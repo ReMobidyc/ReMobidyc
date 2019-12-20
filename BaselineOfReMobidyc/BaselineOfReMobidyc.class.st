@@ -1,5 +1,11 @@
-baselines
-baselineOf: spec
+Class {
+	#name : #BaselineOfReMobidyc,
+	#superclass : #BaselineOf,
+	#category : 'BaselineOfReMobidyc'
+}
+
+{ #category : #baselines }
+BaselineOfReMobidyc >> baselineOf: spec [
 	<baseline>
 	spec
 		for: #common
@@ -17,3 +23,4 @@ baselineOf: spec
 				with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ].
 			spec group: 'default' with: #('core').
 			spec group: 'core' with: #('ReMobidyc-Storage') ]
+]
