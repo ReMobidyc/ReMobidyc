@@ -21,6 +21,9 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			spec
 				baseline: 'Glorp'
 				with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ].
+			spec
+				package: 'ReMobidyc-Storage'
+				with: [ spec requires: #('P3' 'NeoJSON' 'ZTimestamp' 'Glorp') ].
 			spec group: 'default' with: #('core').
 			spec group: 'core' with: #('ReMobidyc-Storage') ]
 ]
