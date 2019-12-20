@@ -1,0 +1,3 @@
+accessing
+tick
+	^ self subclassResponsibility

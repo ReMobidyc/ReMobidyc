@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RMDMemory",
+	"category" : "ReMobidyc-Storage",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"basepath"
+	],
+	"name" : "RMDFileMemory",
+	"type" : "normal"
+}
