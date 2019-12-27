@@ -19,8 +19,8 @@ RMDFileMemory class >> on: aFileReference [
 ]
 
 { #category : #accessing }
-RMDFileMemory >> at: anInteger ifAbsentPut: aBlock [
-	^ values at: anInteger ifAbsentPut: aBlock
+RMDFileMemory >> at: anInteger ifAbsent: aBlock [
+	^ values at: anInteger ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -70,6 +70,12 @@ RMDFileMemory >> digitsPerDirectoryLevel: anInteger [
 	digitsPerDirectoryLevel := anInteger asInteger
 ]
 
+{ #category : #timing }
+RMDFileMemory >> fastSunrise [ 
+	oldValues := values.
+	values := Dictionary new
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> fileReferenceForId: anInteger [
 	| stringId |
@@ -95,8 +101,8 @@ RMDFileMemory >> initialize [
 ]
 
 { #category : #accessing }
-RMDFileMemory >> oldAt: anInteger [
-	^ oldValues at: anInteger
+RMDFileMemory >> oldAt: anInteger ifAbsent: errorBlock [
+	^ oldValues at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #'accessing-storage' }

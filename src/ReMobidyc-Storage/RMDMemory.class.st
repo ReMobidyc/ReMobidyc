@@ -9,17 +9,34 @@ Class {
 
 { #category : #accessing }
 RMDMemory >> at: anInteger [
-	^ self at: anInteger ifAbsentPut: [ ^ KeyNotFound signal ]
+	^ self at: anInteger ifAbsent: [ ^ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> at: anInteger ifAbsent: errorBlock [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 RMDMemory >> at: anInteger ifAbsentPut: aBlock [
-	^ self subclassResponsibility
+	^ self
+		at: anInteger
+		ifAbsent: [ self at: anInteger put: aBlock value ]
 ]
 
 { #category : #accessing }
 RMDMemory >> at: anInteger put: aFloatOrInteger [
 	^ self subclassResponsibility
+]
+
+{ #category : #timing }
+RMDMemory >> fastSunrise [
+	^ self sunrise
+]
+
+{ #category : #timing }
+RMDMemory >> fastSunset [
+	^ self sunset
 ]
 
 { #category : #initialization }
@@ -30,6 +47,11 @@ RMDMemory >> initialize [
 
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger [
+	^ self oldAt: anInteger ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
 	^ self subclassResponsibility
 ]
 
@@ -45,9 +67,9 @@ RMDMemory >> sunset [
 
 { #category : #timing }
 RMDMemory >> tick [
-	self sunset.
+	self fastSunset.
 	time := time + 1.
-	self sunrise
+	self fastSunrise
 ]
 
 { #category : #timing }
