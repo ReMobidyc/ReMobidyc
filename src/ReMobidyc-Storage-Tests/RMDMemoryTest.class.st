@@ -63,6 +63,37 @@ RMDMemoryTest >> testAtPut [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testDeltaAt [
+	memory
+		at: 1 put: 2;
+		at: 3 put: 4;
+		tick;
+		at: 1 put: 5;
+		at: 3 put: 6;
+		at: 7 put: 8.
+	self assert: (memory deltaAt: 1) equals: 5 - 2.
+	self assert: (memory deltaAt: 3) equals: 6 - 4.
+	self should: [ memory deltaAt: 7 ] raise: KeyNotFound
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testDeltaAtIfabsent [
+	memory
+		at: 1 put: 2;
+		at: 3 put: 4;
+		tick;
+		at: 1 put: 5;
+		at: 3 put: 6;
+		at: 7 put: 8.
+	self assert: (memory deltaAt: 1) equals: 5 - 2.
+	self assert: (memory deltaAt: 1 ifAbsent: [ 9 ]) equals: 5 - 2.
+	self assert: (memory deltaAt: 3) equals: 6 - 4.
+	self assert: (memory deltaAt: 3 ifAbsent: [ 10 ]) equals: 6 - 4.
+	self should: [ memory deltaAt: 7 ] raise: KeyNotFound.
+	self assert: (memory deltaAt: 7 ifAbsent: [ 11 ]) equals: 11
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testOldAt [
 	memory
 		at: 1 put: 2;
