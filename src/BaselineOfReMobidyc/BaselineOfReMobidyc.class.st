@@ -17,14 +17,18 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				baseline: 'ZTimestamp'
 					with: [ spec repository: 'github://svenvc/ztimestamp:master/repository' ];
 				baseline: 'Glorp'
-					with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ].
+					with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ];
+				baseline: 'PetitParser2Core'
+					with: [ spec repository: 'github://kursjan/petitparser2/' ].
 			spec
 				package: 'ReMobidyc-Storage'
 					with: [ spec requires: #('P3' 'NeoJSON' 'ZTimestamp' 'Glorp') ];
+				package: 'ReMobidyc-Language'
+					with: [ spec requires: #('PetitParser2Core') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ].
 			spec
-				group: 'default' with: #('core' 'core-tests');
-				group: 'core' with: #('ReMobidyc-Storage');
-				group: 'core-tests' with: #('ReMobidyc-Storage-Tests') ]
+				group: 'default' with: #('core' 'tests');
+				group: 'core' with: #('ReMobidyc-Storage' 'ReMobidyc-Language');
+				group: 'tests' with: #('ReMobidyc-Storage-Tests') ]
 ]
