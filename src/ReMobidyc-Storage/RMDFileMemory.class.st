@@ -128,7 +128,9 @@ RMDFileMemory >> readValuesForTime: anInteger [
 
 { #category : #timing }
 RMDFileMemory >> sunrise [
-	oldValues := self readValuesForTime: time - 1.
+	oldValues := time >= 1
+		ifTrue: [ self readValuesForTime: time - 1 ]
+		ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time
 ]
 

@@ -29,6 +29,17 @@ RMDMemory >> at: anInteger put: aFloatOrInteger [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+RMDMemory >> deltaAt: anInteger [
+	^ self deltaAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> deltaAt: anInteger ifAbsent: errorBlock [
+	^ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
+		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ])
+]
+
 { #category : #timing }
 RMDMemory >> fastSunrise [
 	^ self sunrise
@@ -74,6 +85,8 @@ RMDMemory >> tick [
 
 { #category : #timing }
 RMDMemory >> time: anInteger [
+	(anInteger isInteger and: [ anInteger >= 0 ])
+		ifFalse: [ ^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
 	self sunrise
