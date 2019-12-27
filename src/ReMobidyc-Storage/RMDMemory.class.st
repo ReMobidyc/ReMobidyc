@@ -2,7 +2,8 @@ Class {
 	#name : #RMDMemory,
 	#superclass : #Object,
 	#instVars : [
-		'time'
+		'time',
+		'deltaTime'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -30,6 +31,13 @@ RMDMemory >> at: anInteger put: aFloatOrInteger [
 ]
 
 { #category : #accessing }
+RMDMemory >> delta2At: anInteger ifAbsent: errorBlock [
+	^ (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]) * -2
+		+ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
+		+ (self old2At: anInteger ifAbsent: [ ^ errorBlock value ])
+]
+
+{ #category : #accessing }
 RMDMemory >> deltaAt: anInteger [
 	^ self deltaAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
 ]
@@ -38,6 +46,41 @@ RMDMemory >> deltaAt: anInteger [
 RMDMemory >> deltaAt: anInteger ifAbsent: errorBlock [
 	^ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
 		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ])
+]
+
+{ #category : #accessing }
+RMDMemory >> deltaTime [
+	^ deltaTime
+]
+
+{ #category : #accessing }
+RMDMemory >> deltaTime: aFloat [
+	deltaTime := aFloat asFloat
+]
+
+{ #category : #accessing }
+RMDMemory >> differential2At: anInteger [
+	^ self differential2At: anInteger ifAbsent: [ ^ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> differential2At: anInteger ifAbsent: errorBlock [
+	^ ((self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]) * -2
+		+ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
+		+ (self old2At: anInteger ifAbsent: [ ^ errorBlock value ]))
+		/ deltaTime squared
+]
+
+{ #category : #accessing }
+RMDMemory >> differentialAt: anInteger [
+	^ self differentialAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> differentialAt: anInteger ifAbsent: errorBlock [
+	^ ((self at: anInteger ifAbsent: [ ^ errorBlock value ])
+		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]))
+		/ deltaTime
 ]
 
 { #category : #timing }
@@ -53,7 +96,18 @@ RMDMemory >> fastSunset [
 { #category : #initialization }
 RMDMemory >> initialize [
 	super initialize.
+	deltaTime := 1.0.
 	time := 0
+]
+
+{ #category : #accessing }
+RMDMemory >> old2At: anInteger [
+	^ self old2At: anInteger ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> old2At: anInteger ifAbsent: errorBlock [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

@@ -2,8 +2,9 @@ Class {
 	#name : #RMDFileMemory,
 	#superclass : #RMDMemory,
 	#instVars : [
-		'oldValues',
 		'values',
+		'oldValues',
+		'old2Values',
 		'digitsPerDirectoryLevel',
 		'basePath',
 		'digitsForTime'
@@ -71,7 +72,8 @@ RMDFileMemory >> digitsPerDirectoryLevel: anInteger [
 ]
 
 { #category : #timing }
-RMDFileMemory >> fastSunrise [ 
+RMDFileMemory >> fastSunrise [
+	old2Values := oldValues.
 	oldValues := values.
 	values := Dictionary new
 ]
@@ -97,7 +99,13 @@ RMDFileMemory >> initialize [
 	digitsForTime := self defaultDigitsForTime.
 	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel.
 	values := Dictionary new.
-	oldValues := Dictionary new
+	oldValues := Dictionary new.
+	old2Values := Dictionary new
+]
+
+{ #category : #accessing }
+RMDFileMemory >> old2At: anInteger ifAbsent: errorBlock [
+	^ old2Values at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
@@ -128,6 +136,9 @@ RMDFileMemory >> readValuesForTime: anInteger [
 
 { #category : #timing }
 RMDFileMemory >> sunrise [
+	oldValues := time >= 2
+		ifTrue: [ self readValuesForTime: time - 2 ]
+		ifFalse: [ Dictionary new ].
 	oldValues := time >= 1
 		ifTrue: [ self readValuesForTime: time - 1 ]
 		ifFalse: [ Dictionary new ].
