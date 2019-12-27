@@ -36,6 +36,8 @@ RMDFileMemory >> basePath [
 { #category : #'accessing-storage' }
 RMDFileMemory >> basePath: aFileReference [
 	basePath := aFileReference
+		ensureCreateDirectory;
+		yourself
 ]
 
 { #category : #defaults }
@@ -78,7 +80,8 @@ RMDFileMemory >> fileReferenceForId: anInteger [
 			| ref |
 			ref := self basePath.
 			(self digitsForTime - 1) // self digitsPerDirectoryLevel + 1
-				timesRepeat: [ ref := ref / (idStream next: self digitsPerDirectoryLevel) ].
+				timesRepeat: [ ref := ref ensureCreateDirectory
+						/ (idStream next: self digitsPerDirectoryLevel) ].
 			^ ref ]
 ]
 
@@ -98,7 +101,11 @@ RMDFileMemory >> oldAt: anInteger [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
-	(self fileReferenceForId: anInteger)
+	| ref |
+	ref := self fileReferenceForId: anInteger.
+	ref exists
+		ifFalse: [ ^ Dictionary new ].
+	ref
 		readStreamDo: [ :csvStream | 
 			| vals |
 			vals := Dictionary new.
@@ -115,8 +122,8 @@ RMDFileMemory >> readValuesForTime: anInteger [
 
 { #category : #timing }
 RMDFileMemory >> sunrise [
-	oldValues := values.
-	values := Dictionary new: oldValues size
+	oldValues := self readValuesForTime: time - 1.
+	values := self readValuesForTime: time
 ]
 
 { #category : #timing }
@@ -134,5 +141,5 @@ RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 					id storeOn: csvStream.
 					csvStream nextPut: $,.
 					value storeOn: csvStream.
-					csvStream cr ] ]
+					csvStream lf ] ]
 ]

@@ -49,3 +49,10 @@ RMDMemory >> tick [
 	time := time + 1.
 	self sunrise
 ]
+
+{ #category : #timing }
+RMDMemory >> time: anInteger [
+	self sunset.
+	time := anInteger.
+	self sunrise
+]
