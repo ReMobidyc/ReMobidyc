@@ -13,6 +13,41 @@ RMDGrammarTest >> setUp [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testApply [
+	| apply |
+	apply := grammar apply parse: 'abs(x)'.
+	self assert: apply isApplyNode.
+	self assert: apply function equals: 'abs'.
+	self assert: apply arguments size equals: 1.
+	self
+		assert: apply arguments first
+		equals: (RMDVariableNode symbol: 'x').
+	apply := grammar apply parse: 'max(x, y)'.
+	self assert: apply isApplyNode.
+	self assert: apply function equals: 'max'.
+	self assert: apply arguments size equals: 2.
+	self
+		assert: apply arguments first
+		equals: (RMDVariableNode symbol: 'x').
+	self
+		assert: apply arguments second
+		equals: (RMDVariableNode symbol: 'y').
+	apply := grammar apply parse: 'max3(x, y, z)'.
+	self assert: apply isApplyNode.
+	self assert: apply function equals: 'max3'.
+	self assert: apply arguments size equals: 3.
+	self
+		assert: apply arguments first
+		equals: (RMDVariableNode symbol: 'x').
+	self
+		assert: apply arguments second
+		equals: (RMDVariableNode symbol: 'y').
+	self
+		assert: apply arguments third
+		equals: (RMDVariableNode symbol: 'z')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testDelta [
 	| modifiedVariable |
 	modifiedVariable := grammar delta parse: 'delta x'.
@@ -86,7 +121,11 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 symbol equals: 'x'.
 	expr1 := grammar expr1 parse: 'd2/dt2 x'.
 	self assert: expr1 isDifferential2Node.
-	self assert: expr1 symbol equals: 'x'
+	self assert: expr1 symbol equals: 'x'.
+	expr1 := grammar expr1 parse: 'f(x)'.
+	self assert: expr1 isApplyNode.
+	self assert: expr1 function equals: 'f'.
+	self assert: expr1 arguments equals: {(RMDVariableNode symbol: 'x')}
 ]
 
 { #category : #tests }
@@ -95,67 +134,118 @@ RMDGrammarTest >> testExpr2 [
 	expr2 := grammar expr2 parse: 'x'.
 	self assert: expr2 isVariableNode.
 	self assert: expr2 symbol equals: 'x'.
-	expr2 := grammar expr2 parse: 'x * y * z'.
-	self assert: expr2 isProductNode.
-	self assert: expr2 expression1 isProductNode.
-	self assert: expr2 expression1 expression1 symbol equals: 'x'.
-	self assert: expr2 expression1 expression2 symbol equals: 'y'.
-	self assert: expr2 expression2 symbol equals: 'z'.
-	expr2 := grammar expr2 parse: 'd/dt x * delta y * old z'.
-	self assert: expr2 isProductNode.
-	self assert: expr2 expression1 isProductNode.
-	self assert: expr2 expression1 expression1 isDifferentialNode.
-	self assert: expr2 expression1 expression1 symbol equals: 'x'.
-	self assert: expr2 expression1 expression2 isDeltaNode.
-	self assert: expr2 expression1 expression2 symbol equals: 'y'.
-	self assert: expr2 expression2 isOldNode.
-	self assert: expr2 expression2 symbol equals: 'z'
+	expr2 := grammar expr2 parse: 'x^y^z'.
+	self assert: expr2 isPowerNode.
+	self assert: expr2 expression1 isVariableNode.
+	self assert: expr2 expression1 symbol equals: 'x'.
+	self assert: expr2 expression2 isPowerNode.
+	self assert: expr2 expression2 expression1 isVariableNode.
+	self assert: expr2 expression2 expression1 symbol equals: 'y'.
+	self assert: expr2 expression2 expression2 isVariableNode.
+	self assert: expr2 expression2 expression2 symbol equals: 'z'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testExpr3 [
 	| expr3 |
-	expr3 := grammar expr3 parse: 'x / y'.
-	self assert: expr3 isFractionNode.
-	self assert: expr3 numerator symbol equals: 'x'.
-	self assert: expr3 denominator symbol equals: 'y'.
-	expr3 := grammar expr3 parse: 'x * y / z'.
-	self assert: expr3 isFractionNode.
-	self assert: expr3 numerator isProductNode.
-	self assert: expr3 denominator symbol equals: 'z'.
-	expr3 := grammar expr3 parse: 'x / y * z'.
-	self assert: expr3 isFractionNode.
-	self assert: expr3 numerator symbol equals: 'x'.
-	self assert: expr3 denominator isProductNode
+	expr3 := grammar expr3 parse: 'x'.
+	self assert: expr3 isVariableNode.
+	self assert: expr3 symbol equals: 'x'.
+	expr3 := grammar expr3 parse: 'x * y * z'.
+	self assert: expr3 isProductNode.
+	self assert: expr3 expression1 isProductNode.
+	self assert: expr3 expression1 expression1 symbol equals: 'x'.
+	self assert: expr3 expression1 expression2 symbol equals: 'y'.
+	self assert: expr3 expression2 symbol equals: 'z'.
+	expr3 := grammar expr3 parse: 'd/dt x * delta y * old z'.
+	self assert: expr3 isProductNode.
+	self assert: expr3 expression1 isProductNode.
+	self assert: expr3 expression1 expression1 isDifferentialNode.
+	self assert: expr3 expression1 expression1 symbol equals: 'x'.
+	self assert: expr3 expression1 expression2 isDeltaNode.
+	self assert: expr3 expression1 expression2 symbol equals: 'y'.
+	self assert: expr3 expression2 isOldNode.
+	self assert: expr3 expression2 symbol equals: 'z'.
+	expr3 := grammar expr3 end parse: 'x * y^z'.
+	self assert: expr3 isProductNode.
+	self assert: expr3 expression1 isVariableNode.
+	self assert: expr3 expression1 symbol equals: 'x'.
+	self assert: expr3 expression2 isPowerNode.
+	self assert: expr3 expression2 expression1 isVariableNode.
+	self assert: expr3 expression2 expression1 symbol equals: 'y'.
+	self assert: expr3 expression2 expression2 isVariableNode.
+	self assert: expr3 expression2 expression2 symbol equals: 'z'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testExpr4 [
 	| expr4 |
-	expr4 := grammar expr4 parse: 'x + y - z'.
-	self assert: expr4 isSubtractionNode.
-	self assert: expr4 expression1 isAdditionNode.
-	self assert: expr4 expression1 expression1 symbol equals: 'x'.
-	self assert: expr4 expression1 expression2 symbol equals: 'y'.
-	self assert: expr4 expression2 symbol equals: 'z'.
-	expr4 := grammar expr4 parse: 'x - y + z'.
-	self assert: expr4 isAdditionNode.
-	self assert: expr4 expression1 isSubtractionNode.
-	self assert: expr4 expression1 expression1 symbol equals: 'x'.
-	self assert: expr4 expression1 expression2 symbol equals: 'y'.
-	self assert: expr4 expression2 symbol equals: 'z'.
-	expr4 := grammar expr4 parse: 'x * y + z'.
-	self assert: expr4 isAdditionNode.
-	self assert: expr4 expression1 isProductNode.
-	self assert: expr4 expression1 expression1 symbol equals: 'x'.
-	self assert: expr4 expression1 expression2 symbol equals: 'y'.
-	self assert: expr4 expression2 symbol equals: 'z'.
-	expr4 := grammar expr4 parse: 'x + y * z'.
-	self assert: expr4 isAdditionNode.
+	expr4 := grammar expr4 parse: 'x / y'.
+	self assert: expr4 isFractionNode.
 	self assert: expr4 expression1 symbol equals: 'x'.
-	self assert: expr4 expression2 isProductNode.
-	self assert: expr4 expression2 expression1 symbol equals: 'y'.
-	self assert: expr4 expression2 expression2 symbol equals: 'z'
+	self assert: expr4 expression2 symbol equals: 'y'.
+	expr4 := grammar expr4 parse: 'x * y / z'.
+	self assert: expr4 isFractionNode.
+	self assert: expr4 expression1 isProductNode.
+	self assert: expr4 expression2 symbol equals: 'z'.
+	expr4 := grammar expr4 parse: 'x / y * z'.
+	self assert: expr4 isFractionNode.
+	self assert: expr4 expression1 symbol equals: 'x'.
+	self assert: expr4 expression2 isProductNode
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testExpr5 [
+	| expr5 |
+	expr5 := grammar expr5 parse: 'x + y - z'.
+	self assert: expr5 isSubtractionNode.
+	self assert: expr5 expression1 isAdditionNode.
+	self assert: expr5 expression1 expression1 symbol equals: 'x'.
+	self assert: expr5 expression1 expression2 symbol equals: 'y'.
+	self assert: expr5 expression2 symbol equals: 'z'.
+	expr5 := grammar expr5 parse: 'x - y + z'.
+	self assert: expr5 isAdditionNode.
+	self assert: expr5 expression1 isSubtractionNode.
+	self assert: expr5 expression1 expression1 symbol equals: 'x'.
+	self assert: expr5 expression1 expression2 symbol equals: 'y'.
+	self assert: expr5 expression2 symbol equals: 'z'.
+	expr5 := grammar expr5 parse: 'x * y + z'.
+	self assert: expr5 isAdditionNode.
+	self assert: expr5 expression1 isProductNode.
+	self assert: expr5 expression1 expression1 symbol equals: 'x'.
+	self assert: expr5 expression1 expression2 symbol equals: 'y'.
+	self assert: expr5 expression2 symbol equals: 'z'.
+	expr5 := grammar expr5 parse: 'x + y * z'.
+	self assert: expr5 isAdditionNode.
+	self assert: expr5 expression1 symbol equals: 'x'.
+	self assert: expr5 expression2 isProductNode.
+	self assert: expr5 expression2 expression1 symbol equals: 'y'.
+	self assert: expr5 expression2 expression2 symbol equals: 'z'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testFunction [
+	| function |
+	function := grammar function parse: 'max('.
+	self assert: function equals: 'max'.
+	function := grammar function parse: 'max ('.
+	self assert: function equals: 'max'.
+	function := grammar function parse: 'max3('.
+	self assert: function equals: 'max3'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testLiteral [
+	| literal |
+	literal := grammar literal parse: '3.14'.
+	self assert: literal literal equals: '3.14'.
+	self assert: literal numeric closeTo: 3.14.
+	literal := grammar literal parse: '-3.14'.
+	self assert: literal literal equals: '-3.14'.
+	self assert: literal numeric closeTo: -3.14.
+	literal := grammar literal parse: '3'.
+	self assert: literal literal equals: '3'.
+	self assert: literal numeric closeTo: 3
 ]
 
 { #category : #tests }

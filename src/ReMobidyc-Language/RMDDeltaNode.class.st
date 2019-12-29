@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDDeltaNode,
-	#superclass : #RMDExpressionNode,
-	#instVars : [
-		'variable'
-	],
+	#superclass : #RMDAbstractVariableNode,
 	#category : #'ReMobidyc-Language'
 }
 
@@ -20,27 +17,6 @@ RMDDeltaNode >> isDeltaNode [
 ]
 
 { #category : #accessing }
-RMDDeltaNode >> precedence [
-	^ 1
-]
-
-{ #category : #printing }
-RMDDeltaNode >> printOn: aStream [
-	aStream nextPutAll: 'Δ'.
-	variable printOn: aStream
-]
-
-{ #category : #accessing }
-RMDDeltaNode >> symbol [
-	^ variable symbol
-]
-
-{ #category : #accessing }
-RMDDeltaNode >> variable [
-	^ variable
-]
-
-{ #category : #accessing }
-RMDDeltaNode >> variable: aRMDVariableNode [
-	variable := aRMDVariableNode
+RMDDeltaNode >> operator [
+	^ 'Δ'
 ]

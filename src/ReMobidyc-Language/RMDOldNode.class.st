@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDOldNode,
-	#superclass : #RMDExpressionNode,
-	#instVars : [
-		'variable'
-	],
+	#superclass : #RMDAbstractVariableNode,
 	#category : #'ReMobidyc-Language'
 }
 
@@ -19,28 +16,7 @@ RMDOldNode >> isOldNode [
 	^ true
 ]
 
-{ #category : #accessing }
-RMDOldNode >> precedence [
-	^ 1
-]
-
 { #category : #printing }
-RMDOldNode >> printOn: aStream [
-	aStream nextPutAll: 'old '.
-	variable printOn: aStream
-]
-
-{ #category : #accessing }
-RMDOldNode >> symbol [
-	^ variable symbol
-]
-
-{ #category : #accessing }
-RMDOldNode >> variable [
-	^ variable
-]
-
-{ #category : #accessing }
-RMDOldNode >> variable: aRMDVariableNode [
-	variable := aRMDVariableNode
+RMDOldNode >> operator [
+	^ 'old '
 ]

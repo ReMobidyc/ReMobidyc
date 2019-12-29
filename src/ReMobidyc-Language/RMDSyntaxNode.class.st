@@ -10,6 +10,11 @@ RMDSyntaxNode >> isAdditionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isApplyNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDeltaNode [
 	^ false
 ]
@@ -30,7 +35,17 @@ RMDSyntaxNode >> isFractionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isLiteralNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isOldNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPowerNode [
 	^ false
 ]
 

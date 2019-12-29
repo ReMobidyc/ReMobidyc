@@ -3,20 +3,10 @@ Class {
 	#superclass : #PP2CompositeNode,
 	#instVars : [
 		'delta',
-		'differential',
-		'differential2',
-		'old',
 		'variable',
 		'unit',
 		'type',
-		'literal',
-		'expr1',
-		'function',
-		'call',
-		'expression',
-		'expr2',
-		'expr3',
-		'expr4'
+		'expression'
 	],
 	#category : #'ReMobidyc-Language'
 }
@@ -37,9 +27,21 @@ RMDGrammar >> allUnits [
 		yourself
 ]
 
-{ #category : #parsers }
-RMDGrammar >> call [
-	^ #failure asPParser
+{ #category : #'parsers-expressions' }
+RMDGrammar >> apply [
+	^ (self function , $( asPParser trimBlanks
+		,
+			((expression separatedBy: $, asPParser trimBlanks)
+				==>
+					[ :array | (1 to: array size by: 2) collect: [ :index | array at: index ] ])
+		, $) asPParser trimBlanks)
+		==>
+			[ :quad | self applyNodeClass function: quad first expressions: quad third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> applyNodeClass [
+	^ RMDApplyNode
 ]
 
 { #category : #parsers }
@@ -47,7 +49,7 @@ RMDGrammar >> definition [
 	^ #failure asPParser
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> delta [
 	^ ('delta' asPParser / 'Δ' asPParser , #blank asPParser plus
 		, variable)
@@ -59,13 +61,13 @@ RMDGrammar >> deltaNodeClass [
 	^ RMDDeltaNode
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> differential [
 	^ ('d/dt' asPParser , #blank asPParser plus , variable)
 		==> [ :triple | self differentialNodeClass variable: triple third ]
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> differential2 [
 	^ ('d2/dt2' asPParser / 'd^2/dt^2' asPParser , #blank asPParser plus
 		, variable)
@@ -90,15 +92,27 @@ RMDGrammar >> energyUnits [
 	('cal' -> #(4.184 nil 'J'))} asDictionary
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ (($( asPParser , expression trimBlanks , $) asPParser) ==> #second) / old
-		/ differential / differential2 / delta / call / variable
+	^ self parenExpression / self apply / self old / self differential / self differential2 / delta
+		/ variable
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-expressions' }
 RMDGrammar >> expr2 [
-	^ (expr1 separatedBy: $* asPParser trimBlanks)
+	| expr1 |
+	expr1 := self expr1.
+	^ (expr1 , (($^ asPParser trimBlanks , expr1) ==> #second) optional)
+		==> [ :pair | 
+			pair second
+				ifNil: [ pair first ]
+				ifNotNil:
+					[ self powerNodeClass expression: pair first expression: pair second ] ]
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> expr3 [
+	^ (self expr2 separatedBy: $* asPParser trimBlanks)
 		==> [ :array | 
 			(3 to: array size by: 2)
 				inject: array first
@@ -108,18 +122,22 @@ RMDGrammar >> expr2 [
 						expression: (array at: index) ] ]
 ]
 
-{ #category : #parsers }
-RMDGrammar >> expr3 [
-	^ (expr2 , $/ asPParser trimBlanks , expr2)
-		==> [ :triple | 
-			self fractionNodeClass
-				expression: triple first
-				expression: triple third ]
+{ #category : #'parsers-expressions' }
+RMDGrammar >> expr4 [
+	| expr3 |
+	expr3 := self expr3.
+	^ (expr3 , (($/ asPParser trimBlanks , expr3) ==> #second) optional)
+		==> [ :pair | 
+			pair second
+				ifNil: [ pair first ]
+				ifNotNil: [ self fractionNodeClass
+						expression: pair first
+						expression: pair second ] ]
 ]
 
-{ #category : #parsers }
-RMDGrammar >> expr4 [
-	^ (expr2 separatedBy: ($+ asPParser / $- asPParser) trimBlanks)
+{ #category : #'parsers-expressions' }
+RMDGrammar >> expr5 [
+	^ (self expr4 separatedBy: ($+ asPParser / $- asPParser) trimBlanks)
 		==> [ :array | 
 			(2 to: array size by: 2)
 				inject: array first
@@ -133,9 +151,9 @@ RMDGrammar >> expr4 [
 						expression: (array at: index + 1) ] ]
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-expressions' }
 RMDGrammar >> expression [
-	^ #failure asPParser
+	^ self expr4
 ]
 
 { #category : #'class access' }
@@ -145,7 +163,8 @@ RMDGrammar >> fractionNodeClass [
 
 { #category : #parsers }
 RMDGrammar >> function [
-	^ #failure asPParser
+	^ (#letter asPParser , (#letter asPParser / #digit asPParser) star)
+		flatten
 ]
 
 { #category : #units }
@@ -156,14 +175,19 @@ RMDGrammar >> lengthUnits [
 	('mm' -> #(0.001 nil 'm'))} asDictionary
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> literal [
 	^ ($- asPParser optional , #digit asPParser plus
-		, ($. asPParser , #digit asPParser plus)) flatten
-		==> [ :numeric | numeric asNumber ]
+		, ($. asPParser , #digit asPParser plus) optional) flatten
+		==> [ :numeric | self literalNodeClass literal: numeric ]
 ]
 
-{ #category : #parsers }
+{ #category : #'class access' }
+RMDGrammar >> literalNodeClass [
+	^ RMDLiteralNode
+]
+
+{ #category : #'parsers-atoms' }
 RMDGrammar >> old [
 	^ ('old' asPParser , #blank asPParser plus , variable)
 		==> [ :triple | self oldNodeClass variable: triple third ]
@@ -172,6 +196,16 @@ RMDGrammar >> old [
 { #category : #'class access' }
 RMDGrammar >> oldNodeClass [
 	^ RMDOldNode
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> parenExpression [
+	^ ($( asPParser , expression trimBlanks , $) asPParser) ==> #second
+]
+
+{ #category : #'class access' }
+RMDGrammar >> powerNodeClass [
+	^ RMDPowerNode
 ]
 
 { #category : #'class access' }
@@ -251,7 +285,7 @@ RMDGrammar >> unitFactor [
 			pair ]
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> variable [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)

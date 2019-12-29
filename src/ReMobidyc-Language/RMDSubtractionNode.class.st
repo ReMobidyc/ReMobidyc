@@ -1,10 +1,6 @@
 Class {
 	#name : #RMDSubtractionNode,
-	#superclass : #RMDExpressionNode,
-	#instVars : [
-		'expression1',
-		'expression2'
-	],
+	#superclass : #RMDLeftAssociativeApplicationNode,
 	#category : #'ReMobidyc-Language'
 }
 
@@ -16,47 +12,17 @@ RMDSubtractionNode class >> expression: aRMDExpression1 expression: aRMDExpressi
 		yourself
 ]
 
-{ #category : #accessing }
-RMDSubtractionNode >> expression1 [
-	^ expression1
-]
-
-{ #category : #accessing }
-RMDSubtractionNode >> expression1: aRMDExpression [
-	expression1 := aRMDExpression
-]
-
-{ #category : #accessing }
-RMDSubtractionNode >> expression2 [
-	^ expression2
-]
-
-{ #category : #accessing }
-RMDSubtractionNode >> expression2: aRMDExpression [
-	expression2 := aRMDExpression
-]
-
 { #category : #testing }
 RMDSubtractionNode >> isSubtractionNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDSubtractionNode >> precedence [
-	^ 4
+RMDSubtractionNode >> operator [
+	^ '-'
 ]
 
-{ #category : #printing }
-RMDSubtractionNode >> printOn: aStream [
-	self precedence < expression1 first precedence
-		ifTrue: [ aStream nextPut: $( ].
-	expression1 first printOn: aStream.
-	self precedence < expression1 first precedence
-		ifTrue: [ aStream nextPut: $) ].
-	aStream nextPutAll: '+'.
-	self precedence <= expression2 precedence
-		ifTrue: [ aStream nextPut: $( ].
-	expression2 printOn: aStream.
-	self precedence <= expression2 precedence
-		ifTrue: [ aStream nextPut: $) ]
+{ #category : #accessing }
+RMDSubtractionNode >> precedence [
+	^ 5
 ]

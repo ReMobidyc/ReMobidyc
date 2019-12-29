@@ -14,6 +14,16 @@ RMDVariableNode class >> symbol: aString [
 		yourself
 ]
 
+{ #category : #printing }
+RMDVariableNode >> = anObject [
+	^ self class = anObject class and: [ symbol = anObject symbol ]
+]
+
+{ #category : #printing }
+RMDVariableNode >> hash [
+	^ self class bitXor: symbol hash
+]
+
 { #category : #testing }
 RMDVariableNode >> isVariableNode [
 	^ true

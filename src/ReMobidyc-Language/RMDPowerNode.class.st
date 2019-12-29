@@ -1,20 +1,20 @@
 Class {
-	#name : #RMDFractionNode,
+	#name : #RMDPowerNode,
 	#superclass : #RMDNonAssociativeApplicationNode,
 	#category : #'ReMobidyc-Language'
 }
 
 { #category : #testing }
-RMDFractionNode >> isFractionNode [ 
+RMDPowerNode >> isPowerNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDFractionNode >> operator [
-	^ '/'
+RMDPowerNode >> operator [
+	^ '^'
 ]
 
 { #category : #accessing }
-RMDFractionNode >> precedence [
-	^ 4
+RMDPowerNode >> precedence [
+	^ 2
 ]

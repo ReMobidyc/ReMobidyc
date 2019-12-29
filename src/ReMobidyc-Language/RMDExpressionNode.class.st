@@ -10,6 +10,16 @@ RMDExpressionNode >> * aRMDExpression [
 ]
 
 { #category : #arithmetics }
+RMDExpressionNode >> + aRMDExpression [
+	^ RMDAdditionNode expression: self expression: aRMDExpression
+]
+
+{ #category : #arithmetics }
+RMDExpressionNode >> - aRMDExpression [
+	^ RMDSubtractionNode expression: self expression: aRMDExpression
+]
+
+{ #category : #arithmetics }
 RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]

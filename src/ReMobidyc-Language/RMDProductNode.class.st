@@ -1,10 +1,6 @@
 Class {
 	#name : #RMDProductNode,
-	#superclass : #RMDExpressionNode,
-	#instVars : [
-		'expression1',
-		'expression2'
-	],
+	#superclass : #RMDLeftAssociativeApplicationNode,
 	#category : #'ReMobidyc-Language'
 }
 
@@ -16,47 +12,17 @@ RMDProductNode class >> expression: aRMDExpression1 expression: aRMDExpression2 
 		yourself
 ]
 
-{ #category : #accessing }
-RMDProductNode >> expression1 [
-	^ expression1
-]
-
-{ #category : #accessing }
-RMDProductNode >> expression1: aRMDExpression [
-	expression1 := aRMDExpression
-]
-
-{ #category : #accessing }
-RMDProductNode >> expression2 [
-	^ expression2
-]
-
-{ #category : #accessing }
-RMDProductNode >> expression2: aRMDExpression [
-	expression2 := aRMDExpression
-]
-
 { #category : #testing }
 RMDProductNode >> isProductNode [ 
 	^ true
 ]
 
 { #category : #accessing }
-RMDProductNode >> precedence [
-	^ 2
+RMDProductNode >> operator [
+	^ '*'
 ]
 
-{ #category : #printing }
-RMDProductNode >> printOn: aStream [
-	self precedence < expression1 precedence
-		ifTrue: [ aStream nextPut: $( ].
-	expression1 printOn: aStream.
-	self precedence < expression1 precedence
-		ifTrue: [ aStream nextPut: $) ].
-	aStream nextPutAll: '*'.
-	self precedence <= expression2 precedence
-		ifTrue: [ aStream nextPut: $( ].
-	expression2 printOn: aStream.
-	self precedence <= expression2 precedence
-		ifTrue: [ aStream nextPut: $) ]
+{ #category : #accessing }
+RMDProductNode >> precedence [
+	^ 3
 ]
