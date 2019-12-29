@@ -2,17 +2,29 @@ Class {
 	#name : #RMDGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
-		'modifier',
+		'delta',
+		'differential',
+		'differential2',
+		'old',
 		'variable',
 		'unit',
 		'type',
 		'literal',
-		'atom',
+		'expr1',
 		'function',
-		'call'
+		'call',
+		'expression',
+		'expr2',
+		'expr3',
+		'expr4'
 	],
 	#category : #'ReMobidyc-Language'
 }
+
+{ #category : #'class access' }
+RMDGrammar >> additionNodeClass [
+	^ RMDAdditionNode
+]
 
 { #category : #units }
 RMDGrammar >> allUnits [
@@ -26,11 +38,6 @@ RMDGrammar >> allUnits [
 ]
 
 { #category : #parsers }
-RMDGrammar >> atom [
-	^ #failure asPParser
-]
-
-{ #category : #parsers }
 RMDGrammar >> call [
 	^ #failure asPParser
 ]
@@ -40,12 +47,100 @@ RMDGrammar >> definition [
 	^ #failure asPParser
 ]
 
+{ #category : #parsers }
+RMDGrammar >> delta [
+	^ ('delta' asPParser / 'Δ' asPParser , #blank asPParser plus
+		, variable)
+		==> [ :triple | self deltaNodeClass variable: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> deltaNodeClass [
+	^ RMDDeltaNode
+]
+
+{ #category : #parsers }
+RMDGrammar >> differential [
+	^ ('d/dt' asPParser , #blank asPParser plus , variable)
+		==> [ :triple | self differentialNodeClass variable: triple third ]
+]
+
+{ #category : #parsers }
+RMDGrammar >> differential2 [
+	^ ('d2/dt2' asPParser / 'd^2/dt^2' asPParser , #blank asPParser plus
+		, variable)
+		==> [ :triple | self differential2NodeClass variable: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> differential2NodeClass [
+	^ RMDDifferential2Node
+]
+
+{ #category : #'class access' }
+RMDGrammar >> differentialNodeClass [
+	^ RMDDifferentialNode
+]
+
 { #category : #units }
 RMDGrammar >> energyUnits [
 	^ {('J' -> #(1.0 nil 'J')).
 	('kJ' -> #(1000.0 nil 'J')).
 	('kcal' -> #(4184.0 nil 'J')).
 	('cal' -> #(4.184 nil 'J'))} asDictionary
+]
+
+{ #category : #parsers }
+RMDGrammar >> expr1 [
+	^ (($( asPParser , expression trimBlanks , $) asPParser) ==> #second) / old
+		/ differential / differential2 / delta / call / variable
+]
+
+{ #category : #parsers }
+RMDGrammar >> expr2 [
+	^ (expr1 separatedBy: $* asPParser trimBlanks)
+		==> [ :array | 
+			(3 to: array size by: 2)
+				inject: array first
+				into: [ :product :index | 
+					self productNodeClass
+						expression: product
+						expression: (array at: index) ] ]
+]
+
+{ #category : #parsers }
+RMDGrammar >> expr3 [
+	^ (expr2 , $/ asPParser trimBlanks , expr2)
+		==> [ :triple | 
+			self fractionNodeClass
+				expression: triple first
+				expression: triple third ]
+]
+
+{ #category : #parsers }
+RMDGrammar >> expr4 [
+	^ (expr2 separatedBy: ($+ asPParser / $- asPParser) trimBlanks)
+		==> [ :array | 
+			(2 to: array size by: 2)
+				inject: array first
+				into: [ :total :index | 
+					| op |
+					op := array at: index.
+					(op = $+
+						ifTrue: [ self additionNodeClass ]
+						ifFalse: [ self subtractionNodeClass ])
+						expression: total
+						expression: (array at: index + 1) ] ]
+]
+
+{ #category : #parsers }
+RMDGrammar >> expression [
+	^ #failure asPParser
+]
+
+{ #category : #'class access' }
+RMDGrammar >> fractionNodeClass [
+	^ RMDFractionNode
 ]
 
 { #category : #parsers }
@@ -63,13 +158,25 @@ RMDGrammar >> lengthUnits [
 
 { #category : #parsers }
 RMDGrammar >> literal [
-	^ #failure asPParser
+	^ ($- asPParser optional , #digit asPParser plus
+		, ($. asPParser , #digit asPParser plus)) flatten
+		==> [ :numeric | numeric asNumber ]
 ]
 
 { #category : #parsers }
-RMDGrammar >> modifier [
-	^ ('delta' asPParser / 'd/dt' asPParser / 'd2/dt2' asPParser
-		/ 'old' asPParser , #blank asPParser) ==> #first
+RMDGrammar >> old [
+	^ ('old' asPParser , #blank asPParser plus , variable)
+		==> [ :triple | self oldNodeClass variable: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> oldNodeClass [
+	^ RMDOldNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> productNodeClass [
+	^ RMDProductNode
 ]
 
 { #category : #accessing }
@@ -77,6 +184,11 @@ RMDGrammar >> start [
 	"Answer the production to start this parser with."
 	
 	self definition
+]
+
+{ #category : #'class access' }
+RMDGrammar >> subtractionNodeClass [
+	^ RMDSubtractionNode
 ]
 
 { #category : #units }
@@ -143,7 +255,12 @@ RMDGrammar >> unitFactor [
 RMDGrammar >> variable [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
-		flatten
+		flatten ==> [ :symbol | self variableNodeClass symbol: symbol ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> variableNodeClass [
+	^ RMDVariableNode
 ]
 
 { #category : #units }

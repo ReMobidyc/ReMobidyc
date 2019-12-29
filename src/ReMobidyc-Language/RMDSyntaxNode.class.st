@@ -1,0 +1,55 @@
+Class {
+	#name : #RMDSyntaxNode,
+	#superclass : #Object,
+	#category : #'ReMobidyc-Language'
+}
+
+{ #category : #testing }
+RMDSyntaxNode >> isAdditionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDeltaNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDifferential2Node [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDifferentialNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isFractionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isOldNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isProductNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSubtractionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isVariableNode [
+	^ false
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> printOn: aStream [
+	^ self subclassResponsibility
+]

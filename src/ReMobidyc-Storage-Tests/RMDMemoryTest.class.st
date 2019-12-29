@@ -22,12 +22,12 @@ RMDMemoryTest >> destroyMemory [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'system startup' }
+{ #category : #running }
 RMDMemoryTest >> setUp [
 	memory := self createMemory
 ]
 
-{ #category : #'system startup' }
+{ #category : #running }
 RMDMemoryTest >> tearDown [
 	self destroyMemory
 ]
