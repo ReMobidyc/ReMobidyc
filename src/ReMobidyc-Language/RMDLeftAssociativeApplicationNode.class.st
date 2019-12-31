@@ -6,10 +6,10 @@ Class {
 
 { #category : #printing }
 RMDLeftAssociativeApplicationNode >> printOn: aStream [
-	self precedence < expression1 first precedence
+	self precedence < expression1 precedence
 		ifTrue: [ aStream nextPut: $( ].
-	expression1 first printOn: aStream.
-	self precedence < expression1 first precedence
+	expression1 printOn: aStream.
+	self precedence < expression1 precedence
 		ifTrue: [ aStream nextPut: $) ].
 	aStream nextPutAll: self operator.
 	self precedence <= expression2 precedence

@@ -10,6 +10,11 @@ RMDSyntaxNode >> isAdditionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAdditiveDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isApplyNode [
 	^ false
 ]
@@ -26,6 +31,11 @@ RMDSyntaxNode >> isDifferential2Node [
 
 { #category : #testing }
 RMDSyntaxNode >> isDifferentialNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDirectDefinitionNode [
 	^ false
 ]
 
@@ -51,6 +61,11 @@ RMDSyntaxNode >> isPowerNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isProductNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isProductiveDefinitionNode [
 	^ false
 ]
 

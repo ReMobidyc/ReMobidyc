@@ -48,6 +48,47 @@ RMDGrammarTest >> testApply [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testDefinition [
+	| definition |
+	definition := grammar definition parse: 'x[m] = 1'.
+	self assert: definition isDirectDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x = 1'.
+	self assert: definition isDirectDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type isNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x[m] <+ 1'.
+	self assert: definition isAdditiveDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x[m] <* 1'.
+	self assert: definition isProductiveDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testDelta [
 	| modifiedVariable |
 	modifiedVariable := grammar delta parse: 'delta x'.
@@ -125,7 +166,10 @@ RMDGrammarTest >> testExpr1 [
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
-	self assert: expr1 arguments equals: {(RMDVariableNode symbol: 'x')}
+	self assert: expr1 arguments equals: {(RMDVariableNode symbol: 'x')}.
+	expr1 := grammar expr1 parse: '1'.
+	self assert: expr1 isLiteralNode.
+	self assert: expr1 numeric closeTo: 1
 ]
 
 { #category : #tests }

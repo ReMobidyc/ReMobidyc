@@ -15,6 +15,16 @@ RMDLiteralNode class >> literal: aString [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDLiteralNode >> = anObject [
+	^ self class = anObject class and: [ literal = anObject literal ]
+]
+
+{ #category : #comparing }
+RMDLiteralNode >> hash [
+	^ literal hash
+]
+
 { #category : #testing }
 RMDLiteralNode >> isLiteralNode [
 	^ true

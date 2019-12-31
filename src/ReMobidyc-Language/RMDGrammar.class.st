@@ -16,6 +16,11 @@ RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> additiveDefinitionNodeClass [
+	^ RMDAdditiveDefinitionNode
+]
+
 { #category : #units }
 RMDGrammar >> allUnits [
 	^ Dictionary new
@@ -44,9 +49,27 @@ RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-definitions' }
 RMDGrammar >> definition [
-	^ #failure asPParser
+	^ (variable / delta , type optional
+		, ('=' asPParser / '<+' asPParser / '<*' asPParser) trimBlanks
+		, expression)
+		==> [ :quad | 
+			(self definitionNodeFor: quad third)
+				variable: quad first
+				type: quad second
+				expression: quad fourth ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> definitionNodeFor: aString [
+	aString = '='
+		ifTrue: [ ^ self directDefinitionNodeClass ].
+	aString = '<+'
+		ifTrue: [ ^ self additiveDefinitionNodeClass ].
+	aString = '<*'
+		ifTrue: [ ^ self productiveDefinitionNodeClass ].
+	^ self error: 'Unknown assignment operator: ' , aString
 ]
 
 { #category : #'parsers-atoms' }
@@ -84,6 +107,11 @@ RMDGrammar >> differentialNodeClass [
 	^ RMDDifferentialNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> directDefinitionNodeClass [
+	^ RMDDirectDefinitionNode
+]
+
 { #category : #units }
 RMDGrammar >> energyUnits [
 	^ {('J' -> #(1.0 nil 'J')).
@@ -95,7 +123,7 @@ RMDGrammar >> energyUnits [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
 	^ self parenExpression / self apply / self old / self differential / self differential2 / delta
-		/ variable
+		/ variable / self literal
 ]
 
 { #category : #'parsers-expressions' }
@@ -153,7 +181,7 @@ RMDGrammar >> expr5 [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expression [
-	^ self expr4
+	^ self expr5
 ]
 
 { #category : #'class access' }
@@ -161,7 +189,7 @@ RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> function [
 	^ (#letter asPParser , (#letter asPParser / #digit asPParser) star)
 		flatten
@@ -213,6 +241,11 @@ RMDGrammar >> productNodeClass [
 	^ RMDProductNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> productiveDefinitionNodeClass [
+	^ RMDProductiveDefinitionNode
+]
+
 { #category : #accessing }
 RMDGrammar >> start [
 	"Answer the production to start this parser with."
@@ -241,7 +274,7 @@ RMDGrammar >> timeUnits [
 	('day' -> #(86400.0 nil 's'))} asDictionary
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-units' }
 RMDGrammar >> type [
 	^ ($[ asPParser trimBlanks
 		,
@@ -262,14 +295,14 @@ RMDGrammar >> type [
 		, $] asPParser trimBlanks) ==> [ :quad | quad second , quad third ]
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-units' }
 RMDGrammar >> unit [
 	^ (self allUnits keys
 		inject: #failure asPParser
 		into: [ :p :s | p / s asPParser ]) flatten
 ]
 
-{ #category : #parsers }
+{ #category : #'parsers-units' }
 RMDGrammar >> unitFactor [
 	^ (unit
 		,
