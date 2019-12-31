@@ -6,7 +6,8 @@ Class {
 		'variable',
 		'unit',
 		'type',
-		'expression'
+		'expression',
+		'identifier'
 	],
 	#category : #'ReMobidyc-Language'
 }
@@ -34,7 +35,7 @@ RMDGrammar >> allUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> apply [
-	^ (self function , $( asPParser trimBlanks
+	^ (identifier , $( asPParser trimBlanks
 		,
 			((expression separatedBy: $, asPParser trimBlanks)
 				==>
@@ -75,8 +76,8 @@ RMDGrammar >> definitionNodeFor: aString [
 { #category : #'parsers-atoms' }
 RMDGrammar >> delta [
 	^ ('delta' asPParser / 'Δ' asPParser , #blank asPParser plus
-		, variable)
-		==> [ :triple | self deltaNodeClass variable: triple third ]
+		, identifier)
+		==> [ :triple | self deltaNodeClass symbol: triple third ]
 ]
 
 { #category : #'class access' }
@@ -86,15 +87,15 @@ RMDGrammar >> deltaNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential [
-	^ ('d/dt' asPParser , #blank asPParser plus , variable)
-		==> [ :triple | self differentialNodeClass variable: triple third ]
+	^ ('d/dt' asPParser , #blank asPParser plus , identifier)
+		==> [ :triple | self differentialNodeClass symbol: triple third ]
 ]
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential2 [
 	^ ('d2/dt2' asPParser / 'd^2/dt^2' asPParser , #blank asPParser plus
-		, variable)
-		==> [ :triple | self differential2NodeClass variable: triple third ]
+		, identifier)
+		==> [ :triple | self differential2NodeClass symbol: triple third ]
 ]
 
 { #category : #'class access' }
@@ -190,8 +191,9 @@ RMDGrammar >> fractionNodeClass [
 ]
 
 { #category : #'parsers-atoms' }
-RMDGrammar >> function [
-	^ (#letter asPParser , (#letter asPParser / #digit asPParser) star)
+RMDGrammar >> identifier [
+	^ (#letter asPParser
+		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
 		flatten
 ]
 
@@ -217,8 +219,8 @@ RMDGrammar >> literalNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> old [
-	^ ('old' asPParser , #blank asPParser plus , variable)
-		==> [ :triple | self oldNodeClass variable: triple third ]
+	^ ('old' asPParser , #blank asPParser plus , identifier)
+		==> [ :triple | self oldNodeClass symbol: triple third ]
 ]
 
 { #category : #'class access' }
@@ -320,9 +322,7 @@ RMDGrammar >> unitFactor [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> variable [
-	^ (#letter asPParser
-		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
-		flatten ==> [ :symbol | self variableNodeClass symbol: symbol ]
+	^ identifier ==> [ :symbol | self variableNodeClass symbol: symbol ]
 ]
 
 { #category : #'class access' }

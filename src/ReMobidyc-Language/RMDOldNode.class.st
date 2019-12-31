@@ -4,13 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language'
 }
 
-{ #category : #'instance creation' }
-RMDOldNode class >> variable: aRMDVariableNode [
-	^ self new
-		variable: aRMDVariableNode;
-		yourself
-]
-
 { #category : #testing }
 RMDOldNode >> isOldNode [
 	^ true
@@ -19,4 +12,9 @@ RMDOldNode >> isOldNode [
 { #category : #printing }
 RMDOldNode >> operator [
 	^ 'old '
+]
+
+{ #category : #accessing }
+RMDOldNode >> precedence [
+	^ 1
 ]

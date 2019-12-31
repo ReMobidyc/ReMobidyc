@@ -4,13 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language'
 }
 
-{ #category : #'instance creation' }
-RMDDeltaNode class >> variable: aRMDVariableNode [
-	^ self new
-		variable: aRMDVariableNode;
-		yourself
-]
-
 { #category : #testing }
 RMDDeltaNode >> isDeltaNode [
 	^ true
@@ -19,4 +12,9 @@ RMDDeltaNode >> isDeltaNode [
 { #category : #accessing }
 RMDDeltaNode >> operator [
 	^ 'Δ'
+]
+
+{ #category : #accessing }
+RMDDeltaNode >> precedence [
+	^ 1
 ]

@@ -178,7 +178,7 @@ RMDGrammarTest >> testExpr2 [
 	expr2 := grammar expr2 parse: 'x'.
 	self assert: expr2 isVariableNode.
 	self assert: expr2 symbol equals: 'x'.
-	expr2 := grammar expr2 parse: 'x^y^z'.
+	expr2 := grammar expr2 parse: 'x^(y^z)'.
 	self assert: expr2 isPowerNode.
 	self assert: expr2 expression1 isVariableNode.
 	self assert: expr2 expression1 symbol equals: 'x'.
@@ -265,17 +265,6 @@ RMDGrammarTest >> testExpr5 [
 	self assert: expr5 expression2 isProductNode.
 	self assert: expr5 expression2 expression1 symbol equals: 'y'.
 	self assert: expr5 expression2 expression2 symbol equals: 'z'
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testFunction [
-	| function |
-	function := grammar function parse: 'max('.
-	self assert: function equals: 'max'.
-	function := grammar function parse: 'max ('.
-	self assert: function equals: 'max'.
-	function := grammar function parse: 'max3('.
-	self assert: function equals: 'max3'
 ]
 
 { #category : #tests }

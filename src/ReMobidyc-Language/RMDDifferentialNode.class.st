@@ -4,13 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language'
 }
 
-{ #category : #'instance creation' }
-RMDDifferentialNode class >> variable: aRMDVariableNode [
-	^ self new
-		variable: aRMDVariableNode;
-		yourself
-]
-
 { #category : #testing }
 RMDDifferentialNode >> isDifferentialNode [
 	^ true
@@ -19,4 +12,9 @@ RMDDifferentialNode >> isDifferentialNode [
 { #category : #printing }
 RMDDifferentialNode >> operator [
 	^ 'd/dt '
+]
+
+{ #category : #accessing }
+RMDDifferentialNode >> precedence [
+	^ 1
 ]
