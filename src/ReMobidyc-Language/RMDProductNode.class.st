@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDProductNode,
 	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }

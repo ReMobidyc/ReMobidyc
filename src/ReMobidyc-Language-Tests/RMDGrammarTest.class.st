@@ -50,7 +50,7 @@ RMDGrammarTest >> testApply [
 { #category : #tests }
 RMDGrammarTest >> testDefinition [
 	| definition |
-	definition := grammar definition parse: 'x[m] = 1'.
+	definition := grammar definition parse: 'x''[m] = 1'.
 	self assert: definition isDirectDefinitionNode.
 	self
 		assert: definition variable
@@ -59,7 +59,7 @@ RMDGrammarTest >> testDefinition [
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
-	definition := grammar definition parse: 'x = 1'.
+	definition := grammar definition parse: 'x'' = 1'.
 	self assert: definition isDirectDefinitionNode.
 	self
 		assert: definition variable
@@ -68,7 +68,7 @@ RMDGrammarTest >> testDefinition [
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
-	definition := grammar definition parse: 'x[m] <+ 1'.
+	definition := grammar definition parse: 'x'' [m] <+ 1'.
 	self assert: definition isAdditiveDefinitionNode.
 	self
 		assert: definition variable
@@ -77,7 +77,7 @@ RMDGrammarTest >> testDefinition [
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
-	definition := grammar definition parse: 'x[m] <* 1'.
+	definition := grammar definition parse: 'x'' [m] <* 1'.
 	self assert: definition isProductiveDefinitionNode.
 	self
 		assert: definition variable

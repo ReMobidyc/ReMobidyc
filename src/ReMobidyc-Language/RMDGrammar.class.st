@@ -2,14 +2,11 @@ Class {
 	#name : #RMDGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
-		'delta',
-		'variable',
-		'unit',
-		'type',
+		'definition',
 		'expression',
 		'identifier'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-Parser'
 }
 
 { #category : #'class access' }
@@ -18,8 +15,8 @@ RMDGrammar >> additionNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> additiveDefinitionNodeClass [
-	^ RMDAdditiveDefinitionNode
+RMDGrammar >> additiveStateDefinitionNodeClass [
+	^ RMDAdditiveStateDefinitionNode
 ]
 
 { #category : #units }
@@ -52,24 +49,17 @@ RMDGrammar >> applyNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> definition [
-	^ (variable / delta , type optional
-		, ('=' asPParser / '<+' asPParser / '<*' asPParser) trimBlanks
-		, expression)
-		==> [ :quad | 
-			(self definitionNodeFor: quad third)
-				variable: quad first
-				type: quad second
-				expression: quad fourth ]
+	^ self stateDefinition
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> definitionNodeFor: aString [
 	aString = '='
-		ifTrue: [ ^ self directDefinitionNodeClass ].
+		ifTrue: [ ^ self directStateDefinitionNodeClass ].
 	aString = '<+'
-		ifTrue: [ ^ self additiveDefinitionNodeClass ].
+		ifTrue: [ ^ self additiveStateDefinitionNodeClass ].
 	aString = '<*'
-		ifTrue: [ ^ self productiveDefinitionNodeClass ].
+		ifTrue: [ ^ self productiveStateDefinitionNodeClass ].
 	^ self error: 'Unknown assignment operator: ' , aString
 ]
 
@@ -82,7 +72,7 @@ RMDGrammar >> delta [
 
 { #category : #'class access' }
 RMDGrammar >> deltaNodeClass [
-	^ RMDDeltaNode
+	^ RMDDeltaVariableNode
 ]
 
 { #category : #'parsers-atoms' }
@@ -100,17 +90,17 @@ RMDGrammar >> differential2 [
 
 { #category : #'class access' }
 RMDGrammar >> differential2NodeClass [
-	^ RMDDifferential2Node
+	^ RMDDifferential2VariableNode
 ]
 
 { #category : #'class access' }
 RMDGrammar >> differentialNodeClass [
-	^ RMDDifferentialNode
+	^ RMDDifferentialVariableNode
 ]
 
 { #category : #'class access' }
-RMDGrammar >> directDefinitionNodeClass [
-	^ RMDDirectDefinitionNode
+RMDGrammar >> directStateDefinitionNodeClass [
+	^ RMDDirectStateDefinitionNode
 ]
 
 { #category : #units }
@@ -123,8 +113,8 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ self parenExpression / self apply / self old / self differential / self differential2 / delta
-		/ variable / self literal
+	^ self parenExpression / self apply / self old / self differential
+		/ self differential2 / self delta / self variable / self literal
 ]
 
 { #category : #'parsers-expressions' }
@@ -225,7 +215,7 @@ RMDGrammar >> old [
 
 { #category : #'class access' }
 RMDGrammar >> oldNodeClass [
-	^ RMDOldNode
+	^ RMDOldVariableNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -244,8 +234,8 @@ RMDGrammar >> productNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> productiveDefinitionNodeClass [
-	^ RMDProductiveDefinitionNode
+RMDGrammar >> productiveStateDefinitionNodeClass [
+	^ RMDProductiveStateDefinitionNode
 ]
 
 { #category : #accessing }
@@ -253,6 +243,19 @@ RMDGrammar >> start [
 	"Answer the production to start this parser with."
 	
 	self definition
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> stateDefinition [
+	^ (self variable / self delta , $' asPParser trimBlanks
+		, self type optional
+		, ('=' asPParser / '<+' asPParser / '<*' asPParser) trimBlanks
+		, expression)
+		==> [ :penta | 
+			(self definitionNodeFor: penta fourth)
+				variable: penta first
+				type: penta third
+				expression: penta fifth ]
 ]
 
 { #category : #'class access' }
@@ -306,7 +309,7 @@ RMDGrammar >> unit [
 
 { #category : #'parsers-units' }
 RMDGrammar >> unitFactor [
-	^ (unit
+	^ (self unit
 		,
 			(($^ asPParser
 				,

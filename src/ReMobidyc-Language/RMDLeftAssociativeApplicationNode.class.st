@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDLeftAssociativeApplicationNode,
 	#superclass : #RMDBinaryOperatorApplicationNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #printing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDVariableNode,
 	#superclass : #RMDAbstractVariableNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }

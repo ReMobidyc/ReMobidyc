@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDSyntaxNode,
 	#superclass : #Object,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #testing }
@@ -50,6 +50,11 @@ RMDSyntaxNode >> isLiteralNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isNextVariableNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isOldNode [
 	^ false
 ]
@@ -66,6 +71,11 @@ RMDSyntaxNode >> isProductNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isProductiveDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isStateDefinitionNode [
 	^ false
 ]
 

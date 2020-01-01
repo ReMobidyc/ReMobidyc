@@ -5,7 +5,7 @@ Class {
 		'literal',
 		'numeric'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }

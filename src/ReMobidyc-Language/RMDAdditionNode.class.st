@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDAdditionNode,
 	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #testing }

@@ -6,7 +6,7 @@ Class {
 		'type',
 		'definitionBody'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
@@ -31,19 +31,6 @@ RMDDefinitionNode >> definitionBody: aRMDExpressionNode [
 { #category : #accessing }
 RMDDefinitionNode >> operator [
 	^ self subclassResponsibility
-]
-
-{ #category : #printing }
-RMDDefinitionNode >> printOn: aStream [
-	variable printOn: aStream.
-	type
-		ifNotNil: [ aStream nextPut: Character space.
-			type printOn: aStream ].
-	aStream
-		nextPut: Character space;
-		nextPutAll: self operator;
-		nextPut: Character space.
-	definitionBody printOn: aStream
 ]
 
 { #category : #accessing }

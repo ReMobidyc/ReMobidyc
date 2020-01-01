@@ -5,7 +5,7 @@ Class {
 		'expression1',
 		'expression2'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }

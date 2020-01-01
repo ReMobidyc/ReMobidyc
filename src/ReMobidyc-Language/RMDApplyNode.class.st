@@ -5,7 +5,7 @@ Class {
 		'function',
 		'arguments'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }

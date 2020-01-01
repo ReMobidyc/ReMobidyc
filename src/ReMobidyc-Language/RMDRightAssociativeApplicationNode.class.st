@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDRightAssociativeApplicationNode,
 	#superclass : #RMDBinaryOperatorApplicationNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #accessing }

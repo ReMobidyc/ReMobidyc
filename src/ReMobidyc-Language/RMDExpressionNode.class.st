@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDExpressionNode,
 	#superclass : #RMDSyntaxNode,
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #arithmetics }
