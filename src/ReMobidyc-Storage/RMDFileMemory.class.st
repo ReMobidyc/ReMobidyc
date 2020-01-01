@@ -2,9 +2,6 @@ Class {
 	#name : #RMDFileMemory,
 	#superclass : #RMDMemory,
 	#instVars : [
-		'values',
-		'oldValues',
-		'old2Values',
 		'digitsPerDirectoryLevel',
 		'basePath',
 		'digitsForTime'
@@ -17,16 +14,6 @@ RMDFileMemory class >> on: aFileReference [
 	^ self new
 		basePath: aFileReference asFileReference;
 		yourself
-]
-
-{ #category : #accessing }
-RMDFileMemory >> at: anInteger ifAbsent: aBlock [
-	^ values at: anInteger ifAbsent: aBlock
-]
-
-{ #category : #accessing }
-RMDFileMemory >> at: anInteger put: aNumber [
-	^ values at: anInteger put: aNumber
 ]
 
 { #category : #'accessing-storage' }
@@ -71,13 +58,6 @@ RMDFileMemory >> digitsPerDirectoryLevel: anInteger [
 	digitsPerDirectoryLevel := anInteger asInteger
 ]
 
-{ #category : #timing }
-RMDFileMemory >> fastSunrise [
-	old2Values := oldValues.
-	oldValues := values.
-	values := Dictionary new
-]
-
 { #category : #'accessing-storage' }
 RMDFileMemory >> fileReferenceForId: anInteger [
 	| stringId |
@@ -97,20 +77,7 @@ RMDFileMemory >> fileReferenceForId: anInteger [
 RMDFileMemory >> initialize [
 	super initialize.
 	digitsForTime := self defaultDigitsForTime.
-	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel.
-	values := Dictionary new.
-	oldValues := Dictionary new.
-	old2Values := Dictionary new
-]
-
-{ #category : #accessing }
-RMDFileMemory >> old2At: anInteger ifAbsent: errorBlock [
-	^ old2Values at: anInteger ifAbsent: errorBlock
-]
-
-{ #category : #accessing }
-RMDFileMemory >> oldAt: anInteger ifAbsent: errorBlock [
-	^ oldValues at: anInteger ifAbsent: errorBlock
+	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel
 ]
 
 { #category : #'accessing-storage' }
@@ -132,22 +99,6 @@ RMDFileMemory >> readValuesForTime: anInteger [
 					value := (csvStream upTo: Character lf) asNumber.
 					vals at: id put: value ].
 			^ vals ]
-]
-
-{ #category : #timing }
-RMDFileMemory >> sunrise [
-	oldValues := time >= 2
-		ifTrue: [ self readValuesForTime: time - 2 ]
-		ifFalse: [ Dictionary new ].
-	oldValues := time >= 1
-		ifTrue: [ self readValuesForTime: time - 1 ]
-		ifFalse: [ Dictionary new ].
-	values := self readValuesForTime: time
-]
-
-{ #category : #timing }
-RMDFileMemory >> sunset [
-	self writeValues: values forTime: time
 ]
 
 { #category : #'accessing-storage' }

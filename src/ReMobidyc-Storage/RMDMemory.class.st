@@ -3,7 +3,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'time',
-		'deltaTime'
+		'deltaTime',
+		'values',
+		'oldValues',
+		'old2Values'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -14,8 +17,8 @@ RMDMemory >> at: anInteger [
 ]
 
 { #category : #accessing }
-RMDMemory >> at: anInteger ifAbsent: errorBlock [
-	^ self subclassResponsibility
+RMDMemory >> at: anInteger ifAbsent: aBlock [
+	^ values at: anInteger ifAbsent: aBlock
 ]
 
 { #category : #accessing }
@@ -26,8 +29,8 @@ RMDMemory >> at: anInteger ifAbsentPut: aBlock [
 ]
 
 { #category : #accessing }
-RMDMemory >> at: anInteger put: aFloatOrInteger [
-	^ self subclassResponsibility
+RMDMemory >> at: anInteger put: aNumber [
+	^ values at: anInteger put: aNumber
 ]
 
 { #category : #accessing }
@@ -85,7 +88,9 @@ RMDMemory >> differentialAt: anInteger ifAbsent: errorBlock [
 
 { #category : #timing }
 RMDMemory >> fastSunrise [
-	^ self sunrise
+	old2Values := oldValues.
+	oldValues := values.
+	values := Dictionary new
 ]
 
 { #category : #timing }
@@ -97,7 +102,10 @@ RMDMemory >> fastSunset [
 RMDMemory >> initialize [
 	super initialize.
 	deltaTime := 1.0.
-	time := 0
+	time := 0.
+	values := Dictionary new.
+	oldValues := Dictionary new.
+	old2Values := Dictionary new
 ]
 
 { #category : #accessing }
@@ -107,7 +115,7 @@ RMDMemory >> old2At: anInteger [
 
 { #category : #accessing }
 RMDMemory >> old2At: anInteger ifAbsent: errorBlock [
-	^ self subclassResponsibility
+	^ old2Values at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
@@ -117,17 +125,28 @@ RMDMemory >> oldAt: anInteger [
 
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
+	^ oldValues at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> readValuesForTime: anInteger [
 	^ self subclassResponsibility
 ]
 
 { #category : #timing }
 RMDMemory >> sunrise [
-	^ self subclassResponsibility
+	oldValues := time >= 2
+		ifTrue: [ self readValuesForTime: time - 2 ]
+		ifFalse: [ Dictionary new ].
+	oldValues := time >= 1
+		ifTrue: [ self readValuesForTime: time - 1 ]
+		ifFalse: [ Dictionary new ].
+	values := self readValuesForTime: time
 ]
 
 { #category : #timing }
 RMDMemory >> sunset [
-	^ self subclassResponsibility
+	self writeValues: values forTime: time
 ]
 
 { #category : #timing }
@@ -144,4 +163,9 @@ RMDMemory >> time: anInteger [
 	self sunset.
 	time := anInteger.
 	self sunrise
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> writeValues: aDictionary forTime: anInteger [
+	^ self subclassResponsibility
 ]
