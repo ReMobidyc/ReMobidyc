@@ -33,6 +33,22 @@ RMDDefinitionNode >> operator [
 	^ self subclassResponsibility
 ]
 
+{ #category : #printing }
+RMDDefinitionNode >> printOn: aStream [
+	variable printOn: aStream.
+	aStream
+		nextPut: $';
+		nextPut: Character space.
+	type
+		ifNotNil: [ aStream nextPut: Character space.
+			type printOn: aStream ].
+	aStream
+		nextPut: Character space;
+		nextPutAll: self operator;
+		nextPut: Character space.
+	definitionBody printOn: aStream
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> type [
 	^ type

@@ -51,7 +51,7 @@ RMDGrammarTest >> testApply [
 RMDGrammarTest >> testDefinition [
 	| definition |
 	definition := grammar definition parse: 'x''[m] = 1'.
-	self assert: definition isDirectDefinitionNode.
+	self assert: definition isPropertyDirectDefinitionNode.
 	self
 		assert: definition variable
 		equals: (grammar variable parse: 'x').
@@ -60,7 +60,7 @@ RMDGrammarTest >> testDefinition [
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
 	definition := grammar definition parse: 'x'' = 1'.
-	self assert: definition isDirectDefinitionNode.
+	self assert: definition isPropertyDirectDefinitionNode.
 	self
 		assert: definition variable
 		equals: (grammar variable parse: 'x').
@@ -69,7 +69,7 @@ RMDGrammarTest >> testDefinition [
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
 	definition := grammar definition parse: 'x'' [m] <+ 1'.
-	self assert: definition isAdditiveDefinitionNode.
+	self assert: definition isPropertyAdditiveDefinitionNode.
 	self
 		assert: definition variable
 		equals: (grammar variable parse: 'x').
@@ -78,7 +78,7 @@ RMDGrammarTest >> testDefinition [
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1').
 	definition := grammar definition parse: 'x'' [m] <* 1'.
-	self assert: definition isProductiveDefinitionNode.
+	self assert: definition isPropertyProductiveDefinitionNode.
 	self
 		assert: definition variable
 		equals: (grammar variable parse: 'x').
@@ -298,6 +298,71 @@ RMDGrammarTest >> testOld [
 	self assert: modifiedVariable symbol equals: '変数'.
 	modifiedVariable := grammar old parse: ' x'.
 	self assert: modifiedVariable isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPropertyDefinition [
+	| definition |
+	definition := grammar definition parse: 'x''[m] = 1'.
+	self assert: definition isPropertyDirectDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x'' = 1'.
+	self assert: definition isPropertyDirectDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type isNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x'' [m] <+ 1'.
+	self assert: definition isPropertyAdditiveDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar definition parse: 'x'' [m] <* 1'.
+	self assert: definition isPropertyProductiveDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testUtilityDefinition [
+	| definition |
+	definition := grammar utilityDefinition parse: 'x[m] = 1'.
+	self assert: definition isUtilityDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type notNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+	definition := grammar utilityDefinition parse: 'x = 1'.
+	self assert: definition isUtilityDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar variable parse: 'x').
+	self assert: definition type isNil.
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1').
+
 ]
 
 { #category : #tests }
