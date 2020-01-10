@@ -14,6 +14,23 @@ RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> agentReference [
+	^ (#letter asPParser
+		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
+		flatten
+		==> [ :name | 
+			name first isUppercase
+				ifTrue: [ self agentReferenceNodeClass identifier: name ]
+				ifFalse: [ PP2Failure
+						message: 'An agent name must start with a uppercase letter.' ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> agentReferenceNodeClass [
+	^ RMDAgentReferenceNode
+]
+
 { #category : #units }
 RMDGrammar >> allUnits [
 	^ Dictionary new
@@ -47,22 +64,11 @@ RMDGrammar >> definition [
 	^ self propertyDefinition
 ]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> definitionNodeFor: aString [
-	aString = '='
-		ifTrue: [ ^ self propertyDirectDefinitionNodeClass ].
-	aString = '<+'
-		ifTrue: [ ^ self propertyAdditiveDefinitionNodeClass ].
-	aString = '<*'
-		ifTrue: [ ^ self propertyProductiveDefinitionNodeClass ].
-	^ self error: 'Unknown assignment operator: ' , aString
-]
-
 { #category : #'parsers-atoms' }
 RMDGrammar >> delta [
-	^ ('delta' asPParser / 'Δ' asPParser , #blank asPParser plus
-		, identifier)
-		==> [ :triple | self deltaNodeClass symbol: triple third ]
+	^ (('delta' asPParser , #blank asPParser plus)
+		/ 'Δ' asPParser trimBlanks , identifier)
+		==> [ :pair | self deltaNodeClass identifier: pair second ]
 ]
 
 { #category : #'class access' }
@@ -73,14 +79,14 @@ RMDGrammar >> deltaNodeClass [
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential [
 	^ ('d/dt' asPParser , #blank asPParser plus , identifier)
-		==> [ :triple | self differentialNodeClass symbol: triple third ]
+		==> [ :triple | self differentialNodeClass identifier: triple third ]
 ]
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential2 [
 	^ ('d2/dt2' asPParser / 'd^2/dt^2' asPParser , #blank asPParser plus
 		, identifier)
-		==> [ :triple | self differential2NodeClass symbol: triple third ]
+		==> [ :triple | self differential2NodeClass identifier: triple third ]
 ]
 
 { #category : #'class access' }
@@ -103,7 +109,7 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ self parenExpression / self apply / self old / self differential
+	^ self parenExpression / self apply / self differential
 		/ self differential2 / self delta / self variable / self literal
 ]
 
@@ -165,6 +171,21 @@ RMDGrammar >> expression [
 	^ self expr5
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> externalVariable [
+	^ (self agentReference
+		, ('''s' asPParser , #blank asPParser) trimBlanks , identifier)
+		==> [ :triple | 
+			self externalVariableNodeClass
+				agent: triple first
+				identifier: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> externalVariableNodeClass [
+	^ RMDExternalVariableNode
+]
+
 { #category : #'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
@@ -175,6 +196,11 @@ RMDGrammar >> identifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
 		flatten
+		==> [ :name | 
+			name first isLowercase
+				ifTrue: [ name ]
+				ifFalse:
+					[ PP2Failure message: 'An identifier must start with a lowercase letter.' ] ]
 ]
 
 { #category : #units }
@@ -187,25 +213,16 @@ RMDGrammar >> lengthUnits [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> literal [
-	^ ($- asPParser optional , #digit asPParser plus
+	^ (($- asPParser optional , #digit asPParser plus
 		, ($. asPParser , #digit asPParser plus) optional) flatten
-		==> [ :numeric | self literalNodeClass literal: numeric ]
+		, self type)
+		==>
+			[ :pair | self literalNodeClass literal: pair first type: pair second ]
 ]
 
 { #category : #'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> old [
-	^ ('old' asPParser , #blank asPParser plus , identifier)
-		==> [ :triple | self oldNodeClass symbol: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> oldNodeClass [
-	^ RMDOldVariableNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -223,32 +240,19 @@ RMDGrammar >> productNodeClass [
 	^ RMDProductNode
 ]
 
-{ #category : #'class access' }
-RMDGrammar >> propertyAdditiveDefinitionNodeClass [
-	^ RMDPropertyAdditiveDefinitionNode
-]
-
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
-	^ (self variable / self delta , $' asPParser trimBlanks
-		, self type optional
-		, ('=' asPParser / '<+' asPParser / '<*' asPParser) trimBlanks
-		, expression)
-		==> [ :penta | 
-			(self definitionNodeFor: penta fourth)
-				variable: penta first
-				type: penta third
-				expression: penta fifth ]
+	^ (self delta / self variable , $' asPParser trimBlanks
+		, '=' asPParser trimBlanks , expression)
+		==> [ :quad | 
+			self propertyDefinitionNodeClass
+				variable: quad first
+				expression: quad fourth ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> propertyDirectDefinitionNodeClass [
-	^ RMDPropertyDirectDefinitionNode
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyProductiveDefinitionNodeClass [
-	^ RMDPropertyProductiveDefinitionNode
+RMDGrammar >> propertyDefinitionNodeClass [
+	^ RMDPropertyDefinitionNode
 ]
 
 { #category : #accessing }
@@ -283,21 +287,22 @@ RMDGrammar >> timeUnits [
 RMDGrammar >> type [
 	^ ($[ asPParser trimBlanks
 		,
-			((self unitFactor separatedBy: #blank asPParser plus)
-				==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ])
-		,
-			((($/ asPParser trimBlanks
+			(((self unitFactor separatedBy: #blank asPParser plus)
+				==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ]
 				,
-					((self unitFactor separatedBy: #blank asPParser plus)
-						==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ]))
-				==> [ :pair | 
-					pair second
-						collect: [ :unitAndPow | 
-							unitAndPow
-								at: 2 put: unitAndPow second negated;
-								yourself ] ]) optional
-				==> [ :denominator | denominator ifNil: [ #() ] ])
-		, $] asPParser trimBlanks) ==> [ :quad | quad second , quad third ]
+					((($/ asPParser trimBlanks
+						,
+							((self unitFactor separatedBy: #blank asPParser plus)
+								==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ]))
+						==> [ :pair | 
+							pair second
+								collect: [ :unitAndPow | 
+									unitAndPow
+										at: 2 put: unitAndPow second negated;
+										yourself ] ]) optional
+						==> [ :denominator | denominator ifNil: [ #() ] ]))
+				==> [ :pair | pair first , pair second ]) optional
+		, $] asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-units' }
@@ -325,13 +330,11 @@ RMDGrammar >> unitFactor [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> utilityDefinition [
-	^ (self variable , self type optional , '=' asPParser trimBlanks
-		, expression)
-		==> [ :quad | 
+	^ (self variable , '=' asPParser trimBlanks , expression)
+		==> [ :triple | 
 			self utilityDefinitionNode
-				variable: quad first
-				type: quad second
-				expression: quad fourth ]
+				variable: triple first
+				expression: triple third ]
 ]
 
 { #category : #'class access' }
@@ -341,7 +344,7 @@ RMDGrammar >> utilityDefinitionNode [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> variable [
-	^ identifier ==> [ :symbol | self variableNodeClass symbol: symbol ]
+	^ identifier ==> [ :symbol | self variableNodeClass identifier: symbol ]
 ]
 
 { #category : #'class access' }

@@ -10,6 +10,11 @@ RMDSyntaxNode >> isAdditionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAgentReferenceNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isApplyNode [
 	^ false
 ]
@@ -26,6 +31,16 @@ RMDSyntaxNode >> isDifferential2Node [
 
 { #category : #testing }
 RMDSyntaxNode >> isDifferentialNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isExpressionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isExternalVariableNode [
 	^ false
 ]
 
@@ -66,11 +81,6 @@ RMDSyntaxNode >> isPropertyAdditiveDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isPropertyDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyDirectDefinitionNode [
 	^ false
 ]
 

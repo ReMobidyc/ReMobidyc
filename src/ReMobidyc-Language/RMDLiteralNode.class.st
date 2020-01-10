@@ -3,21 +3,29 @@ Class {
 	#superclass : #RMDExpressionNode,
 	#instVars : [
 		'literal',
-		'numeric'
+		'numeric',
+		'type'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDLiteralNode class >> literal: aString [
+RMDLiteralNode class >> literal: aString type: aRMDTypeNode [
 	^ self new
 		literal: aString;
+		type: aRMDTypeNode;
 		yourself
 ]
 
 { #category : #comparing }
 RMDLiteralNode >> = anObject [
 	^ self class = anObject class and: [ literal = anObject literal ]
+]
+
+{ #category : #private }
+RMDLiteralNode >> computeNumeric [
+	<todo: 'need to normalize by metrics'>
+	^ literal asNumber
 ]
 
 { #category : #comparing }
@@ -42,7 +50,7 @@ RMDLiteralNode >> literal: aString [
 
 { #category : #accessing }
 RMDLiteralNode >> numeric [
-	^ numeric := literal asNumber
+	^ numeric ifNil: [ numeric := self computeNumeric ]
 ]
 
 { #category : #accessing }
@@ -53,4 +61,14 @@ RMDLiteralNode >> precedence [
 { #category : #printing }
 RMDLiteralNode >> printOn: aStream [
 	aStream nextPutAll: self literal
+]
+
+{ #category : #private }
+RMDLiteralNode >> type [
+	^ type
+]
+
+{ #category : #private }
+RMDLiteralNode >> type: aRMDTypeNode [
+	type := aRMDTypeNode
 ]

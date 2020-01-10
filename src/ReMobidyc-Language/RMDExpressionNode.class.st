@@ -24,6 +24,11 @@ RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]
 
+{ #category : #testing }
+RMDExpressionNode >> isExpressionNode [
+	^ true
+]
+
 { #category : #accessing }
 RMDExpressionNode >> precedence [
 	^ self subclassResponsibility

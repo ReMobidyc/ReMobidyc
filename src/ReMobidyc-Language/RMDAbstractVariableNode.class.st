@@ -2,26 +2,36 @@ Class {
 	#name : #RMDAbstractVariableNode,
 	#superclass : #RMDExpressionNode,
 	#instVars : [
-		'symbol'
+		'identifier'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDAbstractVariableNode class >> symbol: aString [
+RMDAbstractVariableNode class >> identifier: aString [
 	^ self new
-		symbol: aString;
+		identifier: aString;
 		yourself
 ]
 
 { #category : #comparing }
 RMDAbstractVariableNode >> = anObject [
-	^ self class = anObject class and: [ symbol = anObject symbol ]
+	^ self class = anObject class and: [ identifier = anObject identifier ]
 ]
 
 { #category : #comparing }
 RMDAbstractVariableNode >> hash [
-	^ self class hash bitXor: symbol hash
+	^ self class hash bitXor: identifier hash
+]
+
+{ #category : #accessing }
+RMDAbstractVariableNode >> identifier [
+	^ identifier
+]
+
+{ #category : #accessing }
+RMDAbstractVariableNode >> identifier: aString [
+	identifier := aString
 ]
 
 { #category : #accessing }
@@ -32,15 +42,5 @@ RMDAbstractVariableNode >> operator [
 { #category : #printing }
 RMDAbstractVariableNode >> printOn: aStream [
 	aStream nextPutAll: self operator.
-	aStream nextPutAll: symbol
-]
-
-{ #category : #accessing }
-RMDAbstractVariableNode >> symbol [
-	^ symbol
-]
-
-{ #category : #accessing }
-RMDAbstractVariableNode >> symbol: aString [
-	symbol := aString
+	aStream nextPutAll: identifier
 ]

@@ -8,3 +8,8 @@ Class {
 RMDPropertyDefinitionNode >> isPropertyDefinitionNode [
 	^ true
 ]
+
+{ #category : #accessing }
+RMDPropertyDefinitionNode >> operator [
+	^ '='
+]
