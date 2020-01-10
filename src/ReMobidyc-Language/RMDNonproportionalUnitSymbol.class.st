@@ -1,19 +1,42 @@
 Class {
-	#name : #RMDNonproportionalUnitSymbol,
-	#superclass : #Object,
+	#name : #RMDNonProportionalUnitSymbol,
+	#superclass : #RMDNonSIUnitSymbol,
 	#instVars : [
-		'toNormalBlock',
-		'fromNormalizedBlock'
+		'fromSIBlock',
+		'toSIBlock'
 	],
-	#category : #'ReMobidyc-Language'
+	#category : #'ReMobidyc-Language-Units'
 }
 
-{ #category : #private }
-RMDNonproportionalUnitSymbol >> setFromNormalizedBlock: aBlock [
-	fromNormalizedBlock := aBlock
+{ #category : #'instance creation' }
+RMDNonProportionalUnitSymbol class >> newSymbol: aString fromSI: fromNormalUnitBlock toSI: toNormalUnitBlock siUnit: aRMDUnit [
+	^ (self newSymbol: aString siUnit: aRMDUnit)
+		setFromSIBlock: fromNormalUnitBlock;
+		setToSIBlock: toNormalUnitBlock;
+		yourself
+]
+
+{ #category : #conversions }
+RMDNonProportionalUnitSymbol >> fromSI: aNumber [
+	^ fromSIBlock value: aNumber
+]
+
+{ #category : #testing }
+RMDNonProportionalUnitSymbol >> isProportional [
+	^ false
 ]
 
 { #category : #private }
-RMDNonproportionalUnitSymbol >> setToNormalBlock: aBlock [
-	toNormalBlock := aBlock
+RMDNonProportionalUnitSymbol >> setFromSIBlock: aBlock [
+	fromSIBlock := aBlock
+]
+
+{ #category : #private }
+RMDNonProportionalUnitSymbol >> setToSIBlock: aBlock [
+	toSIBlock := aBlock
+]
+
+{ #category : #conversions }
+RMDNonProportionalUnitSymbol >> toSI: aNumber [
+	^ toSIBlock value: aNumber
 ]
