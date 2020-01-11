@@ -6,8 +6,19 @@ Class {
 		'expression',
 		'identifier'
 	],
+	#classVars : [
+		'Builtins',
+		'Keywords'
+	],
 	#category : #'ReMobidyc-Language-Parser'
 }
+
+{ #category : #'accessing method dictionary' }
+RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
+	Keywords := nil.
+	Builtins := nil.
+	^ super addSelectorSilently: selector withMethod: compiledMethod
+]
 
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
@@ -20,10 +31,12 @@ RMDGrammar >> agentReference [
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
 		flatten
 		==> [ :name | 
-			name first isUppercase
-				ifTrue: [ self agentReferenceNodeClass identifier: name ]
-				ifFalse: [ PP2Failure
-						message: 'An agent name must start with a uppercase letter.' ] ]
+			(self keywords includes: name)
+				ifTrue: [ PP2Failure message: name , ' is a reserved word.' ]
+				ifFalse: [ name first isUppercase
+						ifTrue: [ self agentReferenceNodeClass identifier: name ]
+						ifFalse: [ PP2Failure
+								message: 'An agent name must start with a uppercase letter.' ] ] ]
 ]
 
 { #category : #'class access' }
@@ -57,6 +70,14 @@ RMDGrammar >> apply [
 { #category : #'class access' }
 RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
+]
+
+{ #category : #accessing }
+RMDGrammar >> builtins [
+	^ Builtins
+		ifNil:
+			[ Builtins := 'World Cell Animat x y heading North South West East north south east west'
+				substrings asSet ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -197,10 +218,20 @@ RMDGrammar >> identifier [
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
 		flatten
 		==> [ :name | 
-			name first isLowercase
-				ifTrue: [ name ]
-				ifFalse:
-					[ PP2Failure message: 'An identifier must start with a lowercase letter.' ] ]
+			(self keywords includes: name)
+				ifTrue: [ PP2Failure message: name , ' is a reserved word.' ]
+				ifFalse: [ name first isLowercase
+						ifTrue: [ name ]
+						ifFalse: [ PP2Failure
+								message: 'An identifier must start with a lowercase letter.' ] ] ]
+]
+
+{ #category : #accessing }
+RMDGrammar >> keywords [
+	^ Keywords
+		ifNil:
+			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become'
+				substrings asSet ]
 ]
 
 { #category : #units }
