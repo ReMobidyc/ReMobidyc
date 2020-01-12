@@ -64,11 +64,11 @@ RMDLiteralNode >> precedence [
 
 { #category : #printing }
 RMDLiteralNode >> printOn: aStream [
-	aStream
-		nextPutAll: self literal;
-		nextPut: $[.
-	type printOn: aStream.
-	aStream nextPut: $]
+	aStream nextPutAll: self literal.
+	type hasDimension
+		ifTrue: [ aStream nextPut: $[.
+			type printOn: aStream.
+			aStream nextPut: $] ]
 ]
 
 { #category : #private }

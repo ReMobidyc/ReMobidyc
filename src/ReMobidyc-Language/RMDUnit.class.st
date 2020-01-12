@@ -196,6 +196,11 @@ RMDUnit >> fromSI: aNumber [
 ]
 
 { #category : #testing }
+RMDUnit >> hasDimension [
+	^ true
+]
+
+{ #category : #testing }
 RMDUnit >> isCompound [
 	^ self subclassResponsibility
 ]

@@ -26,6 +26,11 @@ RMDDefinitionNode >> definitionBody: aRMDExpressionNode [
 	definitionBody := aRMDExpressionNode
 ]
 
+{ #category : #evaluating }
+RMDDefinitionNode >> evalIn: aRMDInterpreter [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> operator [
 	^ self subclassResponsibility

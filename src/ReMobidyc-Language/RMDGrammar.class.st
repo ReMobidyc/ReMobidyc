@@ -261,9 +261,11 @@ RMDGrammar >> lengthUnits [
 RMDGrammar >> literal [
 	^ (($- asPParser optional , #digit asPParser plus
 		, ($. asPParser , #digit asPParser plus) optional) flatten
-		, self type)
-		==>
-			[ :pair | self literalNodeClass literal: pair first type: pair second ]
+		, self type optional)
+		==> [ :pair | 
+			self literalNodeClass
+				literal: pair first
+				type: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
 { #category : #'class access' }

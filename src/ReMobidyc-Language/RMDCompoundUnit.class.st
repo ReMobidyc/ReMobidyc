@@ -87,6 +87,11 @@ RMDCompoundUnit >> fromSI: aNumber [
 	^ value
 ]
 
+{ #category : #testing }
+RMDCompoundUnit >> hasDimension [
+	^ unitSymbolsAndOrders notEmpty
+]
+
 { #category : #comparing }
 RMDCompoundUnit >> hash [
 	^ self class hash bitXor: unitSymbolsAndOrders hash

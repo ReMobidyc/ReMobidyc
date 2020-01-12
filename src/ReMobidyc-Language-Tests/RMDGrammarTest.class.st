@@ -246,7 +246,11 @@ RMDGrammarTest >> testLiteral [
 	| literal |
 	literal := grammar literal parse: '3.14[]'.
 	self assert: literal literal equals: '3.14'.
-	self assert: literal type equals: (grammar type parse: '[]').
+	self assert: literal type equals: RMDUnit noDimension.
+	self assert: literal numeric closeTo: 3.14.
+	literal := grammar literal parse: '3.14'.
+	self assert: literal literal equals: '3.14'.
+	self assert: literal type equals: RMDUnit noDimension.
 	self assert: literal numeric closeTo: 3.14.
 	literal := grammar literal parse: '-3.14[]'.
 	self assert: literal literal equals: '-3.14'.

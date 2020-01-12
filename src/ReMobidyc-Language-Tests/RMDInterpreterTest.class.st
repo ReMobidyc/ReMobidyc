@@ -135,6 +135,21 @@ RMDInterpreterTest >> testWriteToDeltaAgentIfAbsent [
 ]
 
 { #category : #tests }
+RMDInterpreterTest >> testWriteToUtility [
+	interpreter
+		write: 1.0 toUtility: 'foo';
+		write: 2.0 toUtility: 'bar'.
+	self
+		assert: (interpreter readUtility: 'foo' ifAbsent: [ nil ])
+		closeTo: 1.0.
+	self
+		assert: (interpreter readUtility: 'bar' ifAbsent: [ nil ])
+		closeTo: 2.0.
+	self
+		assert: (interpreter readUtility: 'nothing' ifAbsent: [ nil ]) isNil
+]
+
+{ #category : #tests }
 RMDInterpreterTest >> testWriteToVariableAgentIfAbsent [
 	interpreter context
 		setMemoryAddressFor: 'x' agent: 'foo' to: 1;

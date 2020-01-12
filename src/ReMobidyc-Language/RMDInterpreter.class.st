@@ -78,7 +78,7 @@ RMDInterpreter >> readDifferential: aString agent: anotherString ifAbsent: error
 
 { #category : #'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
-	^ context utilityAt: aString ifAbsent: errorBlock
+	^ (context utilityAt: aString ifAbsent: errorBlock) evalIn: self
 ]
 
 { #category : #'variable access' }
@@ -104,13 +104,19 @@ RMDInterpreter >> setMemory: aRMDMemory [
 
 { #category : #'variable access' }
 RMDInterpreter >> write: aNumber toDelta: aString agent: anotherString ifAbsent: errorBlock [
-	^ memory
+	memory
 		nextDeltaAt:
 			(context
 				getMemoryAddressFor: aString
 				agent: anotherString
 				ifAbsent: [ ^ errorBlock value ])
-		add: aNumber
+		add: aNumber.
+	^ aNumber
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> write: aNumber toUtility: aString [
+	^ context utilityAt: aString put: aNumber
 ]
 
 { #category : #'variable access' }
