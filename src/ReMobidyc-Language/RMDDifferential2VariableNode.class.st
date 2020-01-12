@@ -4,8 +4,13 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #evaluating }
+RMDDifferential2VariableNode >> evalIn: aRMDInterpreter [
+	^ aRMDInterpreter readDifferential2At: identifier
+]
+
 { #category : #testing }
-RMDDifferential2VariableNode >> isDifferential2Node [
+RMDDifferential2VariableNode >> isDifferential2VariableNode [
 	^ true
 ]
 

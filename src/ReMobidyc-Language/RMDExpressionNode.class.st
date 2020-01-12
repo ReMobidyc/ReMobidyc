@@ -24,6 +24,11 @@ RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]
 
+{ #category : #evaluating }
+RMDExpressionNode >> evalIn: aRMDInterpreter [
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 RMDExpressionNode >> isExpressionNode [
 	^ true

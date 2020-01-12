@@ -33,14 +33,20 @@ RMDMemoryTest >> tearDown [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testAt [
+	memory at: 1 put: 2.
+	self assert: (memory at: 1) equals: 2.
+	self should: [ memory at: 3 ] raise: KeyNotFound
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testAtIfAbsent [
 	memory at: 1 put: 2.
 	self assert: (memory at: 1 ifAbsent: [ 3 ]) equals: 2.
-	memory at: 1 ifAbsentPut: [ 4 ].
-	self deny: (memory at: 1) equals: 4.
-	self assert: (memory at: 1) equals: 2.
-	memory at: 2 ifAbsentPut: [ 4 ].
-	self assert: (memory at: 2) equals: 4
+	self assert: (memory at: 2 ifAbsent: [ 3 ]) equals: 3.
+	memory at: 2 put: 4.
+	self deny: (memory at: 2 ifAbsent: [ 3 ]) equals: 3.
+	self assert: (memory at: 2 ifAbsent: [ 3 ]) equals: 4
 ]
 
 { #category : #tests }
@@ -172,6 +178,42 @@ RMDMemoryTest >> testDifferentialAtIfAbsent [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testNextAt [
+	memory nextAt: 1 put: 2.
+	self assert: (memory nextAt: 1) equals: 2.
+	self should: [ memory nextAt: 3 ] raise: KeyNotFound
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testNextAtIfAbsent [
+	memory nextAt: 1 put: 2.
+	self assert: (memory nextAt: 1 ifAbsent: [ 3 ]) equals: 2.
+	self assert: (memory nextAt: 2 ifAbsent: [ 3 ]) equals: 3.
+	memory nextAt: 2 put: 4.
+	self deny: (memory nextAt: 2 ifAbsent: [ 3 ]) equals: 3.
+	self assert: (memory nextAt: 2 ifAbsent: [ 3 ]) equals: 4
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testNextAtIfAbsentPut [
+	memory nextAt: 1 put: 2.
+	self assert: (memory nextAt: 1 ifAbsentPut: [ 3 ]) equals: 2.
+	memory nextAt: 1 ifAbsentPut: [ 4 ].
+	self deny: (memory nextAt: 1) equals: 4.
+	self assert: (memory nextAt: 1) equals: 2.
+	memory nextAt: 2 ifAbsentPut: [ 4 ].
+	self assert: (memory nextAt: 2) equals: 4
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testNextAtPut [
+	memory nextAt: 1 put: 2.
+	memory nextAt: 3 put: 4.
+	self assert: (memory nextAt: 1) equals: 2.
+	self assert: (memory nextAt: 3) equals: 4
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testOldAt [
 	memory
 		at: 1 put: 2;
@@ -204,26 +246,29 @@ RMDMemoryTest >> testOldAtIfAbsent [
 RMDMemoryTest >> testTick [
 	memory at: 1 put: 2.
 	memory at: 3 put: 4.
+	memory nextAt: 5 put: 6.
 	self assert: (memory at: 1) equals: 2.
 	self assert: (memory at: 3) equals: 4.
+	self assert: (memory nextAt: 5) equals: 6.
+	self should: [ memory at: 5 ] raise: KeyNotFound.
 	memory tick.
-	self assert: (memory oldAt: 1) equals: 2.
-	self assert: (memory oldAt: 3) equals: 4.
-	self should: [ memory oldAt: 5 ] raise: KeyNotFound.
 	self should: [ memory at: 1 ] raise: KeyNotFound.
 	self should: [ memory at: 3 ] raise: KeyNotFound.
-	self should: [ memory at: 5 ] raise: KeyNotFound
+	self assert: (memory at: 5) equals: 6.
+	self assert: (memory oldAt: 1) equals: 2.
+	self assert: (memory oldAt: 3) equals: 4.
+	self should: [ memory oldAt: 5 ] raise: KeyNotFound
 ]
 
 { #category : #tests }
 RMDMemoryTest >> testTime [
 	memory at: 1 put: 2.
 	memory at: 3 put: 4.
+	memory nextAt: 1 put: 5.
 	memory tick.
-	memory at: 1 put: 5.
 	memory at: 3 put: 6.
+	memory nextAt: 1 put: 7.
 	memory tick.
-	memory at: 1 put: 7.
 	memory at: 8 put: 9.
 	memory time: 1.
 	self assert: (memory at: 1) equals: 5.

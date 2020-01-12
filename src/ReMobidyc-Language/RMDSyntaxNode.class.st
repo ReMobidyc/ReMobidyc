@@ -20,17 +20,17 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isDeltaNode [
+RMDSyntaxNode >> isDeltaVariableNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isDifferential2Node [
+RMDSyntaxNode >> isDifferential2VariableNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isDifferentialNode [
+RMDSyntaxNode >> isDifferentialVariableNode [
 	^ false
 ]
 

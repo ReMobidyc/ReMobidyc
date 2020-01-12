@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'definition',
 		'expression',
-		'identifier'
+		'identifier',
+		'agentReference'
 	],
 	#classVars : [
 		'Builtins',
@@ -26,7 +27,7 @@ RMDGrammar >> additionNodeClass [
 ]
 
 { #category : #'parsers-atoms' }
-RMDGrammar >> agentReference [
+RMDGrammar >> agentIdentifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
 		flatten
@@ -34,14 +35,15 @@ RMDGrammar >> agentReference [
 			(self keywords includes: name)
 				ifTrue: [ PP2Failure message: name , ' is a reserved word.' ]
 				ifFalse: [ name first isUppercase
-						ifTrue: [ self agentReferenceNodeClass identifier: name ]
+						ifTrue: [ name ]
 						ifFalse: [ PP2Failure
 								message: 'An agent name must start with a uppercase letter.' ] ] ]
 ]
 
-{ #category : #'class access' }
-RMDGrammar >> agentReferenceNodeClass [
-	^ RMDAgentReferenceNode
+{ #category : #'parsers-atoms' }
+RMDGrammar >> agentReference [
+	^ ((self agentIdentifier , '''s ' asPParser trimBlanks) ==> #first)
+		optional
 ]
 
 { #category : #units }
@@ -85,38 +87,60 @@ RMDGrammar >> definition [
 	^ self propertyDefinition
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : #'as yet unclassified' }
 RMDGrammar >> delta [
-	^ (('delta' asPParser , #blank asPParser plus)
-		/ 'Δ' asPParser trimBlanks , identifier)
-		==> [ :pair | self deltaNodeClass identifier: pair second ]
+	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> deltaVariable [
+	^ (agentReference , self delta , identifier)
+		==> [ :triple | 
+			self deltaVariableNodeClass
+				identifier: triple third
+				agent: triple first ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> deltaNodeClass [
+RMDGrammar >> deltaVariableNodeClass [
 	^ RMDDeltaVariableNode
 ]
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential [
-	^ ('d/dt' asPParser , #blank asPParser plus , identifier)
-		==> [ :triple | self differentialNodeClass identifier: triple third ]
+	^ 'd/dt ' asPParser trimBlanks
 ]
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential2 [
-	^ ('d2/dt2' asPParser / 'd^2/dt^2' asPParser , #blank asPParser plus
-		, identifier)
-		==> [ :triple | self differential2NodeClass identifier: triple third ]
+	^ ('d2/dt2 ' asPParser / 'd^2/dt^2 ' asPParser) trimBlanks
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> differential2Variable [
+	^ (self agentReference , self differential2 , identifier)
+		==> [ :triple | 
+			self differential2VariableNodeClass
+				identifier: triple third
+				agent: triple first ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> differential2NodeClass [
+RMDGrammar >> differential2VariableNodeClass [
 	^ RMDDifferential2VariableNode
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> differentialVariable [
+	^ (agentReference , self differential , identifier)
+		==> [ :triple | 
+			self differentialVariableNodeClass
+				identifier: triple third
+				agent: triple first ]
+]
+
 { #category : #'class access' }
-RMDGrammar >> differentialNodeClass [
+RMDGrammar >> differentialVariableNodeClass [
 	^ RMDDifferentialVariableNode
 ]
 
@@ -130,8 +154,8 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ self parenExpression / self apply / self differential
-		/ self differential2 / self delta / self variable / self literal
+	^ self parenExpression / self apply / self differentialVariable
+		/ self differential2Variable / self deltaVariable / self variable / self literal
 ]
 
 { #category : #'parsers-expressions' }
@@ -190,16 +214,6 @@ RMDGrammar >> expr5 [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expression [
 	^ self expr5
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> externalVariable [
-	^ (self agentReference
-		, ('''s' asPParser , #blank asPParser) trimBlanks , identifier)
-		==> [ :triple | 
-			self externalVariableNodeClass
-				agent: triple first
-				identifier: triple third ]
 ]
 
 { #category : #'class access' }
@@ -273,7 +287,7 @@ RMDGrammar >> productNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
-	^ (self delta / self variable , $' asPParser trimBlanks
+	^ (self deltaVariable / self variable , $' asPParser trimBlanks
 		, '=' asPParser trimBlanks , expression)
 		==> [ :quad | 
 			self propertyDefinitionNodeClass
@@ -316,36 +330,24 @@ RMDGrammar >> timeUnits [
 
 { #category : #'parsers-units' }
 RMDGrammar >> type [
-	^ ($[ asPParser trimBlanks
-		,
-			(((self unitFactor separatedBy: #blank asPParser plus)
-				==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ]
-				,
-					((($/ asPParser trimBlanks
-						,
-							((self unitFactor separatedBy: #blank asPParser plus)
-								==> [ :array | (1 to: array size by: 2) collect: [ :i | array at: i ] ]))
-						==> [ :pair | 
-							pair second
-								collect: [ :unitAndPow | 
-									unitAndPow
-										at: 2 put: unitAndPow second negated;
-										yourself ] ]) optional
-						==> [ :denominator | denominator ifNil: [ #() ] ]))
-				==> [ :pair | pair first , pair second ]) optional
-		, $] asPParser trimBlanks) ==> #second
+	^ ($[ asPParser trimBlanks , self unit optional
+		, $] asPParser trimBlanks)
+		==> [ :triple | triple second ifNil: [ RMDUnit noDimension ] ]
 ]
 
 { #category : #'parsers-units' }
 RMDGrammar >> unit [
-	^ (self allUnits keys
-		inject: #failure asPParser
-		into: [ :p :s | p / s asPParser ]) flatten
+	^ (self unitTerm
+		, (('/' asPParser trimBlanks , self unitTerm) ==> #second) optional)
+		==> [ :pair | 
+			pair second
+				ifNotNil: [ pair first / pair second ]
+				ifNil: [ pair first ] ]
 ]
 
 { #category : #'parsers-units' }
 RMDGrammar >> unitFactor [
-	^ (self unit
+	^ (self unitSymbol
 		,
 			(($^ asPParser
 				,
@@ -355,8 +357,27 @@ RMDGrammar >> unitFactor [
 								* (pair first ifNil: [ 1 ] ifNotNil: [ -1 ]) ])) ==> #second)
 				optional)
 		==> [ :pair | 
-			pair second ifNil: [ pair at: 2 put: 1 ].
-			pair ]
+			pair second
+				ifNotNil: [ pair first ** pair second ]
+				ifNil: [ pair first ] ]
+]
+
+{ #category : #'parsers-units' }
+RMDGrammar >> unitSymbol [
+	^ #letter asPParser plus flatten
+		==> [ :symbol | 
+			RMDUnitSymbol
+				at: symbol
+				ifAbsent: [ PP2Failure message: 'Unknown unit symbol: ' , symbol ] ]
+]
+
+{ #category : #'parsers-units' }
+RMDGrammar >> unitTerm [
+	^ (self unitFactor separatedBy: #blank asPParser plus)
+		==> [ :array | 
+			(1 to: array size by: 2)
+				inject: RMDUnit noDimension
+				into: [ :unit :i | unit * (array at: i) ] ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -375,7 +396,9 @@ RMDGrammar >> utilityDefinitionNode [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> variable [
-	^ identifier ==> [ :symbol | self variableNodeClass identifier: symbol ]
+	^ (agentReference , identifier)
+		==>
+			[ :pair | self variableNodeClass identifier: pair second agent: pair first ]
 ]
 
 { #category : #'class access' }

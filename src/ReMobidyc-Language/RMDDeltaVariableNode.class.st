@@ -4,8 +4,13 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #evaluating }
+RMDDeltaVariableNode >> evalIn: aRMDInterpreter [
+	^ aRMDInterpreter readDeltaAt: identifier
+]
+
 { #category : #testing }
-RMDDeltaVariableNode >> isDeltaNode [
+RMDDeltaVariableNode >> isDeltaVariableNode [
 	^ true
 ]
 

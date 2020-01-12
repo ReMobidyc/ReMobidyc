@@ -4,9 +4,12 @@ Class {
 	#instVars : [
 		'time',
 		'deltaTime',
+		'nextValues',
 		'values',
 		'oldValues',
-		'old2Values'
+		'old2Values',
+		'valuesDirty',
+		'nextValuesDirty'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -30,6 +33,7 @@ RMDMemory >> at: anInteger ifAbsentPut: aBlock [
 
 { #category : #accessing }
 RMDMemory >> at: anInteger put: aNumber [
+	valuesDirty := true.
 	^ values at: anInteger put: aNumber
 ]
 
@@ -90,7 +94,10 @@ RMDMemory >> differentialAt: anInteger ifAbsent: errorBlock [
 RMDMemory >> fastSunrise [
 	old2Values := oldValues.
 	oldValues := values.
-	values := Dictionary new
+	values := nextValues.
+	nextValues := Dictionary new.
+	valuesDirty := false.
+	nextValuesDirty := false
 ]
 
 { #category : #timing }
@@ -103,9 +110,35 @@ RMDMemory >> initialize [
 	super initialize.
 	deltaTime := 1.0.
 	time := 0.
+	nextValues := Dictionary new.
 	values := Dictionary new.
 	oldValues := Dictionary new.
-	old2Values := Dictionary new
+	old2Values := Dictionary new.
+	valuesDirty := false.
+	nextValuesDirty := false
+]
+
+{ #category : #accessing }
+RMDMemory >> nextAt: anInteger [
+	^ self nextAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> nextAt: anInteger ifAbsent: aBlock [
+	^ nextValues at: anInteger ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+RMDMemory >> nextAt: anInteger ifAbsentPut: aBlock [
+	^ self
+		nextAt: anInteger
+		ifAbsent: [ self nextAt: anInteger put: aBlock value ]
+]
+
+{ #category : #accessing }
+RMDMemory >> nextAt: anInteger put: aNumber [
+	nextValuesDirty := true.
+	^ nextValues at: anInteger put: aNumber
 ]
 
 { #category : #accessing }
@@ -141,12 +174,16 @@ RMDMemory >> sunrise [
 	oldValues := time >= 1
 		ifTrue: [ self readValuesForTime: time - 1 ]
 		ifFalse: [ Dictionary new ].
-	values := self readValuesForTime: time
+	values := self readValuesForTime: time.
+	nextValues := self readValuesForTime: time + 1
 ]
 
 { #category : #timing }
 RMDMemory >> sunset [
-	self writeValues: values forTime: time
+	valuesDirty
+		ifTrue: [ self writeValues: values forTime: time ].
+	nextValuesDirty
+		ifTrue: [ self writeValues: nextValues forTime: time + 1 ]
 ]
 
 { #category : #timing }

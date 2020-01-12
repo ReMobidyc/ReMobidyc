@@ -15,11 +15,6 @@ RMDCompoundUnit class >> from: aDictionary [
 ]
 
 { #category : #'instance creation' }
-RMDCompoundUnit class >> noDimension [
-	^ self from: Dictionary new
-]
-
-{ #category : #'instance creation' }
 RMDCompoundUnit class >> with: aRMDUnitSymbol [
 	^ self
 		from:
@@ -39,6 +34,8 @@ RMDCompoundUnit >> * aRMDUnit [
 			newOrder = 0
 				ifTrue: [ syms removeKey: symbol ifAbsent: [  ] ]
 				ifFalse: [ syms at: symbol put: newOrder ] ].
+	(syms size = 1 and: [ syms values anyOne = 1 ])
+		ifTrue: [ ^ syms keys anyOne ].
 	^ self class from: syms
 ]
 
@@ -48,6 +45,8 @@ RMDCompoundUnit >> ** anInteger [
 	syms := Dictionary new: unitSymbolsAndOrders size.
 	unitSymbolsAndOrders
 		keysAndValuesDo: [ :symbol :order | syms at: symbol put: order * anInteger ].
+	(syms size = 1 and: [ syms values anyOne = 1 ])
+		ifTrue: [ ^ syms keys anyOne ].
 	^ self class from: syms
 ]
 
@@ -62,6 +61,8 @@ RMDCompoundUnit >> / aRMDUnit [
 			newOrder = 0
 				ifTrue: [ syms removeKey: symbol ifAbsent: [  ] ]
 				ifFalse: [ syms at: symbol put: newOrder ] ].
+	(syms size = 1 and: [ syms values anyOne = 1 ])
+		ifTrue: [ ^ syms keys anyOne ].
 	^ self class from: syms
 ]
 
@@ -122,7 +123,7 @@ RMDCompoundUnit >> printOn: aStream [
 			order < 0
 				ifTrue: [ hasNegativeOrder := true ] ].
 	hasPositiveOrder
-		ifFalse: [ aStream nextPutAll: '1 ' ].
+		ifFalse: [ aStream nextPutAll: '1' ].
 	hasNegativeOrder
 		ifTrue: [ aStream nextPutAll: '/ ' ].
 	unitSymbolsAndOrders

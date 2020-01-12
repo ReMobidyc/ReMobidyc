@@ -24,8 +24,12 @@ RMDLiteralNode >> = anObject [
 
 { #category : #private }
 RMDLiteralNode >> computeNumeric [
-	<todo: 'need to normalize by metrics'>
-	^ literal asNumber
+	^ type toSI: literal asNumber
+]
+
+{ #category : #evaluating }
+RMDLiteralNode >> evalIn: aRMDInterpreter [
+	^ self numeric
 ]
 
 { #category : #comparing }

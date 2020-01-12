@@ -165,6 +165,11 @@ RMDUnit class >> newSymbol: aString scale: aFloat siUnit: aRMDUnit [
 		siUnit: aRMDUnit
 ]
 
+{ #category : #'instance creation' }
+RMDUnit class >> noDimension [
+	^ RMDCompoundUnit from: Dictionary new
+]
+
 { #category : #arithmetics }
 RMDUnit >> * aRMDUnit [
 	^ self subclassResponsibility

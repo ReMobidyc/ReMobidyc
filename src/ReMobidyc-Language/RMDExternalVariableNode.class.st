@@ -2,7 +2,7 @@ Class {
 	#name : #RMDExternalVariableNode,
 	#superclass : #RMDAbstractVariableNode,
 	#instVars : [
-		'agent'
+		'agent111'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -17,22 +17,22 @@ RMDExternalVariableNode class >> agent: aRMDAgentNode identifier: aString [
 
 { #category : #comparing }
 RMDExternalVariableNode >> = anObject [
-	^ super = anObject and: [ agent = anObject agent ]
+	^ super = anObject and: [ agent111 = anObject agent ]
 ]
 
 { #category : #accessing }
 RMDExternalVariableNode >> agent [
-	^ agent
+	^ agent111
 ]
 
 { #category : #accessing }
 RMDExternalVariableNode >> agent: aRMDAgentReferenceNode [
-	agent := aRMDAgentReferenceNode
+	agent111 := aRMDAgentReferenceNode
 ]
 
 { #category : #comparing }
 RMDExternalVariableNode >> hash [
-	^ super hash bitXor: agent hash
+	^ super hash bitXor: agent111 hash
 ]
 
 { #category : #testing }
@@ -52,7 +52,7 @@ RMDExternalVariableNode >> precedence [
 
 { #category : #printing }
 RMDExternalVariableNode >> printOn: aStream [
-	agent printOn: aStream.
+	agent111 printOn: aStream.
 	aStream
 		nextPut: Character space;
 		nextPutAll: self operator;

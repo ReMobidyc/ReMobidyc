@@ -4,12 +4,17 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #evaluating }
+RMDDifferentialVariableNode >> evalIn: aRMDInterpreter [
+	^ aRMDInterpreter readDifferentialAt: identifier
+]
+
 { #category : #testing }
-RMDDifferentialVariableNode >> isDifferentialNode [
+RMDDifferentialVariableNode >> isDifferentialVariableNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : #accessing }
 RMDDifferentialVariableNode >> operator [
 	^ 'd/dt '
 ]
