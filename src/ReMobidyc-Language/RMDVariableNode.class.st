@@ -1,8 +1,16 @@
 Class {
 	#name : #RMDVariableNode,
-	#superclass : #RMDAbstractVariableNode,
+	#superclass : #RMDPropertyVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
+
+{ #category : #evaluating }
+RMDVariableNode >> evalIn: aRMDInterpreter [
+	^ aRMDInterpreter
+		readVariable: identifier
+		agent: agent
+		ifAbsent: [ KeyNotFound signal ]
+]
 
 { #category : #testing }
 RMDVariableNode >> isVariableNode [
@@ -12,9 +20,4 @@ RMDVariableNode >> isVariableNode [
 { #category : #accessing }
 RMDVariableNode >> operator [
 	^ ''
-]
-
-{ #category : #accessing }
-RMDVariableNode >> precedence [
-	^ 0
 ]

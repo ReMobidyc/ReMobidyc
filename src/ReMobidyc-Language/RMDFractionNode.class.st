@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #evaluating }
+RMDFractionNode >> evalIn: aRMDInterpreter [
+	^ (expression1 evalIn: aRMDInterpreter)
+		/ (expression2 evalIn: aRMDInterpreter)
+]
+
 { #category : #testing }
 RMDFractionNode >> isFractionNode [ 
 	^ true

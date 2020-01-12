@@ -21,73 +21,73 @@ RMDGrammarTest >> testApply [
 	self assert: apply arguments size equals: 1.
 	self
 		assert: apply arguments first
-		equals: (RMDVariableNode identifier: 'x').
+		equals: (RMDUtilityVariableNode identifier: 'x').
 	apply := grammar apply parse: 'max(x, y)'.
 	self assert: apply isApplyNode.
 	self assert: apply function equals: 'max'.
 	self assert: apply arguments size equals: 2.
 	self
 		assert: apply arguments first
-		equals: (RMDVariableNode identifier: 'x').
+		equals: (RMDUtilityVariableNode identifier: 'x').
 	self
 		assert: apply arguments second
-		equals: (RMDVariableNode identifier: 'y').
+		equals: (RMDUtilityVariableNode identifier: 'y').
 	apply := grammar apply parse: 'max3(x, y, z)'.
 	self assert: apply isApplyNode.
 	self assert: apply function equals: 'max3'.
 	self assert: apply arguments size equals: 3.
 	self
 		assert: apply arguments first
-		equals: (RMDVariableNode identifier: 'x').
+		equals: (RMDUtilityVariableNode identifier: 'x').
 	self
 		assert: apply arguments second
-		equals: (RMDVariableNode identifier: 'y').
+		equals: (RMDUtilityVariableNode identifier: 'y').
 	self
 		assert: apply arguments third
-		equals: (RMDVariableNode identifier: 'z')
+		equals: (RMDUtilityVariableNode identifier: 'z')
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testDeltaVariable [
 	| variable |
-	variable := grammar deltaVariable parse: 'delta foo'.
+	variable := grammar deltaVariable parse: 'my delta foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar deltaVariable parse: 'delta Foo'.
+	variable := grammar deltaVariable parse: 'my delta Foo'.
 	self assert: variable isPetit2Failure.
-	variable := grammar deltaVariable parse: 'Δfoo'.
+	variable := grammar deltaVariable parse: 'my Δfoo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar deltaVariable parse: 'Foo''s delta bar'.
+	variable := grammar deltaVariable parse: 'foo''s delta bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDeltaVariableNode.
-	self assert: variable agent equals: 'Foo'.
+	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar deltaVariable parse: 'Foo''s Δbar'.
+	variable := grammar deltaVariable parse: 'foo''s Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDeltaVariableNode.
-	self assert: variable agent equals: 'Foo'.
+	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testDifferential2Variable [
 	| variable |
-	variable := grammar differential2Variable parse: 'd2/dt2 x'.
+	variable := grammar differential2Variable parse: 'my d2/dt2 x'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDifferential2VariableNode.
 	self assert: variable identifier equals: 'x'.
-	variable := grammar differential2Variable parse: 'd2/dt2 X'.
+	variable := grammar differential2Variable parse: 'my d2/dt2 X'.
 	self assert: variable isPetit2Failure.
-	variable := grammar differential2Variable parse: 'd^2/dt^2 vx'.
+	variable := grammar differential2Variable parse: 'my d^2/dt^2 vx'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDifferential2VariableNode.
 	self assert: variable identifier equals: 'vx'.
-	variable := grammar differential2Variable parse: 'd2/dt2   sugar'.
+	variable := grammar differential2Variable parse: 'my d2/dt2   sugar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDifferential2VariableNode.
 	self assert: variable identifier equals: 'sugar'.
@@ -98,17 +98,17 @@ RMDGrammarTest >> testDifferential2Variable [
 { #category : #tests }
 RMDGrammarTest >> testDifferentialVariable [
 	| variable |
-	variable := grammar differentialVariable parse: 'd/dt foo'.
+	variable := grammar differentialVariable parse: 'my d/dt foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDifferentialVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar differentialVariable parse: 'd/dt X'.
+	variable := grammar differentialVariable parse: 'my d/dt X'.
 	self assert: variable isPetit2Failure.
-	variable := grammar differentialVariable parse: 'Foo''s d/dt bar'.
+	variable := grammar differentialVariable parse: 'foo''s d/dt bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isDifferentialVariableNode.
-	self assert: variable agent equals: 'Foo'.
+	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
 ]
 
@@ -116,21 +116,30 @@ RMDGrammarTest >> testDifferentialVariable [
 RMDGrammarTest >> testExpr1 [
 	| expr1 |
 	expr1 := grammar expr1 parse: 'x'.
+	self assert: expr1 isUtilityVariableNode.
+	self assert: expr1 identifier equals: 'x'.
+	expr1 := grammar expr1 parse: 'my x'.
 	self assert: expr1 isVariableNode.
 	self assert: expr1 identifier equals: 'x'.
-	expr1 := grammar expr1 parse: 'delta x'.
+	self assert: expr1 agent equals: nil.
+	expr1 := grammar expr1 parse: 'my delta x'.
 	self assert: expr1 isDeltaVariableNode.
 	self assert: expr1 identifier equals: 'x'.
-	expr1 := grammar expr1 parse: 'd/dt x'.
+	self assert: expr1 agent equals: nil.
+	expr1 := grammar expr1 parse: 'foo''s d/dt x'.
 	self assert: expr1 isDifferentialVariableNode.
 	self assert: expr1 identifier equals: 'x'.
-	expr1 := grammar expr1 parse: 'd2/dt2 x'.
+	self assert: expr1 agent equals: 'foo'.
+	expr1 := grammar expr1 parse: 'foo''s d2/dt2 x'.
 	self assert: expr1 isDifferential2VariableNode.
 	self assert: expr1 identifier equals: 'x'.
+	self assert: expr1 agent equals: 'foo'.
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
-	self assert: expr1 arguments equals: {(RMDVariableNode identifier: 'x')}.
+	self
+		assert: expr1 arguments
+		equals: {(RMDUtilityVariableNode identifier: 'x')}.
 	expr1 := grammar expr1 parse: '1[m]'.
 	self assert: expr1 isLiteralNode.
 	self assert: expr1 numeric closeTo: 1.
@@ -142,16 +151,16 @@ RMDGrammarTest >> testExpr1 [
 RMDGrammarTest >> testExpr2 [
 	| expr2 |
 	expr2 := grammar expr2 parse: 'x'.
-	self assert: expr2 isVariableNode.
+	self assert: expr2 isUtilityVariableNode.
 	self assert: expr2 identifier equals: 'x'.
 	expr2 := grammar expr2 parse: 'x^(y^z)'.
 	self assert: expr2 isPowerNode.
-	self assert: expr2 expression1 isVariableNode.
+	self assert: expr2 expression1 isUtilityVariableNode.
 	self assert: expr2 expression1 identifier equals: 'x'.
 	self assert: expr2 expression2 isPowerNode.
-	self assert: expr2 expression2 expression1 isVariableNode.
+	self assert: expr2 expression2 expression1 isUtilityVariableNode.
 	self assert: expr2 expression2 expression1 identifier equals: 'y'.
-	self assert: expr2 expression2 expression2 isVariableNode.
+	self assert: expr2 expression2 expression2 isUtilityVariableNode.
 	self assert: expr2 expression2 expression2 identifier equals: 'z'
 ]
 
@@ -159,7 +168,7 @@ RMDGrammarTest >> testExpr2 [
 RMDGrammarTest >> testExpr3 [
 	| expr3 |
 	expr3 := grammar expr3 parse: 'x'.
-	self assert: expr3 isVariableNode.
+	self assert: expr3 isUtilityVariableNode.
 	self assert: expr3 identifier equals: 'x'.
 	expr3 := grammar expr3 parse: 'x * y * z'.
 	self assert: expr3 isProductNode.
@@ -167,7 +176,7 @@ RMDGrammarTest >> testExpr3 [
 	self assert: expr3 expression1 expression1 identifier equals: 'x'.
 	self assert: expr3 expression1 expression2 identifier equals: 'y'.
 	self assert: expr3 expression2 identifier equals: 'z'.
-	expr3 := grammar expr3 parse: 'd/dt x * delta y * z'.
+	expr3 := grammar expr3 parse: 'my d/dt x * foo''s delta y * z'.
 	self assert: expr3 isProductNode.
 	self assert: expr3 expression1 isProductNode.
 	self assert: expr3 expression1 expression1 isDifferentialVariableNode.
@@ -177,12 +186,12 @@ RMDGrammarTest >> testExpr3 [
 	self assert: expr3 expression2 identifier equals: 'z'.
 	expr3 := grammar expr3 end parse: 'x * y^z'.
 	self assert: expr3 isProductNode.
-	self assert: expr3 expression1 isVariableNode.
+	self assert: expr3 expression1 isUtilityVariableNode.
 	self assert: expr3 expression1 identifier equals: 'x'.
 	self assert: expr3 expression2 isPowerNode.
-	self assert: expr3 expression2 expression1 isVariableNode.
+	self assert: expr3 expression2 expression1 isUtilityVariableNode.
 	self assert: expr3 expression2 expression1 identifier equals: 'y'.
-	self assert: expr3 expression2 expression2 isVariableNode.
+	self assert: expr3 expression2 expression2 isUtilityVariableNode.
 	self assert: expr3 expression2 expression2 identifier equals: 'z'
 ]
 
@@ -252,19 +261,19 @@ RMDGrammarTest >> testLiteral [
 { #category : #tests }
 RMDGrammarTest >> testPropertyDefinition [
 	| definition |
-	definition := grammar propertyDefinition parse: 'x'' = 1[m]'.
+	definition := grammar propertyDefinition parse: 'my x'' = 1[m]'.
 	self assert: definition isPropertyDefinitionNode.
 	self
 		assert: definition variable
-		equals: (grammar variable parse: 'x').
+		equals: (grammar variable parse: 'my x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]').
-	definition := grammar propertyDefinition parse: 'delta x'' = 1[m]'.
+	definition := grammar propertyDefinition parse: 'foo''s delta x'' = 1[m]'.
 	self assert: definition isPropertyDefinitionNode.
 	self
 		assert: definition variable
-		equals: (grammar deltaVariable parse: 'delta x').
+		equals: (grammar deltaVariable parse: 'foo''s delta x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]')
@@ -349,25 +358,36 @@ RMDGrammarTest >> testUtilityDefinition [
 	self assert: definition isUtilityDefinitionNode.
 	self
 		assert: definition variable
-		equals: (grammar variable parse: 'x').
+		equals: (grammar utilityVariable parse: 'x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]')
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testUtilityVariable [
+	| variable |
+	variable := grammar utilityVariable parse: 'foo'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isUtilityVariableNode.
+	self assert: variable identifier equals: 'foo'.
+	variable := grammar variable parse: 'Foo'.
+	self assert: variable isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testVariable [
 	| variable |
-	variable := grammar variable parse: 'foo'.
+	variable := grammar variable parse: 'my foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isVariableNode.
 	self assert: variable identifier equals: 'foo'.
 	self assert: variable agent isNil.
-	variable := grammar variable parse: 'Foo'.
+	variable := grammar variable parse: 'foo'.
 	self assert: variable isPetit2Failure.
-	variable := grammar variable parse: 'Foo''s bar'.
+	variable := grammar variable parse: 'foo''s bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isVariableNode.
-	self assert: variable agent equals: 'Foo'.
+	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
 ]

@@ -1,12 +1,15 @@
 Class {
 	#name : #RMDDifferential2VariableNode,
-	#superclass : #RMDAbstractVariableNode,
+	#superclass : #RMDPropertyVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #evaluating }
 RMDDifferential2VariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter readDifferential2At: identifier
+	^ aRMDInterpreter
+		readDifferential2: identifier
+		agent: agent
+		ifAbsent: [ KeyNotFound signal ]
 ]
 
 { #category : #testing }
@@ -17,9 +20,4 @@ RMDDifferential2VariableNode >> isDifferential2VariableNode [
 { #category : #accessing }
 RMDDifferential2VariableNode >> operator [
 	^ 'd^2/dt^2 '
-]
-
-{ #category : #accessing }
-RMDDifferential2VariableNode >> precedence [
-	^ 1
 ]

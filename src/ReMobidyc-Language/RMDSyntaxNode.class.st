@@ -40,11 +40,6 @@ RMDSyntaxNode >> isExpressionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isExternalVariableNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isFractionNode [
 	^ false
 ]
@@ -96,6 +91,11 @@ RMDSyntaxNode >> isSubtractionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isUtilityDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isUtilityVariableNode [
 	^ false
 ]
 

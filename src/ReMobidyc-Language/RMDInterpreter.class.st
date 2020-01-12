@@ -3,43 +3,98 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'memory',
-		'deltas'
+		'libraries',
+		'context'
 	],
 	#category : #'ReMobidyc-Language-Interpreter'
 }
 
-{ #category : #'symbol mapping' }
-RMDInterpreter >> getMemoryAddressFor: aString agent: anInteger [
-	^ self notYetImplemented 
+{ #category : #'library access' }
+RMDInterpreter >> addLibraries: aCollectionOfDictionary [
+	libraries addAll: aCollectionOfDictionary
 ]
 
-{ #category : #'variable access' }
-RMDInterpreter >> readDeltaAt: aString agent: anInteger [
+{ #category : #'library access' }
+RMDInterpreter >> addLibrary: aDictionary [
+	libraries add: aDictionary
+]
+
+{ #category : #private }
+RMDInterpreter >> context [
+	^ context
+]
+
+{ #category : #'library access' }
+RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
+	libraries
+		do:
+			[ :library | library at: aString ifPresent: [ :function | ^ function ] ].
+	^ errorBlock value
+]
+
+{ #category : #initialization }
+RMDInterpreter >> initialize [
+	super initialize.
+	libraries := OrderedCollection new
+]
+
+{ #category : #private }
+RMDInterpreter >> memory [
 	^ memory
-		deltaAt: (self getMemoryAddressFor: aString agent: anInteger)
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> readDifferential2At: aString agent: anInteger [
+RMDInterpreter >> readDelta: aString agent: anotherString ifAbsent: errorBlock [
 	^ memory
-		differential2At: (self getMemoryAddressFor: aString agent: anInteger)
+		deltaAt:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsent: errorBlock
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> readDifferentialAt: aString agent: anInteger [
+RMDInterpreter >> readDifferential2: aString agent: anotherString ifAbsent: errorBlock [
 	^ memory
-		differentialAt: (self getMemoryAddressFor: aString agent: anInteger)
+		differential2At:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsent: errorBlock
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> readUtilityAt: aString [
-	^ self notYetImplemented
-]
-
-{ #category : #'variable access' }
-RMDInterpreter >> readVariableAt: aString agent: anInteger [
+RMDInterpreter >> readDifferential: aString agent: anotherString ifAbsent: errorBlock [
 	^ memory
-		deltaAt: (self getMemoryAddressFor: aString agent: anInteger)
+		differentialAt:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsent: errorBlock
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
+	^ context utilityAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBlock [
+	^ memory
+		at:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsent: errorBlock
+]
+
+{ #category : #private }
+RMDInterpreter >> setContext: aRMDContext [
+	context := aRMDContext
 ]
 
 { #category : #private }
@@ -48,8 +103,23 @@ RMDInterpreter >> setMemory: aRMDMemory [
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> writeDeltaAt: aString agent: anInteger put: aNumber [
-	| binds |
-	binds := deltas at: anInteger ifAbsentPut: [ Dictionary new: 10 ].
-	binds at: aString put: (binds at: aString ifAbsent: [ 0 ]) + aNumber
+RMDInterpreter >> write: aNumber toDelta: aString agent: anotherString ifAbsent: errorBlock [
+	^ memory
+		nextDeltaAt:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		add: aNumber
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> write: aNumber toVariable: aString agent: anotherString ifAbsent: errorBlock [
+	^ memory
+		nextAt:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		put: aNumber
 ]

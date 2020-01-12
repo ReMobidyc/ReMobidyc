@@ -1,12 +1,15 @@
 Class {
 	#name : #RMDDeltaVariableNode,
-	#superclass : #RMDAbstractVariableNode,
+	#superclass : #RMDPropertyVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #evaluating }
 RMDDeltaVariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter readDeltaAt: identifier
+	^ aRMDInterpreter
+		readDelta: identifier
+		agent: agent
+		ifAbsent: [ KeyNotFound signal ]
 ]
 
 { #category : #testing }
@@ -17,9 +20,4 @@ RMDDeltaVariableNode >> isDeltaVariableNode [
 { #category : #accessing }
 RMDDeltaVariableNode >> operator [
 	^ 'Δ'
-]
-
-{ #category : #accessing }
-RMDDeltaVariableNode >> precedence [
-	^ 1
 ]

@@ -12,6 +12,12 @@ RMDSubtractionNode class >> expression: aRMDExpression1 expression: aRMDExpressi
 		yourself
 ]
 
+{ #category : #evaluating }
+RMDSubtractionNode >> evalIn: aRMDInterpreter [
+	^ (expression1 evalIn: aRMDInterpreter)
+		- (expression2 evalIn: aRMDInterpreter)
+]
+
 { #category : #testing }
 RMDSubtractionNode >> isSubtractionNode [
 	^ true

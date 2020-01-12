@@ -33,6 +33,14 @@ RMDApplyNode >> arguments: anArrayOfRMDExpressionNode [
 	arguments := anArrayOfRMDExpressionNode
 ]
 
+{ #category : #evaluating }
+RMDApplyNode >> evalIn: aRMDInterpreter [
+	^ (aRMDInterpreter
+		functionAt: function
+		ifAbsent: [ ^ KeyNotFound signal: function , ' not found.' ])
+		valueWithArguments: (arguments collect: [ :arg | arg evalIn: aRMDInterpreter ])
+]
+
 { #category : #accessing }
 RMDApplyNode >> function [
 	^ function

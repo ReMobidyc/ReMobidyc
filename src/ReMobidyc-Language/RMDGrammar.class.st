@@ -42,8 +42,8 @@ RMDGrammar >> agentIdentifier [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
-	^ ((self agentIdentifier , '''s ' asPParser trimBlanks) ==> #first)
-		optional
+	^ ('my ' asPParser trimBlanks ==> [ :str | nil ])
+		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
 ]
 
 { #category : #units }
@@ -155,7 +155,8 @@ RMDGrammar >> energyUnits [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
 	^ self parenExpression / self apply / self differentialVariable
-		/ self differential2Variable / self deltaVariable / self variable / self literal
+		/ self differential2Variable / self deltaVariable / self variable
+		/ self utilityVariable / self literal
 ]
 
 { #category : #'parsers-expressions' }
@@ -218,7 +219,7 @@ RMDGrammar >> expression [
 
 { #category : #'class access' }
 RMDGrammar >> externalVariableNodeClass [
-	^ RMDExternalVariableNode
+	^ RMDUtilityVariableNode
 ]
 
 { #category : #'class access' }
@@ -382,7 +383,7 @@ RMDGrammar >> unitTerm [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> utilityDefinition [
-	^ (self variable , '=' asPParser trimBlanks , expression)
+	^ (self utilityVariable , '=' asPParser trimBlanks , expression)
 		==> [ :triple | 
 			self utilityDefinitionNode
 				variable: triple first
@@ -392,6 +393,17 @@ RMDGrammar >> utilityDefinition [
 { #category : #'class access' }
 RMDGrammar >> utilityDefinitionNode [
 	^ RMDUtilityDefinitionNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> utilityVariable [
+	^ identifier
+		==> [ :str | self utilityVariableNodeClass identifier: str ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> utilityVariableNodeClass [
+	^ RMDUtilityVariableNode
 ]
 
 { #category : #'parsers-atoms' }

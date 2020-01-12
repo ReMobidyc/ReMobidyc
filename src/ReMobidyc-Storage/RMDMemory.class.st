@@ -5,6 +5,7 @@ Class {
 		'time',
 		'deltaTime',
 		'nextValues',
+		'nextDeltas',
 		'values',
 		'oldValues',
 		'old2Values',
@@ -96,6 +97,7 @@ RMDMemory >> fastSunrise [
 	oldValues := values.
 	values := nextValues.
 	nextValues := Dictionary new.
+	nextDeltas := Dictionary new.
 	valuesDirty := false.
 	nextValuesDirty := false
 ]
@@ -114,6 +116,7 @@ RMDMemory >> initialize [
 	values := Dictionary new.
 	oldValues := Dictionary new.
 	old2Values := Dictionary new.
+	nextDeltas := Dictionary new.
 	valuesDirty := false.
 	nextValuesDirty := false
 ]
@@ -139,6 +142,30 @@ RMDMemory >> nextAt: anInteger ifAbsentPut: aBlock [
 RMDMemory >> nextAt: anInteger put: aNumber [
 	nextValuesDirty := true.
 	^ nextValues at: anInteger put: aNumber
+]
+
+{ #category : #accessing }
+RMDMemory >> nextDeltaAt: anInteger [
+	^ self nextDeltaAt: anInteger ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDMemory >> nextDeltaAt: anInteger add: aNumber [
+	^ nextDeltas
+		at: anInteger
+		put: (nextDeltas at: anInteger ifAbsent: [ 0 ]) + aNumber
+]
+
+{ #category : #accessing }
+RMDMemory >> nextDeltaAt: anInteger ifAbsent: errorBlock [
+	^ nextDeltas at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDMemory >> nextDeltaAt: anInteger ifAbsentPut: errorBlock [
+	^ nextDeltas
+		at: anInteger
+		ifAbsent: [ self nextDeltaAt: anInteger add: errorBlock value ]
 ]
 
 { #category : #accessing }
@@ -175,11 +202,19 @@ RMDMemory >> sunrise [
 		ifTrue: [ self readValuesForTime: time - 1 ]
 		ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time.
-	nextValues := self readValuesForTime: time + 1
+	nextValues := self readValuesForTime: time + 1.
+	nextDeltas := Dictionary new
 ]
 
 { #category : #timing }
 RMDMemory >> sunset [
+	nextDeltas
+		ifNotEmpty: [ nextValuesDirty := true.
+			nextDeltas
+				keysAndValuesDo: [ :id :delta | 
+					nextValues
+						at: id
+						put: (nextValues at: id ifAbsent: [ self at: id ]) + delta ] ].
 	valuesDirty
 		ifTrue: [ self writeValues: values forTime: time ].
 	nextValuesDirty
