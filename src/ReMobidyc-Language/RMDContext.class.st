@@ -25,7 +25,7 @@ RMDContext >> initialize [
 
 { #category : #operations }
 RMDContext >> loadUtilityDefinitions [
-	utilities removeAll.
+	utilities := Dictionary new: script utilityDefinitions size.
 	script utilityDefinitions
 		do: [ :def | utilities at: def variable identifier put: def ]
 ]
