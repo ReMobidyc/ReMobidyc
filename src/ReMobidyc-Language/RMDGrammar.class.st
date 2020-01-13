@@ -5,7 +5,8 @@ Class {
 		'definition',
 		'expression',
 		'identifier',
-		'agentReference'
+		'agentReference',
+		'condition'
 	],
 	#classVars : [
 		'Builtins',
@@ -74,12 +75,104 @@ RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
 ]
 
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryCombinatorFrom: anArray [
+	| operator conds |
+	anArray size = 1
+		ifTrue: [ ^ anArray first ].
+	operator := anArray second.
+	2 to: anArray size by: 2 do: [ :index | 
+		(anArray at: index) = operator
+			ifFalse: [ ^ PP2Failure message: 'More than one kinds of logical operators.' ] ].
+	conds := (1 to: anArray size by: 2)
+		collect: [ :index | anArray at: index ].
+	operator = 'and'
+		ifTrue: [ ^ self conjunctionNodeClass conditions: conds ].
+	operator = 'or'
+		ifTrue: [ ^ self disjunctionNodeClass conditions: conds ].
+	^ PP2Failure message: 'Unknown operator: ' , operator
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryRelation [
+	^ (expression
+		separatedBy:
+			('=' asPParser / '/=' asPParser
+				/ ($< asPParser , $= asPParser optional) flatten
+				/ ($> asPParser , $= asPParser optional) flatten) trimBlanks)
+		==> [ :array | self binaryRelationFrom: array ]
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryRelationFrom: anArray [
+	| operator expressions |
+	anArray size < 3
+		ifTrue: [ ^ PP2Failure message: 'No relational operator.' ].
+	operator := anArray second.
+	4 to: anArray size by: 2 do: [ :index | 
+		operator = (anArray at: index)
+			ifFalse:
+				[ ^ PP2Failure message: 'More than one kinds of relational operators.' ] ].
+	expressions := (1 to: anArray size by: 2)
+		collect: [ :index | anArray at: index ].
+	(operator = '/=' and: [ expressions size > 2 ])
+		ifTrue: [ ^ PP2Failure message: '/= can not be cascaded.' ].
+	^ (self binaryRelationNodeClassFor: operator)
+		expressions: expressions
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryRelationNodeClassFor: aString [
+	aString = '='
+		ifTrue: [ ^ RMDEqualityNode ].
+	aString = '<='
+		ifTrue: [ ^ RMDLessOrEqualNode ].
+	aString = '<'
+		ifTrue: [ ^ RMDLessThanNode ].
+	aString = '>='
+		ifTrue: [ ^ RMDGreaterOrEqualNode ].
+	aString = '>'
+		ifTrue: [ ^ RMDGreaterThanNode ].
+	^ RMDNotEqualNode
+]
+
 { #category : #accessing }
 RMDGrammar >> builtins [
 	^ Builtins
 		ifNil:
-			[ Builtins := 'World Cell Animat x y heading North South West East north south east west'
+			[ Builtins := 'World Cell Animat x y heading North South West East world cell north south east west'
 				substrings asSet ]
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> cond1 [
+	^ ($( asPParser trimBlanks, condition, $) asPParser trimBlanks ==> #second) / self binaryRelation
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> cond2 [
+	^ ('not' asPParser trimBlanks optional , self cond1)
+		==> [ :pair | 
+			pair first
+				ifNotNil: [ self negationNodeClass condition: pair second ]
+				ifNil: [ pair second ] ]
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> cond3 [
+	^ (self cond2
+		separatedBy: ('and' asPParser / 'or' asPParser) trimBlanks)
+		==> [ :array | self binaryCombinatorFrom: array ]
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> condition [
+	^ self cond3
+]
+
+{ #category : #'class access' }
+RMDGrammar >> conjunctionNodeClass [
+	^ RMDConjunctionNode
 ]
 
 { #category : #'parsers-definitions' }
@@ -87,7 +180,7 @@ RMDGrammar >> definition [
 	^ self propertyDefinition
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'parsers-atoms' }
 RMDGrammar >> delta [
 	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
 ]
@@ -142,6 +235,11 @@ RMDGrammar >> differentialVariable [
 { #category : #'class access' }
 RMDGrammar >> differentialVariableNodeClass [
 	^ RMDDifferentialVariableNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> disjunctionNodeClass [
+	^ RMDDisjunctionNode
 ]
 
 { #category : #units }
@@ -245,7 +343,7 @@ RMDGrammar >> identifier [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become'
+			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become otherwise'
 				substrings asSet ]
 ]
 
@@ -271,6 +369,11 @@ RMDGrammar >> literal [
 { #category : #'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> negationNodeClass [
+	^ RMDNegationNode
 ]
 
 { #category : #'parsers-expressions' }

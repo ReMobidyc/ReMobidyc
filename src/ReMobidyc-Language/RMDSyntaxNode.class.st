@@ -20,6 +20,16 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isBinaryRelationNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isConjunctionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDeltaVariableNode [
 	^ false
 ]
@@ -35,6 +45,16 @@ RMDSyntaxNode >> isDifferentialVariableNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDisjunctionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isEqualityNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isExpressionNode [
 	^ false
 ]
@@ -45,12 +65,47 @@ RMDSyntaxNode >> isFractionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isGreaterOrEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isGreaterThanNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isGuardedChoiceNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isLessOrEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isLessThanNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isLiteralNode [
 	^ false
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isNegationNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isNextVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isNotEqualNode [
 	^ false
 ]
 

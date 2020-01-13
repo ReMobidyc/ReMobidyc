@@ -7,6 +7,113 @@ Class {
 	#category : #'ReMobidyc-Language-Tests'
 }
 
+{ #category : #tests }
+RMDGrammarTest >> equalityTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 = 2 = 3'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isEqualityNode.
+	self assert: condition expressions size equals: 3.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	self
+		assert: condition expressions third
+		equals: (grammar expression parse: '3')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> greaterOrEqualTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 >= 2 >= 3'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isGreaterOrEqualNode.
+	self assert: condition expressions size equals: 3.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	self
+		assert: condition expressions third
+		equals: (grammar expression parse: '3')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> greaterThanTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 > 2 > 3'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isGreaterThanNode.
+	self assert: condition expressions size equals: 3.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	self
+		assert: condition expressions third
+		equals: (grammar expression parse: '3')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> lessOrEqualTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 <= 2 <= 3'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isLessOrEqualNode.
+	self assert: condition expressions size equals: 3.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	self
+		assert: condition expressions third
+		equals: (grammar expression parse: '3')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> lessThanTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 < 2 < 3'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isLessThanNode.
+	self assert: condition expressions size equals: 3.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	self
+		assert: condition expressions third
+		equals: (grammar expression parse: '3')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> notEqualTest [
+	| condition |
+	condition := grammar binaryRelation parse: '1 /= 2'.
+	self deny: condition isPetit2Failure.
+	self assert: condition isNotEqualNode.
+	self assert: condition expressions size equals: 2.
+	self
+		assert: condition expressions first
+		equals: (grammar expression parse: '1').
+	self
+		assert: condition expressions second
+		equals: (grammar expression parse: '2').
+	condition := grammar binaryRelation parse: '1 /= 2 /= 3'.
+	self assert: condition isPetit2Failure
+]
+
 { #category : #running }
 RMDGrammarTest >> setUp [
 	grammar := RMDGrammar new
@@ -45,6 +152,95 @@ RMDGrammarTest >> testApply [
 	self
 		assert: apply arguments third
 		equals: (RMDUtilityVariableNode identifier: 'z')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testBinaryRelation [
+	self
+		equalityTest;
+		notEqualTest;
+		lessThanTest;
+		lessOrEqualTest;
+		greaterThanTest;
+		greaterOrEqualTest.
+	self
+		assert: (grammar binaryRelation parse: '1 = 2 /= 3') isPetit2Failure;
+		assert: (grammar binaryRelation parse: '1 = 2 < 3') isPetit2Failure;
+		assert: (grammar binaryRelation parse: '1 < 2 > 3') isPetit2Failure;
+		assert: (grammar binaryRelation parse: '1 /= 2 < 3') isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCond1 [
+	| cond |
+	cond := grammar cond1 parse: '1 = 2'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isEqualityNode.
+	cond := grammar cond1 parse: '(1 = 2 and 3 = 4)'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCond2 [
+	| cond |
+	cond := grammar cond2 parse: 'not 1 = 2'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isNegationNode.
+	cond := grammar cond2 parse: 'not (1 = 2)'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isNegationNode.
+	cond := grammar cond2 parse: '1 = 2'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isEqualityNode.
+
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCond3 [
+	| cond |
+	cond := grammar cond3 parse: '1 = 2 and 3 = 4'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode.
+	cond := grammar cond3 parse: 'not 1 = 2 and 3 = 4 and 5 = 6'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode.
+	cond := grammar cond3 parse: 'not (1 = 2 and 3 = 4)'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isNegationNode.
+	cond := grammar cond3 parse: '1 = 2'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isEqualityNode.
+	cond := grammar cond3 parse: '1 = 2 and 3 = 4 or 5 = 6'.
+	self assert: cond isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCondition [
+	| cond |
+	cond := grammar condition parse: '1 = 2 and 3 = 4'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode.
+	cond := grammar condition
+		parse: 'not 1 = 2 and 3 = 4 and (5 = 6 or 7 = 8)'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode.
+	self
+		assert: cond conditions first
+		equals: (grammar condition parse: 'not 1 = 2').
+	self
+		assert: cond conditions second
+		equals: (grammar condition parse: '3 = 4').
+	self assert: cond conditions third isDisjunctionNode.
+	self
+		assert: cond conditions third
+		equals: (grammar condition parse: '5 = 6 or 7 = 8').
+	self
+		assert: cond conditions third conditions first
+		equals: (grammar condition parse: '5 = 6').
+	self
+		assert: cond conditions third conditions second
+		equals: (grammar condition parse: '7 = 8')
 ]
 
 { #category : #tests }
@@ -144,7 +340,9 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 isLiteralNode.
 	self assert: expr1 numeric closeTo: 1.
 	expr1 := grammar expr1 parse: '1'.
-	self assert: expr1 isPetit2Failure
+	self assert: expr1 isLiteralNode.
+	self assert: expr1 numeric closeTo: 1.
+	self assert: expr1 type hasDimension not
 ]
 
 { #category : #tests }
