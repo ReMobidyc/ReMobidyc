@@ -14,6 +14,12 @@ RMDGuardedChoiceNode class >> from: anArrayOfAssociation [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDGuardedChoiceNode >> = anObject [
+	^ self class = anObject class
+		and: [ guardsAndChoices = anObject guardsAndChoices ]
+]
+
 { #category : #evaluating }
 RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 	guardsAndChoices
@@ -24,8 +30,18 @@ RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #private }
+RMDGuardedChoiceNode >> guardsAndChoices [
+	^ guardsAndChoices
+]
+
+{ #category : #private }
 RMDGuardedChoiceNode >> guardsAndChoices: anArrayOfAssociation [
 	guardsAndChoices := anArrayOfAssociation
+]
+
+{ #category : #comparing }
+RMDGuardedChoiceNode >> hash [
+	^ self hash bitXor: guardsAndChoices hash
 ]
 
 { #category : #testing }

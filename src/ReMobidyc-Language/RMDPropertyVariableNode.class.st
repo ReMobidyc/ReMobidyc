@@ -40,6 +40,7 @@ RMDPropertyVariableNode >> precedence [
 { #category : #printing }
 RMDPropertyVariableNode >> printOn: aStream [
 	agent
+		ifNil: [ aStream nextPutAll: 'my ' ]
 		ifNotNil: [ aStream
 				nextPutAll: agent;
 				nextPutAll: '''s ' ].

@@ -140,6 +140,11 @@ RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isScriptNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSubtractionNode [
 	^ false
 ]

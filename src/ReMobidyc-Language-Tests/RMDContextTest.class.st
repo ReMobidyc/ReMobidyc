@@ -37,6 +37,25 @@ RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
 ]
 
 { #category : #tests }
+RMDContextTest >> testLoadScript [
+	| parser source |
+	parser := RMDGrammar new.
+	source := '
+to test is
+	my delta x'' = two
+where
+	one = 1
+	two = one + 1' trim.
+	context script: (parser script parse: source).
+	self
+		assert: (context utilityAt: 'one' ifAbsent: [ nil ])
+		equals: (parser utilityDefinition parse: 'one = 1').
+	self
+		assert: (context utilityAt: 'two' ifAbsent: [ nil ])
+		equals: (parser utilityDefinition parse: 'two = one + 1')
+]
+
+{ #category : #tests }
 RMDContextTest >> testSetMemoryAddressForAgentTo [
 	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
 	context setMemoryAddressFor: 'y' agent: nil to: 2.

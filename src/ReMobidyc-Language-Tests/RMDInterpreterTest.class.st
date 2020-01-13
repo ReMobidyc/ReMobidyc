@@ -75,14 +75,21 @@ RMDInterpreterTest >> testReadDifferentialAgentIfAbsent [
 
 { #category : #tests }
 RMDInterpreterTest >> testReadUtilityIfAbsent [
-	interpreter context utilityAt: 'x' put: 1.
-	interpreter context utilityAt: 'y' put: 2.
+	| parser source |
+	parser := RMDGrammar new.
+	source := '
+to test is
+	my delta x'' = two
+where
+	x = y + 2
+	y = 3' trim.
+	interpreter context script: (parser script parse: source).
 	self
 		assert: (interpreter readUtility: 'x' ifAbsent: [ nil ])
-		closeTo: 1.
+		closeTo: 3 + 2.
 	self
 		assert: (interpreter readUtility: 'y' ifAbsent: [ nil ])
-		closeTo: 2.
+		closeTo: 3.
 	self assert: (interpreter readUtility: 'z' ifAbsent: [ nil ]) isNil
 ]
 

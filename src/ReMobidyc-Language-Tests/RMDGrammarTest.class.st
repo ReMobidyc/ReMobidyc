@@ -440,6 +440,59 @@ RMDGrammarTest >> testExpr5 [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testExpression [
+	| expr |
+	expr := grammar expression parse: 'x + y * z'.
+	self deny: expr isPetit2Failure.
+	self assert: expr expression1 equals: (grammar expression parse: 'x').
+	self
+		assert: expr expression2
+		equals: (grammar expression parse: 'y * z').
+	expr := grammar expression end
+		parse: '(1 if x = y, 2 if x = z, 3) + 2'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isAdditionNode.
+	self assert: expr expression1 isGuardedChoiceNode.
+	expr := grammar expression end parse: '1 if x = y, 2 if x = z, 3'.
+	self assert: expr isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testGuardedChoice [
+	| choice |
+	choice := grammar guardedChoice parse: '1 if x = 0, 2 if x = 1, 3'.
+	self assert: choice isGuardedChoiceNode.
+	self assert: choice guardsAndChoices size equals: 3.
+	self
+		assert: choice guardsAndChoices first key
+		equals: (grammar condition parse: 'x = 0').
+	self
+		assert: choice guardsAndChoices first value
+		equals: (grammar expression parse: '1').
+	self
+		assert: choice guardsAndChoices second key
+		equals: (grammar condition parse: 'x = 1').
+	self
+		assert: choice guardsAndChoices second value
+		equals: (grammar expression parse: '2').
+	self assert: choice guardsAndChoices third key equals: true.
+	self
+		assert: choice guardsAndChoices third value
+		equals: (grammar expression parse: '3').
+	choice := grammar guardedChoice parse: '1 if x = 0, 2 if x = 1, 3'.
+	self
+		assert: choice
+		equals:
+			(grammar guardedChoice
+				parse:
+					'1 if x = 0,
+	2 if x = 1,
+	3').
+	choice := grammar guardedChoice end parse: '1 if x = 0, 2 if x = 1'.
+	self assert: choice isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testLiteral [
 	| literal |
 	literal := grammar literal parse: '3.14[]'.
@@ -471,14 +524,26 @@ RMDGrammarTest >> testPropertyDefinition [
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]').
-	definition := grammar propertyDefinition parse: 'foo''s delta x'' = 1[m]'.
+	definition := grammar propertyDefinition
+		parse: 'foo''s delta x'' = 1[m]'.
 	self assert: definition isPropertyDefinitionNode.
 	self
 		assert: definition variable
 		equals: (grammar deltaVariable parse: 'foo''s delta x').
 	self
 		assert: definition definitionBody
-		equals: (grammar literal parse: '1[m]')
+		equals: (grammar literal parse: '1[m]').
+	definition := grammar propertyDefinition
+		parse:
+			'my x'' =		1 if x = 2,
+							2 if x = 3,
+							3'.
+	self deny: definition isPetit2Failure.
+	self assert: definition isPropertyDefinitionNode.
+	self assert: definition definitionBody isGuardedChoiceNode.
+	self
+		assert: definition definitionBody
+		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3')
 ]
 
 { #category : #tests }
@@ -563,7 +628,13 @@ RMDGrammarTest >> testUtilityDefinition [
 		equals: (grammar utilityVariable parse: 'x').
 	self
 		assert: definition definitionBody
-		equals: (grammar literal parse: '1[m]')
+		equals: (grammar literal parse: '1[m]').
+	definition := grammar utilityDefinition
+		parse:
+			'x =	1 if x = 2,
+					2 if y = 3,
+					3'.
+	self assert: definition definitionBody isGuardedChoiceNode
 ]
 
 { #category : #tests }

@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'utilities',
-		'propertyDict'
+		'propertyDict',
+		'script'
 	],
 	#category : #'ReMobidyc-Language-Interpreter'
 }
@@ -20,6 +21,24 @@ RMDContext >> initialize [
 	super initialize.
 	propertyDict := Dictionary new.
 	utilities := Dictionary new
+]
+
+{ #category : #operations }
+RMDContext >> loadUtilityDefinitions [
+	utilities removeAll.
+	script utilityDefinitions
+		do: [ :def | utilities at: def variable identifier put: def ]
+]
+
+{ #category : #accessing }
+RMDContext >> script [
+	^ script
+]
+
+{ #category : #accessing }
+RMDContext >> script: aRMDScriptNode [
+	script := aRMDScriptNode.
+	self loadUtilityDefinitions
 ]
 
 { #category : #accessing }

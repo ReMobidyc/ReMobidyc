@@ -16,6 +16,13 @@ RMDDefinitionNode class >> variable: aRMDVariableNode expression: aRMDExpression
 		yourself
 ]
 
+{ #category : #comparing }
+RMDDefinitionNode >> = anObject [
+	^ self class = anObject class
+		and: [ variable = anObject variable
+				and: [ definitionBody = anObject definitionBody ] ]
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> definitionBody [
 	^ definitionBody
@@ -29,6 +36,11 @@ RMDDefinitionNode >> definitionBody: aRMDExpressionNode [
 { #category : #evaluating }
 RMDDefinitionNode >> evalIn: aRMDInterpreter [
 	^ self subclassResponsibility
+]
+
+{ #category : #comparing }
+RMDDefinitionNode >> hash [
+	^ (self class hash bitXor: variable hash) bitXor: definitionBody hash
 ]
 
 { #category : #accessing }

@@ -6,7 +6,8 @@ Class {
 		'expression',
 		'identifier',
 		'agentReference',
-		'condition'
+		'condition',
+		'guardedChoice'
 	],
 	#classVars : [
 		'Builtins',
@@ -285,7 +286,10 @@ RMDGrammar >> expr3 [
 RMDGrammar >> expr4 [
 	| expr3 |
 	expr3 := self expr3.
-	^ (expr3 , (($/ asPParser trimBlanks , expr3) ==> #second) optional)
+	^ (expr3
+		,
+			((#newline asPParser trimBlanks optional , $/ asPParser trimBlanks
+				, expr3) ==> #third) optional)
 		==> [ :pair | 
 			pair second
 				ifNil: [ pair first ]
@@ -323,6 +327,30 @@ RMDGrammar >> externalVariableNodeClass [
 { #category : #'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> guard [
+	^ ('if ' asPParser trimBlanks , condition , $, asPParser trimBlanks
+		, #newline asPParser trimBlanks optional) ==> #second
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> guardedChoice [
+	^ (expression separatedBy: self guard)
+		==> [ :array | 
+			array size = 1
+				ifTrue: [ array first ]
+				ifFalse: [ self guardedChoiceNodeClass
+						from:
+							(((1 to: array size - 1 by: 2)
+								collect: [ :index | (array at: index + 1) -> (array at: index) ])
+								copyWith: true -> array last) ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> guardedChoiceNodeClass [
+	^ RMDGuardedChoiceNode
 ]
 
 { #category : #'parsers-atoms' }
@@ -378,7 +406,7 @@ RMDGrammar >> negationNodeClass [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> parenExpression [
-	^ ($( asPParser , expression trimBlanks , $) asPParser) ==> #second
+	^ ($( asPParser , guardedChoice , $) asPParser) ==> #second
 ]
 
 { #category : #'class access' }
@@ -394,7 +422,7 @@ RMDGrammar >> productNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
 	^ (self deltaVariable / self variable , $' asPParser trimBlanks
-		, '=' asPParser trimBlanks , expression)
+		, '=' asPParser trimBlanks , guardedChoice)
 		==> [ :quad | 
 			self propertyDefinitionNodeClass
 				variable: quad first
@@ -404,6 +432,62 @@ RMDGrammar >> propertyDefinition [
 { #category : #'class access' }
 RMDGrammar >> propertyDefinitionNodeClass [
 	^ RMDPropertyDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> script [
+	^ (self scriptHeaderLine , self scriptPresumeLine optional
+		, self scriptPropertyPart , self scriptUtilityPart optional)
+		==> [ :quad | 
+			self scriptNodeClass
+				name: quad first first
+				object: quad first second
+				guard: (quad second ifNil: [ true ])
+				propertyDefinitions: quad third
+				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> scriptHeaderLine [
+	^ ('to' asPParser trimBlanks , identifier trimBlanks
+		, identifier optional , 'is' asPParser trimBlanks
+		, #newline asPParser trimBlanks)
+		==> [ :array | 
+			{array second.
+			array third} ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> scriptNodeClass [
+	^ RMDScriptNode 
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> scriptPresumeLine [
+	^ ('presume' asPParser trimBlanks , condition
+		, #newline asPParser trimBlanks) ==> #second
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> scriptPropertyPart [
+	^ ((self propertyDefinition
+		separatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional)
+		==> [ :pair | 
+			| lines |
+			lines := pair first.
+			(1 to: lines size by: 2) collect: [ :i | lines at: i ] ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> scriptUtilityPart [
+	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
+		, (self utilityDefinition separatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional)
+		==> [ :quad | 
+			| lines |
+			lines := quad third.
+			(1 to: lines size by: 2) collect: [ :i | lines at: i ] ]
 ]
 
 { #category : #accessing }
@@ -488,7 +572,7 @@ RMDGrammar >> unitTerm [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> utilityDefinition [
-	^ (self utilityVariable , '=' asPParser trimBlanks , expression)
+	^ (self utilityVariable , '=' asPParser trimBlanks , guardedChoice)
 		==> [ :triple | 
 			self utilityDefinitionNode
 				variable: triple first
