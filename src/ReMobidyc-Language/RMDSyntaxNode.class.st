@@ -130,6 +130,11 @@ RMDSyntaxNode >> isPropertyAdditiveDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isPropertyDeclarationNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isPropertyDefinitionNode [
 	^ false
 ]

@@ -519,6 +519,17 @@ RMDGrammarTest >> testLiteral [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testPropertyDeclaration [
+	| declaration |
+	declaration := grammar propertyDeclaration parse: 'x = 1[m]'.
+	self assert: declaration isPropertyDeclarationNode.
+	self assert: declaration identifier equals: 'x'.
+	self
+		assert: declaration expression
+		equals: (grammar literal parse: '1[m]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPropertyDefinition [
 	| definition |
 	definition := grammar propertyDefinition parse: 'my x'' = 1[m]'.

@@ -60,6 +60,13 @@ RMDGrammar >> allUnits [
 		yourself
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> animatHeader [
+	^ (self agentIdentifier , 'is' asPParser trimBlanks
+		, 'Animat' asPParser trimBlanks , 'with' asPParser trimBlanks
+		, #newline asPParser trimBlanks) ==> #first
+]
+
 { #category : #'parsers-expressions' }
 RMDGrammar >> apply [
 	^ (identifier , $( asPParser trimBlanks
@@ -440,6 +447,20 @@ RMDGrammar >> powerNodeClass [
 { #category : #'class access' }
 RMDGrammar >> productNodeClass [
 	^ RMDProductNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> propertyDeclaration [
+	^ (identifier , '=' asPParser trimBlanks , expression)
+		==> [ :triple | 
+			self propertyDeclarationNodeClass
+				identifier: triple first
+				expression: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> propertyDeclarationNodeClass [
+	^ RMDPropertyDeclarationNode
 ]
 
 { #category : #'parsers-definitions' }
