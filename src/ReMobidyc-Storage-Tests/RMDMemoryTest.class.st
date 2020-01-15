@@ -229,7 +229,7 @@ RMDMemoryTest >> testNextDeltaAtAdd [
 	memory
 		nextDeltaAt: 3 add: 11;
 		tick.
-	self should: [ memory at: 1 ] raise: KeyNotFound.
+	self assert: (memory at: 1) equals: 2 + 7 + 9.
 	self assert: (memory at: 3) equals: 4 + 8 + 11
 ]
 

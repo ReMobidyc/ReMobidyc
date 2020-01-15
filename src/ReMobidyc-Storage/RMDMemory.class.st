@@ -106,8 +106,7 @@ RMDMemory >> differentialAt: anInteger ifAbsent: errorBlock [
 RMDMemory >> fastSunrise [
 	old2Values := oldValues.
 	oldValues := values.
-	values := nextValues.
-	nextValues := Dictionary new.
+	values := nextValues copy.
 	nextDeltas := Dictionary new.
 	valuesDirty := false.
 	nextValuesDirty := false
@@ -237,9 +236,15 @@ RMDMemory >> sunset [
 		ifNotEmpty: [ nextValuesDirty := true.
 			nextDeltas
 				keysAndValuesDo: [ :id :delta | 
-					nextValues
-						at: id
-						put: (nextValues at: id ifAbsent: [ self at: id ]) + delta ] ].
+					| nextValue |
+					nextValue := nextValues at: id ifAbsent: [ values at: id ].
+					nextValue ifNotNil: [ nextValues at: id put: nextValue + delta ] ] ].
+	nextValues
+		keysAndValuesRemove: [ :id :value | 
+			value isNil
+				and: [ nextDeltas removeKey: id.
+					nextValuesDirty := true.
+					true ] ].
 	valuesDirty
 		ifTrue: [ self writeValues: values forTime: time ].
 	nextValuesDirty

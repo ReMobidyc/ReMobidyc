@@ -1,29 +1,30 @@
 Class {
-	#name : #RMDSpeciesNode,
+	#name : #RMDSpeciesDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
-		'propertyDeclarations'
+		'propertyDeclarations',
+		'utilityDelarations'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #accessing }
-RMDSpeciesNode >> identifier [
+RMDSpeciesDefinitionNode >> identifier [
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDSpeciesNode >> identifier: aString [
+RMDSpeciesDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
 { #category : #accessing }
-RMDSpeciesNode >> propertyDeclarations [
+RMDSpeciesDefinitionNode >> propertyDeclarations [
 	^ propertyDeclarations
 ]
 
 { #category : #accessing }
-RMDSpeciesNode >> propertyDeclarations: anArrayOfPropertyDeclaration [
+RMDSpeciesDefinitionNode >> propertyDeclarations: anArrayOfPropertyDeclaration [
 	propertyDeclarations := anArrayOfPropertyDeclaration
 ]
