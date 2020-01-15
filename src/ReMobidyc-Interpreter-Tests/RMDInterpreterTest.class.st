@@ -5,7 +5,7 @@ Class {
 		'interpreter',
 		'dt'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : #'ReMobidyc-Interpreter-Tests'
 }
 
 { #category : #running }

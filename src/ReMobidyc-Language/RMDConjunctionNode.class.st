@@ -4,11 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #evaluating }
-RMDConjunctionNode >> evalIn: aRMDInterpreter [
-	^ conditions allSatisfy: [ :cond | cond evalIn: aRMDInterpreter ]
-]
-
 { #category : #testing }
 RMDConjunctionNode >> isConjunctionNode [
 	^ true

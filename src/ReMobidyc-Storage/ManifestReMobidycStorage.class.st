@@ -11,3 +11,8 @@ Class {
 ManifestReMobidycStorage class >> ruleRBAtIfAbsentRuleV1FalsePositive [
 	^ #(#(#(#RGMethodDefinition #(#RMDMemory #at:ifAbsentPut: #false)) #'2019-12-27T13:38:37.83963+09:00') )
 ]
+
+{ #category : #'code-critics' }
+ManifestReMobidycStorage class >> ruleRBCollectionMessagesToExternalObjectRuleV1FalsePositive [
+	^ #(#(#(#RGPackage #(#'ReMobidyc-Storage')) #'2020-01-15T12:40:11.223963+09:00') )
+]

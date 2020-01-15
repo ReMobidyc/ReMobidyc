@@ -12,13 +12,6 @@ RMDUtilityVariableNode class >> agent: aRMDAgentNode identifier: aString [
 		yourself
 ]
 
-{ #category : #evaluating }
-RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter
-		readUtility: identifier
-		ifAbsent: [ KeyNotFound signal ]
-]
-
 { #category : #testing }
 RMDUtilityVariableNode >> isUtilityVariableNode [
 	^ true

@@ -20,15 +20,6 @@ RMDGuardedChoiceNode >> = anObject [
 		and: [ guardsAndChoices = anObject guardsAndChoices ]
 ]
 
-{ #category : #evaluating }
-RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
-	guardsAndChoices
-		do: [ :assoc | 
-			(assoc key evalIn: aRMDInterpreter) = true
-				ifTrue: [ ^ assoc value evalIn: aRMDInterpreter ] ].
-	^ self error: 'All guards failed'
-]
-
 { #category : #private }
 RMDGuardedChoiceNode >> guardsAndChoices [
 	^ guardsAndChoices

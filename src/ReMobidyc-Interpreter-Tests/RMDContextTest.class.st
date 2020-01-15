@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : #'ReMobidyc-Interpreter-Tests'
 }
 
 { #category : #running }

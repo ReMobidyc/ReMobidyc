@@ -27,11 +27,6 @@ RMDLiteralNode >> computeNumeric [
 	^ type toSI: literal asNumber
 ]
 
-{ #category : #evaluating }
-RMDLiteralNode >> evalIn: aRMDInterpreter [
-	^ self numeric
-]
-
 { #category : #comparing }
 RMDLiteralNode >> hash [
 	^ literal hash

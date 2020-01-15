@@ -10,10 +10,21 @@ Class {
 		'oldValues',
 		'old2Values',
 		'valuesDirty',
-		'nextValuesDirty'
+		'nextValuesDirty',
+		'nextAvailableSlot',
+		'individuals'
 	],
 	#category : #'ReMobidyc-Storage'
 }
+
+{ #category : #'accessing-agents' }
+RMDMemory >> allocateIndividualOf: aRMDSpecies [
+	| individual |
+	nextAvailableSlot := (individual := nextAvailableSlot)
+		+ aRMDSpecies propertyDeclarations size.
+	(individuals at: aRMDSpecies ifAbsent: [ Set new ]) add: individual.
+	^ individual
+]
 
 { #category : #accessing }
 RMDMemory >> at: anInteger [
@@ -107,6 +118,18 @@ RMDMemory >> fastSunset [
 	^ self sunset
 ]
 
+{ #category : #'accessing-agents' }
+RMDMemory >> individualsOf: aRMDSpeciesNode do: aBlock [
+	(individuals at: aRMDSpeciesNode ifAbsent: [ #() ])
+		do: [ :id | aBlock value: id ]
+]
+
+{ #category : #'accessing-agents' }
+RMDMemory >> individualsOf: aRMDSpeciesNode doWithSpecies: aBlock [
+	(individuals at: aRMDSpeciesNode ifAbsent: [ #() ])
+		do: [ :id | aBlock value: id value: aRMDSpeciesNode ]
+]
+
 { #category : #initialization }
 RMDMemory >> initialize [
 	super initialize.
@@ -118,7 +141,9 @@ RMDMemory >> initialize [
 	old2Values := Dictionary new.
 	nextDeltas := Dictionary new.
 	valuesDirty := false.
-	nextValuesDirty := false
+	nextValuesDirty := false.
+	nextAvailableSlot := 1.
+	individuals := Dictionary new
 ]
 
 { #category : #accessing }

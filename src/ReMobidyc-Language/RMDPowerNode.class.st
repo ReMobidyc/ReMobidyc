@@ -4,12 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #evaluating }
-RMDPowerNode >> evalIn: aRMDInterpreter [
-	^ (expression1 evalIn: aRMDInterpreter)
-		** (expression2 evalIn: aRMDInterpreter)
-]
-
 { #category : #testing }
 RMDPowerNode >> isPowerNode [
 	^ true

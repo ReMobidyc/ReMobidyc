@@ -10,7 +10,7 @@ Class {
 { #category : #'class initialization' }
 RMDUnit class >> initialize [
 	<script: 'RMDProportionalUnitSymbol initialize'>
-	| register m m2 m3 kg s k |
+	| register m m2 m3 kg second kelvin joules radian |
 	KnownUnits ifNil: [ KnownUnits := Dictionary new ].
 	register := [ :unit :variants | 
 	KnownUnits at: unit symbol put: unit.
@@ -69,32 +69,32 @@ RMDUnit class >> initialize [
 		value: #().
 	"time"
 	register
-		value: (s := self newSISymbol: 's')
+		value: (second := self newSISymbol: 's')
 		value: #(sec secs second seconds).
 	register
-		value: (self newSymbol: 'day' scale: 86400.0 siUnit: s)
+		value: (self newSymbol: 'day' scale: 86400.0 siUnit: second)
 		value: #(days).
 	register
-		value: (self newSymbol: 'h' scale: 3600.0 siUnit: s)
+		value: (self newSymbol: 'h' scale: 3600.0 siUnit: second)
 		value: #(hour hours).
 	register
-		value: (self newSymbol: 'min' scale: 60.0 siUnit: s)
+		value: (self newSymbol: 'min' scale: 60.0 siUnit: second)
 		value: #(mins minute minutes).
 	register
-		value: (self newSymbol: 'ms' scale: 1.0e-3 siUnit: s)
+		value: (self newSymbol: 'ms' scale: 1.0e-3 siUnit: second)
 		value: #(msec milliseconds millisecond).
 	register
-		value: (self newSymbol: 'µs' scale: 1.0e-6 siUnit: s)
+		value: (self newSymbol: 'µs' scale: 1.0e-6 siUnit: second)
 		value: #(µsec microsecond microseconds).
 	"temperature"
-	register value: (k := self newSISymbol: 'K') value: #(K).
+	register value: (kelvin := self newSISymbol: 'K') value: #(K).
 	register
 		value:
 			(self
 				newSymbol: 'C'
 				fromSI: [ :t | t - 273.152519 ]
 				toSI: [ :t | t + 273.152519 ]
-				siUnit: k)
+				siUnit: kelvin)
 		value: #('°C' '℃').
 	register
 		value:
@@ -102,7 +102,7 @@ RMDUnit class >> initialize [
 				newSymbol: 'F'
 				fromSI: [ :t | t * 1.8 - 459.67 ]
 				toSI: [ :t | (t + 459.67) / 1.8 ]
-				siUnit: k)
+				siUnit: kelvin)
 		value: #('°F' '℉').
 	"area"
 	m2 := m * m.
@@ -140,7 +140,19 @@ RMDUnit class >> initialize [
 		value: #(dL dℓ mL mℓ '㎖').
 	register
 		value: (self newSymbol: 'µl' scale: 1.0e-6 siUnit: m3)
-		value: #(µL µℓ)
+		value: #(µL µℓ).
+	"Energy"
+	register value: (joules := self newSISymbol: 'J') value: #().
+	register
+		value: (self newSymbol: 'cal' scale: 4.184 siUnit: joules)
+		value: #().
+	register
+		value: (self newSymbol: 'kcal' scale: 4.184e3 siUnit: joules)
+		value: #().
+	"angle"
+	register value: (radian := self newSISymbol: 'rad') value: #('㎭').
+	register value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian) value: #('degrees' '°')
+	
 ]
 
 { #category : #'instance creation' }

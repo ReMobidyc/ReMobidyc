@@ -6,7 +6,7 @@ Class {
 		'propertyDict',
 		'script'
 	],
-	#category : #'ReMobidyc-Language-Interpreter'
+	#category : #'ReMobidyc-Interpreter'
 }
 
 { #category : #accessing }

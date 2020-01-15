@@ -33,11 +33,6 @@ RMDDefinitionNode >> definitionBody: aRMDExpressionNode [
 	definitionBody := aRMDExpressionNode
 ]
 
-{ #category : #evaluating }
-RMDDefinitionNode >> evalIn: aRMDInterpreter [
-	^ self subclassResponsibility
-]
-
 { #category : #comparing }
 RMDDefinitionNode >> hash [
 	^ (self class hash bitXor: variable hash) bitXor: definitionBody hash
@@ -46,17 +41,6 @@ RMDDefinitionNode >> hash [
 { #category : #accessing }
 RMDDefinitionNode >> operator [
 	^ self subclassResponsibility
-]
-
-{ #category : #printing }
-RMDDefinitionNode >> printOn: aStream [
-	variable printOn: aStream.
-	aStream
-		nextPut: $';
-		nextPut: Character space;
-		nextPutAll: self operator;
-		nextPut: Character space.
-	definitionBody printOn: aStream
 ]
 
 { #category : #accessing }

@@ -7,7 +7,8 @@ Class {
 		'identifier',
 		'agentReference',
 		'condition',
-		'guardedChoice'
+		'guardedChoice',
+		'literal'
 	],
 	#classVars : [
 		'Builtins',
@@ -253,9 +254,10 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ self parenExpression / self apply / self differentialVariable
-		/ self differential2Variable / self deltaVariable / self variable
-		/ self utilityVariable / self literal
+	^ self parenExpression / self interactiveProperty / self apply
+		/ self differentialVariable / self differential2Variable
+		/ self deltaVariable / self variable / self utilityVariable
+		/ literal
 ]
 
 { #category : #'parsers-expressions' }
@@ -365,6 +367,21 @@ RMDGrammar >> identifier [
 						ifTrue: [ name ]
 						ifFalse: [ PP2Failure
 								message: 'An identifier must start with a lowercase letter.' ] ] ]
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> interactiveProperty [
+	^ (('distance' asPParser / 'direction' asPParser) trimBlanks
+		, identifier)
+		==> [ :pair | 
+			self interactivePropertyNodeClass
+				directive: pair first
+				agent: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> interactivePropertyNodeClass [
+	^ RMDInteractivePropertyNode
 ]
 
 { #category : #accessing }

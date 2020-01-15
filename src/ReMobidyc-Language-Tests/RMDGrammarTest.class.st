@@ -547,6 +547,39 @@ RMDGrammarTest >> testPropertyDefinition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testScript [
+	| script |
+	script := grammar script
+		parse:
+			'to walk is
+	presume my energy > 0
+	my delta x'' = sin(my heading) * walking_distance
+	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
+where
+	walking_speed = 10[km/h] if my energy > 1000[kcal],
+	                4[km/h]
+	walking_distance = walking_speed * world''s delta time'.
+	self assert: script isScriptNode.
+	self assert: script identifier equals: 'walk'.
+	self assert: script object equals: nil.
+	self
+		assert: script guard
+		equals: (grammar condition parse: 'my energy > 0').
+	self assert: script propertyDefinitions size equals: 2.
+	self assert: script utilityDefinitions size equals: 2.
+	script := grammar script
+		parse:
+			'to chase target is
+	my delta heading'' = direction target - my heading'.
+	self assert: script isScriptNode.
+	self assert: script identifier equals: 'chase'.
+	self assert: script object equals: 'target'.
+	self assert: script guard equals: true.
+	self assert: script propertyDefinitions size equals: 1.
+	self assert: script utilityDefinitions size equals: 0
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testType [
 	| type |
 	type := grammar type parse: '[m]'.

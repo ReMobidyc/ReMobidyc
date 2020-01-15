@@ -4,13 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #evaluating }
-RMDUtilityDefinitionNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter
-		write: (definitionBody evalIn: aRMDInterpreter)
-		toUtility: variable identifier
-]
-
 { #category : #testing }
 RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 	^ true
@@ -19,4 +12,14 @@ RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 { #category : #accessing }
 RMDUtilityDefinitionNode >> operator [
 	^ '='
+]
+
+{ #category : #printing }
+RMDUtilityDefinitionNode >> printOn: aStream [
+	variable printOn: aStream.
+	aStream
+		nextPut: Character space;
+		nextPutAll: self operator;
+		nextPut: Character space.
+	definitionBody printOn: aStream
 ]

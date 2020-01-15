@@ -6,7 +6,7 @@ Class {
 		'libraries',
 		'context'
 	],
-	#category : #'ReMobidyc-Language-Interpreter'
+	#category : #'ReMobidyc-Interpreter'
 }
 
 { #category : #'library access' }
@@ -22,6 +22,58 @@ RMDInterpreter >> addLibrary: aDictionary [
 { #category : #private }
 RMDInterpreter >> context [
 	^ context
+]
+
+{ #category : #directives }
+RMDInterpreter >> direction: aString [
+	| x1 y1 x2 y2 |
+	x1 := self
+		readVariable: 'x'
+		agent: nil
+		ifAbsent: [ ^ KeyNotFound signal ].
+	y1 := self
+		readVariable: 'y'
+		agent: nil
+		ifAbsent: [ ^ KeyNotFound signal ].
+	x2 := self
+		readVariable: 'x'
+		agent: aString
+		ifAbsent: [ ^ KeyNotFound signal ].
+	y2 := self
+		readVariable: 'y'
+		agent: aString
+		ifAbsent: [ ^ KeyNotFound signal ].
+	^ ((x2 - x1) @ (y2 - y1)) theta
+]
+
+{ #category : #directives }
+RMDInterpreter >> directive: aString object: anotherString [
+	aString = 'direction'
+		ifTrue: [ ^ self direction: anotherString ].
+	aString = 'distance'
+		ifTrue: [ ^ self distance: anotherString ]
+]
+
+{ #category : #directives }
+RMDInterpreter >> distance: aString [
+	| x1 y1 x2 y2 |
+	x1 := self
+		readVariable: 'x'
+		agent: nil
+		ifAbsent: [ ^ KeyNotFound signal ].
+	y1 := self
+		readVariable: 'y'
+		agent: nil
+		ifAbsent: [ ^ KeyNotFound signal ].
+	x2 := self
+		readVariable: 'x'
+		agent: aString
+		ifAbsent: [ ^ KeyNotFound signal ].
+	y2 := self
+		readVariable: 'y'
+		agent: aString
+		ifAbsent: [ ^ KeyNotFound signal ].
+	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
 ]
 
 { #category : #'library access' }

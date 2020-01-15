@@ -15,9 +15,8 @@ RMDSyntaxNodeTest class >> isAbstract [
 
 { #category : #running }
 RMDSyntaxNodeTest >> setUp [
-	interpreter := RMDInterpreter new
-		setMemory: RMDOnMemory new;
-		setContext: RMDContext new;
-		yourself.
-	parser := RMDGrammar new
+	(self class allSelectors
+		select:
+			[ :selector | selector size > 5 and: [ (selector copyFrom: 1 to: 5) = 'setUp' ] ])
+		do: [ :selector | self perform: selector ]
 ]

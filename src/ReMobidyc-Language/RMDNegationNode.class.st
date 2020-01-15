@@ -29,11 +29,6 @@ RMDNegationNode >> condition: aRMDConditionNode [
 	condition := aRMDConditionNode
 ]
 
-{ #category : #evaluating }
-RMDNegationNode >> evalIn: aRMDInterpreter [
-	^ (condition evalIn: aRMDInterpreter) not
-]
-
 { #category : #comparing }
 RMDNegationNode >> hash [
 	^ self class hash bitXor: condition hash

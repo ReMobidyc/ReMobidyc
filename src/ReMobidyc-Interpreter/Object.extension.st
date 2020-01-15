@@ -1,6 +1,6 @@
 Extension { #name : #Object }
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : #'*ReMobidyc-Interpreter' }
 Object >> evalIn: aRMDInterpreter [
 	
 ]

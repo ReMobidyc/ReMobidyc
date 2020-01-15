@@ -4,14 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #evaluating }
-RMDDifferentialVariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter
-		readDifferential: identifier
-		agent: agent
-		ifAbsent: [ KeyNotFound signal ]
-]
-
 { #category : #testing }
 RMDDifferentialVariableNode >> isDifferentialVariableNode [
 	^ true

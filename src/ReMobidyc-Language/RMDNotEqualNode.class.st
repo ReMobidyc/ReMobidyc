@@ -11,12 +11,6 @@ RMDNotEqualNode class >> expressions: anArrayOfRMDExpressionNode [
 		ifFalse: [ nil ]
 ]
 
-{ #category : #evaluating }
-RMDNotEqualNode >> evalIn: aRMDInterpreter [
-	^ ((expressions at: 1) evalIn: aRMDInterpreter)
-		~= ((expressions at: 2) evalIn: aRMDInterpreter)
-]
-
 { #category : #testing }
 RMDNotEqualNode >> isNotEqualNode [
 	^ true
