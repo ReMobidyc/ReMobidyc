@@ -66,27 +66,32 @@ RMDScriptNode >> printOn: aStream [
 		ifNotNil: [ aStream
 				nextPut: Character space;
 				nextPutAll: object ].
-	aStream
-		nextPutAll: ' is';
-		nextPut: Character cr.
+	aStream nextPutAll: ' is'.
 	(guard notNil and: [ guard ~= true ])
-		ifTrue: [ aStream nextPutAll: '    presume '.
-			guard printOn: aStream.
-			aStream nextPut: Character cr ].
+		ifTrue: [ aStream
+				nextPut: Character cr;
+				nextPutAll: '    presume '.
+			guard printOn: aStream ].
 	propertyDefinitions
 		do: [ :def | 
-			aStream nextPutAll: '    '.
-			def printOn: aStream.
-			aStream nextPut: Character cr ].
+			aStream
+				nextPut: Character cr;
+				nextPutAll: '    '.
+			def printOn: aStream ]
+		separatedBy: [ aStream nextPut: Character cr ].
 	utilityDefinitions
 		ifNotEmpty: [ aStream
+				nextPut: Character cr;
 				nextPutAll: 'where';
-				nextPut: Character cr ].
-	utilityDefinitions
-		do: [ :def | 
-			aStream nextPutAll: '    '.
-			def printOn: aStream.
-			aStream nextPut: Character cr ]
+				nextPut: Character cr.
+			utilityDefinitions
+				do: [ :def | 
+					aStream nextPutAll: '    '.
+					def printOn: aStream ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream
+		nextPut: $.;
+		nextPut: Character cr
 ]
 
 { #category : #accessing }

@@ -82,7 +82,7 @@ to test is
 	my delta x'' = two
 where
 	x = y + 2
-	y = 3' trim.
+	y = 3.' trim.
 	interpreter context script: (parser script parse: source).
 	self
 		assert: (interpreter readUtility: 'x' ifAbsent: [ nil ])

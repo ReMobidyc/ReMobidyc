@@ -454,7 +454,8 @@ RMDGrammar >> propertyDefinitionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> script [
 	^ (self scriptHeaderLine , self scriptPresumeLine optional
-		, self scriptPropertyPart , self scriptUtilityPart optional)
+		, self scriptPropertyPart , self scriptUtilityPart optional
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :quad | 
 			self scriptNodeClass
 				name: quad first first

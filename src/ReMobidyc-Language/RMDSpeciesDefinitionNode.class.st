@@ -19,6 +19,20 @@ RMDSpeciesDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #printing }
+RMDSpeciesDefinitionNode >> printOn: aStream [
+	identifier printOn: aStream.
+	aStream nextPutAll: ' is Animat'.
+	propertyDeclarations
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyDeclarations
+				do: [ :def | def printOn: aStream ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream nextPut: $.
+]
+
 { #category : #accessing }
 RMDSpeciesDefinitionNode >> propertyDeclarations [
 	^ propertyDeclarations

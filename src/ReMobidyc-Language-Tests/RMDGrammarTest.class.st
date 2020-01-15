@@ -558,7 +558,7 @@ RMDGrammarTest >> testScript [
 where
 	walking_speed = 10[km/h] if my energy > 1000[kcal],
 	                4[km/h]
-	walking_distance = walking_speed * world''s delta time'.
+	walking_distance = walking_speed * world''s delta time.'.
 	self assert: script isScriptNode.
 	self assert: script identifier equals: 'walk'.
 	self assert: script object equals: nil.
@@ -570,7 +570,7 @@ where
 	script := grammar script
 		parse:
 			'to chase target is
-	my delta heading'' = direction target - my heading'.
+	my delta heading'' = direction target - my heading.'.
 	self assert: script isScriptNode.
 	self assert: script identifier equals: 'chase'.
 	self assert: script object equals: 'target'.

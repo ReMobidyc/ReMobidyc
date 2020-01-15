@@ -45,7 +45,7 @@ to test is
 	my delta x'' = two
 where
 	one = 1
-	two = one + 1' trim.
+	two = one + 1.' trim.
 	context script: (parser script parse: source).
 	self
 		assert: (context utilityAt: 'one' ifAbsent: [ nil ])

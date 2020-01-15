@@ -8,7 +8,7 @@ RMDScriptNodeTest >> testEvalIn [
 			'to metabolize is
     my delta energy'' = basal_metabolism * -1
 where
-    basal_metabolism = 1500 [kcal/day]'.
+    basal_metabolism = 1500 [kcal/day].'.
 	interpreter context script: script.
 	interpreter context setMemoryAddressFor: 'energy' agent: nil to: 1.
 	interpreter memory
