@@ -254,10 +254,16 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ self parenExpression / self interactiveProperty / self apply
-		/ self differentialVariable / self differential2Variable
-		/ self deltaVariable / self variable / self utilityVariable
-		/ literal
+	^ ('-' asPParser trimBlanks optional
+		,
+			(self parenExpression / self interactiveProperty / self apply
+				/ self differentialVariable / self differential2Variable
+				/ self deltaVariable / self variable / self utilityVariable
+				/ literal))
+		==> [ :pair | 
+			pair first
+				ifNil: [ pair second ]
+				ifNotNil: [ self unaryMinusNode expression: pair second ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -541,6 +547,11 @@ RMDGrammar >> type [
 	^ ($[ asPParser trimBlanks , self unit optional
 		, $] asPParser trimBlanks)
 		==> [ :triple | triple second ifNil: [ RMDUnit noDimension ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> unaryMinusNode [
+	^ RMDUnaryMinusNode
 ]
 
 { #category : #'parsers-units' }

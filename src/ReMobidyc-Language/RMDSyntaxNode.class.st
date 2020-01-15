@@ -150,6 +150,11 @@ RMDSyntaxNode >> isSubtractionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isUnaryMinusNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isUtilityDefinitionNode [
 	^ false
 ]

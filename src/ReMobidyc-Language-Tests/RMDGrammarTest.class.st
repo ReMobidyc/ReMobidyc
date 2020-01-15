@@ -330,6 +330,11 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 isDifferential2VariableNode.
 	self assert: expr1 identifier equals: 'x'.
 	self assert: expr1 agent equals: 'foo'.
+	expr1 := grammar expr1 parse: '-foo''s d2/dt2 x'.
+	self assert: expr1 isUnaryMinusNode.
+	self assert: expr1 expression isDifferential2VariableNode.
+	self assert: expr1 expression identifier equals: 'x'.
+	self assert: expr1 expression agent equals: 'foo'.
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
