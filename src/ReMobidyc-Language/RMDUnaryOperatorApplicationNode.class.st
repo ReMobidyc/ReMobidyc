@@ -32,5 +32,9 @@ RMDUnaryOperatorApplicationNode >> operator [
 { #category : #printing }
 RMDUnaryOperatorApplicationNode >> printOn: aStream [
 	aStream nextPutAll: self operator.
-	expression printOn: aStream
+	self precedence < expression precedence
+		ifTrue: [ aStream nextPut: $( ].
+	expression printOn: aStream.
+	self precedence < expression precedence
+		ifTrue: [ aStream nextPut: $) ]
 ]

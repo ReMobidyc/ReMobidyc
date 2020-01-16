@@ -19,6 +19,14 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> allocateIndividualOf: aRMDAnimatDefinition [
+	| animat |
+	animat := memory allocateIndividualOf: aRMDAnimatDefinition.
+	self initializeAnimat: animat species: aRMDAnimatDefinition.
+	^ animat
+]
+
 { #category : #private }
 RMDInterpreter >> context [
 	^ context
@@ -87,7 +95,7 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 { #category : #initialization }
 RMDInterpreter >> initialize [
 	super initialize.
-	libraries := OrderedCollection new
+	libraries := OrderedCollection with: self standardLibrary
 ]
 
 { #category : #'animat operations' }
@@ -188,6 +196,15 @@ RMDInterpreter >> setContext: aRMDContext [
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
+]
+
+{ #category : #'library access' }
+RMDInterpreter >> standardLibrary [
+	^ {('min' -> [ :a :b | a min: b ]).
+	('max' -> [ :a :b | a max: b ]).
+	('sin' -> [ :theta | theta sin ]).
+	('cos' -> [ :theta | theta cos ]).
+	('tan' -> [ :theta | theta tan ])} asDictionary
 ]
 
 { #category : #timing }
