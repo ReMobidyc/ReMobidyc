@@ -26,7 +26,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				package: 'ReMobidyc-Language'
 					with: [ spec requires: #('PetitParser2Core') ];
 				package: 'ReMobidyc-Interpreter'
-					with: [ spec requires: #('Mobidyc-Storage' 'Mobidyc-Language') ];
+					with: [ spec requires: #('ReMobidyc-Storage' 'ReMobidyc-Language') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
