@@ -354,7 +354,7 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 isAgentDirectiveNode.
 	self assert: expr1 directive equals: 'distance'.
 	self assert: expr1 agentIdentifier equals: 'foo'.
-	expr1 := grammar uniformDistribution parse: 'uniform -10[cm] 2[m]'.
+	expr1 := grammar uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
 	self assert: expr1 isUniformDistributionNode.
 	self
 		assert: expr1 fromLiteral
@@ -640,7 +640,7 @@ RMDGrammarTest >> testType [
 { #category : #tests }
 RMDGrammarTest >> testUniformDistribution [
 	| node |
-	node := grammar uniformDistribution parse: 'uniform -10[cm] 2[m]'.
+	node := grammar uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
 	self assert: node isUniformDistributionNode.
 	self
 		assert: node fromLiteral

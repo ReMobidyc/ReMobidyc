@@ -40,7 +40,7 @@ RMDUniformDistributionNode >> precedence [
 RMDUniformDistributionNode >> printOn: aStream [
 	aStream nextPutAll: 'uniform '.
 	fromLiteral printOn: aStream.
-	aStream nextPut: Character space.
+	aStream nextPutAll: ' to '.
 	toLiteral printOn: aStream
 ]
 

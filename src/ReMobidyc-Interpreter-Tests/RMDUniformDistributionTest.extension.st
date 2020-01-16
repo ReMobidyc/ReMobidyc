@@ -3,7 +3,7 @@ Extension { #name : #RMDUniformDistributionTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDUniformDistributionTest >> testEvalIn [
 	| node cm m values |
-	node := parser uniformDistribution parse: 'uniform -10[cm] 2[m]'.
+	node := parser uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
 	cm := 'cm' asRMDUnit.
 	m := 'm' asRMDUnit.
 	self assert: node isUniformDistributionNode.

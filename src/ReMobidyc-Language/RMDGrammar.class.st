@@ -577,9 +577,10 @@ RMDGrammar >> unaryMinusNode [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> uniformDistribution [
-	^ ('uniform' asPParser trimBlanks , literal , literal)
+	^ ('uniform' asPParser trimBlanks , literal
+		, 'to' asPParser trimBlanks , literal)
 		==>
-			[ :triple | self uniformDistributionNodeClass from: triple second to: triple third ]
+			[ :quad | self uniformDistributionNodeClass from: quad second to: quad fourth ]
 ]
 
 { #category : #'class access' }
