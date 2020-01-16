@@ -30,6 +30,21 @@ RMDGrammar >> additionNodeClass [
 ]
 
 { #category : #'parsers-atoms' }
+RMDGrammar >> agentDirective [
+	^ (('distance' asPParser / 'direction' asPParser) trimBlanks
+		, identifier)
+		==> [ :pair | 
+			self agentDirectiveNodeClass
+				directive: pair first
+				agent: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> agentDirectiveNodeClass [
+	^ RMDAgentDirectiveNode
+]
+
+{ #category : #'parsers-atoms' }
 RMDGrammar >> agentIdentifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
@@ -263,10 +278,10 @@ RMDGrammar >> energyUnits [
 RMDGrammar >> expr1 [
 	^ ('-' asPParser trimBlanks optional
 		,
-			(self parenExpression / self interactiveProperty / self apply
-				/ self differentialVariable / self differential2Variable
-				/ self deltaVariable / self variable / self utilityVariable
-				/ literal))
+			(self parenExpression / self agentDirective / self uniformDistribution
+				/ self apply / self differentialVariable
+				/ self differential2Variable / self deltaVariable / self variable
+				/ self utilityVariable / literal))
 		==> [ :pair | 
 			pair first
 				ifNil: [ pair second ]
@@ -380,21 +395,6 @@ RMDGrammar >> identifier [
 						ifTrue: [ name ]
 						ifFalse: [ PP2Failure
 								message: 'An identifier must start with a lowercase letter.' ] ] ]
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> interactiveProperty [
-	^ (('distance' asPParser / 'direction' asPParser) trimBlanks
-		, identifier)
-		==> [ :pair | 
-			self interactivePropertyNodeClass
-				directive: pair first
-				agent: pair second ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> interactivePropertyNodeClass [
-	^ RMDInteractivePropertyNode
 ]
 
 { #category : #accessing }
@@ -573,6 +573,18 @@ RMDGrammar >> type [
 { #category : #'class access' }
 RMDGrammar >> unaryMinusNode [
 	^ RMDUnaryMinusNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> uniformDistribution [
+	^ ('uniform' asPParser trimBlanks , literal , literal)
+		==>
+			[ :triple | self uniformDistributionNodeClass from: triple second to: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> uniformDistributionNodeClass [
+	^ RMDUniformDistributionNode
 ]
 
 { #category : #'parsers-units' }

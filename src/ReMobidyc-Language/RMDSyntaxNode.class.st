@@ -10,6 +10,11 @@ RMDSyntaxNode >> isAdditionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAgentDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAgentReferenceNode [
 	^ false
 ]
@@ -156,6 +161,11 @@ RMDSyntaxNode >> isSubtractionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isUnaryMinusNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isUniformDistributionNode [
 	^ false
 ]
 

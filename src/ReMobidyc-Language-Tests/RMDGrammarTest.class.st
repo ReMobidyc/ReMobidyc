@@ -120,6 +120,21 @@ RMDGrammarTest >> setUp [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAgentDirective [
+	| node |
+	node := grammar agentDirective parse: 'distance foo'.
+	self assert: node isAgentDirectiveNode.
+	self assert: node directive equals: 'distance'.
+	self assert: node agentIdentifier equals: 'foo'.
+	node := grammar agentDirective parse: 'direction foo'.
+	self assert: node isAgentDirectiveNode.
+	self assert: node directive equals: 'direction'.
+	self assert: node agentIdentifier equals: 'foo'.
+	node := grammar agentDirective parse: 'foo bar'.
+	self assert: node isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testApply [
 	| apply |
 	apply := grammar apply parse: 'abs(x)'.
@@ -335,6 +350,16 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 expression isDifferential2VariableNode.
 	self assert: expr1 expression identifier equals: 'x'.
 	self assert: expr1 expression agent equals: 'foo'.
+	expr1 := grammar agentDirective parse: 'distance foo'.
+	self assert: expr1 isAgentDirectiveNode.
+	self assert: expr1 directive equals: 'distance'.
+	self assert: expr1 agentIdentifier equals: 'foo'.
+	expr1 := grammar uniformDistribution parse: 'uniform -10[cm] 2[m]'.
+	self assert: expr1 isUniformDistributionNode.
+	self
+		assert: expr1 fromLiteral
+		equals: (grammar literal parse: '-10cm').
+	self assert: expr1 toLiteral equals: (grammar literal parse: '2[cm]').
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
@@ -610,6 +635,17 @@ RMDGrammarTest >> testType [
 				/ ((RMDUnitSymbol at: 's') ** 2).
 	type := grammar type parse: '[]'.
 	self assert: type equals: RMDUnit noDimension
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testUniformDistribution [
+	| node |
+	node := grammar uniformDistribution parse: 'uniform -10[cm] 2[m]'.
+	self assert: node isUniformDistributionNode.
+	self
+		assert: node fromLiteral
+		equals: (grammar literal parse: '-10cm').
+	self assert: node toLiteral equals: (grammar literal parse: '2[cm]')
 ]
 
 { #category : #tests }
