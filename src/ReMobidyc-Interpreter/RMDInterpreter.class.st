@@ -9,6 +9,43 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #examples }
+RMDInterpreter class >> exampleSugar [
+	<script: 'RMDInterpreter exampleSugar'>
+	| interpreter memory goat eat goats |
+	interpreter := RMDInterpreter new.
+	memory := RMDFileMemory
+		on:
+			((FileLocator documents / 'ReMobidyc' / 'sugar')
+				ensureCreateDirectory;
+				deleteAllChildren;
+				yourself).
+	interpreter setMemory: memory.
+	goat := '
+Goat is Animat with
+	energy = uniform 5000 [kcal] to 20000 [kcal].
+' trim asRMDAnimatDefinition.
+	eat := '
+to eat is
+presume my sugar >= 0
+	my delta sugar'' = -min(basal_metabolism, my sugar)
+where
+	basal_metabolism = 150 [kcal].
+' trim asRMDScript.
+	goats := (1 to: 9)
+		collect: [ :i | interpreter allocateIndividualOf: goat ].
+	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
+		inspect.
+	100
+		timesRepeat: [ interpreter
+				script: eat
+				species: goat
+				replaceMap: {('sugar' -> 'energy')}.
+			interpreter tick ].
+	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
+		inspect
+]
+
 { #category : #'library access' }
 RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary
