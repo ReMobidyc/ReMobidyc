@@ -21,8 +21,8 @@ Class {
 RMDMemory >> allocateIndividualOf: aRMDSpecies [
 	| individual |
 	nextAvailableSlot := (individual := nextAvailableSlot)
-		+ aRMDSpecies propertyDeclarations size.
-	(individuals at: aRMDSpecies ifAbsent: [ Set new ]) add: individual.
+		+ aRMDSpecies totalNumberOfProperties.
+	(individuals at: aRMDSpecies ifAbsentPut: [ Set new ]) add: individual.
 	^ individual
 ]
 
@@ -232,6 +232,8 @@ RMDMemory >> sunrise [
 
 { #category : #timing }
 RMDMemory >> sunset [
+	values
+		keysAndValuesDo: [ :id :value | nextValues at: id ifAbsentPut: [ value ] ].
 	nextDeltas
 		ifNotEmpty: [ nextValuesDirty := true.
 			nextDeltas

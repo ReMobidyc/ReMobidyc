@@ -90,9 +90,30 @@ RMDInterpreter >> initialize [
 	libraries := OrderedCollection new
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> initializeAnimat: anInteger species: aRMDAnimatDefinitionNode [
+	| offsets |
+	offsets := aRMDAnimatDefinitionNode propertyOffsets.
+	memory at: anInteger + (offsets at: 'x') put: self random * 1000.0.
+	memory at: anInteger + (offsets at: 'y') put: self random * 1000.0.
+	memory
+		at: anInteger + (offsets at: 'heading')
+		put: Float pi * 2 * self random.
+	aRMDAnimatDefinitionNode propertyDeclarations
+		do: [ :property | 
+			memory
+				at: anInteger + (offsets at: property identifier)
+				put: (property expression evalIn: self) ]
+]
+
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
+]
+
+{ #category : #private }
+RMDInterpreter >> random [
+	^ SharedRandom globalGenerator next
 ]
 
 { #category : #'variable access' }
@@ -144,6 +165,21 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 		ifAbsent: errorBlock
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> script: aRMDScriptNode species: aRMDAnimatDefinitionNode replaceMap: anArrayOfAssociation [
+	memory
+		individualsOf: aRMDAnimatDefinitionNode
+		do: [ :animat | 
+			context := RMDContext new
+				animat: animat
+					agent: nil
+					species: aRMDAnimatDefinitionNode
+					replaceMap: anArrayOfAssociation;
+				script: aRMDScriptNode;
+				yourself.
+			aRMDScriptNode evalIn: self ]
+]
+
 { #category : #private }
 RMDInterpreter >> setContext: aRMDContext [
 	context := aRMDContext
@@ -152,6 +188,11 @@ RMDInterpreter >> setContext: aRMDContext [
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
+]
+
+{ #category : #timing }
+RMDInterpreter >> tick [
+	memory tick
 ]
 
 { #category : #'variable access' }

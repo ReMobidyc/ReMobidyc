@@ -10,6 +10,18 @@ Class {
 }
 
 { #category : #accessing }
+RMDContext >> animat: anInteger agent: aString species: aRMDAnimatDefinitionNode replaceMap: anArrayOfAssociation [
+	| agentBinds offsets |
+	agentBinds := propertyDict
+		at: aString
+		ifAbsentPut: [ Dictionary new: anArrayOfAssociation size ].
+	offsets := aRMDAnimatDefinitionNode propertyOffsets.
+	anArrayOfAssociation
+		do:
+			[ :assoc | agentBinds at: assoc key put: (offsets at: assoc value) + anInteger ]
+]
+
+{ #category : #accessing }
 RMDContext >> getMemoryAddressFor: aString agent: anInteger ifAbsent: errorBlock [
 	^ (propertyDict at: anInteger ifAbsent: [ ^ errorBlock value ])
 		at: aString

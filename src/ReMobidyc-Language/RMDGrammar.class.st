@@ -76,19 +76,39 @@ RMDGrammar >> allUnits [
 ]
 
 { #category : #'parsers-definitions' }
+RMDGrammar >> animatDefinition [
+	^ (self animatHeader , self animatPropertyPart optional
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
+		==> [ :quad | 
+			self animatDefinitionNodeClass
+				identifier: quad first
+				propertyDeclarations: (quad second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> animatDefinitionNodeClass [
+	^ RMDAnimatDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
 RMDGrammar >> animatHeader [
 	^ (self agentIdentifier , 'is' asPParser trimBlanks
-		, 'Animat' asPParser trimBlanks , 'with' asPParser trimBlanks
-		, #newline asPParser trimBlanks) ==> #first
+		, 'Animat' asPParser trimBlanks) ==> #first
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> animatPropertyPart [
+	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
+		,
+			(self propertyDeclaration
+				onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> apply [
 	^ (identifier , $( asPParser trimBlanks
-		,
-			((expression separatedBy: $, asPParser trimBlanks)
-				==>
-					[ :array | (1 to: array size by: 2) collect: [ :index | array at: index ] ])
+		, (expression onlySeparatedBy: $, asPParser trimBlanks)
 		, $) asPParser trimBlanks)
 		==>
 			[ :quad | self applyNodeClass function: quad first expressions: quad third ]
@@ -516,23 +536,16 @@ RMDGrammar >> scriptPresumeLine [
 { #category : #'parsers-definitions' }
 RMDGrammar >> scriptPropertyPart [
 	^ ((self propertyDefinition
-		separatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional)
-		==> [ :pair | 
-			| lines |
-			lines := pair first.
-			(1 to: lines size by: 2) collect: [ :i | lines at: i ] ]
+		onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #first
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> scriptUtilityPart [
 	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
-		, (self utilityDefinition separatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional)
-		==> [ :quad | 
-			| lines |
-			lines := quad third.
-			(1 to: lines size by: 2) collect: [ :i | lines at: i ] ]
+		,
+			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
 { #category : #accessing }
@@ -626,11 +639,9 @@ RMDGrammar >> unitSymbol [
 
 { #category : #'parsers-units' }
 RMDGrammar >> unitTerm [
-	^ (self unitFactor separatedBy: #blank asPParser plus)
-		==> [ :array | 
-			(1 to: array size by: 2)
-				inject: RMDUnit noDimension
-				into: [ :unit :i | unit * (array at: i) ] ]
+	^ (self unitFactor onlySeparatedBy: #blank asPParser plus)
+		==>
+			[ :array | array inject: RMDUnit noDimension into: [ :unit :f | unit * f ] ]
 ]
 
 { #category : #'parsers-definitions' }

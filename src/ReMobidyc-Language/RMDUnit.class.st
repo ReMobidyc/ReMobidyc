@@ -7,11 +7,33 @@ Class {
 	#category : #'ReMobidyc-Language-Units'
 }
 
+{ #category : #accessing }
+RMDUnit class >> at: aString [
+	^ KnownUnits at: aString ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #accessing }
+RMDUnit class >> at: aString ifAbsent: errorBlock [
+	^ KnownUnits at: aString ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDUnit class >> at: aString ifPresent: aBlock [
+	^ KnownUnits at: aString ifPresent: aBlock
+]
+
+{ #category : #accessing }
+RMDUnit class >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
+	^ KnownUnits at: aString ifPresent: aBlock ifAbsent: errorBlock
+]
+
 { #category : #'class initialization' }
 RMDUnit class >> initialize [
 	<script: 'RMDProportionalUnitSymbol initialize'>
 	| register m m2 m3 kg second kelvin joules radian |
 	KnownUnits ifNil: [ KnownUnits := Dictionary new ].
+	KnownUnits removeAll.
+	KnownUnits at: '' put: RMDCompoundUnit noDimension.
 	register := [ :unit :variants | 
 	KnownUnits at: unit symbol put: unit.
 	variants do: [ :symbol | KnownUnits at: symbol asString put: unit ] ].
@@ -151,8 +173,19 @@ RMDUnit class >> initialize [
 		value: #().
 	"angle"
 	register value: (radian := self newSISymbol: 'rad') value: #('㎭').
-	register value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian) value: #('degrees' '°')
-	
+	register
+		value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian)
+		value: #('degrees' '°')
+]
+
+{ #category : #constants }
+RMDUnit class >> kg [
+	^ self at: 'kg'
+]
+
+{ #category : #constants }
+RMDUnit class >> m [
+	^ self at: 'm'
 ]
 
 { #category : #'instance creation' }
@@ -177,9 +210,19 @@ RMDUnit class >> newSymbol: aString scale: aFloat siUnit: aRMDUnit [
 		siUnit: aRMDUnit
 ]
 
-{ #category : #'instance creation' }
+{ #category : #constants }
 RMDUnit class >> noDimension [
-	^ RMDCompoundUnit from: Dictionary new
+	^ self at: ''
+]
+
+{ #category : #constants }
+RMDUnit class >> rad [
+	^ self at: 'rad'
+]
+
+{ #category : #constants }
+RMDUnit class >> s [
+	^ self at: 's'
 ]
 
 { #category : #arithmetics }

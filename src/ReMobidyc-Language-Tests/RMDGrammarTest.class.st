@@ -135,6 +135,25 @@ RMDGrammarTest >> testAgentDirective [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAnimatDefinition [
+	| node |
+	node := grammar animatDefinition parse: 'Foo is Animat.'.
+	self assert: node isAnimatDefinitionNode.
+	self assert: node identifier equals: 'Foo'.
+	self assert: node propertyDeclarations isEmpty.
+	node := grammar animatDefinition
+		parse:
+			'
+Goat is Animat with
+	sugar = 6000 [kcal].' trim.
+	self assert: node isAnimatDefinitionNode.
+	self assert: node identifier equals: 'Goat'.
+	self
+		assert: node propertyDeclarations
+		equals: {(grammar propertyDeclaration parse: 'sugar = 6000[kcal]')}
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testApply [
 	| apply |
 	apply := grammar apply parse: 'abs(x)'.

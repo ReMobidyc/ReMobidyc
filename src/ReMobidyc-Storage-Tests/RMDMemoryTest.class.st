@@ -267,13 +267,14 @@ RMDMemoryTest >> testTick [
 	memory at: 1 put: 2.
 	memory at: 3 put: 4.
 	memory nextAt: 5 put: 6.
+	memory nextAt: 3 put: 7.
 	self assert: (memory at: 1) equals: 2.
 	self assert: (memory at: 3) equals: 4.
 	self assert: (memory nextAt: 5) equals: 6.
 	self should: [ memory at: 5 ] raise: KeyNotFound.
 	memory tick.
-	self should: [ memory at: 1 ] raise: KeyNotFound.
-	self should: [ memory at: 3 ] raise: KeyNotFound.
+	self assert: (memory at: 1) equals: 2.
+	self assert: (memory at: 3) equals: 7.
 	self assert: (memory at: 5) equals: 6.
 	self assert: (memory oldAt: 1) equals: 2.
 	self assert: (memory oldAt: 3) equals: 4.
@@ -297,7 +298,7 @@ RMDMemoryTest >> testTime [
 	self assert: (memory oldAt: 3) equals: 4.
 	memory time: 2.
 	self assert: (memory at: 1) equals: 7.
-	self assert: (memory at: 3 ifAbsent: [ 10 ]) equals: 10.
+	self assert: (memory at: 3 ifAbsent: [ 10 ]) equals: 4.
 	self assert: (memory at: 8) equals: 9.
 	self assert: (memory oldAt: 1) equals: 5.
 	self assert: (memory oldAt: 3) equals: 6.

@@ -15,6 +15,11 @@ RMDCompoundUnit class >> from: aDictionary [
 ]
 
 { #category : #'instance creation' }
+RMDCompoundUnit class >> noDimension [
+	^ self from: Dictionary new
+]
+
+{ #category : #'instance creation' }
 RMDCompoundUnit class >> with: aRMDUnitSymbol [
 	^ self
 		from:
@@ -68,8 +73,9 @@ RMDCompoundUnit >> / aRMDUnit [
 
 { #category : #comparing }
 RMDCompoundUnit >> = anObject [
-	^ self class = anObject class
-		and: [ unitSymbolsAndOrders = anObject unitSymbolsAndOrders ]
+	^ self == anObject
+		or: [ self class = anObject class
+				and: [ unitSymbolsAndOrders = anObject unitSymbolsAndOrders ] ]
 ]
 
 { #category : #conversions }

@@ -16,6 +16,13 @@ RMDPropertyDeclarationNode class >> identifier: aString expression: aRMDExpressi
 		yourself
 ]
 
+{ #category : #comparing }
+RMDPropertyDeclarationNode >> = anObject [
+	^ self class = anObject class
+		and: [ identifier = anObject identifier
+				and: [ expression = anObject expression ] ]
+]
+
 { #category : #accessing }
 RMDPropertyDeclarationNode >> expression [
 	^ expression
@@ -24,6 +31,11 @@ RMDPropertyDeclarationNode >> expression [
 { #category : #accessing }
 RMDPropertyDeclarationNode >> expression: anRMDExpressionNode [
 	expression := anRMDExpressionNode
+]
+
+{ #category : #comparing }
+RMDPropertyDeclarationNode >> hash [
+	^ (self class hash bitXor: identifier hash) bitXor: expression hash
 ]
 
 { #category : #accessing }
@@ -43,7 +55,8 @@ RMDPropertyDeclarationNode >> isPropertyDeclarationNode [
 
 { #category : #printing }
 RMDPropertyDeclarationNode >> printOn: aStream [
-	identifier printOn: aStream.
-	aStream nextPutAll: ' = '.
+	aStream
+		nextPutAll: identifier;
+		nextPutAll: ' = '.
 	expression printOn: aStream
 ]

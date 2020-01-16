@@ -20,6 +20,11 @@ RMDSyntaxNode >> isAgentReferenceNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAnimatDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isApplyNode [
 	^ false
 ]

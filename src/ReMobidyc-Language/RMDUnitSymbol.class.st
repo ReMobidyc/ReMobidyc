@@ -7,26 +7,6 @@ Class {
 	#category : #'ReMobidyc-Language-Units'
 }
 
-{ #category : #accessing }
-RMDUnitSymbol class >> at: aString [
-	^ KnownUnits at: aString ifAbsent: [ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDUnitSymbol class >> at: aString ifAbsent: errorBlock [
-	^ KnownUnits at: aString ifAbsent: errorBlock
-]
-
-{ #category : #accessing }
-RMDUnitSymbol class >> at: aString ifPresent: aBlock [
-	^ KnownUnits at: aString ifPresent: aBlock
-]
-
-{ #category : #accessing }
-RMDUnitSymbol class >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
-	^ KnownUnits at: aString ifPresent: aBlock ifAbsent: errorBlock
-]
-
 { #category : #arithmetics }
 RMDUnitSymbol >> * aRMDUnit [
 	^ self asCompoundUnit * aRMDUnit
