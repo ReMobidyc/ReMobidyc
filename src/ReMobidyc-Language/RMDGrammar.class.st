@@ -24,6 +24,56 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 	^ super addSelectorSilently: selector withMethod: compiledMethod
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinition [
+	^ (self actionDefinitionHeaderLine , self actionDefinitionPresumeLine optional
+		, self actionDefinitionPropertyPart , self actionDefinitionUtilityPart optional
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
+		==> [ :quad | 
+			self actionDefinitionNodeClass
+				name: quad first first
+				object: quad first second
+				guard: (quad second ifNil: [ true ])
+				propertyDefinitions: quad third
+				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionHeaderLine [
+	^ ('to' asPParser trimBlanks , identifier trimBlanks
+		, identifier optional , 'is' asPParser trimBlanks
+		, #newline asPParser trimBlanks)
+		==> [ :array | 
+			{array second.
+			array third} ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> actionDefinitionNodeClass [
+	^ RMDActionDefinitionNode 
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionPresumeLine [
+	^ ('presume' asPParser trimBlanks , condition
+		, #newline asPParser trimBlanks) ==> #second
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionPropertyPart [
+	^ ((self propertyDefinition
+		onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #first
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionUtilityPart [
+	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
+		,
+			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #third
+]
+
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -119,6 +169,33 @@ RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> behaviorDefinition [
+	^ (self behaviorDefinitionHeader
+		,
+			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
+				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
+				==> #third) optional , $. asPParser trimBlanks)
+		==> [ :triple | 
+			self bindNodeClass
+				subjectIdentifier: triple first first
+				scriptIdentifier: triple first second
+				objectIdentifier: triple first third
+				within: triple first fourth
+				propertyBinds: (triple second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> behaviorDefinitionHeader [
+	^ (self agentIdentifier , identifier , self agentIdentifier optional
+		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
+		==> [ :array | 
+			{array first.
+			array second.
+			array third.
+			array fourth} ]
+]
+
 { #category : #'parsers-conditions' }
 RMDGrammar >> binaryCombinatorFrom: anArray [
 	| operator conds |
@@ -180,36 +257,9 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 	^ RMDNotEqualNode
 ]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> bind [
-	^ (self bindHeader
-		,
-			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
-				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
-				==> #third) optional)
-		==> [ :pair | 
-			self bindNodeClass
-				subjectIdentifier: pair first first
-				scriptIdentifier: pair first second
-				objectIdentifier: pair first third
-				within: pair first fourth
-				propertyBinds: (pair second ifNil: [ Array new ]) ]
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> bindHeader [
-	^ (self agentIdentifier , identifier , self agentIdentifier optional
-		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
-		==> [ :array | 
-			{array first.
-			array second.
-			array third.
-			array fourth} ]
-]
-
 { #category : #'class access' }
 RMDGrammar >> bindNodeClass [
-	^ RMDBindNode
+	^ RMDBehaviorDefinitionNode
 ]
 
 { #category : #accessing }
@@ -544,56 +594,6 @@ RMDGrammar >> propertyDefinition [
 { #category : #'class access' }
 RMDGrammar >> propertyDefinitionNodeClass [
 	^ RMDPropertyDefinitionNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> script [
-	^ (self scriptHeaderLine , self scriptPresumeLine optional
-		, self scriptPropertyPart , self scriptUtilityPart optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :quad | 
-			self scriptNodeClass
-				name: quad first first
-				object: quad first second
-				guard: (quad second ifNil: [ true ])
-				propertyDefinitions: quad third
-				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> scriptHeaderLine [
-	^ ('to' asPParser trimBlanks , identifier trimBlanks
-		, identifier optional , 'is' asPParser trimBlanks
-		, #newline asPParser trimBlanks)
-		==> [ :array | 
-			{array second.
-			array third} ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> scriptNodeClass [
-	^ RMDScriptNode 
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> scriptPresumeLine [
-	^ ('presume' asPParser trimBlanks , condition
-		, #newline asPParser trimBlanks) ==> #second
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> scriptPropertyPart [
-	^ ((self propertyDefinition
-		onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #first
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> scriptUtilityPart [
-	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
-		,
-			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
 { #category : #accessing }

@@ -4,22 +4,29 @@ Class {
 	#instVars : [
 		'utilities',
 		'propertyDict',
-		'script'
+		'action'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #'instance creation' }
+RMDContext class >> individual: anInteger animat: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+	^ self new
+		individual: anInteger
+			animat: aRMDAnimatDefinitionNode
+			propertyBindMap: anArrayOfPropertyBindNode;
+		yourself
+]
+
 { #category : #accessing }
-RMDContext >> bindAnimat: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
-	| offsets |
-	offsets := aRMDAnimatDefinitionNode propertyOffsets.
-	anArrayOfPropertyBindNode
-		do: [ :bind | 
-			(propertyDict
-				at: bind scriptAgent
-				ifAbsentPut: [ Dictionary new: anArrayOfPropertyBindNode size ])
-				at: bind scriptProperty
-				put: (offsets at: bind animatProperty) + anInteger ]
+RMDContext >> action [
+	^ action
+]
+
+{ #category : #accessing }
+RMDContext >> action: aRMDActionDefinitionNode [
+	action := aRMDActionDefinitionNode.
+	self loadUtilityDefinitions
 ]
 
 { #category : #accessing }
@@ -27,6 +34,19 @@ RMDContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: error
 	^ (propertyDict at: agentReference ifAbsent: [ ^ errorBlock value ])
 		at: aString
 		ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDContext >> individual: anInteger animat: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+	| offsets |
+	offsets := aRMDAnimatDefinitionNode propertyOffsets.
+	anArrayOfPropertyBindNode
+		do: [ :bind | 
+			(propertyDict
+				at: bind actionAgent
+				ifAbsentPut: [ Dictionary new: anArrayOfPropertyBindNode size ])
+				at: bind actionProperty
+				put: (offsets at: bind animatProperty) + anInteger ]
 ]
 
 { #category : #initialization }
@@ -38,20 +58,9 @@ RMDContext >> initialize [
 
 { #category : #operations }
 RMDContext >> loadUtilityDefinitions [
-	utilities := Dictionary new: script utilityDefinitions size.
-	script utilityDefinitions
+	utilities := Dictionary new: action utilityDefinitions size.
+	action utilityDefinitions
 		do: [ :def | utilities at: def variable identifier put: def ]
-]
-
-{ #category : #accessing }
-RMDContext >> script [
-	^ script
-]
-
-{ #category : #accessing }
-RMDContext >> script: aRMDScriptNode [
-	script := aRMDScriptNode.
-	self loadUtilityDefinitions
 ]
 
 { #category : #accessing }

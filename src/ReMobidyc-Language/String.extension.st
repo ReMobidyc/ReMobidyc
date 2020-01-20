@@ -1,18 +1,23 @@
 Extension { #name : #String }
 
 { #category : #'*ReMobidyc-Language' }
+String >> asRMDActionDefinition [
+	^ RMDGrammar new actionDefinition parse: self
+]
+
+{ #category : #'*ReMobidyc-Language' }
 String >> asRMDAnimatDefinition [
 	^ RMDGrammar new animatDefinition parse: self
 ]
 
 { #category : #'*ReMobidyc-Language' }
-String >> asRMDExpression [
-	^ RMDGrammar new expression parse: self
+String >> asRMDBehaviorDefinition [
+	^ RMDGrammar new behaviorDefinition parse: self
 ]
 
 { #category : #'*ReMobidyc-Language' }
-String >> asRMDScript [
-	^ RMDGrammar new script parse: self
+String >> asRMDExpression [
+	^ RMDGrammar new expression parse: self
 ]
 
 { #category : #'*ReMobidyc-Language' }

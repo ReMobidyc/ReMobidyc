@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDBindNode,
+	#name : #RMDBehaviorDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'subjectIdentifier',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDBindNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptString1 objectIdentifier: agentString2 within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptString1 objectIdentifier: agentString2 within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
 	^ self new
 		subjectIdentifier: agentString1;
 		scriptIdentifier: scriptString1;
@@ -23,27 +23,27 @@ RMDBindNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptStr
 ]
 
 { #category : #testing }
-RMDBindNode >> hasObject [
+RMDBehaviorDefinitionNode >> hasObject [
 	^ objectIdentifier notNil
 ]
 
 { #category : #testing }
-RMDBindNode >> isBindNode [
+RMDBehaviorDefinitionNode >> isBehaviorDefinitionNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDBindNode >> objectIdentifier [
+RMDBehaviorDefinitionNode >> objectIdentifier [
 	^ objectIdentifier
 ]
 
 { #category : #accessing }
-RMDBindNode >> objectIdentifier: aString [
+RMDBehaviorDefinitionNode >> objectIdentifier: aString [
 	objectIdentifier := aString
 ]
 
 { #category : #printing }
-RMDBindNode >> printOn: aStream [
+RMDBehaviorDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: subjectIdentifier;
 		nextPutAll: ' can ';
@@ -61,41 +61,41 @@ RMDBindNode >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RMDBindNode >> propertyBinds [
+RMDBehaviorDefinitionNode >> propertyBinds [
 	^ propertyBinds
 ]
 
 { #category : #accessing }
-RMDBindNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDBehaviorDefinitionNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
 	propertyBinds := anArrayOfRMDPropertyBindNode
 ]
 
 { #category : #accessing }
-RMDBindNode >> range [
+RMDBehaviorDefinitionNode >> range [
 	^ range
 ]
 
 { #category : #accessing }
-RMDBindNode >> range: aRMDLiteral [
+RMDBehaviorDefinitionNode >> range: aRMDLiteral [
 	range := aRMDLiteral
 ]
 
 { #category : #accessing }
-RMDBindNode >> scriptIdentifier [
+RMDBehaviorDefinitionNode >> scriptIdentifier [
 	^ scriptIdentifier
 ]
 
 { #category : #accessing }
-RMDBindNode >> scriptIdentifier: aString [
+RMDBehaviorDefinitionNode >> scriptIdentifier: aString [
 	scriptIdentifier := aString
 ]
 
 { #category : #accessing }
-RMDBindNode >> subjectIdentifier [
+RMDBehaviorDefinitionNode >> subjectIdentifier [
 	^ subjectIdentifier
 ]
 
 { #category : #accessing }
-RMDBindNode >> subjectIdentifier: aString [
+RMDBehaviorDefinitionNode >> subjectIdentifier: aString [
 	subjectIdentifier := aString
 ]

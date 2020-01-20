@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #testing }
+RMDSyntaxNode >> isActionDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAdditionNode [
 	^ false
 ]
@@ -30,12 +35,12 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isBinaryRelationNode [
+RMDSyntaxNode >> isBehaviorDefinitionNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isBindNode [
+RMDSyntaxNode >> isBinaryRelationNode [
 	^ false
 ]
 
@@ -161,11 +166,6 @@ RMDSyntaxNode >> isPropertyDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isScriptNode [
 	^ false
 ]
 

@@ -120,6 +120,39 @@ RMDGrammarTest >> setUp [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testActionDefinition [
+	| node |
+	node := grammar actionDefinition
+		parse:
+			'to walk is
+	presume my energy > 0
+	my delta x'' = sin(my heading) * walking_distance
+	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
+where
+	walking_speed = 10[km/h] if my energy > 1000[kcal],
+	                4[km/h]
+	walking_distance = walking_speed * world''s delta time.'.
+	self assert: node isActionDefinitionNode.
+	self assert: node identifier equals: 'walk'.
+	self assert: node object equals: nil.
+	self
+		assert: node guard
+		equals: (grammar condition parse: 'my energy > 0').
+	self assert: node propertyDefinitions size equals: 2.
+	self assert: node utilityDefinitions size equals: 2.
+	node := grammar actionDefinition
+		parse:
+			'to chase target is
+	my delta heading'' = direction target - my heading.'.
+	self assert: node isActionDefinitionNode.
+	self assert: node identifier equals: 'chase'.
+	self assert: node object equals: 'target'.
+	self assert: node guard equals: true.
+	self assert: node propertyDefinitions size equals: 1.
+	self assert: node utilityDefinitions size equals: 0
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testAgentDirective [
 	| node |
 	node := grammar agentDirective parse: 'distance foo'.
@@ -189,6 +222,44 @@ RMDGrammarTest >> testApply [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testBehaviorDefinition [
+	| node |
+	node := grammar behaviorDefinition end
+		parse:
+			'
+Goat walk where
+	my energy -> sugar
+	my speed -> slow_speed.' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isBehaviorDefinitionNode.
+	self assert: node subjectIdentifier equals: 'Goat'.
+	self assert: node scriptIdentifier equals: 'walk'.
+	self assert: node objectIdentifier isNil.
+	self assert: node range isNil.
+	self assert: node propertyBinds size = 2.
+	node := grammar behaviorDefinition
+		parse:
+			'
+Wolf eat Goat within 1[m] where
+	my energy -> sugar
+	food''s energy -> sugar.' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isBehaviorDefinitionNode.
+	self assert: node subjectIdentifier equals: 'Wolf'.
+	self assert: node scriptIdentifier equals: 'eat'.
+	self assert: node objectIdentifier equals: 'Goat'.
+	self assert: node range equals: (grammar literal parse: '1[m]').
+	self assert: node propertyBinds size = 2
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testBehaviorDefinitionHeader [
+	| node |
+	node := RMDGrammar new behaviorDefinitionHeader parse: 'Wolf eat Goat within 1[m]'.
+	self deny: node isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testBinaryRelation [
 	self
 		equalityTest;
@@ -202,44 +273,6 @@ RMDGrammarTest >> testBinaryRelation [
 		assert: (grammar binaryRelation parse: '1 = 2 < 3') isPetit2Failure;
 		assert: (grammar binaryRelation parse: '1 < 2 > 3') isPetit2Failure;
 		assert: (grammar binaryRelation parse: '1 /= 2 < 3') isPetit2Failure
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testBind [
-	| node |
-	node := grammar bind
-		parse:
-			'
-Goat walk where
-	my energy -> sugar
-	my speed -> slow_speed' trim.
-	self deny: node isPetit2Failure.
-	self assert: node isBindNode.
-	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node scriptIdentifier equals: 'walk'.
-	self assert: node objectIdentifier isNil.
-	self assert: node range isNil.
-	self assert: node propertyBinds size = 2.
-	node := grammar bind
-		parse:
-			'
-Wolf eat Goat within 1[m] where
-	my energy -> sugar
-	food''s energy -> sugar' trim.
-	self deny: node isPetit2Failure.
-	self assert: node isBindNode.
-	self assert: node subjectIdentifier equals: 'Wolf'.
-	self assert: node scriptIdentifier equals: 'eat'.
-	self assert: node objectIdentifier equals: 'Goat'.
-	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node propertyBinds size = 2
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testBindHeader [
-	| node |
-	node := RMDGrammar new bindHeader parse: 'Wolf eat Goat within 1[m]'.
-	self deny: node isPetit2Failure
 ]
 
 { #category : #tests }
@@ -607,15 +640,15 @@ RMDGrammarTest >> testPropertyBind [
 		parse: 'my energy -> sugar'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node scriptAgent equals: nil.
-	self assert: node scriptProperty equals: 'energy'.
+	self assert: node actionAgent equals: nil.
+	self assert: node actionProperty equals: 'energy'.
 	self assert: node animatProperty equals: 'sugar'.
 	node := grammar propertyBind
 		parse: 'target''s energy -> sugar'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node scriptAgent equals: 'target'.
-	self assert: node scriptProperty equals: 'energy'.
+	self assert: node actionAgent equals: 'target'.
+	self assert: node actionProperty equals: 'energy'.
 	self assert: node animatProperty equals: 'sugar'
 ]
 
@@ -661,39 +694,6 @@ RMDGrammarTest >> testPropertyDefinition [
 	self
 		assert: definition definitionBody
 		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testScript [
-	| script |
-	script := grammar script
-		parse:
-			'to walk is
-	presume my energy > 0
-	my delta x'' = sin(my heading) * walking_distance
-	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
-where
-	walking_speed = 10[km/h] if my energy > 1000[kcal],
-	                4[km/h]
-	walking_distance = walking_speed * world''s delta time.'.
-	self assert: script isScriptNode.
-	self assert: script identifier equals: 'walk'.
-	self assert: script object equals: nil.
-	self
-		assert: script guard
-		equals: (grammar condition parse: 'my energy > 0').
-	self assert: script propertyDefinitions size equals: 2.
-	self assert: script utilityDefinitions size equals: 2.
-	script := grammar script
-		parse:
-			'to chase target is
-	my delta heading'' = direction target - my heading.'.
-	self assert: script isScriptNode.
-	self assert: script identifier equals: 'chase'.
-	self assert: script object equals: 'target'.
-	self assert: script guard equals: true.
-	self assert: script propertyDefinitions size equals: 1.
-	self assert: script utilityDefinitions size equals: 0
 ]
 
 { #category : #tests }

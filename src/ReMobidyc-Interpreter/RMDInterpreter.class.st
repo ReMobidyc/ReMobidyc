@@ -4,7 +4,10 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'context'
+		'context',
+		'animatDefinitions',
+		'actionDefinitions',
+		'behaviorDefinitions'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -12,7 +15,7 @@ Class {
 { #category : #examples }
 RMDInterpreter class >> exampleSugar [
 	<script: 'RMDInterpreter exampleSugar'>
-	| interpreter memory goat metabolism goats |
+	| interpreter memory goat metabolism goats goatMetabolize |
 	interpreter := RMDInterpreter new.
 	memory := RMDFileMemory
 		on:
@@ -20,37 +23,45 @@ RMDInterpreter class >> exampleSugar [
 				ensureCreateDirectory;
 				deleteAllChildren;
 				yourself).
+	memory digitsForTime: 5.
 	interpreter setMemory: memory.
 	goat := '
 Goat is Animat with
 	energy = uniform 5000 [kcal] to 20000 [kcal]
-	basal_metabolism = uniform 10[kcal/day] to 20[kcal/day].
+	basal_metabolism = 3000 [kcal/s].
 ' trim asRMDAnimatDefinition.
+	interpreter load: goat.
 	metabolism := '
 to metabolize is
 presume my sugar >= 0
-	my delta sugar'' = - min(my basal_metabolism, my sugar).
-' trim asRMDScript.
+	my delta sugar'' = - my basal_metabolism.
+' trim asRMDActionDefinition.
+	interpreter load: metabolism.
+	goatMetabolize := '
+Goat metabolize where
+	my sugar -> energy
+	my basal_metabolism -> basal_metabolism.' trim
+		asRMDBehaviorDefinition.
+	interpreter load: goatMetabolize.
 	goats := (1 to: 9)
 		collect: [ :i | interpreter allocateIndividualOf: goat ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect.
-	100
-		timesRepeat: [ interpreter
-				script: metabolism
-				species: goat
-				bindMap:
-					{(RMDPropertyBindNode
-						scriptAgent: nil
-						property: 'sugar'
-						animatProperty: 'energy').
-					(RMDPropertyBindNode
-						scriptAgent: nil
-						property: 'basal_metabolism'
-						animatProperty: 'basal_metabolism')}.
+	1000
+		timesRepeat: [ goatMetabolize evalIn: interpreter.
 			interpreter tick ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
+	^ actionDefinitions at: aString ifAbsent: errorBlock
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
+	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
 ]
 
 { #category : #'library access' }
@@ -69,6 +80,11 @@ RMDInterpreter >> allocateIndividualOf: aRMDAnimatDefinition [
 	animat := memory allocateIndividualOf: aRMDAnimatDefinition.
 	self initializeAnimat: animat species: aRMDAnimatDefinition.
 	^ animat
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
+	^ animatDefinitions at: aString ifAbsent: errorBlock
 ]
 
 { #category : #directives }
@@ -141,10 +157,18 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> individualsOf: aRMDAnimatDefinitionNode do: aBlock [
+	memory individualsOf: aRMDAnimatDefinitionNode do: aBlock
+]
+
 { #category : #initialization }
 RMDInterpreter >> initialize [
 	super initialize.
-	libraries := OrderedCollection with: self standardLibrary
+	libraries := OrderedCollection with: self standardLibrary.
+	animatDefinitions := Dictionary new.
+	actionDefinitions := Dictionary new.
+	behaviorDefinitions := OrderedCollection new
 ]
 
 { #category : #'animat operations' }
@@ -163,9 +187,44 @@ RMDInterpreter >> initializeAnimat: anInteger species: aRMDAnimatDefinitionNode 
 				put: (property expression evalIn: self) ]
 ]
 
+{ #category : #'definition access' }
+RMDInterpreter >> load: aRMDSyntaxNode [
+	aRMDSyntaxNode isActionDefinitionNode
+		ifTrue: [ ^ self loadActionDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isBehaviorDefinitionNode
+		ifTrue: [ ^ self loadBehaviorDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isAnimatDefinitionNode
+		ifTrue: [ ^ self loadAnimatDefinition: aRMDSyntaxNode ].
+	^ self error: 'Unknown load'
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> loadActionDefinition: aRMDActionDefinitionNode [
+	^ actionDefinitions
+		at: aRMDActionDefinitionNode identifier
+		put: aRMDActionDefinitionNode
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> loadAnimatDefinition: aRMDAnimatDefinitionNode [
+	^ animatDefinitions
+		at: aRMDAnimatDefinitionNode identifier
+		put: aRMDAnimatDefinitionNode
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> loadBehaviorDefinition: aRMDBehaviorDefinitionNode [
+	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
+]
+
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
+]
+
+{ #category : #simulating }
+RMDInterpreter >> performBehaviors [
+	behaviorDefinitions do: [ :behavior | behavior evalIn: self ]
 ]
 
 { #category : #private }
@@ -222,23 +281,19 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 		ifAbsent: errorBlock
 ]
 
-{ #category : #'animat operations' }
-RMDInterpreter >> script: aRMDScriptNode species: aRMDAnimatDefinitionNode bindMap: anArrayOfRMDPropertyBindNode [
-	memory
-		individualsOf: aRMDAnimatDefinitionNode
-		do: [ :animat | 
-			context := RMDContext new
-				bindAnimat: animat
-					species: aRMDAnimatDefinitionNode
-					propertyBindMap: anArrayOfRMDPropertyBindNode;
-				script: aRMDScriptNode;
-				yourself.
-			aRMDScriptNode evalIn: self ]
-]
-
 { #category : #private }
 RMDInterpreter >> setContext: aRMDContext [
 	context := aRMDContext
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+	self
+		setContext:
+			(RMDContext
+				individual: anInteger
+				animat: aRMDAnimatDefinitionNode
+				propertyBindMap: anArrayOfPropertyBindNode)
 ]
 
 { #category : #private }

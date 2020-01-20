@@ -13,32 +13,6 @@ RMDContextTest >> setUp [
 ]
 
 { #category : #tests }
-RMDContextTest >> testBindAnimatSpeciesReplaceMap [
-	| parser animat replaceMap |
-	parser := RMDGrammar new.
-	animat := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar = 3000 [kcal].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: nil
-		property: 'heading'
-		animatProperty: 'heading').
-	(RMDPropertyBindNode
-		scriptAgent: nil
-		property: 'energy'
-		animatProperty: 'sugar')}.
-	context bindAnimat: 1 species: animat propertyBindMap: replaceMap.
-	self
-		assert: (context getMemoryAddressFor: 'heading' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'heading') + 1.
-	self
-		assert: (context getMemoryAddressFor: 'energy' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'sugar') + 1
-]
-
-{ #category : #tests }
 RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
 	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
 	context setMemoryAddressFor: 'y' agent: nil to: 2.
@@ -63,6 +37,32 @@ RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
 ]
 
 { #category : #tests }
+RMDContextTest >> testIndividualAnimatPropertyBindMap [
+	| parser animat replaceMap |
+	parser := RMDGrammar new.
+	animat := parser animatDefinition
+		parse:
+			'
+Foo is Animat with
+	sugar = 3000 [kcal].' trim.
+	replaceMap := {(RMDPropertyBindNode
+		scriptAgent: nil
+		property: 'heading'
+		animatProperty: 'heading').
+	(RMDPropertyBindNode
+		scriptAgent: nil
+		property: 'energy'
+		animatProperty: 'sugar')}.
+	context individual: 1 animat: animat propertyBindMap: replaceMap.
+	self
+		assert: (context getMemoryAddressFor: 'heading' agent: nil ifAbsent: [ nil ])
+		equals: (animat propertyOffsets at: 'heading') + 1.
+	self
+		assert: (context getMemoryAddressFor: 'energy' agent: nil ifAbsent: [ nil ])
+		equals: (animat propertyOffsets at: 'sugar') + 1
+]
+
+{ #category : #tests }
 RMDContextTest >> testLoadScript [
 	| parser source |
 	parser := RMDGrammar new.
@@ -72,7 +72,7 @@ to test is
 where
 	one = 1
 	two = one + 1.' trim.
-	context script: (parser script parse: source).
+	context action: (parser actionDefinition parse: source).
 	self
 		assert: (context utilityAt: 'one' ifAbsent: [ nil ])
 		equals: (parser utilityDefinition parse: 'one = 1').

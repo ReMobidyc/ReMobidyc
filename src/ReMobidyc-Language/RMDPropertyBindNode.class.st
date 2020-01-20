@@ -2,9 +2,9 @@ Class {
 	#name : #RMDPropertyBindNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'scriptAgent',
-		'scriptProperty',
-		'animatProperty'
+		'animatProperty',
+		'actionAgent',
+		'actionProperty'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -12,10 +12,30 @@ Class {
 { #category : #'instance creation' }
 RMDPropertyBindNode class >> scriptAgent: agentStringOrNil property: propertyString1 animatProperty: propertyString2 [
 	^ self new
-		scriptAgent: agentStringOrNil;
-		scriptProperty: propertyString1;
+		actionAgent: agentStringOrNil;
+		actionProperty: propertyString1;
 		animatProperty: propertyString2;
 		yourself
+]
+
+{ #category : #accessing }
+RMDPropertyBindNode >> actionAgent [
+	^ actionAgent
+]
+
+{ #category : #accessing }
+RMDPropertyBindNode >> actionAgent: aString [
+	actionAgent := aString
+]
+
+{ #category : #accessing }
+RMDPropertyBindNode >> actionProperty [
+	^ actionProperty
+]
+
+{ #category : #accessing }
+RMDPropertyBindNode >> actionProperty: aString [
+	actionProperty := aString
 ]
 
 { #category : #accessing }
@@ -35,33 +55,13 @@ RMDPropertyBindNode >> isPropertyBindNode [
 
 { #category : #printing }
 RMDPropertyBindNode >> printOn: aStream [
-	scriptAgent
+	actionAgent
 		ifNil: [ aStream nextPutAll: 'my ' ]
 		ifNotNil: [ aStream
-				nextPutAll: scriptAgent;
+				nextPutAll: actionAgent;
 				nextPutAll: '''s ' ].
 	aStream
-		nextPutAll: scriptProperty;
+		nextPutAll: actionProperty;
 		nextPutAll: ' -> '.
 	aStream nextPutAll: animatProperty
-]
-
-{ #category : #accessing }
-RMDPropertyBindNode >> scriptAgent [
-	^ scriptAgent
-]
-
-{ #category : #accessing }
-RMDPropertyBindNode >> scriptAgent: aString [
-	scriptAgent := aString
-]
-
-{ #category : #accessing }
-RMDPropertyBindNode >> scriptProperty [
-	^ scriptProperty
-]
-
-{ #category : #accessing }
-RMDPropertyBindNode >> scriptProperty: aString [
-	scriptProperty := aString
 ]

@@ -1,15 +1,15 @@
-Extension { #name : #RMDScriptNodeTest }
+Extension { #name : #RMDActionDefinitionNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
-RMDScriptNodeTest >> testEvalIn [
+RMDActionDefinitionNodeTest >> testEvalIn [
 	| script |
-	script := RMDGrammar new script
+	script := RMDGrammar new actionDefinition
 		parse:
 			'to metabolize is
     my delta energy'' = basal_metabolism * -1
 where
     basal_metabolism = 1500 [kcal/day].'.
-	interpreter context script: script.
+	interpreter context action: script.
 	interpreter context setMemoryAddressFor: 'energy' agent: nil to: 1.
 	interpreter memory
 		nextAt: 1 put: 100;

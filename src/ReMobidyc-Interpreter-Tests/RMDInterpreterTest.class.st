@@ -83,7 +83,7 @@ to test is
 where
 	x = y + 2
 	y = 3.' trim.
-	interpreter context script: (parser script parse: source).
+	interpreter context action: (parser actionDefinition parse: source).
 	self
 		assert: (interpreter readUtility: 'x' ifAbsent: [ nil ])
 		closeTo: 3 + 2.

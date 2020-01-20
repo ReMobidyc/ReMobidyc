@@ -1,7 +1,8 @@
-Extension { #name : #RMDScriptNode }
+Extension { #name : #RMDActionDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDScriptNode >> evalIn: aRMDInterpreter [
+RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
+	aRMDInterpreter context action: self.
 	(guard evalIn: aRMDInterpreter)
 		ifTrue: [ propertyDefinitions do: [ :def | def evalIn: aRMDInterpreter ] ]
 ]

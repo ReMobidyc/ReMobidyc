@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDScriptNode,
+	#name : #RMDActionDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDScriptNode class >> name: scriptName object: objectName guard: aRMDCondition propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
+RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 	^ self new
 		identifier: scriptName;
 		object: objectName;
@@ -23,42 +23,42 @@ RMDScriptNode class >> name: scriptName object: objectName guard: aRMDCondition 
 ]
 
 { #category : #accessing }
-RMDScriptNode >> guard [
+RMDActionDefinitionNode >> guard [
 	^ guard
 ]
 
 { #category : #accessing }
-RMDScriptNode >> guard: aRMDCondition [
+RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
 { #category : #accessing }
-RMDScriptNode >> identifier [
+RMDActionDefinitionNode >> identifier [
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDScriptNode >> identifier: aString [
+RMDActionDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
 { #category : #testing }
-RMDScriptNode >> isScriptNode [
+RMDActionDefinitionNode >> isActionDefinitionNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDScriptNode >> object [
+RMDActionDefinitionNode >> object [
 	^ object
 ]
 
 { #category : #accessing }
-RMDScriptNode >> object: aString [
+RMDActionDefinitionNode >> object: aString [
 	object := aString
 ]
 
 { #category : #printing }
-RMDScriptNode >> printOn: aStream [
+RMDActionDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: 'to ';
 		nextPutAll: identifier.
@@ -95,21 +95,21 @@ RMDScriptNode >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RMDScriptNode >> propertyDefinitions [
+RMDActionDefinitionNode >> propertyDefinitions [
 	^ propertyDefinitions
 ]
 
 { #category : #accessing }
-RMDScriptNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
+RMDActionDefinitionNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
 	propertyDefinitions := aRMDPropertyDefinitionNode
 ]
 
 { #category : #accessing }
-RMDScriptNode >> utilityDefinitions [
+RMDActionDefinitionNode >> utilityDefinitions [
 	^ utilityDefinitions
 ]
 
 { #category : #accessing }
-RMDScriptNode >> utilityDefinitions: anObject [
+RMDActionDefinitionNode >> utilityDefinitions: anObject [
 	utilityDefinitions := anObject
 ]
