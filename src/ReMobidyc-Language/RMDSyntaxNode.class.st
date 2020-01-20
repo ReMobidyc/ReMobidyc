@@ -35,6 +35,11 @@ RMDSyntaxNode >> isBinaryRelationNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isBindNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
 ]
@@ -136,6 +141,11 @@ RMDSyntaxNode >> isProductNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isPropertyAdditiveDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPropertyBindNode [
 	^ false
 ]
 

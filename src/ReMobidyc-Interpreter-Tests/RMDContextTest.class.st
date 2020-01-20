@@ -13,16 +13,23 @@ RMDContextTest >> setUp [
 ]
 
 { #category : #tests }
-RMDContextTest >> testAnimatAgentSpeciesReplaceMap [
-	| animat replaceMap |
-	animat := RMDGrammar new animatDefinition
+RMDContextTest >> testBindAnimatSpeciesReplaceMap [
+	| parser animat replaceMap |
+	parser := RMDGrammar new.
+	animat := parser animatDefinition
 		parse:
 			'
 Foo is Animat with
 	sugar = 3000 [kcal].' trim.
-	replaceMap := {('heading' -> 'heading').
-	('energy' -> 'sugar')}.
-	context animat: 1 agent: nil species: animat replaceMap: replaceMap.
+	replaceMap := {(RMDPropertyBindNode
+		scriptAgent: nil
+		property: 'heading'
+		animatProperty: 'heading').
+	(RMDPropertyBindNode
+		scriptAgent: nil
+		property: 'energy'
+		animatProperty: 'sugar')}.
+	context bindAnimat: 1 species: animat propertyBindMap: replaceMap.
 	self
 		assert: (context getMemoryAddressFor: 'heading' agent: nil ifAbsent: [ nil ])
 		equals: (animat propertyOffsets at: 'heading') + 1.

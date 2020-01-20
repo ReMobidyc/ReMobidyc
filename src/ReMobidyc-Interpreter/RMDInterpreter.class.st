@@ -12,7 +12,7 @@ Class {
 { #category : #examples }
 RMDInterpreter class >> exampleSugar [
 	<script: 'RMDInterpreter exampleSugar'>
-	| interpreter memory goat eat goats |
+	| interpreter memory goat metabolism goats |
 	interpreter := RMDInterpreter new.
 	memory := RMDFileMemory
 		on:
@@ -23,14 +23,13 @@ RMDInterpreter class >> exampleSugar [
 	interpreter setMemory: memory.
 	goat := '
 Goat is Animat with
-	energy = uniform 5000 [kcal] to 20000 [kcal].
+	energy = uniform 5000 [kcal] to 20000 [kcal]
+	basal_metabolism = uniform 10[kcal/day] to 20[kcal/day].
 ' trim asRMDAnimatDefinition.
-	eat := '
-to eat is
+	metabolism := '
+to metabolize is
 presume my sugar >= 0
-	my delta sugar'' = -min(basal_metabolism, my sugar)
-where
-	basal_metabolism = 150 [kcal].
+	my delta sugar'' = - min(my basal_metabolism, my sugar).
 ' trim asRMDScript.
 	goats := (1 to: 9)
 		collect: [ :i | interpreter allocateIndividualOf: goat ].
@@ -38,9 +37,17 @@ where
 		inspect.
 	100
 		timesRepeat: [ interpreter
-				script: eat
+				script: metabolism
 				species: goat
-				replaceMap: {('sugar' -> 'energy')}.
+				bindMap:
+					{(RMDPropertyBindNode
+						scriptAgent: nil
+						property: 'sugar'
+						animatProperty: 'energy').
+					(RMDPropertyBindNode
+						scriptAgent: nil
+						property: 'basal_metabolism'
+						animatProperty: 'basal_metabolism')}.
 			interpreter tick ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect
@@ -62,6 +69,11 @@ RMDInterpreter >> allocateIndividualOf: aRMDAnimatDefinition [
 	animat := memory allocateIndividualOf: aRMDAnimatDefinition.
 	self initializeAnimat: animat species: aRMDAnimatDefinition.
 	^ animat
+]
+
+{ #category : #directives }
+RMDInterpreter >> byChanceOf: aNumber [
+	^ self random < aNumber
 ]
 
 { #category : #private }
@@ -211,15 +223,14 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> script: aRMDScriptNode species: aRMDAnimatDefinitionNode replaceMap: anArrayOfAssociation [
+RMDInterpreter >> script: aRMDScriptNode species: aRMDAnimatDefinitionNode bindMap: anArrayOfRMDPropertyBindNode [
 	memory
 		individualsOf: aRMDAnimatDefinitionNode
 		do: [ :animat | 
 			context := RMDContext new
-				animat: animat
-					agent: nil
+				bindAnimat: animat
 					species: aRMDAnimatDefinitionNode
-					replaceMap: anArrayOfAssociation;
+					propertyBindMap: anArrayOfRMDPropertyBindNode;
 				script: aRMDScriptNode;
 				yourself.
 			aRMDScriptNode evalIn: self ]

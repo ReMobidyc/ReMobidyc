@@ -48,7 +48,7 @@ RMDGrammar >> agentDirectiveNodeClass [
 RMDGrammar >> agentIdentifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
-		flatten
+		flatten trimBlanks
 		==> [ :name | 
 			(self keywords includes: name)
 				ifTrue: [ PP2Failure message: name , ' is a reserved word.' ]
@@ -178,6 +178,38 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 	aString = '>'
 		ifTrue: [ ^ RMDGreaterThanNode ].
 	^ RMDNotEqualNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> bind [
+	^ (self bindHeader
+		,
+			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
+				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
+				==> #third) optional)
+		==> [ :pair | 
+			self bindNodeClass
+				subjectIdentifier: pair first first
+				scriptIdentifier: pair first second
+				objectIdentifier: pair first third
+				within: pair first fourth
+				propertyBinds: (pair second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> bindHeader [
+	^ (self agentIdentifier , identifier , self agentIdentifier optional
+		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
+		==> [ :array | 
+			{array first.
+			array second.
+			array third.
+			array fourth} ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> bindNodeClass [
+	^ RMDBindNode
 ]
 
 { #category : #accessing }
@@ -467,6 +499,22 @@ RMDGrammar >> powerNodeClass [
 { #category : #'class access' }
 RMDGrammar >> productNodeClass [
 	^ RMDProductNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> propertyBind [
+	^ (self agentReference , identifier , '->' asPParser trimBlanks
+		, identifier)
+		==> [ :quad | 
+			self propertyBindNodeClass
+				scriptAgent: quad first
+				property: quad second
+				animatProperty: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> propertyBindNodeClass [
+	^ RMDPropertyBindNode
 ]
 
 { #category : #'parsers-definitions' }

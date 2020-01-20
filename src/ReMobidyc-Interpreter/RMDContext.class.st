@@ -10,20 +10,21 @@ Class {
 }
 
 { #category : #accessing }
-RMDContext >> animat: anInteger agent: aString species: aRMDAnimatDefinitionNode replaceMap: anArrayOfAssociation [
-	| agentBinds offsets |
-	agentBinds := propertyDict
-		at: aString
-		ifAbsentPut: [ Dictionary new: anArrayOfAssociation size ].
+RMDContext >> bindAnimat: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+	| offsets |
 	offsets := aRMDAnimatDefinitionNode propertyOffsets.
-	anArrayOfAssociation
-		do:
-			[ :assoc | agentBinds at: assoc key put: (offsets at: assoc value) + anInteger ]
+	anArrayOfPropertyBindNode
+		do: [ :bind | 
+			(propertyDict
+				at: bind scriptAgent
+				ifAbsentPut: [ Dictionary new: anArrayOfPropertyBindNode size ])
+				at: bind scriptProperty
+				put: (offsets at: bind animatProperty) + anInteger ]
 ]
 
 { #category : #accessing }
-RMDContext >> getMemoryAddressFor: aString agent: anInteger ifAbsent: errorBlock [
-	^ (propertyDict at: anInteger ifAbsent: [ ^ errorBlock value ])
+RMDContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
+	^ (propertyDict at: agentReference ifAbsent: [ ^ errorBlock value ])
 		at: aString
 		ifAbsent: errorBlock
 ]
@@ -54,8 +55,8 @@ RMDContext >> script: aRMDScriptNode [
 ]
 
 { #category : #accessing }
-RMDContext >> setMemoryAddressFor: aString agent: anInteger to: anotherInteger [
-	^ (propertyDict at: anInteger ifAbsentPut: [ Dictionary new ])
+RMDContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInteger [
+	^ (propertyDict at: agentReference ifAbsentPut: [ Dictionary new ])
 		at: aString
 		put: anotherInteger
 ]

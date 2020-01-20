@@ -205,6 +205,44 @@ RMDGrammarTest >> testBinaryRelation [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testBind [
+	| node |
+	node := grammar bind
+		parse:
+			'
+Goat walk where
+	my energy -> sugar
+	my speed -> slow_speed' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isBindNode.
+	self assert: node subjectIdentifier equals: 'Goat'.
+	self assert: node scriptIdentifier equals: 'walk'.
+	self assert: node objectIdentifier isNil.
+	self assert: node range isNil.
+	self assert: node propertyBinds size = 2.
+	node := grammar bind
+		parse:
+			'
+Wolf eat Goat within 1[m] where
+	my energy -> sugar
+	food''s energy -> sugar' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isBindNode.
+	self assert: node subjectIdentifier equals: 'Wolf'.
+	self assert: node scriptIdentifier equals: 'eat'.
+	self assert: node objectIdentifier equals: 'Goat'.
+	self assert: node range equals: (grammar literal parse: '1[m]').
+	self assert: node propertyBinds size = 2
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testBindHeader [
+	| node |
+	node := RMDGrammar new bindHeader parse: 'Wolf eat Goat within 1[m]'.
+	self deny: node isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testCond1 [
 	| cond |
 	cond := grammar cond1 parse: '1 = 2'.
@@ -560,6 +598,25 @@ RMDGrammarTest >> testLiteral [
 	self assert: literal literal equals: '3'.
 	self assert: literal type equals: (grammar type parse: '[m]').
 	self assert: literal numeric closeTo: 3
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPropertyBind [
+	| node |
+	node := grammar propertyBind
+		parse: 'my energy -> sugar'.
+	self deny: node isPetit2Failure.
+	self assert: node isPropertyBindNode.
+	self assert: node scriptAgent equals: nil.
+	self assert: node scriptProperty equals: 'energy'.
+	self assert: node animatProperty equals: 'sugar'.
+	node := grammar propertyBind
+		parse: 'target''s energy -> sugar'.
+	self deny: node isPetit2Failure.
+	self assert: node isPropertyBindNode.
+	self assert: node scriptAgent equals: 'target'.
+	self assert: node scriptProperty equals: 'energy'.
+	self assert: node animatProperty equals: 'sugar'
 ]
 
 { #category : #tests }
