@@ -93,19 +93,31 @@ RMDUnit class >> initialize [
 	register value: (s := self newSISymbol: 's') value: #(sec secs s ss).
 	register
 		value: (self newSymbol: 'day' scale: 86400.0 siUnit: s)
-		value: #(days).
+		value: #('day' 'days').
 	register
 		value: (self newSymbol: 'h' scale: 3600.0 siUnit: s)
-		value: #(hour hours).
+		value: #('hour' 'hours').
 	register
 		value: (self newSymbol: 'min' scale: 60.0 siUnit: s)
-		value: #(mins minute minutes).
+		value: #('mins' 'minute' 'minutes').
 	register
 		value: (self newSymbol: 'ms' scale: 1.0e-3 siUnit: s)
-		value: #(msec milliss millis).
+		value: #('msec').
 	register
 		value: (self newSymbol: 'µs' scale: 1.0e-6 siUnit: s)
-		value: #(µsec micros micross).
+		value: #('µsec' 'micros' 'micross').
+	register
+		value: (self newSymbol: 'w' scale: 604800.0 siUnit: s)
+		value: #('week' 'weeks').
+	register
+		value: (self newSymbol: 'mo' scale: 2592000.0 siUnit: s)
+		value: #('month' 'months' 'mo30' 'month30' 'months30').
+	register
+		value: (self newSymbol: 'mo31' scale: 2678400.0 siUnit: s)
+		value: #('month31' 'months31').
+	register
+		value: (self newSymbol: 'a' scale: 31557600.0 siUnit: s)
+		value: #('y' 'yr' 'year' 'years').
 	"temperature"
 	register value: (kelvin := self newSISymbol: 'K') value: #(K).
 	register
