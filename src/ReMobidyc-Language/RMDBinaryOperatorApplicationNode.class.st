@@ -23,6 +23,13 @@ RMDBinaryOperatorApplicationNode >> = anObject [
 				and: [ expression2 = anObject expression2 ] ]
 ]
 
+{ #category : #enumerating }
+RMDBinaryOperatorApplicationNode >> childrenDo: aBlock [
+	aBlock
+		value: expression1;
+		value: expression2
+]
+
 { #category : #accessing }
 RMDBinaryOperatorApplicationNode >> expression1 [
 	^ expression1

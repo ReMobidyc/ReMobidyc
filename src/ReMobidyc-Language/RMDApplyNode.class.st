@@ -33,6 +33,11 @@ RMDApplyNode >> arguments: anArrayOfRMDExpressionNode [
 	arguments := anArrayOfRMDExpressionNode
 ]
 
+{ #category : #enumerating }
+RMDApplyNode >> childrenDo: aBlock [
+	arguments do: aBlock
+]
+
 { #category : #accessing }
 RMDApplyNode >> function [
 	^ function

@@ -16,6 +16,13 @@ RMDUniformDistributionNode class >> from: aRMDLiteral to: anotherRMDLiteral [
 		yourself
 ]
 
+{ #category : #enumerating }
+RMDUniformDistributionNode >> childrenDo: aBlock [
+	aBlock
+		value: fromLiteral;
+		value: toLiteral
+]
+
 { #category : #accessing }
 RMDUniformDistributionNode >> fromLiteral [
 	^ fromLiteral

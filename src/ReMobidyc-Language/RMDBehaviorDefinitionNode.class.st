@@ -22,6 +22,12 @@ RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentif
 		yourself
 ]
 
+{ #category : #enumerating }
+RMDBehaviorDefinitionNode >> childrenDo: aBlock [
+	aBlock value: range.
+	propertyBinds do: aBlock
+]
+
 { #category : #testing }
 RMDBehaviorDefinitionNode >> hasObject [
 	^ objectIdentifier notNil

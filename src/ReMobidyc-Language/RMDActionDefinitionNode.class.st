@@ -22,6 +22,13 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 		yourself
 ]
 
+{ #category : #enumerating }
+RMDActionDefinitionNode >> childrenDo: aBlock [
+	aBlock value: aBlock.
+	propertyDefinitions do: aBlock.
+	utilityDefinitions do: aBlock
+]
+
 { #category : #accessing }
 RMDActionDefinitionNode >> guard [
 	^ guard

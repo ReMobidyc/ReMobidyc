@@ -20,6 +20,11 @@ RMDBinaryCombinatorNode >> = anObject [
 		and: [ conditions = anObject conditions ]
 ]
 
+{ #category : #enumerating }
+RMDBinaryCombinatorNode >> childrenDo: aBlock [
+	conditions do: aBlock
+]
+
 { #category : #accessing }
 RMDBinaryCombinatorNode >> conditions [
 	^ conditions

@@ -2,21 +2,19 @@ Class {
 	#name : #RMDContext,
 	#superclass : #Object,
 	#instVars : [
-		'utilities',
+		'subject',
+		'subjectSpecies',
+		'object',
+		'objectSpecies',
+		'location',
+		'cellDefinition',
+		'worldDefinition',
+		'action',
 		'propertyDict',
-		'action'
+		'utilities'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
-
-{ #category : #'instance creation' }
-RMDContext class >> individual: anInteger animat: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
-	^ self new
-		individual: anInteger
-			animat: aRMDAnimatDefinitionNode
-			propertyBindMap: anArrayOfPropertyBindNode;
-		yourself
-]
 
 { #category : #accessing }
 RMDContext >> action [
@@ -29,24 +27,13 @@ RMDContext >> action: aRMDActionDefinitionNode [
 	self loadUtilityDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : #'memory access' }
 RMDContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
-	^ (propertyDict at: agentReference ifAbsent: [ ^ errorBlock value ])
+	^ (propertyDict
+		at: agentReference
+		ifAbsentPut: [ ^ errorBlock value ])
 		at: aString
 		ifAbsent: errorBlock
-]
-
-{ #category : #accessing }
-RMDContext >> individual: anInteger animat: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
-	| offsets |
-	offsets := aRMDAnimatDefinitionNode propertyOffsets.
-	anArrayOfPropertyBindNode
-		do: [ :bind | 
-			(propertyDict
-				at: bind actionAgent
-				ifAbsentPut: [ Dictionary new: anArrayOfPropertyBindNode size ])
-				at: bind actionProperty
-				put: (offsets at: bind animatProperty) + anInteger ]
 ]
 
 { #category : #initialization }
@@ -56,7 +43,30 @@ RMDContext >> initialize [
 	utilities := Dictionary new
 ]
 
-{ #category : #operations }
+{ #category : #'memory access' }
+RMDContext >> loadPropertyBindMap: anArrayOfPropertyBindNode [
+	anArrayOfPropertyBindNode
+		do: [ :bind | 
+			| agent individual species |
+			agent := bind actionAgent.
+			agent
+				ifNil: [ individual := subject.
+					species := subjectSpecies ]
+				ifNotNil: [ agent = 'here'
+						ifTrue: [ individual := location.
+							species := cellDefinition ]
+						ifFalse: [ agent = 'world'
+								ifTrue: [ individual := 1.
+									species := worldDefinition ]
+								ifFalse: [ individual := object.
+									species := objectSpecies ] ] ].
+			self
+				setMemoryAddressFor: bind actionProperty
+				agent: agent
+				to: (species propertyOffsets at: bind animatProperty) + individual ]
+]
+
+{ #category : #'utility access' }
 RMDContext >> loadUtilityDefinitions [
 	utilities := Dictionary new: action utilityDefinitions size.
 	action utilityDefinitions
@@ -64,6 +74,18 @@ RMDContext >> loadUtilityDefinitions [
 ]
 
 { #category : #accessing }
+RMDContext >> location: anInteger cell: aRMDCellDefinition [
+	location := anInteger.
+	cellDefinition := aRMDCellDefinition
+]
+
+{ #category : #accessing }
+RMDContext >> object: anInteger species: aRMDAnimatDefinition [
+	object := anInteger.
+	objectSpecies := aRMDAnimatDefinition
+]
+
+{ #category : #'memory access' }
 RMDContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInteger [
 	^ (propertyDict at: agentReference ifAbsentPut: [ Dictionary new ])
 		at: aString
@@ -71,11 +93,22 @@ RMDContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInte
 ]
 
 { #category : #accessing }
+RMDContext >> subject: anInteger species: aRMDAnimatDefinition [
+	subject := anInteger.
+	subjectSpecies := aRMDAnimatDefinition
+]
+
+{ #category : #'utility access' }
 RMDContext >> utilityAt: aString ifAbsent: errorBlock [
 	^ utilities at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : #'utility access' }
 RMDContext >> utilityAt: aString put: aNumber [
 	^ utilities at: aString put: aNumber
+]
+
+{ #category : #accessing }
+RMDContext >> world: aRMDWorldDefinition [
+	worldDefinition := aRMDWorldDefinition
 ]

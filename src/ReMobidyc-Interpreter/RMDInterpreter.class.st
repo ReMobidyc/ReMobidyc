@@ -6,6 +6,8 @@ Class {
 		'libraries',
 		'context',
 		'animatDefinitions',
+		'cellDefinition',
+		'worldDefinition',
 		'actionDefinitions',
 		'behaviorDefinitions'
 	],
@@ -195,6 +197,10 @@ RMDInterpreter >> load: aRMDSyntaxNode [
 		ifTrue: [ ^ self loadBehaviorDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isAnimatDefinitionNode
 		ifTrue: [ ^ self loadAnimatDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isCellDefinitionNode
+		ifTrue: [ ^ self loadCellDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isWorldDefinitionNode
+		ifTrue: [ ^ self loadWorldDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
 ]
 
@@ -215,6 +221,16 @@ RMDInterpreter >> loadAnimatDefinition: aRMDAnimatDefinitionNode [
 { #category : #'definition access' }
 RMDInterpreter >> loadBehaviorDefinition: aRMDBehaviorDefinitionNode [
 	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> loadCellDefinition: aRMDCellDefinitionNode [
+	cellDefinition := aRMDCellDefinitionNode
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> loadWorldDefinition: aRMDWorldDefinitionNode [
+	worldDefinition := aRMDWorldDefinitionNode
 ]
 
 { #category : #private }
@@ -290,10 +306,10 @@ RMDInterpreter >> setContext: aRMDContext [
 RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
 	self
 		setContext:
-			(RMDContext
-				individual: anInteger
-				animat: aRMDAnimatDefinitionNode
-				propertyBindMap: anArrayOfPropertyBindNode)
+			(RMDContext new
+				subject: anInteger species: aRMDAnimatDefinitionNode;
+				loadPropertyBindMap: anArrayOfPropertyBindNode;
+				yourself)
 ]
 
 { #category : #private }

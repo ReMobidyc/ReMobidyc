@@ -276,6 +276,24 @@ RMDGrammarTest >> testBinaryRelation [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testCellDefinition [
+	| node |
+	node := grammar cellDefinition parse: 'Cell'.
+	self assert: node isCellDefinitionNode.
+	self assert: node propertyDeclarations isEmpty.
+	self assert: node equals: RMDCellDefinitionNode default.
+	node := grammar cellDefinition
+		parse:
+			'
+Cell with
+	sugar = 60000 [kcal].' trim.
+	self assert: node isCellDefinitionNode.
+	self
+		assert: node propertyDeclarations
+		equals: {(grammar propertyDeclaration parse: 'sugar = 60000[kcal]')}
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testCond1 [
 	| cond |
 	cond := grammar cond1 parse: '1 = 2'.
@@ -824,4 +842,22 @@ RMDGrammarTest >> testVariable [
 	self assert: variable isVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testWorldDefinition [
+	| node |
+	node := grammar worldDefinition parse: 'World'.
+	self assert: node isWorldDefinitionNode.
+	self assert: node propertyDeclarations isEmpty.
+	self assert: node equals: RMDWorldDefinitionNode default.
+	node := grammar worldDefinition
+		parse:
+			'
+World with
+	temperature = 10 [C].' trim.
+	self assert: node isWorldDefinitionNode.
+	self
+		assert: node propertyDeclarations
+		equals: {(grammar propertyDeclaration parse: 'temperature = 10[C]')}
 ]

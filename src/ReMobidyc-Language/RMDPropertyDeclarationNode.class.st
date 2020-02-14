@@ -23,6 +23,11 @@ RMDPropertyDeclarationNode >> = anObject [
 				and: [ expression = anObject expression ] ]
 ]
 
+{ #category : #enumerating }
+RMDPropertyDeclarationNode >> childrenDo: aBlock [
+	aBlock value: expression
+]
+
 { #category : #accessing }
 RMDPropertyDeclarationNode >> expression [
 	^ expression

@@ -14,6 +14,11 @@ RMDUnaryOperatorApplicationNode class >> expression: aRMDExpressionNode [
 		yourself
 ]
 
+{ #category : #enumerating }
+RMDUnaryOperatorApplicationNode >> childrenDo: aBlock [
+	aBlock value: expression
+]
+
 { #category : #accessing }
 RMDUnaryOperatorApplicationNode >> expression [
 	^ expression
@@ -26,7 +31,7 @@ RMDUnaryOperatorApplicationNode >> expression: aRMDExpressionNode [
 
 { #category : #accessing }
 RMDUnaryOperatorApplicationNode >> operator [
-	^ '-'
+	^ self subclassResponsibility
 ]
 
 { #category : #printing }

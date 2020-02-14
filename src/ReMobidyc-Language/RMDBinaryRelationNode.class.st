@@ -20,6 +20,11 @@ RMDBinaryRelationNode >> = anObject [
 		and: [ expressions = anObject expressions ]
 ]
 
+{ #category : #enumerating }
+RMDBinaryRelationNode >> childrenDo: aBlock [
+	expressions do: aBlock
+]
+
 { #category : #accessing }
 RMDBinaryRelationNode >> expressions [
 	^ expressions

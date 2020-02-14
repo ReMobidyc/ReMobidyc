@@ -10,16 +10,21 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDLiteralNode class >> literal: aString type: aRMDTypeNode [
+RMDLiteralNode class >> literal: aString type: aRMDUnit [
 	^ self new
 		literal: aString;
-		type: aRMDTypeNode;
+		type: aRMDUnit;
 		yourself
 ]
 
 { #category : #comparing }
 RMDLiteralNode >> = anObject [
 	^ self class = anObject class and: [ literal = anObject literal ]
+]
+
+{ #category : #enumerating }
+RMDLiteralNode >> childrenDo: aBlock [
+	
 ]
 
 { #category : #private }
@@ -72,6 +77,6 @@ RMDLiteralNode >> type [
 ]
 
 { #category : #private }
-RMDLiteralNode >> type: aRMDTypeNode [
-	type := aRMDTypeNode
+RMDLiteralNode >> type: aRMDUnit [
+	type := aRMDUnit
 ]

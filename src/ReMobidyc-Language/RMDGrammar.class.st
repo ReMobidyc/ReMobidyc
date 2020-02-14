@@ -270,6 +270,26 @@ RMDGrammar >> builtins [
 				substrings asSet ]
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> cellDefinition [
+	^ ('Cell' asPParser
+		,
+			((#blank asPParser , 'with' asPParser trimBlanks
+				, #newline asPParser trimBlanks
+				,
+					(self propertyDeclaration
+						onlySeparatedBy: #newline asPParser trimBlanks)
+				, #newline asPParser trimBlanks optional) ==> #fourth) optional)
+		==> [ :pair | 
+			self cellDefinitionNodeClass
+				propertyDeclarations: (pair second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> cellDefinitionNodeClass [
+	^ RMDCellDefinitionNode
+]
+
 { #category : #'parsers-conditions' }
 RMDGrammar >> cond1 [
 	^ ($( asPParser trimBlanks, condition, $) asPParser trimBlanks ==> #second) / self binaryRelation
@@ -735,4 +755,24 @@ RMDGrammar >> weightUnits [
 	('kg' -> #(1 nil 'kg')).
 	('g' -> #(0.001 nil 'kg')).
 	('mg' -> #(0.000001 nil 'kg'))} asDictionary
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> worldDefinition [
+	^ ('World' asPParser
+		,
+			((#blank asPParser , 'with' asPParser trimBlanks
+				, #newline asPParser trimBlanks
+				,
+					(self propertyDeclaration
+						onlySeparatedBy: #newline asPParser trimBlanks)
+				, #newline asPParser trimBlanks optional) ==> #fourth) optional)
+		==> [ :pair | 
+			self worldDefinitionNodeClass
+				propertyDeclarations: (pair second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> worldDefinitionNodeClass [
+	^ RMDWorldDefinitionNode
 ]

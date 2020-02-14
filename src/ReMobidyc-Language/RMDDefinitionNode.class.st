@@ -23,6 +23,13 @@ RMDDefinitionNode >> = anObject [
 				and: [ definitionBody = anObject definitionBody ] ]
 ]
 
+{ #category : #enumerating }
+RMDDefinitionNode >> childrenDo: aBlock [
+	aBlock
+		value: variable;
+		value: definitionBody
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> definitionBody [
 	^ definitionBody

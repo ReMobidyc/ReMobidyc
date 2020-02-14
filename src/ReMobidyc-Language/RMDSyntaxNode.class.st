@@ -4,6 +4,11 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #enumerating }
+RMDSyntaxNode >> childrenDo: aBlock [
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 RMDSyntaxNode >> isActionDefinitionNode [
 	^ false
@@ -41,6 +46,11 @@ RMDSyntaxNode >> isBehaviorDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isBinaryRelationNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isCellDefinitionNode [
 	^ false
 ]
 
@@ -197,6 +207,24 @@ RMDSyntaxNode >> isUtilityVariableNode [
 { #category : #testing }
 RMDSyntaxNode >> isVariableNode [
 	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isWorldDefinitionNode [
+	^ false
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> nodesDo: aBlock [
+	aBlock value: self.
+	self childrenDo: [ :node | node nodesDo: aBlock ]
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> nodesSuchThat: condition do: aBlock [
+	(condition value: self)
+		ifTrue: [ aBlock value: self ].
+	self childrenDo: [ :node | node nodesSuchThat: condition do: aBlock ]
 ]
 
 { #category : #printing }

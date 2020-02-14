@@ -23,6 +23,11 @@ RMDSpeciesDefinitionNode class >> createBuiltinProperties [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'instance creation' }
+RMDSpeciesDefinitionNode class >> default [
+	^ self propertyDeclarations: #()
+]
+
 { #category : #accessing }
 RMDSpeciesDefinitionNode class >> flushBuiltinProperties [
 	<script:
@@ -31,9 +36,8 @@ RMDSpeciesDefinitionNode class >> flushBuiltinProperties [
 ]
 
 { #category : #'instance creation' }
-RMDSpeciesDefinitionNode class >> identifier: aString propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
+RMDSpeciesDefinitionNode class >> propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
 	^ self new
-		identifier: aString;
 		propertyDeclarations: anArrayOfRMDPropertyDeclarationNode;
 		yourself
 ]
@@ -57,6 +61,11 @@ RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 { #category : #accessing }
 RMDSpeciesDefinitionNode >> builtinProperties [
 	^ self class builtinProperties
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> childrenDo: aBlock [
+	propertyDeclarations do: aBlock
 ]
 
 { #category : #comparing }

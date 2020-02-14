@@ -10,6 +10,11 @@ RMDUnaryMinusNode >> isUnaryMinusNode [
 ]
 
 { #category : #accessing }
+RMDUnaryMinusNode >> operator [
+	^ '-'
+]
+
+{ #category : #accessing }
 RMDUnaryMinusNode >> precedence [
 	^ 1
 ]

@@ -11,6 +11,13 @@ RMDAnimatDefinitionNode class >> createBuiltinProperties [
 	('heading' -> RMDUnit rad)}
 ]
 
+{ #category : #'instance creation' }
+RMDAnimatDefinitionNode class >> identifier: aString propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
+	^ (self propertyDeclarations: anArrayOfRMDPropertyDeclarationNode)
+		identifier: aString;
+		yourself
+]
+
 { #category : #testing }
 RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 	^ true

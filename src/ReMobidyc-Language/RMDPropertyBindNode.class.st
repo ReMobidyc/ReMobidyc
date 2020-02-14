@@ -48,6 +48,11 @@ RMDPropertyBindNode >> animatProperty: aString [
 	animatProperty := aString
 ]
 
+{ #category : #enumerating }
+RMDPropertyBindNode >> childrenDo: aBlock [
+	
+]
+
 { #category : #testing }
 RMDPropertyBindNode >> isPropertyBindNode [
 	^ true

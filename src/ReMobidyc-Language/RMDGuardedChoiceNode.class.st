@@ -20,6 +20,15 @@ RMDGuardedChoiceNode >> = anObject [
 		and: [ guardsAndChoices = anObject guardsAndChoices ]
 ]
 
+{ #category : #enumerating }
+RMDGuardedChoiceNode >> childrenDo: aBlock [
+	guardsAndChoices
+		do: [ :assoc | 
+			aBlock
+				value: assoc key;
+				value: assoc value ]
+]
+
 { #category : #private }
 RMDGuardedChoiceNode >> guardsAndChoices [
 	^ guardsAndChoices
