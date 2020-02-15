@@ -7,8 +7,7 @@ Class {
 { #category : #accessing }
 RMDAnimatDefinitionNode class >> createBuiltinProperties [
 	^ {('x' -> RMDUnit m).
-	('y' -> RMDUnit m).
-	('heading' -> RMDUnit rad)}
+	('y' -> RMDUnit m)}
 ]
 
 { #category : #'instance creation' }

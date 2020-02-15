@@ -16,6 +16,13 @@ RMDUniformDistributionNode class >> from: aRMDLiteral to: anotherRMDLiteral [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDUniformDistributionNode >> = anObject [
+	^ self class = anObject class
+		and: [ fromLiteral = anObject fromLiteral
+				and: [ toLiteral = anObject toLiteral ] ]
+]
+
 { #category : #enumerating }
 RMDUniformDistributionNode >> childrenDo: aBlock [
 	aBlock
@@ -31,6 +38,11 @@ RMDUniformDistributionNode >> fromLiteral [
 { #category : #accessing }
 RMDUniformDistributionNode >> fromLiteral: aRMDLiteralNode [
 	fromLiteral := aRMDLiteralNode
+]
+
+{ #category : #comparing }
+RMDUniformDistributionNode >> hash [
+	^ (self class hash bitXor: fromLiteral hash) bitXor: toLiteral hash
 ]
 
 { #category : #testing }

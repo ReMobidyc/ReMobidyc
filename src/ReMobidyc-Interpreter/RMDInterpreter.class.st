@@ -179,9 +179,6 @@ RMDInterpreter >> initializeAnimat: anInteger species: aRMDAnimatDefinitionNode 
 	offsets := aRMDAnimatDefinitionNode propertyOffsets.
 	memory at: anInteger + (offsets at: 'x') put: self random * 1000.0.
 	memory at: anInteger + (offsets at: 'y') put: self random * 1000.0.
-	memory
-		at: anInteger + (offsets at: 'heading')
-		put: Float pi * 2 * self random.
 	aRMDAnimatDefinitionNode propertyDeclarations
 		do: [ :property | 
 			memory

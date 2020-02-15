@@ -180,6 +180,31 @@ RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isSimulationAnimatDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSimulationDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSimulationPropertyDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSimulationSpaceDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSimulationTimeDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSubtractionNode [
 	^ false
 ]

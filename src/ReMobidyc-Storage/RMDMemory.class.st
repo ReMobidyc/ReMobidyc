@@ -18,11 +18,13 @@ Class {
 }
 
 { #category : #'accessing-agents' }
-RMDMemory >> allocateIndividualOf: aRMDSpecies [
+RMDMemory >> allocateIndividualOf: aRMDAnimatDefinitionNode [
 	| individual |
 	nextAvailableSlot := (individual := nextAvailableSlot)
-		+ aRMDSpecies totalNumberOfProperties.
-	(individuals at: aRMDSpecies ifAbsentPut: [ Set new ]) add: individual.
+		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+	(individuals
+		at: aRMDAnimatDefinitionNode
+		ifAbsentPut: [ Set new: 1024 ]) add: individual.
 	^ individual
 ]
 
@@ -118,8 +120,8 @@ RMDMemory >> fastSunset [
 ]
 
 { #category : #'accessing-agents' }
-RMDMemory >> individualsOf: aRMDSpeciesNode do: aBlock [
-	(individuals at: aRMDSpeciesNode ifAbsent: [ #() ])
+RMDMemory >> individualsOf: aRMDAnimatDefinitionNode do: aBlock [
+	(individuals at: aRMDAnimatDefinitionNode ifAbsent: [ #() ])
 		do: [ :id | aBlock value: id ]
 ]
 

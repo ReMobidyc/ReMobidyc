@@ -715,6 +715,82 @@ RMDGrammarTest >> testPropertyDefinition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testSimulationAnimatDefinition [
+	| node |
+	node := grammar simulationAnimatDefinition parse: '100 Goat'.
+	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node population equals: 100.
+	self assert: node animat equals: 'Goat'.
+	self assert: node propertyDefinitions size equals: 0.
+	node := grammar simulationAnimatDefinition
+		parse:
+			'5 Wolf with
+		energy = 1000[kcal]
+		speed = 50 [km/h]'.
+	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node population equals: 5.
+	self assert: node animat equals: 'Wolf'.
+	self assert: node propertyDefinitions size equals: 2
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testSimulationPropertyDefinition [
+	| node |
+	node := grammar simulationPropertyDefinition
+		parse: 'green = uniform 100[kcal] to 1000[kcal]'.
+	self assert: node isSimulationPropertyDefinitionNode.
+	self assert: node identifier equals: 'green'.
+	self
+		assert: node expression
+		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testSimulationSpaceDefinition [
+	| node |
+	node := grammar simulationSpaceDefinition
+		parse: '10x20 of 5[m] cells'.
+	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node xDivisions equals: 10.
+	self assert: node yDivisions equals: 20.
+	self assert: node length literal equals: '5'.
+	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node propertyDefinitions isEmpty.
+	node := grammar simulationSpaceDefinition
+		parse:
+			'15x30 of 2[m] cells with
+	green = 10000 [kcal]
+	fertility = 12345 [kcal]'.
+	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node xDivisions equals: 15.
+	self assert: node yDivisions equals: 30.
+	self assert: node length literal equals: '2'.
+	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node propertyDefinitions size equals: 2.
+	self
+		assert: node propertyDefinitions first identifier
+		equals: 'green'.
+	self
+		assert: node propertyDefinitions second identifier
+		equals: 'fertility'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testSimulationTimeDefinition [
+	| node |
+	node := grammar simulationTimeDefinition parse: 'during 100 [days] by 1 [hour]'.
+	self assert: node isSimulationTimeDefinitionNode.
+	self assert: node duration isLiteralNode.
+	self assert: node duration type equals: 'days' asRMDUnit.
+	self assert: node duration literal equals: '100'.
+	self assert: node step isLiteralNode.
+	self assert: node step type equals: 'hour' asRMDUnit.
+	self assert: node step literal equals: '1'.
+
+
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testType [
 	| type |
 	type := grammar type parse: '[m]'.

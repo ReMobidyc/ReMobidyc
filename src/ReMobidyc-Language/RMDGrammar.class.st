@@ -616,6 +616,82 @@ RMDGrammar >> propertyDefinitionNodeClass [
 	^ RMDPropertyDefinitionNode
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> simulationAnimatDefinition [
+	^ (#digit asPParser plus flatten trimBlanks , self agentIdentifier
+		,
+			(('with' asPParser trimBlanks , #newline asPParser trimBlanks
+				,
+					(self simulationPropertyDefinition
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #third)
+				optional)
+		==> [ :triple | 
+			self simulationAnimatDefinitionNode
+				population: triple first asInteger
+				animat: triple second
+				propertyDefinitions: (triple third ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationAnimatDefinitionNode [
+	^ RMDSimulationAnimatDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> simulationPropertyDefinition [
+	^ (identifier , '=' asPParser trimBlanks , expression)
+		==> [ :triple | 
+			self simulationPropertyDefinitionNode
+				identifier: triple first
+				expression: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationPropertyDefinitionNode [
+	^ RMDSimulationPropertyDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> simulationSpaceDefinition [
+	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
+		, #digit asPParser plus flatten trimBlanks
+		, 'of' asPParser trimBlanks , literal , 'cells' asPParser trimBlanks
+		,
+			(('with' asPParser , #newline asPParser trimBlanks
+				,
+					(self simulationPropertyDefinition
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
+				optional)
+		==> [ :array | 
+			self simulationSpaceDefinitionNode
+				xDivisions: array first asInteger
+				yDivisions: array third asInteger
+				length: array fifth
+				cellPropertyDefinitions: (array seventh ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationSpaceDefinitionNode [
+	^ RMDSimulationSpaceDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> simulationTimeDefinition [
+	^ (('during' asPParser trimBlanks , literal) ==> #last
+		,
+			(('step' asPParser trimBlanks optional , 'by' asPParser trimBlanks
+				, literal) ==> #last))
+		==> [ :pair | 
+			self simulationTimeDefinitionNode
+				duration: pair first
+				step: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationTimeDefinitionNode [
+	^ RMDSimulationTimeDefinitionNode
+]
+
 { #category : #accessing }
 RMDGrammar >> start [
 	"Answer the production to start this parser with."
