@@ -11,6 +11,30 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #examples }
+RMDActionDefinitionNode class >> crop [
+	<script: 'RMDActionDefinitionNode crop inspect'>
+	^ 'to crop is
+presume here''s grass > 0[kcal]
+	here''s delta grass'' = -amount
+	my delta energy'' = amount
+where
+	amount = min(my capacity - my energy, my diet).
+' asRMDActionDefinition
+]
+
+{ #category : #examples }
+RMDActionDefinitionNode class >> grow [
+	<script: 'RMDActionDefinitionNode grow inspect'>
+	^ 'to grow is
+presume here''s fertility > 0[kcal]
+	here''s delta fertility'' = -amount
+	here''s delta green'' = amount
+where
+	amount = min3(here''s transfer_rate, here''s fertility, here''s capacity - here''s green).
+' asRMDActionDefinition
+]
+
 { #category : #'instance creation' }
 RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 	^ self new
