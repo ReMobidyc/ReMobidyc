@@ -638,6 +638,29 @@ RMDGrammar >> simulationAnimatDefinitionNode [
 ]
 
 { #category : #'parsers-definitions' }
+RMDGrammar >> simulationDefinition [
+	^ (('Simulation' asPParser trimBlanks , 'with' asPParser
+		, #newline asPParser trimBlanks) ==> [ :triple | nil ]
+		,
+			((self simulationTimeDefinition , #newline asPParser trimBlanks)
+				==> #first)
+		,
+			((self simulationSpaceDefinition , #newline asPParser trimBlanks)
+				==> #first)
+		, (self simulationAnimatDefinition onlySeparatedBy: #newline asPParser trimBlanks))
+		==> [ :quad | 
+			self simulationDefinitionNodeClass
+				timeDefinition: quad second
+				spaceDefinition: quad third
+				animatDefinitions: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationDefinitionNodeClass [
+	^ RMDSimulationDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
 RMDGrammar >> simulationPropertyDefinition [
 	^ (identifier , '=' asPParser trimBlanks , expression)
 		==> [ :triple | 
@@ -655,7 +678,7 @@ RMDGrammar >> simulationPropertyDefinitionNode [
 RMDGrammar >> simulationSpaceDefinition [
 	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
 		, #digit asPParser plus flatten trimBlanks
-		, 'of' asPParser trimBlanks , literal , 'cells' asPParser trimBlanks
+		, 'of' asPParser trimBlanks , literal , 'Cell' asPParser trimBlanks
 		,
 			(('with' asPParser , #newline asPParser trimBlanks
 				,

@@ -734,6 +734,24 @@ RMDGrammarTest >> testSimulationAnimatDefinition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testSimulationDefinition [
+	| node |
+	node := grammar simulationDefinition
+		parse:
+			'Simulation with
+	during 10 [days] by 1 [day]
+	5 x 5 of 10[m] Cell with
+	    fertility = uniform 1000[kcal] to 2000[kcal]
+	10 Goat with
+		x = uniform 0[m] to 50[m]
+		y = uniform 20[m] to 30[m].'.
+	self assert: node isSimulationDefinitionNode.
+	self
+		assert: node timeDefinition duration
+		equals: (grammar literal parse: '10[day]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testSimulationPropertyDefinition [
 	| node |
 	node := grammar simulationPropertyDefinition
@@ -749,7 +767,7 @@ RMDGrammarTest >> testSimulationPropertyDefinition [
 RMDGrammarTest >> testSimulationSpaceDefinition [
 	| node |
 	node := grammar simulationSpaceDefinition
-		parse: '10x20 of 5[m] cells'.
+		parse: '10x20 of 5[m] Cell'.
 	self assert: node isSimulationSpaceDefinitionNode.
 	self assert: node xDivisions equals: 10.
 	self assert: node yDivisions equals: 20.
@@ -758,7 +776,7 @@ RMDGrammarTest >> testSimulationSpaceDefinition [
 	self assert: node propertyDefinitions isEmpty.
 	node := grammar simulationSpaceDefinition
 		parse:
-			'15x30 of 2[m] cells with
+			'15x30 of 2[m] Cell with
 	green = 10000 [kcal]
 	fertility = 12345 [kcal]'.
 	self assert: node isSimulationSpaceDefinitionNode.

@@ -10,10 +10,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSimulationDefinitionNode class >> spaceDefinition: aRMDSimulationSpaceDefinitionNode timeDefinition: aRMDSimulationTimeDefinitionNode animatDefinitions: anArrayOfRMDSimulationAnimatDefinitionNode [
+RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode spaceDefinition: aRMDSimulationSpaceDefinitionNode animatDefinitions: anArrayOfRMDSimulationAnimatDefinitionNode [
 	^ self new
-		spaceDefinition: aRMDSimulationSpaceDefinitionNode;
 		timeDefinition: aRMDSimulationTimeDefinitionNode;
+		spaceDefinition: aRMDSimulationSpaceDefinitionNode;
 		animatDefinitions: anArrayOfRMDSimulationAnimatDefinitionNode;
 		yourself
 ]
