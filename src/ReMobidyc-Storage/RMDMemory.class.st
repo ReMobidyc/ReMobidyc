@@ -263,6 +263,11 @@ RMDMemory >> tick [
 ]
 
 { #category : #timing }
+RMDMemory >> time [
+	^ time
+]
+
+{ #category : #timing }
 RMDMemory >> time: anInteger [
 	(anInteger isInteger and: [ anInteger >= 0 ])
 		ifFalse: [ ^ SubscriptOutOfBounds signal ].

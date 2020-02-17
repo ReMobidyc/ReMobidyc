@@ -17,5 +17,12 @@ RMDAgentDirectiveNodeTest >> testEvalIn [
 		closeTo: (3 * 3 + (4 * 4)) sqrt.
 	self
 		assert: ((parser expression parse: 'direction foo') evalIn: interpreter)
-		closeTo: (3 @ 4) theta
+		closeTo: (3 @ 4) theta.
+	self
+		assert: ((parser expression parse: 'time') evalIn: interpreter)
+		closeTo: 1.
+	self
+		assert: ((parser expression parse: 'delta time') evalIn: interpreter)
+		closeTo: 1.
+
 ]

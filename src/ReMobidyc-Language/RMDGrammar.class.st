@@ -81,12 +81,20 @@ RMDGrammar >> additionNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
-	^ (('distance' asPParser / 'direction' asPParser) trimBlanks
+	^ ((('distance' asPParser / 'direction' asPParser) trimBlanks
 		, identifier)
-		==> [ :pair | 
-			self agentDirectiveNodeClass
-				directive: pair first
-				agent: pair second ]
+		==>
+			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ])
+		/
+			(('terminate' asPParser trimBlanks , identifier optional)
+				==>
+					[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ])
+		/
+			((self delta optional , 'time' asPParser trimBlanks)
+				==> [ :pair | 
+					self agentDirectiveNodeClass
+						directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'dtime' ])
+						agent: nil ])
 ]
 
 { #category : #'class access' }
@@ -111,6 +119,7 @@ RMDGrammar >> agentIdentifier [
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
 	^ ('my ' asPParser trimBlanks ==> [ :str | nil ])
+		/ 'the' asPParser trimBlanks
 		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
 ]
 
@@ -523,7 +532,7 @@ RMDGrammar >> identifier [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become otherwise'
+			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become otherwise time'
 				substrings asSet ]
 ]
 

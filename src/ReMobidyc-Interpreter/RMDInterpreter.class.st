@@ -126,7 +126,12 @@ RMDInterpreter >> directive: aString object: anotherString [
 	aString = 'direction'
 		ifTrue: [ ^ self direction: anotherString ].
 	aString = 'distance'
-		ifTrue: [ ^ self distance: anotherString ]
+		ifTrue: [ ^ self distance: anotherString ].
+	aString = 'time'
+		ifTrue: [ ^ memory time ].
+	aString = 'dtime'
+		ifTrue: [ ^ memory deltaTime ].
+	^ self error: 'Unknown directive: ' , aString
 ]
 
 { #category : #directives }
