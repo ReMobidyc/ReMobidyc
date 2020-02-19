@@ -156,6 +156,27 @@ RMDGrammar >> animatHeader [
 ]
 
 { #category : #'parsers-definitions' }
+RMDGrammar >> animatInitializer [
+	^ (#digit asPParser plus flatten trimBlanks , self agentIdentifier
+		,
+			(('with' asPParser trimBlanks , #newline asPParser trimBlanks
+				,
+					(self propertyInitializer
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #third)
+				optional)
+		==> [ :triple | 
+			self animatInitializerNodeClass
+				population: triple first asInteger
+				animat: triple second
+				propertyInitializers: (triple third ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> animatInitializerNodeClass [
+	^ RMDAnimatInitializerNode
+]
+
+{ #category : #'parsers-definitions' }
 RMDGrammar >> animatPropertyPart [
 	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
 		,
@@ -299,6 +320,30 @@ RMDGrammar >> cellDefinitionNodeClass [
 	^ RMDCellDefinitionNode
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> cellInitializer [
+	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
+		, #digit asPParser plus flatten trimBlanks
+		, 'of' asPParser trimBlanks , literal , 'Cell' asPParser trimBlanks
+		,
+			(('with' asPParser , #newline asPParser trimBlanks
+				,
+					(self propertyInitializer
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
+				optional)
+		==> [ :array | 
+			self cellInitializerNodeClass
+				xDivisions: array first asInteger
+				yDivisions: array third asInteger
+				length: array fifth
+				cellPropertyInitializers: (array seventh ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> cellInitializerNodeClass [
+	^ RMDCellInitializerNode
+]
+
 { #category : #'parsers-conditions' }
 RMDGrammar >> cond1 [
 	^ ($( asPParser trimBlanks, condition, $) asPParser trimBlanks ==> #second) / self binaryRelation
@@ -416,7 +461,7 @@ RMDGrammar >> expr1 [
 		==> [ :pair | 
 			pair first
 				ifNil: [ pair second ]
-				ifNotNil: [ self unaryMinusNode expression: pair second ] ]
+				ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -586,7 +631,7 @@ RMDGrammar >> propertyBind [
 		, identifier)
 		==> [ :quad | 
 			self propertyBindNodeClass
-				scriptAgent: quad first
+				actionAgent: quad first
 				property: quad second
 				animatProperty: quad fourth ]
 ]
@@ -626,24 +671,17 @@ RMDGrammar >> propertyDefinitionNodeClass [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> simulationAnimatDefinition [
-	^ (#digit asPParser plus flatten trimBlanks , self agentIdentifier
-		,
-			(('with' asPParser trimBlanks , #newline asPParser trimBlanks
-				,
-					(self simulationPropertyDefinition
-						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #third)
-				optional)
+RMDGrammar >> propertyInitializer [
+	^ (identifier , '=' asPParser trimBlanks , expression)
 		==> [ :triple | 
-			self simulationAnimatDefinitionNode
-				population: triple first asInteger
-				animat: triple second
-				propertyDefinitions: (triple third ifNil: [ Array new ]) ]
+			self propertyInitializerNodeClass
+				identifier: triple first
+				expression: triple third ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> simulationAnimatDefinitionNode [
-	^ RMDSimulationAnimatDefinitionNode
+RMDGrammar >> propertyInitializerNodeClass [
+	^ RMDPropertyInitializerNode
 ]
 
 { #category : #'parsers-definitions' }
@@ -652,59 +690,21 @@ RMDGrammar >> simulationDefinition [
 		, #newline asPParser trimBlanks) ==> [ :triple | nil ]
 		,
 			((self simulationTimeDefinition , #newline asPParser trimBlanks)
-				==> #first)
+				==> #first) , self worldInitializer optional
+		, ((self cellInitializer , #newline asPParser trimBlanks) ==> #first)
 		,
-			((self simulationSpaceDefinition , #newline asPParser trimBlanks)
-				==> #first)
-		, (self simulationAnimatDefinition onlySeparatedBy: #newline asPParser trimBlanks))
-		==> [ :quad | 
+			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks))
+		==> [ :array | 
 			self simulationDefinitionNodeClass
-				timeDefinition: quad second
-				spaceDefinition: quad third
-				animatDefinitions: quad fourth ]
+				timeDefinition: array second
+				worldInitializer: array third
+				cellInitializer: array fourth
+				animatInitializers: array fifth ]
 ]
 
 { #category : #'class access' }
 RMDGrammar >> simulationDefinitionNodeClass [
 	^ RMDSimulationDefinitionNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> simulationPropertyDefinition [
-	^ (identifier , '=' asPParser trimBlanks , expression)
-		==> [ :triple | 
-			self simulationPropertyDefinitionNode
-				identifier: triple first
-				expression: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> simulationPropertyDefinitionNode [
-	^ RMDSimulationPropertyDefinitionNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> simulationSpaceDefinition [
-	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
-		, #digit asPParser plus flatten trimBlanks
-		, 'of' asPParser trimBlanks , literal , 'Cell' asPParser trimBlanks
-		,
-			(('with' asPParser , #newline asPParser trimBlanks
-				,
-					(self simulationPropertyDefinition
-						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
-				optional)
-		==> [ :array | 
-			self simulationSpaceDefinitionNode
-				xDivisions: array first asInteger
-				yDivisions: array third asInteger
-				length: array fifth
-				cellPropertyDefinitions: (array seventh ifNil: [ Array new ]) ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> simulationSpaceDefinitionNode [
-	^ RMDSimulationSpaceDefinitionNode
 ]
 
 { #category : #'parsers-definitions' }
@@ -714,13 +714,13 @@ RMDGrammar >> simulationTimeDefinition [
 			(('step' asPParser trimBlanks optional , 'by' asPParser trimBlanks
 				, literal) ==> #last))
 		==> [ :pair | 
-			self simulationTimeDefinitionNode
+			self simulationTimeDefinitionNodeClass
 				duration: pair first
 				step: pair second ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> simulationTimeDefinitionNode [
+RMDGrammar >> simulationTimeDefinitionNodeClass [
 	^ RMDSimulationTimeDefinitionNode
 ]
 
@@ -760,7 +760,7 @@ RMDGrammar >> type [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> unaryMinusNode [
+RMDGrammar >> unaryMinusNodeClass [
 	^ RMDUnaryMinusNode
 ]
 
@@ -883,4 +883,22 @@ RMDGrammar >> worldDefinition [
 { #category : #'class access' }
 RMDGrammar >> worldDefinitionNodeClass [
 	^ RMDWorldDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> worldInitializer [
+	^ (('World' asPParser trimBlanks , 'with' asPParser trimBlanks
+		, #newline asPParser trimBlanks
+		,
+			(self propertyInitializer
+				onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks) ==> #fourth) optional
+		==> [ :initializers | 
+			self worldInitializerNodeClass
+				propertyInitializers: (initializers ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> worldInitializerNodeClass [
+	^ RMDWorldInitializerNode
 ]

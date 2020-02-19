@@ -10,12 +10,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyBindNode class >> scriptAgent: agentStringOrNil property: propertyString1 animatProperty: propertyString2 [
+RMDPropertyBindNode class >> actionAgent: agentStringOrNil property: propertyString1 animatProperty: propertyString2 [
 	^ self new
 		actionAgent: agentStringOrNil;
 		actionProperty: propertyString1;
 		animatProperty: propertyString2;
 		yourself
+]
+
+{ #category : #comparing }
+RMDPropertyBindNode >> = anObject [
+	^ self class = anObject class
+		and: [ actionAgent = anObject actionAgent
+				and: [ actionProperty = anObject actionProperty
+						and: [ animatProperty = anObject animatProperty ] ] ]
 ]
 
 { #category : #accessing }
@@ -51,6 +59,12 @@ RMDPropertyBindNode >> animatProperty: aString [
 { #category : #enumerating }
 RMDPropertyBindNode >> childrenDo: aBlock [
 	
+]
+
+{ #category : #comparing }
+RMDPropertyBindNode >> hash [
+	^ ((self class hash bitXor: actionAgent hash)
+		bitXor: actionProperty hash) bitXor: animatProperty hash
 ]
 
 { #category : #testing }

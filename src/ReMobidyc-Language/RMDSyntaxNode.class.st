@@ -175,6 +175,11 @@ RMDSyntaxNode >> isPropertyDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isPropertyInitializerNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
 	^ false
 ]
@@ -185,12 +190,7 @@ RMDSyntaxNode >> isSimulationAnimatDefinitionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isSimulationDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isSimulationPropertyDefinitionNode [
+RMDSyntaxNode >> isSimulationInitializerNode [
 	^ false
 ]
 

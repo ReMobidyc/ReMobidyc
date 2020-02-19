@@ -5,6 +5,7 @@ Class {
 		'memory',
 		'libraries',
 		'context',
+		'simulationDefinition',
 		'animatDefinitions',
 		'cellDefinition',
 		'worldDefinition',
@@ -317,6 +318,16 @@ RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinit
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> simulationDefinition [
+	^ simulationDefinition
+]
+
+{ #category : #'definition access' }
+RMDInterpreter >> simulationDefinition: aRMDSimulationDefinitionNode [
+	simulationDefinition := aRMDSimulationDefinitionNode
 ]
 
 { #category : #'library access' }

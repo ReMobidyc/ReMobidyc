@@ -2,42 +2,54 @@ Class {
 	#name : #RMDSimulationDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'spaceDefinition',
-		'timeDefinition',
-		'animatDefinitions'
+		'timeInitializer',
+		'worldInitializer',
+		'cellInitializer',
+		'animatInitializers'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode spaceDefinition: aRMDSimulationSpaceDefinitionNode animatDefinitions: anArrayOfRMDSimulationAnimatDefinitionNode [
+RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode worldInitializer: aRMDWorldInitializerNode cellInitializer: aRMDCellInitializerNode animatInitializers: anArrayOfRMDAnimatInitializerNode [
 	^ self new
 		timeDefinition: aRMDSimulationTimeDefinitionNode;
-		spaceDefinition: aRMDSimulationSpaceDefinitionNode;
-		animatDefinitions: anArrayOfRMDSimulationAnimatDefinitionNode;
+		worldInitializer: aRMDWorldInitializerNode;
+		cellInitializer: aRMDCellInitializerNode;
+		animatInitializers: anArrayOfRMDAnimatInitializerNode;
 		yourself
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> animatDefinitions [
-	^ animatDefinitions
+RMDSimulationDefinitionNode >> animatInitializers [
+	^ animatInitializers
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> animatDefinitions: anArrayOfRMDSimulationAnimatDefinition [
-	animatDefinitions := anArrayOfRMDSimulationAnimatDefinition
+RMDSimulationDefinitionNode >> animatInitializers: anArrayOfRMDSimulationAnimatInitializer [
+	animatInitializers := anArrayOfRMDSimulationAnimatInitializer
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> cellInitializer [
+	^ cellInitializer
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> cellInitializer: aRMDSimulationCellInitializer [
+	cellInitializer := aRMDSimulationCellInitializer
 ]
 
 { #category : #enumerating }
 RMDSimulationDefinitionNode >> childrenDo: aBlock [
 	aBlock
-		value: spaceDefinition;
-		value: timeDefinition.
-	animatDefinitions ifNotNil: [ animatDefinitions do: aBlock ]
+		value: cellInitializer;
+		value: timeInitializer.
+	animatInitializers ifNotNil: [ animatInitializers do: aBlock ]
 ]
 
 { #category : #testing }
-RMDSimulationDefinitionNode >> isSimulationDefinitionNode [
+RMDSimulationDefinitionNode >> isSimulationInitializerNode [
 	^ true
 ]
 
@@ -46,11 +58,11 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: 'Simulation with';
 		nextPut: Character cr.
-	spaceDefinition printOn: aStream.
+	cellInitializer printOn: aStream.
 	aStream nextPut: Character cr.
-	timeDefinition printOn: aStream.
+	timeInitializer printOn: aStream.
 	aStream nextPut: Character cr.
-	animatDefinitions
+	animatInitializers
 		do: [ :def | def printOn: aStream ]
 		separatedBy: [ aStream
 				nextPut: $,;
@@ -59,21 +71,21 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> spaceDefinition [
-	^ spaceDefinition
+RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode [
+	timeInitializer := aRMDSimulationTimeDefinitionNode
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> spaceDefinition: aRMDSimulationSpaceDefinition [
-	spaceDefinition := aRMDSimulationSpaceDefinition
+RMDSimulationDefinitionNode >> timedefinition [
+	^ timeInitializer
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> timeDefinition [
-	^ timeDefinition
+RMDSimulationDefinitionNode >> worldInitializer [
+	^ worldInitializer
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinition [
-	timeDefinition := aRMDSimulationTimeDefinition
+RMDSimulationDefinitionNode >> worldInitializer: aRMDWorldInitializerNode [
+	worldInitializer := aRMDWorldInitializerNode
 ]

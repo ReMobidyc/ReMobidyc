@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSimulationPropertyDefinitionNode,
+	#name : #RMDPropertyInitializerNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSimulationPropertyDefinitionNode class >> identifier: aString expression: aRMDExpressionNode [
+RMDPropertyInitializerNode class >> identifier: aString expression: aRMDExpressionNode [
 	^ self new
 		identifier: aString;
 		expression: aRMDExpressionNode;
@@ -17,37 +17,37 @@ RMDSimulationPropertyDefinitionNode class >> identifier: aString expression: aRM
 ]
 
 { #category : #enumerating }
-RMDSimulationPropertyDefinitionNode >> childrenDo: aBlock [
+RMDPropertyInitializerNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
 { #category : #accessing }
-RMDSimulationPropertyDefinitionNode >> expression [
+RMDPropertyInitializerNode >> expression [
 	^ expression
 ]
 
 { #category : #accessing }
-RMDSimulationPropertyDefinitionNode >> expression: aRMDExpressionNode [
+RMDPropertyInitializerNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
 { #category : #accessing }
-RMDSimulationPropertyDefinitionNode >> identifier [
+RMDPropertyInitializerNode >> identifier [
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDSimulationPropertyDefinitionNode >> identifier: aString [
+RMDPropertyInitializerNode >> identifier: aString [
 	identifier := aString
 ]
 
 { #category : #printing }
-RMDSimulationPropertyDefinitionNode >> isSimulationPropertyDefinitionNode [
+RMDPropertyInitializerNode >> isPropertyInitializerNode [
 	^ true
 ]
 
 { #category : #printing }
-RMDSimulationPropertyDefinitionNode >> printOn: aStream [
+RMDPropertyInitializerNode >> printOn: aStream [
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' = '.

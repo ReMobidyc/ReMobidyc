@@ -68,6 +68,32 @@ RMDSpeciesDefinitionNode >> childrenDo: aBlock [
 	propertyDeclarations do: aBlock
 ]
 
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> defaultPropertyBinds [
+	| binds index |
+	binds := Array new: self totalNumberOfProperties.
+	index := 0.
+	self builtinProperties
+		do: [ :assoc | 
+			binds
+				at: (index := index + 1)
+				put:
+					(RMDPropertyBindNode
+						actionAgent: nil
+						property: assoc key
+						animatProperty: assoc key) ].
+	self propertyDeclarations
+		do: [ :decl | 
+			binds
+				at: (index := index + 1)
+				put:
+					(RMDPropertyBindNode
+						actionAgent: nil
+						property: decl identifier
+						animatProperty: decl identifier) ].
+	^ binds
+]
+
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> hash [
 	^ (self class hash bitXor: identifier hash)

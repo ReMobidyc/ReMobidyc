@@ -191,6 +191,25 @@ Goat is Animat with
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAnimatInitializer [
+	| node |
+	node := grammar animatInitializer parse: '100 Goat'.
+	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node population equals: 100.
+	self assert: node animat equals: 'Goat'.
+	self assert: node propertyInitializers size equals: 0.
+	node := grammar animatInitializer
+		parse:
+			'5 Wolf with
+		energy = 1000[kcal]
+		speed = 50 [km/h]'.
+	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node population equals: 5.
+	self assert: node animat equals: 'Wolf'.
+	self assert: node propertyInitializers size equals: 2
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testApply [
 	| apply |
 	apply := grammar apply parse: 'abs(x)'.
@@ -299,6 +318,36 @@ Cell with
 	self
 		assert: node propertyDeclarations first unit
 		equals: RMDUnit kcal
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCellInitializer [
+	| node |
+	node := grammar cellInitializer
+		parse: '10x20 of 5[m] Cell'.
+	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node xDivisions equals: 10.
+	self assert: node yDivisions equals: 20.
+	self assert: node length literal equals: '5'.
+	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node propertyInitializers isEmpty.
+	node := grammar cellInitializer
+		parse:
+			'15x30 of 2[m] Cell with
+	green = 10000 [kcal]
+	fertility = 12345 [kcal]'.
+	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node xDivisions equals: 15.
+	self assert: node yDivisions equals: 30.
+	self assert: node length literal equals: '2'.
+	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node propertyInitializers size equals: 2.
+	self
+		assert: node propertyInitializers first identifier
+		equals: 'green'.
+	self
+		assert: node propertyInitializers second identifier
+		equals: 'fertility'
 ]
 
 { #category : #tests }
@@ -721,22 +770,15 @@ RMDGrammarTest >> testPropertyDefinition [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testSimulationAnimatDefinition [
+RMDGrammarTest >> testPropertyInitializer [
 	| node |
-	node := grammar simulationAnimatDefinition parse: '100 Goat'.
-	self assert: node isSimulationAnimatDefinitionNode.
-	self assert: node population equals: 100.
-	self assert: node animat equals: 'Goat'.
-	self assert: node propertyDefinitions size equals: 0.
-	node := grammar simulationAnimatDefinition
-		parse:
-			'5 Wolf with
-		energy = 1000[kcal]
-		speed = 50 [km/h]'.
-	self assert: node isSimulationAnimatDefinitionNode.
-	self assert: node population equals: 5.
-	self assert: node animat equals: 'Wolf'.
-	self assert: node propertyDefinitions size equals: 2
+	node := grammar propertyInitializer
+		parse: 'green = uniform 100[kcal] to 1000[kcal]'.
+	self assert: node isPropertyInitializerNode.
+	self assert: node identifier equals: 'green'.
+	self
+		assert: node expression
+		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
 ]
 
 { #category : #tests }
@@ -751,52 +793,10 @@ RMDGrammarTest >> testSimulationDefinition [
 	10 Goat with
 		x = uniform 0[m] to 50[m]
 		y = uniform 20[m] to 30[m].'.
-	self assert: node isSimulationDefinitionNode.
+	self assert: node isSimulationInitializerNode.
 	self
-		assert: node timeDefinition duration
+		assert: node timedefinition duration
 		equals: (grammar literal parse: '10[day]')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testSimulationPropertyDefinition [
-	| node |
-	node := grammar simulationPropertyDefinition
-		parse: 'green = uniform 100[kcal] to 1000[kcal]'.
-	self assert: node isSimulationPropertyDefinitionNode.
-	self assert: node identifier equals: 'green'.
-	self
-		assert: node expression
-		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testSimulationSpaceDefinition [
-	| node |
-	node := grammar simulationSpaceDefinition
-		parse: '10x20 of 5[m] Cell'.
-	self assert: node isSimulationSpaceDefinitionNode.
-	self assert: node xDivisions equals: 10.
-	self assert: node yDivisions equals: 20.
-	self assert: node length literal equals: '5'.
-	self assert: node length type equals: 'm' asRMDUnit.
-	self assert: node propertyDefinitions isEmpty.
-	node := grammar simulationSpaceDefinition
-		parse:
-			'15x30 of 2[m] Cell with
-	green = 10000 [kcal]
-	fertility = 12345 [kcal]'.
-	self assert: node isSimulationSpaceDefinitionNode.
-	self assert: node xDivisions equals: 15.
-	self assert: node yDivisions equals: 30.
-	self assert: node length literal equals: '2'.
-	self assert: node length type equals: 'm' asRMDUnit.
-	self assert: node propertyDefinitions size equals: 2.
-	self
-		assert: node propertyDefinitions first identifier
-		equals: 'green'.
-	self
-		assert: node propertyDefinitions second identifier
-		equals: 'fertility'
 ]
 
 { #category : #tests }

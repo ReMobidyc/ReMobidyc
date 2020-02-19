@@ -46,11 +46,11 @@ RMDContextTest >> testLoadPropertyBindMap [
 Foo is Animat with
 	sugar [kcal].' trim.
 	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: nil
+		actionAgent: nil
 		property: 'x'
 		animatProperty: 'x').
 	(RMDPropertyBindNode
-		scriptAgent: nil
+		actionAgent: nil
 		property: 'energy'
 		animatProperty: 'sugar')}.
 	context
@@ -93,7 +93,7 @@ RMDContextTest >> testLocationCell [
 Cell with
 	fertility [kcal].' trim.
 	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: 'here'
+		actionAgent: 'here'
 		property: 'sugar'
 		animatProperty: 'fertility')}.
 	context
@@ -119,7 +119,7 @@ Foo is Animat with
 Bar is Animat with
 	salt [g].' trim.
 	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: 'bar'
+		actionAgent: 'bar'
 		property: 'sea'
 		animatProperty: 'salt')}.
 	context
@@ -153,7 +153,7 @@ RMDContextTest >> testSubjectSpecies [
 Foo is Animat with
 	sugar [kcal].' trim.
 	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: nil
+		actionAgent: nil
 		property: 'energy'
 		animatProperty: 'sugar')}.
 	context
@@ -191,7 +191,7 @@ RMDContextTest >> testWorld [
 World with
 	temperature [C].' trim.
 	replaceMap := {(RMDPropertyBindNode
-		scriptAgent: 'world'
+		actionAgent: 'world'
 		property: 'temp'
 		animatProperty: 'temperature')}.
 	context
