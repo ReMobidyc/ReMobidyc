@@ -598,11 +598,11 @@ RMDGrammar >> propertyBindNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDeclaration [
-	^ (identifier , '=' asPParser trimBlanks , expression)
-		==> [ :triple | 
+	^ (identifier , self type)
+		==> [ :pair | 
 			self propertyDeclarationNodeClass
-				identifier: triple first
-				expression: triple third ]
+				identifier: pair first
+				unit: pair second ]
 ]
 
 { #category : #'class access' }

@@ -7,6 +7,11 @@ Class {
 	#category : #'ReMobidyc-Language-Units'
 }
 
+{ #category : #constants }
+RMDUnit class >> C [
+	^ self at: 'C'
+]
+
 { #category : #accessing }
 RMDUnit class >> at: aString [
 	^ KnownUnits at: aString ifAbsent: [ KeyNotFound signal ]
@@ -288,6 +293,11 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: '%' scale: 1.0 - 2 siUnit: self noDimension)
 		value: #('percent')
 	"probability"
+]
+
+{ #category : #constants }
+RMDUnit class >> kcal [
+	^ self at: 'kcal'
 ]
 
 { #category : #constants }

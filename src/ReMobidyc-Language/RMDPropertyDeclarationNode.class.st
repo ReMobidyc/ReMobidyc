@@ -2,17 +2,17 @@ Class {
 	#name : #RMDPropertyDeclarationNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'expression',
-		'identifier'
+		'identifier',
+		'unit'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDPropertyDeclarationNode class >> identifier: aString expression: aRMDExpression [
+RMDPropertyDeclarationNode class >> identifier: aString unit: aRMDUnit [
 	^ self new
 		identifier: aString;
-		expression: aRMDExpression;
+		unit: aRMDUnit;
 		yourself
 ]
 
@@ -20,27 +20,17 @@ RMDPropertyDeclarationNode class >> identifier: aString expression: aRMDExpressi
 RMDPropertyDeclarationNode >> = anObject [
 	^ self class = anObject class
 		and: [ identifier = anObject identifier
-				and: [ expression = anObject expression ] ]
+				and: [ unit = anObject unit ] ]
 ]
 
 { #category : #enumerating }
 RMDPropertyDeclarationNode >> childrenDo: aBlock [
-	aBlock value: expression
-]
 
-{ #category : #accessing }
-RMDPropertyDeclarationNode >> expression [
-	^ expression
-]
-
-{ #category : #accessing }
-RMDPropertyDeclarationNode >> expression: anRMDExpressionNode [
-	expression := anRMDExpressionNode
 ]
 
 { #category : #comparing }
 RMDPropertyDeclarationNode >> hash [
-	^ (self class hash bitXor: identifier hash) bitXor: expression hash
+	^ (self class hash bitXor: identifier hash) bitXor: unit hash
 ]
 
 { #category : #accessing }
@@ -62,6 +52,17 @@ RMDPropertyDeclarationNode >> isPropertyDeclarationNode [
 RMDPropertyDeclarationNode >> printOn: aStream [
 	aStream
 		nextPutAll: identifier;
-		nextPutAll: ' = '.
-	expression printOn: aStream
+		nextPutAll: ' ['.
+	unit printOn: aStream.
+	aStream nextPut: $]
+]
+
+{ #category : #accessing }
+RMDPropertyDeclarationNode >> unit [
+	^ unit
+]
+
+{ #category : #accessing }
+RMDPropertyDeclarationNode >> unit: anRMDUnit [
+	unit := anRMDUnit
 ]

@@ -131,7 +131,7 @@ RMDGrammarTest >> testActionDefinition [
 where
 	walking_speed = 10[km/h] if my energy > 1000[kcal],
 	                4[km/h]
-	walking_distance = walking_speed * world''s delta time.'.
+	walking_distance = walking_speed * delta time.'.
 	self assert: node isActionDefinitionNode.
 	self assert: node identifier equals: 'walk'.
 	self assert: node object equals: nil.
@@ -178,12 +178,16 @@ RMDGrammarTest >> testAnimatDefinition [
 		parse:
 			'
 Goat is Animat with
-	sugar = 6000 [kcal].' trim.
+	sugar [kcal].' trim.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'Goat'.
+	self assert: node propertyDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations
-		equals: {(grammar propertyDeclaration parse: 'sugar = 6000[kcal]')}
+		assert: node propertyDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node propertyDeclarations first unit
+		equals: (RMDUnit at: 'kcal')
 ]
 
 { #category : #tests }
@@ -286,11 +290,15 @@ RMDGrammarTest >> testCellDefinition [
 		parse:
 			'
 Cell with
-	sugar = 60000 [kcal].' trim.
+	sugar [kcal].' trim.
 	self assert: node isCellDefinitionNode.
+	self assert: node propertyDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations
-		equals: {(grammar propertyDeclaration parse: 'sugar = 60000[kcal]')}
+		assert: node propertyDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node propertyDeclarations first unit
+		equals: RMDUnit kcal
 ]
 
 { #category : #tests }
@@ -673,12 +681,10 @@ RMDGrammarTest >> testPropertyBind [
 { #category : #tests }
 RMDGrammarTest >> testPropertyDeclaration [
 	| declaration |
-	declaration := grammar propertyDeclaration parse: 'x = 1[m]'.
+	declaration := grammar propertyDeclaration parse: 'x [m]'.
 	self assert: declaration isPropertyDeclarationNode.
 	self assert: declaration identifier equals: 'x'.
-	self
-		assert: declaration expression
-		equals: (grammar literal parse: '1[m]')
+	self assert: declaration unit equals: RMDUnit m
 ]
 
 { #category : #tests }
@@ -949,9 +955,11 @@ RMDGrammarTest >> testWorldDefinition [
 		parse:
 			'
 World with
-	temperature = 10 [C].' trim.
+	temperature [C].' trim.
 	self assert: node isWorldDefinitionNode.
+	self assert: node propertyDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations
-		equals: {(grammar propertyDeclaration parse: 'temperature = 10[C]')}
+		assert: node propertyDeclarations first identifier
+		equals: 'temperature'.
+	self assert: node propertyDeclarations first unit equals: RMDUnit C
 ]
