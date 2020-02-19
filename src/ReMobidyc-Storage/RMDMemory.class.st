@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'time',
-		'deltaTime',
 		'nextValues',
 		'nextDeltas',
 		'values',
@@ -69,41 +68,6 @@ RMDMemory >> deltaAt: anInteger ifAbsent: errorBlock [
 		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ])
 ]
 
-{ #category : #accessing }
-RMDMemory >> deltaTime [
-	^ deltaTime
-]
-
-{ #category : #accessing }
-RMDMemory >> deltaTime: aFloat [
-	deltaTime := aFloat asFloat
-]
-
-{ #category : #accessing }
-RMDMemory >> differential2At: anInteger [
-	^ self differential2At: anInteger ifAbsent: [ ^ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDMemory >> differential2At: anInteger ifAbsent: errorBlock [
-	^ ((self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]) * -2
-		+ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
-		+ (self old2At: anInteger ifAbsent: [ ^ errorBlock value ]))
-		/ deltaTime squared
-]
-
-{ #category : #accessing }
-RMDMemory >> differentialAt: anInteger [
-	^ self differentialAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDMemory >> differentialAt: anInteger ifAbsent: errorBlock [
-	^ ((self at: anInteger ifAbsent: [ ^ errorBlock value ])
-		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]))
-		/ deltaTime
-]
-
 { #category : #timing }
 RMDMemory >> fastSunrise [
 	old2Values := oldValues.
@@ -134,7 +98,6 @@ RMDMemory >> individualsOf: aRMDSpeciesNode doWithSpecies: aBlock [
 { #category : #initialization }
 RMDMemory >> initialize [
 	super initialize.
-	deltaTime := 1.0.
 	time := 0.
 	nextValues := Dictionary new.
 	values := Dictionary new.

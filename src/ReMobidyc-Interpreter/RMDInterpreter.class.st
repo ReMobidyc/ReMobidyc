@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
+		'deltaTime',
 		'context',
 		'simulationDefinition',
 		'animatDefinitions',
@@ -100,6 +101,17 @@ RMDInterpreter >> context [
 	^ context
 ]
 
+{ #category : #timing }
+RMDInterpreter >> deltaTime [
+	^ deltaTime
+		ifNil: [ deltaTime := simulationDefinition timeDefinition step numeric ]
+]
+
+{ #category : #timing }
+RMDInterpreter >> deltaTime: aNumber [
+	deltaTime := aNumber
+]
+
 { #category : #directives }
 RMDInterpreter >> direction: aString [
 	| x1 y1 x2 y2 |
@@ -129,9 +141,9 @@ RMDInterpreter >> directive: aString object: anotherString [
 	aString = 'distance'
 		ifTrue: [ ^ self distance: anotherString ].
 	aString = 'time'
-		ifTrue: [ ^ memory time ].
+		ifTrue: [ ^ self time ].
 	aString = 'dtime'
-		ifTrue: [ ^ memory deltaTime ].
+		ifTrue: [ ^ self deltaTime ].
 	^ self error: 'Unknown directive: ' , aString
 ]
 
@@ -264,24 +276,26 @@ RMDInterpreter >> readDelta: aString agent: anotherString ifAbsent: errorBlock [
 
 { #category : #'variable access' }
 RMDInterpreter >> readDifferential2: aString agent: anotherString ifAbsent: errorBlock [
-	^ memory
-		differential2At:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: errorBlock
+	| address |
+	address := context
+		getMemoryAddressFor: aString
+		agent: anotherString
+		ifAbsent: [ ^ errorBlock value ].
+	^ ((memory oldAt: address ifAbsent: [ ^ errorBlock value ]) * -2
+		+ (memory at: address ifAbsent: [ ^ errorBlock value ])
+		+ (memory old2At: address ifAbsent: [ ^ errorBlock value ]))
+		/ self deltaTime squared
 ]
 
 { #category : #'variable access' }
 RMDInterpreter >> readDifferential: aString agent: anotherString ifAbsent: errorBlock [
-	^ memory
-		differentialAt:
+	^ (memory
+		deltaAt:
 			(context
 				getMemoryAddressFor: aString
 				agent: anotherString
 				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: errorBlock
+		ifAbsent: [ ^ errorBlock value ]) / self deltaTime
 ]
 
 { #category : #'variable access' }
@@ -342,6 +356,11 @@ RMDInterpreter >> standardLibrary [
 { #category : #timing }
 RMDInterpreter >> tick [
 	memory tick
+]
+
+{ #category : #timing }
+RMDInterpreter >> time [ 
+	^ memory time * self deltaTime
 ]
 
 { #category : #'variable access' }

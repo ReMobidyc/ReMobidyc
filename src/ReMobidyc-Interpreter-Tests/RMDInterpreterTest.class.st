@@ -13,8 +13,9 @@ RMDInterpreterTest >> setUp [
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
 		setContext: RMDContext new;
+		deltaTime: 60.0;
 		yourself.
-	dt := interpreter memory deltaTime
+	dt := interpreter deltaTime
 ]
 
 { #category : #tests }

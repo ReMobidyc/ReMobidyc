@@ -2,6 +2,7 @@ Extension { #name : #RMDAgentDirectiveNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDAgentDirectiveNodeTest >> testEvalIn [
+	interpreter deltaTime: 1.0.
 	interpreter context setMemoryAddressFor: 'x' agent: nil to: 1.
 	interpreter context setMemoryAddressFor: 'y' agent: nil to: 2.
 	interpreter context setMemoryAddressFor: 'x' agent: 'foo' to: 3.
