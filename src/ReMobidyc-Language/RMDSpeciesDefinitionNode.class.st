@@ -110,6 +110,11 @@ RMDSpeciesDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #testing }
+RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
+	^ true
+]
+
 { #category : #printing }
 RMDSpeciesDefinitionNode >> printOn: aStream [
 	aStream
@@ -137,6 +142,17 @@ RMDSpeciesDefinitionNode >> propertyDeclarations: anArrayOfPropertyDeclaration [
 	propertyDeclarations := anArrayOfPropertyDeclaration
 ]
 
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> propertyDeclarationsDo: aBlock [
+	propertyDeclarations do: aBlock
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> propertyIdentifiersDo: aBlock [
+	propertyDeclarations
+		do: [ :property | aBlock value: property identifier ]
+]
+
 { #category : #accessing }
 RMDSpeciesDefinitionNode >> propertyOffsets [
 	^ propertyOffsets
@@ -151,6 +167,11 @@ RMDSpeciesDefinitionNode >> propertyOffsets [
 						at: declaration identifier
 						ifAbsentPut: [ offset := offset + 1 ] ].
 			propertyOffsets ]
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> propertyOffsetsDo: aBlock [
+	self propertyOffsets keysAndValuesDo: aBlock
 ]
 
 { #category : #accessing }

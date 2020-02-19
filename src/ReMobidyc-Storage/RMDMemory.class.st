@@ -17,12 +17,12 @@ Class {
 }
 
 { #category : #'accessing-agents' }
-RMDMemory >> allocateIndividualOf: aRMDAnimatDefinitionNode [
+RMDMemory >> allocateIndividualOf: aRMDSpeciesDefinitionNode [
 	| individual |
 	nextAvailableSlot := (individual := nextAvailableSlot)
-		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+		+ aRMDSpeciesDefinitionNode totalNumberOfProperties.
 	(individuals
-		at: aRMDAnimatDefinitionNode
+		at: aRMDSpeciesDefinitionNode
 		ifAbsentPut: [ Set new: 1024 ]) add: individual.
 	^ individual
 ]

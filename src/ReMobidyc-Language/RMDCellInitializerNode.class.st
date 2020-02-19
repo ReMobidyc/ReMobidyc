@@ -1,11 +1,10 @@
 Class {
 	#name : #RMDCellInitializerNode,
-	#superclass : #RMDSyntaxNode,
+	#superclass : #RMDSpeciesInitializerNode,
 	#instVars : [
 		'xDivisions',
 		'yDivisions',
-		'length',
-		'propertyInitializers'
+		'length'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -27,7 +26,7 @@ RMDCellInitializerNode >> childrenDo: aBlock [
 ]
 
 { #category : #testing }
-RMDCellInitializerNode >> isSimulationSpaceDefinitionNode [
+RMDCellInitializerNode >> isCellInitializerNode [
 	^ true
 ]
 
@@ -55,16 +54,6 @@ RMDCellInitializerNode >> printOn: aStream [
 				nextPut: Character cr.
 			propertyInitializers do: [ :init | init printOn: aStream ] ].
 	aStream nextPut: $,
-]
-
-{ #category : #accessing }
-RMDCellInitializerNode >> propertyInitializers [
-	^ propertyInitializers
-]
-
-{ #category : #accessing }
-RMDCellInitializerNode >> propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
-	propertyInitializers := anArrayOfRMDSimulationPropertyInitializerNode
 ]
 
 { #category : #accessing }

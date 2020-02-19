@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyBindNodeTest,
+	#name : #RMDWorldInitializerNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }

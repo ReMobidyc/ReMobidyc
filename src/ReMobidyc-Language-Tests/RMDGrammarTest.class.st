@@ -194,7 +194,7 @@ Goat is Animat with
 RMDGrammarTest >> testAnimatInitializer [
 	| node |
 	node := grammar animatInitializer parse: '100 Goat'.
-	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 100.
 	self assert: node animat equals: 'Goat'.
 	self assert: node propertyInitializers size equals: 0.
@@ -203,7 +203,7 @@ RMDGrammarTest >> testAnimatInitializer [
 			'5 Wolf with
 		energy = 1000[kcal]
 		speed = 50 [km/h]'.
-	self assert: node isSimulationAnimatDefinitionNode.
+	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 5.
 	self assert: node animat equals: 'Wolf'.
 	self assert: node propertyInitializers size equals: 2
@@ -325,7 +325,7 @@ RMDGrammarTest >> testCellInitializer [
 	| node |
 	node := grammar cellInitializer
 		parse: '10x20 of 5[m] Cell'.
-	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node isCellInitializerNode.
 	self assert: node xDivisions equals: 10.
 	self assert: node yDivisions equals: 20.
 	self assert: node length literal equals: '5'.
@@ -336,7 +336,7 @@ RMDGrammarTest >> testCellInitializer [
 			'15x30 of 2[m] Cell with
 	green = 10000 [kcal]
 	fertility = 12345 [kcal]'.
-	self assert: node isSimulationSpaceDefinitionNode.
+	self assert: node isCellInitializerNode.
 	self assert: node xDivisions equals: 15.
 	self assert: node yDivisions equals: 30.
 	self assert: node length literal equals: '2'.
@@ -962,4 +962,15 @@ World with
 		assert: node propertyDeclarations first identifier
 		equals: 'temperature'.
 	self assert: node propertyDeclarations first unit equals: RMDUnit C
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testWorldInitializer [
+	| node |
+	node := grammar worldInitializer parse: 'World with
+	temperature = 10 [C]'.
+	self assert: node isWorldInitializerNode.
+	self assert: node propertyInitializers size equals: 1.
+	self assert: node propertyInitializers first identifier equals: 'temperature'.
+	self assert: node propertyInitializers first expression equals: (grammar literal parse: '10 [C]')
 ]

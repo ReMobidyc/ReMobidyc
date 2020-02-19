@@ -35,6 +35,11 @@ RMDSyntaxNode >> isAnimatDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAnimatInitializerNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isApplyNode [
 	^ false
 ]
@@ -51,6 +56,11 @@ RMDSyntaxNode >> isBinaryRelationNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isCellDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isCellInitializerNode [
 	^ false
 ]
 
@@ -185,22 +195,22 @@ RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isSimulationAnimatDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isSimulationInitializerNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isSimulationSpaceDefinitionNode [
+RMDSyntaxNode >> isSimulationTimeDefinitionNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isSimulationTimeDefinitionNode [
+RMDSyntaxNode >> isSpeciesDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isSpeciesInitializerNode [
 	^ false
 ]
 
@@ -236,6 +246,11 @@ RMDSyntaxNode >> isVariableNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isWorldDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isWorldInitializerNode [
 	^ false
 ]
 

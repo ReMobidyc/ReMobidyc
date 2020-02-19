@@ -195,8 +195,6 @@ RMDInterpreter >> initialize [
 RMDInterpreter >> initializeAnimat: anInteger species: aRMDAnimatDefinitionNode [
 	| offsets |
 	offsets := aRMDAnimatDefinitionNode propertyOffsets.
-	memory at: anInteger + (offsets at: 'x') put: self random * 1000.0.
-	memory at: anInteger + (offsets at: 'y') put: self random * 1000.0.
 	aRMDAnimatDefinitionNode propertyDeclarations
 		do: [ :property | 
 			memory
@@ -323,10 +321,10 @@ RMDInterpreter >> setContext: aRMDContext [
 RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
 	self
 		setContext:
-			(RMDContext new
-				subject: anInteger species: aRMDAnimatDefinitionNode;
-				loadPropertyBindMap: anArrayOfPropertyBindNode;
-				yourself)
+			(RMDActionContext
+				subject: anInteger
+				species: aRMDAnimatDefinitionNode
+				propertyBindMap: anArrayOfPropertyBindNode)
 ]
 
 { #category : #private }

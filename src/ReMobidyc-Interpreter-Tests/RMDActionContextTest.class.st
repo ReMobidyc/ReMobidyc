@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDContextTest,
+	#name : #RMDActionContextTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'context'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #running }
-RMDContextTest >> setUp [
-	context := RMDContext new.
+RMDActionContextTest >> setUp [
+	context := RMDActionContext new.
 ]
 
 { #category : #tests }
-RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
+RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
 	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
 	context setMemoryAddressFor: 'y' agent: nil to: 2.
 	self
@@ -37,7 +37,7 @@ RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
 ]
 
 { #category : #tests }
-RMDContextTest >> testLoadPropertyBindMap [
+RMDActionContextTest >> testLoadPropertyBindMap [
 	| parser animat replaceMap |
 	parser := RMDGrammar new.
 	animat := parser animatDefinition
@@ -65,7 +65,7 @@ Foo is Animat with
 ]
 
 { #category : #tests }
-RMDContextTest >> testLoadScript [
+RMDActionContextTest >> testLoadScript [
 	| parser source |
 	parser := RMDGrammar new.
 	source := '
@@ -84,7 +84,7 @@ where
 ]
 
 { #category : #tests }
-RMDContextTest >> testLocationCell [
+RMDActionContextTest >> testLocationCell [
 	| parser cell replaceMap |
 	parser := RMDGrammar new.
 	cell := parser cellDefinition
@@ -105,7 +105,7 @@ Cell with
 ]
 
 { #category : #tests }
-RMDContextTest >> testObjectSpecies [
+RMDActionContextTest >> testObjectSpecies [
 	| parser foo bar replaceMap |
 	parser := RMDGrammar new.
 	foo := parser animatDefinition
@@ -132,7 +132,7 @@ Bar is Animat with
 ]
 
 { #category : #tests }
-RMDContextTest >> testSetMemoryAddressForAgentTo [
+RMDActionContextTest >> testSetMemoryAddressForAgentTo [
 	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
 	context setMemoryAddressFor: 'y' agent: nil to: 2.
 	self
@@ -144,7 +144,7 @@ RMDContextTest >> testSetMemoryAddressForAgentTo [
 ]
 
 { #category : #tests }
-RMDContextTest >> testSubjectSpecies [
+RMDActionContextTest >> testSubjectSpecies [
 	| parser animat replaceMap |
 	parser := RMDGrammar new.
 	animat := parser animatDefinition
@@ -165,7 +165,7 @@ Foo is Animat with
 ]
 
 { #category : #tests }
-RMDContextTest >> testUtilityAtIfAbsent [
+RMDActionContextTest >> testUtilityAtIfAbsent [
 	context utilityAt: 'foo' put: 1.
 	context utilityAt: 'bar' put: 2.
 	self assert: (context utilityAt: 'foo' ifAbsent: [ nil ]) equals: 1.
@@ -174,7 +174,7 @@ RMDContextTest >> testUtilityAtIfAbsent [
 ]
 
 { #category : #tests }
-RMDContextTest >> testUtilityAtPut [
+RMDActionContextTest >> testUtilityAtPut [
 	context utilityAt: 'foo' put: 1.
 	context utilityAt: 'bar' put: 2.
 	self assert: (context utilityAt: 'foo' ifAbsent: [ nil ]) equals: 1.
@@ -182,7 +182,7 @@ RMDContextTest >> testUtilityAtPut [
 ]
 
 { #category : #tests }
-RMDContextTest >> testWorld [
+RMDActionContextTest >> testWorld [
 	| parser world replaceMap |
 	parser := RMDGrammar new.
 	world := parser worldDefinition

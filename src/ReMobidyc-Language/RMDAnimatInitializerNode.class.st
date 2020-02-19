@@ -1,10 +1,9 @@
 Class {
 	#name : #RMDAnimatInitializerNode,
-	#superclass : #RMDSyntaxNode,
+	#superclass : #RMDSpeciesInitializerNode,
 	#instVars : [
 		'population',
-		'animat',
-		'propertyInitializers'
+		'animat'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -28,13 +27,8 @@ RMDAnimatInitializerNode >> animat: aString [
 	animat := aString
 ]
 
-{ #category : #enumerating }
-RMDAnimatInitializerNode >> childrenDo: aBlock [
-	propertyInitializers do: aBlock
-]
-
 { #category : #testing }
-RMDAnimatInitializerNode >> isSimulationAnimatDefinitionNode [
+RMDAnimatInitializerNode >> isAnimatInitializerNode [
 	^ true
 ]
 
@@ -62,14 +56,4 @@ RMDAnimatInitializerNode >> printOn: aStream [
 				do: [ :def | 
 					def printOn: aStream.
 					aStream nextPut: Character cr ] ]
-]
-
-{ #category : #accessing }
-RMDAnimatInitializerNode >> propertyInitializers [
-	^ propertyInitializers
-]
-
-{ #category : #accessing }
-RMDAnimatInitializerNode >> propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
-	propertyInitializers := anArrayOfRMDSimulationPropertyInitializerNode
 ]

@@ -4,7 +4,7 @@ Extension { #name : #RMDSyntaxNodeTest }
 RMDSyntaxNodeTest >> setUpInterpreter [
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
-		setContext: RMDContext new;
+		setContext: RMDActionContext new;
 		yourself.
 	parser := RMDGrammar new
 ]

@@ -452,16 +452,18 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ ('-' asPParser trimBlanks optional
-		,
-			(self parenExpression / self agentDirective / self uniformDistribution
-				/ self apply / self differentialVariable
-				/ self differential2Variable / self deltaVariable / self variable
-				/ self utilityVariable / literal))
-		==> [ :pair | 
-			pair first
-				ifNil: [ pair second ]
-				ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ]
+	^ literal
+		/
+			(('-' asPParser trimBlanks optional
+				,
+					(self parenExpression / self agentDirective / self uniformDistribution
+						/ self apply / self differentialVariable
+						/ self differential2Variable / self deltaVariable
+						/ self variable / self utilityVariable))
+				==> [ :pair | 
+					pair first
+						ifNil: [ pair second ]
+						ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
 ]
 
 { #category : #'parsers-expressions' }
@@ -892,7 +894,7 @@ RMDGrammar >> worldInitializer [
 		,
 			(self propertyInitializer
 				onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks) ==> #fourth) optional
+		, #newline asPParser trimBlanks optional) ==> #fourth) optional
 		==> [ :initializers | 
 			self worldInitializerNodeClass
 				propertyInitializers: (initializers ifNil: [ Array new ]) ]

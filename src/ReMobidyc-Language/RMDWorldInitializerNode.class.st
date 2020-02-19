@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDWorldInitializerNode,
-	#superclass : #RMDSyntaxNode,
-	#instVars : [
-		'propertyInitializers'
-	],
+	#superclass : #RMDSpeciesInitializerNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
@@ -14,9 +11,9 @@ RMDWorldInitializerNode class >> propertyInitializers: anArrayOfRMDPropertyIniti
 		yourself
 ]
 
-{ #category : #enumerating }
-RMDWorldInitializerNode >> childrenDo: aBlock [
-	propertyInitializers do: aBlock
+{ #category : #testing }
+RMDWorldInitializerNode >> isWorldInitializerNode [
+	^ true
 ]
 
 { #category : #printing }
@@ -28,14 +25,4 @@ RMDWorldInitializerNode >> printOn: aStream [
 				nextPut: Character cr.
 			propertyInitializers do: [ :init | init printOn: aStream ] ].
 	aStream nextPut: $,
-]
-
-{ #category : #accessing }
-RMDWorldInitializerNode >> propertyInitializers [
-	^ propertyInitializers
-]
-
-{ #category : #accessing }
-RMDWorldInitializerNode >> propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
-	propertyInitializers := anArrayOfRMDSimulationPropertyInitializerNode
 ]
