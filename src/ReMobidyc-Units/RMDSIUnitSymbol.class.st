@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDSIUnitSymbol,
 	#superclass : #RMDUnitSymbol,
-	#category : #'ReMobidyc-Language-Units'
+	#category : #'ReMobidyc-Units'
 }
 
 { #category : #'instance creation' }

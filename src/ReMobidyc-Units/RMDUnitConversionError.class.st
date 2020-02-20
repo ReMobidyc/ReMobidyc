@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDUnitConversionError,
 	#superclass : #Error,
-	#category : #'ReMobidyc-Language-Units'
+	#category : #'ReMobidyc-Units'
 }

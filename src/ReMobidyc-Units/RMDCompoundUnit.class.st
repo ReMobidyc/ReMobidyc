@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'unitSymbolsAndOrders'
 	],
-	#category : #'ReMobidyc-Language-Units'
+	#category : #'ReMobidyc-Units'
 }
 
 { #category : #'instance creation' }

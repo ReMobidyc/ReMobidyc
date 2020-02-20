@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'symbol'
 	],
-	#category : #'ReMobidyc-Language-Units'
+	#category : #'ReMobidyc-Units'
 }
 
 { #category : #arithmetics }

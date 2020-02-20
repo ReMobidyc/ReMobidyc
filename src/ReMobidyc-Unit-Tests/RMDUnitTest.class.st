@@ -11,7 +11,7 @@ Class {
 		'meter',
 		'ton'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : #'ReMobidyc-Unit-Tests'
 }
 
 { #category : #running }

@@ -4,7 +4,7 @@ Class {
 	#classVars : [
 		'KnownUnits'
 	],
-	#category : #'ReMobidyc-Language-Units'
+	#category : #'ReMobidyc-Units'
 }
 
 { #category : #accessing }

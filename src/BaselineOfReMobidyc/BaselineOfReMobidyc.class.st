@@ -23,22 +23,26 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			spec
 				package: 'ReMobidyc-Storage'
 					with: [ spec requires: #('P3' 'NeoJSON' 'ZTimestamp' 'Glorp') ];
+				package: 'ReMobidyc-Unit' with: [ spec requires: #() ];
 				package: 'ReMobidyc-Language'
-					with: [ spec requires: #('PetitParser2Core') ];
+					with: [ spec requires: #('PetitParser2Core' 'ReMobidyc-Unit') ];
 				package: 'ReMobidyc-Interpreter'
 					with: [ spec requires: #('ReMobidyc-Storage' 'ReMobidyc-Language') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
 					with: [ spec requires: #('ReMobidyc-Language') ];
+				package: 'ReMobidyc-Unit-Tests'
+					with: [ spec requires: #('ReMobidyc-Unit') ];
 				package: 'ReMobidyc-Interpreter-Tests'
 					with:
 						[ spec requires: #('ReMobidyc-Language-Tests' 'ReMobidyc-Interpreter') ].
 			spec
 				group: 'default' with: #('core' 'tests');
 				group: 'core'
-					with: #('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Interpreter');
+					with:
+					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Unit' 'ReMobidyc-Interpreter');
 				group: 'tests'
 					with:
-					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Interpreter-Tests') ]
+					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Unit-Tests' 'ReMobidyc-Interpreter-Tests') ]
 ]
