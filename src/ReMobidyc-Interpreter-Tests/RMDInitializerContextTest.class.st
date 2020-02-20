@@ -15,7 +15,7 @@ RMDInitializerContextTest >> setUp [
 ]
 
 { #category : #tests }
-RMDInitializerContextTest >> testSpecies [
+RMDInitializerContextTest >> testSubjectSpecies [
 	| worldDef |
 	worldDef := parser worldDefinition
 		parse:

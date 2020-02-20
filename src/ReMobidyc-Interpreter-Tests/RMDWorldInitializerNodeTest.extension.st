@@ -2,7 +2,7 @@ Extension { #name : #RMDWorldInitializerNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDWorldInitializerNodeTest >> testEvalIn [
-	| worldDef worldInitializer |
+	| worldDef worldInitializer count |
 	worldDef := parser worldDefinition
 		parse:
 			'World with
@@ -13,15 +13,27 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 			'World with
 			temperature = -10 [C]
 			humidity = 0.4 []'.
-	interpreter memory allocateIndividualOf: worldDef.
+	interpreter allocateWorld: worldDef.
 	interpreter
-		setContext: (RMDInitializerContext subject: 1 species: worldDef).
-	worldInitializer evalIn: interpreter.
-	interpreter tick.
-	self
-		assert: (interpreter readVariable: 'temperature' agent: nil ifAbsent: [ nil ])
-		closeTo: (RMDUnit C toSI: -10).
-	self
-		assert: (interpreter readVariable: 'humidity' agent: nil ifAbsent: [ nil ])
-		closeTo: 0.4
+		individualsOf: worldDef
+		do: [ :world | 
+			interpreter setInitializerContextWithSubject: world species: worldDef.
+			worldInitializer evalIn: interpreter ].
+	count := 0.
+	interpreter
+		individualsOf: worldDef
+		do: [ :world | 
+			interpreter
+				setActionContextWithIndividual: world
+				species: worldDef
+				propertyBindMap: worldDef defaultPropertyBinds.
+			self
+				assert: (interpreter readVariable: 'temperature' agent: nil ifAbsent: [ nil ])
+				closeTo: (RMDUnit celsius toSI: -10).
+			self
+				assert: (interpreter readVariable: 'humidity' agent: nil ifAbsent: [ nil ])
+				closeTo: 0.4.
+			self assert: interpreter time closeTo: 0.0.
+			count := count + 1 ].
+	self assert: count equals: 1
 ]

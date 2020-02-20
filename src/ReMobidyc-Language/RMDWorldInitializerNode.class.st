@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDWorldInitializerNode class >> default [
+	^ self propertyInitializers: Array new
+]
+
+{ #category : #'instance creation' }
 RMDWorldInitializerNode class >> propertyInitializers: anArrayOfRMDPropertyInitializer [
 	^ self new
 		propertyInitializers: anArrayOfRMDPropertyInitializer;

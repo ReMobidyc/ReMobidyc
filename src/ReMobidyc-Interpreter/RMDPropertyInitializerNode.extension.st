@@ -3,8 +3,7 @@ Extension { #name : #RMDPropertyInitializerNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPropertyInitializerNode >> evalIn: aRMDInterpreter [
 	aRMDInterpreter
-		write: (expression evalIn: aRMDInterpreter)
-		toVariable: identifier
-		agent: nil
+		initializeVariable: identifier
+		with: (expression evalIn: aRMDInterpreter)
 		ifAbsent: [ ^ KeyNotFound signal: identifier ]
 ]

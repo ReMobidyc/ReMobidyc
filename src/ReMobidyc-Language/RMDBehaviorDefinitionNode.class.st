@@ -3,10 +3,10 @@ Class {
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'subjectIdentifier',
-		'scriptIdentifier',
 		'objectIdentifier',
 		'range',
-		'propertyBinds'
+		'propertyBinds',
+		'actionIdentifier'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -15,11 +15,21 @@ Class {
 RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptString1 objectIdentifier: agentString2 within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
 	^ self new
 		subjectIdentifier: agentString1;
-		scriptIdentifier: scriptString1;
+		actionIdentifier: scriptString1;
 		objectIdentifier: agentString2;
 		range: aRMDLiteralNode;
 		propertyBinds: anArrayOfRMDPropertyBindNode;
 		yourself
+]
+
+{ #category : #accessing }
+RMDBehaviorDefinitionNode >> actionIdentifier [
+	^ actionIdentifier
+]
+
+{ #category : #accessing }
+RMDBehaviorDefinitionNode >> actionIdentifier: aString [
+	actionIdentifier := aString
 ]
 
 { #category : #enumerating }
@@ -53,7 +63,7 @@ RMDBehaviorDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: subjectIdentifier;
 		nextPutAll: ' can ';
-		nextPutAll: scriptIdentifier.
+		nextPutAll: actionIdentifier.
 	objectIdentifier
 		ifNotNil: [ aStream
 				nextPut: Character space;
@@ -84,16 +94,6 @@ RMDBehaviorDefinitionNode >> range [
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> range: aRMDLiteral [
 	range := aRMDLiteral
-]
-
-{ #category : #accessing }
-RMDBehaviorDefinitionNode >> scriptIdentifier [
-	^ scriptIdentifier
-]
-
-{ #category : #accessing }
-RMDBehaviorDefinitionNode >> scriptIdentifier: aString [
-	scriptIdentifier := aString
 ]
 
 { #category : #accessing }

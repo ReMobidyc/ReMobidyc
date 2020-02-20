@@ -7,11 +7,6 @@ Class {
 	#category : #'ReMobidyc-Language-Units'
 }
 
-{ #category : #constants }
-RMDUnit class >> C [
-	^ self at: 'C'
-]
-
 { #category : #accessing }
 RMDUnit class >> at: aString [
 	^ KnownUnits at: aString ifAbsent: [ KeyNotFound signal ]
@@ -30,6 +25,16 @@ RMDUnit class >> at: aString ifPresent: aBlock [
 { #category : #accessing }
 RMDUnit class >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ KnownUnits at: aString ifPresent: aBlock ifAbsent: errorBlock
+]
+
+{ #category : #constants }
+RMDUnit class >> celsius [
+	^ self at: 'C'
+]
+
+{ #category : #constants }
+RMDUnit class >> day [
+	^ self at: 'day'
 ]
 
 { #category : #'class initialization' }
@@ -143,6 +148,7 @@ RMDUnit class >> initialize [
 		value: #('°F' '℉').
 	"area"
 	m2 := m * m.
+	KnownUnits at: 'm2' put: m2.
 	register
 		value: (self newSymbol: 'ac' scale: 4046.8564224 siUnit: m2)
 		value: #().
@@ -289,7 +295,8 @@ RMDUnit class >> initialize [
 	register value: (radian := self newSISymbol: 'rad') value: #('㎭').
 	register
 		value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian)
-		value: #('degrees' '°') register
+		value: #('degrees' '°').
+	register
 		value: (self newSymbol: '%' scale: 1.0 - 2 siUnit: self noDimension)
 		value: #('percent')
 	"probability"
@@ -308,6 +315,11 @@ RMDUnit class >> kg [
 { #category : #constants }
 RMDUnit class >> m [
 	^ self at: 'm'
+]
+
+{ #category : #constants }
+RMDUnit class >> m2 [
+	^ self at: 'm2'
 ]
 
 { #category : #'instance creation' }

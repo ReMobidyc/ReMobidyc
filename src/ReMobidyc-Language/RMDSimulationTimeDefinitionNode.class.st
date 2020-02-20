@@ -9,6 +9,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDSimulationTimeDefinitionNode class >> default [
+	^ self
+		duration: '0 [s]' asRMDExpression
+		step: '1 [h]' asRMDExpression
+]
+
+{ #category : #'instance creation' }
 RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherRMDExpression [
 	^ self new
 		duration: aRMDExpression;

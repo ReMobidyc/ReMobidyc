@@ -29,7 +29,6 @@ RMDDeltaVariableNodeTest >> testAssignIn [
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDDeltaVariableNodeTest >> testEvalIn [
-	interpreter deltaTime: 0.1.
 	interpreter context setMemoryAddressFor: 'x' agent: 'foo' to: 1.
 	interpreter memory
 		nextAt: 1 put: 2;

@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDSimulationDefinitionNode class >> default [
+	^ self
+		timeDefinition: RMDSimulationTimeDefinitionNode default
+		worldInitializer: RMDWorldInitializerNode default
+		cellInitializer: RMDCellInitializerNode default
+		animatInitializers: Array new
+]
+
+{ #category : #'instance creation' }
 RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode worldInitializer: aRMDWorldInitializerNode cellInitializer: aRMDCellInitializerNode animatInitializers: anArrayOfRMDAnimatInitializerNode [
 	^ self new
 		timeDefinition: aRMDSimulationTimeDefinitionNode;
@@ -18,6 +27,12 @@ RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitio
 		cellInitializer: aRMDCellInitializerNode;
 		animatInitializers: anArrayOfRMDAnimatInitializerNode;
 		yourself
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> addAnimatInitializer: aRMDAnimatInitializerNode [
+	animatInitializers := animatInitializers
+		copyWith: aRMDAnimatInitializerNode
 ]
 
 { #category : #accessing }
@@ -49,7 +64,7 @@ RMDSimulationDefinitionNode >> childrenDo: aBlock [
 ]
 
 { #category : #testing }
-RMDSimulationDefinitionNode >> isSimulationInitializerNode [
+RMDSimulationDefinitionNode >> isSimulationDefinitionNode [
 	^ true
 ]
 
@@ -71,13 +86,13 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode [
-	timeInitializer := aRMDSimulationTimeDefinitionNode
+RMDSimulationDefinitionNode >> timeDefinition [
+	^ timeInitializer
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionNode >> timedefinition [
-	^ timeInitializer
+RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode [
+	timeInitializer := aRMDSimulationTimeDefinitionNode
 ]
 
 { #category : #accessing }

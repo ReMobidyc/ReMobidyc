@@ -2,20 +2,20 @@ Extension { #name : #RMDBehaviorDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDBehaviorDefinitionNode >> evalIn: aRMDInterpreter [
-	| action animat |
-	animat := aRMDInterpreter
+	| action species |
+	species := aRMDInterpreter
 		animatDefinitionAt: subjectIdentifier
 		ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ].
 	action := aRMDInterpreter
-		actionDefinitionAt: scriptIdentifier
-		ifAbsent: [ ^ KeyNotFound signal: scriptIdentifier ].
+		actionDefinitionAt: actionIdentifier
+		ifAbsent: [ ^ KeyNotFound signal: actionIdentifier ].
 	self hasObject
 		ifTrue: [ self shouldBeImplemented ]
 		ifFalse: [ aRMDInterpreter
-				individualsOf: animat
-				do: [ :animatId | 
+				individualsOf: species
+				do: [ :animat | 
 					aRMDInterpreter
-						setContextWithIndividual: animatId
+						setActionContextWithIndividual: animat
 						species: animat
 						propertyBindMap: propertyBinds.
 					action evalIn: aRMDInterpreter ] ]

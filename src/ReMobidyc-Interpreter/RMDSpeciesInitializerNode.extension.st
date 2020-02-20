@@ -1,7 +1,7 @@
-Extension { #name : #RMDWorldInitializerNode }
+Extension { #name : #RMDSpeciesInitializerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDWorldInitializerNode >> evalIn: aRMDInterpreter [
+RMDSpeciesInitializerNode >> evalIn: aRMDInterpreter [
 	propertyInitializers
 		do: [ :initializer | initializer evalIn: aRMDInterpreter ]
 ]

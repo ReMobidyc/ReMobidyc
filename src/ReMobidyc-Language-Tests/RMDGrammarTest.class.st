@@ -187,7 +187,28 @@ Goat is Animat with
 		equals: 'sugar'.
 	self
 		assert: node propertyDeclarations first unit
-		equals: (RMDUnit at: 'kcal')
+		equals: (RMDUnit at: 'kcal').
+	node := grammar animatDefinition
+		parse:
+			'
+Goat is Animat with
+	sugar [kcal]
+	age [day].' trim.
+	self assert: node isAnimatDefinitionNode.
+	self assert: node identifier equals: 'Goat'.
+	self assert: node propertyDeclarations size equals: 2.
+	self
+		assert: node propertyDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node propertyDeclarations first unit
+		equals: (RMDUnit at: 'kcal').
+	self
+		assert: node propertyDeclarations second identifier
+		equals: 'age'.
+	self
+		assert: node propertyDeclarations second unit
+		equals: (RMDUnit at: 'day')
 ]
 
 { #category : #tests }
@@ -256,7 +277,7 @@ Goat walk where
 	self deny: node isPetit2Failure.
 	self assert: node isBehaviorDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node scriptIdentifier equals: 'walk'.
+	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
 	self assert: node propertyBinds size = 2.
@@ -269,7 +290,7 @@ Wolf eat Goat within 1[m] where
 	self deny: node isPetit2Failure.
 	self assert: node isBehaviorDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
-	self assert: node scriptIdentifier equals: 'eat'.
+	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
 	self assert: node propertyBinds size = 2
@@ -323,24 +344,25 @@ Cell with
 { #category : #tests }
 RMDGrammarTest >> testCellInitializer [
 	| node |
-	node := grammar cellInitializer
-		parse: '10x20 of 5[m] Cell'.
+	node := grammar cellInitializer parse: '10x20 of 5[m] Cell'.
 	self assert: node isCellInitializerNode.
 	self assert: node xDivisions equals: 10.
 	self assert: node yDivisions equals: 20.
-	self assert: node length literal equals: '5'.
-	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node size literal equals: '5'.
+	self assert: node size type equals: 'm' asRMDUnit.
+	self assert: node length closeTo: 5.0.
 	self assert: node propertyInitializers isEmpty.
 	node := grammar cellInitializer
 		parse:
-			'15x30 of 2[m] Cell with
+			'15x30 of 4[m^2] Cell with
 	green = 10000 [kcal]
 	fertility = 12345 [kcal]'.
 	self assert: node isCellInitializerNode.
 	self assert: node xDivisions equals: 15.
 	self assert: node yDivisions equals: 30.
-	self assert: node length literal equals: '2'.
-	self assert: node length type equals: 'm' asRMDUnit.
+	self assert: node size literal equals: '4'.
+	self assert: node size type equals: 'm^2' asRMDUnit.
+	self assert: node length closeTo: 2.0.
 	self assert: node propertyInitializers size equals: 2.
 	self
 		assert: node propertyInitializers first identifier
@@ -793,9 +815,9 @@ RMDGrammarTest >> testSimulationDefinition [
 	10 Goat with
 		x = uniform 0[m] to 50[m]
 		y = uniform 20[m] to 30[m].'.
-	self assert: node isSimulationInitializerNode.
+	self assert: node isSimulationDefinitionNode.
 	self
-		assert: node timedefinition duration
+		assert: node timeDefinition duration
 		equals: (grammar literal parse: '10[day]')
 ]
 
@@ -961,7 +983,7 @@ World with
 	self
 		assert: node propertyDeclarations first identifier
 		equals: 'temperature'.
-	self assert: node propertyDeclarations first unit equals: RMDUnit C
+	self assert: node propertyDeclarations first unit equals: RMDUnit celsius
 ]
 
 { #category : #tests }

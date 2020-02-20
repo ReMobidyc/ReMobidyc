@@ -2,8 +2,7 @@ Class {
 	#name : #RMDInterpreterTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'interpreter',
-		'dt'
+		'interpreter'
 	],
 	#category : #'ReMobidyc-Interpreter-Tests'
 }
@@ -13,9 +12,7 @@ RMDInterpreterTest >> setUp [
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
 		setContext: RMDActionContext new;
-		deltaTime: 60.0;
-		yourself.
-	dt := interpreter deltaTime
+		yourself
 ]
 
 { #category : #tests }
@@ -47,7 +44,9 @@ RMDInterpreterTest >> testReadDifferential2AgentIfAbsent [
 		tick.
 	self
 		assert: (interpreter readDifferential2: 'x' agent: 'foo' ifAbsent: [ nil ])
-		closeTo: ((12 - 7) / dt - ((7 - 4) / dt)) / dt.
+		closeTo:
+			((12 - 7) / interpreter deltaTime - ((7 - 4) / interpreter deltaTime))
+				/ interpreter deltaTime.
 	self
 		assert: (interpreter readDifferential2: 'y' agent: 'foo' ifAbsent: [ nil ])
 		equals: nil.
@@ -65,7 +64,7 @@ RMDInterpreterTest >> testReadDifferentialAgentIfAbsent [
 		tick.
 	self
 		assert: (interpreter readDifferential: 'x' agent: 'foo' ifAbsent: [ nil ])
-		closeTo: (7 - 4) / dt.
+		closeTo: (7 - 4) / interpreter deltaTime.
 	self
 		assert: (interpreter readDelta: 'y' agent: 'foo' ifAbsent: [ nil ])
 		equals: nil.
@@ -109,6 +108,66 @@ RMDInterpreterTest >> testReadVariableAgentIfAbsent [
 	self
 		assert: (interpreter readDelta: 'x' agent: 'bar' ifAbsent: [ nil ])
 		equals: nil
+]
+
+{ #category : #tests }
+RMDInterpreterTest >> testSetUpSimulation [
+	| parser memory kcal celsius  |
+	parser := RMDGrammar new.
+	memory := interpreter memory.
+	interpreter
+		load:
+			(parser worldDefinition
+				parse:
+					'World with
+	temperature [C].');
+		load:
+			(parser cellDefinition
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].');
+		load:
+			(parser animatDefinition
+				parse:
+					'Goat is Animat with
+	body [kcal]
+	age [day].');
+		load:
+			(parser simulationTimeDefinition
+				parse: 'during 300 [day] by 0.5 [day]');
+		load:
+			(parser worldInitializer
+				parse:
+					'World with
+	temperature = 30 [C]');
+		load:
+			(parser cellInitializer
+				parse:
+					'5 x 6 of 10 [m] Cell with
+	grass = uniform 1000 [kcal] to 5000 [kcal]
+	fertility = 2000 [kcal]');
+		load:
+			(parser animatInitializer
+				parse:
+					'10 Goat with
+	x = uniform 0 [m] to 50 [m]
+	y = uniform 0 [m] to 60 [m]
+	body = 10000 [kcal]
+	age = 0 [day]').
+	interpreter setupSimulation.
+	kcal := RMDUnit kcal.
+	celsius := RMDUnit celsius.
+	self assert: (memory at: 1) closeTo: (celsius toSI: 30).
+	2 to: 5 * 6 * 2 + 1 by: 2 do: [ :cell | 
+		self
+			assert: ((memory at: cell) between: (kcal toSI: 1000) and: (kcal toSI: 5000)).
+		self assert: (memory at: cell + 1) closeTo: (kcal toSI: 2000) ].
+	5 * 6 * 2 + 1 + 1 to: 5 * 6 * 2 + 1 + (10 * 4) by: 4 do: [ :goat | 
+		self assert: ((memory at: goat) between: 0.0 and: 50.0).
+		self assert: ((memory at: goat + 1) between: 0.0 and: 60.0).
+		self assert: (memory at: goat + 2) closeTo: (kcal toSI: 10000).
+		self assert: (memory at: goat + 3) closeTo: 0.0 ]
 ]
 
 { #category : #tests }

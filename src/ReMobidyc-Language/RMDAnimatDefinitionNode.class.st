@@ -11,6 +11,11 @@ RMDAnimatDefinitionNode class >> createBuiltinProperties [
 ]
 
 { #category : #'instance creation' }
+RMDAnimatDefinitionNode class >> default [
+	^ self identifier: 'Default' propertyDeclarations: Array new
+]
+
+{ #category : #'instance creation' }
 RMDAnimatDefinitionNode class >> identifier: aString propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
 	^ (self propertyDeclarations: anArrayOfRMDPropertyDeclarationNode)
 		identifier: aString;

@@ -4,14 +4,9 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'deltaTime',
 		'context',
-		'simulationDefinition',
-		'animatDefinitions',
-		'cellDefinition',
-		'worldDefinition',
-		'actionDefinitions',
-		'behaviorDefinitions'
+		'individualDirectory',
+		'simulationModel'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -48,7 +43,7 @@ Goat metabolize where
 		asRMDBehaviorDefinition.
 	interpreter load: goatMetabolize.
 	goats := (1 to: 9)
-		collect: [ :i | interpreter allocateIndividualOf: goat ].
+		collect: [ :i | interpreter allocateAnimat: goat ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect.
 	1000
@@ -56,16 +51,6 @@ Goat metabolize where
 			interpreter tick ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
-	^ actionDefinitions at: aString ifAbsent: errorBlock
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
-	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
 ]
 
 { #category : #'library access' }
@@ -79,16 +64,21 @@ RMDInterpreter >> addLibrary: aDictionary [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> allocateIndividualOf: aRMDAnimatDefinition [
-	| animat |
-	animat := memory allocateIndividualOf: aRMDAnimatDefinition.
-	self initializeAnimat: animat species: aRMDAnimatDefinition.
-	^ animat
+RMDInterpreter >> allocateAnimat: aRMDAnimatDefinitionNode [
+	^ individualDirectory allocateAnimat: aRMDAnimatDefinitionNode
 ]
 
-{ #category : #'definition access' }
-RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
-	^ animatDefinitions at: aString ifAbsent: errorBlock
+{ #category : #'animat operations' }
+RMDInterpreter >> allocateCell: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
+	^ individualDirectory
+		allocateCell: aRMDCellDefinitionNode
+		x: anInteger1
+		y: anInteger2
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
+	^ individualDirectory allocateWorld: aRMDWorldDefinitionNode
 ]
 
 { #category : #directives }
@@ -103,13 +93,7 @@ RMDInterpreter >> context [
 
 { #category : #timing }
 RMDInterpreter >> deltaTime [
-	^ deltaTime
-		ifNil: [ deltaTime := simulationDefinition timeDefinition step numeric ]
-]
-
-{ #category : #timing }
-RMDInterpreter >> deltaTime: aNumber [
-	deltaTime := aNumber
+	^ simulationModel deltaTime
 ]
 
 { #category : #directives }
@@ -178,72 +162,43 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> individualsOf: aRMDAnimatDefinitionNode do: aBlock [
-	memory individualsOf: aRMDAnimatDefinitionNode do: aBlock
+RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
+	aRMDSpeciesDefinitionNode isAnimatDefinitionNode
+		ifTrue: [ individualDirectory
+				animatsOf: aRMDSpeciesDefinitionNode identifier
+				do: aBlock.
+			^ self ].
+	aRMDSpeciesDefinitionNode isCellDefinitionNode
+		ifTrue: [ individualDirectory cellsDo: aBlock.
+			^ self ].
+	aRMDSpeciesDefinitionNode isWorldDefinitionNode
+		ifTrue: [ individualDirectory worldDo: aBlock.
+			^ self ].
+	^ self error: 'Unknown species type'
 ]
 
 { #category : #initialization }
 RMDInterpreter >> initialize [
 	super initialize.
+	simulationModel := RMDSimulationModel new.
 	libraries := OrderedCollection with: self standardLibrary.
-	animatDefinitions := Dictionary new.
-	actionDefinitions := Dictionary new.
-	behaviorDefinitions := OrderedCollection new
+	individualDirectory := RMDIndividualDirectory new
 ]
 
-{ #category : #'animat operations' }
-RMDInterpreter >> initializeAnimat: anInteger species: aRMDAnimatDefinitionNode [
-	| offsets |
-	offsets := aRMDAnimatDefinitionNode propertyOffsets.
-	aRMDAnimatDefinitionNode propertyDeclarations
-		do: [ :property | 
-			memory
-				at: anInteger + (offsets at: property identifier)
-				put: (property expression evalIn: self) ]
+{ #category : #'variable access' }
+RMDInterpreter >> initializeVariable: aString with: aNumber ifAbsent: errorBlock [
+	^ memory
+		at:
+			(context
+				getMemoryAddressFor: aString
+				agent: nil
+				ifAbsent: [ ^ errorBlock value ])
+		put: aNumber
 ]
 
-{ #category : #'definition access' }
+{ #category : #'loading definitions' }
 RMDInterpreter >> load: aRMDSyntaxNode [
-	aRMDSyntaxNode isActionDefinitionNode
-		ifTrue: [ ^ self loadActionDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isBehaviorDefinitionNode
-		ifTrue: [ ^ self loadBehaviorDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isAnimatDefinitionNode
-		ifTrue: [ ^ self loadAnimatDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isCellDefinitionNode
-		ifTrue: [ ^ self loadCellDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isWorldDefinitionNode
-		ifTrue: [ ^ self loadWorldDefinition: aRMDSyntaxNode ].
-	^ self error: 'Unknown load'
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> loadActionDefinition: aRMDActionDefinitionNode [
-	^ actionDefinitions
-		at: aRMDActionDefinitionNode identifier
-		put: aRMDActionDefinitionNode
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> loadAnimatDefinition: aRMDAnimatDefinitionNode [
-	^ animatDefinitions
-		at: aRMDAnimatDefinitionNode identifier
-		put: aRMDAnimatDefinitionNode
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> loadBehaviorDefinition: aRMDBehaviorDefinitionNode [
-	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> loadCellDefinition: aRMDCellDefinitionNode [
-	cellDefinition := aRMDCellDefinitionNode
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> loadWorldDefinition: aRMDWorldDefinitionNode [
-	worldDefinition := aRMDWorldDefinitionNode
+	simulationModel load: aRMDSyntaxNode
 ]
 
 { #category : #private }
@@ -253,7 +208,7 @@ RMDInterpreter >> memory [
 
 { #category : #simulating }
 RMDInterpreter >> performBehaviors [
-	behaviorDefinitions do: [ :behavior | behavior evalIn: self ]
+	simulationModel behaviorsDo: [ :behavior | behavior evalIn: self ]
 ]
 
 { #category : #private }
@@ -310,13 +265,8 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 		ifAbsent: errorBlock
 ]
 
-{ #category : #private }
-RMDInterpreter >> setContext: aRMDContext [
-	context := aRMDContext
-]
-
 { #category : #'context controls' }
-RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
 	self
 		setContext:
 			(RMDActionContext
@@ -326,18 +276,63 @@ RMDInterpreter >> setContextWithIndividual: anInteger species: aRMDAnimatDefinit
 ]
 
 { #category : #private }
+RMDInterpreter >> setContext: aRMDContext [
+	context := aRMDContext
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> setInitializerContextWithSubject: anInteger species: aRMDSpeciesInitializerNode [
+	self
+		setContext:
+			(RMDInitializerContext
+				subject: anInteger
+				species: aRMDSpeciesInitializerNode)
+]
+
+{ #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
 ]
 
-{ #category : #'definition access' }
-RMDInterpreter >> simulationDefinition [
-	^ simulationDefinition
-]
-
-{ #category : #'definition access' }
-RMDInterpreter >> simulationDefinition: aRMDSimulationDefinitionNode [
-	simulationDefinition := aRMDSimulationDefinitionNode
+{ #category : #simulating }
+RMDInterpreter >> setupSimulation [
+	memory time: 1.
+	individualDirectory
+		allocateWorld: simulationModel worldDefinition;
+		allocateCell: simulationModel cellDefinition
+			x: simulationModel cellXDivisions
+			y: simulationModel cellYDivisions.
+	simulationModel
+		animatInitializersDo: [ :initializer | 
+			initializer population
+				timesRepeat: [ individualDirectory
+						allocateAnimat:
+							(simulationModel
+								animatDefinitionAt: initializer animat
+								ifAbsent: [ ^ KeyNotFound signal: initializer animat ]) ] ].
+	individualDirectory
+		worldDo: [ :world | 
+			self
+				setInitializerContextWithSubject: world
+				species: simulationModel worldDefinition.
+			simulationModel worldInitializer evalIn: self ].
+	individualDirectory
+		cellsDo: [ :cell | 
+			self
+				setInitializerContextWithSubject: cell
+				species: simulationModel cellDefinition.
+			simulationModel cellInitializer evalIn: self ].
+	simulationModel
+		animatInitializersDo: [ :initializer | 
+			individualDirectory
+				animatsOf: initializer animat
+				do: [ :animat | 
+					| species |
+					species := simulationModel
+						animatDefinitionAt: initializer animat
+						ifAbsent: [ ^ KeyNotFound signal: initializer animat ].
+					self setInitializerContextWithSubject: animat species: species.
+					initializer evalIn: self ] ]
 ]
 
 { #category : #'library access' }
