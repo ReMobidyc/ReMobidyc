@@ -86,6 +86,28 @@ RMDInterpreter >> byChanceOf: aNumber [
 	^ self random < aNumber
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
+	^ ((anotherInteger - 1) * simulationModel xDivisions + anInteger - 1)
+		* self cellDefinition totalNumberOfProperties
+		+ individualDirectory cell
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> cellDefinition [
+	^ simulationModel cellDefinition
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> cellXDivisions [
+	^ simulationModel cellXDivisions
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> cellYDivisions [
+	^ simulationModel cellYDivisions
+]
+
 { #category : #private }
 RMDInterpreter >> context [
 	^ context
@@ -292,6 +314,15 @@ RMDInterpreter >> setInitializerContextWithSubject: anInteger species: aRMDSpeci
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> setObserverContextWithSubject: anInteger species: aRMDSpeciesInitializerNode [
+	self
+		setContext:
+			(RMDObserverContext
+				subject: anInteger
+				species: aRMDSpeciesInitializerNode)
 ]
 
 { #category : #simulating }
