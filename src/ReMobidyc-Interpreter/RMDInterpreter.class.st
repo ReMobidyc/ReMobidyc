@@ -274,15 +274,13 @@ RMDInterpreter >> readDelta: aString agent: anotherString ifAbsent: errorBlock [
 
 { #category : #'variable access' }
 RMDInterpreter >> readDifferential2: aString agent: anotherString ifAbsent: errorBlock [
-	| address |
-	address := context
-		getMemoryAddressFor: aString
-		agent: anotherString
-		ifAbsent: [ ^ errorBlock value ].
-	^ ((memory oldAt: address ifAbsent: [ ^ errorBlock value ]) * -2
-		+ (memory at: address ifAbsent: [ ^ errorBlock value ])
-		+ (memory old2At: address ifAbsent: [ ^ errorBlock value ]))
-		/ self deltaTime squared
+	^ (memory
+		delta2At:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsent: [ ^ errorBlock value ]) / self deltaTime squared
 ]
 
 { #category : #'variable access' }
