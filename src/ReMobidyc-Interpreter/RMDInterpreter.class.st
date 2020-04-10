@@ -88,7 +88,7 @@ RMDInterpreter >> byChanceOf: aNumber [
 
 { #category : #'animat operations' }
 RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ ((anotherInteger - 1) * simulationModel xDivisions + anInteger - 1)
+	^ ((anotherInteger - 1) * simulationModel cellXDivisions + anInteger - 1)
 		* self cellDefinition totalNumberOfProperties
 		+ individualDirectory cell
 ]

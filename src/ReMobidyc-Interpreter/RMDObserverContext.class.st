@@ -21,5 +21,6 @@ RMDObserverContext >> subject: anInteger species: aRMDSpeciesDefinitionNode [
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	propertyDict := Dictionary new
 		at: nil put: dict;
+		at: 'here' put: dict;
 		yourself
 ]

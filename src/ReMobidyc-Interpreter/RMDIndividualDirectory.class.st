@@ -46,8 +46,13 @@ RMDIndividualDirectory >> animatsOf: aString do: aBlock [
 ]
 
 { #category : #accessing }
-RMDIndividualDirectory >> cell: anObject [
-	cell := anObject
+RMDIndividualDirectory >> cell [
+	^ cell
+]
+
+{ #category : #accessing }
+RMDIndividualDirectory >> cell: anInteger [
+	cell := anInteger
 ]
 
 { #category : #accessing }
@@ -88,8 +93,8 @@ RMDIndividualDirectory >> world [
 ]
 
 { #category : #accessing }
-RMDIndividualDirectory >> world: anObject [
-	world := anObject
+RMDIndividualDirectory >> world: anInteger [
+	world := anInteger
 ]
 
 { #category : #enumerating }
@@ -98,11 +103,11 @@ RMDIndividualDirectory >> worldDo: aBlock [
 ]
 
 { #category : #accessing }
-RMDIndividualDirectory >> xCells: anObject [
-	xCells := anObject
+RMDIndividualDirectory >> xCells: anInteger [
+	xCells := anInteger
 ]
 
 { #category : #accessing }
-RMDIndividualDirectory >> yCells: anObject [
-	yCells := anObject
+RMDIndividualDirectory >> yCells: anInteger [
+	yCells := anInteger
 ]

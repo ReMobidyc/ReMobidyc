@@ -9,21 +9,31 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #'instance creation' }
+RMDCellRenderer class >> expression: aRMDExpressionNode min: aNumber max: anotherNumber [
+	^ self new
+		expression: aRMDExpressionNode;
+		min: aNumber;
+		max: anotherNumber;
+		yourself
+]
+
 { #category : #drawing }
 RMDCellRenderer >> draw: aRMDInterpreter on: aFormCanvas [
-	| xDivisions yDivisions formWidth formHeight cellWidth cellHeight cellExtent |
+	| xDivisions yDivisions formWidth formHeight cellWidth cellExtent offsetX offsetY |
 	xDivisions := aRMDInterpreter cellXDivisions.
 	yDivisions := aRMDInterpreter cellYDivisions.
 	formWidth := aFormCanvas form width.
 	formHeight := aFormCanvas form height.
-	cellWidth := formWidth / xDivisions.
-	cellHeight := formHeight / yDivisions.
-	cellExtent := cellWidth @ cellHeight.
+	cellWidth := formWidth asFloat / xDivisions asFloat min: formHeight asFloat / yDivisions asFloat.
+	cellExtent := cellWidth @ cellWidth.
+	offsetX := (formWidth - (cellWidth * xDivisions)) // 2.
+	offsetY := (formHeight - (cellWidth * yDivisions)) // 2.
 	1 to: yDivisions do: [ :cellY | 
 		1 to: xDivisions do: [ :cellX | 
 			| x y |
-			x := (cellX - 1) * cellWidth.
-			y := (cellY - 1) * cellHeight.
+			x := (cellX - 1) * cellWidth + offsetX.
+			y := (cellY - 1) * cellWidth + offsetY.
 			self
 				drawValue:
 					(self
@@ -84,5 +94,5 @@ RMDCellRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
 		setObserverContextWithSubject: anInteger
 		species: cellDef.
 	value := expression evalIn: aRMDInterpreter.
-	^ (value - min) / (max - min)
+	^ (value - min) / (max - min) min: 1.0 max: 0.0
 ]
