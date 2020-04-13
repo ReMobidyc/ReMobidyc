@@ -20,26 +20,29 @@ RMDCellRenderer class >> expression: aRMDExpressionNode min: aNumber max: anothe
 
 { #category : #drawing }
 RMDCellRenderer >> draw: aRMDInterpreter on: aFormCanvas [
-	| xDivisions yDivisions formWidth formHeight cellWidth cellExtent offsetX offsetY |
+	| xDivisions yDivisions cellLength |
 	xDivisions := aRMDInterpreter cellXDivisions.
 	yDivisions := aRMDInterpreter cellYDivisions.
-	formWidth := aFormCanvas form width.
-	formHeight := aFormCanvas form height.
-	cellWidth := formWidth asFloat / xDivisions asFloat min: formHeight asFloat / yDivisions asFloat.
-	cellExtent := cellWidth @ cellWidth.
-	offsetX := (formWidth - (cellWidth * xDivisions)) // 2.
-	offsetY := (formHeight - (cellWidth * yDivisions)) // 2.
+	cellLength := aRMDInterpreter cellLength.
 	1 to: yDivisions do: [ :cellY | 
 		1 to: xDivisions do: [ :cellX | 
-			| x y |
-			x := (cellX - 1) * cellWidth + offsetX.
-			y := (cellY - 1) * cellWidth + offsetY.
 			self
 				drawValue:
 					(self
 						valueForIndividual: (aRMDInterpreter cellAtXIndex: cellX yIndex: cellY)
 						interpreter: aRMDInterpreter)
-				bounds: (x @ y extent: cellExtent)
+				bounds:
+					((self
+						pointFromX: (cellX - 1) * cellLength
+						y: (cellY - 1) * cellLength
+						interpreter: aRMDInterpreter
+						on: aFormCanvas)
+						corner:
+							(self
+								pointFromX: cellX * cellLength
+								y: cellY * cellLength
+								interpreter: aRMDInterpreter
+								on: aFormCanvas))
 				on: aFormCanvas ] ]
 ]
 

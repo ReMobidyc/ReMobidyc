@@ -13,7 +13,7 @@ RMDCellInitializerNodeTest >> testEvalIn [
 			'10 x 11 of 2 [m] Cell with
 			grass = 1000 [ kcal ]
 			fertility = 1100 [kcal]'.
-	interpreter allocateCell: cellDef x: 10 y: 11.
+	interpreter allocateCells: cellDef x: 10 y: 11.
 	interpreter
 		individualsOf: cellDef
 		do: [ :cell | 

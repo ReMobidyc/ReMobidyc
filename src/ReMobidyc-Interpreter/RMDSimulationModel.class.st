@@ -91,6 +91,11 @@ RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
 ]
 
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> east [
+	^ self cellLength * self cellXDivisions
+]
+
 { #category : #initialization }
 RMDSimulationModel >> initialize [
 	super initialize.
@@ -180,6 +185,11 @@ RMDSimulationModel >> loadWorldInitializer: aRMDWorldInitializerNode [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> north [
+	^ self cellLength * self cellYDivisions
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> simulationDefinition [
 	^ simulationDefinition
 ]
@@ -187,6 +197,16 @@ RMDSimulationModel >> simulationDefinition [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 	simulationDefinition := aRMDSimulationDefinition
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> south [
+	^ 0.0
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> west [
+	^ 0.0
 ]
 
 { #category : #'accessing - definitions' }

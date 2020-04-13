@@ -69,9 +69,9 @@ RMDInterpreter >> allocateAnimat: aRMDAnimatDefinitionNode [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> allocateCell: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
+RMDInterpreter >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
 	^ individualDirectory
-		allocateCell: aRMDCellDefinitionNode
+		allocateCells: aRMDCellDefinitionNode
 		x: anInteger1
 		y: anInteger2
 ]
@@ -79,6 +79,13 @@ RMDInterpreter >> allocateCell: aRMDCellDefinitionNode x: anInteger1 y: anIntege
 { #category : #'animat operations' }
 RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
 	^ individualDirectory allocateWorld: aRMDWorldDefinitionNode
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
+	^ simulationModel
+		ifNil: errorBlock
+		ifNotNil: [ simulationModel animatDefinitionAt: aString ifAbsent: errorBlock ]
 ]
 
 { #category : #directives }
@@ -98,9 +105,24 @@ RMDInterpreter >> cellDefinition [
 	^ simulationModel cellDefinition
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> cellLength [
+	^ simulationModel cellLength
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> cellX: aNumber [
+	^ (aNumber - self west) / simulationModel cellLength
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> cellXDivisions [
 	^ simulationModel cellXDivisions
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> cellY: aNumber [
+	^ (aNumber - self south) / simulationModel cellLength
 ]
 
 { #category : #'animat operations' }
@@ -175,6 +197,11 @@ RMDInterpreter >> distance: aString [
 	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> east [
+	^ simulationModel east
+]
+
 { #category : #'library access' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
@@ -226,6 +253,11 @@ RMDInterpreter >> load: aRMDSyntaxNode [
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> north [
+	^ simulationModel north
 ]
 
 { #category : #simulating }
@@ -330,7 +362,7 @@ RMDInterpreter >> setupSimulation [
 	memory time: 1.
 	individualDirectory
 		allocateWorld: simulationModel worldDefinition;
-		allocateCell: simulationModel cellDefinition
+		allocateCells: simulationModel cellDefinition
 			x: simulationModel cellXDivisions
 			y: simulationModel cellYDivisions.
 	simulationModel
@@ -366,6 +398,11 @@ RMDInterpreter >> setupSimulation [
 					initializer evalIn: self ] ]
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> south [
+	^ simulationModel south
+]
+
 { #category : #'library access' }
 RMDInterpreter >> standardLibrary [
 	^ {('min' -> [ :a :b | a min: b ]).
@@ -383,6 +420,11 @@ RMDInterpreter >> tick [
 { #category : #timing }
 RMDInterpreter >> time [ 
 	^ memory time * self deltaTime
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> west [
+	^ simulationModel west
 ]
 
 { #category : #'variable access' }
