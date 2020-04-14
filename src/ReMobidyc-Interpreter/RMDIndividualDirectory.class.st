@@ -67,7 +67,7 @@ RMDIndividualDirectory >> cellSize: anInteger [
 
 { #category : #enumerating }
 RMDIndividualDirectory >> cellsDo: aBlock [
-	cell to: cellSize * xCells * yCells by: cellSize do: aBlock
+	cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock
 ]
 
 { #category : #initialization }

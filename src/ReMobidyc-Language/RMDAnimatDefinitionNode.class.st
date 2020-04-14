@@ -1,6 +1,9 @@
 Class {
 	#name : #RMDAnimatDefinitionNode,
 	#superclass : #RMDSpeciesDefinitionNode,
+	#instVars : [
+		'identifier'
+	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
@@ -22,7 +25,44 @@ RMDAnimatDefinitionNode class >> identifier: aString propertyDeclarations: anArr
 		yourself
 ]
 
+{ #category : #comparing }
+RMDAnimatDefinitionNode >> = anObject [
+	^ super = anObject and: [ identifier = anObject identifier ]
+]
+
+{ #category : #comparing }
+RMDAnimatDefinitionNode >> hash [
+	^ super hash bitXor: identifier hash
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> identifier [
+	^ identifier
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> identifier: aString [
+	identifier := aString
+]
+
 { #category : #testing }
 RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 	^ true
+]
+
+{ #category : #printing }
+RMDAnimatDefinitionNode >> printOn: aStream [
+	aStream
+		nextPutAll: identifier;
+		nextPutAll: ' is Animat'.
+	propertyDeclarations
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyDeclarations
+				do: [ :def | 
+					aStream nextPutAll: '    '.
+					def printOn: aStream ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream nextPut: $.
 ]

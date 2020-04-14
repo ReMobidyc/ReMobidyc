@@ -2,7 +2,6 @@ Class {
 	#name : #RMDSpeciesDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'identifier',
 		'propertyDeclarations',
 		'propertyOffsets'
 	],
@@ -45,8 +44,7 @@ RMDSpeciesDefinitionNode class >> propertyDeclarations: anArrayOfRMDPropertyDecl
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> = anObject [
 	^ self class = anObject class
-		and: [ identifier = anObject identifier
-				and: [ propertyDeclarations = anObject propertyDeclarations ] ]
+		and: [ propertyDeclarations = anObject propertyDeclarations ]
 ]
 
 { #category : #utilities }
@@ -96,40 +94,12 @@ RMDSpeciesDefinitionNode >> defaultPropertyBinds [
 
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> hash [
-	^ (self class hash bitXor: identifier hash)
-		bitXor: propertyDeclarations hash
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> identifier [
-	^ identifier
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> identifier: aString [
-	identifier := aString
+	^ self class hash bitXor: propertyDeclarations hash
 ]
 
 { #category : #testing }
 RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
 	^ true
-]
-
-{ #category : #printing }
-RMDSpeciesDefinitionNode >> printOn: aStream [
-	aStream
-		nextPutAll: identifier;
-		nextPutAll: ' is Animat'.
-	propertyDeclarations
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			propertyDeclarations
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def printOn: aStream ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
-	aStream nextPut: $.
 ]
 
 { #category : #accessing }

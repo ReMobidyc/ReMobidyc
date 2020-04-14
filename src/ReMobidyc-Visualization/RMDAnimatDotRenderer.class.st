@@ -8,6 +8,14 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #'instance creation' }
+RMDAnimatDotRenderer class >> on: aString diameter: aNumber color: aColor [
+	^ (self on: aString)
+		diameter: aNumber;
+		color: aColor;
+		yourself
+]
+
 { #category : #accessing }
 RMDAnimatDotRenderer >> color [
 	^ color ifNil: [ color := self defaultColor ]

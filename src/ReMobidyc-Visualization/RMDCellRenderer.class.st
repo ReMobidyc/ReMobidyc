@@ -19,7 +19,7 @@ RMDCellRenderer class >> expression: aRMDExpressionNode min: aNumber max: anothe
 ]
 
 { #category : #drawing }
-RMDCellRenderer >> draw: aRMDInterpreter on: aFormCanvas [
+RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	| xDivisions yDivisions cellLength |
 	xDivisions := aRMDInterpreter cellXDivisions.
 	yDivisions := aRMDInterpreter cellYDivisions.
@@ -36,14 +36,14 @@ RMDCellRenderer >> draw: aRMDInterpreter on: aFormCanvas [
 						pointFromX: (cellX - 1) * cellLength
 						y: (cellY - 1) * cellLength
 						interpreter: aRMDInterpreter
-						on: aFormCanvas)
+						scale: aNumber)
 						corner:
 							(self
 								pointFromX: cellX * cellLength
 								y: cellY * cellLength
 								interpreter: aRMDInterpreter
-								on: aFormCanvas))
-				on: aFormCanvas ] ]
+								scale: aNumber))
+				on: aCanvas ] ]
 ]
 
 { #category : #drawing }

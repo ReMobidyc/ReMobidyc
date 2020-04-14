@@ -13,3 +13,18 @@ RMDWorldDefinitionNode class >> createBuiltinProperties [
 RMDWorldDefinitionNode >> isWorldDefinitionNode [
 	^ true
 ]
+
+{ #category : #printing }
+RMDWorldDefinitionNode >> printOn: aStream [
+	aStream nextPutAll: 'World'.
+	propertyDeclarations
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyDeclarations
+				do: [ :def | 
+					aStream nextPutAll: '    '.
+					def printOn: aStream ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream nextPut: $.
+]

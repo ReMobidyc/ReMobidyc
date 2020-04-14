@@ -5,19 +5,15 @@ Class {
 }
 
 { #category : #drawing }
-RMDRenderer >> draw: aRMDInterpreter on: aFormCanvas [
+RMDRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	^ self subclassResponsibility
 ]
 
 { #category : #private }
-RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter on: aFormCanvas [
-	| formExtent cellX cellY scale |
-	formExtent := aFormCanvas form extent.
+RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
+	| cellX cellY |
 	cellX := aRMDInterpreter cellX: modelX.
 	cellY := aRMDInterpreter cellY: modelY.
-	scale := formExtent x asFloat
-		/ aRMDInterpreter cellXDivisions asFloat
-		min: formExtent y asFloat / aRMDInterpreter cellYDivisions asFloat.
 	^ (cellX * scale)
 		@ ((aRMDInterpreter cellYDivisions asFloat - cellY) * scale)
 ]

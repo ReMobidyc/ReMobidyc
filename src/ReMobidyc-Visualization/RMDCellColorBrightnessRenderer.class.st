@@ -7,6 +7,16 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #'instance creation' }
+RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpressionNode between: aNumber and: anotherNumber [
+	^ (self
+		expression: aRMDExpressionNode
+		min: aNumber
+		max: anotherNumber)
+		color: aColor;
+		yourself
+]
+
 { #category : #accessing }
 RMDCellColorBrightnessRenderer >> color [
 	^ color
@@ -23,8 +33,8 @@ RMDCellColorBrightnessRenderer >> defaultColor [
 ]
 
 { #category : #drawing }
-RMDCellColorBrightnessRenderer >> drawValue: aNumber bounds: aRectangle on: aFormCanvas [
-	aFormCanvas
+RMDCellColorBrightnessRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
+	aCanvas
 		frameAndFillRectangle: aRectangle
 		fillColor:
 			(Color

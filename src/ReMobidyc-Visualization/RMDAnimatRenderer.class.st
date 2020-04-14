@@ -15,7 +15,7 @@ RMDAnimatRenderer class >> on: aString [
 ]
 
 { #category : #drawing }
-RMDAnimatRenderer >> draw: aRMDInterpreter on: aFormCanvas [
+RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	| animatDefinition |
 	animatDefinition := species isString
 		ifTrue: [ aRMDInterpreter
@@ -45,8 +45,8 @@ RMDAnimatRenderer >> draw: aRMDInterpreter on: aFormCanvas [
 						pointFromX: x
 						y: y
 						interpreter: aRMDInterpreter
-						on: aFormCanvas)
-				on: aFormCanvas ]
+						scale: aNumber)
+				on: aCanvas ]
 ]
 
 { #category : #drawing }

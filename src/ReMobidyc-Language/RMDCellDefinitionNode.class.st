@@ -13,3 +13,18 @@ RMDCellDefinitionNode class >> createBuiltinProperties [
 RMDCellDefinitionNode >> isCellDefinitionNode [
 	^ true
 ]
+
+{ #category : #printing }
+RMDCellDefinitionNode >> printOn: aStream [
+	aStream nextPutAll: 'Cell'.
+	propertyDeclarations
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyDeclarations
+				do: [ :def | 
+					aStream nextPutAll: '    '.
+					def printOn: aStream ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream nextPut: $.
+]
