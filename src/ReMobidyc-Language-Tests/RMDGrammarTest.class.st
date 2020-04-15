@@ -496,12 +496,12 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 isUtilityVariableNode.
 	self assert: expr1 identifier equals: 'x'.
 	expr1 := grammar expr1 parse: 'my x'.
-	self assert: expr1 isVariableNode.
+	self assert: expr1 isPropertyVariableNode.
 	self assert: expr1 identifier equals: 'x'.
 	self assert: expr1 agent equals: nil.
 	expr1 := grammar expr1 parse: '-foo''s x'.
 	self assert: expr1 isUnaryMinusNode.
-	self assert: expr1 expression isVariableNode.
+	self assert: expr1 expression isPropertyVariableNode.
 	self assert: expr1 expression identifier equals: 'x'.
 	self assert: expr1 expression agent equals: 'foo'.
 	expr1 := grammar agentDirective parse: 'distance foo'.

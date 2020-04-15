@@ -8,8 +8,3 @@ RMDDeltaVariableNode >> assign: aNumber in: aRMDInterpreter [
 		agent: agent
 		ifAbsent: [ KeyNotFound signal ]
 ]
-
-{ #category : #'*ReMobidyc-Interpreter' }
-RMDDeltaVariableNode >> evalIn: aRMDInterpreter [
-	^ self shouldNotImplement
-]

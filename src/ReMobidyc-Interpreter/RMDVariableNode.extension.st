@@ -8,11 +8,3 @@ RMDVariableNode >> assign: aNumber in: aRMDInterpreter [
 		agent: agent
 		ifAbsent: [ KeyNotFound signal ]
 ]
-
-{ #category : #'*ReMobidyc-Interpreter' }
-RMDVariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter
-		readVariable: identifier
-		agent: agent
-		ifAbsent: [ KeyNotFound signal ]
-]

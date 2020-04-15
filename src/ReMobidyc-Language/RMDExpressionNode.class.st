@@ -33,3 +33,15 @@ RMDExpressionNode >> isExpressionNode [
 RMDExpressionNode >> precedence [
 	^ self subclassResponsibility
 ]
+
+{ #category : #rewriting }
+RMDExpressionNode >> replace: aDictionary [
+	^ aDictionary
+		at: self
+		ifAbsent: [ self replaceChildren: aDictionary ]
+]
+
+{ #category : #rewriting }
+RMDExpressionNode >> replaceChildren: aDictionary [
+	^ self subclassResponsibility
+]

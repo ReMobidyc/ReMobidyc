@@ -5,9 +5,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDUtilityVariableNode class >> agent: aRMDAgentNode identifier: aString [
+RMDUtilityVariableNode class >> identifier: aString [
 	^ self new
-		agent: aRMDAgentNode;
 		identifier: aString;
 		yourself
 ]

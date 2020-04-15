@@ -7,9 +7,17 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'instance creation' }
+RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
+	^ self new
+		identifier: aString;
+		agent: anotherString;
+		yourself
+]
+
 { #category : #comparing }
 RMDPropertyVariableNode >> = anObject [
-	^ self class = anObject class and: [ agent = anObject agent ]
+	^ super = anObject and: [ agent = anObject agent ]
 ]
 
 { #category : #accessing }
@@ -22,14 +30,19 @@ RMDPropertyVariableNode >> agent: aString [
 	agent := aString
 ]
 
-{ #category : #comparing }
-RMDPropertyVariableNode >> hash [
-	^ self class hash bitXor: agent hash
+{ #category : #enumerating }
+RMDPropertyVariableNode >> childrenDo: aBlock [
+
 ]
 
-{ #category : #accessing }
-RMDPropertyVariableNode >> operator [
-	^ self subclassResponsibility
+{ #category : #comparing }
+RMDPropertyVariableNode >> hash [
+	^ super hash bitXor: agent hash
+]
+
+{ #category : #testing }
+RMDPropertyVariableNode >> isPropertyVariableNode [
+	^ true
 ]
 
 { #category : #accessing }
@@ -44,6 +57,10 @@ RMDPropertyVariableNode >> printOn: aStream [
 		ifNotNil: [ aStream
 				nextPutAll: agent;
 				nextPutAll: '''s ' ].
-	aStream nextPutAll: self operator.
 	aStream nextPutAll: identifier
+]
+
+{ #category : #rewriting }
+RMDPropertyVariableNode >> replaceChildren: aDictionary [
+
 ]

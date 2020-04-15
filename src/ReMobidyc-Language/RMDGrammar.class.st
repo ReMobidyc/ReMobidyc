@@ -443,7 +443,7 @@ RMDGrammar >> expr1 [
 			(('-' asPParser trimBlanks optional
 				,
 					(self parenExpression / self agentDirective / self uniformDistribution
-						/ self apply / self variable / self utilityVariable))
+						/ self apply / self propertyVariable / self utilityVariable))
 				==> [ :pair | 
 					pair first
 						ifNil: [ pair second ]
@@ -668,6 +668,20 @@ RMDGrammar >> propertyInitializer [
 { #category : #'class access' }
 RMDGrammar >> propertyInitializerNodeClass [
 	^ RMDPropertyInitializerNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> propertyVariable [
+	^ (agentReference , identifier)
+		==> [ :pair | 
+			self propertyVariableNodeClass
+				identifier: pair second
+				agent: pair first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> propertyVariableNodeClass [
+	^ RMDPropertyVariableNode
 ]
 
 { #category : #'parsers-definitions' }
