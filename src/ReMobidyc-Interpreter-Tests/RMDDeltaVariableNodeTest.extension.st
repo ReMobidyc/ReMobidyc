@@ -26,22 +26,3 @@ RMDDeltaVariableNodeTest >> testAssignIn [
 		closeTo: 4 + 6 + 7.
 	self assert: (interpreter memory at: 2) closeTo: 4 + 6 + 7
 ]
-
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
-RMDDeltaVariableNodeTest >> testEvalIn [
-	interpreter context setMemoryAddressFor: 'x' agent: 'foo' to: 1.
-	interpreter memory
-		nextAt: 1 put: 2;
-		tick;
-		nextAt: 1 put: 3;
-		tick.
-	self
-		assert: ((parser expression parse: 'foo''s delta x') evalIn: interpreter)
-		closeTo: 1.0.
-	self
-		should: [ (parser expression parse: 'my delta x') evalIn: interpreter ]
-		raise: KeyNotFound.
-	self
-		should: [ (parser expression parse: 'foo''s delta y') evalIn: interpreter ]
-		raise: KeyNotFound
-]

@@ -1,9 +1,15 @@
 Extension { #name : #RMDDifferentialVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDDifferentialVariableNode >> evalIn: aRMDInterpreter [
+RMDDifferentialVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
-		readDifferential: identifier
+		write: aNumber
+		toDifferential: identifier
 		agent: agent
 		ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDDifferentialVariableNode >> evalIn: aRMDInterpreter [
+	^ self shouldNotImplement
 ]

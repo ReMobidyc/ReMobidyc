@@ -271,39 +271,6 @@ RMDInterpreter >> random [
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> readDelta: aString agent: anotherString ifAbsent: errorBlock [
-	^ memory
-		deltaAt:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: errorBlock
-]
-
-{ #category : #'variable access' }
-RMDInterpreter >> readDifferential2: aString agent: anotherString ifAbsent: errorBlock [
-	^ (memory
-		delta2At:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: [ ^ errorBlock value ]) / self deltaTime squared
-]
-
-{ #category : #'variable access' }
-RMDInterpreter >> readDifferential: aString agent: anotherString ifAbsent: errorBlock [
-	^ (memory
-		deltaAt:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: [ ^ errorBlock value ]) / self deltaTime
-]
-
-{ #category : #'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 	^ (context utilityAt: aString ifAbsent: errorBlock) evalIn: self
 ]
@@ -436,6 +403,18 @@ RMDInterpreter >> write: aNumber toDelta: aString agent: anotherString ifAbsent:
 				agent: anotherString
 				ifAbsent: [ ^ errorBlock value ])
 		add: aNumber.
+	^ aNumber
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> write: aNumber toDifferential: aString agent: anotherString ifAbsent: errorBlock [
+	memory
+		nextDeltaAt:
+			(context
+				getMemoryAddressFor: aString
+				agent: anotherString
+				ifAbsent: [ ^ errorBlock value ])
+		add: aNumber * self deltaTime.
 	^ aNumber
 ]
 

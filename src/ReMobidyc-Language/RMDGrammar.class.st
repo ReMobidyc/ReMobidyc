@@ -410,20 +410,6 @@ RMDGrammar >> differential2 [
 ]
 
 { #category : #'parsers-atoms' }
-RMDGrammar >> differential2Variable [
-	^ (self agentReference , self differential2 , identifier)
-		==> [ :triple | 
-			self differential2VariableNodeClass
-				identifier: triple third
-				agent: triple first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> differential2VariableNodeClass [
-	^ RMDDifferential2VariableNode
-]
-
-{ #category : #'parsers-atoms' }
 RMDGrammar >> differentialVariable [
 	^ (agentReference , self differential , identifier)
 		==> [ :triple | 
@@ -457,9 +443,7 @@ RMDGrammar >> expr1 [
 			(('-' asPParser trimBlanks optional
 				,
 					(self parenExpression / self agentDirective / self uniformDistribution
-						/ self apply / self differentialVariable
-						/ self differential2Variable / self deltaVariable
-						/ self variable / self utilityVariable))
+						/ self apply / self variable / self utilityVariable))
 				==> [ :pair | 
 					pair first
 						ifNil: [ pair second ]
@@ -659,7 +643,7 @@ RMDGrammar >> propertyDeclarationNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
-	^ (self deltaVariable / self variable , $' asPParser trimBlanks
+	^ (self differentialVariable / self deltaVariable / self variable , $' asPParser trimBlanks
 		, '=' asPParser trimBlanks , guardedChoice)
 		==> [ :quad | 
 			self propertyDefinitionNodeClass

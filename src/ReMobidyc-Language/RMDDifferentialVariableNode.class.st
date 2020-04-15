@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDDifferentialVariableNode,
-	#superclass : #RMDPropertyVariableNode,
+	#superclass : #RMDAssignablePropertyVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 

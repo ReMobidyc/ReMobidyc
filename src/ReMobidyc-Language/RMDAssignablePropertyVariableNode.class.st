@@ -3,3 +3,8 @@ Class {
 	#superclass : #RMDPropertyVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
+
+{ #category : #enumerating }
+RMDAssignablePropertyVariableNode >> childrenDo: aBlock [
+	
+]

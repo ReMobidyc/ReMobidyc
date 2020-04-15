@@ -69,37 +69,6 @@ RMDMemoryTest >> testAtPut [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testDeltaAt [
-	memory
-		at: 1 put: 2;
-		at: 3 put: 4;
-		tick;
-		at: 1 put: 5;
-		at: 3 put: 6;
-		at: 7 put: 8.
-	self assert: (memory deltaAt: 1) equals: 5 - 2.
-	self assert: (memory deltaAt: 3) equals: 6 - 4.
-	self should: [ memory deltaAt: 7 ] raise: KeyNotFound
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testDeltaAtIfabsent [
-	memory
-		at: 1 put: 2;
-		at: 3 put: 4;
-		tick;
-		at: 1 put: 5;
-		at: 3 put: 6;
-		at: 7 put: 8.
-	self assert: (memory deltaAt: 1) equals: 5 - 2.
-	self assert: (memory deltaAt: 1 ifAbsent: [ 9 ]) equals: 5 - 2.
-	self assert: (memory deltaAt: 3) equals: 6 - 4.
-	self assert: (memory deltaAt: 3 ifAbsent: [ 10 ]) equals: 6 - 4.
-	self should: [ memory deltaAt: 7 ] raise: KeyNotFound.
-	self assert: (memory deltaAt: 7 ifAbsent: [ 11 ]) equals: 11
-]
-
-{ #category : #tests }
 RMDMemoryTest >> testNextAt [
 	memory nextAt: 1 put: 2.
 	self assert: (memory nextAt: 1) equals: 2.
@@ -133,26 +102,6 @@ RMDMemoryTest >> testNextAtPut [
 	memory nextAt: 3 put: 4.
 	self assert: (memory nextAt: 1) equals: 2.
 	self assert: (memory nextAt: 3) equals: 4
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testNextDeltaAtAdd [
-	memory
-		at: 1 put: 2;
-		at: 3 put: 4;
-		at: 5 put: 6;
-		nextDeltaAt: 1 add: 7;
-		nextDeltaAt: 3 add: 8;
-		nextDeltaAt: 1 add: 9;
-		tick.
-	self assert: (memory at: 1) equals: 2 + 7 + 9.
-	self assert: (memory at: 3) equals: 4 + 8.
-	self should: [ memory nextDeltaAt: 10 ] raise: KeyNotFound.
-	memory
-		nextDeltaAt: 3 add: 11;
-		tick.
-	self assert: (memory at: 1) equals: 2 + 7 + 9.
-	self assert: (memory at: 3) equals: 4 + 8 + 11
 ]
 
 { #category : #tests }

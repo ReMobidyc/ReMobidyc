@@ -11,8 +11,5 @@ RMDDeltaVariableNode >> assign: aNumber in: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDDeltaVariableNode >> evalIn: aRMDInterpreter [
-	^ aRMDInterpreter
-		readDelta: identifier
-		agent: agent
-		ifAbsent: [ KeyNotFound signal ]
+	^ self shouldNotImplement
 ]

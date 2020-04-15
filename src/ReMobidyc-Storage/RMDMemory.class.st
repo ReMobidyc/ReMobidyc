@@ -37,24 +37,6 @@ RMDMemory >> at: anInteger put: aNumber [
 	^ values at: anInteger put: aNumber
 ]
 
-{ #category : #accessing }
-RMDMemory >> delta2At: anInteger ifAbsent: errorBlock [
-	^ (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ]) * -2
-		+ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
-		+ (self old2At: anInteger ifAbsent: [ ^ errorBlock value ])
-]
-
-{ #category : #accessing }
-RMDMemory >> deltaAt: anInteger [
-	^ self deltaAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDMemory >> deltaAt: anInteger ifAbsent: errorBlock [
-	^ (self at: anInteger ifAbsent: [ ^ errorBlock value ])
-		- (self oldAt: anInteger ifAbsent: [ ^ errorBlock value ])
-]
-
 { #category : #timing }
 RMDMemory >> fastSunrise [
 	old2Values := oldValues.
@@ -107,37 +89,10 @@ RMDMemory >> nextAt: anInteger put: aNumber [
 ]
 
 { #category : #accessing }
-RMDMemory >> nextDeltaAt: anInteger [
-	^ self nextDeltaAt: anInteger ifAbsent: [ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
 RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 	^ nextDeltas
 		at: anInteger
 		put: (nextDeltas at: anInteger ifAbsent: [ 0 ]) + aNumber
-]
-
-{ #category : #accessing }
-RMDMemory >> nextDeltaAt: anInteger ifAbsent: errorBlock [
-	^ nextDeltas at: anInteger ifAbsent: errorBlock
-]
-
-{ #category : #accessing }
-RMDMemory >> nextDeltaAt: anInteger ifAbsentPut: errorBlock [
-	^ nextDeltas
-		at: anInteger
-		ifAbsent: [ self nextDeltaAt: anInteger add: errorBlock value ]
-]
-
-{ #category : #accessing }
-RMDMemory >> old2At: anInteger [
-	^ self old2At: anInteger ifAbsent: [ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDMemory >> old2At: anInteger ifAbsent: errorBlock [
-	^ old2Values at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
