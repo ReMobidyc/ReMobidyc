@@ -50,6 +50,18 @@ RMDDefinitionNode >> operator [
 	^ self subclassResponsibility
 ]
 
+{ #category : #copying }
+RMDDefinitionNode >> postCopy [
+	variable := variable copy.
+	definitionBody := definitionBody copy
+]
+
+{ #category : #rewriting }
+RMDDefinitionNode >> replaceChildren: aDictionary [
+	variable := variable copyReplace: aDictionary.
+	definitionBody := definitionBody copyReplace: aDictionary
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> variable [
 	^ variable

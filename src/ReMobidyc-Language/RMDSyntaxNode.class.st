@@ -4,8 +4,24 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #comparing }
+RMDSyntaxNode >> = anObject [
+	^ self subclassResponsibility
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> childrenDo: aBlock [
+	^ self subclassResponsibility
+]
+
+{ #category : #rewriting }
+RMDSyntaxNode >> copyReplace: aDictionary [
+	aDictionary at: self ifPresent: [ :node | ^ node copy ].
+	^ self shallowCopy replaceChildren: aDictionary
+]
+
+{ #category : #comparing }
+RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
 ]
 
@@ -272,7 +288,17 @@ RMDSyntaxNode >> nodesSuchThat: condition do: aBlock [
 	self childrenDo: [ :node | node nodesSuchThat: condition do: aBlock ]
 ]
 
+{ #category : #copying }
+RMDSyntaxNode >> postCopy [
+	^ self subclassResponsibility
+]
+
 { #category : #printing }
 RMDSyntaxNode >> printOn: aStream [
+	^ self subclassResponsibility
+]
+
+{ #category : #rewriting }
+RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
 ]

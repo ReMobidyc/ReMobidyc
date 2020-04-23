@@ -2,19 +2,19 @@ Class {
 	#name : #RMDPropertyBindNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'animatProperty',
 		'actionAgent',
-		'actionProperty'
+		'actionProperty',
+		'expression'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDPropertyBindNode class >> actionAgent: agentStringOrNil property: propertyString1 animatProperty: propertyString2 [
+RMDPropertyBindNode class >> actionAgent: agentStringOrNil property: propertyString1 expression: aRMDExpressionNode [
 	^ self new
 		actionAgent: agentStringOrNil;
 		actionProperty: propertyString1;
-		animatProperty: propertyString2;
+		expression: aRMDExpressionNode;
 		yourself
 ]
 
@@ -23,7 +23,7 @@ RMDPropertyBindNode >> = anObject [
 	^ self class = anObject class
 		and: [ actionAgent = anObject actionAgent
 				and: [ actionProperty = anObject actionProperty
-						and: [ animatProperty = anObject animatProperty ] ] ]
+						and: [ expression = anObject expression ] ] ]
 ]
 
 { #category : #accessing }
@@ -46,30 +46,35 @@ RMDPropertyBindNode >> actionProperty: aString [
 	actionProperty := aString
 ]
 
-{ #category : #accessing }
-RMDPropertyBindNode >> animatProperty [
-	^ animatProperty
-]
-
-{ #category : #accessing }
-RMDPropertyBindNode >> animatProperty: aString [
-	animatProperty := aString
-]
-
 { #category : #enumerating }
 RMDPropertyBindNode >> childrenDo: aBlock [
 	
 ]
 
+{ #category : #accessing }
+RMDPropertyBindNode >> expression [
+	^ expression
+]
+
+{ #category : #accessing }
+RMDPropertyBindNode >> expression: aRMDExpressionNode [
+	expression := aRMDExpressionNode
+]
+
 { #category : #comparing }
 RMDPropertyBindNode >> hash [
 	^ ((self class hash bitXor: actionAgent hash)
-		bitXor: actionProperty hash) bitXor: animatProperty hash
+		bitXor: actionProperty hash) bitXor: expression hash
 ]
 
 { #category : #testing }
 RMDPropertyBindNode >> isPropertyBindNode [
 	^ true
+]
+
+{ #category : #copying }
+RMDPropertyBindNode >> postCopy [
+	
 ]
 
 { #category : #printing }
@@ -82,5 +87,16 @@ RMDPropertyBindNode >> printOn: aStream [
 	aStream
 		nextPutAll: actionProperty;
 		nextPutAll: ' -> '.
-	aStream nextPutAll: animatProperty
+	expression printOn: aStream
+]
+
+{ #category : #rewriting }
+RMDPropertyBindNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: actionAgent
+		ifPresent: [ :node | actionAgent := node copy ].
+	aDictionary
+		at: actionProperty
+		ifPresent: [ :node | actionProperty := node copy ].
+	expression := expression copyReplace: aDictionary
 ]

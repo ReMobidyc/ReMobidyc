@@ -37,34 +37,6 @@ RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testLoadPropertyBindMap [
-	| parser animat replaceMap |
-	parser := RMDGrammar new.
-	animat := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar [kcal].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		actionAgent: nil
-		property: 'x'
-		animatProperty: 'x').
-	(RMDPropertyBindNode
-		actionAgent: nil
-		property: 'energy'
-		animatProperty: 'sugar')}.
-	context
-		subject: 1 species: animat;
-		loadPropertyBindMap: replaceMap.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'x') + 1.
-	self
-		assert: (context getMemoryAddressFor: 'energy' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'sugar') + 1
-]
-
-{ #category : #tests }
 RMDActionContextTest >> testLoadScript [
 	| parser source |
 	parser := RMDGrammar new.
@@ -85,49 +57,46 @@ where
 
 { #category : #tests }
 RMDActionContextTest >> testLocationCell [
-	| parser cell replaceMap |
+	| parser cell |
 	parser := RMDGrammar new.
 	cell := parser cellDefinition
 		parse:
 			'
 Cell with
-	fertility [kcal].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		actionAgent: 'here'
-		property: 'sugar'
-		animatProperty: 'fertility')}.
-	context
-		location: 10 cell: cell;
-		loadPropertyBindMap: replaceMap.
+	grass [kcal].' trim.
+	context location: 10 species: cell.
 	self
-		assert: (context getMemoryAddressFor: 'sugar' agent: 'here' ifAbsent: [ nil ])
-		equals: (cell propertyOffsets at: 'fertility') + 10
+		assert: (context getMemoryAddressFor: 'grass' agent: 'here' ifAbsent: [ nil ])
+		equals: (cell propertyOffsets at: 'grass') + 10
 ]
 
 { #category : #tests }
 RMDActionContextTest >> testObjectSpecies [
-	| parser foo bar replaceMap |
+	| parser foo bar eat replaceMap |
 	parser := RMDGrammar new.
 	foo := parser animatDefinition
 		parse:
 			'
 Foo is Animat with
-	sugar = 3000 [kcal].' trim.
+	sugar [kcal].' trim.
 	bar := parser animatDefinition
 		parse:
 			'
 Bar is Animat with
 	salt [g].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		actionAgent: 'bar'
-		property: 'sea'
-		animatProperty: 'salt')}.
+	eat := parser actionDefinition end
+		parse:
+			'to eat food is
+	my delta sugar'' = food''s salt.'.
 	context
 		subject: 10 species: foo;
-		object: 20 species: bar;
-		loadPropertyBindMap: replaceMap.
+		action: eat;
+		object: 20 species: bar.
 	self
-		assert: (context getMemoryAddressFor: 'sea' agent: 'bar' ifAbsent: [ nil ])
+		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
+		equals: (foo propertyOffsets at: 'sugar') + 10.
+	self
+		assert: (context getMemoryAddressFor: 'salt' agent: 'food' ifAbsent: [ nil ])
 		equals: (bar propertyOffsets at: 'salt') + 20
 ]
 
@@ -145,23 +114,20 @@ RMDActionContextTest >> testSetMemoryAddressForAgentTo [
 
 { #category : #tests }
 RMDActionContextTest >> testSubjectSpecies [
-	| parser animat replaceMap |
+	| parser animat |
 	parser := RMDGrammar new.
 	animat := parser animatDefinition
 		parse:
 			'
 Foo is Animat with
 	sugar [kcal].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		actionAgent: nil
-		property: 'energy'
-		animatProperty: 'sugar')}.
-	context
-		subject: 10 species: animat;
-		loadPropertyBindMap: replaceMap.
+	context subject: 1 species: animat.
 	self
-		assert: (context getMemoryAddressFor: 'energy' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'sugar') + 10
+		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
+		equals: (animat propertyOffsets at: 'x') + 1.
+	self
+		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
+		equals: (animat propertyOffsets at: 'sugar') + 1
 ]
 
 { #category : #tests }
@@ -183,21 +149,19 @@ RMDActionContextTest >> testUtilityAtPut [
 
 { #category : #tests }
 RMDActionContextTest >> testWorld [
-	| parser world replaceMap |
+	| parser world |
 	parser := RMDGrammar new.
 	world := parser worldDefinition
 		parse:
 			'
 World with
 	temperature [C].' trim.
-	replaceMap := {(RMDPropertyBindNode
-		actionAgent: 'world'
-		property: 'temp'
-		animatProperty: 'temperature')}.
-	context
-		world: world;
-		loadPropertyBindMap: replaceMap.
+	context world: 1 species: world.
 	self
-		assert: (context getMemoryAddressFor: 'temp' agent: 'world' ifAbsent: [ nil ])
+		assert:
+			(context
+				getMemoryAddressFor: 'temperature'
+				agent: 'world'
+				ifAbsent: [ nil ])
 		equals: (world propertyOffsets at: 'temperature') + 1
 ]

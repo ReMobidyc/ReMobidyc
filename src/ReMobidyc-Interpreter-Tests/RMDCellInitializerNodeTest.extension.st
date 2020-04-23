@@ -26,10 +26,7 @@ RMDCellInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: cellDef
 		do: [ :cell | 
-			interpreter
-				setActionContextWithIndividual: cell
-				species: cellDef
-				propertyBindMap: cellDef defaultPropertyBinds.
+			interpreter setActionContextWithIndividual: cell species: cellDef.
 			self
 				assert: (interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])
 				equals: grass.

@@ -59,3 +59,15 @@ RMDBinaryOperatorApplicationNode >> hash [
 RMDBinaryOperatorApplicationNode >> operator [
 	^ self subclassResponsibility
 ]
+
+{ #category : #copying }
+RMDBinaryOperatorApplicationNode >> postCopy [
+	expression1 := expression1 copy.
+	expression2 := expression2 copy
+]
+
+{ #category : #rewriting }
+RMDBinaryOperatorApplicationNode >> replaceChildren: aDictionary [
+	expression1 := expression1 copyReplace: aDictionary.
+	expression2 := expression2 copyReplace: aDictionary
+]

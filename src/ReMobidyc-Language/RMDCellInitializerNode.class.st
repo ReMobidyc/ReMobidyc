@@ -29,10 +29,24 @@ RMDCellInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpr
 		yourself
 ]
 
+{ #category : #comparing }
+RMDCellInitializerNode >> = anObject [
+	^ self class = anObject class
+		and: [ xDivisions = anObject xDivisions
+				and:
+					[ yDivisions = anObject yDivisions and: [ size = anObject size ] ] ]
+]
+
 { #category : #enumerating }
 RMDCellInitializerNode >> childrenDo: aBlock [
 	aBlock value: length.
 	propertyInitializers do: aBlock
+]
+
+{ #category : #comparing }
+RMDCellInitializerNode >> hash [
+	^ (((super hash bitXor: xDivisions hash) bitXor: yDivisions hash)
+		bitXor: size hash) bitXor: length hash
 ]
 
 { #category : #testing }
@@ -43,6 +57,17 @@ RMDCellInitializerNode >> isCellInitializerNode [
 { #category : #accessing }
 RMDCellInitializerNode >> length [
 	^ length
+		ifNil: [ length := size type siUnit = RMDUnit m
+				ifTrue: [ size numeric ]
+				ifFalse: [ size type siUnit = RMDUnit m2
+						ifTrue: [ size numeric sqrt ]
+						ifFalse: [ nil ] ] ]
+]
+
+{ #category : #copying }
+RMDCellInitializerNode >> postCopy [
+	super postCopy.
+	size := size copy
 ]
 
 { #category : #printing }
@@ -51,7 +76,7 @@ RMDCellInitializerNode >> printOn: aStream [
 	aStream nextPutAll: ' x '.
 	yDivisions printOn: aStream.
 	aStream nextPutAll: ' cells, '.
-	length printOn: aStream.
+	size printOn: aStream.
 	aStream nextPutAll: ' each side'.
 	propertyInitializers
 		ifNotEmpty: [ aStream
@@ -61,6 +86,13 @@ RMDCellInitializerNode >> printOn: aStream [
 	aStream nextPut: $,
 ]
 
+{ #category : #rewriting }
+RMDCellInitializerNode >> replaceChildren: aDictionary [
+	super replaceChildren: aDictionary.
+	aDictionary at: size ifPresent: [ :node | size := node copy ].
+	length := nil
+]
+
 { #category : #accessing }
 RMDCellInitializerNode >> size [
 	^ size
@@ -68,12 +100,7 @@ RMDCellInitializerNode >> size [
 
 { #category : #accessing }
 RMDCellInitializerNode >> size: aRMDLiteralNode [
-	size := aRMDLiteralNode.
-	length := aRMDLiteralNode type siUnit = RMDUnit m
-		ifTrue: [ size numeric ]
-		ifFalse: [ aRMDLiteralNode type siUnit = RMDUnit m2
-				ifTrue: [ size numeric sqrt ]
-				ifFalse: [ nil ] ]
+	size := aRMDLiteralNode
 ]
 
 { #category : #accessing }

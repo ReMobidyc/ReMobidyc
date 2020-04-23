@@ -44,6 +44,11 @@ RMDNegationNode >> isNegationNode [
 	^ true
 ]
 
+{ #category : #copying }
+RMDNegationNode >> postCopy [
+	condition := condition copy
+]
+
 { #category : #accessing }
 RMDNegationNode >> precedence [
 	^ 1
@@ -57,4 +62,9 @@ RMDNegationNode >> printOn: aStream [
 	condition printOn: aStream.
 	self precedence <= condition precedence
 		ifFalse: [ aStream nextPut: $) ]
+]
+
+{ #category : #rewriting }
+RMDNegationNode >> replaceChildren: aDictionary [
+	condition := condition copyReplace: aDictionary
 ]

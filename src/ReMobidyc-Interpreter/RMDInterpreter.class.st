@@ -287,13 +287,10 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
+RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
 	self
 		setContext:
-			(RMDActionContext
-				subject: anInteger
-				species: aRMDAnimatDefinitionNode
-				propertyBindMap: anArrayOfPropertyBindNode)
+			(RMDActionContext subject: anInteger species: aRMDAnimatDefinitionNode)
 ]
 
 { #category : #private }

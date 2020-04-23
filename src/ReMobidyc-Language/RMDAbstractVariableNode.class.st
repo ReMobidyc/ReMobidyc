@@ -26,3 +26,15 @@ RMDAbstractVariableNode >> identifier [
 RMDAbstractVariableNode >> identifier: aString [
 	identifier := aString
 ]
+
+{ #category : #copying }
+RMDAbstractVariableNode >> postCopy [
+	
+]
+
+{ #category : #rewriting }
+RMDAbstractVariableNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ]
+]

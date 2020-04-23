@@ -66,3 +66,11 @@ RMDAnimatDefinitionNode >> printOn: aStream [
 				separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
+
+{ #category : #rewriting }
+RMDAnimatDefinitionNode >> replaceChildren: aDictionary [
+	super replaceChildren: aDictionary.
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ]
+]

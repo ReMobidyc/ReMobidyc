@@ -16,6 +16,13 @@ RMDAgentDirectiveNode class >> directive: aString agent: anotherString [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDAgentDirectiveNode >> = anObject [
+	^ self class = anObject class
+		and: [ agentIdentifier = anObject agentIdentifier
+				and: [ directive = anObject directive ] ]
+]
+
 { #category : #accessing }
 RMDAgentDirectiveNode >> agentIdentifier [
 	^ agentIdentifier
@@ -36,9 +43,19 @@ RMDAgentDirectiveNode >> directive: aString [
 	directive := aString
 ]
 
+{ #category : #comparing }
+RMDAgentDirectiveNode >> hash [
+	^ agentIdentifier hash bitXor: directive hash
+]
+
 { #category : #testing }
 RMDAgentDirectiveNode >> isAgentDirectiveNode [
 	^ true
+]
+
+{ #category : #copying }
+RMDAgentDirectiveNode >> postCopy [
+	
 ]
 
 { #category : #accessing }
@@ -52,4 +69,14 @@ RMDAgentDirectiveNode >> printOn: aStream [
 		nextPutAll: directive;
 		nextPut: Character space;
 		nextPutAll: agentIdentifier
+]
+
+{ #category : #rewriting }
+RMDAgentDirectiveNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: agentIdentifier
+		ifPresent: [ :node | agentIdentifier := node copy ].
+	aDictionary
+		at: directive
+		ifPresent: [ :node | directive := node copy ]
 ]

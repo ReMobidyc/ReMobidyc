@@ -66,32 +66,6 @@ RMDSpeciesDefinitionNode >> childrenDo: aBlock [
 	propertyDeclarations do: aBlock
 ]
 
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> defaultPropertyBinds [
-	| binds index |
-	binds := Array new: self totalNumberOfProperties.
-	index := 0.
-	self builtinProperties
-		do: [ :assoc | 
-			binds
-				at: (index := index + 1)
-				put:
-					(RMDPropertyBindNode
-						actionAgent: nil
-						property: assoc key
-						animatProperty: assoc key) ].
-	self propertyDeclarations
-		do: [ :decl | 
-			binds
-				at: (index := index + 1)
-				put:
-					(RMDPropertyBindNode
-						actionAgent: nil
-						property: decl identifier
-						animatProperty: decl identifier) ].
-	^ binds
-]
-
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> hash [
 	^ self class hash bitXor: propertyDeclarations hash
@@ -100,6 +74,12 @@ RMDSpeciesDefinitionNode >> hash [
 { #category : #testing }
 RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
 	^ true
+]
+
+{ #category : #copying }
+RMDSpeciesDefinitionNode >> postCopy [
+	propertyDeclarations := propertyDeclarations collect: #copy.
+	propertyOffsets := nil
 ]
 
 { #category : #accessing }
@@ -142,6 +122,13 @@ RMDSpeciesDefinitionNode >> propertyOffsets [
 { #category : #enumerating }
 RMDSpeciesDefinitionNode >> propertyOffsetsDo: aBlock [
 	self propertyOffsets keysAndValuesDo: aBlock
+]
+
+{ #category : #rewriting }
+RMDSpeciesDefinitionNode >> replaceChildren: aDictionary [
+	propertyDeclarations := propertyDeclarations
+		collect: [ :node | node copyReplace: aDictionary ].
+	propertyOffsets := nil
 ]
 
 { #category : #accessing }

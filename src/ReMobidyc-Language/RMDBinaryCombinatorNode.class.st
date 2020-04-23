@@ -45,6 +45,11 @@ RMDBinaryCombinatorNode >> operator [
 	^ self subclassResponsibility
 ]
 
+{ #category : #copying }
+RMDBinaryCombinatorNode >> postCopy [
+	conditions := conditions collect: #copy
+]
+
 { #category : #accessing }
 RMDBinaryCombinatorNode >> precedence [
 	^ 2
@@ -60,4 +65,10 @@ RMDBinaryCombinatorNode >> printOn: aStream [
 			self precedence <= cond precedence
 				ifTrue: [ aStream nextPut: $) ] ]
 		separatedBy: [ aStream nextPutAll: self operator ]
+]
+
+{ #category : #rewriting }
+RMDBinaryCombinatorNode >> replaceChildren: aDictionary [
+	conditions := conditions
+		collect: [ :node | node copyReplace: aDictionary ]
 ]

@@ -693,19 +693,19 @@ RMDGrammarTest >> testLiteral [
 RMDGrammarTest >> testPropertyBind [
 	| node |
 	node := grammar propertyBind
-		parse: 'my energy -> sugar'.
+		parse: 'my energy -> my sugar'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
 	self assert: node actionAgent equals: nil.
 	self assert: node actionProperty equals: 'energy'.
-	self assert: node animatProperty equals: 'sugar'.
+	self assert: node expression equals: (grammar expression parse: 'my sugar').
 	node := grammar propertyBind
-		parse: 'target''s energy -> sugar'.
+		parse: 'target''s energy -> 10 [m]'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
 	self assert: node actionAgent equals: 'target'.
 	self assert: node actionProperty equals: 'energy'.
-	self assert: node animatProperty equals: 'sugar'
+	self assert: node expression equals: (grammar expression parse: '10 [m]')
 ]
 
 { #category : #tests }

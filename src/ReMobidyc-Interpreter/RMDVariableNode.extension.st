@@ -4,7 +4,7 @@ Extension { #name : #RMDVariableNode }
 RMDVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
 		write: aNumber
-		toVariable: identifier
-		agent: agent
+		toVariable: self identifier
+		agent: self agent
 		ifAbsent: [ KeyNotFound signal ]
 ]

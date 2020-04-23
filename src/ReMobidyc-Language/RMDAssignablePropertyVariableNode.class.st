@@ -2,8 +2,7 @@ Class {
 	#name : #RMDAssignablePropertyVariableNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'agent',
-		'identifier'
+		'propertyVariable'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -11,25 +10,19 @@ Class {
 { #category : #'instance creation' }
 RMDAssignablePropertyVariableNode class >> identifier: aString agent: anotherString [
 	^ self new
-		identifier: aString;
-		agent: anotherString;
+		propertyVariable: (RMDPropertyVariableNode identifier: aString agent: anotherString);
 		yourself
 ]
 
 { #category : #comparing }
 RMDAssignablePropertyVariableNode >> = anObject [
 	^ self class = anObject class
-		and: [ identifier = anObject identifier and: [ agent = anObject agent ] ]
+		and: [ propertyVariable = anObject propertyVariable ]
 ]
 
 { #category : #accessing }
 RMDAssignablePropertyVariableNode >> agent [
-	^ agent
-]
-
-{ #category : #accessing }
-RMDAssignablePropertyVariableNode >> agent: aString [
-	agent := aString
+	^ propertyVariable agent
 ]
 
 { #category : #enumerating }
@@ -39,17 +32,12 @@ RMDAssignablePropertyVariableNode >> childrenDo: aBlock [
 
 { #category : #comparing }
 RMDAssignablePropertyVariableNode >> hash [
-	^ (self class hash bitXor: identifier hash) bitXor: agent hash
+	^ self class hash bitXor: propertyVariable hash
 ]
 
 { #category : #accessing }
 RMDAssignablePropertyVariableNode >> identifier [
-	^ identifier
-]
-
-{ #category : #accessing }
-RMDAssignablePropertyVariableNode >> identifier: aString [
-	identifier := aString
+	^ propertyVariable identifier
 ]
 
 { #category : #accessing }
@@ -57,13 +45,34 @@ RMDAssignablePropertyVariableNode >> operator [
 	^ self subclassResponsibility
 ]
 
+{ #category : #copying }
+RMDAssignablePropertyVariableNode >> postCopy [
+	
+]
+
 { #category : #printing }
 RMDAssignablePropertyVariableNode >> printOn: aStream [
-	agent
+	self agent
 		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ aStream
+		ifNotNil: [ :agent | 
+			aStream
 				nextPutAll: agent;
 				nextPutAll: '''s ' ].
 	aStream nextPutAll: self operator.
-	aStream nextPutAll: identifier
+	aStream nextPutAll: self identifier
+]
+
+{ #category : #accessing }
+RMDAssignablePropertyVariableNode >> propertyVariable [
+	^ propertyVariable
+]
+
+{ #category : #accessing }
+RMDAssignablePropertyVariableNode >> propertyVariable: aRMDPropertyVariableNode [
+	propertyVariable := aRMDPropertyVariableNode
+]
+
+{ #category : #rewriting }
+RMDAssignablePropertyVariableNode >> replaceChildren: aDictionary [
+	propertyVariable := propertyVariable copyReplace: aDictionary
 ]

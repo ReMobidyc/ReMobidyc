@@ -57,6 +57,11 @@ RMDLiteralNode >> numeric [
 	^ numeric ifNil: [ numeric := self computeNumeric ]
 ]
 
+{ #category : #copying }
+RMDLiteralNode >> postCopy [
+	
+]
+
 { #category : #accessing }
 RMDLiteralNode >> precedence [
 	^ 0
@@ -71,12 +76,26 @@ RMDLiteralNode >> printOn: aStream [
 			aStream nextPut: $] ]
 ]
 
-{ #category : #private }
+{ #category : #rewriting }
+RMDLiteralNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: literal
+		ifPresent: [ :node | 
+			literal := node copy.
+			numeric := nil ].
+	aDictionary
+		at: type
+		ifPresent: [ :node | 
+			type := node copy.
+			numeric := nil ]
+]
+
+{ #category : #accessing }
 RMDLiteralNode >> type [
 	^ type
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDLiteralNode >> type: aRMDUnit [
 	type := aRMDUnit
 ]

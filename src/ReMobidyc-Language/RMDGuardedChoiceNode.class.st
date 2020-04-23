@@ -41,12 +41,17 @@ RMDGuardedChoiceNode >> guardsAndChoices: anArrayOfAssociation [
 
 { #category : #comparing }
 RMDGuardedChoiceNode >> hash [
-	^ self hash bitXor: guardsAndChoices hash
+	^ self class hash bitXor: guardsAndChoices hash
 ]
 
 { #category : #testing }
 RMDGuardedChoiceNode >> isGuardedChoiceNode [
 	^ true
+]
+
+{ #category : #copying }
+RMDGuardedChoiceNode >> postCopy [
+	guardsAndChoices := guardsAndChoices collect: #copy
 ]
 
 { #category : #accessing }
@@ -88,4 +93,14 @@ RMDGuardedChoiceNode >> printMultilineIndent: anInteger on: aStream [
 { #category : #printing }
 RMDGuardedChoiceNode >> printOn: aStream [
 	self printInlineOn: aStream
+]
+
+{ #category : #rewriting }
+RMDGuardedChoiceNode >> replaceChildren: aDictionary [
+	guardsAndChoices := guardsAndChoices
+		collect: [ :assoc | 
+			assoc key = true
+				ifTrue: [ true -> (assoc value copyReplace: aDictionary) ]
+				ifFalse: [ (assoc key copyReplace: aDictionary)
+						-> (assoc value copyReplace: aDictionary) ] ]
 ]

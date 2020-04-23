@@ -62,5 +62,6 @@ RMDPropertyVariableNode >> printOn: aStream [
 
 { #category : #rewriting }
 RMDPropertyVariableNode >> replaceChildren: aDictionary [
-
+	super replaceChildren: aDictionary.
+	aDictionary at: agent ifPresent: [ :node | agent := node copy ]
 ]

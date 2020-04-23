@@ -14,6 +14,12 @@ RMDUnaryOperatorApplicationNode class >> expression: aRMDExpressionNode [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDUnaryOperatorApplicationNode >> = anObject [
+	^ self class = anObject class
+		and: [ expression = anObject expression ]
+]
+
 { #category : #enumerating }
 RMDUnaryOperatorApplicationNode >> childrenDo: aBlock [
 	aBlock value: expression
@@ -29,9 +35,19 @@ RMDUnaryOperatorApplicationNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
+{ #category : #comparing }
+RMDUnaryOperatorApplicationNode >> hash [
+	^ self class hash bitXor: expression hash
+]
+
 { #category : #accessing }
 RMDUnaryOperatorApplicationNode >> operator [
 	^ self subclassResponsibility
+]
+
+{ #category : #copying }
+RMDUnaryOperatorApplicationNode >> postCopy [
+	expression := expression copy
 ]
 
 { #category : #printing }
@@ -42,4 +58,9 @@ RMDUnaryOperatorApplicationNode >> printOn: aStream [
 	expression printOn: aStream.
 	self precedence < expression precedence
 		ifTrue: [ aStream nextPut: $) ]
+]
+
+{ #category : #rewriting }
+RMDUnaryOperatorApplicationNode >> replaceChildren: aDictionary [
+	expression := expression copyReplace: aDictionary
 ]

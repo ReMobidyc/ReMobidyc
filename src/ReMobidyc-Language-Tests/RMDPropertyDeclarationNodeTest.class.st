@@ -1,18 +1,19 @@
 Class {
-	#name : #RMDLiteralNodeTest,
+	#name : #RMDPropertyDeclarationNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDLiteralNodeTest >> testCopyReplace [
+RMDPropertyDeclarationNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser expression end parse: '10 [kcal]'.
+	node := parser propertyDeclaration end parse: 'blood_sugar [kcal]'.
 	replacement := Dictionary new
+		at: 'blood_sugar' put: 'energy';
 		at: (parser type end parse: '[kcal]')
 			put: (parser type end parse: '[J]');
 		yourself.
 	self
 		assert: (node copyReplace: replacement)
-		equals: (parser expression end parse: '10 [J]')
+		equals: (parser propertyDeclaration end parse: 'energy [J]')
 ]

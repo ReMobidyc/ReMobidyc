@@ -13,14 +13,6 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
-{ #category : #'instance creation' }
-RMDActionContext class >> subject: anInteger species: aRMDSpeciesDefinitionNode propertyBindMap: anArrayOfPropertyBindNode [
-	^ self new
-		subject: anInteger species: aRMDSpeciesDefinitionNode;
-		loadPropertyBindMap: anArrayOfPropertyBindNode;
-		yourself
-]
-
 { #category : #accessing }
 RMDActionContext >> action [
 	^ action
@@ -38,29 +30,6 @@ RMDActionContext >> initialize [
 	utilities := Dictionary new
 ]
 
-{ #category : #'memory access' }
-RMDActionContext >> loadPropertyBindMap: anArrayOfPropertyBindNode [
-	anArrayOfPropertyBindNode
-		do: [ :bind | 
-			| agent individual species |
-			agent := bind actionAgent.
-			agent
-				ifNil: [ individual := subject.
-					species := subjectSpecies ]
-				ifNotNil: [ agent = 'here'
-						ifTrue: [ individual := location.
-							species := cellDefinition ]
-						ifFalse: [ agent = 'world'
-								ifTrue: [ individual := 1.
-									species := worldDefinition ]
-								ifFalse: [ individual := object.
-									species := objectSpecies ] ] ].
-			self
-				setMemoryAddressFor: bind actionProperty
-				agent: agent
-				to: (species propertyOffsets at: bind animatProperty) + individual ]
-]
-
 { #category : #'utility access' }
 RMDActionContext >> loadUtilityDefinitions [
 	utilities := Dictionary new: action utilityDefinitions size.
@@ -69,15 +38,29 @@ RMDActionContext >> loadUtilityDefinitions [
 ]
 
 { #category : #accessing }
-RMDActionContext >> location: anInteger cell: aRMDCellDefinition [
+RMDActionContext >> location: anInteger species: aRMDCellDefinition [
+	| dict |
 	location := anInteger.
-	cellDefinition := aRMDCellDefinition
+	cellDefinition := aRMDCellDefinition.
+	dict := Dictionary new.
+	aRMDCellDefinition
+		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	propertyDict := Dictionary new
+		at: 'here' put: dict;
+		yourself
 ]
 
 { #category : #accessing }
 RMDActionContext >> object: anInteger species: aRMDAnimatDefinition [
+	| dict |
 	object := anInteger.
-	objectSpecies := aRMDAnimatDefinition
+	objectSpecies := aRMDAnimatDefinition.
+	dict := Dictionary new.
+	aRMDAnimatDefinition
+		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	propertyDict
+		at: (action ifNotNil: #object ifNil: [ #object ])
+		put: dict
 ]
 
 { #category : #'utility access' }
@@ -91,6 +74,11 @@ RMDActionContext >> utilityAt: aString put: aNumber [
 ]
 
 { #category : #accessing }
-RMDActionContext >> world: aRMDWorldDefinition [
-	worldDefinition := aRMDWorldDefinition
+RMDActionContext >> world: anInteger species: aRMDWorldDefinition [
+	| dict |
+	worldDefinition := aRMDWorldDefinition.
+	dict := Dictionary new.
+	aRMDWorldDefinition
+		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	propertyDict at: 'world' put: dict
 ]

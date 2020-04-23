@@ -50,6 +50,11 @@ RMDBinaryRelationNode >> operator [
 	^ self subclassResponsibility
 ]
 
+{ #category : #copying }
+RMDBinaryRelationNode >> postCopy [
+	expressions := expressions collect: #copy
+]
+
 { #category : #accessing }
 RMDBinaryRelationNode >> precedence [
 	^ 0
@@ -60,4 +65,10 @@ RMDBinaryRelationNode >> printOn: aStream [
 	expressions
 		do: [ :expr | expr printOn: aStream ]
 		separatedBy: [ aStream nextPutAll: self operator ]
+]
+
+{ #category : #rewriting }
+RMDBinaryRelationNode >> replaceChildren: aDictionary [
+	expressions := expressions
+		collect: [ :node | node copyReplace: aDictionary ]
 ]

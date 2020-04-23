@@ -4,7 +4,7 @@ Extension { #name : #RMDDeltaVariableNode }
 RMDDeltaVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
 		write: aNumber
-		toDelta: identifier
-		agent: agent
+		toDelta: self identifier
+		agent: self agent
 		ifAbsent: [ KeyNotFound signal ]
 ]

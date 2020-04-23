@@ -22,9 +22,19 @@ RMDUnitSymbol >> / aRMDUnit [
 	^ self asCompoundUnit / aRMDUnit
 ]
 
+{ #category : #comparing }
+RMDUnitSymbol >> = anObject [
+	^ self class = anObject class and: [ symbol = anObject symbol ]
+]
+
 { #category : #conversions }
 RMDUnitSymbol >> asCompoundUnit [
 	^ RMDCompoundUnit with: self
+]
+
+{ #category : #comparing }
+RMDUnitSymbol >> hash [
+	^ self class hash bitXor: symbol hash
 ]
 
 { #category : #testing }

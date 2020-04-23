@@ -27,10 +27,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: goatDef
 		do: [ :cell | 
-			interpreter
-				setActionContextWithIndividual: cell
-				species: goatDef
-				propertyBindMap: goatDef defaultPropertyBinds.
+			interpreter setActionContextWithIndividual: cell species: goatDef.
 			self
 				assert:
 					((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])

@@ -31,7 +31,7 @@ RMDSimulationModel >> addAnimatDefinition: aRMDAnimatDefinitionNode [
 		put: aRMDAnimatDefinitionNode
 ]
 
-{ #category : #'definition access' }
+{ #category : #adding }
 RMDSimulationModel >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
 	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
 ]

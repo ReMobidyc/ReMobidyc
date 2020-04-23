@@ -3,3 +3,16 @@ Class {
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
+
+{ #category : #tests }
+RMDApplyNodeTest >> testCopyReplace [
+	| node replacement |
+	node := parser expression end parse: 'my a + min(my b, my c)'.
+	replacement := Dictionary new
+		at: (self expression: 'min(my b, my c)')
+			put: (self expression: 'my z');
+		yourself.
+	self
+		assert: (node copyReplace: replacement)
+		equals: (parser expression end parse: 'my a + my z')
+]

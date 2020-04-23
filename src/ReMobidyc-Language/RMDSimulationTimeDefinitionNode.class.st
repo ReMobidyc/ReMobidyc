@@ -23,6 +23,12 @@ RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherR
 		yourself
 ]
 
+{ #category : #comparing }
+RMDSimulationTimeDefinitionNode >> = anObject [
+	^ self class = anObject class
+		and: [ duration = anObject duration and: [ step = anObject step ] ]
+]
+
 { #category : #enumerating }
 RMDSimulationTimeDefinitionNode >> childrenDo: aBlock [
 	aBlock
@@ -40,9 +46,20 @@ RMDSimulationTimeDefinitionNode >> duration: aRMDExpressionNode [
 	duration := aRMDExpressionNode
 ]
 
+{ #category : #comparing }
+RMDSimulationTimeDefinitionNode >> hash [
+	^ duration hash bitXor: step hash
+]
+
 { #category : #testing }
 RMDSimulationTimeDefinitionNode >> isSimulationTimeDefinitionNode [
 	^ true
+]
+
+{ #category : #copying }
+RMDSimulationTimeDefinitionNode >> postCopy [
+	duration := duration copy.
+	step := step copy
 ]
 
 { #category : #printing }
@@ -51,6 +68,12 @@ RMDSimulationTimeDefinitionNode >> printOn: aStream [
 	duration printOn: aStream.
 	aStream nextPutAll: ' step by '.
 	step printOn: aStream
+]
+
+{ #category : #rewriting }
+RMDSimulationTimeDefinitionNode >> replaceChildren: aDictionary [
+	duration := duration copyReplace: aDictionary.
+	step := step copyReplace: aDictionary
 ]
 
 { #category : #accessing }

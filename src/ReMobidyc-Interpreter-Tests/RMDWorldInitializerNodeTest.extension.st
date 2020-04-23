@@ -25,8 +25,7 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 		do: [ :world | 
 			interpreter
 				setActionContextWithIndividual: world
-				species: worldDef
-				propertyBindMap: worldDef defaultPropertyBinds.
+				species: worldDef.
 			self
 				assert: (interpreter readVariable: 'temperature' agent: nil ifAbsent: [ nil ])
 				closeTo: (RMDUnit celsius toSI: -10).

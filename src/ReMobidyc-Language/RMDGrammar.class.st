@@ -118,7 +118,7 @@ RMDGrammar >> agentIdentifier [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
-	^ ('my ' asPParser trimBlanks ==> [ :str | nil ])
+	^ (('my' asPParser, #space asPParser) trimBlanks ==> [ :str | nil ])
 		/ 'the' asPParser trimBlanks
 		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
 ]
@@ -563,7 +563,7 @@ RMDGrammar >> identifier [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta d d2 dt dt2 is with if where die kill forward move go become otherwise time'
+			[ Keywords := 'nearest distance direction delta is with if where die kill forward move go become otherwise time'
 				substrings asSet ]
 ]
 
@@ -614,12 +614,12 @@ RMDGrammar >> productNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyBind [
 	^ (self agentReference , identifier , '->' asPParser trimBlanks
-		, identifier)
+		, expression)
 		==> [ :quad | 
 			self propertyBindNodeClass
 				actionAgent: quad first
 				property: quad second
-				animatProperty: quad fourth ]
+				expression: quad fourth ]
 ]
 
 { #category : #'class access' }

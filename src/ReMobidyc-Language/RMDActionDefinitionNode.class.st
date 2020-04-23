@@ -46,6 +46,16 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 		yourself
 ]
 
+{ #category : #comparing }
+RMDActionDefinitionNode >> = anObject [
+	^ self class = anObject class
+		and: [ identifier = anObject identifier
+				and: [ guard = anObject guard
+						and: [ propertyDefinitions = anObject propertyDefinitions
+								and: [ utilityDefinitions = anObject utilityDefinitions
+										and: [ object = anObject object ] ] ] ] ]
+]
+
 { #category : #enumerating }
 RMDActionDefinitionNode >> childrenDo: aBlock [
 	aBlock value: aBlock.
@@ -61,6 +71,13 @@ RMDActionDefinitionNode >> guard [
 { #category : #accessing }
 RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
+]
+
+{ #category : #comparing }
+RMDActionDefinitionNode >> hash [
+	^ (((identifier hash bitXor: guard hash)
+		bitXor: propertyDefinitions hash) bitXor: utilityDefinitions hash)
+		bitXor: object hash
 ]
 
 { #category : #accessing }
@@ -86,6 +103,15 @@ RMDActionDefinitionNode >> object [
 { #category : #accessing }
 RMDActionDefinitionNode >> object: aString [
 	object := aString
+]
+
+{ #category : #copying }
+RMDActionDefinitionNode >> postCopy [
+	guard := guard ifNotNil: [ guard copy ].
+	propertyDefinitions := propertyDefinitions
+		ifNotNil: [ propertyDefinitions collect: #copy ].
+	utilityDefinitions := utilityDefinitions
+		ifNotNil: [ utilityDefinitions collect: #copy ]
 ]
 
 { #category : #printing }
@@ -133,6 +159,19 @@ RMDActionDefinitionNode >> propertyDefinitions [
 { #category : #accessing }
 RMDActionDefinitionNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
 	propertyDefinitions := aRMDPropertyDefinitionNode
+]
+
+{ #category : #rewriting }
+RMDActionDefinitionNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ].
+	guard := guard ifNotNil: [ guard copyReplace: aDictionary ].
+	propertyDefinitions := propertyDefinitions
+		collect: [ :node | node copyReplace: aDictionary ].
+	utilityDefinitions := utilityDefinitions
+		collect: [ :node | node copyReplace: aDictionary ].
+	aDictionary at: object ifPresent: [ :node | object := node copy ]
 ]
 
 { #category : #accessing }

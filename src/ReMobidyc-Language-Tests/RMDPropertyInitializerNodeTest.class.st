@@ -1,16 +1,15 @@
 Class {
-	#name : #RMDWorldInitializerNodeTest,
+	#name : #RMDPropertyInitializerNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDWorldInitializerNodeTest >> testCopyReplace [
+RMDPropertyInitializerNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser worldInitializer end
+	node := parser propertyInitializer end
 		parse:
-			'World with
-	temperature = 30 [C]'.
+			'temperature = 30 [C]'.
 	replacement := Dictionary new
 		at: 'temperature' put: 'temp';
 		at: (parser expression end parse: '30 [C]')
@@ -19,8 +18,7 @@ RMDWorldInitializerNodeTest >> testCopyReplace [
 	self
 		assert: (node copyReplace: replacement)
 		equals:
-			(parser worldInitializer end
+			(parser propertyInitializer end
 				parse:
-					'World with
-	temp = 100 [F]')
+					'temp = 100 [F]')
 ]

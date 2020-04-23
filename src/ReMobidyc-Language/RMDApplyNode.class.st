@@ -58,6 +58,11 @@ RMDApplyNode >> isApplyNode [
 	^ true
 ]
 
+{ #category : #copying }
+RMDApplyNode >> postCopy [
+	arguments := arguments collect: #copy
+]
+
 { #category : #accessing }
 RMDApplyNode >> precedence [
 	^ 1
@@ -71,4 +76,11 @@ RMDApplyNode >> printOn: aStream [
 		do: [ :expression | expression printOn: aStream ]
 		separatedBy: [ aStream nextPutAll: ', ' ].
 	aStream nextPut: $)
+]
+
+{ #category : #rewriting }
+RMDApplyNode >> replaceChildren: aDictionary [
+	aDictionary at: function ifPresent: [ :node | function := node copy ].
+	arguments := arguments
+		collect: [ :node | node copyReplace: aDictionary ]
 ]

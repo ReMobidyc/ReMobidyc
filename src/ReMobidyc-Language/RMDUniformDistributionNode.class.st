@@ -50,6 +50,12 @@ RMDUniformDistributionNode >> isUniformDistributionNode [
 	^ true
 ]
 
+{ #category : #copying }
+RMDUniformDistributionNode >> postCopy [
+	fromLiteral := fromLiteral copy.
+	toLiteral := toLiteral copy
+]
+
 { #category : #accessing }
 RMDUniformDistributionNode >> precedence [
 	^ 1
@@ -61,6 +67,12 @@ RMDUniformDistributionNode >> printOn: aStream [
 	fromLiteral printOn: aStream.
 	aStream nextPutAll: ' to '.
 	toLiteral printOn: aStream
+]
+
+{ #category : #rewriting }
+RMDUniformDistributionNode >> replaceChildren: aDictionary [
+	fromLiteral := fromLiteral copyReplace: aDictionary.
+	toLiteral := toLiteral copyReplace: aDictionary
 ]
 
 { #category : #accessing }

@@ -9,6 +9,13 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #'instance creation' }
+RMDContext class >> subject: anInteger species: aRMDSpeciesDefinitionNode [
+	^ self new
+		subject: anInteger species: aRMDSpeciesDefinitionNode;
+		yourself
+]
+
 { #category : #'memory access' }
 RMDContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
 	^ (propertyDict
@@ -32,7 +39,16 @@ RMDContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInte
 ]
 
 { #category : #accessing }
-RMDContext >> subject: anInteger species: aRMDAnimatDefinition [
+RMDContext >> subject: anInteger species: aRMDSpeciesDefinitionNode [
+	| dict |
 	subject := anInteger.
-	subjectSpecies := aRMDAnimatDefinition
+	subjectSpecies := aRMDSpeciesDefinitionNode.
+	dict := Dictionary new.
+	aRMDSpeciesDefinitionNode
+		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	propertyDict at: nil put: dict.
+	aRMDSpeciesDefinitionNode isCellDefinitionNode
+		ifTrue: [ propertyDict at: 'here' put: dict ].
+	aRMDSpeciesDefinitionNode isWorldDefinitionNode
+		ifTrue: [ propertyDict at: 'world' put: dict ]
 ]

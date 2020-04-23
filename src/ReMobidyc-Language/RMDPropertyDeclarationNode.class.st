@@ -48,6 +48,11 @@ RMDPropertyDeclarationNode >> isPropertyDeclarationNode [
 	^ true
 ]
 
+{ #category : #copying }
+RMDPropertyDeclarationNode >> postCopy [
+	
+]
+
 { #category : #printing }
 RMDPropertyDeclarationNode >> printOn: aStream [
 	aStream
@@ -55,6 +60,14 @@ RMDPropertyDeclarationNode >> printOn: aStream [
 		nextPutAll: ' ['.
 	unit printOn: aStream.
 	aStream nextPut: $]
+]
+
+{ #category : #rewriting }
+RMDPropertyDeclarationNode >> replaceChildren: aDictionary [
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ].
+	aDictionary at: unit ifPresent: [ :node | unit := node copy ]
 ]
 
 { #category : #accessing }

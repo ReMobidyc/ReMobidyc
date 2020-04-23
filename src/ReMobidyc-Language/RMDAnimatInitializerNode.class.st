@@ -17,6 +17,12 @@ RMDAnimatInitializerNode class >> population: anInteger animat: aString property
 		yourself
 ]
 
+{ #category : #comparing }
+RMDAnimatInitializerNode >> = anObject [
+	^ super = anObject
+		and: [ population = anObject population and: [ animat = anObject animat ] ]
+]
+
 { #category : #accessing }
 RMDAnimatInitializerNode >> animat [
 	^ animat
@@ -25,6 +31,11 @@ RMDAnimatInitializerNode >> animat [
 { #category : #accessing }
 RMDAnimatInitializerNode >> animat: aString [
 	animat := aString
+]
+
+{ #category : #comparing }
+RMDAnimatInitializerNode >> hash [
+	^ (super hash bitXor: population hash) bitXor: animat hash
 ]
 
 { #category : #testing }
@@ -56,4 +67,10 @@ RMDAnimatInitializerNode >> printOn: aStream [
 				do: [ :def | 
 					def printOn: aStream.
 					aStream nextPut: Character cr ] ]
+]
+
+{ #category : #rewriting }
+RMDAnimatInitializerNode >> replaceChildren: aDictionary [
+	super replaceChildren: aDictionary.
+	aDictionary at: animat ifPresent: [ :node | animat := node copy ]
 ]
