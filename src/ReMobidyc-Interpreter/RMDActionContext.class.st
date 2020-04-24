@@ -3,12 +3,7 @@ Class {
 	#superclass : #RMDContext,
 	#instVars : [
 		'action',
-		'cellDefinition',
-		'location',
-		'object',
-		'objectSpecies',
-		'utilities',
-		'worldDefinition'
+		'utilities'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -38,10 +33,8 @@ RMDActionContext >> loadUtilityDefinitions [
 ]
 
 { #category : #accessing }
-RMDActionContext >> location: anInteger species: aRMDCellDefinition [
+RMDActionContext >> location: anInteger definition: aRMDCellDefinition [
 	| dict |
-	location := anInteger.
-	cellDefinition := aRMDCellDefinition.
 	dict := Dictionary new.
 	aRMDCellDefinition
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
@@ -51,10 +44,8 @@ RMDActionContext >> location: anInteger species: aRMDCellDefinition [
 ]
 
 { #category : #accessing }
-RMDActionContext >> object: anInteger species: aRMDAnimatDefinition [
+RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 	| dict |
-	object := anInteger.
-	objectSpecies := aRMDAnimatDefinition.
 	dict := Dictionary new.
 	aRMDAnimatDefinition
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
@@ -74,9 +65,8 @@ RMDActionContext >> utilityAt: aString put: aNumber [
 ]
 
 { #category : #accessing }
-RMDActionContext >> world: anInteger species: aRMDWorldDefinition [
+RMDActionContext >> world: anInteger definition: aRMDWorldDefinition [
 	| dict |
-	worldDefinition := aRMDWorldDefinition.
 	dict := Dictionary new.
 	aRMDWorldDefinition
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].

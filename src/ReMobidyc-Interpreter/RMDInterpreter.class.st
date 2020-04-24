@@ -93,14 +93,12 @@ RMDInterpreter >> byChanceOf: aNumber [
 	^ self random < aNumber
 ]
 
-{ #category : #'animat operations' }
+{ #category : #'space access' }
 RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ ((anotherInteger - 1) * simulationModel cellXDivisions + anInteger - 1)
-		* self cellDefinition totalNumberOfProperties
-		+ individualDirectory cell
+	^ individualDirectory cellAtXIndex: anInteger yIndex: anotherInteger
 ]
 
-{ #category : #'animat operations' }
+{ #category : #'space access' }
 RMDInterpreter >> cellDefinition [
 	^ simulationModel cellDefinition
 ]
@@ -115,7 +113,7 @@ RMDInterpreter >> cellX: aNumber [
 	^ (aNumber - self west) / simulationModel cellLength
 ]
 
-{ #category : #'animat operations' }
+{ #category : #'space access' }
 RMDInterpreter >> cellXDivisions [
 	^ simulationModel cellXDivisions
 ]
@@ -125,7 +123,7 @@ RMDInterpreter >> cellY: aNumber [
 	^ (aNumber - self south) / simulationModel cellLength
 ]
 
-{ #category : #'animat operations' }
+{ #category : #'space access' }
 RMDInterpreter >> cellYDivisions [
 	^ simulationModel cellYDivisions
 ]
@@ -210,6 +208,20 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> here [
+	| x y cellX cellY |
+	x := self readVariable: 'x' agent: nil ifAbsent: [ ^ nil ].
+	y := self readVariable: 'y' agent: nil ifAbsent: [ ^ nil ].
+	cellX := (self cellX: x) floor + 1
+		min: 1
+		max: simulationModel cellXDivisions.
+	cellY := (self cellY: y) floor + 1
+		min: 1
+		max: simulationModel cellYDivisions.
+	^ individualDirectory cellAtXIndex: cellX yIndex: cellY
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 	aRMDSpeciesDefinitionNode isAnimatDefinitionNode
@@ -290,7 +302,30 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
 	self
 		setContext:
-			(RMDActionContext subject: anInteger species: aRMDAnimatDefinitionNode)
+			(RMDActionContext subject: anInteger definition: aRMDAnimatDefinitionNode).
+	aRMDAnimatDefinitionNode isAnimatDefinitionNode
+		ifTrue: [ context
+				location:
+					(individualDirectory
+						cellAtXIndex:
+							((self
+								cellX:
+									(self
+										readVariable: 'x'
+										agent: nil
+										ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
+								min: 1
+								max: simulationModel cellXDivisions)
+						yIndex:
+							((self
+								cellY:
+									(self
+										readVariable: 'y'
+										agent: nil
+										ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
+								min: 1
+								max: simulationModel cellYDivisions))
+				definition: simulationModel cellDefinition ]
 ]
 
 { #category : #private }
@@ -304,7 +339,7 @@ RMDInterpreter >> setInitializerContextWithSubject: anInteger species: aRMDSpeci
 		setContext:
 			(RMDInitializerContext
 				subject: anInteger
-				species: aRMDSpeciesInitializerNode)
+				definition: aRMDSpeciesInitializerNode)
 ]
 
 { #category : #private }
@@ -318,7 +353,7 @@ RMDInterpreter >> setObserverContextWithSubject: anInteger species: aRMDSpeciesI
 		setContext:
 			(RMDObserverContext
 				subject: anInteger
-				species: aRMDSpeciesInitializerNode)
+				definition: aRMDSpeciesInitializerNode)
 ]
 
 { #category : #simulating }

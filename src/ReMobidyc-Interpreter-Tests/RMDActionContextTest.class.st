@@ -13,6 +13,25 @@ RMDActionContextTest >> setUp [
 ]
 
 { #category : #tests }
+RMDActionContextTest >> testAction [
+	| parser source |
+	parser := RMDGrammar new.
+	source := '
+to test is
+	my delta x'' = two
+where
+	one = 1
+	two = one + 1.' trim.
+	context action: (parser actionDefinition parse: source).
+	self
+		assert: (context utilityAt: 'one' ifAbsent: [ nil ])
+		equals: (parser utilityDefinition parse: 'one = 1').
+	self
+		assert: (context utilityAt: 'two' ifAbsent: [ nil ])
+		equals: (parser utilityDefinition parse: 'two = one + 1')
+]
+
+{ #category : #tests }
 RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
 	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
 	context setMemoryAddressFor: 'y' agent: nil to: 2.
@@ -37,7 +56,7 @@ RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testLoadScript [
+RMDActionContextTest >> testLoadUtilityDefinitions [
 	| parser source |
 	parser := RMDGrammar new.
 	source := '
@@ -56,23 +75,23 @@ where
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testLocationCell [
+RMDActionContextTest >> testLocationDefinition [
 	| parser cell |
 	parser := RMDGrammar new.
-	cell := parser cellDefinition
+	cell := parser cellDefinition end
 		parse:
 			'
 Cell with
 	grass [kcal].' trim.
-	context location: 10 species: cell.
+	context location: 10 definition: cell.
 	self
 		assert: (context getMemoryAddressFor: 'grass' agent: 'here' ifAbsent: [ nil ])
 		equals: (cell propertyOffsets at: 'grass') + 10
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testObjectSpecies [
-	| parser foo bar eat replaceMap |
+RMDActionContextTest >> testObjectDefinition [
+	| parser foo bar eat |
 	parser := RMDGrammar new.
 	foo := parser animatDefinition
 		parse:
@@ -89,9 +108,9 @@ Bar is Animat with
 			'to eat food is
 	my delta sugar'' = food''s salt.'.
 	context
-		subject: 10 species: foo;
+		subject: 10 definition: foo;
 		action: eat;
-		object: 20 species: bar.
+		object: 20 definition: bar.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
 		equals: (foo propertyOffsets at: 'sugar') + 10.
@@ -113,7 +132,7 @@ RMDActionContextTest >> testSetMemoryAddressForAgentTo [
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testSubjectSpecies [
+RMDActionContextTest >> testSubjectDefinition [
 	| parser animat |
 	parser := RMDGrammar new.
 	animat := parser animatDefinition
@@ -121,7 +140,7 @@ RMDActionContextTest >> testSubjectSpecies [
 			'
 Foo is Animat with
 	sugar [kcal].' trim.
-	context subject: 1 species: animat.
+	context subject: 1 definition: animat.
 	self
 		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
 		equals: (animat propertyOffsets at: 'x') + 1.
@@ -148,7 +167,7 @@ RMDActionContextTest >> testUtilityAtPut [
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testWorld [
+RMDActionContextTest >> testWorldDefinition [
 	| parser world |
 	parser := RMDGrammar new.
 	world := parser worldDefinition
@@ -156,7 +175,7 @@ RMDActionContextTest >> testWorld [
 			'
 World with
 	temperature [C].' trim.
-	context world: 1 species: world.
+	context world: 1 definition: world.
 	self
 		assert:
 			(context

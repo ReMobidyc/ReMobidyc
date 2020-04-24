@@ -309,7 +309,8 @@ RMDGrammar >> cellDefinition [
 				,
 					(self propertyDeclaration
 						onlySeparatedBy: #newline asPParser trimBlanks)
-				, #newline asPParser trimBlanks optional) ==> #fourth) optional)
+				, #newline asPParser trimBlanks optional) ==> #fourth) optional
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :pair | 
 			self cellDefinitionNodeClass
 				propertyDeclarations: (pair second ifNil: [ Array new ]) ]
@@ -869,12 +870,13 @@ RMDGrammar >> weightUnits [
 RMDGrammar >> worldDefinition [
 	^ ('World' asPParser
 		,
-			((#blank asPParser , 'with' asPParser trimBlanks
+			((#blank asPParser plus , 'with' asPParser trimBlanks
 				, #newline asPParser trimBlanks
 				,
 					(self propertyDeclaration
-						onlySeparatedBy: #newline asPParser trimBlanks)
-				, #newline asPParser trimBlanks optional) ==> #fourth) optional)
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #fourth)
+				optional , '.' asPParser trimBlanks
+		, #newline asPParser trimBlanks optional)
 		==> [ :pair | 
 			self worldDefinitionNodeClass
 				propertyDeclarations: (pair second ifNil: [ Array new ]) ]

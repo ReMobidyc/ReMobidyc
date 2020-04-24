@@ -21,12 +21,12 @@ RMDVisualizer class >> exampleSugarScape [
 			(parser worldDefinition end
 				parse:
 					'World with
-	temperature [C]');
+	temperature [C].');
 		load:
 			(parser cellDefinition end
 				parse:
 					'Cell with
-	grass [kcal]');
+	grass [kcal].');
 		load:
 			(parser animatDefinition end
 				parse:

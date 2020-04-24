@@ -3,7 +3,7 @@ Extension { #name : #RMDWorldInitializerNodeTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDWorldInitializerNodeTest >> testEvalIn [
 	| worldDef worldInitializer count |
-	worldDef := parser worldDefinition
+	worldDef := parser worldDefinition end
 		parse:
 			'World with
 	temperature [C]
@@ -23,9 +23,7 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: worldDef
 		do: [ :world | 
-			interpreter
-				setActionContextWithIndividual: world
-				species: worldDef.
+			interpreter setActionContextWithIndividual: world species: worldDef.
 			self
 				assert: (interpreter readVariable: 'temperature' agent: nil ifAbsent: [ nil ])
 				closeTo: (RMDUnit celsius toSI: -10).

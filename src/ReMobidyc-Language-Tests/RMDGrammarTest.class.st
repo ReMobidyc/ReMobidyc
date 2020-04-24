@@ -322,11 +322,11 @@ RMDGrammarTest >> testBinaryRelation [
 { #category : #tests }
 RMDGrammarTest >> testCellDefinition [
 	| node |
-	node := grammar cellDefinition parse: 'Cell'.
+	node := grammar cellDefinition end parse: 'Cell.'.
 	self assert: node isCellDefinitionNode.
 	self assert: node propertyDeclarations isEmpty.
 	self assert: node equals: RMDCellDefinitionNode default.
-	node := grammar cellDefinition
+	node := grammar cellDefinition end
 		parse:
 			'
 Cell with
@@ -938,11 +938,11 @@ RMDGrammarTest >> testVariable [
 { #category : #tests }
 RMDGrammarTest >> testWorldDefinition [
 	| node |
-	node := grammar worldDefinition parse: 'World'.
+	node := grammar worldDefinition end parse: 'World.'.
 	self assert: node isWorldDefinitionNode.
 	self assert: node propertyDeclarations isEmpty.
 	self assert: node equals: RMDWorldDefinitionNode default.
-	node := grammar worldDefinition
+	node := grammar worldDefinition end
 		parse:
 			'
 World with

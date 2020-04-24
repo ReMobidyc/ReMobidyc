@@ -3,7 +3,7 @@ Extension { #name : #RMDCellInitializerNodeTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDCellInitializerNodeTest >> testEvalIn [
 	| cellDef cellInitializer grass fertility count |
-	cellDef := parser cellDefinition
+	cellDef := parser cellDefinition end
 		parse:
 			'Cell with
 	grass [kcal]

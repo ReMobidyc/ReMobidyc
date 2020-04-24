@@ -12,7 +12,7 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
-{ #category : #'definition access' }
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ actionDefinitions at: aString ifAbsent: errorBlock
 ]
@@ -36,7 +36,7 @@ RMDSimulationModel >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
 	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
 ]
 
-{ #category : #'definition access' }
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ animatDefinitions at: aString ifAbsent: errorBlock
 ]

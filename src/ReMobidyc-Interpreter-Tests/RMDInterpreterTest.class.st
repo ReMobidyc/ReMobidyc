@@ -36,18 +36,41 @@ where
 ]
 
 { #category : #tests }
+RMDInterpreterTest >> testReadVariableAgentIfAbsent [
+	interpreter context
+		setMemoryAddressFor: 'x' agent: 'foo' to: 1;
+		setMemoryAddressFor: 'x' agent: 'bar' to: 2.
+	interpreter memory
+		nextAt: 1 put: 3;
+		nextAt: 2 put: 4;
+		tick.
+	self
+		assert: (interpreter readVariable: 'x' agent: 'foo' ifAbsent: [ nil ])
+		equals: 3.
+	self
+		assert: (interpreter readVariable: 'x' agent: 'bar' ifAbsent: [ nil ])
+		equals: 4.
+	self
+		assert: (interpreter readVariable: 'x' agent: 'buzz' ifAbsent: [ nil ])
+		equals: nil.
+	self
+		assert: (interpreter readVariable: 'y' agent: 'foo' ifAbsent: [ nil ])
+		equals: nil
+]
+
+{ #category : #tests }
 RMDInterpreterTest >> testSetUpSimulation [
-	| parser memory kcal celsius  |
+	| parser memory kcal celsius |
 	parser := RMDGrammar new.
 	memory := interpreter memory.
 	interpreter
 		load:
-			(parser worldDefinition
+			(parser worldDefinition end
 				parse:
 					'World with
 	temperature [C].');
 		load:
-			(parser cellDefinition
+			(parser cellDefinition end
 				parse:
 					'Cell with
 	grass [kcal]

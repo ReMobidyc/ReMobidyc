@@ -40,6 +40,11 @@ RMDIndividualDirectory >> allocateWorld: aRMDWorldDefinitionNode [
 ]
 
 { #category : #enumerating }
+RMDIndividualDirectory >> animatNamesDo: aBlock [
+	animats keysDo: aBlock
+]
+
+{ #category : #enumerating }
 RMDIndividualDirectory >> animatsOf: aString do: aBlock [
 	(animats at: aString ifAbsent: [ ^ self ])
 		do: [ :id | aBlock value: id ]
@@ -51,18 +56,13 @@ RMDIndividualDirectory >> cell [
 ]
 
 { #category : #accessing }
-RMDIndividualDirectory >> cell: anInteger [
-	cell := anInteger
+RMDIndividualDirectory >> cellAtXIndex: anInteger yIndex: anotherInteger [
+	^ ((anotherInteger - 1) * xCells + anInteger - 1) * cellSize + cell
 ]
 
 { #category : #accessing }
 RMDIndividualDirectory >> cellSize [
 	^ cellSize
-]
-
-{ #category : #accessing }
-RMDIndividualDirectory >> cellSize: anInteger [
-	cellSize := anInteger
 ]
 
 { #category : #enumerating }
@@ -82,32 +82,12 @@ RMDIndividualDirectory >> initialize [
 	animats := Dictionary new
 ]
 
-{ #category : #enumerating }
-RMDIndividualDirectory >> speciesDo: aBlock [
-	animats keysDo: aBlock
-]
-
 { #category : #accessing }
 RMDIndividualDirectory >> world [
 	^ world
 ]
 
-{ #category : #accessing }
-RMDIndividualDirectory >> world: anInteger [
-	world := anInteger
-]
-
 { #category : #enumerating }
 RMDIndividualDirectory >> worldDo: aBlock [
 	aBlock value: world
-]
-
-{ #category : #accessing }
-RMDIndividualDirectory >> xCells: anInteger [
-	xCells := anInteger
-]
-
-{ #category : #accessing }
-RMDIndividualDirectory >> yCells: anInteger [
-	yCells := anInteger
 ]
