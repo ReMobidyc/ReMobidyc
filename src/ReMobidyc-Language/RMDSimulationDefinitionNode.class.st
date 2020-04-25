@@ -2,10 +2,10 @@ Class {
 	#name : #RMDSimulationDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'timeInitializer',
 		'worldInitializer',
 		'cellInitializer',
-		'animatInitializers'
+		'animatInitializers',
+		'timeDefinition'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -32,7 +32,7 @@ RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitio
 { #category : #comparing }
 RMDSimulationDefinitionNode >> = anObject [
 	^ self class = anObject class
-		and: [ timeInitializer = anObject timeInitializer
+		and: [ timeDefinition = anObject timeDefinition
 				and: [ worldInitializer = anObject worldInitializer
 						and: [ cellInitializer = anObject cellInitializer
 								and: [ animatInitializers = anObject animatInitializers ] ] ] ]
@@ -68,13 +68,13 @@ RMDSimulationDefinitionNode >> cellInitializer: aRMDSimulationCellInitializer [
 RMDSimulationDefinitionNode >> childrenDo: aBlock [
 	aBlock
 		value: cellInitializer;
-		value: timeInitializer.
+		value: timeDefinition.
 	animatInitializers ifNotNil: [ animatInitializers do: aBlock ]
 ]
 
 { #category : #comparing }
 RMDSimulationDefinitionNode >> hash [
-	^ ((timeInitializer hash bitXor: worldInitializer hash)
+	^ ((timeDefinition hash bitXor: worldInitializer hash)
 		bitXor: cellInitializer hash) bitXor: animatInitializers hash
 ]
 
@@ -85,7 +85,7 @@ RMDSimulationDefinitionNode >> isSimulationDefinitionNode [
 
 { #category : #copying }
 RMDSimulationDefinitionNode >> postCopy [
-	timeInitializer := timeInitializer copy.
+	timeDefinition := timeDefinition copy.
 	worldInitializer := worldInitializer copy.
 	cellInitializer := cellInitializer copy.
 	animatInitializers := animatInitializers copy
@@ -98,7 +98,7 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 		nextPut: Character cr.
 	cellInitializer printOn: aStream.
 	aStream nextPut: Character cr.
-	timeInitializer printOn: aStream.
+	timeDefinition printOn: aStream.
 	aStream nextPut: Character cr.
 	animatInitializers
 		do: [ :def | def printOn: aStream ]
@@ -110,7 +110,7 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 
 { #category : #rewriting }
 RMDSimulationDefinitionNode >> replaceChildren: aDictionary [
-	timeInitializer := timeInitializer copyReplace: aDictionary.
+	timeDefinition := timeDefinition copyReplace: aDictionary.
 	worldInitializer := worldInitializer copyReplace: aDictionary.
 	cellInitializer := cellInitializer copyReplace: aDictionary.
 	animatInitializers := animatInitializers
@@ -119,12 +119,12 @@ RMDSimulationDefinitionNode >> replaceChildren: aDictionary [
 
 { #category : #accessing }
 RMDSimulationDefinitionNode >> timeDefinition [
-	^ timeInitializer
+	^ timeDefinition
 ]
 
 { #category : #accessing }
 RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode [
-	timeInitializer := aRMDSimulationTimeDefinitionNode
+	timeDefinition := aRMDSimulationTimeDefinitionNode
 ]
 
 { #category : #accessing }

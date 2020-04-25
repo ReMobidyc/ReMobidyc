@@ -29,7 +29,8 @@ RMDBehaviorDefinitionNode >> = anObject [
 		and: [ subjectIdentifier = anObject subjectIdentifier
 				and: [ objectIdentifier = anObject objectIdentifier
 						and: [ range = anObject range
-								and: [ propertyBinds = anObject propertyBinds and: [ actionIdentifier ] ] ] ] ]
+								and: [ propertyBinds = anObject propertyBinds
+										and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -100,14 +101,14 @@ RMDBehaviorDefinitionNode >> postCopy [
 RMDBehaviorDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: subjectIdentifier;
-		nextPutAll: ' can ';
+		nextPutAll: ' ';
 		nextPutAll: actionIdentifier.
 	objectIdentifier
 		ifNotNil: [ aStream
 				nextPut: Character space;
 				nextPutAll: objectIdentifier ].
-	propertyBinds
-		ifNotNil: [ aStream nextPutAll: ' where '.
+	(propertyBinds notNil and: [ propertyBinds notEmpty ])
+		ifTrue: [ aStream nextPutAll: ' with '.
 			propertyBinds
 				do: [ :bind | bind printOn: aStream ]
 				separatedBy: [ aStream nextPut: Character cr ] ].

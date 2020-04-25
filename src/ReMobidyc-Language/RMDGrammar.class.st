@@ -694,7 +694,8 @@ RMDGrammar >> simulationDefinition [
 				==> #first) , self worldInitializer optional
 		, ((self cellInitializer , #newline asPParser trimBlanks) ==> #first)
 		,
-			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks))
+			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks)
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :array | 
 			self simulationDefinitionNodeClass
 				timeDefinition: array second

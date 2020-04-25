@@ -34,26 +34,19 @@ RMDVisualizer class >> exampleSugarScape [
 	bloodSugar [kcal]
 	age [day].');
 		load:
-			(parser simulationTimeDefinition
-				parse: 'during 300 [day] by 0.5 [day]');
-		load:
-			(parser worldInitializer
+			(parser simulationDefinition
 				parse:
-					'World with
-	temperature = 30 [C]');
-		load:
-			(parser cellInitializer
-				parse:
-					'5 x 6 of 10 [m] Cell with
-	grass = uniform 1000 [kcal] to 5000 [kcal]');
-		load:
-			(parser animatInitializer
-				parse:
-					'10 Goat with
+					'Simulation with
+during 300 [day] by 0.5 [day]
+World with
+	temperature = 30 [C]
+5 x 6 of 10 [m] Cell with
+	grass = uniform 1000 [kcal] to 5000 [kcal]
+10 Goat with
 	x = uniform 0 [m] to 50 [m]
 	y = uniform 0 [m] to 60 [m]
 	bloodSugar = 10000 [kcal]
-	age = 0 [day]').
+	age = 0 [day].').
 	interpreter setupSimulation.
 	visualizer := RMDVisualizer new
 		addCellRendererColor: Color green

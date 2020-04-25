@@ -71,27 +71,32 @@ RMDSimulationModel >> cellInitializer [
 	^ simulationDefinition cellInitializer
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> cellLength [
 	^ simulationDefinition cellInitializer length
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> cellXDivisions [
 	^ simulationDefinition cellInitializer xDivisions
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> cellYDivisions [
 	^ simulationDefinition cellInitializer yDivisions
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing - time' }
 RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing - time' }
+RMDSimulationModel >> duration [
+	^ simulationDefinition timeDefinition duration numeric
+]
+
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> east [
 	^ self cellLength * self cellXDivisions
 ]
@@ -110,81 +115,21 @@ RMDSimulationModel >> initialize [
 { #category : #accessing }
 RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isWorldDefinitionNode
-		ifTrue: [ ^ self loadWorldDefinition: aRMDSyntaxNode ].
+		ifTrue: [ ^ self worldDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isCellDefinitionNode
-		ifTrue: [ ^ self loadCellDefinition: aRMDSyntaxNode ].
+		ifTrue: [ ^ self cellDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isAnimatDefinitionNode
-		ifTrue: [ ^ self loadAnimatDefinition: aRMDSyntaxNode ].
+		ifTrue: [ ^ self addAnimatDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isActionDefinitionNode
-		ifTrue: [ ^ self loadActionDefinition: aRMDSyntaxNode ].
+		ifTrue: [ ^ self addActionDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isBehaviorDefinitionNode
-		ifTrue: [ ^ self loadBehaviorDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isWorldInitializerNode 
-		ifTrue: [ ^ self loadWorldInitializer: aRMDSyntaxNode ].
-	aRMDSyntaxNode isCellInitializerNode 
-		ifTrue: [ ^ self loadCellInitializer: aRMDSyntaxNode ].
-	aRMDSyntaxNode isAnimatInitializerNode 
-		ifTrue: [ ^ self loadAnimatInitializer: aRMDSyntaxNode ].
+		ifTrue: [ ^ self addBehaviorDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isSimulationDefinitionNode
-		ifTrue: [ ^self loadSimulationDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isSimulationTimeDefinitionNode
-		ifTrue: [ ^self loadSimulationTimeDefinition: aRMDSyntaxNode ].
+		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
 ]
 
-{ #category : #accessing }
-RMDSimulationModel >> loadActionDefinition: aRMDActionDefinitionNode [
-	self addActionDefinition: aRMDActionDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadAnimatDefinition: aRMDAnimatDefinitionNode [
-	^ self addAnimatDefinition: aRMDAnimatDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadAnimatInitializer: aRMDAnimatInitializerNode [
-	self simulationDefinition
-		addAnimatInitializer: aRMDAnimatInitializerNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadBehaviorDefinition: aRMDBehaviorDefinitionNode [
-	^ self addBehaviorDefinition: aRMDBehaviorDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadCellDefinition: aRMDCellDefinitionNode [
-	self cellDefinition: aRMDCellDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadCellInitializer: aRMDCellInitializerNode [
-	self simulationDefinition cellInitializer: aRMDCellInitializerNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadSimulationDefinition: aRMDSimulationDefinitionNode [
-	self simulationDefinition: aRMDSimulationDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadSimulationTimeDefinition: aRMDSimulationTimeDefinitionNode [
-	self simulationDefinition
-		timeDefinition: aRMDSimulationTimeDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadWorldDefinition: aRMDWorldDefinitionNode [
-	self worldDefinition: aRMDWorldDefinitionNode
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> loadWorldInitializer: aRMDWorldInitializerNode [
-	self simulationDefinition worldInitializer: aRMDWorldInitializerNode
-]
-
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> north [
 	^ self cellLength * self cellYDivisions
 ]
@@ -199,12 +144,12 @@ RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 	simulationDefinition := aRMDSimulationDefinition
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> south [
 	^ 0.0
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : #'accessing-cells' }
 RMDSimulationModel >> west [
 	^ 0.0
 ]

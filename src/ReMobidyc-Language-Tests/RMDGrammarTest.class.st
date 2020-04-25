@@ -775,7 +775,7 @@ RMDGrammarTest >> testPropertyInitializer [
 { #category : #tests }
 RMDGrammarTest >> testSimulationDefinition [
 	| node |
-	node := grammar simulationDefinition
+	node := grammar simulationDefinition end
 		parse:
 			'Simulation with
 	during 10 [days] by 1 [day]
