@@ -31,6 +31,7 @@ RMDVisualizer class >> exampleSugarScape [
 			(parser animatDefinition end
 				parse:
 					'Goat is Animat with
+	heading [deg]
 	bloodSugar [kcal]
 	age [day].');
 		load:
@@ -43,8 +44,9 @@ World with
 5 x 6 of 10 [m] Cell with
 	grass = uniform 1000 [kcal] to 5000 [kcal]
 10 Goat with
-	x = uniform 0 [m] to 50 [m]
-	y = uniform 0 [m] to 60 [m]
+   heading = uniform 0[deg] to 360[deg]
+	x = uniform 0[m] to 50[m]
+	y = uniform 0[m] to 60[m]
 	bloodSugar = 10000 [kcal]
 	age = 0 [day].').
 	interpreter setupSimulation.

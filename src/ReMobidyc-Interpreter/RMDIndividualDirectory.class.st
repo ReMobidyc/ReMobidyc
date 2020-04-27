@@ -46,7 +46,7 @@ RMDIndividualDirectory >> animatNamesDo: aBlock [
 
 { #category : #enumerating }
 RMDIndividualDirectory >> animatsOf: aString do: aBlock [
-	(animats at: aString ifAbsent: [ ^ self ])
+	(animats at: aString ifAbsent: [ ^ self ]) asArray
 		do: [ :id | aBlock value: id ]
 ]
 
@@ -70,6 +70,12 @@ RMDIndividualDirectory >> cellsDo: aBlock [
 	cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock
 ]
 
+{ #category : #accessing }
+RMDIndividualDirectory >> eastOf: anInteger do: aBlock [
+	(self xCellOf: anInteger) < xCells
+		ifTrue: [ aBlock value: anInteger + cellSize ]
+]
+
 { #category : #initialization }
 RMDIndividualDirectory >> initialize [
 	super initialize.
@@ -83,6 +89,33 @@ RMDIndividualDirectory >> initialize [
 ]
 
 { #category : #accessing }
+RMDIndividualDirectory >> northOf: anInteger do: aBlock [
+	(self yCellOf: anInteger) < yCells
+		ifTrue: [ aBlock value: anInteger + (cellSize * xCells) ]
+]
+
+{ #category : #allocating }
+RMDIndividualDirectory >> remove: anInteger animat: aRMDAnimatDefinitionNode ifAbsent: errorBlock [
+	^ (animats
+		at: aRMDAnimatDefinitionNode identifier
+		ifAbsent: [ ^ errorBlock value ])
+		remove: anInteger
+		ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDIndividualDirectory >> southOf: anInteger do: aBlock [
+	(self yCellOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - (cellSize * xCells) ]
+]
+
+{ #category : #accessing }
+RMDIndividualDirectory >> westOf: anInteger do: aBlock [
+	(self xCellOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - cellSize ]
+]
+
+{ #category : #accessing }
 RMDIndividualDirectory >> world [
 	^ world
 ]
@@ -90,4 +123,14 @@ RMDIndividualDirectory >> world [
 { #category : #enumerating }
 RMDIndividualDirectory >> worldDo: aBlock [
 	aBlock value: world
+]
+
+{ #category : #accessing }
+RMDIndividualDirectory >> xCellOf: anInteger [
+	^ (anInteger - cell) // cellSize \\ xCells + 1
+]
+
+{ #category : #accessing }
+RMDIndividualDirectory >> yCellOf: anInteger [
+	^ (anInteger - cell) // cellSize // xCells + 1
 ]

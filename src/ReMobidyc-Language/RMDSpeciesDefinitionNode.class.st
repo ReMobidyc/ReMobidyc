@@ -104,6 +104,11 @@ RMDSpeciesDefinitionNode >> propertyIdentifiersDo: aBlock [
 ]
 
 { #category : #accessing }
+RMDSpeciesDefinitionNode >> propertyOffsetAt: aString ifAbsent: errorBlock [
+	^ self propertyOffsets at: aString ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
 RMDSpeciesDefinitionNode >> propertyOffsets [
 	^ propertyOffsets
 		ifNil: [ | offset |

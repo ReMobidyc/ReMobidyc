@@ -2,7 +2,9 @@ Class {
 	#name : #RMDContext,
 	#superclass : #Object,
 	#instVars : [
-		'propertyDict'
+		'propertyDict',
+		'subject',
+		'subjectDefinition'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -45,6 +47,11 @@ RMDContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInte
 ]
 
 { #category : #accessing }
+RMDContext >> subject [
+	^ subject
+]
+
+{ #category : #accessing }
 RMDContext >> subject: anInteger definition: aRMDSpeciesDefinitionNode [
 	| dict |
 	dict := Dictionary new.
@@ -54,5 +61,12 @@ RMDContext >> subject: anInteger definition: aRMDSpeciesDefinitionNode [
 	aRMDSpeciesDefinitionNode isCellDefinitionNode
 		ifTrue: [ propertyDict at: 'here' put: dict ].
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
-		ifTrue: [ propertyDict at: 'world' put: dict ]
+		ifTrue: [ propertyDict at: 'world' put: dict ].
+	subject := anInteger.
+	subjectDefinition := aRMDSpeciesDefinitionNode 
+]
+
+{ #category : #accessing }
+RMDContext >> subjectDefinition [
+	^ subjectDefinition
 ]

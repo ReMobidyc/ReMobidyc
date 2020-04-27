@@ -1,9 +1,8 @@
 Class {
 	#name : #RMDAgentDirectiveNode,
-	#superclass : #RMDExpressionNode,
+	#superclass : #RMDDirectiveNode,
 	#instVars : [
-		'agentIdentifier',
-		'directive'
+		'agentIdentifier'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -33,19 +32,14 @@ RMDAgentDirectiveNode >> agentIdentifier: aString [
 	agentIdentifier := aString
 ]
 
-{ #category : #accessing }
-RMDAgentDirectiveNode >> directive [
-	^ directive
-]
-
-{ #category : #accessing }
-RMDAgentDirectiveNode >> directive: aString [
-	directive := aString
+{ #category : #enumerating }
+RMDAgentDirectiveNode >> childrenDo: aBlock [
+	
 ]
 
 { #category : #comparing }
 RMDAgentDirectiveNode >> hash [
-	^ agentIdentifier hash bitXor: directive hash
+	^ super hash bitXor: agentIdentifier hash
 ]
 
 { #category : #testing }
@@ -58,11 +52,6 @@ RMDAgentDirectiveNode >> postCopy [
 	
 ]
 
-{ #category : #accessing }
-RMDAgentDirectiveNode >> precedence [
-	^ 1
-]
-
 { #category : #printing }
 RMDAgentDirectiveNode >> printOn: aStream [
 	aStream
@@ -73,10 +62,8 @@ RMDAgentDirectiveNode >> printOn: aStream [
 
 { #category : #rewriting }
 RMDAgentDirectiveNode >> replaceChildren: aDictionary [
+	super replaceChildren: aDictionary.
 	aDictionary
 		at: agentIdentifier
-		ifPresent: [ :node | agentIdentifier := node copy ].
-	aDictionary
-		at: directive
-		ifPresent: [ :node | directive := node copy ]
+		ifPresent: [ :node | agentIdentifier := node copy ]
 ]

@@ -74,3 +74,13 @@ RMDAnimatDefinitionNode >> replaceChildren: aDictionary [
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ]
 ]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> xOffset [
+	^ 0
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> yOffset [
+	^ 1
+]

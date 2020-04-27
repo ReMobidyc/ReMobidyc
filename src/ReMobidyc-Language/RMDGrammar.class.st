@@ -81,20 +81,8 @@ RMDGrammar >> additionNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
-	^ ((('distance' asPParser / 'direction' asPParser) trimBlanks
-		, identifier)
-		==>
-			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ])
-		/
-			(('terminate' asPParser trimBlanks , identifier optional)
-				==>
-					[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ])
-		/
-			((self delta optional , 'time' asPParser trimBlanks)
-				==> [ :pair | 
-					self agentDirectiveNodeClass
-						directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'dtime' ])
-						agent: nil ])
+	^ self distanceDirective / self directionDirective
+		/ self timeDirective / self terminateDirective
 ]
 
 { #category : #'class access' }
@@ -424,9 +412,33 @@ RMDGrammar >> differentialVariableNodeClass [
 	^ RMDDifferentialVariableNode
 ]
 
+{ #category : #'parsers-directives' }
+RMDGrammar >> directionDirective [
+	^ ('direction' asPParser trimBlanks , identifier)
+		==>
+			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> directionOfGradientDirective [
+	^ ('direction' asPParser trimLeft , #blank asPParser plus
+		, 'grad' asPParser trimLeft , identifier)
+		==> [ :pair | 
+			self agentDirectiveNodeClass
+				directive: 'directioOfGradient'
+				agent: pair second ]
+]
+
 { #category : #'class access' }
 RMDGrammar >> disjunctionNodeClass [
 	^ RMDDisjunctionNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> distanceDirective [
+	^ ('distance' asPParser trimBlanks , identifier)
+		==>
+			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
 ]
 
 { #category : #units }
@@ -743,6 +755,22 @@ RMDGrammar >> temperatureUnits [
 	^ {('K' -> #(1.0 nil 'K')).
 	('C' -> #(1.0 273.15 'K')).
 	('F' -> #(0.5555555555555556 255.3722222222222 'J'))} asDictionary
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> terminateDirective [
+	^ ('terminate' asPParser trimBlanks , identifier optional)
+		==>
+			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> timeDirective [
+	^ (self delta optional , 'time' asPParser trimBlanks)
+		==> [ :pair | 
+			self agentDirectiveNodeClass
+				directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'dtime' ])
+				agent: nil ]
 ]
 
 { #category : #units }

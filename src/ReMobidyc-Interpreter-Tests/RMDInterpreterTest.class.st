@@ -16,6 +16,50 @@ RMDInterpreterTest >> setUp [
 ]
 
 { #category : #tests }
+RMDInterpreterTest >> testAddLibraries [
+	| foo bar buzz |
+	foo := [ :x :y | x + y ].
+	bar := [ :x | x abs ].
+	buzz := [ :x :y | x ** y ].
+	interpreter
+		addLibraries:
+			{{('foo' -> foo).
+			('bar' -> bar)} asDictionary.
+			{('buzz' -> buzz)} asDictionary}.
+	self
+		assert: (interpreter functionAt: 'foo' ifAbsent: [ nil ])
+		equals: foo.
+	self
+		assert: (interpreter functionAt: 'bar' ifAbsent: [ nil ])
+		equals: bar.
+	self
+		assert: (interpreter functionAt: 'buzz' ifAbsent: [ nil ])
+		equals: buzz
+]
+
+{ #category : #tests }
+RMDInterpreterTest >> testAddLibrary [
+	| foo bar buzz |
+	foo := [ :x :y | x + y ].
+	bar := [ :x | x abs ].
+	buzz := [ :x :y | x ** y ].
+	interpreter
+		addLibraries:
+			{{('foo' -> foo).
+			('bar' -> bar).
+			('buzz' -> buzz)} asDictionary}.
+	self
+		assert: (interpreter functionAt: 'foo' ifAbsent: [ nil ])
+		equals: foo.
+	self
+		assert: (interpreter functionAt: 'bar' ifAbsent: [ nil ])
+		equals: bar.
+	self
+		assert: (interpreter functionAt: 'buzz' ifAbsent: [ nil ])
+		equals: buzz
+]
+
+{ #category : #tests }
 RMDInterpreterTest >> testReadUtilityIfAbsent [
 	| parser source |
 	parser := RMDGrammar new.
@@ -82,27 +126,19 @@ RMDInterpreterTest >> testSetUpSimulation [
 	body [kcal]
 	age [day].');
 		load:
-			(parser simulationTimeDefinition
-				parse: 'during 300 [day] by 0.5 [day]');
-		load:
-			(parser worldInitializer
-				parse:
-					'World with
-	temperature = 30 [C]');
-		load:
-			(parser cellInitializer
-				parse:
-					'5 x 6 of 10 [m] Cell with
-	grass = uniform 1000 [kcal] to 5000 [kcal]
-	fertility = 2000 [kcal]');
-		load:
-			(parser animatInitializer
-				parse:
-					'10 Goat with
-	x = uniform 0 [m] to 50 [m]
-	y = uniform 0 [m] to 60 [m]
-	body = 10000 [kcal]
-	age = 0 [day]').
+			(parser simulationDefinition
+				parse: 'Simulation with
+	during 300 [day] by 0.5 [day]
+	World with
+		temperature = 30 [C]
+	5 x 6 of 10 [m] Cell with
+		grass = uniform 1000 [kcal] to 5000 [kcal]
+		fertility = 2000 [kcal]
+	10 Goat with
+		x = uniform 0 [m] to 50 [m]
+		y = uniform 0 [m] to 60 [m]
+		body = 10000 [kcal]
+		age = 0 [day].').
 	interpreter setupSimulation.
 	kcal := RMDUnit kcal.
 	celsius := RMDUnit celsius.

@@ -161,6 +161,22 @@ RMDInterpreter >> direction: aString [
 ]
 
 { #category : #directives }
+RMDInterpreter >> directionOfGradient: aString [
+	| here west east south north vector |
+	here := west := east := south := north := context location.
+	individualDirectory westOf: here do: [ :cell | west := cell ].
+	individualDirectory eastOf: here do: [ :cell | east := cell ].
+	individualDirectory southOf: here do: [ :cell | south := cell ].
+	individualDirectory northOf: here do: [ :cell | north := cell ].
+	vector := ((self readVariable: aString agent: east ifAbsent: [ 0 ])
+		- (self readVariable: aString agent: west ifAbsent: [ 0 ]))
+		@
+			((self readVariable: aString agent: north ifAbsent: [ 0 ])
+				- (self readVariable: aString agent: south ifAbsent: [ 0 ])).
+	^ vector theta
+]
+
+{ #category : #directives }
 RMDInterpreter >> directive: aString object: anotherString [
 	aString = 'direction'
 		ifTrue: [ ^ self direction: anotherString ].
@@ -170,6 +186,8 @@ RMDInterpreter >> directive: aString object: anotherString [
 		ifTrue: [ ^ self time ].
 	aString = 'dtime'
 		ifTrue: [ ^ self deltaTime ].
+	aString = 'terminate'
+		ifTrue: [ ^ self terminate: anotherString ].
 	^ self error: 'Unknown directive: ' , aString
 ]
 
@@ -298,6 +316,31 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 		ifAbsent: errorBlock
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> removeOutOfBoundsAnimats [
+	individualDirectory
+		animatNamesDo: [ :animatName | 
+			| animatDef xOffset yOffset |
+			animatDef := simulationModel
+				animatDefinitionAt: animatName
+				ifAbsent: [ ^ NotFoundError signal: animatName ].
+			xOffset := animatDef
+				propertyOffsetAt: 'x'
+				ifAbsent: [ ^ NotFoundError signal: 'x' ].
+			yOffset := animatDef
+				propertyOffsetAt: 'y'
+				ifAbsent: [ ^ NotFoundError signal: 'y' ].
+			individualDirectory
+				animatsOf: animatName
+				do: [ :individual | 
+					| x y |
+					x := memory at: individual + xOffset ifAbsent: [ nil ].
+					y := memory at: individual + yOffset ifAbsent: [ nil ].
+					((x between: simulationModel west and: simulationModel east)
+						and: [ y between: simulationModel south and: simulationModel north ])
+						ifFalse: [ self terminate: individual animat: animatDef ] ] ]
+]
+
 { #category : #'context controls' }
 RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
 	self
@@ -404,11 +447,28 @@ RMDInterpreter >> south [
 
 { #category : #'library access' }
 RMDInterpreter >> standardLibrary [
-	^ {('min' -> [ :a :b | a min: b ]).
-	('max' -> [ :a :b | a max: b ]).
-	('sin' -> [ :theta | theta sin ]).
-	('cos' -> [ :theta | theta cos ]).
-	('tan' -> [ :theta | theta tan ])} asDictionary
+	^ {('min' -> RMDFunction min).
+	('max' -> RMDFunction max).
+	('mean' -> RMDFunction mean).
+	('sum' -> RMDFunction sum).
+	('sin' -> RMDFunction sin).
+	('cos' -> RMDFunction cos).
+	('exp' -> RMDFunction exp).
+	('abs' -> RMDFunction abs).
+	('squareRoot' -> RMDFunction squareRoot)} asDictionary
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
+	individualDirectory
+		remove: anInteger
+		animat: aRMDAnimatDefinitionNode
+		ifAbsent: [ ^ NotFound
+				signal:
+					{aRMDAnimatDefinitionNode.
+					anInteger} ].
+	anInteger to: anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1
+	do: [ :slot | memory nextAt: slot put: nil ]
 ]
 
 { #category : #timing }

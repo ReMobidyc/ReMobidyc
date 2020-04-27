@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDContext,
 	#instVars : [
 		'action',
-		'utilities'
+		'utilities',
+		'location'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -33,6 +34,11 @@ RMDActionContext >> loadUtilityDefinitions [
 ]
 
 { #category : #accessing }
+RMDActionContext >> location [
+	^ location
+]
+
+{ #category : #accessing }
 RMDActionContext >> location: anInteger definition: aRMDCellDefinition [
 	| dict |
 	dict := Dictionary new.
@@ -40,7 +46,8 @@ RMDActionContext >> location: anInteger definition: aRMDCellDefinition [
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	propertyDict := Dictionary new
 		at: 'here' put: dict;
-		yourself
+		yourself.
+	location := anInteger
 ]
 
 { #category : #accessing }

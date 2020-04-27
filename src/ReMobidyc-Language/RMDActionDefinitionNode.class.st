@@ -24,6 +24,18 @@ where
 ]
 
 { #category : #examples }
+RMDActionDefinitionNode class >> graze [
+	<script: 'RMDActionDefinitionNode graze inspect'>
+	^ 'to graze is
+presume here''s grass > 0[kcal]
+	here''s delta grass'' = -amount
+	my delta energy'' = amount
+where
+	amount = min3(my capacity - my energy, my diet, here''s grass).
+' asRMDActionDefinition
+]
+
+{ #category : #examples }
 RMDActionDefinitionNode class >> grow [
 	<script: 'RMDActionDefinitionNode grow inspect'>
 	^ 'to grow is
@@ -44,6 +56,18 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 		propertyDefinitions: (anArrayOfRMDPropertyDefinition ifNil: [ Array new ]);
 		utilityDefinitions: (anArrayOfRMDUtilityDefinition ifNil: [ Array new ]);
 		yourself
+]
+
+{ #category : #examples }
+RMDActionDefinitionNode class >> walk [
+	<script: 'RMDActionDefinitionNode walk inspect'>
+	^ 'to walk is
+presume here''s grass > 0[kcal]
+	here''s delta grass'' = -amount
+	my delta energy'' = amount
+where
+	amount = min(my capacity - my energy, my diet).
+' asRMDActionDefinition
 ]
 
 { #category : #comparing }
