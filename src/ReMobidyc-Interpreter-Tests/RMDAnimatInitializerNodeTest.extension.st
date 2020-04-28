@@ -3,14 +3,24 @@ Extension { #name : #RMDAnimatInitializerNodeTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDAnimatInitializerNodeTest >> testEvalIn [
 	| goatDef goatInitializer minBody maxBody age count |
-	goatDef := parser animatDefinition
+	goatDef := parser animatDefinition end
 		parse:
 			'Goat is Animat with
 	body [kcal]
 	age [day].'.
-	goatInitializer := parser animatInitializer
+	interpreter
+		load: goatDef;
+		load:
+			(parser simulationDefinition end
+				parse:
+					'Simulation with
+	during 10[day] by 0.5[day]
+	20x20 of  5[m] Cell.').
+	interpreter setupSimulation.
+	goatInitializer := parser animatInitializer end
 		parse:
 			'10 Goat with
+			x = uniform 10[m] to 90[m]
 			body = uniform 1000 [kcal] to 5000 [ kcal ]
 			age = 0 [day]'.
 	10 timesRepeat: [ interpreter allocateAnimat: goatDef ].
@@ -26,8 +36,8 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter
 		individualsOf: goatDef
-		do: [ :cell | 
-			interpreter setActionContextWithIndividual: cell species: goatDef.
+		do: [ :goat | 
+			interpreter setActionContextWithIndividual: goat species: goatDef.
 			self
 				assert:
 					((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])

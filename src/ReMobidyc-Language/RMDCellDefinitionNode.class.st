@@ -9,6 +9,13 @@ RMDCellDefinitionNode class >> createBuiltinProperties [
 	^ {}
 ]
 
+{ #category : #'typical instances' }
+RMDCellDefinitionNode class >> grassField [
+	<script: 'RMDCellDefinitionNode grassField inspect'>
+	^ RMDGrammar new cellDefinition end parse: 'Cell with
+	grass [kcal].'
+]
+
 { #category : #testing }
 RMDCellDefinitionNode >> isCellDefinitionNode [
 	^ true

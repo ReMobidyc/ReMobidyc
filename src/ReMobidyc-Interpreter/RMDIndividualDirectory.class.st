@@ -67,7 +67,9 @@ RMDIndividualDirectory >> cellSize [
 
 { #category : #enumerating }
 RMDIndividualDirectory >> cellsDo: aBlock [
-	cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock
+	cellSize > 0
+		ifTrue:
+			[ cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock ]
 ]
 
 { #category : #accessing }

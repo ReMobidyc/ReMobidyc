@@ -17,44 +17,31 @@ RMDVisualizer class >> exampleSugarScape [
 		setContext: RMDActionContext new;
 		yourself.
 	interpreter
+		load: RMDWorldDefinitionNode empty;
+		load: RMDCellDefinitionNode grassField;
+		load: RMDAnimatDefinitionNode goat;
 		load:
-			(parser worldDefinition end
-				parse:
-					'World with
-	temperature [C].');
-		load:
-			(parser cellDefinition end
-				parse:
-					'Cell with
-	grass [kcal].');
-		load:
-			(parser animatDefinition end
-				parse:
-					'Goat is Animat with
-	heading [deg]
-	bloodSugar [kcal]
-	age [day].');
-		load:
-			(parser simulationDefinition
-				parse:
-					'Simulation with
-during 300 [day] by 0.5 [day]
-World with
-	temperature = 30 [C]
-5 x 6 of 10 [m] Cell with
-	grass = uniform 1000 [kcal] to 5000 [kcal]
-10 Goat with
-   heading = uniform 0[deg] to 360[deg]
-	x = uniform 0[m] to 50[m]
-	y = uniform 0[m] to 60[m]
-	bloodSugar = 10000 [kcal]
-	age = 0 [day].').
+			(RMDSimulationDefinitionNode
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '365[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode default
+				cellInitializer:
+					(RMDCellInitializerNode
+						grassInitializer: 5
+						by: 6
+						of: '1[km]'
+						grass: '5000[kcal]'
+						to: '10000[kcal]')
+				animatInitializers:
+					{(RMDAnimatInitializerNode
+						goatInitializer: 10
+						bloodSugar: '1000[kcal]'
+						to: '10000[kcal]')}).
 	interpreter setupSimulation.
 	visualizer := RMDVisualizer new
 		addCellRendererColor: Color green
 			brightness: (parser expression end parse: 'here''s grass')
 			between: 0
-			and: (RMDUnit kcal toSI: 5000);
+			and: '10000[kcal]' asRMDExpression numeric;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
 	form := visualizer visualize: interpreter extent: 500 @ 500.

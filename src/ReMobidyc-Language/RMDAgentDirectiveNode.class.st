@@ -55,9 +55,12 @@ RMDAgentDirectiveNode >> postCopy [
 { #category : #printing }
 RMDAgentDirectiveNode >> printOn: aStream [
 	aStream
-		nextPutAll: directive;
-		nextPut: Character space;
-		nextPutAll: agentIdentifier
+		nextPutAll:
+			(directive = 'delta time'
+				ifTrue: [ 'Δ time' ]
+				ifFalse: [ directive ]);
+		nextPut: Character space.
+	agentIdentifier ifNotNil: [ aStream nextPutAll: agentIdentifier ]
 ]
 
 { #category : #rewriting }

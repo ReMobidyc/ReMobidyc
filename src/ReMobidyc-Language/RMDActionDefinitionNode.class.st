@@ -11,40 +11,32 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #examples }
-RMDActionDefinitionNode class >> crop [
-	<script: 'RMDActionDefinitionNode crop inspect'>
-	^ 'to crop is
-presume here''s grass > 0[kcal]
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> eat_grass [
+	<script: 'RMDActionDefinitionNode eat_grass inspect'>
+	^ 'to eat_grass is
+presume here''s grass > 0[kcal] and my energy < my max_energy
 	here''s delta grass'' = -amount
 	my delta energy'' = amount
 where
-	amount = min(my capacity - my energy, my diet).
+	amount = min(my max_energy - my energy, my diet * deltaTime, here''s grass).
 ' asRMDActionDefinition
 ]
 
-{ #category : #examples }
-RMDActionDefinitionNode class >> graze [
-	<script: 'RMDActionDefinitionNode graze inspect'>
-	^ 'to graze is
-presume here''s grass > 0[kcal]
-	here''s delta grass'' = -amount
-	my delta energy'' = amount
-where
-	amount = min3(my capacity - my energy, my diet, here''s grass).
-' asRMDActionDefinition
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> grow_grass [
+	<script: 'RMDActionDefinitionNode grow_grass inspect'>
+	^ 'to grow_grass is
+presume here''s grass < here''s max_grass
+	here''s delta grass'' = min(here''s growth_rate * delta time, here''s max_grass - here''s grass).' asRMDActionDefinition
 ]
 
-{ #category : #examples }
-RMDActionDefinitionNode class >> grow [
-	<script: 'RMDActionDefinitionNode grow inspect'>
-	^ 'to grow is
-presume here''s fertility > 0[kcal]
-	here''s delta fertility'' = -amount
-	here''s delta green'' = amount
-where
-	amount = min3(here''s transfer_rate, here''s fertility, here''s capacity - here''s green).
-' asRMDActionDefinition
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> move [
+	<script: 'RMDActionDefinitionNode move inspect'>
+	^ 'to move is
+	my delta x'' = cos(my heading) * dist
+	my delta y'' = sin(my heading) * dist.' asRMDActionDefinition
 ]
 
 { #category : #'instance creation' }
@@ -58,16 +50,11 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 		yourself
 ]
 
-{ #category : #examples }
-RMDActionDefinitionNode class >> walk [
-	<script: 'RMDActionDefinitionNode walk inspect'>
-	^ 'to walk is
-presume here''s grass > 0[kcal]
-	here''s delta grass'' = -amount
-	my delta energy'' = amount
-where
-	amount = min(my capacity - my energy, my diet).
-' asRMDActionDefinition
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> respire [
+	<script: 'RMDActionDefinitionNode respire inspect'>
+	^ 'to respire is
+	my delta energy'' = - my respiration_rate * delta time.' asRMDActionDefinition
 ]
 
 { #category : #comparing }

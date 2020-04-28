@@ -8,6 +8,44 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'typical instances' }
+RMDAnimatInitializerNode class >> goatInitializer [
+	<script: 'RMDAnimatInitializerNode goatInitializer inspect'>
+	^ RMDGrammar new animatInitializer end
+		parse:
+			'100 Goat with
+	blood_sugar = uniform 10000 [kcal] to 100000 [kcal]'
+]
+
+{ #category : #'typical instances' }
+RMDAnimatInitializerNode class >> goatInitializer: anInteger [
+	<script: 'RMDAnimatInitializerNode goatInitializer inspect'>
+	^ RMDGrammar new animatInitializer end
+		parse:
+			anInteger printString
+				,
+					' Goat with
+	blood_sugar = uniform 10000 [kcal] to 100000 [kcal]'
+]
+
+{ #category : #'typical instances' }
+RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString1 to: aString2 [
+	<script:
+		'(RMDAnimatInitializerNode goatInitializer: 100 bloodSugar: ''10000[kcal]'' to: ''100000[kcal]'') inspect'>
+	^ RMDGrammar new animatInitializer end
+		parse:
+			(String
+				streamContents: [ :stream | 
+					anInteger printOn: stream.
+					stream
+						nextPutAll: ' Goat with';
+						cr;
+						nextPutAll: '	blood_sugar = uniform ';
+						nextPutAll: aString1;
+						nextPutAll: ' to ';
+						nextPutAll: aString2 ])
+]
+
 { #category : #'instance creation' }
 RMDAnimatInitializerNode class >> population: anInteger animat: aString propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
 	^ self new

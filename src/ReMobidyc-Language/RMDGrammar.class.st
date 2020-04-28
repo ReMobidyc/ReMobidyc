@@ -576,7 +576,7 @@ RMDGrammar >> identifier [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta is with if where die kill forward move go become otherwise time'
+			[ Keywords := 'nearest distance direction delta is with if where become otherwise time'
 				substrings asSet ]
 ]
 
@@ -702,18 +702,18 @@ RMDGrammar >> simulationDefinition [
 	^ (('Simulation' asPParser trimBlanks , 'with' asPParser
 		, #newline asPParser trimBlanks) ==> [ :triple | nil ]
 		,
-			((self simulationTimeDefinition , #newline asPParser trimBlanks)
+			((self simulationTimeDefinition , #newline asPParser trimBlanks optional)
 				==> #first) , self worldInitializer optional
-		, ((self cellInitializer , #newline asPParser trimBlanks) ==> #first)
+		, ((self cellInitializer , #newline asPParser trimBlanks optional) ==> #first)
 		,
-			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks)
+			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks) optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :array | 
 			self simulationDefinitionNodeClass
 				timeDefinition: array second
 				worldInitializer: array third
 				cellInitializer: array fourth
-				animatInitializers: array fifth ]
+				animatInitializers: (array fifth ifNil: [ { } ]) ]
 ]
 
 { #category : #'class access' }
@@ -769,7 +769,7 @@ RMDGrammar >> timeDirective [
 	^ (self delta optional , 'time' asPParser trimBlanks)
 		==> [ :pair | 
 			self agentDirectiveNodeClass
-				directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'dtime' ])
+				directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'delta time' ])
 				agent: nil ]
 ]
 

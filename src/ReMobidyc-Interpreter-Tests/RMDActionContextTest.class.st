@@ -90,6 +90,31 @@ Cell with
 ]
 
 { #category : #tests }
+RMDActionContextTest >> testObject [
+	| parser foo bar eat |
+	parser := RMDGrammar new.
+	foo := parser animatDefinition
+		parse:
+			'
+Foo is Animat with
+	sugar [kcal].' trim.
+	bar := parser animatDefinition
+		parse:
+			'
+Bar is Animat with
+	salt [g].' trim.
+	eat := parser actionDefinition end
+		parse:
+			'to eat food is
+	my delta sugar'' = food''s salt.'.
+	context
+		subject: 10 definition: foo;
+		action: eat;
+		object: 20 definition: bar.
+	self assert: context object equals: 20
+]
+
+{ #category : #tests }
 RMDActionContextTest >> testObjectDefinition [
 	| parser foo bar eat |
 	parser := RMDGrammar new.
@@ -116,7 +141,8 @@ Bar is Animat with
 		equals: (foo propertyOffsets at: 'sugar') + 10.
 	self
 		assert: (context getMemoryAddressFor: 'salt' agent: 'food' ifAbsent: [ nil ])
-		equals: (bar propertyOffsets at: 'salt') + 20
+		equals: (bar propertyOffsets at: 'salt') + 20.
+	self assert: context objectDefinition equals: bar
 ]
 
 { #category : #tests }

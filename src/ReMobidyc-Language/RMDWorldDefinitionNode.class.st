@@ -9,6 +9,12 @@ RMDWorldDefinitionNode class >> createBuiltinProperties [
 	^ {}
 ]
 
+{ #category : #'typical instances' }
+RMDWorldDefinitionNode class >> empty [
+	<script: 'RMDWorldDefinitionNode empty inspect'>
+	^ self propertyDeclarations: {}
+]
+
 { #category : #testing }
 RMDWorldDefinitionNode >> isWorldDefinitionNode [
 	^ true

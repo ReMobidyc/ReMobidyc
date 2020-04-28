@@ -8,6 +8,9 @@ Class {
 		'individualDirectory',
 		'simulationModel'
 	],
+	#classInstVars : [
+		'standardLibrary'
+	],
 	#category : #'ReMobidyc-Interpreter'
 }
 
@@ -51,6 +54,22 @@ Goat metabolize where
 			interpreter tick ].
 	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
 		inspect
+]
+
+{ #category : #'library access' }
+RMDInterpreter class >> standardLibrary [
+	^ standardLibrary
+		ifNil: [ standardLibrary := {('min' -> RMDFunction min).
+			('max' -> RMDFunction max).
+			('mean' -> RMDFunction mean).
+			('sum' -> RMDFunction sum).
+			('sin' -> RMDFunction sin).
+			('cos' -> RMDFunction cos).
+			('exp' -> RMDFunction exp).
+			('log' -> RMDFunction log).
+			('ln' -> RMDFunction ln).
+			('abs' -> RMDFunction abs).
+			('squareRoot' -> RMDFunction squareRoot)} asDictionary ]
 ]
 
 { #category : #'library access' }
@@ -184,7 +203,7 @@ RMDInterpreter >> directive: aString object: anotherString [
 		ifTrue: [ ^ self distance: anotherString ].
 	aString = 'time'
 		ifTrue: [ ^ self time ].
-	aString = 'dtime'
+	aString = 'delta time'
 		ifTrue: [ ^ self deltaTime ].
 	aString = 'terminate'
 		ifTrue: [ ^ self terminate: anotherString ].
@@ -273,6 +292,17 @@ RMDInterpreter >> initializeVariable: aString with: aNumber ifAbsent: errorBlock
 				agent: nil
 				ifAbsent: [ ^ errorBlock value ])
 		put: aNumber
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> initializeVariableIfNotInitialized: aString with: aBlock ifAbsent: errorBlock [
+	^ memory
+		at:
+			(context
+				getMemoryAddressFor: aString
+				agent: nil
+				ifAbsent: [ ^ errorBlock value ])
+		ifAbsentPut: aBlock
 ]
 
 { #category : #'loading definitions' }
@@ -401,7 +431,7 @@ RMDInterpreter >> setObserverContextWithSubject: anInteger species: aRMDSpeciesI
 
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
-	memory time: 1.
+	memory time: 0.
 	individualDirectory
 		allocateWorld: simulationModel worldDefinition;
 		allocateCells: simulationModel cellDefinition
@@ -447,15 +477,15 @@ RMDInterpreter >> south [
 
 { #category : #'library access' }
 RMDInterpreter >> standardLibrary [
-	^ {('min' -> RMDFunction min).
-	('max' -> RMDFunction max).
-	('mean' -> RMDFunction mean).
-	('sum' -> RMDFunction sum).
-	('sin' -> RMDFunction sin).
-	('cos' -> RMDFunction cos).
-	('exp' -> RMDFunction exp).
-	('abs' -> RMDFunction abs).
-	('squareRoot' -> RMDFunction squareRoot)} asDictionary
+	^ self class standardLibrary 
+]
+
+{ #category : #'animat operations' }
+RMDInterpreter >> terminate: aString [
+	aString
+		ifNil:
+			[ ^ self terminate: context subject animat: context subjectDefinition ].
+	^ self terminate: context object animat: context objectDefinition
 ]
 
 { #category : #'animat operations' }

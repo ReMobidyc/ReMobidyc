@@ -19,6 +19,28 @@ RMDCellInitializerNode class >> default [
 		cellPropertyInitializers: Array new
 ]
 
+{ #category : #'typical instances' }
+RMDCellInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: lengthString grass: minString to: maxString [
+	<script:
+		'(RMDCellInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') inspect'>
+	^ RMDGrammar new cellInitializer end
+		parse:
+			(String
+				streamContents: [ :stream | 
+					xDivisions printOn: stream.
+					stream nextPutAll: 'x'.
+					yDivisions printOn: stream.
+					stream
+						nextPutAll: ' of ';
+						nextPutAll: lengthString;
+						nextPutAll: ' Cell with';
+						cr;
+						nextPutAll: '    grass = uniform ';
+						nextPutAll: minString;
+						nextPutAll: ' to ';
+						nextPutAll: maxString ])
+]
+
 { #category : #'instance creation' }
 RMDCellInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 cellPropertyInitializers: anArrayOfRMDSimulationCellPropertyDefinitions [
 	^ self new

@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'action',
 		'utilities',
-		'location'
+		'location',
+		'object',
+		'objectDefinition'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -44,10 +46,13 @@ RMDActionContext >> location: anInteger definition: aRMDCellDefinition [
 	dict := Dictionary new.
 	aRMDCellDefinition
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict := Dictionary new
-		at: 'here' put: dict;
-		yourself.
+	propertyDict at: 'here' put: dict.
 	location := anInteger
+]
+
+{ #category : #accessing }
+RMDActionContext >> object [
+	^ object
 ]
 
 { #category : #accessing }
@@ -58,7 +63,14 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	propertyDict
 		at: (action ifNotNil: #object ifNil: [ #object ])
-		put: dict
+		put: dict.
+	object := anInteger.
+	objectDefinition := aRMDAnimatDefinition
+]
+
+{ #category : #accessing }
+RMDActionContext >> objectDefinition [
+	^ objectDefinition
 ]
 
 { #category : #'utility access' }

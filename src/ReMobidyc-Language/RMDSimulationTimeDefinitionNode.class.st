@@ -23,6 +23,13 @@ RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherR
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
+	^ self
+		duration: aString asRMDExpression
+		step: anotherString asRMDExpression
+]
+
 { #category : #comparing }
 RMDSimulationTimeDefinitionNode >> = anObject [
 	^ self class = anObject class

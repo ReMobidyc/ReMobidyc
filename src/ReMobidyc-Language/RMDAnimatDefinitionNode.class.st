@@ -13,9 +13,11 @@ RMDAnimatDefinitionNode class >> createBuiltinProperties [
 	('y' -> RMDUnit m)}
 ]
 
-{ #category : #'instance creation' }
-RMDAnimatDefinitionNode class >> default [
-	^ self identifier: 'Default' propertyDeclarations: Array new
+{ #category : #'typical instances' }
+RMDAnimatDefinitionNode class >> goat [
+	<script: 'RMDAnimatDefinitionNode goat inspect'>
+	^ RMDGrammar new animatDefinition end parse: 'Goat is Animat with
+	blood_sugar [kcal].'
 ]
 
 { #category : #'instance creation' }
