@@ -81,8 +81,9 @@ RMDGrammar >> additionNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
-	^ self distanceDirective / self directionDirective
-		/ self timeDirective / self terminateDirective
+	^ self directionOfGradientDirective / self distanceDirective
+		/ self directionDirective / self timeDirective
+		/ self terminateDirective
 ]
 
 { #category : #'class access' }
@@ -422,11 +423,11 @@ RMDGrammar >> directionDirective [
 { #category : #'parsers-directives' }
 RMDGrammar >> directionOfGradientDirective [
 	^ ('direction' asPParser trimLeft , #blank asPParser plus
-		, 'grad' asPParser trimLeft , identifier)
+		, 'grad' asPParser trim , identifier)
 		==> [ :pair | 
 			self agentDirectiveNodeClass
-				directive: 'directioOfGradient'
-				agent: pair second ]
+				directive: 'directionOfGradient'
+				agent: pair fourth ]
 ]
 
 { #category : #'class access' }

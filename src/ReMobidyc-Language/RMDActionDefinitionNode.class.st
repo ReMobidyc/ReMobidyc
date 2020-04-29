@@ -19,7 +19,7 @@ presume here''s grass > 0[kcal] and my energy < my max_energy
 	here''s delta grass'' = -amount
 	my delta energy'' = amount
 where
-	amount = min(my max_energy - my energy, my diet * deltaTime, here''s grass).
+	amount = min(my max_energy - my energy, my diet * delta time, here''s grass).
 ' asRMDActionDefinition
 ]
 
@@ -35,8 +35,8 @@ presume here''s grass < here''s max_grass
 RMDActionDefinitionNode class >> move [
 	<script: 'RMDActionDefinitionNode move inspect'>
 	^ 'to move is
-	my delta x'' = cos(my heading) * dist
-	my delta y'' = sin(my heading) * dist.' asRMDActionDefinition
+	my d/dt x'' = cos(my heading) * my speed
+	my d/dt y'' = sin(my heading) * my speed.' asRMDActionDefinition
 ]
 
 { #category : #'instance creation' }
@@ -177,7 +177,9 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ].
-	guard := guard ifNotNil: [ guard copyReplace: aDictionary ].
+	(guard isKindOf: RMDSyntaxNode)
+		ifTrue: [ guard := guard copyReplace: aDictionary ]
+		ifFalse: [ aDictionary at: guard ifPresent: [ :node | guard := node copy ] ].
 	propertyDefinitions := propertyDefinitions
 		collect: [ :node | node copyReplace: aDictionary ].
 	utilityDefinitions := utilityDefinitions

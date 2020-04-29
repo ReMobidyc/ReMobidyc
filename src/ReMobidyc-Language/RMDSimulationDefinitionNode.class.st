@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSimulationDefinitionNode class >> default [
+RMDSimulationDefinitionNode class >> empty [
 	^ self
-		timeDefinition: RMDSimulationTimeDefinitionNode default
-		worldInitializer: RMDWorldInitializerNode default
-		cellInitializer: RMDCellInitializerNode default
+		timeDefinition: RMDSimulationTimeDefinitionNode empty
+		worldInitializer: RMDWorldInitializerNode empty
+		cellInitializer: RMDCellInitializerNode empty
 		animatInitializers: Array new
 ]
 

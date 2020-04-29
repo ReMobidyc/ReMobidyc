@@ -72,12 +72,17 @@ RMDInterpreter class >> standardLibrary [
 			('squareRoot' -> RMDFunction squareRoot)} asDictionary ]
 ]
 
-{ #category : #'library access' }
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
+	^ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - libraries' }
 RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary
 ]
 
-{ #category : #'library access' }
+{ #category : #'accessing - libraries' }
 RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
@@ -100,11 +105,41 @@ RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
 	^ individualDirectory allocateWorld: aRMDWorldDefinitionNode
 ]
 
-{ #category : #'animat operations' }
+{ #category : #'accessing - definitions' }
 RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ simulationModel
 		ifNil: errorBlock
 		ifNotNil: [ simulationModel animatDefinitionAt: aString ifAbsent: errorBlock ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> bounceOutOfBoundsAnimats [
+	individualDirectory
+		animatNamesDo: [ :animatName | 
+			| animatDef xOffset yOffset |
+			animatDef := simulationModel
+				animatDefinitionAt: animatName
+				ifAbsent: [ ^ NotFoundError signal: animatName ].
+			xOffset := animatDef
+				propertyOffsetAt: 'x'
+				ifAbsent: [ ^ NotFoundError signal: 'x' ].
+			yOffset := animatDef
+				propertyOffsetAt: 'y'
+				ifAbsent: [ ^ NotFoundError signal: 'y' ].
+			individualDirectory
+				animatsOf: animatName
+				do: [ :individual | 
+					| x y |
+					x := memory at: individual + xOffset ifAbsent: [ nil ].
+					x < simulationModel west
+						ifTrue: [ memory at: individual + xOffset put: simulationModel west ].
+					x > simulationModel east
+						ifTrue: [ memory at: individual + xOffset put: simulationModel east ].
+					y := memory at: individual + yOffset ifAbsent: [ nil ].
+					y < simulationModel south
+						ifTrue: [ memory at: individual + yOffset put: simulationModel south ].
+					y > simulationModel north
+						ifTrue: [ memory at: individual + yOffset put: simulationModel north ] ] ]
 ]
 
 { #category : #directives }
@@ -182,21 +217,19 @@ RMDInterpreter >> direction: aString [
 { #category : #directives }
 RMDInterpreter >> directionOfGradient: aString [
 	| here west east south north vector |
-	here := west := east := south := north := context location.
-	individualDirectory westOf: here do: [ :cell | west := cell ].
-	individualDirectory eastOf: here do: [ :cell | east := cell ].
-	individualDirectory southOf: here do: [ :cell | south := cell ].
-	individualDirectory northOf: here do: [ :cell | north := cell ].
-	vector := ((self readVariable: aString agent: east ifAbsent: [ 0 ])
-		- (self readVariable: aString agent: west ifAbsent: [ 0 ]))
-		@
-			((self readVariable: aString agent: north ifAbsent: [ 0 ])
-				- (self readVariable: aString agent: south ifAbsent: [ 0 ])).
+	here := self readVariable: aString agent: 'here' ifAbsent: [ 0 ].
+	east := self readVariable: aString agent: 'east' ifAbsent: [ here ].
+	west := self readVariable: aString agent: 'west' ifAbsent: [ here ].
+	south := self readVariable: aString agent: 'south' ifAbsent: [ here ].
+	north := self readVariable: aString agent: 'north' ifAbsent: [ here ].
+	vector := (east - west) @ (north - south).
 	^ vector theta
 ]
 
 { #category : #directives }
 RMDInterpreter >> directive: aString object: anotherString [
+	aString = 'directionOfGradient'
+		ifTrue: [ ^ self directionOfGradient: anotherString ].
 	aString = 'direction'
 		ifTrue: [ ^ self direction: anotherString ].
 	aString = 'distance'
@@ -237,7 +270,7 @@ RMDInterpreter >> east [
 	^ simulationModel east
 ]
 
-{ #category : #'library access' }
+{ #category : #'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
 		do:
@@ -305,7 +338,7 @@ RMDInterpreter >> initializeVariableIfNotInitialized: aString with: aBlock ifAbs
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #'loading definitions' }
+{ #category : #'accessing - definitions' }
 RMDInterpreter >> load: aRMDSyntaxNode [
 	simulationModel load: aRMDSyntaxNode
 ]
@@ -375,30 +408,62 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
 	self
 		setContext:
-			(RMDActionContext subject: anInteger definition: aRMDAnimatDefinitionNode).
+			(RMDActionContext
+				subject: anInteger
+				definition: aRMDAnimatDefinitionNode).
 	aRMDAnimatDefinitionNode isAnimatDefinitionNode
-		ifTrue: [ context
-				location:
-					(individualDirectory
-						cellAtXIndex:
-							((self
-								cellX:
-									(self
-										readVariable: 'x'
-										agent: nil
-										ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
-								min: 1
-								max: simulationModel cellXDivisions)
-						yIndex:
-							((self
-								cellY:
-									(self
-										readVariable: 'y'
-										agent: nil
-										ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
-								min: 1
-								max: simulationModel cellYDivisions))
-				definition: simulationModel cellDefinition ]
+		ifTrue: [ | here |
+			here := individualDirectory
+				cellAtXIndex:
+					((self
+						cellX:
+							(self
+								readVariable: 'x'
+								agent: nil
+								ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
+						min: simulationModel cellXDivisions
+						max: 1)
+				yIndex:
+					((self
+						cellY:
+							(self
+								readVariable: 'y'
+								agent: nil
+								ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
+						min: simulationModel cellYDivisions
+						max: 1).
+			context
+				location: here
+				definition: simulationModel cellDefinition
+				agent: 'here'.
+			individualDirectory
+				eastOf: here
+				do: [ :east | 
+					context
+						location: east
+						definition: simulationModel cellDefinition
+						agent: 'east' ].
+			individualDirectory
+				westOf: here
+				do: [ :west | 
+					context
+						location: west
+						definition: simulationModel cellDefinition
+						agent: 'west' ].
+			individualDirectory
+				southOf: here
+				do: [ :south | 
+					context
+						location: south
+						definition: simulationModel cellDefinition
+						agent: 'south' ].
+			individualDirectory
+				northOf: here
+				do: [ :north | 
+					context
+						location: north
+						definition: simulationModel cellDefinition
+						agent: 'north' ] ]
 ]
 
 { #category : #private }
@@ -475,9 +540,18 @@ RMDInterpreter >> south [
 	^ simulationModel south
 ]
 
-{ #category : #'library access' }
+{ #category : #'accessing - libraries' }
 RMDInterpreter >> standardLibrary [
 	^ self class standardLibrary 
+]
+
+{ #category : #simulating }
+RMDInterpreter >> stepSimulation [
+	^ self time < simulationModel duration
+		and: [ self performBehaviors.
+			self tick.
+			self bounceOutOfBoundsAnimats.
+			true ]
 ]
 
 { #category : #'animat operations' }

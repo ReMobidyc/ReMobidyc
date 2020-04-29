@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDCellInitializerNode class >> default [
+RMDCellInitializerNode class >> empty [
 	^ self
 		xDivisions: 1
 		yDivisions: 1

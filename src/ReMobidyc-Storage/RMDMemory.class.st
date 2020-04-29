@@ -137,7 +137,7 @@ RMDMemory >> sunset [
 	nextValues
 		keysAndValuesRemove: [ :id :value | 
 			value isNil
-				and: [ nextDeltas removeKey: id.
+				and: [ nextDeltas removeKey: id ifAbsent: [].
 					nextValuesDirty := true.
 					true ] ].
 	valuesDirty

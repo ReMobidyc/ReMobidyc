@@ -163,6 +163,10 @@ RMDGrammarTest >> testAgentDirective [
 	self assert: node isAgentDirectiveNode.
 	self assert: node directive equals: 'direction'.
 	self assert: node agentIdentifier equals: 'foo'.
+	node := grammar agentDirective parse: 'direction grad foo'.
+	self assert: node isAgentDirectiveNode.
+	self assert: node directive equals: 'directionOfGradient'.
+	self assert: node agentIdentifier equals: 'foo'.
 	node := grammar agentDirective parse: 'foo bar'.
 	self assert: node isPetit2Failure
 ]
@@ -325,7 +329,7 @@ RMDGrammarTest >> testCellDefinition [
 	node := grammar cellDefinition end parse: 'Cell.'.
 	self assert: node isCellDefinitionNode.
 	self assert: node propertyDeclarations isEmpty.
-	self assert: node equals: RMDCellDefinitionNode default.
+	self assert: node equals: RMDCellDefinitionNode empty.
 	node := grammar cellDefinition end
 		parse:
 			'
@@ -941,7 +945,7 @@ RMDGrammarTest >> testWorldDefinition [
 	node := grammar worldDefinition end parse: 'World.'.
 	self assert: node isWorldDefinitionNode.
 	self assert: node propertyDeclarations isEmpty.
-	self assert: node equals: RMDWorldDefinitionNode default.
+	self assert: node equals: RMDWorldDefinitionNode empty.
 	node := grammar worldDefinition end
 		parse:
 			'

@@ -12,6 +12,46 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'typical instances' }
+RMDBehaviorDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
+	<script:
+		'(RMDBehaviorDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Cell grow_grass where
+	here''s max_grass -> ' , maxString
+		,
+			'
+	here''s growth_rate -> ' , amountString , '.')
+		asRMDBehaviorDefinition
+]
+
+{ #category : #'typical instances' }
+RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
+	<script:
+		'(RMDBehaviorDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Goat eat_grass where
+	my energy -> my blood_sugar
+	my max_energy -> ' , maxString
+		,
+			'
+	my diet -> ' , dietString , '.') asRMDBehaviorDefinition
+]
+
+{ #category : #'typical instances' }
+RMDBehaviorDefinitionNode class >> goat_respire: aString [
+	<script: '(RMDBehaviorDefinitionNode goat_respire: ''2000[kcal/day]'') inspect'>
+	^ ('Goat respire where
+	my energy -> my blood_sugar
+	my respiration_rate -> ' , aString , '.') asRMDBehaviorDefinition
+]
+
+{ #category : #'typical instances' }
+RMDBehaviorDefinitionNode class >> goat_walk_for_grass [
+	<script: 'RMDBehaviorDefinitionNode goat_walk_for_grass inspect'>
+	^ 'Goat move where
+	my heading -> direction grad grass
+	my speed -> 1[km/day].' asRMDBehaviorDefinition
+]
+
 { #category : #'instance creation' }
 RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptString1 objectIdentifier: agentString2 within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
 	^ self new

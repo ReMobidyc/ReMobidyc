@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDWorldInitializerNode class >> default [
+RMDWorldInitializerNode class >> empty [
 	^ self propertyInitializers: Array new
 ]
 

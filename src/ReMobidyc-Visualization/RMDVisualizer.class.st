@@ -10,7 +10,7 @@ Class {
 { #category : #examples }
 RMDVisualizer class >> exampleSugarScape [
 	<script: 'RMDVisualizer exampleSugarScape'>
-	| parser interpreter visualizer form |
+	| parser interpreter visualizer form morph |
 	parser := RMDGrammar new.
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
@@ -20,33 +20,51 @@ RMDVisualizer class >> exampleSugarScape [
 		load: RMDWorldDefinitionNode empty;
 		load: RMDCellDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
+		load: RMDActionDefinitionNode respire;
+		load: RMDActionDefinitionNode move;
+		load: RMDActionDefinitionNode eat_grass;
+		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				goat_eat_grass: '3000 [kcal/day]'
+				upto: '10000[kcal]');
+		load: RMDActionDefinitionNode grow_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				cell_grow_grass: '2000[kcal/day]'
+				upto: '1000000[kcal]');
 		load:
 			(RMDSimulationDefinitionNode
-				timeDefinition: (RMDSimulationTimeDefinitionNode during: '365[day]' by: '0.5[day]')
-				worldInitializer: RMDWorldInitializerNode default
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode empty
 				cellInitializer:
 					(RMDCellInitializerNode
-						grassInitializer: 5
-						by: 6
-						of: '1[km]'
-						grass: '5000[kcal]'
-						to: '10000[kcal]')
+						grassInitializer: 10
+						by: 10
+						of: '5[km]'
+						grass: '500000[kcal]'
+						to: '1000000[kcal]')
 				animatInitializers:
 					{(RMDAnimatInitializerNode
-						goatInitializer: 10
-						bloodSugar: '1000[kcal]'
-						to: '10000[kcal]')}).
+						goatInitializer: 100
+						bloodSugar: '500[kcal]'
+						to: '1000[kcal]')}).
 	interpreter setupSimulation.
 	visualizer := RMDVisualizer new
 		addCellRendererColor: Color green
 			brightness: (parser expression end parse: 'here''s grass')
 			between: 0
-			and: '10000[kcal]' asRMDExpression numeric;
+			and: '1000000[kcal]' asRMDExpression numeric;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
 	form := visualizer visualize: interpreter extent: 500 @ 500.
-	form asMorph openInWindowLabeled: 'Sugar Scape'.
-	^ form
+	morph := form asMorph.
+	morph openInWindowLabeled: 'Sugar Scape'.
+	[ [ interpreter stepSimulation ]
+		whileTrue: [ morph form: (visualizer visualize: interpreter extent: 500 @ 500).
+			0.01 second wait ] ] forkAt: Processor userBackgroundPriority.
+	^ morph
 ]
 
 { #category : #'adding-removing' }

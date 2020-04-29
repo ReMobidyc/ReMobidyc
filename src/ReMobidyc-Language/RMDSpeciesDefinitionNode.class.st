@@ -23,7 +23,7 @@ RMDSpeciesDefinitionNode class >> createBuiltinProperties [
 ]
 
 { #category : #'instance creation' }
-RMDSpeciesDefinitionNode class >> default [
+RMDSpeciesDefinitionNode class >> empty [
 	^ self propertyDeclarations: #()
 ]
 

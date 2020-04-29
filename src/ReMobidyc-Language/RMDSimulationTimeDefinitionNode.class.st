@@ -9,13 +9,6 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSimulationTimeDefinitionNode class >> default [
-	^ self
-		duration: '0 [s]' asRMDExpression
-		step: '1 [h]' asRMDExpression
-]
-
-{ #category : #'instance creation' }
 RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherRMDExpression [
 	^ self new
 		duration: aRMDExpression;
@@ -28,6 +21,13 @@ RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
 	^ self
 		duration: aString asRMDExpression
 		step: anotherString asRMDExpression
+]
+
+{ #category : #'instance creation' }
+RMDSimulationTimeDefinitionNode class >> empty [
+	^ self
+		duration: '0 [s]' asRMDExpression
+		step: '1 [day]' asRMDExpression
 ]
 
 { #category : #comparing }

@@ -75,7 +75,7 @@ where
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testLocationDefinition [
+RMDActionContextTest >> testLocationDefinitionAgent [
 	| parser cell |
 	parser := RMDGrammar new.
 	cell := parser cellDefinition end
@@ -83,7 +83,7 @@ RMDActionContextTest >> testLocationDefinition [
 			'
 Cell with
 	grass [kcal].' trim.
-	context location: 10 definition: cell.
+	context location: 10 definition: cell agent: 'here'.
 	self
 		assert: (context getMemoryAddressFor: 'grass' agent: 'here' ifAbsent: [ nil ])
 		equals: (cell propertyOffsets at: 'grass') + 10

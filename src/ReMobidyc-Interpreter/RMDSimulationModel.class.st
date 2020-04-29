@@ -104,9 +104,9 @@ RMDSimulationModel >> east [
 { #category : #initialization }
 RMDSimulationModel >> initialize [
 	super initialize.
-	simulationDefinition := RMDSimulationDefinitionNode default.
-	cellDefinition := RMDCellDefinitionNode default.
-	worldDefinition := RMDWorldDefinitionNode default.
+	simulationDefinition := RMDSimulationDefinitionNode empty.
+	cellDefinition := RMDCellDefinitionNode empty.
+	worldDefinition := RMDWorldDefinitionNode empty.
 	animatDefinitions := Dictionary new.
 	actionDefinitions := Dictionary new.
 	behaviorDefinitions := OrderedCollection new
