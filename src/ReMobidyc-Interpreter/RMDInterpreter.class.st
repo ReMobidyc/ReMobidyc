@@ -17,7 +17,7 @@ Class {
 { #category : #examples }
 RMDInterpreter class >> exampleSugar [
 	<script: 'RMDInterpreter exampleSugar'>
-	| interpreter memory goat metabolism goats goatMetabolize |
+	| interpreter memory goat metabolism goats goatMetabolize simulation |
 	interpreter := RMDInterpreter new.
 	memory := RMDFileMemory
 		on:
@@ -29,8 +29,8 @@ RMDInterpreter class >> exampleSugar [
 	interpreter setMemory: memory.
 	goat := '
 Goat is Animat with
-	energy = uniform 5000 [kcal] to 20000 [kcal]
-	basal_metabolism = 3000 [kcal/s].
+	energy [kcal]
+	basal_metabolism [kcal/s].
 ' trim asRMDAnimatDefinition.
 	interpreter load: goat.
 	metabolism := '
@@ -41,18 +41,32 @@ presume my sugar >= 0
 	interpreter load: metabolism.
 	goatMetabolize := '
 Goat metabolize where
-	my sugar -> energy
-	my basal_metabolism -> basal_metabolism.' trim
+	my sugar -> my energy
+	my basal_metabolism -> my basal_metabolism.' trim
 		asRMDBehaviorDefinition.
 	interpreter load: goatMetabolize.
-	goats := (1 to: 9)
-		collect: [ :i | interpreter allocateAnimat: goat ].
-	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
+	simulation := '
+Simulation with
+	during 1000 [day] by 1[day]
+	1x1 of 1[m] Cell
+	9 Goat with
+		energy = uniform 5000 [kcal] to 20000 [kcal]
+		basal_metabolism = 3000 [kcal/s].
+' trim asRMDSimulationDefinition.
+	interpreter load: simulation.
+	interpreter setupSimulation.
+	(Array
+		streamContents: [ :stream | 
+			interpreter
+				individualsOf: goat
+				do: [ :g | stream nextPut: (goat asDictionary: g in: memory) ] ])
 		inspect.
-	1000
-		timesRepeat: [ goatMetabolize evalIn: interpreter.
-			interpreter tick ].
-	(goats collect: [ :animat | goat asDictionary: animat in: memory ])
+	1000 timesRepeat: [ interpreter stepSimulation ].
+	(Array
+		streamContents: [ :stream | 
+			interpreter
+				individualsOf: goat
+				do: [ :g | stream nextPut: (goat asDictionary: g in: memory) ] ])
 		inspect
 ]
 

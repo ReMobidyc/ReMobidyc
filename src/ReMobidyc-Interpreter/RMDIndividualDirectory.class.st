@@ -27,7 +27,7 @@ RMDIndividualDirectory >> allocateAnimat: aRMDAnimatDefinitionNode [
 { #category : #allocating }
 RMDIndividualDirectory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
 	nextAvailableSlot := (cellSize := aRMDCellDefinitionNode
-		totalNumberOfProperties) * (xCells := anInteger1)
+		totalNumberOfProperties max: 1) * (xCells := anInteger1)
 		* (yCells := anInteger2) + (cell := nextAvailableSlot).
 	^ cell
 ]

@@ -21,6 +21,11 @@ String >> asRMDExpression [
 ]
 
 { #category : #'*ReMobidyc-Language' }
+String >> asRMDSimulationDefinition [
+	^ RMDGrammar new simulationDefinition end parse: self
+]
+
+{ #category : #'*ReMobidyc-Language' }
 String >> asRMDUnit [
 	^ RMDGrammar new unit parse: self
 ]
