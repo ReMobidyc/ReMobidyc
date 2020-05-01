@@ -28,6 +28,9 @@ BaselineOfReMobidyc >> baselineOf: spec [
 					with: [ spec requires: #('PetitParser2Core' 'ReMobidyc-Units') ];
 				package: 'ReMobidyc-Interpreter'
 					with: [ spec requires: #('ReMobidyc-Storage' 'ReMobidyc-Language') ];
+				package: 'ReMobidyc-Visualization'
+					with: [ spec
+						requires: #('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
@@ -41,7 +44,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				group: 'default' with: #('core' 'tests');
 				group: 'core'
 					with:
-					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter');
+					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization');
 				group: 'tests'
 					with:
 					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Unit-Tests' 'ReMobidyc-Interpreter-Tests') ]
