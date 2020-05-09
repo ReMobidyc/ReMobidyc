@@ -2,30 +2,66 @@ Extension { #name : #String }
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDActionDefinition [
-	^ RMDGrammar new actionDefinition parse: self
+	| node |
+	node := RMDGrammar new actionDefinition end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
 ]
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDAnimatDefinition [
-	^ RMDGrammar new animatDefinition parse: self
+	| node |
+	node := RMDGrammar new animatDefinition end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
 ]
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDBehaviorDefinition [
-	^ RMDGrammar new behaviorDefinition parse: self
+	| node |
+	node := RMDGrammar new behaviorDefinition end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
 ]
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDExpression [
-	^ RMDGrammar new expression parse: self
+	^ self
+		asRMDExpressionDo: [ :node | node ]
+		ifError: [ :failure | RMDParseError signalPP2Failure: failure ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> asRMDExpressionDo: aBlock [
+	^ self asRMDExpressionDo: aBlock ifError: [  ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> asRMDExpressionDo: aBlock ifError: errorBlock [
+	| node |
+	node := RMDGrammar new expression end parse: self.
+	^ (node isPetit2Failure
+		ifTrue: [ errorBlock ]
+		ifFalse: [ aBlock ]) cull: node
 ]
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDSimulationDefinition [
-	^ RMDGrammar new simulationDefinition end parse: self
+	| node |
+	node := RMDGrammar new simulationDefinition end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
 ]
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDUnit [
-	^ RMDGrammar new unit parse: self
+	| node |
+	node := RMDGrammar new unit end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
 ]

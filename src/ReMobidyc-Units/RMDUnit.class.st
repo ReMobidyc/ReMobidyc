@@ -322,6 +322,11 @@ RMDUnit class >> m2 [
 	^ self at: 'm2'
 ]
 
+{ #category : #constants }
+RMDUnit class >> month [
+	^ self at: 'month'
+]
+
 { #category : #'instance creation' }
 RMDUnit class >> newSISymbol: aString [
 	^ RMDSIUnitSymbol newSISymbol: aString
@@ -357,6 +362,16 @@ RMDUnit class >> rad [
 { #category : #constants }
 RMDUnit class >> s [
 	^ self at: 's'
+]
+
+{ #category : #constants }
+RMDUnit class >> week [
+	^ self at: 'week'
+]
+
+{ #category : #constants }
+RMDUnit class >> year [
+	^ self at: 'year'
 ]
 
 { #category : #arithmetics }
