@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'xDivisionsField',
 		'yDivisionsField',
-		'sizeField'
+		'sizeField',
+		'sizeUnitDropList'
 	],
 	#category : #'ReMobidyc-Spec2'
 }
@@ -12,9 +13,7 @@ Class {
 { #category : #specs }
 RMDCellInitializerEditor class >> defaultSpec [
 	<spec>
-	^ SpBoxLayout newVertical
-		borderWidth: 10;
-		spacing: 10;
+	^ super defaultSpec
 		add:
 			(SpBoxLayout newHorizontal
 				add: #xDivisionsField expand: false;
@@ -22,21 +21,22 @@ RMDCellInitializerEditor class >> defaultSpec [
 					(SpBoxLayout newVertical
 						addLast: ' x ' expand: false;
 						yourself)
-					width: 16;
+					width: 18;
 				add: #yDivisionsField expand: false;
 				add:
 					(SpBoxLayout newVertical
 						addLast: ' of ' expand: false;
 						yourself)
 					width: 25;
-				add: #sizeField expand: false;
+				add: #sizeField width: 80;
+				add: #sizeUnitDropList width: 80;
 				add:
 					(SpBoxLayout newVertical
-						addLast: ' Cells' expand: false;
+						addLast: ' Cell with' expand: false;
 						yourself)
-					width: 30;
+					width: 60;
 				yourself)
-			expand: false;
+			height: self labelHeight;
 		yourself
 ]
 
@@ -46,37 +46,51 @@ RMDCellInitializerEditor >> initializeWidgets [
 	xDivisionsField := self newNumberInput
 		beInteger;
 		autoAccept: true;
-		whenTextIsAcceptedDo: [ :text | 
-			self
-				fromString: text asString trim
-				ifIntegerDo: [ :int | 
-					| nat |
-					nat := int max: 1.
-					node ifNotNil: [ node xDivisions: nat ].
-					xDivisionsField
-						text: nat printString;
-						color: self okColor ]
-				ifError: [ xDivisionsField color: self errorColor ] ];
+		whenLastValidNumberChangedDo: [ :int | 
+			| nat |
+			nat := int max: 1.
+			xDivisionsField text: nat printString.
+			node ifNotNil: [ node xDivisions: nat ] ];
 		yourself.
 	yDivisionsField := self newNumberInput
 		beInteger;
 		autoAccept: true;
-		whenTextIsAcceptedDo: [ :text | 
-			self
-				fromString: text asString trim
-				ifIntegerDo: [ :int | 
-					| nat |
-					nat := int max: 1.
-					node ifNotNil: [ node yDivisions: nat ].
-					yDivisionsField
-						text: nat printString;
-						color: self okColor ]
-				ifError: [ yDivisionsField color: self errorColor ] ];
+		whenLastValidNumberChangedDo: [ :int | 
+			| nat |
+			nat := int max: 1.
+			yDivisionsField text: nat printString.
+			node ifNotNil: [ node yDivisions: nat ] ];
 		yourself.
-	sizeField := self newExpressionTextInput
-		beText;
+	sizeField := self newNumberInput
+		beFloat;
 		autoAccept: true;
-		whenLastValidExpressionChangedDo: [ :expr | node ifNotNil: [ node size: expr ] ];
+		whenLastValidNumberChangedDo:
+				[ :val | node ifNotNil: [ node size literal: val printString ] ];
+		yourself.
+	sizeUnitDropList := self newDropList
+		items:
+			{(RMDUnit at: 'm').
+			(RMDUnit at: 'km').
+			(RMDUnit at: 'mile').
+			(RMDUnit at: 'yd').
+			((RMDUnit at: 'm') ** 2).
+			((RMDUnit at: 'km') ** 2).
+			(RMDUnit at: 'ac').
+			(RMDUnit at: 'a').
+			(RMDUnit at: 'ha')};
+		selectIndex: 1;
+		whenSelectedItemChangedDo: [ :newUnit | 
+			node
+				ifNotNil: [ | numeric |
+					numeric := node length.
+					newUnit siUnit = (RMDUnit at: 'm')
+						ifFalse: [ numeric := numeric squared ].
+					node
+						size:
+							(RMDLiteralNode
+								literal: (newUnit fromSI: numeric) printString
+								type: newUnit).
+					self updateSizeField ] ];
 		yourself
 ]
 
@@ -86,12 +100,28 @@ RMDCellInitializerEditor >> nodeChanged [
 	self
 		updateXDivisionsField;
 		updateYDivisionsField;
-		updateSizeField
+		updateSizeField;
+		updateSizeUnitField
+]
+
+{ #category : #accessing }
+RMDCellInitializerEditor >> sizeField [
+	^ sizeField
+]
+
+{ #category : #accessing }
+RMDCellInitializerEditor >> sizeUnitDropList [
+	^ sizeUnitDropList
 ]
 
 { #category : #updating }
 RMDCellInitializerEditor >> updateSizeField [
-	node ifNotNil: [ sizeField text: node size printString ]
+	node ifNotNil: [ sizeField text: node size literal ]
+]
+
+{ #category : #updating }
+RMDCellInitializerEditor >> updateSizeUnitField [
+	node ifNotNil: [ sizeUnitDropList selectItem: node size type ]
 ]
 
 { #category : #updating }
@@ -102,4 +132,14 @@ RMDCellInitializerEditor >> updateXDivisionsField [
 { #category : #updating }
 RMDCellInitializerEditor >> updateYDivisionsField [
 	node ifNotNil: [ yDivisionsField text: node yDivisions printString ]
+]
+
+{ #category : #accessing }
+RMDCellInitializerEditor >> xDivisionsField [
+	^ xDivisionsField
+]
+
+{ #category : #accessing }
+RMDCellInitializerEditor >> yDivisionsField [
+	^ yDivisionsField
 ]

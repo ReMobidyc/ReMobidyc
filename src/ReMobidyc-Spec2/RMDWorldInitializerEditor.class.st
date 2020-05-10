@@ -7,8 +7,7 @@ Class {
 { #category : #specs }
 RMDWorldInitializerEditor class >> defaultSpec [
 	<spec>
-	^ SpBoxLayout newVertical
-		borderWidth: 10;
-		spacing: 10;
+	^ super defaultSpec
+		add: 'World with' expand: false;
 		yourself
 ]

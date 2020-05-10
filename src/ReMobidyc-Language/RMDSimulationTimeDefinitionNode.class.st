@@ -18,6 +18,8 @@ RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherR
 
 { #category : #'instance creation' }
 RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
+	<script:
+		'(RMDSimulationTimeDefinitionNode during: ''100 [day]'' by: ''0.5 [day]'') inspect'>
 	^ self
 		duration: aString asRMDExpression
 		step: anotherString asRMDExpression

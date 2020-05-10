@@ -21,6 +21,7 @@ RMDSimulationDefinitionNode class >> empty [
 
 { #category : #'instance creation' }
 RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode worldInitializer: aRMDWorldInitializerNode cellInitializer: aRMDCellInitializerNode animatInitializers: anArrayOfRMDAnimatInitializerNode [
+	<script: '(RMDSimulationDefinitionNode timeDefinition: (RMDSimulationTimeDefinitionNode during: ''100 [day]'' by: ''0.5 [day]'') worldInitializer: RMDWorldInitializerNode empty cellInitializer: (RMDCellInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') animatInitializers: {RMDAnimatInitializerNode goatInitializer}) inspect'>
 	^ self new
 		timeDefinition: aRMDSimulationTimeDefinitionNode;
 		worldInitializer: aRMDWorldInitializerNode;

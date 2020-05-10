@@ -12,8 +12,10 @@ Class {
 RMDPropertyInitializerEditor class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newHorizontal
+		add: '' width: 20;
 		add: #identifierField width: 100;
-		add: ' = ' expand: false;
+		add: (SpBoxLayout newVertical addLast: ' = ' expand: false)
+			width: 16;
 		add: #expressionField;
 		yourself
 ]

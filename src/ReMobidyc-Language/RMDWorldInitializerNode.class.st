@@ -6,6 +6,7 @@ Class {
 
 { #category : #'instance creation' }
 RMDWorldInitializerNode class >> empty [
+	<script: 'RMDWorldInitializerNode empty inspect'>
 	^ self propertyInitializers: Array new
 ]
 
@@ -14,6 +15,13 @@ RMDWorldInitializerNode class >> propertyInitializers: anArrayOfRMDPropertyIniti
 	^ self new
 		propertyInitializers: anArrayOfRMDPropertyInitializer;
 		yourself
+]
+
+{ #category : #'instance creation' }
+RMDWorldInitializerNode class >> withTemperature [
+	<script:
+		'(RMDWorldInitializerNode propertyInitializers: {RMDPropertyInitializerNode identifier: ''temperature'' expression: ''27 [C]'' asRMDExpression}) inspect'>
+	^ self propertyInitializers: Array new
 ]
 
 { #category : #testing }

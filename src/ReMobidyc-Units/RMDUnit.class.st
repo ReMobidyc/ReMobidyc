@@ -37,6 +37,11 @@ RMDUnit class >> day [
 	^ self at: 'day'
 ]
 
+{ #category : #constants }
+RMDUnit class >> hour [
+	^ self at: 'hour'
+]
+
 { #category : #'class initialization' }
 RMDUnit class >> initialize [
 	<script: 'RMDProportionalUnitSymbol initialize'>

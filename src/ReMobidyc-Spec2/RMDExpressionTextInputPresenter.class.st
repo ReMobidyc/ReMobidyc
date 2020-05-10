@@ -9,7 +9,7 @@ Class {
 	#category : #'ReMobidyc-Spec2'
 }
 
-{ #category : #accessing }
+{ #category : #api }
 RMDExpressionTextInputPresenter >> acceptExpression: aRMDExpression [
 	expression := aRMDExpression.
 	(aRMDExpression isKindOf: RMDExpressionNode)
@@ -29,12 +29,12 @@ RMDExpressionTextInputPresenter >> beParseFailure [
 	self color: parseFailureColor
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 RMDExpressionTextInputPresenter >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 RMDExpressionTextInputPresenter >> expression: aRMDExpression [
 	expression := aRMDExpression.
 	(aRMDExpression isKindOf: RMDExpressionNode)
@@ -50,12 +50,12 @@ RMDExpressionTextInputPresenter >> initialize [
 	parseFailureColor := self theme backgroundColor mixed: 0.9 with: Color red
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 RMDExpressionTextInputPresenter >> lastValidExpression [
 	^ lastValidExpression
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 RMDExpressionTextInputPresenter >> text: aString [
 	aString
 		asRMDExpressionDo: [ :node | 

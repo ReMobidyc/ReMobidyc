@@ -18,10 +18,12 @@ RMDSimulationTimeDefinitionEditor class >> defaultSpec [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: 'during ' expand: false;
+				add: (SpBoxLayout newVertical addLast: 'during ' expand: false)
+					width: 60;
 				add: #durationField width: 80;
 				add: #durationUnitDropList width: 80;
-				add: ' step by ' expand: false;
+				add: (SpBoxLayout newVertical addLast: ' step by ' expand: false)
+					width: 60;
 				add: #stepField width: 60;
 				add: #stepUnitDropList width: 80;
 				yourself)
@@ -42,8 +44,8 @@ RMDSimulationTimeDefinitionEditor >> durationUnitDropList [
 RMDSimulationTimeDefinitionEditor >> initializeWidgets [
 	durationField := self newNumberInput
 		beFloat;
-		acceptOnCR: true;
-		whenNumberChangedDo: [ :val | 
+		autoAccept: true;
+		whenLastValidNumberChangedDo: [ :val | 
 			node
 				ifNotNil: [ node
 						duration:
@@ -56,7 +58,8 @@ RMDSimulationTimeDefinitionEditor >> initializeWidgets [
 			{RMDUnit year.
 			RMDUnit month.
 			RMDUnit week.
-			RMDUnit day};
+			RMDUnit day.
+			RMDUnit hour};
 		selectIndex: 4;
 		whenSelectedItemChangedDo: [ :newUnit | 
 			node
@@ -69,14 +72,31 @@ RMDSimulationTimeDefinitionEditor >> initializeWidgets [
 		yourself.
 	stepField := self newNumberInput
 		beFloat;
+		autoAccept: true;
+		whenLastValidNumberChangedDo: [ :val | 
+			node
+				ifNotNil: [ node
+						step:
+							(RMDLiteralNode
+								literal: val printString
+								type: stepUnitDropList selectedItem) ] ];
 		yourself.
 	stepUnitDropList := self newDropList
 		items:
 			{RMDUnit year.
 			RMDUnit month.
 			RMDUnit week.
-			RMDUnit day};
+			RMDUnit day.
+			RMDUnit hour};
 		selectIndex: 4;
+		whenSelectedItemChangedDo: [ :newUnit | 
+			node
+				ifNotNil: [ node
+						step:
+							(RMDLiteralNode
+								literal: (newUnit fromSI: node step numeric) printString
+								type: newUnit).
+					self updateStepField ] ];
 		yourself
 ]
 
@@ -109,7 +129,8 @@ RMDSimulationTimeDefinitionEditor >> updateDurationField [
 
 { #category : #updating }
 RMDSimulationTimeDefinitionEditor >> updateDurationUnit [
-	durationUnitDropList selectItem: node duration type
+	node
+		ifNotNil: [ durationUnitDropList selectItem: node duration type ]
 ]
 
 { #category : #updating }
@@ -123,5 +144,5 @@ RMDSimulationTimeDefinitionEditor >> updateStepField [
 
 { #category : #updating }
 RMDSimulationTimeDefinitionEditor >> updateStepUnit [
-	stepUnitDropList selectItem: node step type
+	node ifNotNil: [ stepUnitDropList selectItem: node step type ]
 ]

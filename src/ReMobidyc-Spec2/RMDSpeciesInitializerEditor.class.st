@@ -4,9 +4,25 @@ Class {
 	#category : #'ReMobidyc-Spec2'
 }
 
+{ #category : #specs }
+RMDSpeciesInitializerEditor class >> defaultSpec [
+	<spec>
+	^ SpBoxLayout newVertical
+		borderWidth: 10;
+		spacing: 10;
+		yourself
+]
+
 { #category : #initialization }
 RMDSpeciesInitializerEditor >> initializeWidgets [
-	self whenBuiltDo: [ self updatePropertyInitializersList ]
+	self
+		whenBuiltDo: [ self
+				withWidgetDo: [ :w | 
+					w
+						update: #color: with: {Color white};
+						update: #borderColor: with: {Color lightGray};
+						update: #borderWidth: with: {1} ].
+			self updatePropertyInitializersList ]
 ]
 
 { #category : #accessing }

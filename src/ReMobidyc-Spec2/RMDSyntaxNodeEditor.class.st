@@ -31,6 +31,11 @@ RMDSyntaxNodeEditor >> newExpressionTextInput [
 	^ self instantiate: RMDExpressionTextInputPresenter
 ]
 
+{ #category : #widgets }
+RMDSyntaxNodeEditor >> newNumberInput [
+	^ self instantiate: RMDNumberInputPresenter
+]
+
 { #category : #accessing }
 RMDSyntaxNodeEditor >> node [
 	^ node

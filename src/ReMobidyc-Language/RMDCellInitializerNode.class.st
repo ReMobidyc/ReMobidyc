@@ -122,7 +122,8 @@ RMDCellInitializerNode >> size [
 
 { #category : #accessing }
 RMDCellInitializerNode >> size: aRMDLiteralNode [
-	size := aRMDLiteralNode
+	size := aRMDLiteralNode.
+	length := nil
 ]
 
 { #category : #accessing }
