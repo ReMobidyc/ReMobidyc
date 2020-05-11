@@ -1,12 +1,13 @@
 Class {
 	#name : #RMDNumberInputPresenter,
 	#superclass : #SpNumberInputFieldPresenter,
+	#traits : 'TRMDPresenter',
+	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
 		'#number => SpObservableSlot',
-		'#lastValidNumber => SpObservableSlot',
-		'#parseFailureColor => SpObservableSlot'
+		'#lastValidNumber => SpObservableSlot'
 	],
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Widgets'
 }
 
 { #category : #api }
@@ -19,22 +20,9 @@ RMDNumberInputPresenter >> acceptNumebr: aNumber [
 	self accept: number printString
 ]
 
-{ #category : #private }
-RMDNumberInputPresenter >> beOk [
-	self color: self theme backgroundColor
-]
-
-{ #category : #private }
-RMDNumberInputPresenter >> beParseFailure [
-	self color: parseFailureColor
-]
-
 { #category : #initialization }
 RMDNumberInputPresenter >> initialize [
 	super initialize.
-	parseFailureColor := self theme backgroundColor
-		mixed: 0.9
-		with: Color red
 ]
 
 { #category : #api }
@@ -67,7 +55,7 @@ RMDNumberInputPresenter >> text: aString [
 	^ super text: number printString ]
 		on: Error
 		do: [ :ex | 
-			self beParseFailure.
+			self beError.
 			number := nil.
 			^ nil ]
 ]

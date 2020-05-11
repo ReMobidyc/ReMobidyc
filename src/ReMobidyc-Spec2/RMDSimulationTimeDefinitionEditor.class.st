@@ -7,7 +7,7 @@ Class {
 		'durationUnitDropList',
 		'stepUnitDropList'
 	],
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }

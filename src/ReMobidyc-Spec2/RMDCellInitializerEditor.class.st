@@ -7,7 +7,7 @@ Class {
 		'sizeField',
 		'sizeUnitDropList'
 	],
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }

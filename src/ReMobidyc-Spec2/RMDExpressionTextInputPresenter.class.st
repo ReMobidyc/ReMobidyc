@@ -1,12 +1,13 @@
 Class {
 	#name : #RMDExpressionTextInputPresenter,
 	#superclass : #SpTextInputFieldPresenter,
+	#traits : 'TRMDPresenter',
+	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
 		'#expression => SpObservableSlot',
-		'#lastValidExpression => SpObservableSlot',
-		'#parseFailureColor => SpObservableSlot'
+		'#lastValidExpression => SpObservableSlot'
 	],
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Widgets'
 }
 
 { #category : #api }
@@ -15,18 +16,8 @@ RMDExpressionTextInputPresenter >> acceptExpression: aRMDExpression [
 	(aRMDExpression isKindOf: RMDExpressionNode)
 		ifTrue: [ self beOk.
 			lastValidExpression := aRMDExpression ]
-		ifFalse: [ self beParseFailure ].
+		ifFalse: [ self beError ].
 	self accept: aRMDExpression printString
-]
-
-{ #category : #private }
-RMDExpressionTextInputPresenter >> beOk [
-	self color: self theme backgroundColor
-]
-
-{ #category : #private }
-RMDExpressionTextInputPresenter >> beParseFailure [
-	self color: parseFailureColor
 ]
 
 { #category : #api }
@@ -40,14 +31,8 @@ RMDExpressionTextInputPresenter >> expression: aRMDExpression [
 	(aRMDExpression isKindOf: RMDExpressionNode)
 		ifTrue: [ self beOk.
 			lastValidExpression := aRMDExpression ]
-		ifFalse: [ self beParseFailure ].
+		ifFalse: [ self beError ].
 	text := aRMDExpression printString
-]
-
-{ #category : #initialization }
-RMDExpressionTextInputPresenter >> initialize [
-	super initialize.
-	parseFailureColor := self theme backgroundColor mixed: 0.9 with: Color red
 ]
 
 { #category : #api }
@@ -62,7 +47,7 @@ RMDExpressionTextInputPresenter >> text: aString [
 			self beOk.
 			expression := node.
 			lastValidExpression := node ]
-		ifError: [ self beParseFailure.
+		ifError: [ self beError.
 			expression := nil ].
 	^ super text: aString
 ]

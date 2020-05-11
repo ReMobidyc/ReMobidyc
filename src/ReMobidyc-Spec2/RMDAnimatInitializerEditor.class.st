@@ -5,7 +5,7 @@ Class {
 		'populationField',
 		'animatField'
 	],
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
@@ -38,27 +38,17 @@ RMDAnimatInitializerEditor >> initializeWidgets [
 	populationField := self newNumberInput
 		beInteger;
 		autoAccept: true;
-		whenTextIsAcceptedDo: [ :text | 
-			self
-				fromString: text asString trim
-				ifIntegerDo: [ :int | 
-					| nat |
-					nat := int max: 1.
-					node ifNotNil: [ node population: nat ].
-					populationField
-						text: nat printString;
-						color: self okColor ]
-				ifError: [ populationField color: self errorColor ] ];
+		whenLastValidNumberChangedDo: [ :int | 
+			| nat |
+			nat := int max: 1.
+			node ifNotNil: [ node population: nat ].
+			populationField text: nat printString ];
 		yourself.
-	animatField := self newTextInput
+	animatField := self newValidatedTextInput
 		autoAccept: true;
-		whenTextIsAcceptedDo: [ :text | 
-			text trimmed
-				ifEmpty: [ animatField color: self errorColor ]
-				ifNotEmpty: [ :name | 
-					(name contains: #isSeparator)
-						ifTrue: [ animatField color: self errorColor ]
-						ifFalse: [ node animat: name ] ] ];
+		validation:
+				[ :name | name notEmpty and: (name asString contains: #isSeparator) not ];
+		whenLastValidTextChangedDo: [ :text | node animat: text asString ];
 		yourself
 ]
 

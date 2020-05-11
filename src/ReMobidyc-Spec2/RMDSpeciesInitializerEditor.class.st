@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDSpeciesInitializerEditor,
 	#superclass : #RMDSyntaxNodeEditor,
-	#category : #'ReMobidyc-Spec2'
+	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
