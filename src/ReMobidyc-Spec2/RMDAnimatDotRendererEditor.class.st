@@ -2,7 +2,6 @@ Class {
 	#name : #RMDAnimatDotRendererEditor,
 	#superclass : #RMDAnimatRendererEditor,
 	#instVars : [
-		'colorDropList',
 		'diameterField'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
@@ -18,14 +17,11 @@ RMDAnimatDotRendererEditor class >> defaultSpec [
 				spacing: 5;
 				add: '' width: 20;
 				add: #animatField width: 100;
-				add: (SpBoxLayout newVertical addLast: ' → ' expand: false)
-					width: 16;
+				add: ' → ' expand: false;
 				add: #colorDropList width: 60;
-				add: (SpBoxLayout newVertical addLast: ' dot of ' expand: false)
-					width: 50;
+				add: ' dot of ' expand: false;
 				add: #diameterField width: 40;
-				add: (SpBoxLayout newVertical addLast: ' pixels' expand: false)
-					width: 50;
+				add: ' pixels' expand: false;
 				yourself)
 		height: self inputTextHeight
 ]
@@ -33,9 +29,6 @@ RMDAnimatDotRendererEditor class >> defaultSpec [
 { #category : #initialization }
 RMDAnimatDotRendererEditor >> initializeWidgets [
 	super initializeWidgets.
-	colorDropList := self newColor
-		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer color: color ] ];
-		yourself.
 	diameterField := self newNumberInput
 		beInteger;
 		autoAccept: true;
@@ -45,20 +38,7 @@ RMDAnimatDotRendererEditor >> initializeWidgets [
 { #category : #accessing }
 RMDAnimatDotRendererEditor >> rendererChanged [
 	super rendererChanged.
-	self
-		updateColorDropList;
-		updateDiameterField
-]
-
-{ #category : #updating }
-RMDAnimatDotRendererEditor >> updateColorDropList [
-	renderer
-		ifNotNil: [ | color colors |
-			color := renderer color.
-			colors := colorDropList listItems.
-			(colors includes: color)
-				ifFalse: [ colorDropList items: (colors copyWith: color) ].
-			colorDropList selectItem: renderer color ]
+	self updateDiameterField
 ]
 
 { #category : #updating }

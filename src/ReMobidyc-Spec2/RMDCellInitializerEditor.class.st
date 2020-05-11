@@ -17,26 +17,14 @@ RMDCellInitializerEditor class >> defaultSpec [
 		add:
 			(SpBoxLayout newHorizontal
 				add: #xDivisionsField expand: false;
-				add:
-					(SpBoxLayout newVertical
-						addLast: ' x ' expand: false;
-						yourself)
-					width: 18;
+				add: ' x ' expand: false;
 				add: #yDivisionsField expand: false;
-				add:
-					(SpBoxLayout newVertical
-						addLast: ' of ' expand: false;
-						yourself)
-					width: 25;
+				add: ' of ' expand: false;
 				add: #sizeField width: 80;
 				add: #sizeUnitDropList width: 80;
-				add:
-					(SpBoxLayout newVertical
-						addLast: ' Cell with' expand: false;
-						yourself)
-					width: 60;
+				add: ' Cell with' expand: false;
 				yourself)
-			height: self labelHeight;
+			height: self inputTextHeight;
 		yourself
 ]
 

@@ -1,35 +1,19 @@
 Class {
 	#name : #RMDCellColorBrightnessRenderer,
 	#superclass : #RMDCellExpressionRenderer,
-	#instVars : [
-		'color'
-	],
 	#category : #'ReMobidyc-Visualization'
 }
 
 { #category : #'instance creation' }
-RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpressionNode between: aNumber and: anotherNumber [
+RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpressionNode between: aRMDLiteralNode1 and: aRMDLiteralNode2 [
+	<script:
+		'(RMDCellColorBrightnessRenderer color: Color green brightness: ''my grass'' asRMDExpression between: ''0 [kcal]'' asRMDExpression and: ''10000 [kcal]'' asRMDExpression) inspect'>
 	^ (self
 		expression: aRMDExpressionNode
-		min: aNumber
-		max: anotherNumber)
+		min: aRMDLiteralNode1
+		max: aRMDLiteralNode2)
 		color: aColor;
 		yourself
-]
-
-{ #category : #accessing }
-RMDCellColorBrightnessRenderer >> color [
-	^ color
-]
-
-{ #category : #accessing }
-RMDCellColorBrightnessRenderer >> color: aColor [
-	color := aColor
-]
-
-{ #category : #defaults }
-RMDCellColorBrightnessRenderer >> defaultColor [
-	^ Color white
 ]
 
 { #category : #drawing }

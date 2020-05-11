@@ -17,13 +17,9 @@ RMDAnimatInitializerEditor class >> defaultSpec [
 				add: #populationField expand: false;
 				add: ' ' expand: false;
 				add: #animatField expand: false;
-				add:
-					(SpBoxLayout newVertical
-						addLast: ' with' expand: false;
-						yourself)
-					width: 32;
+				add: ' with' expand: false;
 				yourself)
-			expand: false;
+			height: self inputTextHeight;
 		yourself
 ]
 

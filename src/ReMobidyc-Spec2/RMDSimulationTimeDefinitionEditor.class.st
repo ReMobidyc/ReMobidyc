@@ -18,12 +18,10 @@ RMDSimulationTimeDefinitionEditor class >> defaultSpec [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: (SpBoxLayout newVertical addLast: 'during ' expand: false)
-					width: 60;
+				add: 'during ' expand: false;
 				add: #durationField width: 80;
 				add: #durationUnitDropList width: 80;
-				add: (SpBoxLayout newVertical addLast: ' step by ' expand: false)
-					width: 60;
+				add: ' step by ' expand: false;
 				add: #stepField width: 60;
 				add: #stepUnitDropList width: 80;
 				yourself)
@@ -42,6 +40,7 @@ RMDSimulationTimeDefinitionEditor >> durationUnitDropList [
 
 { #category : #initialization }
 RMDSimulationTimeDefinitionEditor >> initializeWidgets [
+	super initializeWidgets.
 	durationField := self newNumberInput
 		beFloat;
 		autoAccept: true;

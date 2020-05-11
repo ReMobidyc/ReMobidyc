@@ -10,8 +10,6 @@ RMDSimulationDefinitionEditor class >> defaultSpec [
 	^ SpScrollableLayout new
 		add:
 			(SpBoxLayout newVertical
-				borderWidth: 20;
-				spacing: 10;
 				add: 'N/A' expand: false;
 				yourself);
 		yourself
@@ -24,6 +22,7 @@ RMDSimulationDefinitionEditor >> initializePresenters [
 
 { #category : #initialization }
 RMDSimulationDefinitionEditor >> initializeWidgets [
+	super initializeWidgets.
 	self whenBuiltDo: [ self nodeChanged ]
 ]
 
@@ -41,20 +40,20 @@ RMDSimulationDefinitionEditor >> nodeChanged [
 		ifNotNil: [ layout presenters first
 				removeAll;
 				add: node timeDefinition asPresenter
-					height: self class inputTextHeight + 10;
+					height: self class inputTextHeight + 5;
 				add: node worldInitializer asPresenter
 					height:
-					(self class inputTextHeight + 10)
-						* (node worldInitializer propertyInitializers size + 1);
+					self class inputTextHeight
+						* (node worldInitializer propertyInitializers size + 1) + 5;
 				add: node cellInitializer asPresenter
 					height:
-					(self class inputTextHeight + 10)
-						* (node cellInitializer propertyInitializers size + 1).
+					self class inputTextHeight
+						* (node cellInitializer propertyInitializers size + 1) + 5.
 			node animatInitializers
 				do: [ :initializer | 
 					layout presenters first
 						add: initializer asPresenter
 						height:
-							(self class inputTextHeight + 10)
-								* (initializer propertyInitializers size + 1) ] ]
+							self class inputTextHeight
+								* (initializer propertyInitializers size + 1) + 5 ] ]
 ]

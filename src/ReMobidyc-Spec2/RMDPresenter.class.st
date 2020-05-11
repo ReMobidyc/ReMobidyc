@@ -6,6 +6,18 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #initialization }
+RMDPresenter >> initializeWidgets [
+	self
+		whenBuiltDo: [ :w | 
+			| font |
+			font := TextStyle defaultFont.
+			w widget
+				allMorphsDo: [ :m | 
+					(m respondsTo: #font:)
+						ifTrue: [ m font: font ] ] ]
+]
+
 { #category : #widgets }
 RMDPresenter >> newAnimatInput [
 	^ self newValidatedTextInput

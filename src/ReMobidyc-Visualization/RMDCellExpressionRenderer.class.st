@@ -1,6 +1,11 @@
 Class {
 	#name : #RMDCellExpressionRenderer,
 	#superclass : #RMDCellRenderer,
+	#instVars : [
+		'min',
+		'expression',
+		'max'
+	],
 	#category : #'ReMobidyc-Visualization'
 }
 
@@ -14,31 +19,12 @@ RMDCellExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber m
 ]
 
 { #category : #drawing }
-RMDCellExpressionRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
-	| xDivisions yDivisions cellLength |
-	xDivisions := aRMDInterpreter cellXDivisions.
-	yDivisions := aRMDInterpreter cellYDivisions.
-	cellLength := aRMDInterpreter cellLength.
-	1 to: yDivisions do: [ :cellY | 
-		1 to: xDivisions do: [ :cellX | 
-			self
-				drawValue:
-					(self
-						valueForIndividual: (aRMDInterpreter cellAtXIndex: cellX yIndex: cellY)
-						interpreter: aRMDInterpreter)
-				bounds:
-					((self
-						pointFromX: (cellX - 1) * cellLength
-						y: (cellY - 1) * cellLength
-						interpreter: aRMDInterpreter
-						scale: aNumber)
-						corner:
-							(self
-								pointFromX: cellX * cellLength
-								y: cellY * cellLength
-								interpreter: aRMDInterpreter
-								scale: aNumber))
-				on: aCanvas ] ]
+RMDCellExpressionRenderer >> drawCell: anInteger interpreter: aRMDInterpreter bounds: aRectangle on: aCanvas [
+	self
+		drawValue:
+			(self valueForIndividual: anInteger interpreter: aRMDInterpreter)
+		bounds: aRectangle
+		on: aCanvas
 ]
 
 { #category : #drawing }

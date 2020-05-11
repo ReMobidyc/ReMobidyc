@@ -1,8 +1,26 @@
 Class {
 	#name : #RMDRenderer,
 	#superclass : #Object,
+	#instVars : [
+		'color'
+	],
 	#category : #'ReMobidyc-Visualization'
 }
+
+{ #category : #accessing }
+RMDRenderer >> color [
+	^ color ifNil: [ color := self defaultColor ]
+]
+
+{ #category : #accessing }
+RMDRenderer >> color: aColor [
+	color := aColor
+]
+
+{ #category : #defaults }
+RMDRenderer >> defaultColor [
+	^ Color yellow
+]
 
 { #category : #drawing }
 RMDRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [

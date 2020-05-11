@@ -2,7 +2,6 @@ Class {
 	#name : #RMDAnimatDotRenderer,
 	#superclass : #RMDAnimatRenderer,
 	#instVars : [
-		'color',
 		'diameter'
 	],
 	#category : #'ReMobidyc-Visualization'
@@ -16,21 +15,6 @@ RMDAnimatDotRenderer class >> on: aString diameter: aNumber color: aColor [
 		diameter: aNumber;
 		color: aColor;
 		yourself
-]
-
-{ #category : #accessing }
-RMDAnimatDotRenderer >> color [
-	^ color ifNil: [ color := self defaultColor ]
-]
-
-{ #category : #accessing }
-RMDAnimatDotRenderer >> color: aColor [
-	color := aColor
-]
-
-{ #category : #defaults }
-RMDAnimatDotRenderer >> defaultColor [
-	^ Color yellow
 ]
 
 { #category : #defaults }

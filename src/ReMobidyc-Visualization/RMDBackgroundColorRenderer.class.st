@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDBackgroundColorRenderer,
 	#superclass : #RMDBackgroundRenderer,
-	#instVars : [
-		'color'
-	],
 	#category : #'ReMobidyc-Visualization'
 }
 
@@ -32,16 +29,6 @@ RMDBackgroundColorRenderer class >> red [
 { #category : #'instance creation' }
 RMDBackgroundColorRenderer class >> white [
 	^ self color: Color white
-]
-
-{ #category : #accessing }
-RMDBackgroundColorRenderer >> color [
-	^ color
-]
-
-{ #category : #accessing }
-RMDBackgroundColorRenderer >> color: aColor [
-	color := aColor
 ]
 
 { #category : #drawing }

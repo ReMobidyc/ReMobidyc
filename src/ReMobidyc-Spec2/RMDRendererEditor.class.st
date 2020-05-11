@@ -2,7 +2,8 @@ Class {
 	#name : #RMDRendererEditor,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'renderer'
+		'renderer',
+		'colorDropList'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -11,6 +12,14 @@ Class {
 RMDRendererEditor class >> on: aRMDRenderer [
 	^ self new
 		renderer: aRMDRenderer;
+		yourself
+]
+
+{ #category : #initialization }
+RMDRendererEditor >> initializeWidgets [
+	super initializeWidgets.
+	colorDropList := self newColor
+		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer color: color ] ];
 		yourself
 ]
 
@@ -27,5 +36,16 @@ RMDRendererEditor >> renderer: aRMDRenderer [
 
 { #category : #accessing }
 RMDRendererEditor >> rendererChanged [
-	^ self subclassResponsibility
+	self updateColorDropList
+]
+
+{ #category : #updating }
+RMDRendererEditor >> updateColorDropList [
+	renderer
+		ifNotNil: [ | color colors |
+			color := renderer color.
+			colors := colorDropList listItems.
+			(colors includes: color)
+				ifFalse: [ colorDropList items: (colors copyWith: color) ].
+			colorDropList selectItem: renderer color ]
 ]

@@ -9,6 +9,7 @@ Class {
 
 { #category : #initialization }
 RMDAnimatRendererEditor >> initializeWidgets [
+	super initializeWidgets.
 	animatField := self newAnimatInput
 		autoAccept: true;
 		whenLastValidTextChangedDo: [ :animat | renderer animat: animat ]
@@ -16,6 +17,7 @@ RMDAnimatRendererEditor >> initializeWidgets [
 
 { #category : #accessing }
 RMDAnimatRendererEditor >> rendererChanged [
+	super rendererChanged.
 	self updateAnimatField
 ]
 

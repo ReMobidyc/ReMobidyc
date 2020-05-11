@@ -11,13 +11,15 @@ Class {
 { #category : #specs }
 RMDPropertyInitializerEditor class >> defaultSpec [
 	<spec>
-	^ SpBoxLayout newHorizontal
-		add: '' width: 20;
-		add: #identifierField width: 100;
-		add: (SpBoxLayout newVertical addLast: ' = ' expand: false)
-			width: 16;
-		add: #expressionField;
-		yourself
+	^ SpBoxLayout newVertical
+		add:
+			(SpBoxLayout newHorizontal
+				add: '     ' expand: false;
+				add: #identifierField width: 100;
+				add: ' = ' expand: false;
+				add: #expressionField;
+				yourself)
+		height: self inputTextHeight
 ]
 
 { #category : #api }
@@ -47,6 +49,7 @@ RMDPropertyInitializerEditor >> identifierField [
 
 { #category : #initialization }
 RMDPropertyInitializerEditor >> initializeWidgets [
+	super initializeWidgets.
 	identifierField := self newTextInput
 		beText;
 		autoAccept: true;

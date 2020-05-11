@@ -8,13 +8,14 @@ Class {
 RMDSpeciesInitializerEditor class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
-		borderWidth: 10;
-		spacing: 10;
+		borderWidth: 0;
+		spacing: 0;
 		yourself
 ]
 
 { #category : #initialization }
 RMDSpeciesInitializerEditor >> initializeWidgets [
+	super initializeWidgets.
 	self
 		whenBuiltDo: [ self
 				withWidgetDo: [ :w | 
@@ -44,5 +45,5 @@ RMDSpeciesInitializerEditor >> updatePropertyInitializersList [
 									(initializer asPresenter
 										disableIdentifier;
 										yourself)
-								expand: false ] ] ]
+								height: self class inputTextHeight ] ] ]
 ]
