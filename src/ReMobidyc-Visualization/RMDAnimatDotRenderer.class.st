@@ -10,6 +10,8 @@ Class {
 
 { #category : #'instance creation' }
 RMDAnimatDotRenderer class >> on: aString diameter: aNumber color: aColor [
+	<script:
+		'(RMDAnimatDotRenderer on: ''Goat'' diameter: 2 color: Color gray) inspect'>
 	^ (self on: aString)
 		diameter: aNumber;
 		color: aColor;

@@ -44,10 +44,8 @@ RMDAnimatInitializerEditor >> initializeWidgets [
 			node ifNotNil: [ node population: nat ].
 			populationField text: nat printString ];
 		yourself.
-	animatField := self newValidatedTextInput
+	animatField := self newAnimatInput
 		autoAccept: true;
-		validation:
-				[ :name | name notEmpty and: (name asString contains: #isSeparator) not ];
 		whenLastValidTextChangedDo: [ :text | node animat: text asString ];
 		yourself
 ]

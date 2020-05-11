@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDCellColorBrightnessRenderer,
-	#superclass : #RMDCellRenderer,
+	#superclass : #RMDCellExpressionRenderer,
 	#instVars : [
 		'color'
 	],

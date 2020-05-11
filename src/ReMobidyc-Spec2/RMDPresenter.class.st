@@ -7,24 +7,31 @@ Class {
 }
 
 { #category : #widgets }
+RMDPresenter >> newAnimatInput [
+	^ self newValidatedTextInput
+		validation: [ :name | 
+			(self speciesValidation value: name)
+				and: [ (#('World' 'Cell') includes: name asString) not ] ]
+]
+
+{ #category : #widgets }
 RMDPresenter >> newColor [
 	^ self
 		newColor:
-			{Color white.
-			Color gray.
-			Color black} , (Color wheel: 7)
+			{Color black.
+			Color gray} , (Color wheel: 5)
 ]
 
 { #category : #widgets }
 RMDPresenter >> newColor: anArrayOfColor [
 	^ self newDropList
 		items: anArrayOfColor;
-		iconBlock: [ :c | 
+		display: [ :color | '' ];
+		iconBlock: [ :color | 
 			| form |
-			form := Form extent: self class inputTextHeight asPoint depth: 32.
-			form getCanvas fillColor: c.
+			form := Form extent: 14 @ 14 depth: 32.
+			form getCanvas fillColor: color.
 			form ];
-		display: [ :item | '' ];
 		yourself
 ]
 
@@ -41,4 +48,9 @@ RMDPresenter >> newNumberInput [
 { #category : #widgets }
 RMDPresenter >> newValidatedTextInput [
 	^ self instantiate: RMDValidatedTextInputPresenter
+]
+
+{ #category : #private }
+RMDPresenter >> speciesValidation [
+	^ [ :name | name asString allSatisfy: [ :c | c isLetter or: [ c isDigit ] ] ]
 ]

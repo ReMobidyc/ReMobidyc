@@ -1,10 +1,5 @@
 Class {
-	#name : #RMDCellRenderer,
+	#name : #RMDBackgroundRenderer,
 	#superclass : #RMDRenderer,
-	#instVars : [
-		'min',
-		'max',
-		'expression'
-	],
 	#category : #'ReMobidyc-Visualization'
 }

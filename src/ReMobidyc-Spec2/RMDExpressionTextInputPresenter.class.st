@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
 		'#expression => SpObservableSlot',
-		'#lastValidExpression => SpObservableSlot'
+		'#lastValidExpression => SpObservableSlot',
+		'#isLiteralOnly => SpObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -13,7 +14,8 @@ Class {
 { #category : #api }
 RMDExpressionTextInputPresenter >> acceptExpression: aRMDExpression [
 	expression := aRMDExpression.
-	(aRMDExpression isKindOf: RMDExpressionNode)
+	((aRMDExpression isKindOf: RMDExpressionNode)
+		and: [ isLiteralOnly not or: [ aRMDExpression isLiteralNode ] ])
 		ifTrue: [ self beOk.
 			lastValidExpression := aRMDExpression ]
 		ifFalse: [ self beError ].
@@ -28,11 +30,28 @@ RMDExpressionTextInputPresenter >> expression [
 { #category : #api }
 RMDExpressionTextInputPresenter >> expression: aRMDExpression [
 	expression := aRMDExpression.
-	(aRMDExpression isKindOf: RMDExpressionNode)
+	((aRMDExpression isKindOf: RMDExpressionNode)
+		and: [ isLiteralOnly not or: [ aRMDExpression isLiteralNode ] ])
 		ifTrue: [ self beOk.
 			lastValidExpression := aRMDExpression ]
 		ifFalse: [ self beError ].
 	text := aRMDExpression printString
+]
+
+{ #category : #initialization }
+RMDExpressionTextInputPresenter >> initialize [
+	super initialize.
+	isLiteralOnly := false
+]
+
+{ #category : #api }
+RMDExpressionTextInputPresenter >> isLiteralOnly [
+	^ isLiteralOnly
+]
+
+{ #category : #api }
+RMDExpressionTextInputPresenter >> isLiteralOnly: aBoolean [
+	isLiteralOnly := aBoolean = true
 ]
 
 { #category : #api }
@@ -44,9 +63,12 @@ RMDExpressionTextInputPresenter >> lastValidExpression [
 RMDExpressionTextInputPresenter >> text: aString [
 	aString
 		asRMDExpressionDo: [ :node | 
-			self beOk.
-			expression := node.
-			lastValidExpression := node ]
+			(isLiteralOnly and: [ node isLiteralNode not ])
+				ifTrue: [ self beError.
+					expression := nil ]
+				ifFalse: [ self beOk.
+					expression := node.
+					lastValidExpression := node ] ]
 		ifError: [ self beError.
 			expression := nil ].
 	^ super text: aString
@@ -55,6 +77,11 @@ RMDExpressionTextInputPresenter >> text: aString [
 { #category : #'api-events' }
 RMDExpressionTextInputPresenter >> whenExpressionChangedDo: aBlock [
 	self property: #expression whenChangedDo: aBlock
+]
+
+{ #category : #'api-events' }
+RMDExpressionTextInputPresenter >> whenIsLiteralOnlyChangedDo: aBlock [
+	self property: #lastValidExpression whenChangedDo: aBlock
 ]
 
 { #category : #'api-events' }

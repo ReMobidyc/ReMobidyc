@@ -2,7 +2,7 @@ Class {
 	#name : #RMDAnimatRenderer,
 	#superclass : #RMDRenderer,
 	#instVars : [
-		'species'
+		'animat'
 	],
 	#category : #'ReMobidyc-Visualization'
 }
@@ -10,18 +10,28 @@ Class {
 { #category : #'instance creation' }
 RMDAnimatRenderer class >> on: aString [
 	^ self new
-		species: aString;
+		animat: aString;
 		yourself
+]
+
+{ #category : #accessing }
+RMDAnimatRenderer >> animat [
+	^ animat
+]
+
+{ #category : #accessing }
+RMDAnimatRenderer >> animat: aString [
+	animat := aString
 ]
 
 { #category : #drawing }
 RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	| animatDefinition |
-	animatDefinition := species isString
+	animatDefinition := animat isString
 		ifTrue: [ aRMDInterpreter
-				animatDefinitionAt: species
-				ifAbsent: [ ^ KeyNotFound signal: species ] ]
-		ifFalse: [ species ].
+				animatDefinitionAt: animat
+				ifAbsent: [ ^ KeyNotFound signal: animat ] ]
+		ifFalse: [ animat ].
 	aRMDInterpreter
 		individualsOf: animatDefinition
 		do: [ :individual | 
@@ -52,14 +62,4 @@ RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 { #category : #drawing }
 RMDAnimatRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoint on: aCanvas [
 	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-RMDAnimatRenderer >> species [
-	^ species
-]
-
-{ #category : #accessing }
-RMDAnimatRenderer >> species: aString [
-	species := aString
 ]

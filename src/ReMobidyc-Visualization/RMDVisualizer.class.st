@@ -2,6 +2,7 @@ Class {
 	#name : #RMDVisualizer,
 	#superclass : #Object,
 	#instVars : [
+		'extent',
 		'renderers'
 	],
 	#category : #'ReMobidyc-Visualization'
@@ -9,7 +10,6 @@ Class {
 
 { #category : #examples }
 RMDVisualizer class >> exampleSugarScape [
-	<script: 'RMDVisualizer exampleSugarScape'>
 	| parser interpreter visualizer form morph |
 	parser := RMDGrammar new.
 	interpreter := RMDInterpreter new
@@ -51,20 +51,28 @@ RMDVisualizer class >> exampleSugarScape [
 						bloodSugar: '500[kcal]'
 						to: '1000[kcal]')}).
 	interpreter setupSimulation.
-	visualizer := RMDVisualizer new
+	visualizer := (self extent: 500 @ 500)
+		addBackgroundRendererColor: Color red;
 		addCellRendererColor: Color green
-			brightness: (parser expression end parse: 'here''s grass')
+			alpha: (parser expression end parse: 'here''s grass')
 			between: 0
 			and: '1000000[kcal]' asRMDExpression numeric;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
-	form := visualizer visualize: interpreter extent: 500 @ 500.
+	form := visualizer visualize: interpreter.
 	morph := form asMorph.
 	morph openInWindowLabeled: 'Sugar Scape'.
 	[ [ interpreter stepSimulation ]
-		whileTrue: [ morph form: (visualizer visualize: interpreter extent: 500 @ 500).
+		whileTrue: [ morph form: (visualizer visualize: interpreter).
 			0.01 second wait ] ] forkAt: Processor userBackgroundPriority.
 	^ morph
+]
+
+{ #category : #'instance creation' }
+RMDVisualizer class >> extent: aPoint [
+	^ self new
+		extent: aPoint;
+		yourself
 ]
 
 { #category : #'adding-removing' }
@@ -72,6 +80,22 @@ RMDVisualizer >> addAnimatDotRenderer: aString diameter: aNumber color: aColor [
 	^ self
 		addRenderer:
 			(RMDAnimatDotRenderer on: aString diameter: aNumber color: aColor)
+]
+
+{ #category : #'adding-removing' }
+RMDVisualizer >> addBackgroundRendererColor: aColor [
+	^ self addRendererFirst: (RMDBackgroundColorRenderer color: aColor)
+]
+
+{ #category : #'adding-removing' }
+RMDVisualizer >> addCellRendererColor: aColor alpha: aRMDExpressionNode between: aNumber and: anotherNumber [
+	^ self
+		addRenderer:
+			(RMDCellColorAlphaRenderer
+				color: aColor
+				alpha: aRMDExpressionNode
+				between: aNumber
+				and: anotherNumber)
 ]
 
 { #category : #'adding-removing' }
@@ -91,6 +115,27 @@ RMDVisualizer >> addRenderer: aRMDRenderer [
 	^ aRMDRenderer
 ]
 
+{ #category : #'adding-removing' }
+RMDVisualizer >> addRendererFirst: aRMDRenderer [
+	renderers addFirst: aRMDRenderer.
+	^ aRMDRenderer
+]
+
+{ #category : #accessing }
+RMDVisualizer >> extent [
+	^ extent
+]
+
+{ #category : #accessing }
+RMDVisualizer >> extent: aPoint [
+	extent := aPoint
+]
+
+{ #category : #private }
+RMDVisualizer >> formToWrite [
+	^ self subclassResponsibility
+]
+
 { #category : #initialization }
 RMDVisualizer >> initialize [
 	super initialize.
@@ -104,11 +149,11 @@ RMDVisualizer >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 ]
 
 { #category : #visualizing }
-RMDVisualizer >> visualize: aRMDInterpreter extent: aPoint [
+RMDVisualizer >> visualize: aRMDInterpreter [
 	| scale form canvas |
-	scale := aPoint x asFloat / aRMDInterpreter cellXDivisions asFloat
-		min: aPoint y asFloat / aRMDInterpreter cellYDivisions asFloat.
-	form := Form extent: aPoint depth: 32.
+	scale := extent x asFloat / aRMDInterpreter cellXDivisions asFloat
+		min: extent y asFloat / aRMDInterpreter cellYDivisions asFloat.
+	form := self formToWrite.
 	canvas := form getCanvas.
 	renderers
 		do:
