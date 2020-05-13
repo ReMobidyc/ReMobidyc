@@ -11,3 +11,8 @@ RMDWorldInitializerEditor class >> defaultSpec [
 		add: 'World with' expand: false;
 		yourself
 ]
+
+{ #category : #accessing }
+RMDWorldInitializerEditor >> preferredHeight [
+	^ (node propertyInitializers size + 1) * self class inputTextHeight
+]

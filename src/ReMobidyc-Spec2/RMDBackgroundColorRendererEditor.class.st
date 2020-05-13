@@ -12,9 +12,12 @@ RMDBackgroundColorRendererEditor class >> defaultSpec [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: '' width: 20;
-				add: (SpBoxLayout newVertical addLast: 'Background' expand: false)
-					width: 50;
+				add: 'Background' expand: false;
 				add: #colorDropList width: 60)
 		height: self inputTextHeight
+]
+
+{ #category : #accessing }
+RMDBackgroundColorRendererEditor >> preferredHeight [
+	^ self class inputTextHeight
 ]

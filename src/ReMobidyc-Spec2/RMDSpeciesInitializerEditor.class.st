@@ -21,7 +21,7 @@ RMDSpeciesInitializerEditor >> initializeWidgets [
 				withWidgetDo: [ :w | 
 					w
 						update: #color: with: {Color white};
-						update: #borderColor: with: {Color lightGray};
+						update: #borderColor: with: {Color darkGray};
 						update: #borderWidth: with: {1} ].
 			self updatePropertyInitializersList ]
 ]
@@ -45,5 +45,5 @@ RMDSpeciesInitializerEditor >> updatePropertyInitializersList [
 									(initializer asPresenter
 										disableIdentifier;
 										yourself)
-								height: self class inputTextHeight ] ] ]
+								expand: false ] ] ]
 ]

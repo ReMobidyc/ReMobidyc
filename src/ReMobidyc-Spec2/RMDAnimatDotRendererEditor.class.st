@@ -15,7 +15,6 @@ RMDAnimatDotRendererEditor class >> defaultSpec [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: '' width: 20;
 				add: #animatField width: 100;
 				add: ' → ' expand: false;
 				add: #colorDropList width: 60;
@@ -33,6 +32,11 @@ RMDAnimatDotRendererEditor >> initializeWidgets [
 		beInteger;
 		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :diameter | renderer diameter: diameter ]
+]
+
+{ #category : #accessing }
+RMDAnimatDotRendererEditor >> preferredHeight [
+	^ self class inputTextHeight
 ]
 
 { #category : #accessing }

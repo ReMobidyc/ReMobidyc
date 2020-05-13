@@ -70,6 +70,11 @@ RMDPropertyInitializerEditor >> nodeChanged [
 		updateExpressionField
 ]
 
+{ #category : #accessing }
+RMDPropertyInitializerEditor >> preferredHeight [
+	^ self class inputTextHeight
+]
+
 { #category : #updating }
 RMDPropertyInitializerEditor >> updateExpressionField [
 	expressionField text: node expression printString

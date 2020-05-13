@@ -27,6 +27,12 @@ RMDRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	^ self subclassResponsibility
 ]
 
+{ #category : #initialization }
+RMDRenderer >> initialize [
+	super initialize.
+	color := self defaultColor
+]
+
 { #category : #private }
 RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
 	| cellX cellY |

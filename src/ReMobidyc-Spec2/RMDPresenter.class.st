@@ -27,15 +27,15 @@ RMDPresenter >> newAnimatInput [
 ]
 
 { #category : #widgets }
-RMDPresenter >> newColor [
+RMDPresenter >> newColorDropList [
 	^ self
-		newColor:
+		newColorDropList:
 			{Color black.
 			Color gray} , (Color wheel: 5)
 ]
 
 { #category : #widgets }
-RMDPresenter >> newColor: anArrayOfColor [
+RMDPresenter >> newColorDropList: anArrayOfColor [
 	^ self newDropList
 		items: anArrayOfColor;
 		display: [ :color | '' ];

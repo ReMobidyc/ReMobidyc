@@ -10,9 +10,17 @@ RMDSimulationDefinitionEditor class >> defaultSpec [
 	^ SpScrollableLayout new
 		add:
 			(SpBoxLayout newVertical
+				spacing: 10;
 				add: 'N/A' expand: false;
 				yourself);
 		yourself
+]
+
+{ #category : #private }
+RMDSimulationDefinitionEditor >> add: aRMDSyntaxNodeEditor [
+	self theLayout
+		add: aRMDSyntaxNodeEditor
+		height: aRMDSyntaxNodeEditor preferredHeight
 ]
 
 { #category : #initialization }
@@ -37,23 +45,21 @@ RMDSimulationDefinitionEditor >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDSimulationDefinitionEditor >> nodeChanged [
 	layout
-		ifNotNil: [ layout presenters first
-				removeAll;
-				add: node timeDefinition asPresenter
-					height: self class inputTextHeight + 5;
-				add: node worldInitializer asPresenter
-					height:
-					self class inputTextHeight
-						* (node worldInitializer propertyInitializers size + 1) + 5;
-				add: node cellInitializer asPresenter
-					height:
-					self class inputTextHeight
-						* (node cellInitializer propertyInitializers size + 1) + 5.
+		ifNotNil: [ layout presenters first removeAll.
+			self
+				add: node timeDefinition asPresenter;
+				add: node worldInitializer asPresenter;
+				add: node cellInitializer asPresenter.
 			node animatInitializers
-				do: [ :initializer | 
-					layout presenters first
-						add: initializer asPresenter
-						height:
-							self class inputTextHeight
-								* (initializer propertyInitializers size + 1) + 5 ] ]
+				do: [ :initializer | self add: initializer asPresenter ] ]
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionEditor >> preferredHeight [
+	^ (layout presenters collect: #preferredHeight) sum
+]
+
+{ #category : #private }
+RMDSimulationDefinitionEditor >> theLayout [
+	^ layout ifNotNil: [ layout presenters first ]
 ]

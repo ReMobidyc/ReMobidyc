@@ -29,3 +29,8 @@ RMDSyntaxNodeEditor >> node: aRMDSyntaxNode [
 RMDSyntaxNodeEditor >> nodeChanged [
 	^ self subclassResponsibility
 ]
+
+{ #category : #accessing }
+RMDSyntaxNodeEditor >> preferredHeight [
+	^ self subclassResponsibility
+]

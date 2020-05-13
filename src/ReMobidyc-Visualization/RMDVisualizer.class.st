@@ -51,14 +51,16 @@ RMDVisualizer class >> exampleSugarScape [
 						bloodSugar: '500[kcal]'
 						to: '1000[kcal]')}).
 	interpreter setupSimulation.
+	interpreter simulationDefinition asPresenter openWithSpec.
 	visualizer := (self extent: 500 @ 500)
 		addBackgroundRendererColor: Color red;
 		addCellRendererColor: Color green
 			alpha: (parser expression end parse: 'here''s grass')
-			between: 0
-			and: '1000000[kcal]' asRMDExpression numeric;
+			between: '0[kcal]' asRMDExpression
+			and: '1000000[kcal]' asRMDExpression;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
+	visualizer asPresenter openWithSpec.
 	form := visualizer visualize: interpreter.
 	morph := form asMorph.
 	morph openInWindowLabeled: 'Sugar Scape'.
@@ -72,6 +74,18 @@ RMDVisualizer class >> exampleSugarScape [
 RMDVisualizer class >> extent: aPoint [
 	^ self new
 		extent: aPoint;
+		yourself
+]
+
+{ #category : #'instance creation' }
+RMDVisualizer class >> sugarScape [
+	^ (self extent: 500 @ 500)
+		addBackgroundRendererColor: Color red;
+		addCellRendererColor: Color green
+			alpha: 'here''s grass' asRMDExpression
+			between: 0
+			and: '1000000[kcal]' asRMDExpression numeric;
+		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself
 ]
 
@@ -146,6 +160,11 @@ RMDVisualizer >> initialize [
 RMDVisualizer >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 	renderers remove: aRMDRenderer ifAbsent: [ ^ errorBlock value ].
 	^ aRMDRenderer
+]
+
+{ #category : #enumerating }
+RMDVisualizer >> renderersDo: aBlock [
+	renderers do: aBlock
 ]
 
 { #category : #visualizing }

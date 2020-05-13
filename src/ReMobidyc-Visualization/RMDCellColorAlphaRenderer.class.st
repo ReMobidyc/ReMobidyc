@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDCellColorAlphaRenderer,
-	#superclass : #RMDCellExpressionRenderer,
+	#superclass : #RMDCellColorRenderer,
 	#category : #'ReMobidyc-Visualization'
 }
 
@@ -16,11 +16,7 @@ RMDCellColorAlphaRenderer class >> color: aColor alpha: aRMDExpressionNode betwe
 		yourself
 ]
 
-{ #category : #drawing }
-RMDCellColorAlphaRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
-	aCanvas
-		frameAndFillRectangle: aRectangle
-		fillColor: (color alpha: (aNumber min: 1.0 max: 0.0))
-		borderWidth: 1
-		borderColor: color
+{ #category : #accessing }
+RMDCellColorAlphaRenderer >> colorFrom: aNumber [
+	^ color alpha: (aNumber min: 1.0 max: 0.0)
 ]

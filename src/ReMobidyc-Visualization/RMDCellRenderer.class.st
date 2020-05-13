@@ -4,6 +4,11 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #defaults }
+RMDCellRenderer >> defaultColor [
+	^ Color white
+]
+
 { #category : #drawing }
 RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	| xDivisions yDivisions cellLength |

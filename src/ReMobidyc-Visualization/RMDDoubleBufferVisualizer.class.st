@@ -14,6 +14,12 @@ RMDDoubleBufferVisualizer class >> exampleSugarSpace [
 	super exampleSugarScape
 ]
 
+{ #category : #'instance creation' }
+RMDDoubleBufferVisualizer class >> sugarScape [
+	<script: 'RMDDoubleBufferVisualizer sugarScape inspect'>
+	^ super sugarScape
+]
+
 { #category : #accessing }
 RMDDoubleBufferVisualizer >> extent: aPoint [
 	super extent: aPoint.

@@ -18,9 +18,21 @@ RMDRendererEditor class >> on: aRMDRenderer [
 { #category : #initialization }
 RMDRendererEditor >> initializeWidgets [
 	super initializeWidgets.
-	colorDropList := self newColor
+	colorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer color: color ] ];
-		yourself
+		yourself.
+	self
+		whenBuiltDo: [ self
+				withWidgetDo: [ :w | 
+					w
+						update: #color: with: {Color white};
+						update: #borderColor: with: {Color darkGray};
+						update: #borderWidth: with: {1} ] ]
+]
+
+{ #category : #accessing }
+RMDRendererEditor >> preferredHeight [ 
+	^ self subclassResponsibility 
 ]
 
 { #category : #accessing }

@@ -549,6 +549,11 @@ RMDInterpreter >> setupSimulation [
 					initializer evalIn: self ] ]
 ]
 
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> simulationDefinition [
+	^ simulationModel simulationDefinition
+]
+
 { #category : #'space access' }
 RMDInterpreter >> south [
 	^ simulationModel south

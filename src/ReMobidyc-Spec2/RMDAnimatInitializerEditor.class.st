@@ -23,9 +23,24 @@ RMDAnimatInitializerEditor class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #api }
+RMDAnimatInitializerEditor >> animatEnabled: aBoolean [
+	animatField enabled: aBoolean = true
+]
+
 { #category : #accessing }
 RMDAnimatInitializerEditor >> animatField [
 	^ animatField
+]
+
+{ #category : #api }
+RMDAnimatInitializerEditor >> disableAnimat [
+	animatField disable
+]
+
+{ #category : #api }
+RMDAnimatInitializerEditor >> enableAnimat [
+	animatField enable
 ]
 
 { #category : #initialization }
@@ -59,6 +74,11 @@ RMDAnimatInitializerEditor >> populationField [
 	^ populationField
 ]
 
+{ #category : #accessing }
+RMDAnimatInitializerEditor >> preferredHeight [
+	^ (node propertyInitializers size + 1) * self class inputTextHeight
+]
+
 { #category : #updating }
 RMDAnimatInitializerEditor >> updateAnimatField [
 	node ifNotNil: [ animatField text: node animat ]
@@ -67,4 +87,9 @@ RMDAnimatInitializerEditor >> updateAnimatField [
 { #category : #updating }
 RMDAnimatInitializerEditor >> updatePopulationField [
 	node ifNotNil: [ populationField text: node population printString ]
+]
+
+{ #category : #'api-events' }
+RMDAnimatInitializerEditor >> whenAnimatEnabledChangedDo: aBlock [
+	animatField whenEnabledChangedDo: aBlock
 ]

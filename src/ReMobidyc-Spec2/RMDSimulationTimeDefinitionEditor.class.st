@@ -108,6 +108,11 @@ RMDSimulationTimeDefinitionEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
+RMDSimulationTimeDefinitionEditor >> preferredHeight [
+	^ self class inputTextHeight
+]
+
+{ #category : #accessing }
 RMDSimulationTimeDefinitionEditor >> stepField [
 	^ stepField
 ]

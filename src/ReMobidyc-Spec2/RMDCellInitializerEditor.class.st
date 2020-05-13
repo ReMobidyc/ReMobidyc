@@ -93,6 +93,11 @@ RMDCellInitializerEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
+RMDCellInitializerEditor >> preferredHeight [
+	^ (node propertyInitializers size + 1) * self class inputTextHeight
+]
+
+{ #category : #accessing }
 RMDCellInitializerEditor >> sizeField [
 	^ sizeField
 ]

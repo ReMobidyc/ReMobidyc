@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDCellColorBrightnessRenderer,
-	#superclass : #RMDCellExpressionRenderer,
+	#superclass : #RMDCellColorRenderer,
 	#category : #'ReMobidyc-Visualization'
 }
 
@@ -16,22 +16,11 @@ RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpression
 		yourself
 ]
 
-{ #category : #drawing }
-RMDCellColorBrightnessRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
-	aCanvas
-		frameAndFillRectangle: aRectangle
-		fillColor:
-			(Color
-				h: color hue
-				s: color saturation
-				v: (aNumber min: 1.0 max: 0.005)
-				alpha: color alpha)
-		borderWidth: 1
-		borderColor: color
-]
-
-{ #category : #initialization }
-RMDCellColorBrightnessRenderer >> initialize [
-	super initialize.
-	color := self defaultColor
+{ #category : #accessing }
+RMDCellColorBrightnessRenderer >> colorFrom: aNumber [
+	^ Color
+		h: color hue
+		s: color saturation
+		v: (aNumber min: 1.0 max: 0.005)
+		alpha: color alpha
 ]
