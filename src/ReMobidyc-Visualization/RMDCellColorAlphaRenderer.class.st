@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDCellColorAlphaRenderer,
-	#superclass : #RMDCellColorRenderer,
+	#superclass : #RMDCellColorRangeRenderer,
 	#category : #'ReMobidyc-Visualization'
 }
 

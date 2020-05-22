@@ -14,6 +14,12 @@ RMDDoubleBufferVisualizer class >> exampleSugarSpace [
 	super exampleSugarScape
 ]
 
+{ #category : #examples }
+RMDDoubleBufferVisualizer class >> exampleSugarSpaceMap [
+	<script: 'RMDDoubleBufferVisualizer exampleSugarScapeMap'>
+	super exampleSugarScapeMap
+]
+
 { #category : #'instance creation' }
 RMDDoubleBufferVisualizer class >> sugarScape [
 	<script: 'RMDDoubleBufferVisualizer sugarScape inspect'>

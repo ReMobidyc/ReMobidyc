@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'expressionField',
 		'minField',
-		'maxField'
+		'maxField',
+		'borderWidthField',
+		'borderColorDropList'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -12,17 +14,22 @@ Class {
 { #category : #initialization }
 RMDCellExpressionRendererEditor >> initializeWidgets [
 	super initializeWidgets.
+	borderColorDropList := self newColorDropList
+		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer borderColor: color ] ];
+		yourself.
+	borderWidthField := self newNumberInput
+		beInteger;
+		autoAccept: true;
+		whenLastValidNumberChangedDo: [ :width | renderer borderWidth: width ].
 	expressionField := self newExpressionTextInput
 		autoAccept: true;
 		whenLastValidExpressionChangedDo: [ :expression | renderer expression: expression ].
-	minField := self newExpressionTextInput
-		autoAccept: true;
-		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | renderer min: literal ].
-	maxField := self newExpressionTextInput
-		autoAccept: true;
-		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | renderer max: literal ]
+
+]
+
+{ #category : #accessing }
+RMDCellExpressionRendererEditor >> preferredHeight [ 
+	^ self subclassResponsibility 
 ]
 
 { #category : #accessing }
@@ -30,22 +37,28 @@ RMDCellExpressionRendererEditor >> rendererChanged [
 	super rendererChanged.
 	self
 		updateExpressionField;
-		updateMinField;
-		updateMaxField
+		updateBorderColorDropList;
+		updateBorderWidthField
+]
+
+{ #category : #updating }
+RMDCellExpressionRendererEditor >> updateBorderColorDropList [
+	renderer
+		ifNotNil: [ | color colors |
+			color := renderer borderColor.
+			colors := borderColorDropList listItems.
+			(colors includes: color)
+				ifFalse: [ borderColorDropList items: (colors copyWith: color) ].
+			borderColorDropList selectItem: color ]
+]
+
+{ #category : #updating }
+RMDCellExpressionRendererEditor >> updateBorderWidthField [
+	renderer ifNotNil: [ borderWidthField number: renderer borderWidth ]
 ]
 
 { #category : #updating }
 RMDCellExpressionRendererEditor >> updateExpressionField [
 	renderer
 		ifNotNil: [ expressionField expression: renderer expression ]
-]
-
-{ #category : #updating }
-RMDCellExpressionRendererEditor >> updateMaxField [
-	renderer ifNotNil: [ maxField expression: renderer max ]
-]
-
-{ #category : #updating }
-RMDCellExpressionRendererEditor >> updateMinField [
-	renderer ifNotNil: [ minField expression: renderer min ]
 ]

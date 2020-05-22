@@ -49,7 +49,7 @@ RMDVisualizerEditor >> updateRendererEditors [
 			theLayout removeAll.
 			visualizer
 				ifNotNil: [ visualizer
-						renderersDo: [ :renderer | 
+						renderersReverseDo: [ :renderer | 
 							| presenter |
 							presenter := renderer asPresenter.
 							theLayout add: presenter height: presenter preferredHeight ] ] ]

@@ -2,9 +2,7 @@ Class {
 	#name : #RMDCellExpressionRenderer,
 	#superclass : #RMDCellRenderer,
 	#instVars : [
-		'min',
-		'expression',
-		'max'
+		'expression'
 	],
 	#category : #'ReMobidyc-Visualization'
 }
@@ -45,40 +43,15 @@ RMDCellExpressionRenderer >> expression: aRMDExpressionNode [
 { #category : #initialization }
 RMDCellExpressionRenderer >> initialize [
 	super initialize.
-	min := 0.0.
-	max := 1.0.
 	expression := '0 []' asRMDExpression
 ]
 
 { #category : #accessing }
-RMDCellExpressionRenderer >> max [
-	^ max
-]
-
-{ #category : #accessing }
-RMDCellExpressionRenderer >> max: aRMDLiteral [
-	max := aRMDLiteral
-]
-
-{ #category : #accessing }
-RMDCellExpressionRenderer >> min [
-	^ min
-]
-
-{ #category : #accessing }
-RMDCellExpressionRenderer >> min: aRMDLiteral [
-	min := aRMDLiteral
-]
-
-{ #category : #accessing }
 RMDCellExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
-	| cellDef value |
+	| cellDef |
 	cellDef := aRMDInterpreter cellDefinition.
 	aRMDInterpreter
 		setObserverContextWithSubject: anInteger
 		species: cellDef.
-	value := expression evalIn: aRMDInterpreter.
-	^ (value - min numeric) / (max numeric - min numeric)
-		min: 1.0
-		max: 0.0
+	^ expression evalIn: aRMDInterpreter
 ]

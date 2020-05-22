@@ -31,11 +31,6 @@ RMDRendererEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDRendererEditor >> preferredHeight [ 
-	^ self subclassResponsibility 
-]
-
-{ #category : #accessing }
 RMDRendererEditor >> renderer [
 	^ renderer
 ]

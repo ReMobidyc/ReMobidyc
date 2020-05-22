@@ -43,7 +43,69 @@ RMDVisualizer class >> exampleSugarScape [
 						grassInitializer: 10
 						by: 10
 						of: '5[km]'
-						grass: '500000[kcal]'
+						grass: '0[kcal]'
+						to: '1000000[kcal]')
+				animatInitializers:
+					{(RMDAnimatInitializerNode
+						goatInitializer: 100
+						bloodSugar: '500[kcal]'
+						to: '1000[kcal]')}).
+	interpreter setupSimulation.
+	interpreter simulationDefinition asPresenter openWithSpec.
+	visualizer := (self extent: 500 @ 500)
+		addBackgroundRendererColor: Color brown;
+		addCellRendererColor: Color green
+			alpha: (parser expression end parse: 'here''s grass')
+			between: '0[kcal]' asRMDExpression
+			and: '1000000[kcal]' asRMDExpression;
+		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
+		yourself.
+	visualizer asPresenter openWithSpec.
+	form := visualizer visualize: interpreter.
+	morph := form asMorph.
+	morph openInWindowLabeled: 'Sugar Scape'.
+	[ [ interpreter stepSimulation ]
+		whileTrue: [ morph form: (visualizer visualize: interpreter).
+			0.01 second wait ] ] forkAt: Processor userBackgroundPriority.
+	^ morph
+]
+
+{ #category : #examples }
+RMDVisualizer class >> exampleSugarScapeMap [
+	| parser interpreter visualizer form morph |
+	parser := RMDGrammar new.
+	interpreter := RMDInterpreter new
+		setMemory: RMDOnMemory new;
+		setContext: RMDActionContext new;
+		yourself.
+	interpreter
+		load: RMDWorldDefinitionNode empty;
+		load: RMDCellDefinitionNode grassField;
+		load: RMDAnimatDefinitionNode goat;
+		load: RMDActionDefinitionNode respire;
+		load: RMDActionDefinitionNode move;
+		load: RMDActionDefinitionNode eat_grass;
+		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				goat_eat_grass: '3000 [kcal/day]'
+				upto: '10000[kcal]');
+		load: RMDActionDefinitionNode grow_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				cell_grow_grass: '2000[kcal/day]'
+				upto: '1000000[kcal]');
+		load:
+			(RMDSimulationDefinitionNode
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode empty
+				cellInitializer:
+					(RMDCellInitializerNode
+						grassInitializer: 10
+						by: 10
+						of: '5[km]'
+						grass: '0[kcal]'
 						to: '1000000[kcal]')
 				animatInitializers:
 					{(RMDAnimatInitializerNode
@@ -54,10 +116,12 @@ RMDVisualizer class >> exampleSugarScape [
 	interpreter simulationDefinition asPresenter openWithSpec.
 	visualizer := (self extent: 500 @ 500)
 		addBackgroundRendererColor: Color red;
-		addCellRendererColor: Color green
-			alpha: (parser expression end parse: 'here''s grass')
-			between: '0[kcal]' asRMDExpression
-			and: '1000000[kcal]' asRMDExpression;
+		addCellRenderer: 'here''s grass' asRMDExpression
+			color: Color red
+			value: '333333 [kcal]' asRMDExpression
+			color: Color yellow
+			value: '666666[kcal]' asRMDExpression
+			color: Color green;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
 	visualizer asPresenter openWithSpec.
@@ -99,6 +163,19 @@ RMDVisualizer >> addAnimatDotRenderer: aString diameter: aNumber color: aColor [
 { #category : #'adding-removing' }
 RMDVisualizer >> addBackgroundRendererColor: aColor [
 	^ self addRendererFirst: (RMDBackgroundColorRenderer color: aColor)
+]
+
+{ #category : #'adding-removing' }
+RMDVisualizer >> addCellRenderer: aRMDExpressionNode color: aColor1 value: aRMDLiteralNode1 color: aColor2 value: aRMDLiteralnode2 color: aColor3 [
+	^ self
+		addRenderer:
+			(RMDCellColorMapRenderer
+				expression: aRMDExpressionNode
+				color: aColor1
+				value: aRMDLiteralNode1
+				color: aColor2
+				value: aRMDLiteralnode2
+				color: aColor3)
 ]
 
 { #category : #'adding-removing' }
@@ -165,6 +242,11 @@ RMDVisualizer >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 { #category : #enumerating }
 RMDVisualizer >> renderersDo: aBlock [
 	renderers do: aBlock
+]
+
+{ #category : #enumerating }
+RMDVisualizer >> renderersReverseDo: aBlock [
+	renderers reverseDo: aBlock
 ]
 
 { #category : #visualizing }

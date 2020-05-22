@@ -1,8 +1,42 @@
 Class {
 	#name : #RMDCellRenderer,
 	#superclass : #RMDRenderer,
+	#instVars : [
+		'borderWidth',
+		'borderColor'
+	],
 	#category : #'ReMobidyc-Visualization'
 }
+
+{ #category : #accessing }
+RMDCellRenderer >> borderColor [
+	^ borderColor
+]
+
+{ #category : #accessing }
+RMDCellRenderer >> borderColor: aColor [
+	borderColor := aColor
+]
+
+{ #category : #accessing }
+RMDCellRenderer >> borderWidth [
+	^ borderWidth
+]
+
+{ #category : #accessing }
+RMDCellRenderer >> borderWidth: anInteger [
+	borderWidth := anInteger
+]
+
+{ #category : #defaults }
+RMDCellRenderer >> defaultBorderColor [
+	^ Color black
+]
+
+{ #category : #defaults }
+RMDCellRenderer >> defaultBorderWidth [
+	^ 1
+]
 
 { #category : #defaults }
 RMDCellRenderer >> defaultColor [

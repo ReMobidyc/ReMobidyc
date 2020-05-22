@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDCellColorAlphaRendererEditor,
-	#superclass : #RMDCellColorRendererEditor,
+	#superclass : #RMDCellColorRangeRendererEditor,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
