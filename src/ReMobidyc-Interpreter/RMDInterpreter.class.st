@@ -86,6 +86,51 @@ RMDInterpreter class >> standardLibrary [
 			('squareRoot' -> RMDFunction squareRoot)} asDictionary ]
 ]
 
+{ #category : #examples }
+RMDInterpreter class >> sugarScape [
+	| interpreter |
+	interpreter := self new
+		setMemory: RMDOnMemory new;
+		setContext: RMDActionContext new;
+		yourself.
+	interpreter
+		load: RMDWorldDefinitionNode empty;
+		load: RMDCellDefinitionNode grassField;
+		load: RMDAnimatDefinitionNode goat;
+		load: RMDActionDefinitionNode respire;
+		load: RMDActionDefinitionNode move;
+		load: RMDActionDefinitionNode eat_grass;
+		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				goat_eat_grass: '3000 [kcal/day]'
+				upto: '10000[kcal]');
+		load: RMDActionDefinitionNode grow_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				cell_grow_grass: '2000[kcal/day]'
+				upto: '1000000[kcal]');
+		load:
+			(RMDSimulationDefinitionNode
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode empty
+				cellInitializer:
+					(RMDCellInitializerNode
+						grassInitializer: 10
+						by: 10
+						of: '5[km]'
+						grass: '0[kcal]'
+						to: '1000000[kcal]')
+				animatInitializers:
+					{(RMDAnimatInitializerNode
+						goatInitializer: 100
+						bloodSugar: '500[kcal]'
+						to: '1000[kcal]')}).
+	interpreter setupSimulation.
+	^ interpreter
+]
+
 { #category : #'accessing - definitions' }
 RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock
@@ -237,6 +282,14 @@ RMDInterpreter >> directionOfGradient: aString [
 	south := self readVariable: aString agent: 'south' ifAbsent: [ here ].
 	north := self readVariable: aString agent: 'north' ifAbsent: [ here ].
 	vector := (east - west) @ (north - south).
+	(east <= here
+		and: [ west <= here and: [ south <= here and: [ north <= here ] ] ])
+		ifTrue: [ | x y cellX cellY |
+			x := self readVariable: 'x' agent: nil ifAbsent: [ 0.0 ].
+			y := self readVariable: 'y' agent: nil ifAbsent: [ 0.0 ].
+			cellX := self cellLength * ((self cellX: x) + 0.5).
+			cellY := self cellLength * ((self cellY: y) + 0.5).
+			vector := (cellX - x) @ (cellY - y) ].
 	^ vector theta
 ]
 
@@ -512,6 +565,7 @@ RMDInterpreter >> setObserverContextWithSubject: anInteger species: aRMDSpeciesI
 RMDInterpreter >> setupSimulation [
 	memory time: 0.
 	individualDirectory
+		initialize;
 		allocateWorld: simulationModel worldDefinition;
 		allocateCells: simulationModel cellDefinition
 			x: simulationModel cellXDivisions

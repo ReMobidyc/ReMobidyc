@@ -140,11 +140,11 @@ RMDVisualizer class >> extent: aPoint [
 { #category : #'instance creation' }
 RMDVisualizer class >> sugarScape [
 	^ (self extent: 500 @ 500)
-		addBackgroundRendererColor: Color red;
+		addBackgroundRendererColor: Color brown;
 		addCellRendererColor: Color green
 			alpha: 'here''s grass' asRMDExpression
-			between: 0
-			and: '1000000[kcal]' asRMDExpression numeric;
+			between: '0[kcal]' asRMDExpression
+			and: '1000000[kcal]' asRMDExpression;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself
 ]
