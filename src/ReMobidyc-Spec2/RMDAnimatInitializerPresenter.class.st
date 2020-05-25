@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatInitializerEditor,
-	#superclass : #RMDSpeciesInitializerEditor,
+	#name : #RMDAnimatInitializerPresenter,
+	#superclass : #RMDSpeciesInitializerPresenter,
 	#instVars : [
 		'populationField',
 		'animatField'
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #specs }
-RMDAnimatInitializerEditor class >> defaultSpec [
+RMDAnimatInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ super defaultSpec
 		add:
@@ -24,27 +24,27 @@ RMDAnimatInitializerEditor class >> defaultSpec [
 ]
 
 { #category : #api }
-RMDAnimatInitializerEditor >> animatEnabled: aBoolean [
+RMDAnimatInitializerPresenter >> animatEnabled: aBoolean [
 	animatField enabled: aBoolean = true
 ]
 
 { #category : #accessing }
-RMDAnimatInitializerEditor >> animatField [
+RMDAnimatInitializerPresenter >> animatField [
 	^ animatField
 ]
 
 { #category : #api }
-RMDAnimatInitializerEditor >> disableAnimat [
+RMDAnimatInitializerPresenter >> disableAnimat [
 	animatField disable
 ]
 
 { #category : #api }
-RMDAnimatInitializerEditor >> enableAnimat [
+RMDAnimatInitializerPresenter >> enableAnimat [
 	animatField enable
 ]
 
 { #category : #initialization }
-RMDAnimatInitializerEditor >> initializeWidgets [
+RMDAnimatInitializerPresenter >> initializeWidgets [
 	super initializeWidgets.
 	populationField := self newNumberInput
 		beInteger;
@@ -62,7 +62,7 @@ RMDAnimatInitializerEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDAnimatInitializerEditor >> nodeChanged [
+RMDAnimatInitializerPresenter >> nodeChanged [
 	super nodeChanged.
 	self
 		updatePopulationField;
@@ -70,26 +70,26 @@ RMDAnimatInitializerEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDAnimatInitializerEditor >> populationField [
+RMDAnimatInitializerPresenter >> populationField [
 	^ populationField
 ]
 
 { #category : #accessing }
-RMDAnimatInitializerEditor >> preferredHeight [
+RMDAnimatInitializerPresenter >> preferredHeight [
 	^ (node propertyInitializers size + 1) * self class inputTextHeight
 ]
 
 { #category : #updating }
-RMDAnimatInitializerEditor >> updateAnimatField [
+RMDAnimatInitializerPresenter >> updateAnimatField [
 	node ifNotNil: [ animatField text: node animat ]
 ]
 
 { #category : #updating }
-RMDAnimatInitializerEditor >> updatePopulationField [
+RMDAnimatInitializerPresenter >> updatePopulationField [
 	node ifNotNil: [ populationField text: node population printString ]
 ]
 
 { #category : #'api-events' }
-RMDAnimatInitializerEditor >> whenAnimatEnabledChangedDo: aBlock [
+RMDAnimatInitializerPresenter >> whenAnimatEnabledChangedDo: aBlock [
 	animatField whenEnabledChangedDo: aBlock
 ]

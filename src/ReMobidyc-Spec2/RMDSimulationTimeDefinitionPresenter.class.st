@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSimulationTimeDefinitionEditor,
-	#superclass : #RMDSyntaxNodeEditor,
+	#name : #RMDSimulationTimeDefinitionPresenter,
+	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'durationField',
 		'stepField',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RMDSimulationTimeDefinitionEditor class >> defaultSpec [
+RMDSimulationTimeDefinitionPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -29,17 +29,17 @@ RMDSimulationTimeDefinitionEditor class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> durationField [
+RMDSimulationTimeDefinitionPresenter >> durationField [
 	^ durationField
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> durationUnitDropList [
+RMDSimulationTimeDefinitionPresenter >> durationUnitDropList [
 	^ durationUnitDropList
 ]
 
 { #category : #initialization }
-RMDSimulationTimeDefinitionEditor >> initializeWidgets [
+RMDSimulationTimeDefinitionPresenter >> initializeWidgets [
 	super initializeWidgets.
 	durationField := self newNumberInput
 		beFloat;
@@ -100,7 +100,7 @@ RMDSimulationTimeDefinitionEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> nodeChanged [
+RMDSimulationTimeDefinitionPresenter >> nodeChanged [
 	self updateDurationField.
 	self updateDurationUnit.
 	self updateStepField.
@@ -108,22 +108,22 @@ RMDSimulationTimeDefinitionEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> preferredHeight [
+RMDSimulationTimeDefinitionPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> stepField [
+RMDSimulationTimeDefinitionPresenter >> stepField [
 	^ stepField
 ]
 
 { #category : #accessing }
-RMDSimulationTimeDefinitionEditor >> stepUnitDropList [
+RMDSimulationTimeDefinitionPresenter >> stepUnitDropList [
 	^ stepUnitDropList
 ]
 
 { #category : #updating }
-RMDSimulationTimeDefinitionEditor >> updateDurationField [
+RMDSimulationTimeDefinitionPresenter >> updateDurationField [
 	durationField
 		number:
 			(node
@@ -132,13 +132,13 @@ RMDSimulationTimeDefinitionEditor >> updateDurationField [
 ]
 
 { #category : #updating }
-RMDSimulationTimeDefinitionEditor >> updateDurationUnit [
+RMDSimulationTimeDefinitionPresenter >> updateDurationUnit [
 	node
 		ifNotNil: [ durationUnitDropList selectItem: node duration type ]
 ]
 
 { #category : #updating }
-RMDSimulationTimeDefinitionEditor >> updateStepField [
+RMDSimulationTimeDefinitionPresenter >> updateStepField [
 	stepField
 		number:
 			(node
@@ -147,6 +147,6 @@ RMDSimulationTimeDefinitionEditor >> updateStepField [
 ]
 
 { #category : #updating }
-RMDSimulationTimeDefinitionEditor >> updateStepUnit [
+RMDSimulationTimeDefinitionPresenter >> updateStepUnit [
 	node ifNotNil: [ stepUnitDropList selectItem: node step type ]
 ]

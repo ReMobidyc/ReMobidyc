@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCellExpressionRendererEditor,
-	#superclass : #RMDRendererEditor,
+	#name : #RMDCellExpressionRendererPresenter,
+	#superclass : #RMDRendererPresenter,
 	#instVars : [
 		'expressionField',
 		'minField',
@@ -12,28 +12,34 @@ Class {
 }
 
 { #category : #initialization }
-RMDCellExpressionRendererEditor >> initializeWidgets [
+RMDCellExpressionRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	borderColorDropList := self newColorDropList
-		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer borderColor: color ] ];
+		whenSelectedItemChangedDo: [ :color | 
+			color
+				ifNotNil: [ renderer borderColor: color.
+					self valueChanged ] ];
 		yourself.
 	borderWidthField := self newNumberInput
 		beInteger;
 		autoAccept: true;
-		whenLastValidNumberChangedDo: [ :width | renderer borderWidth: width ].
+		whenLastValidNumberChangedDo: [ :width | 
+			renderer borderWidth: width.
+			self valueChanged ].
 	expressionField := self newExpressionTextInput
 		autoAccept: true;
-		whenLastValidExpressionChangedDo: [ :expression | renderer expression: expression ].
-
+		whenLastValidExpressionChangedDo: [ :expression | 
+			renderer expression: expression.
+			self valueChanged ]
 ]
 
 { #category : #accessing }
-RMDCellExpressionRendererEditor >> preferredHeight [ 
+RMDCellExpressionRendererPresenter >> preferredHeight [ 
 	^ self subclassResponsibility 
 ]
 
 { #category : #accessing }
-RMDCellExpressionRendererEditor >> rendererChanged [
+RMDCellExpressionRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
 		updateExpressionField;
@@ -42,7 +48,7 @@ RMDCellExpressionRendererEditor >> rendererChanged [
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererEditor >> updateBorderColorDropList [
+RMDCellExpressionRendererPresenter >> updateBorderColorDropList [
 	renderer
 		ifNotNil: [ | color colors |
 			color := renderer borderColor.
@@ -53,12 +59,12 @@ RMDCellExpressionRendererEditor >> updateBorderColorDropList [
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererEditor >> updateBorderWidthField [
+RMDCellExpressionRendererPresenter >> updateBorderWidthField [
 	renderer ifNotNil: [ borderWidthField number: renderer borderWidth ]
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererEditor >> updateExpressionField [
+RMDCellExpressionRendererPresenter >> updateExpressionField [
 	renderer
 		ifNotNil: [ expressionField expression: renderer expression ]
 ]

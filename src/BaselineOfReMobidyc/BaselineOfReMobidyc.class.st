@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfReMobidyc,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfReMobidyc'
+	#category : #BaselineOfReMobidyc
 }
 
 { #category : #baselines }
@@ -31,11 +31,15 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				package: 'ReMobidyc-Visualization'
 					with: [ spec
 						requires: #('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Storage') ];
+				package: 'ReMobidyc-Spec2'
+					with: [ spec
+						requires:
+							#('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Units' 'Remobidyc-Visualization') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
 					with: [ spec requires: #('ReMobidyc-Language') ];
-				package: 'ReMobidyc-Unit-Tests'
+				package: 'ReMobidyc-Units-Tests'
 					with: [ spec requires: #('ReMobidyc-Units') ];
 				package: 'ReMobidyc-Interpreter-Tests'
 					with:
@@ -47,5 +51,5 @@ BaselineOfReMobidyc >> baselineOf: spec [
 					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization');
 				group: 'tests'
 					with:
-					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Unit-Tests' 'ReMobidyc-Interpreter-Tests') ]
+					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests') ]
 ]

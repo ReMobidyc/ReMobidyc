@@ -33,5 +33,12 @@ RMDBackgroundColorRenderer class >> white [
 
 { #category : #drawing }
 RMDBackgroundColorRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
-	aCanvas fillColor: color
+	| xDivisions yDivisions |
+	xDivisions := aRMDInterpreter cellXDivisions.
+	yDivisions := aRMDInterpreter cellYDivisions.
+	aCanvas
+		fillRectangle:
+			(0 @ 0
+				extent: (aNumber * xDivisions) ceiling @ (aNumber * yDivisions) ceiling)
+		color: color
 ]

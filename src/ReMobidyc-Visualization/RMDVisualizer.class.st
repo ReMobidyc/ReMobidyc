@@ -3,15 +3,16 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'extent',
-		'renderers'
+		'renderers',
+		'formToWrite',
+		'formToRead'
 	],
 	#category : #'ReMobidyc-Visualization'
 }
 
 { #category : #examples }
 RMDVisualizer class >> exampleSugarScape [
-	| parser interpreter visualizer form morph |
-	parser := RMDGrammar new.
+	| interpreter visualizer |
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
 		setContext: RMDActionContext new;
@@ -55,25 +56,22 @@ RMDVisualizer class >> exampleSugarScape [
 	visualizer := (self extent: 500 @ 500)
 		addBackgroundRendererColor: Color brown;
 		addCellRendererColor: Color green
-			alpha: (parser expression end parse: 'here''s grass')
+			alpha: 'here''s grass' asRMDExpression
 			between: '0[kcal]' asRMDExpression
 			and: '1000000[kcal]' asRMDExpression;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
-	visualizer asPresenter openWithSpec.
-	form := visualizer visualize: interpreter.
-	morph := form asMorph.
-	morph openInWindowLabeled: 'Sugar Scape'.
-	[ [ interpreter stepSimulation ]
-		whileTrue: [ morph form: (visualizer visualize: interpreter).
-			0.01 second wait ] ] forkAt: Processor userBackgroundPriority.
-	^ morph
+	(visualizer asPresenter
+		interpreter: interpreter;
+		openWithSpec) title: 'Sugar Scape'.
+	[ [ interpreter stepSimulation ] whileTrue: [ 0.01 second wait ] ]
+		forkAt: Processor userBackgroundPriority.
+	^ visualizer
 ]
 
 { #category : #examples }
 RMDVisualizer class >> exampleSugarScapeMap [
-	| parser interpreter visualizer form morph |
-	parser := RMDGrammar new.
+	| interpreter visualizer |
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
 		setContext: RMDActionContext new;
@@ -124,14 +122,12 @@ RMDVisualizer class >> exampleSugarScapeMap [
 			color: Color green;
 		addAnimatDotRenderer: 'Goat' diameter: 7 color: Color yellow;
 		yourself.
-	visualizer asPresenter openWithSpec.
-	form := visualizer visualize: interpreter.
-	morph := form asMorph.
-	morph openInWindowLabeled: 'Sugar Scape'.
-	[ [ interpreter stepSimulation ]
-		whileTrue: [ morph form: (visualizer visualize: interpreter).
-			0.01 second wait ] ] forkAt: Processor userBackgroundPriority.
-	^ morph
+	(visualizer asPresenter
+		interpreter: interpreter;
+		openWithSpec) title: 'Sugar Scape'.
+	[ [ interpreter stepSimulation ] whileTrue: [ 0.01 second wait ] ]
+		forkAt: Processor userBackgroundPriority.
+	^ visualizer
 ]
 
 { #category : #'instance creation' }
@@ -219,12 +215,16 @@ RMDVisualizer >> extent [
 
 { #category : #accessing }
 RMDVisualizer >> extent: aPoint [
-	extent := aPoint
+	extent := aPoint.
+	(formToRead isNil or: [ formToRead extent ~= aPoint ])
+		ifTrue: [ formToRead := Form extent: aPoint depth: 32 ].
+	(formToWrite isNil or: [ formToWrite extent ~= aPoint ])
+		ifTrue: [ formToWrite := Form extent: aPoint depth: 32 ]
 ]
 
 { #category : #private }
 RMDVisualizer >> formToWrite [
-	^ self subclassResponsibility
+	^ formToWrite
 ]
 
 { #category : #initialization }
@@ -256,8 +256,11 @@ RMDVisualizer >> visualize: aRMDInterpreter [
 		min: extent y asFloat / aRMDInterpreter cellYDivisions asFloat.
 	form := self formToWrite.
 	canvas := form getCanvas.
+	canvas fillColor: Color white.
 	renderers
-		do:
-			[ :renderer | renderer draw: aRMDInterpreter scale: scale on: canvas ].
-	^ form
+		do: [ :renderer | renderer draw: aRMDInterpreter scale: scale on: canvas ].
+	form := formToRead.
+	formToRead := formToWrite.
+	formToWrite := form.
+	^ formToRead
 ]

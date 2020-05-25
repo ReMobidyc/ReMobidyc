@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDInterpreter,
-	#superclass : #Object,
+	#superclass : #Model,
 	#instVars : [
 		'memory',
 		'libraries',
@@ -133,13 +133,13 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 			| animatDef xOffset yOffset |
 			animatDef := simulationModel
 				animatDefinitionAt: animatName
-				ifAbsent: [ ^ NotFoundError signal: animatName ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: animatName ].
 			xOffset := animatDef
 				propertyOffsetAt: 'x'
-				ifAbsent: [ ^ NotFoundError signal: 'x' ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
 				propertyOffsetAt: 'y'
-				ifAbsent: [ ^ NotFoundError signal: 'y' ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
 			individualDirectory
 				animatsOf: animatName
 				do: [ :individual | 
@@ -400,13 +400,13 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 			| animatDef xOffset yOffset |
 			animatDef := simulationModel
 				animatDefinitionAt: animatName
-				ifAbsent: [ ^ NotFoundError signal: animatName ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: animatName ].
 			xOffset := animatDef
 				propertyOffsetAt: 'x'
-				ifAbsent: [ ^ NotFoundError signal: 'x' ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
 				propertyOffsetAt: 'y'
-				ifAbsent: [ ^ NotFoundError signal: 'y' ].
+				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
 			individualDirectory
 				animatsOf: animatName
 				do: [ :individual | 
@@ -546,7 +546,8 @@ RMDInterpreter >> setupSimulation [
 						animatDefinitionAt: initializer animat
 						ifAbsent: [ ^ KeyNotFound signal: initializer animat ].
 					self setInitializerContextWithSubject: animat species: species.
-					initializer evalIn: self ] ]
+					initializer evalIn: self ] ].
+	self timeChanged
 ]
 
 { #category : #'accessing - definitions' }
@@ -570,6 +571,7 @@ RMDInterpreter >> stepSimulation [
 		and: [ self performBehaviors.
 			self tick.
 			self bounceOutOfBoundsAnimats.
+			self timeChanged.
 			true ]
 ]
 
@@ -602,6 +604,16 @@ RMDInterpreter >> tick [
 { #category : #timing }
 RMDInterpreter >> time [ 
 	^ memory time * self deltaTime
+]
+
+{ #category : #timing }
+RMDInterpreter >> time: aNumber [
+	memory time: aNumber // self deltaTime
+]
+
+{ #category : #simulating }
+RMDInterpreter >> timeChanged [
+	self announcer announce: (RMDTimeChanged time: self time)
 ]
 
 { #category : #'space access' }

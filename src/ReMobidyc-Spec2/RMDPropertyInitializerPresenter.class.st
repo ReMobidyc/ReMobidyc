@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDPropertyInitializerEditor,
-	#superclass : #RMDSyntaxNodeEditor,
+	#name : #RMDPropertyInitializerPresenter,
+	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'identifierField',
 		'expressionField'
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #specs }
-RMDPropertyInitializerEditor class >> defaultSpec [
+RMDPropertyInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -23,32 +23,32 @@ RMDPropertyInitializerEditor class >> defaultSpec [
 ]
 
 { #category : #api }
-RMDPropertyInitializerEditor >> disableIdentifier [
+RMDPropertyInitializerPresenter >> disableIdentifier [
 	identifierField disable
 ]
 
 { #category : #api }
-RMDPropertyInitializerEditor >> enableIdentifier [
+RMDPropertyInitializerPresenter >> enableIdentifier [
 	identifierField enable
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerEditor >> expressionField [
+RMDPropertyInitializerPresenter >> expressionField [
 	^ expressionField
 ]
 
 { #category : #api }
-RMDPropertyInitializerEditor >> identifierEnabled [
+RMDPropertyInitializerPresenter >> identifierEnabled [
 	^ identifierField enabled
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerEditor >> identifierField [
+RMDPropertyInitializerPresenter >> identifierField [
 	^ identifierField
 ]
 
 { #category : #initialization }
-RMDPropertyInitializerEditor >> initializeWidgets [
+RMDPropertyInitializerPresenter >> initializeWidgets [
 	super initializeWidgets.
 	identifierField := self newTextInput
 		beText;
@@ -64,28 +64,28 @@ RMDPropertyInitializerEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerEditor >> nodeChanged [
+RMDPropertyInitializerPresenter >> nodeChanged [
 	self
 		updateIdentifierField;
 		updateExpressionField
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerEditor >> preferredHeight [
+RMDPropertyInitializerPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #updating }
-RMDPropertyInitializerEditor >> updateExpressionField [
+RMDPropertyInitializerPresenter >> updateExpressionField [
 	expressionField text: node expression printString
 ]
 
 { #category : #updating }
-RMDPropertyInitializerEditor >> updateIdentifierField [
+RMDPropertyInitializerPresenter >> updateIdentifierField [
 	identifierField text: node identifier
 ]
 
 { #category : #'api-events' }
-RMDPropertyInitializerEditor >> whenIdentifierEnabledChangedDo: aBlock [
+RMDPropertyInitializerPresenter >> whenIdentifierEnabledChangedDo: aBlock [
 	identifierField whenEnabledChangedDo: aBlock
 ]

@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDSpeciesInitializerEditor,
-	#superclass : #RMDSyntaxNodeEditor,
+	#name : #RMDSpeciesInitializerPresenter,
+	#superclass : #RMDSyntaxNodePresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDSpeciesInitializerEditor class >> defaultSpec [
+RMDSpeciesInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
@@ -14,7 +14,7 @@ RMDSpeciesInitializerEditor class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDSpeciesInitializerEditor >> initializeWidgets [
+RMDSpeciesInitializerPresenter >> initializeWidgets [
 	super initializeWidgets.
 	self
 		whenBuiltDo: [ self
@@ -27,15 +27,15 @@ RMDSpeciesInitializerEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDSpeciesInitializerEditor >> nodeChanged [
+RMDSpeciesInitializerPresenter >> nodeChanged [
 	self updatePropertyInitializersList
 ]
 
 { #category : #updating }
-RMDSpeciesInitializerEditor >> updatePropertyInitializersList [
+RMDSpeciesInitializerPresenter >> updatePropertyInitializersList [
 	layout
 		ifNotNil: [ (layout presenters
-				select: [ :presenter | presenter isKindOf: RMDPropertyInitializerEditor ])
+				select: [ :presenter | presenter isKindOf: RMDPropertyInitializerPresenter ])
 				do: [ :presenter | layout remove: presenter ].
 			node
 				ifNotNil: [ node propertyInitializers

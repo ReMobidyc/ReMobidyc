@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSyntaxNodeEditor,
+	#name : #RMDSyntaxNodePresenter,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'node'
@@ -8,29 +8,29 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSyntaxNodeEditor class >> on: aRMDSyntaxNode [
+RMDSyntaxNodePresenter class >> on: aRMDSyntaxNode [
 	^ self new
 		node: aRMDSyntaxNode;
 		yourself
 ]
 
 { #category : #accessing }
-RMDSyntaxNodeEditor >> node [
+RMDSyntaxNodePresenter >> node [
 	^ node
 ]
 
 { #category : #accessing }
-RMDSyntaxNodeEditor >> node: aRMDSyntaxNode [
+RMDSyntaxNodePresenter >> node: aRMDSyntaxNode [
 	node := aRMDSyntaxNode.
 	self nodeChanged
 ]
 
 { #category : #accessing }
-RMDSyntaxNodeEditor >> nodeChanged [
+RMDSyntaxNodePresenter >> nodeChanged [
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-RMDSyntaxNodeEditor >> preferredHeight [
+RMDSyntaxNodePresenter >> preferredHeight [
 	^ self subclassResponsibility
 ]

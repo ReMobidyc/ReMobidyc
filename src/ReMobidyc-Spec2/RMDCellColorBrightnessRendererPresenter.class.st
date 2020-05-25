@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellColorBrightnessRendererEditor,
-	#superclass : #RMDCellColorRangeRendererEditor,
+	#name : #RMDCellColorBrightnessRendererPresenter,
+	#superclass : #RMDCellColorRangeRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDCellColorBrightnessRendererEditor class >> defaultSpec [
+RMDCellColorBrightnessRendererPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -42,6 +42,6 @@ RMDCellColorBrightnessRendererEditor class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDCellColorBrightnessRendererEditor >> preferredHeight [
+RMDCellColorBrightnessRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight * 3
 ]

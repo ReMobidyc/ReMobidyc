@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellColorMapEntryEditor,
+	#name : #RMDCellColorMapEntryPresenter,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'association',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-RMDCellColorMapEntryEditor class >> defaultSpec [
+RMDCellColorMapEntryPresenter class >> defaultSpec [
 	^ SpBoxLayout newHorizontal
 		borderWidth: 5;
 		spacing: 5;
@@ -23,44 +23,49 @@ RMDCellColorMapEntryEditor class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-RMDCellColorMapEntryEditor class >> on: anAssociation [
+RMDCellColorMapEntryPresenter class >> on: anAssociation [
 	^ self new
 		association: anAssociation;
 		yourself
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryEditor >> association: anAssociation [
+RMDCellColorMapEntryPresenter >> association: anAssociation [
 	association := anAssociation.
 	self associationChanged
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryEditor >> associationChanged [
+RMDCellColorMapEntryPresenter >> associationChanged [
 	self updateColorDropList.
 	self updateMinValueField
 ]
 
 { #category : #initialization }
-RMDCellColorMapEntryEditor >> initializeWidgets [
+RMDCellColorMapEntryPresenter >> initializeWidgets [
 	super initializeWidgets.
 	colorDropList := self newColorDropList
-		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ association value: color ] ];
+		whenSelectedItemChangedDo: [ :color | 
+			color
+				ifNotNil: [ association value: color.
+					self valueChanged ] ];
 		yourself.
 	minValueField := self newExpressionTextInput
 		autoAccept: true;
 		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :expression | association key: expression ];
+		whenLastValidExpressionChangedDo: [ :expression | 
+			association key: expression.
+			self valueChanged ];
 		yourself
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryEditor >> preferredHeight [
+RMDCellColorMapEntryPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryEditor >> updateColorDropList [
+RMDCellColorMapEntryPresenter >> updateColorDropList [
 	association
 		ifNotNil: [ | color colors |
 			color := association value.
@@ -71,6 +76,6 @@ RMDCellColorMapEntryEditor >> updateColorDropList [
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryEditor >> updateMinValueField [
+RMDCellColorMapEntryPresenter >> updateMinValueField [
 	association ifNotNil: [ minValueField expression: association key ]
 ]

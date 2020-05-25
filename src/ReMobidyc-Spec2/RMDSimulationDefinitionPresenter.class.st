@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDSimulationDefinitionEditor,
-	#superclass : #RMDSyntaxNodeEditor,
+	#name : #RMDSimulationDefinitionPresenter,
+	#superclass : #RMDSyntaxNodePresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDSimulationDefinitionEditor class >> defaultSpec [
+RMDSimulationDefinitionPresenter class >> defaultSpec [
 	<spec>
 	^ SpScrollableLayout new
 		add:
@@ -17,25 +17,25 @@ RMDSimulationDefinitionEditor class >> defaultSpec [
 ]
 
 { #category : #private }
-RMDSimulationDefinitionEditor >> add: aRMDSyntaxNodeEditor [
+RMDSimulationDefinitionPresenter >> add: aRMDSyntaxNodeEditor [
 	self theLayout
 		add: aRMDSyntaxNodeEditor
 		height: aRMDSyntaxNodeEditor preferredHeight
 ]
 
 { #category : #initialization }
-RMDSimulationDefinitionEditor >> initializePresenters [
+RMDSimulationDefinitionPresenter >> initializePresenters [
 	self nodeChanged
 ]
 
 { #category : #initialization }
-RMDSimulationDefinitionEditor >> initializeWidgets [
+RMDSimulationDefinitionPresenter >> initializeWidgets [
 	super initializeWidgets.
 	self whenBuiltDo: [ self nodeChanged ]
 ]
 
 { #category : #initialization }
-RMDSimulationDefinitionEditor >> initializeWindow: aWindowPresenter [
+RMDSimulationDefinitionPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Simulation Definition';
@@ -43,7 +43,7 @@ RMDSimulationDefinitionEditor >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionEditor >> nodeChanged [
+RMDSimulationDefinitionPresenter >> nodeChanged [
 	layout
 		ifNotNil: [ layout presenters first removeAll.
 			self
@@ -55,11 +55,11 @@ RMDSimulationDefinitionEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDSimulationDefinitionEditor >> preferredHeight [
+RMDSimulationDefinitionPresenter >> preferredHeight [
 	^ (layout presenters collect: #preferredHeight) sum
 ]
 
 { #category : #private }
-RMDSimulationDefinitionEditor >> theLayout [
+RMDSimulationDefinitionPresenter >> theLayout [
 	^ layout ifNotNil: [ layout presenters first ]
 ]

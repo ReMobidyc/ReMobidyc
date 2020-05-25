@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellColorAlphaRendererEditor,
-	#superclass : #RMDCellColorRangeRendererEditor,
+	#name : #RMDCellColorAlphaRendererPresenter,
+	#superclass : #RMDCellColorRangeRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDCellColorAlphaRendererEditor class >> defaultSpec [
+RMDCellColorAlphaRendererPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
@@ -44,6 +44,6 @@ RMDCellColorAlphaRendererEditor class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDCellColorAlphaRendererEditor >> preferredHeight [
+RMDCellColorAlphaRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight * 3
 ]

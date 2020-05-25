@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDRendererEditor,
+	#name : #RMDRendererPresenter,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'renderer',
@@ -9,17 +9,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDRendererEditor class >> on: aRMDRenderer [
+RMDRendererPresenter class >> on: aRMDRenderer [
 	^ self new
 		renderer: aRMDRenderer;
 		yourself
 ]
 
 { #category : #initialization }
-RMDRendererEditor >> initializeWidgets [
+RMDRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	colorDropList := self newColorDropList
-		whenSelectedItemChangedDo: [ :color | color ifNotNil: [ renderer color: color ] ];
+		whenSelectedItemChangedDo: [ :color | 
+			color
+				ifNotNil: [ renderer color: color.
+					self valueChanged ] ];
 		yourself.
 	self
 		whenBuiltDo: [ self
@@ -31,23 +34,23 @@ RMDRendererEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDRendererEditor >> renderer [
+RMDRendererPresenter >> renderer [
 	^ renderer
 ]
 
 { #category : #accessing }
-RMDRendererEditor >> renderer: aRMDRenderer [
+RMDRendererPresenter >> renderer: aRMDRenderer [
 	renderer := aRMDRenderer.
 	self rendererChanged
 ]
 
 { #category : #accessing }
-RMDRendererEditor >> rendererChanged [
+RMDRendererPresenter >> rendererChanged [
 	self updateColorDropList
 ]
 
 { #category : #updating }
-RMDRendererEditor >> updateColorDropList [
+RMDRendererPresenter >> updateColorDropList [
 	renderer
 		ifNotNil: [ | color colors |
 			color := renderer color.

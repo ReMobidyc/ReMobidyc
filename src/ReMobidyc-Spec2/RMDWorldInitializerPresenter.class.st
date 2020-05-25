@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDWorldInitializerEditor,
-	#superclass : #RMDSpeciesInitializerEditor,
+	#name : #RMDWorldInitializerPresenter,
+	#superclass : #RMDSpeciesInitializerPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDWorldInitializerEditor class >> defaultSpec [
+RMDWorldInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ super defaultSpec
 		add: 'World with' expand: false;
@@ -13,6 +13,6 @@ RMDWorldInitializerEditor class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDWorldInitializerEditor >> preferredHeight [
+RMDWorldInitializerPresenter >> preferredHeight [
 	^ (node propertyInitializers size + 1) * self class inputTextHeight
 ]

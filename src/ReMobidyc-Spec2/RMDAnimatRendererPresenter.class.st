@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatRendererEditor,
-	#superclass : #RMDRendererEditor,
+	#name : #RMDAnimatRendererPresenter,
+	#superclass : #RMDRendererPresenter,
 	#instVars : [
 		'animatField'
 	],
@@ -8,20 +8,22 @@ Class {
 }
 
 { #category : #initialization }
-RMDAnimatRendererEditor >> initializeWidgets [
+RMDAnimatRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	animatField := self newAnimatInput
 		autoAccept: true;
-		whenLastValidTextChangedDo: [ :animat | renderer animat: animat ]
+		whenLastValidTextChangedDo: [ :animat | 
+			renderer animat: animat.
+			self valueChanged ]
 ]
 
 { #category : #accessing }
-RMDAnimatRendererEditor >> rendererChanged [
+RMDAnimatRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateAnimatField
 ]
 
 { #category : #updating }
-RMDAnimatRendererEditor >> updateAnimatField [
+RMDAnimatRendererPresenter >> updateAnimatField [
 	animatField text: renderer animat
 ]

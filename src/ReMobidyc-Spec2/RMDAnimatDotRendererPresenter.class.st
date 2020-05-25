@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatDotRendererEditor,
-	#superclass : #RMDAnimatRendererEditor,
+	#name : #RMDAnimatDotRendererPresenter,
+	#superclass : #RMDAnimatRendererPresenter,
 	#instVars : [
 		'diameterField'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #specs }
-RMDAnimatDotRendererEditor class >> defaultSpec [
+RMDAnimatDotRendererPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -26,26 +26,28 @@ RMDAnimatDotRendererEditor class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDAnimatDotRendererEditor >> initializeWidgets [
+RMDAnimatDotRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	diameterField := self newNumberInput
 		beInteger;
 		autoAccept: true;
-		whenLastValidNumberChangedDo: [ :diameter | renderer diameter: diameter ]
+		whenLastValidNumberChangedDo: [ :diameter | 
+			renderer diameter: diameter.
+			self valueChanged ]
 ]
 
 { #category : #accessing }
-RMDAnimatDotRendererEditor >> preferredHeight [
+RMDAnimatDotRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDAnimatDotRendererEditor >> rendererChanged [
+RMDAnimatDotRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateDiameterField
 ]
 
 { #category : #updating }
-RMDAnimatDotRendererEditor >> updateDiameterField [
+RMDAnimatDotRendererPresenter >> updateDiameterField [
 	renderer ifNotNil: [ diameterField number: renderer diameter x ]
 ]

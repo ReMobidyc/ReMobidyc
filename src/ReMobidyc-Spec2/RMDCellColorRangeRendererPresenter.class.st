@@ -1,24 +1,28 @@
 Class {
-	#name : #RMDCellColorRangeRendererEditor,
-	#superclass : #RMDCellExpressionRendererEditor,
+	#name : #RMDCellColorRangeRendererPresenter,
+	#superclass : #RMDCellExpressionRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #initialization }
-RMDCellColorRangeRendererEditor >> initializeWidgets [
+RMDCellColorRangeRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	minField := self newExpressionTextInput
 		autoAccept: true;
 		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | renderer min: literal ].
+		whenLastValidExpressionChangedDo: [ :literal | 
+			renderer min: literal.
+			self valueChanged ].
 	maxField := self newExpressionTextInput
 		autoAccept: true;
 		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | renderer max: literal ]
+		whenLastValidExpressionChangedDo: [ :literal | 
+			renderer max: literal.
+			self valueChanged ]
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererEditor >> rendererChanged [
+RMDCellColorRangeRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
 		updateMinField;
@@ -26,11 +30,11 @@ RMDCellColorRangeRendererEditor >> rendererChanged [
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererEditor >> updateMaxField [
+RMDCellColorRangeRendererPresenter >> updateMaxField [
 	renderer ifNotNil: [ maxField expression: renderer max ]
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererEditor >> updateMinField [
+RMDCellColorRangeRendererPresenter >> updateMinField [
 	renderer ifNotNil: [ minField expression: renderer min ]
 ]

@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellColorMapRendererEditor,
-	#superclass : #RMDCellExpressionRendererEditor,
+	#name : #RMDCellColorMapRendererPresenter,
+	#superclass : #RMDCellExpressionRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDCellColorMapRendererEditor class >> defaultSpec [
+RMDCellColorMapRendererPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
@@ -18,12 +18,12 @@ RMDCellColorMapRendererEditor class >> defaultSpec [
 			height: self inputTextHeight;
 		add:
 			(SpBoxLayout newVertical
-				borderWidth: 5;
-				spacing: 5);
+				borderWidth: 0;
+				spacing: 0);
 		add:
 			(SpBoxLayout newHorizontal
-				borderWidth: 5;
-				spacing: 5;
+				borderWidth: 0;
+				spacing: 0;
 				add: '        ' expand: false;
 				add: #colorDropList width: 60;
 				yourself)
@@ -31,27 +31,29 @@ RMDCellColorMapRendererEditor class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDCellColorMapRendererEditor >> initializeWidgets [
+RMDCellColorMapRendererPresenter >> initializeWidgets [
 	super initializeWidgets.
 	self whenBuiltDo: [ self updateSpec ]
 ]
 
 { #category : #accessing }
-RMDCellColorMapRendererEditor >> preferredHeight [
-	^ (renderer numberOfMinAndColors + 2) * self class inputTextHeight
+RMDCellColorMapRendererPresenter >> preferredHeight [
+	^ (renderer numberOfMinAndColors + 3) * self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellColorMapRendererEditor >> rendererChanged [
+RMDCellColorMapRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateSpec
 ]
 
 { #category : #updating }
-RMDCellColorMapRendererEditor >> updateSpec [
+RMDCellColorMapRendererPresenter >> updateSpec [
 	| theLayout |
 	layout ifNil: [ ^ self ].
 	theLayout := layout presenters second.
 	renderer
-		minAndColorEditorsDo: [ :editor | theLayout add: editor height: editor preferredHeight ]
+		minAndColorEditorsDo: [ :presenter | 
+			theLayout add: presenter height: presenter preferredHeight.
+			presenter whenChangedSend: #valueChanged to: self ]
 ]

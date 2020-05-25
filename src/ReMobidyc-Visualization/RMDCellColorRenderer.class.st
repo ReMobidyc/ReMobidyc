@@ -11,11 +11,7 @@ RMDCellColorRenderer >> colorFrom: aNumber [
 
 { #category : #drawing }
 RMDCellColorRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
-	aCanvas
-		frameAndFillRectangle: aRectangle
-		fillColor: (self colorFrom: aNumber)
-		borderWidth: borderWidth
-		borderColor: borderColor
+	aCanvas fillRectangle: aRectangle color: (self colorFrom: aNumber)
 ]
 
 { #category : #initialization }

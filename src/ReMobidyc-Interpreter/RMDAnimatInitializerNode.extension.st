@@ -6,8 +6,8 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 	aRMDInterpreter
 		initializeVariableIfNotInitialized: 'x'
 			with: [ RMDUniformDistributionXNode current evalIn: aRMDInterpreter ]
-			ifAbsent: [ ^ NotFoundError signal: 'x' ];
+			ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ];
 		initializeVariableIfNotInitialized: 'y'
 			with: [ RMDUniformDistributionYNode current evalIn: aRMDInterpreter ]
-			ifAbsent: [ ^ NotFoundError signal: 'y' ]
+			ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ]
 ]

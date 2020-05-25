@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCellInitializerEditor,
-	#superclass : #RMDSpeciesInitializerEditor,
+	#name : #RMDCellInitializerPresenter,
+	#superclass : #RMDSpeciesInitializerPresenter,
 	#instVars : [
 		'xDivisionsField',
 		'yDivisionsField',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RMDCellInitializerEditor class >> defaultSpec [
+RMDCellInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ super defaultSpec
 		add:
@@ -29,7 +29,7 @@ RMDCellInitializerEditor class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDCellInitializerEditor >> initializeWidgets [
+RMDCellInitializerPresenter >> initializeWidgets [
 	super initializeWidgets.
 	xDivisionsField := self newNumberInput
 		beInteger;
@@ -83,7 +83,7 @@ RMDCellInitializerEditor >> initializeWidgets [
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> nodeChanged [
+RMDCellInitializerPresenter >> nodeChanged [
 	super nodeChanged.
 	self
 		updateXDivisionsField;
@@ -93,46 +93,46 @@ RMDCellInitializerEditor >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> preferredHeight [
+RMDCellInitializerPresenter >> preferredHeight [
 	^ (node propertyInitializers size + 1) * self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> sizeField [
+RMDCellInitializerPresenter >> sizeField [
 	^ sizeField
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> sizeUnitDropList [
+RMDCellInitializerPresenter >> sizeUnitDropList [
 	^ sizeUnitDropList
 ]
 
 { #category : #updating }
-RMDCellInitializerEditor >> updateSizeField [
+RMDCellInitializerPresenter >> updateSizeField [
 	node ifNotNil: [ sizeField text: node size literal ]
 ]
 
 { #category : #updating }
-RMDCellInitializerEditor >> updateSizeUnitField [
+RMDCellInitializerPresenter >> updateSizeUnitField [
 	node ifNotNil: [ sizeUnitDropList selectItem: node size type ]
 ]
 
 { #category : #updating }
-RMDCellInitializerEditor >> updateXDivisionsField [
+RMDCellInitializerPresenter >> updateXDivisionsField [
 	node ifNotNil: [ xDivisionsField text: node xDivisions printString ]
 ]
 
 { #category : #updating }
-RMDCellInitializerEditor >> updateYDivisionsField [
+RMDCellInitializerPresenter >> updateYDivisionsField [
 	node ifNotNil: [ yDivisionsField text: node yDivisions printString ]
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> xDivisionsField [
+RMDCellInitializerPresenter >> xDivisionsField [
 	^ xDivisionsField
 ]
 
 { #category : #accessing }
-RMDCellInitializerEditor >> yDivisionsField [
+RMDCellInitializerPresenter >> yDivisionsField [
 	^ yDivisionsField
 ]

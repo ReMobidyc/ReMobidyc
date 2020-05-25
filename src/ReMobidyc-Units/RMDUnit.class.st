@@ -122,17 +122,17 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'µs' scale: 1.0e-6 siUnit: s)
 		value: #('µsec' 'micros' 'micross').
 	register
-		value: (self newSymbol: 'w' scale: 604800.0 siUnit: s)
-		value: #('week' 'weeks').
+		value: (self newSymbol: 'week' scale: 604800.0 siUnit: s)
+		value: #('w' 'weeks').
 	register
-		value: (self newSymbol: 'mo' scale: 2592000.0 siUnit: s)
-		value: #('month' 'months' 'mo30' 'month30' 'months30').
+		value: (self newSymbol: 'month' scale: 2592000.0 siUnit: s)
+		value: #('mo' 'months' 'mo30' 'month30' 'months30').
 	register
-		value: (self newSymbol: 'mo31' scale: 2678400.0 siUnit: s)
-		value: #('month31' 'months31').
+		value: (self newSymbol: 'month31' scale: 2678400.0 siUnit: s)
+		value: #('mo31' 'months31').
 	register
-		value: (self newSymbol: 'a' scale: 31557600.0 siUnit: s)
-		value: #('y' 'yr' 'year' 'years').
+		value: (self newSymbol: 'year' scale: 31557600.0 siUnit: s)
+		value: #('y' 'yr' 'a' 'years').
 	"temperature"
 	register value: (kelvin := self newSISymbol: 'K') value: #(K).
 	register

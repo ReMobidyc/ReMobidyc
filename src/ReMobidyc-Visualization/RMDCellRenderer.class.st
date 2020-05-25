@@ -35,7 +35,7 @@ RMDCellRenderer >> defaultBorderColor [
 
 { #category : #defaults }
 RMDCellRenderer >> defaultBorderWidth [
-	^ 1
+	^ 2
 ]
 
 { #category : #defaults }
@@ -66,7 +66,19 @@ RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 								y: cellY * cellLength
 								interpreter: aRMDInterpreter
 								scale: aNumber))
-				on: aCanvas ] ]
+				on: aCanvas ] ].
+	0 to: xDivisions do: [ :x | 
+		aCanvas
+			line: (x * aNumber) @ 0
+			to: (x * aNumber) @ (yDivisions * aNumber)
+			width: borderWidth
+			color: borderColor ].
+	0 to: yDivisions do: [ :y | 
+		aCanvas
+			line: 0 @ (y * aNumber)
+			to: (xDivisions * aNumber) @ (y * aNumber)
+			width: borderWidth
+			color: borderColor ]
 ]
 
 { #category : #drawing }
