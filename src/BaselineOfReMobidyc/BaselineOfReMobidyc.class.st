@@ -33,7 +33,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				package: 'ReMobidyc-Spec2'
 					with: [ spec
 						requires:
-							#('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Units' 'Remobidyc-Visualization') ];
+							#('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Units' 'ReMobidyc-Visualization') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
