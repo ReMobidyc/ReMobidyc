@@ -68,7 +68,7 @@ RMDVisualizerPresenter >> interpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	interpreter
-		ifNotNil: [ interpreter announcer
+		ifNotNil: [ interpreter announcer weak
 				when: RMDTimeChanged
 				send: #updateImage
 				to: self ]

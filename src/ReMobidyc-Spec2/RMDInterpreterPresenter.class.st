@@ -103,7 +103,10 @@ RMDInterpreterPresenter >> interpreter [
 RMDInterpreterPresenter >> interpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
-	interpreter announcer when: RMDTimeChanged send: #updateTime to: self.
+	interpreter announcer weak
+		when: RMDTimeChanged
+		send: #updateTime
+		to: self.
 	self interpreterChanged
 ]
 
