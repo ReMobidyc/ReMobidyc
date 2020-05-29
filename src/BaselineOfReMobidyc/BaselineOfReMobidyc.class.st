@@ -47,7 +47,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				group: 'default' with: #('core' 'tests');
 				group: 'core'
 					with:
-					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization');
+					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization' 'ReMobidyc-Spec2');
 				group: 'tests'
 					with:
 					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests') ]
