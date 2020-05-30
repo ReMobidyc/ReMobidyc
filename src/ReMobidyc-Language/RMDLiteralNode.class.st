@@ -71,7 +71,7 @@ RMDLiteralNode >> precedence [
 RMDLiteralNode >> printOn: aStream [
 	aStream nextPutAll: self literal.
 	type hasDimension
-		ifTrue: [ aStream nextPut: $[.
+		ifTrue: [ aStream nextPutAll: ' ['.
 			type printOn: aStream.
 			aStream nextPut: $] ]
 ]

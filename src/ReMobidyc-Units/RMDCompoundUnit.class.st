@@ -16,14 +16,14 @@ RMDCompoundUnit class >> from: aDictionary [
 
 { #category : #'instance creation' }
 RMDCompoundUnit class >> noDimension [
-	^ self from: Dictionary new
+	^ self from: OrderedDictionary new
 ]
 
 { #category : #'instance creation' }
 RMDCompoundUnit class >> with: aRMDUnitSymbol [
 	^ self
 		from:
-			(Dictionary new
+			(OrderedDictionary new
 				at: aRMDUnitSymbol put: 1;
 				yourself)
 ]
@@ -47,7 +47,7 @@ RMDCompoundUnit >> * aRMDUnit [
 { #category : #arithmetics }
 RMDCompoundUnit >> ** anInteger [
 	| syms |
-	syms := Dictionary new: unitSymbolsAndOrders size.
+	syms := OrderedDictionary new: unitSymbolsAndOrders size.
 	unitSymbolsAndOrders
 		keysAndValuesDo: [ :symbol :order | syms at: symbol put: order * anInteger ].
 	(syms size = 1 and: [ syms values anyOne = 1 ])
@@ -119,32 +119,28 @@ RMDCompoundUnit >> isProportional [
 
 { #category : #printing }
 RMDCompoundUnit >> printOn: aStream [
-	| hasPositiveOrder hasNegativeOrder |
-	hasPositiveOrder := false.
-	hasNegativeOrder := false.
-	unitSymbolsAndOrders
-		keysAndValuesDo: [ :unit :order | 
-			order > 0
-				ifTrue: [ hasPositiveOrder := true.
-					unit printOn: aStream.
-					order > 1
+	(unitSymbolsAndOrders associations
+		select: [ :assoc | assoc value > 0 ])
+		ifEmpty: [ aStream nextPutAll: '1' ]
+		ifNotEmpty: [ :numerators | 
+			numerators
+				do: [ :assoc | 
+					assoc key printOn: aStream.
+					assoc value > 1
 						ifTrue: [ aStream nextPut: $^.
-							order printOn: aStream ].
-					aStream nextPut: Character space ].
-			order < 0
-				ifTrue: [ hasNegativeOrder := true ] ].
-	hasPositiveOrder
-		ifFalse: [ aStream nextPutAll: '1' ].
-	hasNegativeOrder
-		ifTrue: [ aStream nextPutAll: '/ ' ].
-	unitSymbolsAndOrders
-		keysAndValuesDo: [ :unit :order | 
-			order < 0
-				ifTrue: [ unit printOn: aStream.
-					order < -1
+							assoc value printOn: aStream ] ]
+				separatedBy: [ aStream nextPut: $• ] ].
+	(unitSymbolsAndOrders associations
+		select: [ :assoc | assoc value < 0 ])
+		ifNotEmpty: [ :denominators | 
+			aStream nextPutAll: '/'.
+			denominators
+				do: [ :assoc | 
+					assoc key printOn: aStream.
+					assoc value < -1
 						ifTrue: [ aStream nextPut: $^.
-							order abs printOn: aStream ].
-					aStream nextPut: Character space ] ]
+							assoc value abs printOn: aStream ] ]
+				separatedBy: [ aStream nextPut: $• ] ]
 ]
 
 { #category : #private }
