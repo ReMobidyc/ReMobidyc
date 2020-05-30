@@ -15,7 +15,7 @@ Class {
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 	<script:
-		'(RMDBehaviorDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+		'(RMDBehaviorDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
 	^ ('Cell grow_grass where
 	here''s max_grass -> ' , maxString
 		,
@@ -27,7 +27,7 @@ RMDBehaviorDefinitionNode class >> cell_grow_grass: amountString upto: maxString
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
 	<script:
-		'(RMDBehaviorDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+		'(RMDBehaviorDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
 	^ ('Goat eat_grass where
 	my energy -> my blood_sugar
 	my max_energy -> ' , maxString
@@ -38,7 +38,7 @@ RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
 
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> goat_respire: aString [
-	<script: '(RMDBehaviorDefinitionNode goat_respire: ''2000[kcal/day]'') inspect'>
+	<script: '(RMDBehaviorDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
 	^ ('Goat respire where
 	my energy -> my blood_sugar
 	my respiration_rate -> ' , aString , '.') asRMDBehaviorDefinition
@@ -46,7 +46,8 @@ RMDBehaviorDefinitionNode class >> goat_respire: aString [
 
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> goat_walk_for_grass [
-	<script: 'RMDBehaviorDefinitionNode goat_walk_for_grass inspect'>
+	<script:
+		'RMDBehaviorDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
 	^ 'Goat move where
 	my heading -> direction grad grass
 	my speed -> 1[km/day].' asRMDBehaviorDefinition
@@ -148,9 +149,13 @@ RMDBehaviorDefinitionNode >> printOn: aStream [
 				nextPut: Character space;
 				nextPutAll: objectIdentifier ].
 	(propertyBinds notNil and: [ propertyBinds notEmpty ])
-		ifTrue: [ aStream nextPutAll: ' with '.
+		ifTrue: [ aStream
+				nextPutAll: ' where';
+				nextPut: Character cr.
 			propertyBinds
-				do: [ :bind | bind printOn: aStream ]
+				do: [ :bind | 
+					aStream nextPutAll: '    '.
+					bind printOn: aStream ]
 				separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
