@@ -39,8 +39,8 @@ RMDSimulationTimeDefinitionPresenter >> durationUnitDropList [
 ]
 
 { #category : #initialization }
-RMDSimulationTimeDefinitionPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDSimulationTimeDefinitionPresenter >> initializePresenters [
+	super initializePresenters.
 	durationField := self newNumberInput
 		beFloat;
 		autoAccept: true;

@@ -29,8 +29,8 @@ RMDCellInitializerPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDCellInitializerPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDCellInitializerPresenter >> initializePresenters [
+	super initializePresenters.
 	xDivisionsField := self newNumberInput
 		beInteger;
 		autoAccept: true;

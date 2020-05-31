@@ -136,6 +136,11 @@ RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock
 ]
 
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> actionNames [
+	^ simulationModel actionNames
+]
+
 { #category : #'accessing - libraries' }
 RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary
@@ -169,6 +174,16 @@ RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ simulationModel
 		ifNil: errorBlock
 		ifNotNil: [ simulationModel animatDefinitionAt: aString ifAbsent: errorBlock ]
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> behaviorDefinitions [
+	^ simulationModel behaviorDefinitions
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> behaviorNames [
+	^ simulationModel behaviorNames
 ]
 
 { #category : #simulating }
@@ -471,6 +486,16 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 						ifFalse: [ self terminate: individual animat: animatDef ] ] ]
 ]
 
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode [
+	^ simulationModel replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> resetBehaviors [
+	simulationModel behaviorsDo: [ :behavior | behavior resetAction ]
+]
+
 { #category : #'context controls' }
 RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
 	self
@@ -607,6 +632,11 @@ RMDInterpreter >> setupSimulation [
 { #category : #'accessing - definitions' }
 RMDInterpreter >> simulationDefinition [
 	^ simulationModel simulationDefinition
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> simulationModel [
+	^ simulationModel
 ]
 
 { #category : #'space access' }

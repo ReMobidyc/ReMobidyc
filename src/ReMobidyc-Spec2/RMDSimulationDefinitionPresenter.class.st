@@ -25,12 +25,7 @@ RMDSimulationDefinitionPresenter >> add: aRMDSyntaxNodeEditor [
 
 { #category : #initialization }
 RMDSimulationDefinitionPresenter >> initializePresenters [
-	self nodeChanged
-]
-
-{ #category : #initialization }
-RMDSimulationDefinitionPresenter >> initializeWidgets [
-	super initializeWidgets.
+	super initializePresenters.
 	self whenBuiltDo: [ self nodeChanged ]
 ]
 

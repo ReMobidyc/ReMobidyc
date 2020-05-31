@@ -145,8 +145,7 @@ RMDActionDefinitionNode >> printOn: aStream [
 			aStream
 				nextPut: Character cr;
 				nextPutAll: '    '.
-			def printOn: aStream ]
-		separatedBy: [ aStream nextPut: Character cr ].
+			def printOn: aStream ].
 	utilityDefinitions
 		ifNotEmpty: [ aStream
 				nextPut: Character cr;

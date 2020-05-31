@@ -12,8 +12,8 @@ Class {
 }
 
 { #category : #initialization }
-RMDCellExpressionRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDCellExpressionRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	borderColorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | 
 			color

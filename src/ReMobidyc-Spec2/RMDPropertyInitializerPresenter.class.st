@@ -48,8 +48,8 @@ RMDPropertyInitializerPresenter >> identifierField [
 ]
 
 { #category : #initialization }
-RMDPropertyInitializerPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDPropertyInitializerPresenter >> initializePresenters [
+	super initializePresenters.
 	identifierField := self newTextInput
 		beText;
 		autoAccept: true;

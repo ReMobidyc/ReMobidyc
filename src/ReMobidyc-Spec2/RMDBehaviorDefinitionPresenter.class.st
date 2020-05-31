@@ -14,8 +14,8 @@ RMDBehaviorDefinitionPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDBehaviorDefinitionPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDBehaviorDefinitionPresenter >> initializePresenters [
+	super initializePresenters.
 	source := (self newSourceWith: RMDGrammar new behaviorDefinition end)
 		whenLastValidSyntaxNodeChangedDo: [ :newNode | 
 			node

@@ -42,8 +42,8 @@ RMDVisualizerPresenter class >> on: aRMDVisualizer interpreter: aRMDInterpreter 
 ]
 
 { #category : #initialization }
-RMDVisualizerPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDVisualizerPresenter >> initializePresenters [
+	super initializePresenters.
 	image := self newImage
 		autoScale: true;
 		yourself.

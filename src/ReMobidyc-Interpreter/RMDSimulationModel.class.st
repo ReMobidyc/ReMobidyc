@@ -17,11 +17,21 @@ RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ actionDefinitions at: aString ifAbsent: errorBlock
 ]
 
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> actionNames [
+	^ actionDefinitions keys asSortedCollection
+]
+
 { #category : #adding }
 RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
-	^ actionDefinitions
+	actionDefinitions
 		at: aRMDActionDefinitionNode identifier
-		put: aRMDActionDefinitionNode
+		put: aRMDActionDefinitionNode.
+	behaviorDefinitions
+		do: [ :behavior | 
+			behavior actionIdentifier = aRMDActionDefinitionNode identifier
+				ifTrue: [ behavior resetAction ] ].
+	^ aRMDActionDefinitionNode
 ]
 
 { #category : #adding }
@@ -49,6 +59,16 @@ RMDSimulationModel >> animatDefinitionsDo: aBlock [
 { #category : #enumerating }
 RMDSimulationModel >> animatInitializersDo: aBlock [
 	simulationDefinition animatInitializers do: aBlock
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> behaviorDefinitions [
+	^ Array withAll: behaviorDefinitions
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> behaviorNames [
+	^ (behaviorDefinitions collect: #name) asSortedCollection
 ]
 
 { #category : #enumerating }
@@ -132,6 +152,17 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 { #category : #'accessing-cells' }
 RMDSimulationModel >> north [
 	^ self cellLength * self cellYDivisions
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode [
+	| index |
+	index := behaviorDefinitions indexOf: aRMDBehaviorDefinitionNode.
+	index = 0
+		ifTrue: [ behaviorDefinitions add: anotherRMDBehaviorDefinitionNode ]
+		ifFalse:
+			[ behaviorDefinitions at: index put: anotherRMDBehaviorDefinitionNode ].
+	^ anotherRMDBehaviorDefinitionNode
 ]
 
 { #category : #'accessing - definitions' }

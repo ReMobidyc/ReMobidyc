@@ -32,6 +32,27 @@ RMDSimulationModelTest >> testActionDefinitionAtIfAbsent [
 ]
 
 { #category : #running }
+RMDSimulationModelTest >> testActionNames [
+	model
+		addActionDefinition:
+			(parser actionDefinition end
+				parse:
+					'to walk is
+	my d/dt x'' = cos(heading) * my speed
+	my d/dt y'' = sin(heading) * my speed.').
+	model
+		addActionDefinition:
+			(parser actionDefinition end
+				parse:
+					'to run is
+	my d/dt x'' = cos(heading) * my max_speed
+	my d/dt y'' = sin(heading) * my max_speed.').
+	self
+		assert: model actionNames asArray
+		equals: #('walk' 'run') asSortedCollection asArray
+]
+
+{ #category : #running }
 RMDSimulationModelTest >> testAddActionDefinition [
 	| action |
 	action := parser actionDefinition end
@@ -173,6 +194,51 @@ World with
 				streamContents: [ :stream | model animatInitializersDo: [ :i | stream nextPut: i ] ])
 				asSet
 		equals: sim animatInitializers asSet
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testBehaviorDefinitions [
+	| behavior1 behavior2 behavior3 |
+	behavior1 := parser behaviorDefinition end parse: 'Goat walk.'.
+	model addBehaviorDefinition: behavior1.
+	behavior2 := parser behaviorDefinition end
+		parse:
+			'Goat eat where
+	my energy -> my blood_sugar
+	here''s energy -> here''s grass.'.
+	model addBehaviorDefinition: behavior2.
+	behavior3 := parser behaviorDefinition end
+		parse:
+			'Wolf walk where
+	my speed -> my walking_speed.'.
+	model addBehaviorDefinition: behavior3.
+	self
+		assert: model behaviorDefinitions
+		equals:
+			{behavior1.
+			behavior2.
+			behavior3}
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testBehaviorNames [
+	| behavior1 behavior2 behavior3 |
+	behavior1 := parser behaviorDefinition end parse: 'Goat walk.'.
+	model addBehaviorDefinition: behavior1.
+	behavior2 := parser behaviorDefinition end
+		parse:
+			'Goat eat where
+	my energy -> my blood_sugar
+	here''s energy -> here''s grass.'.
+	model addBehaviorDefinition: behavior2.
+	behavior3 := parser behaviorDefinition end
+		parse:
+			'Wolf walk where
+	my speed -> my walking_speed.'.
+	model addBehaviorDefinition: behavior3.
+	self
+		assert: model behaviorNames
+		equals: #('Goat walk' 'Goat eat' 'Wolf walk') asSortedCollection
 ]
 
 { #category : #running }

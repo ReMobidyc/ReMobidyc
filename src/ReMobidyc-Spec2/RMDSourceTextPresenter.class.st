@@ -48,6 +48,7 @@ RMDSourceTextPresenter >> syntaxNode [
 
 { #category : #api }
 RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
+	syntaxNode == aRMDSyntaxNode ifTrue: [ ^self ].
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
 		ifTrue: [ self beOk.

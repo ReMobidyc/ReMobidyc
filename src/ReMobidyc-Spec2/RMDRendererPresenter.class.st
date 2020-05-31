@@ -16,8 +16,8 @@ RMDRendererPresenter class >> on: aRMDRenderer [
 ]
 
 { #category : #initialization }
-RMDRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	colorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | 
 			color

@@ -14,8 +14,8 @@ RMDSpeciesInitializerPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDSpeciesInitializerPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDSpeciesInitializerPresenter >> initializePresenters [
+	super initializePresenters.
 	self
 		whenBuiltDo: [ self
 				withWidgetDo: [ :w | 

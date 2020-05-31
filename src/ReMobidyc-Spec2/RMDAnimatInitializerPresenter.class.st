@@ -44,8 +44,8 @@ RMDAnimatInitializerPresenter >> enableAnimat [
 ]
 
 { #category : #initialization }
-RMDAnimatInitializerPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDAnimatInitializerPresenter >> initializePresenters [
+	super initializePresenters.
 	populationField := self newNumberInput
 		beInteger;
 		autoAccept: true;

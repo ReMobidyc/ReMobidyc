@@ -8,8 +8,8 @@ Class {
 }
 
 { #category : #initialization }
-RMDAnimatRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDAnimatRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	animatField := self newAnimatInput
 		autoAccept: true;
 		whenLastValidTextChangedDo: [ :animat | 

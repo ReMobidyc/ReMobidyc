@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #initialization }
-RMDCellColorRangeRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDCellColorRangeRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	minField := self newExpressionTextInput
 		autoAccept: true;
 		isLiteralOnly: true;

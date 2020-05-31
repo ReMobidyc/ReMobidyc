@@ -26,8 +26,8 @@ RMDAnimatDotRendererPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDAnimatDotRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDAnimatDotRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	diameterField := self newNumberInput
 		beInteger;
 		autoAccept: true;

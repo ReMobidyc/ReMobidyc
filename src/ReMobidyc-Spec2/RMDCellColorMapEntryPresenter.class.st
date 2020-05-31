@@ -42,8 +42,8 @@ RMDCellColorMapEntryPresenter >> associationChanged [
 ]
 
 { #category : #initialization }
-RMDCellColorMapEntryPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDCellColorMapEntryPresenter >> initializePresenters [
+	super initializePresenters.
 	colorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | 
 			color

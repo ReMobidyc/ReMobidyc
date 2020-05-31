@@ -7,7 +7,8 @@ Class {
 		'objectIdentifier',
 		'range',
 		'propertyBinds',
-		'action'
+		'action',
+		'name'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -81,7 +82,8 @@ RMDBehaviorDefinitionNode >> actionIdentifier [
 
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> actionIdentifier: aString [
-	actionIdentifier := aString
+	actionIdentifier := aString.
+	name := nil
 ]
 
 { #category : #accessing }
@@ -122,13 +124,29 @@ RMDBehaviorDefinitionNode >> isBehaviorDefinitionNode [
 ]
 
 { #category : #accessing }
+RMDBehaviorDefinitionNode >> name [
+	^ name
+		ifNil: [ name := String
+				streamContents: [ :stream | 
+					stream
+						nextPutAll: subjectIdentifier;
+						space;
+						nextPutAll: actionIdentifier.
+					objectIdentifier
+						ifNotNil: [ stream
+								space;
+								nextPutAll: objectIdentifier ] ] ]
+]
+
+{ #category : #accessing }
 RMDBehaviorDefinitionNode >> objectIdentifier [
 	^ objectIdentifier
 ]
 
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> objectIdentifier: aString [
-	objectIdentifier := aString
+	objectIdentifier := aString.
+	name := nil
 ]
 
 { #category : #copying }
@@ -201,11 +219,17 @@ RMDBehaviorDefinitionNode >> replaceChildren: aDictionary [
 ]
 
 { #category : #accessing }
+RMDBehaviorDefinitionNode >> resetAction [
+	action := nil
+]
+
+{ #category : #accessing }
 RMDBehaviorDefinitionNode >> subjectIdentifier [
 	^ subjectIdentifier
 ]
 
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> subjectIdentifier: aString [
-	subjectIdentifier := aString
+	subjectIdentifier := aString.
+	name := nil
 ]

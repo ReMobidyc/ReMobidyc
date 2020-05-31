@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : #initialization }
-RMDPresenter >> initializeWidgets [
+RMDPresenter >> initializePresenters [
 	self
 		whenBuiltDo: [ :w | 
 			| font |

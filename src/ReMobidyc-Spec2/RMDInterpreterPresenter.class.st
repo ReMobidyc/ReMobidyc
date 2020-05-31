@@ -8,7 +8,9 @@ Class {
 		'runButton',
 		'time',
 		'process',
-		'timeUnit'
+		'timeUnit',
+		'actionBrowser',
+		'behaviorBrowser'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -65,9 +67,18 @@ RMDInterpreterPresenter >> initialize [
 ]
 
 { #category : #initialization }
-RMDInterpreterPresenter >> initializeWidgets [
-	super initializeWidgets.
-	views := self newNotebook.
+RMDInterpreterPresenter >> initializePresenters [
+	super initializePresenters.
+	views := self newNotebook
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ behaviorBrowser := RMDBehaviorBrowser on: interpreter ];
+				title: 'Behaviors');
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ actionBrowser := RMDActionBrowser on: interpreter ];
+				title: 'Actions');
+		yourself.
 	time := self newLabel
 		label: '0';
 		yourself.
@@ -113,6 +124,7 @@ RMDInterpreterPresenter >> interpreter: aRMDInterpreter [
 { #category : #accessing }
 RMDInterpreterPresenter >> interpreterChanged [
 	self
+		updateActionBrowser;
 		updateTime;
 		updateTimeUnit
 ]
@@ -135,6 +147,11 @@ RMDInterpreterPresenter >> runState: aBoolean [
 { #category : #api }
 RMDInterpreterPresenter >> toggleRunPauseSimulation [
 	self runState: self runState not
+]
+
+{ #category : #accessing }
+RMDInterpreterPresenter >> updateActionBrowser [
+	actionBrowser ifNotNil: [ actionBrowser interpreter: interpreter ]
 ]
 
 { #category : #accessing }

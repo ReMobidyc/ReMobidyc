@@ -31,8 +31,8 @@ RMDCellColorMapRendererPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDCellColorMapRendererPresenter >> initializeWidgets [
-	super initializeWidgets.
+RMDCellColorMapRendererPresenter >> initializePresenters [
+	super initializePresenters.
 	self whenBuiltDo: [ self updateSpec ]
 ]
 
