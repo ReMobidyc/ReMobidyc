@@ -62,6 +62,11 @@ RMDSimulationModel >> animatInitializersDo: aBlock [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> animatNames [
+	^ animatDefinitions keys asSortedCollection
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> behaviorDefinitions [
 	^ Array withAll: behaviorDefinitions
 ]

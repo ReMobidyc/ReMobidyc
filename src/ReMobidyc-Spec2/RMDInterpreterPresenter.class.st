@@ -10,7 +10,8 @@ Class {
 		'process',
 		'timeUnit',
 		'actionBrowser',
-		'behaviorBrowser'
+		'behaviorBrowser',
+		'animatBrowser'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -70,6 +71,10 @@ RMDInterpreterPresenter >> initialize [
 RMDInterpreterPresenter >> initializePresenters [
 	super initializePresenters.
 	views := self newNotebook
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ animatBrowser := RMDAnimatBrowser on: interpreter ];
+				title: 'Animats');
 		addPage:
 			(self newNotebookPage
 				presenterProvider: [ behaviorBrowser := RMDBehaviorBrowser on: interpreter ];

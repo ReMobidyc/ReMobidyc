@@ -59,17 +59,20 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 { #category : #api }
 RMDSourceTextPresenter >> text: aString [
+	| aText |
+	aText := aString.
 	parser
 		ifNil: [ syntaxNode := nil ]
 		ifNotNil: [ | node |
-			node := parser parse: aString asString.
+			node := parser parse: aText asString.
 			node isPetit2Failure
 				ifTrue: [ self beError.
 					syntaxNode := nil ]
 				ifFalse: [ self beOk.
 					syntaxNode := node.
-					lastValidSyntaxNode := node ] ].
-	^ super text: aString
+					lastValidSyntaxNode := node.
+					aText := node printString ] ].
+	^ super text: aText
 ]
 
 { #category : #'api-events' }

@@ -133,12 +133,14 @@ RMDInterpreter class >> sugarScape [
 
 { #category : #'accessing - definitions' }
 RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
-	^ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock
+	^ simulationModel
+		ifNil: errorBlock
+		ifNotNil: [ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock ]
 ]
 
 { #category : #'accessing - definitions' }
 RMDInterpreter >> actionNames [
-	^ simulationModel actionNames
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #actionNames
 ]
 
 { #category : #'accessing - libraries' }
@@ -177,13 +179,18 @@ RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing - definitions' }
+RMDInterpreter >> animatNames [
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #animatNames
+]
+
+{ #category : #'accessing - definitions' }
 RMDInterpreter >> behaviorDefinitions [
-	^ simulationModel behaviorDefinitions
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #behaviorDefinitions
 ]
 
 { #category : #'accessing - definitions' }
 RMDInterpreter >> behaviorNames [
-	^ simulationModel behaviorNames
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #behaviorNames
 ]
 
 { #category : #simulating }
@@ -488,7 +495,10 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 
 { #category : #'accessing - definitions' }
 RMDInterpreter >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode [
-	^ simulationModel replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode
+	^ simulationModel
+		ifNotNil: [ simulationModel
+				replaceBehavior: aRMDBehaviorDefinitionNode
+				with: anotherRMDBehaviorDefinitionNode ]
 ]
 
 { #category : #'accessing - definitions' }

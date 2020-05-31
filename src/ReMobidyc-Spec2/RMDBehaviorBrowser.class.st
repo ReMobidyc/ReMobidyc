@@ -1,10 +1,7 @@
 Class {
 	#name : #RMDBehaviorBrowser,
-	#superclass : #RMDPresenter,
+	#superclass : #RMDAbstractDefinitionBrowser,
 	#instVars : [
-		'interpreter',
-		'list',
-		'source',
 		'action'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
@@ -31,31 +28,20 @@ RMDBehaviorBrowser class >> example1 [
 		openWithSpec
 ]
 
-{ #category : #'instance creation' }
-RMDBehaviorBrowser class >> on: aRMDInterpreter [
-	^ self new
-		interpreter: aRMDInterpreter;
-		yourself
+{ #category : #accessing }
+RMDBehaviorBrowser >> getListSelector [
+	^ #behaviorDefinitions
+]
+
+{ #category : #accessing }
+RMDBehaviorBrowser >> getSource: aRMDBehaviorDefinitionNode ifAbsent: aBlock [
+	^ aRMDBehaviorDefinitionNode ifNil: aBlock
 ]
 
 { #category : #initialization }
 RMDBehaviorBrowser >> initializePresenters [
 	super initializePresenters.
-	list := self newList
-		display: [ :item | item name ];
-		whenSelectionChangedDo: [ self updateSource ];
-		yourself.
-	source := (self newSourceWith: RMDGrammar new behaviorDefinition end)
-		whenLastValidSyntaxNodeChangedDo: [ :behaviorNode | 
-			list selection selectedItem == behaviorNode
-				ifFalse: [ interpreter
-						ifNotNil: [ interpreter
-								replaceBehavior: list selection selectedItem
-								with: behaviorNode.
-							self updateList.
-							list selectItem: behaviorNode ] ].
-			self updateAction ];
-		yourself.
+	list display: [ :item | item name ].
 	action := self newText
 		enabled: false;
 		whenBuiltDo: [ action color: (Color gray: 0.9) ];
@@ -63,22 +49,26 @@ RMDBehaviorBrowser >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDBehaviorBrowser >> interpreter [
-	^ interpreter
-]
-
-{ #category : #accessing }
-RMDBehaviorBrowser >> interpreter: aRMDSimulationModel [
-	interpreter := aRMDSimulationModel.
-	self interpreterChanged
-]
-
-{ #category : #accessing }
 RMDBehaviorBrowser >> interpreterChanged [
-	self
-		updateList;
-		updateSource;
-		updateAction
+	super interpreterChanged.
+	self updateAction
+]
+
+{ #category : #accessing }
+RMDBehaviorBrowser >> parser [
+	^ RMDGrammar new behaviorDefinition end
+]
+
+{ #category : #accessing }
+RMDBehaviorBrowser >> sourceAccepted: aRMDBehaviorDefinitionNode [
+	list selection selectedItem == aRMDBehaviorDefinitionNode
+		ifFalse: [ interpreter
+				ifNotNil: [ interpreter
+						replaceBehavior: list selection selectedItem
+						with: aRMDBehaviorDefinitionNode.
+					self updateList.
+					list selectItem: aRMDBehaviorDefinitionNode ] ].
+	self updateAction
 ]
 
 { #category : #accessing }
@@ -89,14 +79,6 @@ RMDBehaviorBrowser >> updateAction [
 	source syntaxNode
 		ifNotNil:
 			[ :behavior | action text: (behavior actionWith: interpreter) printString ]
-]
-
-{ #category : #accessing }
-RMDBehaviorBrowser >> updateList [
-	| item |
-	item := list selection selectedItem.
-	list
-		items: (interpreter ifNil: [ Array new ] ifNotNil: #behaviorDefinitions)
 ]
 
 { #category : #accessing }
