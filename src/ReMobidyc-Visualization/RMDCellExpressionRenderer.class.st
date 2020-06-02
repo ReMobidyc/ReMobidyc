@@ -51,7 +51,7 @@ RMDCellExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInte
 	| cellDef |
 	cellDef := aRMDInterpreter cellDefinition.
 	aRMDInterpreter
-		setObserverContextWithSubject: anInteger
-		species: cellDef.
-	^ expression evalIn: aRMDInterpreter
+		withObserverContextWithSubject: anInteger
+		species: cellDef
+		do: [ ^ expression evalIn: aRMDInterpreter ]
 ]

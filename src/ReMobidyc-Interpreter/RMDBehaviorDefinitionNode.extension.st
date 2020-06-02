@@ -16,7 +16,7 @@ RMDBehaviorDefinitionNode >> evalIn: aRMDInterpreter [
 				individualsOf: species
 				do: [ :animat | 
 					aRMDInterpreter
-						setActionContextWithIndividual: animat
-						species: species.
-					(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]
+						withActionContextWithIndividual: animat
+						species: species
+						do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]

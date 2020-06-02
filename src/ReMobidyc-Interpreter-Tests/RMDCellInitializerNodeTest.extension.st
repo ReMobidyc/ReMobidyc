@@ -17,8 +17,10 @@ RMDCellInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: cellDef
 		do: [ :cell | 
-			interpreter setInitializerContextWithSubject: cell species: cellDef.
-			cellInitializer evalIn: interpreter ].
+			interpreter
+				withInitializerContextWithSubject: cell
+				species: cellDef
+				do: [ cellInitializer evalIn: interpreter ] ].
 	self assert: interpreter time closeTo: 0.0.
 	grass := 'kcal' asRMDUnit toSI: 1000.
 	fertility := 'kcal' asRMDUnit toSI: 1100.
@@ -26,13 +28,15 @@ RMDCellInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: cellDef
 		do: [ :cell | 
-			interpreter setActionContextWithIndividual: cell species: cellDef.
-			self
-				assert: (interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])
-				equals: grass.
-			self
-				assert: (interpreter readVariable: 'fertility' agent: nil ifAbsent: [ nil ])
-				equals: fertility.
-			count := count + 1 ].
+			interpreter
+				withActionContextWithIndividual: cell
+				species: cellDef
+				do: [ self
+						assert: (interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])
+						equals: grass.
+					self
+						assert: (interpreter readVariable: 'fertility' agent: nil ifAbsent: [ nil ])
+						equals: fertility.
+					count := count + 1 ] ].
 	self assert: count equals: 10 * 11
 ]

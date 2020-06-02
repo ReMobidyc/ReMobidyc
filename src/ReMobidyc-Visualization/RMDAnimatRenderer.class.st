@@ -35,28 +35,28 @@ RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	aRMDInterpreter
 		individualsOf: animatDefinition
 		do: [ :individual | 
-			| x y |
 			aRMDInterpreter
-				setObserverContextWithSubject: individual
-				species: animatDefinition.
-			x := aRMDInterpreter
-				readVariable: 'x'
-				agent: nil
-				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-			y := aRMDInterpreter
-				readVariable: 'y'
-				agent: nil
-				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-			self
-				drawIndividual: individual
-				with: aRMDInterpreter
-				at:
-					(self
-						pointFromX: x
-						y: y
-						interpreter: aRMDInterpreter
-						scale: aNumber)
-				on: aCanvas ]
+				withObserverContextWithSubject: individual
+				species: animatDefinition
+				do: [ | x y |
+					x := aRMDInterpreter
+						readVariable: 'x'
+						agent: nil
+						ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+					y := aRMDInterpreter
+						readVariable: 'y'
+						agent: nil
+						ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+					self
+						drawIndividual: individual
+						with: aRMDInterpreter
+						at:
+							(self
+								pointFromX: x
+								y: y
+								interpreter: aRMDInterpreter
+								scale: aNumber)
+						on: aCanvas ] ]
 ]
 
 { #category : #drawing }

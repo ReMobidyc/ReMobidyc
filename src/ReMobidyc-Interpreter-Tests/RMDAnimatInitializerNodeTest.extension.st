@@ -27,8 +27,10 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: goatDef
 		do: [ :goat | 
-			interpreter setInitializerContextWithSubject: goat species: goatDef.
-			goatInitializer evalIn: interpreter ].
+			interpreter
+				withInitializerContextWithSubject: goat
+				species: goatDef
+				do: [ goatInitializer evalIn: interpreter ] ].
 	self assert: interpreter time closeTo: 0.0.
 	minBody := 'kcal' asRMDUnit toSI: 1000.
 	maxBody := 'kcal' asRMDUnit toSI: 5000.
@@ -37,15 +39,17 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	interpreter
 		individualsOf: goatDef
 		do: [ :goat | 
-			interpreter setActionContextWithIndividual: goat species: goatDef.
-			self
-				assert:
-					((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])
-						between: minBody
-						and: maxBody).
-			self
-				assert: (interpreter readVariable: 'age' agent: nil ifAbsent: [ nil ])
-				closeTo: age.
-			count := count + 1 ].
+			interpreter
+				withActionContextWithIndividual: goat
+				species: goatDef
+				do: [ self
+						assert:
+							((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])
+								between: minBody
+								and: maxBody).
+					self
+						assert: (interpreter readVariable: 'age' agent: nil ifAbsent: [ nil ])
+						closeTo: age.
+					count := count + 1 ] ].
 	self assert: count equals: 10
 ]

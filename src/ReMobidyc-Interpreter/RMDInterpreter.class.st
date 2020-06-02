@@ -5,6 +5,7 @@ Class {
 		'memory',
 		'libraries',
 		'context',
+		'contextSemaphore',
 		'individualDirectory',
 		'simulationModel'
 	],
@@ -402,7 +403,8 @@ RMDInterpreter >> initialize [
 	super initialize.
 	simulationModel := RMDSimulationModel new.
 	libraries := OrderedCollection with: self standardLibrary.
-	individualDirectory := RMDIndividualDirectory new
+	individualDirectory := RMDIndividualDirectory new.
+	contextSemaphore := Semaphore forMutualExclusion
 ]
 
 { #category : #'variable access' }
@@ -506,94 +508,14 @@ RMDInterpreter >> resetBehaviors [
 	simulationModel behaviorsDo: [ :behavior | behavior resetAction ]
 ]
 
-{ #category : #'context controls' }
-RMDInterpreter >> setActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode [
-	self
-		setContext:
-			(RMDActionContext
-				subject: anInteger
-				definition: aRMDAnimatDefinitionNode).
-	aRMDAnimatDefinitionNode isAnimatDefinitionNode
-		ifTrue: [ | here |
-			here := individualDirectory
-				cellAtXIndex:
-					((self
-						cellX:
-							(self
-								readVariable: 'x'
-								agent: nil
-								ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
-						min: simulationModel cellXDivisions
-						max: 1)
-				yIndex:
-					((self
-						cellY:
-							(self
-								readVariable: 'y'
-								agent: nil
-								ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
-						min: simulationModel cellYDivisions
-						max: 1).
-			context
-				location: here
-				definition: simulationModel cellDefinition
-				agent: 'here'.
-			individualDirectory
-				eastOf: here
-				do: [ :east | 
-					context
-						location: east
-						definition: simulationModel cellDefinition
-						agent: 'east' ].
-			individualDirectory
-				westOf: here
-				do: [ :west | 
-					context
-						location: west
-						definition: simulationModel cellDefinition
-						agent: 'west' ].
-			individualDirectory
-				southOf: here
-				do: [ :south | 
-					context
-						location: south
-						definition: simulationModel cellDefinition
-						agent: 'south' ].
-			individualDirectory
-				northOf: here
-				do: [ :north | 
-					context
-						location: north
-						definition: simulationModel cellDefinition
-						agent: 'north' ] ]
-]
-
 { #category : #private }
 RMDInterpreter >> setContext: aRMDContext [
 	context := aRMDContext
 ]
 
-{ #category : #'context controls' }
-RMDInterpreter >> setInitializerContextWithSubject: anInteger species: aRMDSpeciesInitializerNode [
-	self
-		setContext:
-			(RMDInitializerContext
-				subject: anInteger
-				definition: aRMDSpeciesInitializerNode)
-]
-
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
-]
-
-{ #category : #'context controls' }
-RMDInterpreter >> setObserverContextWithSubject: anInteger species: aRMDSpeciesInitializerNode [
-	self
-		setContext:
-			(RMDObserverContext
-				subject: anInteger
-				definition: aRMDSpeciesInitializerNode)
 ]
 
 { #category : #simulating }
@@ -616,15 +538,15 @@ RMDInterpreter >> setupSimulation [
 	individualDirectory
 		worldDo: [ :world | 
 			self
-				setInitializerContextWithSubject: world
-				species: simulationModel worldDefinition.
-			simulationModel worldInitializer evalIn: self ].
+				withInitializerContextWithSubject: world
+				species: simulationModel worldDefinition
+				do: [ simulationModel worldInitializer evalIn: self ] ].
 	individualDirectory
 		cellsDo: [ :cell | 
 			self
-				setInitializerContextWithSubject: cell
-				species: simulationModel cellDefinition.
-			simulationModel cellInitializer evalIn: self ].
+				withInitializerContextWithSubject: cell
+				species: simulationModel cellDefinition
+				do: [ simulationModel cellInitializer evalIn: self ] ].
 	simulationModel
 		animatInitializersDo: [ :initializer | 
 			individualDirectory
@@ -634,8 +556,10 @@ RMDInterpreter >> setupSimulation [
 					species := simulationModel
 						animatDefinitionAt: initializer animat
 						ifAbsent: [ ^ KeyNotFound signal: initializer animat ].
-					self setInitializerContextWithSubject: animat species: species.
-					initializer evalIn: self ] ].
+					self
+						withInitializerContextWithSubject: animat
+						species: species
+						do: [ initializer evalIn: self ] ] ].
 	self timeChanged
 ]
 
@@ -713,6 +637,101 @@ RMDInterpreter >> timeChanged [
 { #category : #'space access' }
 RMDInterpreter >> west [
 	^ simulationModel west
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode do: aBlock [
+	^ contextSemaphore
+		critical: [ | originalContext |
+			originalContext := context.
+			self
+				setContext:
+					(RMDActionContext
+						subject: anInteger
+						definition: aRMDAnimatDefinitionNode).
+			aRMDAnimatDefinitionNode isAnimatDefinitionNode
+				ifTrue: [ | here |
+					here := individualDirectory
+						cellAtXIndex:
+							((self
+								cellX:
+									(self
+										readVariable: 'x'
+										agent: nil
+										ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
+								min: simulationModel cellXDivisions
+								max: 1)
+						yIndex:
+							((self
+								cellY:
+									(self
+										readVariable: 'y'
+										agent: nil
+										ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
+								min: simulationModel cellYDivisions
+								max: 1).
+					context
+						location: here
+						definition: simulationModel cellDefinition
+						agent: 'here'.
+					individualDirectory
+						eastOf: here
+						do: [ :east | 
+							context
+								location: east
+								definition: simulationModel cellDefinition
+								agent: 'east' ].
+					individualDirectory
+						westOf: here
+						do: [ :west | 
+							context
+								location: west
+								definition: simulationModel cellDefinition
+								agent: 'west' ].
+					individualDirectory
+						southOf: here
+						do: [ :south | 
+							context
+								location: south
+								definition: simulationModel cellDefinition
+								agent: 'south' ].
+					individualDirectory
+						northOf: here
+						do: [ :north | 
+							context
+								location: north
+								definition: simulationModel cellDefinition
+								agent: 'north' ] ].
+			[ aBlock cull: self cull: context ]
+				ensure: [ context := originalContext ] ]
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesInitializerNode do: aBlock [
+	^ contextSemaphore
+		critical: [ | originalContext |
+			originalContext := context.
+			self
+				setContext:
+					(RMDInitializerContext
+						subject: anInteger
+						definition: aRMDSpeciesInitializerNode).
+			[ aBlock cull: self cull: context ]
+				ensure: [ context := originalContext ] ]
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpeciesInitializerNode do: aBlock [
+	^ contextSemaphore
+		critical: [ | originalContext |
+			originalContext := context.
+			self
+				setContext:
+					(RMDObserverContext
+						subject: anInteger
+						definition: aRMDSpeciesInitializerNode).
+			[ aBlock cull: self cull: context ]
+				ensure: [ context := originalContext ] ]
 ]
 
 { #category : #'variable access' }

@@ -106,7 +106,7 @@ RMDInterpreterPresenter >> initializePresenters [
 						whileTrue: [ interpreter
 								ifNotNil: [ interpreter stepSimulation
 										ifFalse: [ self runState: false ].
-									10 milliSecond wait ] ] ]
+									0 milliSecond wait ] ] ]
 						forkAt: Processor userBackgroundPriority ] ];
 		yourself.
 	resetButton := self newButton

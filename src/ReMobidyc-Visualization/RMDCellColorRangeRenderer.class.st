@@ -40,9 +40,9 @@ RMDCellColorRangeRenderer >> valueForIndividual: anInteger interpreter: aRMDInte
 	| cellDef value |
 	cellDef := aRMDInterpreter cellDefinition.
 	aRMDInterpreter
-		setObserverContextWithSubject: anInteger
-		species: cellDef.
-	value := expression evalIn: aRMDInterpreter.
+		withObserverContextWithSubject: anInteger
+		species: cellDef
+		do: [ value := expression evalIn: aRMDInterpreter ].
 	^ (value - min numeric) / (max numeric - min numeric)
 		min: 1.0
 		max: 0.0
