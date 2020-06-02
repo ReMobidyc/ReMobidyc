@@ -23,5 +23,5 @@ RMDActionBrowser >> getSource: aString ifAbsent: aBlock [
 
 { #category : #accessing }
 RMDActionBrowser >> parser [
-	^ RMDGrammar new actionDefinition end
+	^ RMDGrammar new actionDefinition
 ]

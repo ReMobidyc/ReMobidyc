@@ -56,7 +56,7 @@ RMDBehaviorBrowser >> interpreterChanged [
 
 { #category : #accessing }
 RMDBehaviorBrowser >> parser [
-	^ RMDGrammar new behaviorDefinition end
+	^ RMDGrammar new behaviorDefinition
 ]
 
 { #category : #accessing }

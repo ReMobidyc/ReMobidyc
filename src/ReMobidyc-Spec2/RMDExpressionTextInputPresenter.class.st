@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'#expression => SpObservableSlot',
 		'#lastValidExpression => SpObservableSlot',
-		'#isLiteralOnly => SpObservableSlot'
+		'#isLiteralOnly => SpObservableSlot',
+		'#parser'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -41,7 +42,8 @@ RMDExpressionTextInputPresenter >> expression: aRMDExpression [
 { #category : #initialization }
 RMDExpressionTextInputPresenter >> initialize [
 	super initialize.
-	isLiteralOnly := false
+	isLiteralOnly := false.
+	parser := RMDGrammar new expression
 ]
 
 { #category : #api }
@@ -61,17 +63,24 @@ RMDExpressionTextInputPresenter >> lastValidExpression [
 
 { #category : #api }
 RMDExpressionTextInputPresenter >> text: aString [
-	aString
-		asRMDExpressionDo: [ :node | 
-			(isLiteralOnly and: [ node isLiteralNode not ])
+	| newText node |
+	newText := aString asText.
+	node := parser end parse: aString asString.
+	node isPetit2Failure
+		ifTrue: [ | node2 |
+			node2 := parser parse: aString asString.
+			node2 isPetit2Failure
+				ifTrue: [ node := node2 ].
+			newText makeColor: Color red from: node position to: aString size.
+			self beError.
+			expression := nil ]
+		ifFalse: [ (isLiteralOnly and: [ node isLiteralNode not ])
 				ifTrue: [ self beError.
 					expression := nil ]
 				ifFalse: [ self beOk.
 					expression := node.
-					lastValidExpression := node ] ]
-		ifError: [ self beError.
-			expression := nil ].
-	^ super text: aString
+					lastValidExpression := node ] ].
+	^ super text: newText
 ]
 
 { #category : #'api-events' }

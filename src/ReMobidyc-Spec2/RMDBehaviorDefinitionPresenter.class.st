@@ -16,7 +16,7 @@ RMDBehaviorDefinitionPresenter class >> defaultSpec [
 { #category : #initialization }
 RMDBehaviorDefinitionPresenter >> initializePresenters [
 	super initializePresenters.
-	source := (self newSourceWith: RMDGrammar new behaviorDefinition end)
+	source := (self newSourceWith: RMDGrammar new behaviorDefinition)
 		whenLastValidSyntaxNodeChangedDo: [ :newNode | 
 			node
 				ifNotNil: [ node subjectIdentifier: newNode subjectIdentifier.

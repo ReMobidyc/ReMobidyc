@@ -64,15 +64,20 @@ RMDSourceTextPresenter >> text: aString [
 	parser
 		ifNil: [ syntaxNode := nil ]
 		ifNotNil: [ | node |
-			node := parser parse: aText asString.
+			node := parser end parse: aText asString.
 			node isPetit2Failure
-				ifTrue: [ self beError.
+				ifTrue: [ | node2 |
+					node2 := parser parse: aString asString.
+					node2 isPetit2Failure
+						ifTrue: [ node := node2 ].
+					aText makeColor: Color red from: node position to: aString size.
+					self beError.
 					syntaxNode := nil ]
 				ifFalse: [ self beOk.
 					syntaxNode := node.
 					lastValidSyntaxNode := node.
 					aText := node printString ] ].
-	^ super text: aText
+	super text: aText
 ]
 
 { #category : #'api-events' }

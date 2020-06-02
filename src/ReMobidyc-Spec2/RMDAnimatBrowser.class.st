@@ -23,5 +23,5 @@ RMDAnimatBrowser >> getSource: aString ifAbsent: aBlock [
 
 { #category : #accessing }
 RMDAnimatBrowser >> parser [
-	^ RMDGrammar new animatDefinition end
+	^ RMDGrammar new animatDefinition
 ]
