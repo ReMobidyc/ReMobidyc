@@ -11,7 +11,8 @@ Class {
 		'timeUnit',
 		'actionBrowser',
 		'behaviorBrowser',
-		'animatBrowser'
+		'animatBrowser',
+		'simulationDefinition'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -73,6 +74,11 @@ RMDInterpreterPresenter >> initializePresenters [
 	views := self newNotebook
 		addPage:
 			(self newNotebookPage
+				presenterProvider: [ simulationDefinition := RMDSimulationDefinitionPresenter
+						on: (interpreter ifNotNil: #simulationDefinition) ];
+				title: 'Conditions');
+		addPage:
+			(self newNotebookPage
 				presenterProvider: [ animatBrowser := RMDAnimatBrowser on: interpreter ];
 				title: 'Animats');
 		addPage:
@@ -129,6 +135,7 @@ RMDInterpreterPresenter >> interpreter: aRMDInterpreter [
 { #category : #accessing }
 RMDInterpreterPresenter >> interpreterChanged [
 	self
+		updateSimulationDefinition;
 		updateActionBrowser;
 		updateTime;
 		updateTimeUnit
@@ -157,6 +164,13 @@ RMDInterpreterPresenter >> toggleRunPauseSimulation [
 { #category : #accessing }
 RMDInterpreterPresenter >> updateActionBrowser [
 	actionBrowser ifNotNil: [ actionBrowser interpreter: interpreter ]
+]
+
+{ #category : #accessing }
+RMDInterpreterPresenter >> updateSimulationDefinition [
+	simulationDefinition
+		ifNotNil: [ simulationDefinition
+				node: (interpreter ifNotNil: #simulationDefinition) ]
 ]
 
 { #category : #accessing }
