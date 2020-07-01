@@ -116,6 +116,14 @@ RMDInterpreterPresenter >> initializePresenters [
 		yourself
 ]
 
+{ #category : #initialization }
+RMDInterpreterPresenter >> initializeWindow: aWindowPresenter [
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter
+		title: 'Remobidyc';
+		initialExtent: 800 @ 600
+]
+
 { #category : #accessing }
 RMDInterpreterPresenter >> interpreter [
 	^ interpreter

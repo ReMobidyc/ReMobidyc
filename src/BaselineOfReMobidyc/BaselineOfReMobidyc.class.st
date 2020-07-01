@@ -52,3 +52,40 @@ BaselineOfReMobidyc >> baselineOf: spec [
 					with:
 					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests') ]
 ]
+
+{ #category : #scripts }
+BaselineOfReMobidyc >> installLogos [
+	| imagesUrl basenames client |
+	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
+		asUrl.
+	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
+	client := ZnClient new.
+	basenames
+		do: [ :basename | 
+			(self logoDirectoryPath / basename) exists
+				ifFalse: [ | response |
+					response := client
+						url: imagesUrl / basename;
+						get;
+						response.
+					(response isSuccess
+						and: [ response entity contentType sub = 'png' ])
+						ifTrue: [ self logoDirectoryPath / basename
+								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
+]
+
+{ #category : #scripts }
+BaselineOfReMobidyc >> logoDirectoryPath [
+	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
+		ensureCreateDirectory
+]
+
+{ #category : #scripts }
+BaselineOfReMobidyc >> postLoad [
+	<script: 'BaselineOfReMobidyc new postLoad'>
+	self installLogos.
+	PharoLightTheme beCurrent.
+	PolymorphSystemSettings desktopLogoFileName: ''.
+	PolymorphSystemSettings
+		desktopLogoFileName: (self logoDirectoryPath / 'default.png') fullName
+]
