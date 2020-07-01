@@ -1,5 +1,22 @@
+![logo-light1](images/logo-light1.png)
+
 # ReMobidyc
 ReːMobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+
+## Background
+Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
+of Mobidyc.
+The objective of Re:Mobidyc is to renovate the original Mobidyc keeping
+its design principles.
+The base system is changed from VisualWorks to Pharo.
+They are both Smalltalk systems, and Pharo is today's most actively
+developed/used open-source Smalltalk system.
+We will renovate the implementation of Mobidyc from its very basis to
+apply outcomes from computer science.
+The development of Re:Mobidyc is just beginning, and we will need time
+to re-produce the functionality of the original Mobidyc.
+
+[1] [The original Mobidyc site](https://mobidyc.cnrs.fr/index.php?title=English_summary)
 
 ## Design Rationale
 As a tool for scientific research, ReːMobidyc will provide the following features
@@ -34,7 +51,7 @@ To achieve the objectives above, ReːMobidyc will have the following major compo
 * Persistent storage
   - ReːMobidyc will use a DBMS as its persistent storage to store models, states of agents at all simulation steps, input data and output data.
 
-* Reproduceable random numbers
+* Reproducible random numbers
   - ReːMobidyc will have its own random number generator and make its code open so that all actions taken in a simulation can be accurately reproduceable.
 
 * Web servers and APIs
