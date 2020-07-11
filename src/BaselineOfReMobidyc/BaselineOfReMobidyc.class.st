@@ -10,16 +10,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	spec
 		for: #common
 		do: [ spec
-				"baseline: 'P3'
-					with: [ spec repository: 'github://svenvc/P3:master/repository' ];"
-				"baseline: 'NeoJSON'
-					with: [ spec repository: 'github://svenvc/NeoJSON:master/repository' ];
-				baseline: 'ZTimestamp'
-					with: [ spec repository: 'github://svenvc/ztimestamp:master/repository' ];"
-				"baseline: 'Glorp'
-					with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ];"
 				baseline: 'PetitParser2Core'
-					with: [ spec repository: 'github://kursjan/petitparser2/' ].
+				with: [ spec repository: 'github://kursjan/petitparser2/' ].
 			spec
 				package: 'ReMobidyc-Storage';
 				package: 'ReMobidyc-Units' with: [ spec requires: #() ];
@@ -50,7 +42,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization' 'ReMobidyc-Spec2');
 				group: 'tests'
 					with:
-					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests') ]
+					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests').
+			spec postLoadDoIt: #postLoad ]
 ]
 
 { #category : #scripts }
