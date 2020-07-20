@@ -3,11 +3,16 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
+		'visualizer',
 		'animat',
 		'propertyList',
 		'addPropertyButton',
 		'removePropertyButton',
 		'editPropertyButton',
+		'rendererList',
+		'addRendererButton',
+		'removeRendererButton',
+		'editRendererButton',
 		'behaviorList',
 		'addBehaviorButton',
 		'removeBehaviorButton',
@@ -26,16 +31,32 @@ RMDAnimatDefinitionBrowser class >> defaultSpec [
 	^ SpPanedLayout newVertical
 		position: 0.3;
 		add:
-			(SpBoxLayout newVertical
-				add: 'Properties' expand: false;
-				add: #propertyList;
+			(SpPanedLayout newHorizontal
+				position: 0.5;
 				add:
-					(SpBoxLayout newHorizontal
-						add: #addPropertyButton width: self buttonHeight;
-						add: #removePropertyButton width: self buttonHeight;
-						add: #editPropertyButton width: self buttonHeight;
-						yourself)
-					height: self buttonHeight;
+					(SpBoxLayout newVertical
+						add: 'Properties' expand: false;
+						add: #propertyList;
+						add:
+							(SpBoxLayout newHorizontal
+								add: #addPropertyButton width: self buttonHeight;
+								add: #removePropertyButton width: self buttonHeight;
+								add: #editPropertyButton width: self buttonHeight;
+								yourself)
+							height: self buttonHeight;
+						yourself);
+				add:
+					(SpBoxLayout newVertical
+						add: 'Visualization' expand: false;
+						add: #rendererList;
+						add:
+							(SpBoxLayout newHorizontal
+								add: #addRendererButton width: self buttonHeight;
+								add: #removeRendererButton width: self buttonHeight;
+								add: #editRendererButton width: self buttonHeight;
+								yourself)
+							height: self buttonHeight;
+						yourself);
 				yourself);
 		add:
 			(SpPanedLayout newVertical
@@ -74,10 +95,13 @@ RMDAnimatDefinitionBrowser class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-RMDAnimatDefinitionBrowser class >> on: aRMDInterpreter animat: aString [
-	<script: '(RMDAnimatDefinitionBrowser on: RMDInterpreter sugarScape animat: ''Goat'') openWithSpec'>
+RMDAnimatDefinitionBrowser class >> on: aRMDInterpreter visualizer: aRMDVisualizer animat: aString [
+	<script:
+		'(RMDAnimatDefinitionBrowser on: RMDInterpreter sugarScape visualizer: RMDVisualizer sugarScape animat: ''Goat'') openWithSpec'>
 	^ self new
-		setInterpreter: aRMDInterpreter animat: aString;
+		setInterpreter: aRMDInterpreter
+			visualizer: aRMDVisualizer
+			animat: aString;
 		yourself
 ]
 
@@ -105,6 +129,18 @@ RMDAnimatDefinitionBrowser >> initializePresenters [
 		icon: (Smalltalk ui icons iconNamed: #smallDelete);
 		yourself.
 	editPropertyButton := self newButton
+		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		yourself.
+	rendererList := self newComponentList
+		beSingleSelection;
+		yourself.
+	addRendererButton := self newButton
+		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		yourself.
+	removeRendererButton := self newButton
+		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		yourself.
+	editRendererButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
 		yourself.
 	behaviorList := self newTable
@@ -169,11 +205,23 @@ RMDAnimatDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter initialExtent: 600 @ 400
 ]
 
+{ #category : #accessing }
+RMDAnimatDefinitionBrowser >> renderersDo: aBlock [
+	visualizer ifNil: [ ^ self ].
+	animat ifNil: [ ^ self ].
+	visualizer
+		renderersDo: [ :renderer | 
+			(renderer isAnimatRendererFor: animat)
+				ifTrue: [ aBlock cull: renderer ] ]
+]
+
 { #category : #private }
-RMDAnimatDefinitionBrowser >> setInterpreter: aRMDInterpreter animat: aString [
+RMDAnimatDefinitionBrowser >> setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer animat: aString [
 	interpreter := aRMDInterpreter.
+	visualizer := aRMDVisualizer.
 	animat := aString.
 	self updatePropertyList.
+	self updateRendererList.
 	self updateBehaviorList
 ]
 
@@ -190,6 +238,15 @@ RMDAnimatDefinitionBrowser >> updateBehaviorList [
 RMDAnimatDefinitionBrowser >> updatePropertyList [
 	self animatDefinitionDo: [:animatDefinition |
 		propertyList items: animatDefinition propertyDeclarations]
+]
+
+{ #category : #updating }
+RMDAnimatDefinitionBrowser >> updateRendererList [
+	rendererList
+		items:
+			(Array
+				streamContents:
+					[ :stream | self renderersDo: [ :renderer | stream nextPut: renderer asPresenter ] ])
 ]
 
 { #category : #updating }

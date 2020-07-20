@@ -63,3 +63,8 @@ RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 RMDAnimatRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoint on: aCanvas [
 	^ self subclassResponsibility
 ]
+
+{ #category : #testing }
+RMDAnimatRenderer >> isAnimatRendererFor: aString [
+	^ animat = aString
+]

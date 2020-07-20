@@ -33,6 +33,11 @@ RMDRenderer >> initialize [
 	color := self defaultColor
 ]
 
+{ #category : #testing }
+RMDRenderer >> isAnimatRendererFor: aString [
+	^ false
+]
+
 { #category : #private }
 RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
 	| cellX cellY |
