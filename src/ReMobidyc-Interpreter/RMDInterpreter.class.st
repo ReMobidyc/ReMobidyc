@@ -234,7 +234,7 @@ RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
 	^ individualDirectory cellAtXIndex: anInteger yIndex: anotherInteger
 ]
 
-{ #category : #'space access' }
+{ #category : #'accessing - definitions' }
 RMDInterpreter >> cellDefinition [
 	^ simulationModel cellDefinition
 ]
@@ -732,6 +732,11 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpecies
 						definition: aRMDSpeciesInitializerNode).
 			[ aBlock cull: self cull: context ]
 				ensure: [ context := originalContext ] ]
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> worldDefinition [
+	^ simulationModel worldDefinition
 ]
 
 { #category : #'variable access' }

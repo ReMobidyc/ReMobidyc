@@ -15,6 +15,16 @@ RMDRendererPresenter class >> on: aRMDRenderer [
 		yourself
 ]
 
+{ #category : #api }
+RMDRendererPresenter >> disableAgentFields [
+	^ self subclassResponsibility
+]
+
+{ #category : #api }
+RMDRendererPresenter >> enableAgentFields [
+	^ self subclassResponsibility
+]
+
 { #category : #initialization }
 RMDRendererPresenter >> initializePresenters [
 	super initializePresenters.

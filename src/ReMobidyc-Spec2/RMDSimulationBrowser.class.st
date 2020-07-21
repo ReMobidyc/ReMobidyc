@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDInterpreterPresenter,
+	#name : #RMDSimulationBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
@@ -12,13 +12,14 @@ Class {
 		'actionBrowser',
 		'behaviorBrowser',
 		'animatBrowser',
-		'simulationDefinition'
+		'simulationDefinition',
+		'visualizer'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDInterpreterPresenter class >> defaultSpec [
+RMDSimulationBrowser class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add:
 			(SpBoxLayout newHorizontal
@@ -32,44 +33,78 @@ RMDInterpreterPresenter class >> defaultSpec [
 ]
 
 { #category : #examples }
-RMDInterpreterPresenter class >> exampleSugarScape [
-	^ RMDInterpreter sugarScape asPresenter
-		addVisualizer: RMDVisualizer sugarScape;
-		openWithSpec
+RMDSimulationBrowser class >> exampleSugarScape [
+	^ (RMDSimulationBrowser
+		on: RMDInterpreter sugarScape
+		visualizer: RMDVisualizer sugarScape) openWithSpec
 ]
 
 { #category : #'instance creation' }
-RMDInterpreterPresenter class >> on: aRMDInterpreter [
+RMDSimulationBrowser class >> on: aRMDInterpreter visualizer: aRMDVisualizer [
 	^ self new
-		interpreter: aRMDInterpreter;
+		setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer;
 		yourself
 ]
 
-{ #category : #api }
-RMDInterpreterPresenter >> addVisualizer: aRMDVisualizer [
+{ #category : #private }
+RMDSimulationBrowser >> addAnimatPages [
+	interpreter animatNames
+		do: [ :animat | 
+			views
+				addPage:
+					(self newNotebookPage
+						presenterProvider: [ RMDAnimatDefinitionBrowser
+								on: interpreter
+								visualizer: visualizer
+								animat: animat ];
+						title: animat) ]
+]
+
+{ #category : #private }
+RMDSimulationBrowser >> addCellPage [
 	views
 		addPage:
 			(self newNotebookPage
-				presenterProvider: [ aRMDVisualizer asPresenter
+				presenterProvider:
+						[ RMDCellDefinitionBrowser on: interpreter visualizer: visualizer ];
+				title: 'Cell')
+]
+
+{ #category : #private }
+RMDSimulationBrowser >> addVisualizerPage [
+	views
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ visualizer asPresenter
 						interpreter: interpreter;
 						yourself ];
 				title: 'Visualization')
 ]
 
+{ #category : #private }
+RMDSimulationBrowser >> addWorldPage [
+	views
+		addPage:
+			(self newNotebookPage
+				presenterProvider:
+						[ RMDWorldDefinitionBrowser on: interpreter visualizer: visualizer ];
+				title: 'World')
+]
+
 { #category : #api }
-RMDInterpreterPresenter >> forceKill [
+RMDSimulationBrowser >> forceKill [
 	self runState: false.
 	process ifNotNil: #terminate
 ]
 
 { #category : #initialization }
-RMDInterpreterPresenter >> initialize [
+RMDSimulationBrowser >> initialize [
 	super initialize.
 
 ]
 
 { #category : #initialization }
-RMDInterpreterPresenter >> initializePresenters [
+RMDSimulationBrowser >> initializePresenters [
 	super initializePresenters.
 	views := self newNotebook
 		addPage:
@@ -77,18 +112,6 @@ RMDInterpreterPresenter >> initializePresenters [
 				presenterProvider: [ simulationDefinition := RMDSimulationDefinitionPresenter
 						on: (interpreter ifNotNil: #simulationDefinition) ];
 				title: 'Conditions');
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ animatBrowser := RMDAnimatBrowser on: interpreter ];
-				title: 'Animats');
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ behaviorBrowser := RMDBehaviorBrowser on: interpreter ];
-				title: 'Behaviors');
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ actionBrowser := RMDActionBrowser on: interpreter ];
-				title: 'Actions');
 		yourself.
 	time := self newLabel
 		label: '0';
@@ -117,7 +140,7 @@ RMDInterpreterPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDInterpreterPresenter >> initializeWindow: aWindowPresenter [
+RMDSimulationBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Remobidyc';
@@ -125,64 +148,59 @@ RMDInterpreterPresenter >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #accessing }
-RMDInterpreterPresenter >> interpreter [
+RMDSimulationBrowser >> interpreter [
 	^ interpreter
 ]
 
-{ #category : #accessing }
-RMDInterpreterPresenter >> interpreter: aRMDInterpreter [
+{ #category : #api }
+RMDSimulationBrowser >> resetSimulation [
+	interpreter setupSimulation
+]
+
+{ #category : #api }
+RMDSimulationBrowser >> runState [
+	^ runButton state == true
+]
+
+{ #category : #api }
+RMDSimulationBrowser >> runState: aBoolean [
+	runButton state: aBoolean = true
+]
+
+{ #category : #private }
+RMDSimulationBrowser >> setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #updateTime
 		to: self.
-	self interpreterChanged
-]
-
-{ #category : #accessing }
-RMDInterpreterPresenter >> interpreterChanged [
 	self
 		updateSimulationDefinition;
-		updateActionBrowser;
 		updateTime;
-		updateTimeUnit
+		updateTimeUnit.
+	visualizer := aRMDVisualizer.
+	self
+		addWorldPage;
+		addCellPage;
+		addAnimatPages;
+		addVisualizerPage
 ]
 
 { #category : #api }
-RMDInterpreterPresenter >> resetSimulation [
-	interpreter setupSimulation
-]
-
-{ #category : #api }
-RMDInterpreterPresenter >> runState [
-	^ runButton state == true
-]
-
-{ #category : #api }
-RMDInterpreterPresenter >> runState: aBoolean [
-	runButton state: aBoolean = true
-]
-
-{ #category : #api }
-RMDInterpreterPresenter >> toggleRunPauseSimulation [
+RMDSimulationBrowser >> toggleRunPauseSimulation [
 	self runState: self runState not
 ]
 
 { #category : #accessing }
-RMDInterpreterPresenter >> updateActionBrowser [
-	actionBrowser ifNotNil: [ actionBrowser interpreter: interpreter ]
-]
-
-{ #category : #accessing }
-RMDInterpreterPresenter >> updateSimulationDefinition [
+RMDSimulationBrowser >> updateSimulationDefinition [
 	simulationDefinition
 		ifNotNil: [ simulationDefinition
 				node: (interpreter ifNotNil: #simulationDefinition) ]
 ]
 
 { #category : #accessing }
-RMDInterpreterPresenter >> updateTime [
+RMDSimulationBrowser >> updateTime [
 	interpreter
 		ifNotNil: [ time
 				label:
@@ -191,7 +209,7 @@ RMDInterpreterPresenter >> updateTime [
 ]
 
 { #category : #accessing }
-RMDInterpreterPresenter >> updateTimeUnit [
+RMDSimulationBrowser >> updateTimeUnit [
 	interpreter
 		ifNotNil: [ timeUnit
 				label:
@@ -200,6 +218,6 @@ RMDInterpreterPresenter >> updateTimeUnit [
 ]
 
 { #category : #'api-events' }
-RMDInterpreterPresenter >> whenRunStateChangedDo: aBlock [
+RMDSimulationBrowser >> whenRunStateChangedDo: aBlock [
 	runButton whenStateChangedDo: aBlock
 ]

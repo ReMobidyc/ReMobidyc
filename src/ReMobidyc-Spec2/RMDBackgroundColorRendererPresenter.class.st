@@ -17,6 +17,15 @@ RMDBackgroundColorRendererPresenter class >> defaultSpec [
 		height: self inputTextHeight
 ]
 
+{ #category : #api }
+RMDBackgroundColorRendererPresenter >> disableAgentFields [
+	
+]
+
+{ #category : #api }
+RMDBackgroundColorRendererPresenter >> enableAgentFields [
+]
+
 { #category : #accessing }
 RMDBackgroundColorRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight

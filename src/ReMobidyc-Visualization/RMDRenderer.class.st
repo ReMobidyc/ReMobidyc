@@ -38,6 +38,16 @@ RMDRenderer >> isAnimatRendererFor: aString [
 	^ false
 ]
 
+{ #category : #testing }
+RMDRenderer >> isCellRenderer [
+	^ false
+]
+
+{ #category : #testing }
+RMDRenderer >> isWorldRenderer [
+	^ false
+]
+
 { #category : #private }
 RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
 	| cellX cellY |
