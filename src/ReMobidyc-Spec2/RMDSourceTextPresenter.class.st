@@ -70,7 +70,10 @@ RMDSourceTextPresenter >> text: aString [
 					node2 := parser parse: aString asString.
 					node2 isPetit2Failure
 						ifTrue: [ node := node2 ].
-					aText makeColor: Color red from: node position to: aString size.
+					aText
+						makeColor: Color red
+						from: (node position max: 1)
+						to: aString size.
 					self beError.
 					syntaxNode := nil ]
 				ifFalse: [ self beOk.

@@ -23,6 +23,11 @@ RMDPropertyDeclarationNode >> = anObject [
 				and: [ unit = anObject unit ] ]
 ]
 
+{ #category : #converting }
+RMDPropertyDeclarationNode >> asPresenter [
+	^ RMDPropertyDeclarationPresenter on: self
+]
+
 { #category : #enumerating }
 RMDPropertyDeclarationNode >> childrenDo: aBlock [
 

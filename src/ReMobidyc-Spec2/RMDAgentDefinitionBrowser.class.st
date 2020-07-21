@@ -24,7 +24,7 @@ Class {
 		'editReplacementButton',
 		'sourceText'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
@@ -99,6 +99,34 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addBehavior [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addProperty [
+	| propertyNode |
+	(propertyNode := RMDPropertyDeclarationNode
+		identifier: ''
+		unit: RMDUnit noDimension) asPresenter openDialogWithSpec
+		okAction: [ self
+				definitionDo: [ :definition | 
+					definition
+						propertyDeclarations: (definition propertyDeclarations copyWith: propertyNode).
+					self updatePropertyList ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addRenderer [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addReplacement [
+	^ self notYetImplemented
+]
+
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> agentName [
 	^ self subclassResponsibility
@@ -107,6 +135,37 @@ RMDAgentDefinitionBrowser >> agentName [
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 	^ self subclassResponsibility
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> editBehavior [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> editProperty [
+	propertyList selection selectedItem
+		ifNotNil: [ :originalPropertyNode | 
+			| newPropertyNode |
+			newPropertyNode := originalPropertyNode copy.
+			newPropertyNode asPresenter openDialogWithSpec
+				okAction: [ self
+						definitionDo: [ :definition | 
+							definition
+								propertyDeclarations:
+									((definition propertyDeclarations copyWithout: originalPropertyNode)
+										copyWith: newPropertyNode).
+							self updatePropertyList ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> editRenderer [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> editReplacement [
+	^ self notYetImplemented
 ]
 
 { #category : #initialization }
@@ -120,28 +179,56 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			(SpStringTableColumn
 				title: 'name'
 				evaluated: [ :item | item identifier ]);
-		addColumn: (SpStringTableColumn title: 'unit' evaluated: [ :item | item unit ]);
+		addColumn:
+			(SpStringTableColumn
+				title: 'unit'
+				evaluated: [ :item | 
+					| unit |
+					unit := item unit.
+					unit hasDimension
+						ifTrue: [ unit printString ]
+						ifFalse: [ '' ] ]);
+		whenModelChangedDo: [ propertyList selectItem: nil ];
+		whenSelectionChangedDo: [ | selected |
+			selected := propertyList selection selectedItem notNil.
+			removePropertyButton enabled: selected.
+			editPropertyButton enabled: selected ];
 		yourself.
 	addPropertyButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		action: [ self addProperty ];
 		yourself.
 	removePropertyButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		action: [ self removeProperty ];
+		disable;
 		yourself.
 	editPropertyButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		action: [ self editProperty ];
+		disable;
 		yourself.
 	rendererList := self newComponentList
 		beSingleSelection;
+		whenModelChangedDo: [ rendererList selectItem: nil ];
+		whenSelectionChangedDo: [ | selected |
+			selected := rendererList selection selectedItem notNil.
+			removeRendererButton enabled: selected.
+			editRendererButton enabled: selected ];
 		yourself.
 	addRendererButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		action: [ self addRenderer ];
 		yourself.
 	removeRendererButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		action: [ self removeRenderer ];
+		disable;
 		yourself.
 	editRendererButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		action: [ self editRenderer ];
+		disable;
 		yourself.
 	behaviorList := self newTable
 		beSingleSelection;
@@ -150,7 +237,11 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		addColumn:
 			(SpStringTableColumn
 				evaluated: [ :item | item objectIdentifier ifNil: [ '' ] ]);
-		whenSelectionChangedDo: [ :selection | 
+		whenModelChangedDo: [ behaviorList selectItem: nil ];
+		whenSelectionChangedDo: [ | selected |
+			selected := behaviorList selection selectedItem notNil.
+			removeBehaviorButton enabled: selected.
+			editBehaviorButton enabled: selected.
 			self
 				updateReplacementList;
 				updateActionSourceText;
@@ -158,14 +249,20 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		yourself.
 	addBehaviorButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		action: [ self addBehavior ];
 		yourself.
 	removeBehaviorButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		action: [ self removeBehavior ];
+		disable;
 		yourself.
 	editBehaviorButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		action: [ self editBehavior ];
+		disable;
 		yourself.
-	actionSourceText := (self newSourceWith: RMDGrammar new actionDefinition)
+	actionSourceText := (self
+		newSourceWith: RMDGrammar new actionDefinition)
 		enabled: false;
 		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		yourself.
@@ -188,15 +285,25 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			((SpStringTableColumn
 				evaluated: [ :item | item expression printString ]) width: 200)
 				beExpandable;
+		whenModelChangedDo: [ replacementList selectItem: nil ];
+		whenSelectionChangedDo: [ | selected |
+			selected := replacementList selection selectedItem notNil.
+			removeReplacementButton enabled: selected.
+			editReplacementButton enabled: selected ];
 		yourself.
 	addReplacementButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		action: [ self addReplacement ];
 		yourself.
 	removeReplacementButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		action: [ self removeReplacement ];
+		disable;
 		yourself.
 	editReplacementButton := self newButton
 		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		action: [ self editReplacement ];
+		disable;
 		yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
 		enabled: false;
@@ -209,6 +316,32 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: self agentName.
 	aWindowPresenter initialExtent: 800 @ 600
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeBehavior [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeProperty [
+	propertyList selection selectedItem
+		ifNotNil: [ :propertyNode | 
+			self
+				definitionDo: [ :definitionNode | 
+					definitionNode
+						propertyDeclarations: (definitionNode propertyDeclarations copyWithout: propertyNode).
+					self updatePropertyList ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeRenderer [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeReplacement [
+	^ self notYetImplemented
 ]
 
 { #category : #enumerating }
@@ -261,7 +394,7 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 					self
 						renderersDo: [ :renderer | 
 							stream
-								nextPut: renderer asPresenter disableAgentFields;
+								nextPut: (renderer asPresenter enabled: false);
 								yourself ] ])
 ]
 
