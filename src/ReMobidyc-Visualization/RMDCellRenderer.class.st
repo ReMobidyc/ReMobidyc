@@ -85,3 +85,8 @@ RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 RMDCellRenderer >> drawCell: aNumber interpreter: aRMDInterpreter bounds: aRectangle on: aFormCanvas [
 	^ self subclassResponsibility
 ]
+
+{ #category : #testing }
+RMDCellRenderer >> isCellRenderer [
+	^ true
+]

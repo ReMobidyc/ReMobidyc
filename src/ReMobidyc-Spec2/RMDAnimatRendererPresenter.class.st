@@ -7,6 +7,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #api }
+RMDAnimatRendererPresenter >> disableAgentFields [
+	animatField enabled: false
+]
+
+{ #category : #api }
+RMDAnimatRendererPresenter >> enableAgentFields [
+	animatField enabled: true
+]
+
 { #category : #initialization }
 RMDAnimatRendererPresenter >> initializePresenters [
 	super initializePresenters.
