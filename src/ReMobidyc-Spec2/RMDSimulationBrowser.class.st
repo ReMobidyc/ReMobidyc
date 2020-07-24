@@ -15,7 +15,7 @@ Class {
 		'simulationDefinition',
 		'visualizer'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }

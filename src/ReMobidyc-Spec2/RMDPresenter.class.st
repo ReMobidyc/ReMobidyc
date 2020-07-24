@@ -3,7 +3,7 @@ Class {
 	#superclass : #SpPresenter,
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : #'ReMobidyc-Spec2-Abstract'
 }
 
 { #category : #initialization }
