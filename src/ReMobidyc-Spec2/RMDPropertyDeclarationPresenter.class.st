@@ -15,7 +15,7 @@ RMDPropertyDeclarationPresenter class >> defaultSpec [
 		add:
 			(SpBoxLayout newHorizontal
 				add: '     ' expand: false;
-				add: #identifierField width: 100;
+				add: #identifierField width: 180;
 				add: ' [' expand: false;
 				add: #unitField width: 50;
 				add: '] ' expand: false;
@@ -29,10 +29,12 @@ RMDPropertyDeclarationPresenter >> initializePresenters [
 	identifierField := self newTextInput
 		beText;
 		autoAccept: true;
+		placeholder: 'identifier';
 		whenTextIsAcceptedDo: [ node
 				ifNotNil: [ node identifier: identifierField text asString trim ] ];
 		yourself.
 	unitField := self newValidatedTextInput
+		placeholder: 'unit';
 		validation: [ :text | 
 			(RMDGrammar new unit optional end parse: text asString trim)
 				isPetit2Failure not ];
@@ -47,6 +49,12 @@ RMDPropertyDeclarationPresenter >> initializePresenters [
 		focusOrder:
 			{identifierField.
 			unitField} asOrderedCollection
+]
+
+{ #category : #initialization }
+RMDPropertyDeclarationPresenter >> initializeWindow: aWindowPresenter [
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter initialExtent: 400 @ (self class buttonHeight * 3.5)
 ]
 
 { #category : #accessing }

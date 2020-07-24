@@ -110,6 +110,7 @@ RMDAgentDefinitionBrowser >> addProperty [
 	(propertyNode := RMDPropertyDeclarationNode
 		identifier: ''
 		unit: RMDUnit noDimension) asPresenter openDialogWithSpec
+		title: 'Add property to ' , self agentName;
 		okAction: [ self
 				definitionDo: [ :definition | 
 					definition
@@ -149,6 +150,7 @@ RMDAgentDefinitionBrowser >> editProperty [
 			| newPropertyNode |
 			newPropertyNode := originalPropertyNode copy.
 			newPropertyNode asPresenter openDialogWithSpec
+				title: 'Edit property of ' , self agentName;
 				okAction: [ self
 						definitionDo: [ :definition | 
 							definition
@@ -327,11 +329,16 @@ RMDAgentDefinitionBrowser >> removeBehavior [
 RMDAgentDefinitionBrowser >> removeProperty [
 	propertyList selection selectedItem
 		ifNotNil: [ :propertyNode | 
-			self
-				definitionDo: [ :definitionNode | 
-					definitionNode
-						propertyDeclarations: (definitionNode propertyDeclarations copyWithout: propertyNode).
-					self updatePropertyList ] ]
+			(self newLabel
+				label: 'OK to remove ' , propertyNode identifier , '?';
+				yourself) openDialogWithSpec
+				title: 'Remove property from ' , self agentName;
+				extent: 400 @ (self class buttonHeight * 3.5);
+				okAction: [ self
+								definitionDo: [ :definitionNode | 
+									definitionNode
+										propertyDeclarations: (definitionNode propertyDeclarations copyWithout: propertyNode).
+									self updatePropertyList ] ] ]
 ]
 
 { #category : #operations }
