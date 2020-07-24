@@ -12,6 +12,39 @@ Class {
 }
 
 { #category : #'typical instances' }
+RMDActionDefinitionNode class >> collect [
+	<script: 'RMDActionDefinitionNode collect inspect'>
+	^ 'to collect is
+	here''s delta thing'' = - amount
+	my delta thing'' = amount
+where
+	amout = my greed.
+' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> convert [
+	<script: 'RMDActionDefinitionNode convert inspect'>
+	^ 'to convert is
+	my delta new_form'' = amount
+	my delta old_form'' = -amount
+where
+	amout = my amount.
+' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> diffuse [
+	<script: 'RMDActionDefinitionNode diffuse inspect'>
+	^ 'to diffuse is
+	here''s delta thing'' = amount
+	my delta thing'' = -amount
+where
+	amout = my amount.
+' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
 RMDActionDefinitionNode class >> eat_grass [
 	<script: 'RMDActionDefinitionNode eat_grass inspect'>
 	^ 'to eat_grass is
@@ -24,11 +57,25 @@ where
 ]
 
 { #category : #'typical instances' }
+RMDActionDefinitionNode class >> gain [
+	<script: 'RMDActionDefinitionNode lose gain'>
+	^ 'to gain is
+	my delta thing'' = my amount.' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
 RMDActionDefinitionNode class >> grow_grass [
 	<script: 'RMDActionDefinitionNode grow_grass inspect'>
 	^ 'to grow_grass is
 presume here''s grass < here''s max_grass
 	here''s delta grass'' = min(here''s growth_rate * delta time, here''s max_grass - here''s grass).' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> lose [
+	<script: 'RMDActionDefinitionNode lose inspect'>
+	^ 'to lose is
+	my delta thing'' = - my amount.' asRMDActionDefinition
 ]
 
 { #category : #'typical instances' }
