@@ -197,16 +197,16 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			editPropertyButton enabled: selected ];
 		yourself.
 	addPropertyButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		icon: self addIcon;
 		action: [ self addProperty ];
 		yourself.
 	removePropertyButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		icon: self removeIcon;
 		action: [ self removeProperty ];
 		disable;
 		yourself.
 	editPropertyButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		icon: self editIcon;
 		action: [ self editProperty ];
 		disable;
 		yourself.
@@ -219,16 +219,16 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			editRendererButton enabled: selected ];
 		yourself.
 	addRendererButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		icon: self addIcon;
 		action: [ self addRenderer ];
 		yourself.
 	removeRendererButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		icon: self removeIcon;
 		action: [ self removeRenderer ];
 		disable;
 		yourself.
 	editRendererButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		icon: self editIcon;
 		action: [ self editRenderer ];
 		disable;
 		yourself.
@@ -250,16 +250,16 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 				updateSourceText ];
 		yourself.
 	addBehaviorButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		icon: self addIcon;
 		action: [ self addBehavior ];
 		yourself.
 	removeBehaviorButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		icon: self removeIcon;
 		action: [ self removeBehavior ];
 		disable;
 		yourself.
 	editBehaviorButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		icon: self editIcon;
 		action: [ self editBehavior ];
 		disable;
 		yourself.
@@ -280,8 +280,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			(SpStringTableColumn evaluated: [ :item | item actionProperty ])
 				beNotExpandable;
 		addColumn:
-			((SpImageTableColumn
-				evaluated: [ :item | Smalltalk ui icons iconNamed: #smallForward ])
+			((SpImageTableColumn evaluated: [ :item | self replacementIcon ])
 				width: 20);
 		addColumn:
 			((SpStringTableColumn
@@ -294,16 +293,16 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			editReplacementButton enabled: selected ];
 		yourself.
 	addReplacementButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallAdd);
+		icon: self addIcon;
 		action: [ self addReplacement ];
 		yourself.
 	removeReplacementButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallDelete);
+		icon: self removeIcon;
 		action: [ self removeReplacement ];
 		disable;
 		yourself.
 	editReplacementButton := self newButton
-		icon: (Smalltalk ui icons iconNamed: #smallConfiguration);
+		icon: self editIcon;
 		action: [ self editReplacement ];
 		disable;
 		yourself.

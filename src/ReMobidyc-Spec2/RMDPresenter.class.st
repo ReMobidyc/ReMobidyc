@@ -6,6 +6,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Abstract'
 }
 
+{ #category : #icons }
+RMDPresenter >> addIcon [
+	^ Smalltalk ui icons iconNamed: #smallAdd
+]
+
+{ #category : #icons }
+RMDPresenter >> editIcon [
+	^ Smalltalk ui icons iconNamed: #smallConfiguration
+]
+
 { #category : #initialization }
 RMDPresenter >> initializePresenters [
 	self
@@ -67,6 +77,16 @@ RMDPresenter >> newSourceWith: aPP2Node [
 { #category : #widgets }
 RMDPresenter >> newValidatedTextInput [
 	^ self instantiate: RMDValidatedTextInputPresenter
+]
+
+{ #category : #icons }
+RMDPresenter >> removeIcon [
+	^ Smalltalk ui icons iconNamed: #smallDelete
+]
+
+{ #category : #icons }
+RMDPresenter >> replacementIcon [
+	^ Smalltalk ui icons iconNamed: #smallForward
 ]
 
 { #category : #private }
