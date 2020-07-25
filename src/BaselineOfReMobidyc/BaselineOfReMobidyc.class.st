@@ -22,10 +22,12 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				package: 'ReMobidyc-Visualization'
 					with: [ spec
 						requires: #('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Storage') ];
+				package: 'ReMobidyc-Repository'
+					with: [ spec requires: #('ReMobidyc-Language') ];
 				package: 'ReMobidyc-Spec2'
 					with: [ spec
 						requires:
-							#('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Units' 'ReMobidyc-Visualization') ];
+							#('ReMobidyc-Language' 'ReMobidyc-Interpreter' 'ReMobidyc-Units' 'ReMobidyc-Visualization' 'ReMobidyc-Repository') ];
 				package: 'ReMobidyc-Storage-Tests'
 					with: [ spec requires: #('ReMobidyc-Storage') ];
 				package: 'ReMobidyc-Language-Tests'
@@ -39,7 +41,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				group: 'default' with: #('core' 'tests');
 				group: 'core'
 					with:
-					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization' 'ReMobidyc-Spec2');
+					#('ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units' 'ReMobidyc-Interpreter' 'ReMobidyc-Visualization' 'ReMobidyc-Repository' 'ReMobidyc-Spec2');
 				group: 'tests'
 					with:
 					#('ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests' 'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests').

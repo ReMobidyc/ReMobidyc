@@ -40,7 +40,7 @@ RMDActionDefinitionNode class >> diffuse [
 	here''s delta thing'' = amount
 	my delta thing'' = -amount
 where
-	amout = my amount.
+	amount = my amount.
 ' asRMDActionDefinition
 ]
 
