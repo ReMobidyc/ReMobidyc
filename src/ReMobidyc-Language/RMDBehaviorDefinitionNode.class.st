@@ -50,7 +50,7 @@ RMDBehaviorDefinitionNode class >> goat_walk_for_grass [
 	<script:
 		'RMDBehaviorDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
 	^ 'Goat move where
-	my heading -> direction grad grass
+	my heading -> direction neighbor''s grass
 	my speed -> 1[km/day].' asRMDBehaviorDefinition
 ]
 

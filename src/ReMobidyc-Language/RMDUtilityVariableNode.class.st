@@ -11,6 +11,11 @@ RMDUtilityVariableNode class >> identifier: aString [
 		yourself
 ]
 
+{ #category : #enumerating }
+RMDUtilityVariableNode >> childrenDo: aBlock [
+
+]
+
 { #category : #testing }
 RMDUtilityVariableNode >> isUtilityVariableNode [
 	^ true

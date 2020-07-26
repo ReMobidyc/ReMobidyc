@@ -61,6 +61,21 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAssignableDeltaVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAssignableDifferentialPropertyVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAssignablePropertyVariableNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isBehaviorDefinitionNode [
 	^ false
 ]
@@ -76,6 +91,11 @@ RMDSyntaxNode >> isCellDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isCellDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isCellInitializerNode [
 	^ false
 ]
@@ -86,17 +106,7 @@ RMDSyntaxNode >> isConjunctionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isDeltaVariableNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isDifferential2VariableNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isDifferentialVariableNode [
 	^ false
 ]
 
@@ -261,11 +271,6 @@ RMDSyntaxNode >> isUtilityVariableNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isVariableNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isWorldDefinitionNode [
 	^ false
 ]
@@ -298,7 +303,23 @@ RMDSyntaxNode >> printOn: aStream [
 	^ self subclassResponsibility
 ]
 
+{ #category : #enumerating }
+RMDSyntaxNode >> propertyVariableNodesDo: aBlock [
+	self
+		nodesDo: [ :node | 
+			node isPropertyVariableNode
+				ifTrue: [ aBlock cull: node ] ]
+]
+
 { #category : #rewriting }
 RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> utilityVariableNodesDo: aBlock [
+	self
+		nodesDo: [ :node | 
+			node isUtilityVariableNode
+				ifTrue: [ aBlock cull: node ] ]
 ]

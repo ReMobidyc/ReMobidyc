@@ -2,5 +2,9 @@ Extension { #name : #RMDAssignablePropertyVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignablePropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
-	^ self subclassResponsibility
+	^ aRMDInterpreter
+		write: aNumber
+		toVariable: self identifier
+		agent: self agent
+		ifAbsent: [ KeyNotFound signal ]
 ]

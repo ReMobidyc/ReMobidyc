@@ -26,14 +26,16 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
-	^ (self actionDefinitionHeaderLine , self actionDefinitionPresumeLine optional
-		, self actionDefinitionPropertyPart , self actionDefinitionUtilityPart optional
+	^ (self actionDefinitionHeaderLine
+		, self actionDefinitionPresumeLine optional
+		, self actionDefinitionPropertyPart
+		, self actionDefinitionUtilityPart optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :quad | 
 			self actionDefinitionNodeClass
 				name: quad first first
 				object: quad first second
-				guard: (quad second ifNil: [ true ])
+				guard: quad second
 				propertyDefinitions: quad third
 				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
 ]
@@ -188,6 +190,46 @@ RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignableDeltaPropertyVariable [
+	^ (agentReference , self delta , identifier)
+		==> [ :triple | 
+			self assignableDeltaPropertyVariableNodeClass
+				identifier: triple third
+				agent: triple first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> assignableDeltaPropertyVariableNodeClass [
+	^ RMDAssignableDeltaPropertyVariableNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignableDifferentialPropertyVariable [
+	^ (agentReference , self differential , identifier)
+		==> [ :triple | 
+			self assignableDifferentialPropertyVariableNodeClass
+				identifier: triple third
+				agent: triple first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> assignableDifferentialPropertyVariableNodeClass [
+	^ RMDAssignableDifferentialPropertyVariableNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignablePropertyVariable [
+	^ (agentReference , identifier)
+		==>
+			[ :pair | self assignablePropertyVariableNodeClass identifier: pair second agent: pair first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> assignablePropertyVariableNodeClass [
+	^ RMDAssignablePropertyVariableNode
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> behaviorDefinition [
 	^ (self behaviorDefinitionHeader
@@ -310,6 +352,11 @@ RMDGrammar >> cellDefinitionNodeClass [
 	^ RMDCellDefinitionNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> cellDirectiveNodeClass [
+	^ RMDCellDirectiveNode
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> cellInitializer [
 	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
@@ -376,20 +423,6 @@ RMDGrammar >> delta [
 ]
 
 { #category : #'parsers-atoms' }
-RMDGrammar >> deltaVariable [
-	^ (agentReference , self delta , identifier)
-		==> [ :triple | 
-			self deltaVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> deltaVariableNodeClass [
-	^ RMDDeltaVariableNode
-]
-
-{ #category : #'parsers-atoms' }
 RMDGrammar >> differential [
 	^ 'd/dt ' asPParser trimBlanks
 ]
@@ -397,20 +430,6 @@ RMDGrammar >> differential [
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential2 [
 	^ ('d2/dt2 ' asPParser / 'd^2/dt^2 ' asPParser) trimBlanks
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> differentialVariable [
-	^ (agentReference , self differential , identifier)
-		==> [ :triple | 
-			self differentialVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> differentialVariableNodeClass [
-	^ RMDDifferentialVariableNode
 ]
 
 { #category : #'parsers-directives' }
@@ -423,11 +442,12 @@ RMDGrammar >> directionDirective [
 { #category : #'parsers-directives' }
 RMDGrammar >> directionOfGradientDirective [
 	^ ('direction' asPParser trimLeft , #blank asPParser plus
-		, 'grad' asPParser trim , identifier)
+		, ('neighbor''s' asPParser / 'neighbour''s' asPParser) trim
+		, identifier)
 		==> [ :pair | 
-			self agentDirectiveNodeClass
-				directive: 'directionOfGradient'
-				agent: pair fourth ]
+			self cellDirectiveNodeClass
+				directive: 'direction'
+				identifier: pair fourth ]
 ]
 
 { #category : #'class access' }
@@ -657,7 +677,7 @@ RMDGrammar >> propertyDeclarationNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
-	^ (self differentialVariable / self deltaVariable / self variable , $' asPParser trimBlanks
+	^ (self assignableDifferentialPropertyVariable / self assignableDeltaPropertyVariable / self assignablePropertyVariable , $' asPParser trimBlanks
 		, '=' asPParser trimBlanks , guardedChoice)
 		==> [ :quad | 
 			self propertyDefinitionNodeClass
@@ -875,18 +895,6 @@ RMDGrammar >> utilityVariable [
 { #category : #'class access' }
 RMDGrammar >> utilityVariableNodeClass [
 	^ RMDUtilityVariableNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> variable [
-	^ (agentReference , identifier)
-		==>
-			[ :pair | self variableNodeClass identifier: pair second agent: pair first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> variableNodeClass [
-	^ RMDVariableNode
 ]
 
 { #category : #units }

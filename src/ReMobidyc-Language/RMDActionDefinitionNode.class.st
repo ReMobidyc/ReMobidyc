@@ -18,7 +18,7 @@ RMDActionDefinitionNode class >> collect [
 	here''s delta thing'' = - amount
 	my delta thing'' = amount
 where
-	amout = my greed.
+	amount = my greed.
 ' asRMDActionDefinition
 ]
 
@@ -91,7 +91,7 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 	^ self new
 		identifier: scriptName;
 		object: objectName;
-		guard: (aRMDCondition ifNil: [ true ]);
+		guard: aRMDCondition;
 		propertyDefinitions: (anArrayOfRMDPropertyDefinition ifNil: [ Array new ]);
 		utilityDefinitions: (anArrayOfRMDUtilityDefinition ifNil: [ Array new ]);
 		yourself
@@ -102,6 +102,75 @@ RMDActionDefinitionNode class >> respire [
 	<script: 'RMDActionDefinitionNode respire inspect'>
 	^ 'to respire is
 	my delta energy'' = - my respiration_rate * delta time.' asRMDActionDefinition
+]
+
+{ #category : #'instance creation' }
+RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
+	| variables actionDefinition |
+	variables := Dictionary new.
+	aCollectionOfRMDActionDefinitionNode
+		do: [ :action | 
+			| vars |
+			vars := Set new.
+			action
+				nodesDo: [ :node | 
+					(node isPropertyVariableNode or: [ node isUtilityVariableNode ])
+						ifTrue: [ vars add: node ] ].
+			vars
+				do:
+					[ :var | (variables at: var ifAbsentPut: [ OrderedCollection new ]) add: action ] ].
+	actionDefinition := aCollectionOfRMDActionDefinitionNode
+		inject:
+			(self
+				name: ''
+				object: nil
+				guard: nil
+				propertyDefinitions: Array new
+				utilityDefinitions: Array new)
+		into: [ :composite :action | 
+			composite
+				+
+					(action
+						copyReplace:
+							(variables associations
+								select:
+									[ :assoc | assoc value size >= 2 and: [ assoc value includes: action ] ]
+								thenCollect: [ :assoc | 
+									assoc key
+										->
+											(assoc key copy
+												identifier: assoc key identifier , '_' , action identifier;
+												yourself) ]) asDictionary) ].
+	actionDefinition identifier first = $_
+		ifTrue: [ actionDefinition
+				identifier: (actionDefinition identifier allButFirst: 1) ].
+	(actionDefinition object notNil
+		and: [ actionDefinition object first = $_ ])
+		ifTrue: [ actionDefinition object: (actionDefinition object allButFirst: 1) ].
+	^ actionDefinition
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
+	^ self class
+		name: identifier , '_' , aRMDActionDefinitionNode identifier
+		object:
+			(object
+				ifNil: [ aRMDActionDefinitionNode object ]
+				ifNotNil: [ aRMDActionDefinitionNode object
+						ifNil: [ object ]
+						ifNotNil: [ object , '_' , aRMDActionDefinitionNode object ] ])
+		guard:
+			(guard
+				ifNil: [ aRMDActionDefinitionNode guard ]
+				ifNotNil: [ aRMDActionDefinitionNode guard
+						ifNil: [ guard ]
+						ifNotNil: [ RMDConjunctionNode
+								conditions:
+									{guard.
+									aRMDActionDefinitionNode guard} ] ])
+		propertyDefinitions: propertyDefinitions , aRMDActionDefinitionNode propertyDefinitions
+		utilityDefinitions: utilityDefinitions , aRMDActionDefinitionNode utilityDefinitions
 ]
 
 { #category : #comparing }
@@ -182,7 +251,7 @@ RMDActionDefinitionNode >> printOn: aStream [
 				nextPut: Character space;
 				nextPutAll: object ].
 	aStream nextPutAll: ' is'.
-	(guard notNil and: [ guard ~= true ])
+	guard notNil
 		ifTrue: [ aStream
 				nextPut: Character cr;
 				nextPutAll: '    presume '.
