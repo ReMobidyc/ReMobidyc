@@ -90,6 +90,11 @@ RMDSyntaxNode >> isCellDefinitionNode [
 	^ false
 ]
 
+{ #category : #accessing }
+RMDSyntaxNode >> isCellDirectiveNode [
+	^ false
+]
+
 { #category : #testing }
 RMDSyntaxNode >> isCellInitializerNode [
 	^ false

@@ -350,6 +350,11 @@ RMDGrammar >> cellDefinitionNodeClass [
 	^ RMDCellDefinitionNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> cellDirectiveNodeClass [
+	^ RMDCellDirectiveNode
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> cellInitializer [
 	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
@@ -435,11 +440,12 @@ RMDGrammar >> directionDirective [
 { #category : #'parsers-directives' }
 RMDGrammar >> directionOfGradientDirective [
 	^ ('direction' asPParser trimLeft , #blank asPParser plus
-		, 'grad' asPParser trim , identifier)
+		, ('neighbor''s' asPParser / 'neighbour''s' asPParser) trim
+		, identifier)
 		==> [ :pair | 
-			self agentDirectiveNodeClass
-				directive: 'directionOfGradient'
-				agent: pair fourth ]
+			self cellDirectiveNodeClass
+				directive: 'direction'
+				identifier: pair fourth ]
 ]
 
 { #category : #'class access' }
