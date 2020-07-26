@@ -1,7 +1,7 @@
-Extension { #name : #RMDDifferentialVariableNode }
+Extension { #name : #RMDAssignableDifferentialPropertyVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDDifferentialVariableNode >> assign: aNumber in: aRMDInterpreter [
+RMDAssignableDifferentialPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
 		write: aNumber
 		toDifferential: self identifier

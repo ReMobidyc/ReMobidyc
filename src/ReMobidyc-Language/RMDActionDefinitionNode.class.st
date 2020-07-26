@@ -18,7 +18,7 @@ RMDActionDefinitionNode class >> collect [
 	here''s delta thing'' = - amount
 	my delta thing'' = amount
 where
-	amout = my greed.
+	amount = my greed.
 ' asRMDActionDefinition
 ]
 

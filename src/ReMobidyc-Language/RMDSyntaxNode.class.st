@@ -61,6 +61,21 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAssignableDeltaVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAssignableDifferentialPropertyVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAssignablePropertyVariableNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isBehaviorDefinitionNode [
 	^ false
 ]
@@ -86,17 +101,7 @@ RMDSyntaxNode >> isConjunctionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isDeltaVariableNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isDifferential2VariableNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isDifferentialVariableNode [
 	^ false
 ]
 
@@ -257,11 +262,6 @@ RMDSyntaxNode >> isUtilityDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isUtilityVariableNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isVariableNode [
 	^ false
 ]
 

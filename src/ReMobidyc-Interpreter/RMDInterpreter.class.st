@@ -239,6 +239,13 @@ RMDInterpreter >> cellDefinition [
 	^ simulationModel cellDefinition
 ]
 
+{ #category : #directives }
+RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
+	aString = 'direction'
+		ifTrue: [ ^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
+	^ self error: 'Unknown directive: ' , aString
+]
+
 { #category : #'space access' }
 RMDInterpreter >> cellLength [
 	^ simulationModel cellLength

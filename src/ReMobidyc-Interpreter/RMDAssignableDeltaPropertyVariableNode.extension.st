@@ -1,7 +1,7 @@
-Extension { #name : #RMDDeltaVariableNode }
+Extension { #name : #RMDAssignableDeltaPropertyVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDDeltaVariableNode >> assign: aNumber in: aRMDInterpreter [
+RMDAssignableDeltaPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
 		write: aNumber
 		toDelta: self identifier
