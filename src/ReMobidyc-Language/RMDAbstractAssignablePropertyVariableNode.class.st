@@ -27,7 +27,7 @@ RMDAbstractAssignablePropertyVariableNode >> agent [
 
 { #category : #enumerating }
 RMDAbstractAssignablePropertyVariableNode >> childrenDo: aBlock [
-	
+	aBlock value: propertyVariable
 ]
 
 { #category : #comparing }

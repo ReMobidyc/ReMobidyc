@@ -90,7 +90,7 @@ RMDSyntaxNode >> isCellDefinitionNode [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 RMDSyntaxNode >> isCellDirectiveNode [
 	^ false
 ]
@@ -303,7 +303,23 @@ RMDSyntaxNode >> printOn: aStream [
 	^ self subclassResponsibility
 ]
 
+{ #category : #enumerating }
+RMDSyntaxNode >> propertyVariableNodesDo: aBlock [
+	self
+		nodesDo: [ :node | 
+			node isPropertyVariableNode
+				ifTrue: [ aBlock cull: node ] ]
+]
+
 { #category : #rewriting }
 RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> utilityVariableNodesDo: aBlock [
+	self
+		nodesDo: [ :node | 
+			node isUtilityVariableNode
+				ifTrue: [ aBlock cull: node ] ]
 ]

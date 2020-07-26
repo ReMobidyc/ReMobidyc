@@ -26,14 +26,16 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
-	^ (self actionDefinitionHeaderLine , self actionDefinitionPresumeLine optional
-		, self actionDefinitionPropertyPart , self actionDefinitionUtilityPart optional
+	^ (self actionDefinitionHeaderLine
+		, self actionDefinitionPresumeLine optional
+		, self actionDefinitionPropertyPart
+		, self actionDefinitionUtilityPart optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :quad | 
 			self actionDefinitionNodeClass
 				name: quad first first
 				object: quad first second
-				guard: (quad second ifNil: [ true ])
+				guard: quad second
 				propertyDefinitions: quad third
 				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
 ]
