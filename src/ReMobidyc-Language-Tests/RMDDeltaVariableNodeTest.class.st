@@ -9,8 +9,8 @@ RMDDeltaVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser propertyDefinition end parse: 'my delta x'' = foo'.
 	replacement := Dictionary new
-		at: (parser deltaVariable end parse: 'my delta x')
-			put: (parser deltaVariable end parse: 'my delta y');
+		at: (parser assignableDeltaPropertyVariable end parse: 'my delta x')
+			put: (parser assignableDeltaPropertyVariable end parse: 'my delta y');
 		yourself.
 	self
 		assert: (node copyReplace: replacement)

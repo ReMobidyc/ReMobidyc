@@ -38,8 +38,8 @@ RMDDifferentialVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser propertyDefinition end parse: 'my d/dt x'' = foo'.
 	replacement := Dictionary new
-		at: (parser differentialVariable end parse: 'my d/dt x')
-			put: (parser differentialVariable end parse: 'my d/dt y');
+		at: (parser assignableDifferentialPropertyVariable end parse: 'my d/dt x')
+			put: (parser assignableDifferentialPropertyVariable end parse: 'my d/dt y');
 		yourself.
 	self
 		assert: (node copyReplace: replacement)

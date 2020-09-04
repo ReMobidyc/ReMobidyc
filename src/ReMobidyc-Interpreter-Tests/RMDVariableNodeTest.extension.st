@@ -2,13 +2,13 @@ Extension { #name : #RMDVariableNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDVariableNodeTest >> testAssignIn [
-	interpreter context
-		setMemoryAddressFor: 'x' agent: 'foo' to: 1.
 	interpreter memory
 		nextAt: 1 put: 3;
 		tick.
+	interpreter context
+		setMemoryAddressFor: 'x' agent: 'foo' to: 1.
 	self
-		assert: ((parser variable parse: 'foo''s x') assign: 5 in: interpreter)
+		assert: ((parser assignablePropertyVariable parse: 'foo''s x') assign: 5 in: interpreter)
 		equals: 5.
 	self assert: (interpreter memory nextAt: 1) closeTo: 5.
 	self

@@ -147,7 +147,7 @@ where
 	self assert: node isActionDefinitionNode.
 	self assert: node identifier equals: 'chase'.
 	self assert: node object equals: 'target'.
-	self assert: node guard equals: true.
+	self assert: node guard equals: nil.
 	self assert: node propertyDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0
 ]
@@ -163,10 +163,11 @@ RMDGrammarTest >> testAgentDirective [
 	self assert: node isAgentDirectiveNode.
 	self assert: node directive equals: 'direction'.
 	self assert: node agentIdentifier equals: 'foo'.
-	node := grammar agentDirective parse: 'direction grad foo'.
-	self assert: node isAgentDirectiveNode.
-	self assert: node directive equals: 'directionOfGradient'.
-	self assert: node agentIdentifier equals: 'foo'.
+	node := grammar agentDirective parse: 'direction neighbor''s foo'.
+	self assert: node isCellDirectiveNode.
+	self assert: node directive equals: 'direction'.
+	self assert: node cellPropertyVariable agent equals: 'here'.
+	self assert: node cellPropertyVariable identifier equals: 'foo'.
 	node := grammar agentDirective parse: 'foo bar'.
 	self assert: node isPetit2Failure
 ]
@@ -267,6 +268,50 @@ RMDGrammarTest >> testApply [
 	self
 		assert: apply arguments third
 		equals: (RMDUtilityVariableNode identifier: 'z')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAssignableDeltaPropertyVariable [
+	| variable |
+	variable := grammar assignableDeltaPropertyVariable parse: 'my delta foo'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable agent isNil.
+	self assert: variable identifier equals: 'foo'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'my delta Foo'.
+	self assert: variable isPetit2Failure.
+	variable := grammar assignableDeltaPropertyVariable parse: 'my Δfoo'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable agent isNil.
+	self assert: variable identifier equals: 'foo'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s delta bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable agent equals: 'foo'.
+	self assert: variable identifier equals: 'bar'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s Δbar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable agent equals: 'foo'.
+	self assert: variable identifier equals: 'bar'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
+	| variable |
+	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt foo'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable agent isNil.
+	self assert: variable identifier equals: 'foo'.
+	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt X'.
+	self assert: variable isPetit2Failure.
+	variable := grammar assignableDifferentialPropertyVariable parse: 'foo''s d/dt bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable agent equals: 'foo'.
+	self assert: variable identifier equals: 'bar'
 ]
 
 { #category : #tests }
@@ -447,50 +492,6 @@ RMDGrammarTest >> testCondition [
 	self
 		assert: cond conditions third conditions second
 		equals: (grammar condition parse: '7 = 8')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testDeltaVariable [
-	| variable |
-	variable := grammar deltaVariable parse: 'my delta foo'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDeltaVariableNode.
-	self assert: variable agent isNil.
-	self assert: variable identifier equals: 'foo'.
-	variable := grammar deltaVariable parse: 'my delta Foo'.
-	self assert: variable isPetit2Failure.
-	variable := grammar deltaVariable parse: 'my Δfoo'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDeltaVariableNode.
-	self assert: variable agent isNil.
-	self assert: variable identifier equals: 'foo'.
-	variable := grammar deltaVariable parse: 'foo''s delta bar'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDeltaVariableNode.
-	self assert: variable agent equals: 'foo'.
-	self assert: variable identifier equals: 'bar'.
-	variable := grammar deltaVariable parse: 'foo''s Δbar'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDeltaVariableNode.
-	self assert: variable agent equals: 'foo'.
-	self assert: variable identifier equals: 'bar'
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testDifferentialVariable [
-	| variable |
-	variable := grammar differentialVariable parse: 'my d/dt foo'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDifferentialVariableNode.
-	self assert: variable agent isNil.
-	self assert: variable identifier equals: 'foo'.
-	variable := grammar differentialVariable parse: 'my d/dt X'.
-	self assert: variable isPetit2Failure.
-	variable := grammar differentialVariable parse: 'foo''s d/dt bar'.
-	self deny: variable isPetit2Failure.
-	self assert: variable isDifferentialVariableNode.
-	self assert: variable agent equals: 'foo'.
-	self assert: variable identifier equals: 'bar'
 ]
 
 { #category : #tests }
@@ -728,7 +729,7 @@ RMDGrammarTest >> testPropertyDefinition [
 	self assert: definition isPropertyDefinitionNode.
 	self
 		assert: definition variable
-		equals: (grammar variable parse: 'my x').
+		equals: (grammar assignablePropertyVariable parse: 'my x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]').
@@ -736,8 +737,8 @@ RMDGrammarTest >> testPropertyDefinition [
 		parse: 'foo''s delta x'' = 1[m]'.
 	self assert: definition isPropertyDefinitionNode.
 	self
-		assert: definition variable
-		equals: (grammar deltaVariable parse: 'foo''s delta x').
+		assert: definition variable 
+		equals: (grammar assignableDeltaPropertyVariable parse: 'foo''s delta x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m]').
@@ -746,7 +747,7 @@ RMDGrammarTest >> testPropertyDefinition [
 	self assert: definition isPropertyDefinitionNode.
 	self
 		assert: definition variable
-		equals: (grammar differentialVariable parse: 'foo''s d/dt x').
+		equals: (grammar assignableDifferentialPropertyVariable parse: 'foo''s d/dt x').
 	self
 		assert: definition definitionBody
 		equals: (grammar literal parse: '1[m/s]').
@@ -918,23 +919,23 @@ RMDGrammarTest >> testUtilityVariable [
 	self deny: variable isPetit2Failure.
 	self assert: variable isUtilityVariableNode.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar variable parse: 'Foo'.
+	variable := grammar utilityVariable parse: 'Foo'.
 	self assert: variable isPetit2Failure
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testVariable [
 	| variable |
-	variable := grammar variable parse: 'my foo'.
+	variable := grammar propertyVariable parse: 'my foo'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isVariableNode.
+	self assert: variable isPropertyVariableNode.
 	self assert: variable identifier equals: 'foo'.
 	self assert: variable agent isNil.
-	variable := grammar variable parse: 'foo'.
+	variable := grammar propertyVariable parse: 'foo'.
 	self assert: variable isPetit2Failure.
-	variable := grammar variable parse: 'foo''s bar'.
+	variable := grammar propertyVariable parse: 'foo''s bar'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isVariableNode.
+	self assert: variable isPropertyVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
 ]
