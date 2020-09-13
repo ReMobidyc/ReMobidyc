@@ -50,16 +50,16 @@ RMDPropertyInitializerPresenter >> identifierField [
 { #category : #initialization }
 RMDPropertyInitializerPresenter >> initializePresenters [
 	super initializePresenters.
-	identifierField := self newTextInput
-		beText;
+	identifierField := self newSyntaxNodeTextInput
+		beIdentifier;
 		autoAccept: true;
-		whenTextIsAcceptedDo: [ node
+		whenLastValidSyntaxNodeChangedDo: [ node
 				ifNotNil: [ node identifier: identifierField text asString trim ] ];
 		yourself.
-	expressionField := self newExpressionTextInput
-		beText;
+	expressionField := self newSyntaxNodeTextInput
+		beExpression;
 		autoAccept: true;
-		whenLastValidExpressionChangedDo: [ :expr | node ifNotNil: [ node expression: expr ] ];
+		whenLastValidSyntaxNodeChangedDo: [ :expr | node ifNotNil: [ node expression: expr ] ];
 		yourself
 ]
 

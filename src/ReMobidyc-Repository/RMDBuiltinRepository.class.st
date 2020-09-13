@@ -1,8 +1,33 @@
 Class {
 	#name : #RMDBuiltinRepository,
 	#superclass : #RMDRepository,
+	#classInstVars : [
+		'current'
+	],
 	#category : #'ReMobidyc-Repository'
 }
+
+{ #category : #accessing }
+RMDBuiltinRepository class >> actionNamed: aString ifAbsent: errorBlock [
+	^ self current actionNamed: aString ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDBuiltinRepository class >> actionNames [
+	^ self current actionNames
+]
+
+{ #category : #'sole instance' }
+RMDBuiltinRepository class >> current [
+	^ current ifNil: [ current := self new ]
+]
+
+{ #category : #accessing }
+RMDBuiltinRepository >> actionIdentifiers [
+	^ self actionNames
+		collect:
+			[ :actionName | RMDBuiltinActionIdentifierNode identifier: actionName ]
+]
 
 { #category : #accessing }
 RMDBuiltinRepository >> actionNamed: aString ifAbsent: errorBlock [
@@ -33,7 +58,14 @@ RMDBuiltinRepository >> diffuse [
 
 { #category : #actions }
 RMDBuiltinRepository >> gain [
-	^ RMDActionDefinitionNode gain
+	^ 'to gain is
+	my delta thing'' = my amount.' asRMDActionDefinition
+]
+
+{ #category : #actions }
+RMDBuiltinRepository >> gain_upto [
+	^ 'to gain_upto is
+	my delta thing'' = min(my amount, my maximum - my thing).' asRMDActionDefinition
 ]
 
 { #category : #actions }
@@ -49,6 +81,11 @@ RMDBuiltinRepository >> move [
 { #category : #accessing }
 RMDBuiltinRepository >> name [
 	'Built-in'
+]
+
+{ #category : #accessing }
+RMDBuiltinRepository >> repositoryName [
+	^ 'Built-in'
 ]
 
 { #category : #actions }

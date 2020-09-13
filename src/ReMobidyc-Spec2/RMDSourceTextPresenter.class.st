@@ -60,7 +60,7 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 { #category : #api }
 RMDSourceTextPresenter >> text: aString [
 	| aText |
-	aText := aString.
+	aText := aString asText.
 	parser
 		ifNil: [ syntaxNode := nil ]
 		ifNotNil: [ | node |

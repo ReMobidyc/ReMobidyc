@@ -320,13 +320,14 @@ RMDGrammarTest >> testBehaviorDefinition [
 	node := grammar behaviorDefinition end
 		parse:
 			'
-Goat walk where
+Goat move namely walk@local where
 	my energy -> sugar
 	my speed -> slow_speed.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isBehaviorDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node actionIdentifier equals: 'walk'.
+	self assert: node actionIdentifier isLocalActionIdentifierNode.
+	self assert: node actionIdentifier shortName equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
 	self assert: node propertyBinds size = 2.
@@ -339,7 +340,8 @@ Wolf eat Goat within 1[m] where
 	self deny: node isPetit2Failure.
 	self assert: node isBehaviorDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
-	self assert: node actionIdentifier equals: 'eat'.
+	self assert: node actionIdentifier isBuiltinActionIdentifierNode.
+	self assert: node actionIdentifier shortName equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
 	self assert: node propertyBinds size = 2

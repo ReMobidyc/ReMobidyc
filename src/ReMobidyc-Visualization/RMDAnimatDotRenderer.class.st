@@ -45,3 +45,8 @@ RMDAnimatDotRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoi
 		borderWidth: 1
 		borderColor: Color black
 ]
+
+{ #category : #accessing }
+RMDAnimatDotRenderer >> name [
+	^ 'dot renderer'
+]

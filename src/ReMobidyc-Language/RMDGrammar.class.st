@@ -76,6 +76,11 @@ RMDGrammar >> actionDefinitionUtilityPart [
 		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionIdentifier [
+	^ self localActionIdentifier / self builtinActionIdentifier
+]
+
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -240,21 +245,32 @@ RMDGrammar >> behaviorDefinition [
 		==> [ :triple | 
 			self bindNodeClass
 				subjectIdentifier: triple first first
-				scriptIdentifier: triple first second
+				verbIdentifier: triple first second
 				objectIdentifier: triple first third
-				within: triple first fourth
+				actionIdentifier: triple first fourth
+				within: triple first fifth
 				propertyBinds: (triple second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> behaviorDefinitionHeader [
-	^ (self agentIdentifier , identifier , self agentIdentifier optional
+	^ (self agentIdentifier
+		,
+			((identifier , self agentIdentifier optional
+				, (('namely' asPParser trimBlanks , self actionIdentifier) ==> #second))
+				/
+					((self actionIdentifier , self agentIdentifier optional)
+						==> [ :pair | 
+							{pair first shortName.
+							pair second.
+							pair first} ]))
 		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
-		==> [ :array | 
-			{array first.
-			array second.
-			array third.
-			array fourth} ]
+		==> [ :triple | 
+			{triple first.
+			triple second first.
+			triple second second.
+			triple second third.
+			triple third} ]
 ]
 
 { #category : #'parsers-conditions' }
@@ -321,6 +337,17 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 { #category : #'class access' }
 RMDGrammar >> bindNodeClass [
 	^ RMDBehaviorDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> builtinActionIdentifier [
+	^ identifier
+		==> [ :string | self builtinActionIdentifierNodeClass identifier: string ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> builtinActionIdentifierNodeClass [
+	^ RMDBuiltinActionIdentifierNode 
 ]
 
 { #category : #accessing }
@@ -623,6 +650,17 @@ RMDGrammar >> literal [
 { #category : #'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> localActionIdentifier [
+	^ (identifier , '@model' asPParser)
+		==> [ :pair | self localActionIdentifierNodeClass identifier: pair first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> localActionIdentifierNodeClass [
+	^ RMDLocalActionIdentifierNode 
 ]
 
 { #category : #'class access' }

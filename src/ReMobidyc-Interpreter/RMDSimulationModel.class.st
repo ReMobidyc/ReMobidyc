@@ -7,10 +7,59 @@ Class {
 		'cellDefinition',
 		'worldDefinition',
 		'actionDefinitions',
-		'behaviorDefinitions'
+		'behaviorDefinitions',
+		'visualizer',
+		'renderers'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
+
+{ #category : #'instance creation' }
+RMDSimulationModel class >> sugarScape [
+	^ self new
+		load: RMDWorldDefinitionNode empty;
+		load: RMDCellDefinitionNode grassField;
+		load: RMDAnimatDefinitionNode goat;
+		load: RMDActionDefinitionNode respire;
+		load: RMDActionDefinitionNode move;
+		load: RMDActionDefinitionNode eat_grass;
+		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				goat_eat_grass: '3000 [kcal/day]'
+				upto: '10000[kcal]');
+		load: RMDActionDefinitionNode grow_grass;
+		load:
+			(RMDBehaviorDefinitionNode
+				cell_grow_grass: '2000[kcal/day]'
+				upto: '1000000[kcal]');
+		load:
+			(RMDSimulationDefinitionNode
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode empty
+				cellInitializer:
+					(RMDCellInitializerNode
+						grassInitializer: 10
+						by: 10
+						of: '5[km]'
+						grass: '0[kcal]'
+						to: '1000000[kcal]')
+				animatInitializers:
+					{(RMDAnimatInitializerNode
+						goatInitializer: 100
+						bloodSugar: '500[kcal]'
+						to: '1000[kcal]')});
+		addRenderer: (RMDBackgroundColorRenderer color: Color brown);
+		addRenderer:
+			(RMDCellColorAlphaRenderer
+				color: Color green
+				alpha: 'here''s grass' asRMDExpression
+				between: '0[kcal]' asRMDExpression
+				and: '1000000[kcal]' asRMDExpression);
+		addRenderer: (RMDAnimatDotRenderer on: 'Goat' diameter: 7 color: Color yellow);
+		yourself
+]
 
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
@@ -29,7 +78,9 @@ RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
 		put: aRMDActionDefinitionNode.
 	behaviorDefinitions
 		do: [ :behavior | 
-			behavior actionIdentifier = aRMDActionDefinitionNode identifier
+			(behavior actionIdentifier isLocalActionIdentifierNode
+				and: [ behavior actionIdentifier shortName
+						= aRMDActionDefinitionNode identifier ])
 				ifTrue: [ behavior resetAction ] ].
 	^ aRMDActionDefinitionNode
 ]
@@ -44,6 +95,11 @@ RMDSimulationModel >> addAnimatDefinition: aRMDAnimatDefinitionNode [
 { #category : #adding }
 RMDSimulationModel >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
 	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
+]
+
+{ #category : #adding }
+RMDSimulationModel >> addRenderer: aRMDRenderer [
+	renderers add: aRMDRenderer
 ]
 
 { #category : #'accessing - definitions' }
@@ -96,17 +152,17 @@ RMDSimulationModel >> cellInitializer [
 	^ simulationDefinition cellInitializer
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> cellLength [
 	^ simulationDefinition cellInitializer length
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> cellXDivisions [
 	^ simulationDefinition cellInitializer xDivisions
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> cellYDivisions [
 	^ simulationDefinition cellInitializer yDivisions
 ]
@@ -121,7 +177,7 @@ RMDSimulationModel >> duration [
 	^ simulationDefinition timeDefinition duration numeric
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> east [
 	^ self cellLength * self cellXDivisions
 ]
@@ -134,7 +190,8 @@ RMDSimulationModel >> initialize [
 	worldDefinition := RMDWorldDefinitionNode empty.
 	animatDefinitions := Dictionary new.
 	actionDefinitions := Dictionary new.
-	behaviorDefinitions := OrderedCollection new
+	behaviorDefinitions := OrderedCollection new.
+	renderers := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -154,9 +211,29 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	^ self error: 'Unknown load'
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> north [
 	^ self cellLength * self cellYDivisions
+]
+
+{ #category : #adding }
+RMDSimulationModel >> removeBehaviorDefinition: aRMDBehaviorDefinitionNode ifAbsent: errorBlock [
+	^ behaviorDefinitions remove: aRMDBehaviorDefinitionNode ifAbsent: errorBlock
+]
+
+{ #category : #adding }
+RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
+	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> renderers [
+	^ renderers
+]
+
+{ #category : #enumerating }
+RMDSimulationModel >> renderersDo: aBlock [
+	renderers do: aBlock
 ]
 
 { #category : #'accessing - definitions' }
@@ -170,6 +247,11 @@ RMDSimulationModel >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherR
 	^ anotherRMDBehaviorDefinitionNode
 ]
 
+{ #category : #accessing }
+RMDSimulationModel >> repositoryName [
+	^ 'model'
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> simulationDefinition [
 	^ simulationDefinition
@@ -180,12 +262,12 @@ RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 	simulationDefinition := aRMDSimulationDefinition
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> south [
 	^ 0.0
 ]
 
-{ #category : #'accessing-cells' }
+{ #category : #'accessing - cells' }
 RMDSimulationModel >> west [
 	^ 0.0
 ]

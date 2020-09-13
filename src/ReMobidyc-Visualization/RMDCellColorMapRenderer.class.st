@@ -53,6 +53,11 @@ RMDCellColorMapRenderer >> minAndColorsDo: aBlock [
 		do: [ :assoc | aBlock value: assoc key value: assoc value ]
 ]
 
+{ #category : #accessing }
+RMDCellColorMapRenderer >> name [
+	^ 'color map'
+]
+
 { #category : #enumerating }
 RMDCellColorMapRenderer >> numberOfMinAndColors [
 	^ minAndColors size

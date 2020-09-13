@@ -5,12 +5,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDCellDefinitionBrowser class >> on: aRMDInterpreter visualizer: aRMDVisualizer [
+RMDCellDefinitionBrowser class >> on: aRMDSimulationModel [
 	<script:
-		'(RMDCellDefinitionBrowser on: RMDInterpreter sugarScape visualizer: RMDVisualizer sugarScape) openWithSpec'>
-	^ self new
-		setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer;
-		yourself
+		'(RMDCellDefinitionBrowser on: RMDSimulationModel sugarScape ) openWithSpec'>
+	^ self new setSimulationModel: aRMDSimulationModel yourself
 ]
 
 { #category : #accessing }
@@ -20,13 +18,13 @@ RMDCellDefinitionBrowser >> agentName [
 
 { #category : #accessing }
 RMDCellDefinitionBrowser >> definitionDo: aBlock [
-	interpreter ifNotNil: [ interpreter cellDefinition ifNotNil: aBlock ]
+	simulationModel ifNotNil: [ simulationModel cellDefinition ifNotNil: aBlock ]
 ]
 
 { #category : #enumerating }
 RMDCellDefinitionBrowser >> renderersDo: aBlock [
-	visualizer
-		ifNotNil: [ visualizer
+	simulationModel
+		ifNotNil: [ simulationModel
 				renderersDo: [ :renderer | 
 					renderer isCellRenderer
 						ifTrue: [ aBlock cull: renderer ] ] ]

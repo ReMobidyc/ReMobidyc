@@ -3,6 +3,7 @@ Class {
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'subjectIdentifier',
+		'verbIdentifier',
 		'actionIdentifier',
 		'objectIdentifier',
 		'range',
@@ -17,19 +18,19 @@ Class {
 RMDBehaviorDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 	<script:
 		'(RMDBehaviorDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Cell grow_grass where
-	here''s max_grass -> ' , maxString
+	^ ('Cell grow_grass namely gain_upto where
+	my thing -> here''s grass
+	my amount -> ' , amountString
 		,
-			'
-	here''s growth_rate -> ' , amountString , '.')
-		asRMDBehaviorDefinition
+			' * delta time
+	my maximum -> ' , maxString , '.') asRMDBehaviorDefinition
 ]
 
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
 	<script:
 		'(RMDBehaviorDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat eat_grass where
+	^ ('Goat eat_grass@model where
 	my energy -> my blood_sugar
 	my max_energy -> ' , maxString
 		,
@@ -40,7 +41,7 @@ RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
 { #category : #'typical instances' }
 RMDBehaviorDefinitionNode class >> goat_respire: aString [
 	<script: '(RMDBehaviorDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
-	^ ('Goat respire where
+	^ ('Goat respire@model where
 	my energy -> my blood_sugar
 	my respiration_rate -> ' , aString , '.') asRMDBehaviorDefinition
 ]
@@ -55,10 +56,11 @@ RMDBehaviorDefinitionNode class >> goat_walk_for_grass [
 ]
 
 { #category : #'instance creation' }
-RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentifier: scriptString1 objectIdentifier: agentString2 within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
 	^ self new
 		subjectIdentifier: agentString1;
-		actionIdentifier: scriptString1;
+		verbIdentifier: verbString;
+		actionIdentifier: aRMDActionIdentifierNode;
 		objectIdentifier: agentString2;
 		range: aRMDLiteralNode;
 		propertyBinds: anArrayOfRMDPropertyBindNode;
@@ -69,10 +71,11 @@ RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 scriptIdentif
 RMDBehaviorDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ subjectIdentifier = anObject subjectIdentifier
-				and: [ objectIdentifier = anObject objectIdentifier
-						and: [ range = anObject range
-								and: [ propertyBinds = anObject propertyBinds
-										and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ]
+				and: [ verbIdentifier = anObject verbIdentifier
+						and: [ objectIdentifier = anObject objectIdentifier
+								and: [ range = anObject range
+										and: [ propertyBinds = anObject propertyBinds
+												and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -81,28 +84,30 @@ RMDBehaviorDefinitionNode >> actionIdentifier [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> actionIdentifier: aString [
-	actionIdentifier := aString.
-	name := nil
+RMDBehaviorDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
+	actionIdentifier := aRMDActionIdentifierNode.
+	name := nil.
+	self resetAction
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> actionWith: aRMDInterpreter [
+RMDBehaviorDefinitionNode >> actionWith: aRMDSimulationModel [
 	^ action
-		ifNil: [ action := (aRMDInterpreter
-				actionDefinitionAt: actionIdentifier
-				ifAbsent: [ ^ KeyNotFound signal: actionIdentifier ])
+		ifNil: [ action := ((actionIdentifier resolveWith: aRMDSimulationModel)
 				copyReplace:
-					(propertyBinds
-						collect: [ :bind | 
-							(RMDPropertyVariableNode
-								identifier: bind actionProperty
-								agent: bind actionAgent) -> bind expression ]) asDictionary ]
+				(propertyBinds
+				collect: [ :bind | 
+					(RMDPropertyVariableNode
+						identifier: bind actionProperty
+						agent: bind actionAgent) -> bind expression ]) asDictionary)
+				identifier: verbIdentifier;
+				yourself ]
 ]
 
 { #category : #enumerating }
 RMDBehaviorDefinitionNode >> childrenDo: aBlock [
-	aBlock value: range.
+	range ifNotNil: [ aBlock value: range ].
+	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
 ]
 
@@ -113,9 +118,9 @@ RMDBehaviorDefinitionNode >> hasObject [
 
 { #category : #comparing }
 RMDBehaviorDefinitionNode >> hash [
-	^ (((subjectIdentifier hash bitXor: objectIdentifier hash)
-		bitXor: range hash) bitXor: propertyBinds hash)
-		bitXor: actionIdentifier hash
+	^ ((((subjectIdentifier hash bitXor: verbIdentifier hash)
+		bitXor: objectIdentifier hash) bitXor: range hash)
+		bitXor: propertyBinds hash) bitXor: actionIdentifier hash
 ]
 
 { #category : #testing }
@@ -131,7 +136,7 @@ RMDBehaviorDefinitionNode >> name [
 					stream
 						nextPutAll: subjectIdentifier;
 						space;
-						nextPutAll: actionIdentifier.
+						nextPutAll: verbIdentifier.
 					objectIdentifier
 						ifNotNil: [ stream
 								space;
@@ -146,7 +151,8 @@ RMDBehaviorDefinitionNode >> objectIdentifier [
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> objectIdentifier: aString [
 	objectIdentifier := aString.
-	name := nil
+	name := nil.
+	self resetAction
 ]
 
 { #category : #copying }
@@ -160,15 +166,21 @@ RMDBehaviorDefinitionNode >> postCopy [
 RMDBehaviorDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: subjectIdentifier;
-		nextPutAll: ' ';
-		nextPutAll: actionIdentifier.
+		space;
+		nextPutAll: verbIdentifier.
 	objectIdentifier
 		ifNotNil: [ aStream
-				nextPut: Character space;
+				space;
 				nextPutAll: objectIdentifier ].
+	aStream
+		space;
+		nextPutAll: 'namely';
+		space.
+	actionIdentifier printOn: aStream.
 	(propertyBinds notNil and: [ propertyBinds notEmpty ])
 		ifTrue: [ aStream
-				nextPutAll: ' where';
+				space;
+				nextPutAll: 'where';
 				nextPut: Character cr.
 			propertyBinds
 				do: [ :bind | 
@@ -185,7 +197,8 @@ RMDBehaviorDefinitionNode >> propertyBinds [
 
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
-	propertyBinds := anArrayOfRMDPropertyBindNode
+	propertyBinds := anArrayOfRMDPropertyBindNode.
+	self resetAction
 ]
 
 { #category : #accessing }
@@ -204,6 +217,9 @@ RMDBehaviorDefinitionNode >> replaceChildren: aDictionary [
 		at: subjectIdentifier
 		ifPresent: [ :node | subjectIdentifier := node copy ].
 	aDictionary
+		at: verbIdentifier
+		ifPresent: [ :node | verbIdentifier := node copy ].
+	aDictionary
 		at: objectIdentifier
 		ifPresent: [ :node | objectIdentifier := node copy ].
 	range
@@ -213,9 +229,10 @@ RMDBehaviorDefinitionNode >> replaceChildren: aDictionary [
 				ifAbsent: [ range copyReplace: aDictionary ] ].
 	propertyBinds := propertyBinds
 		collect: [ :node | node copyReplace: aDictionary ].
-	aDictionary
+	actionIdentifier := aDictionary
 		at: actionIdentifier
-		ifPresent: [ :node | actionIdentifier := node copy ]
+		ifPresent: #copy
+		ifAbsent: [ actionIdentifier copyReplace: aDictionary ]
 ]
 
 { #category : #accessing }
@@ -231,5 +248,17 @@ RMDBehaviorDefinitionNode >> subjectIdentifier [
 { #category : #accessing }
 RMDBehaviorDefinitionNode >> subjectIdentifier: aString [
 	subjectIdentifier := aString.
-	name := nil
+	name := nil.
+	self resetAction
+]
+
+{ #category : #accessing }
+RMDBehaviorDefinitionNode >> verbIdentifier [
+	^ verbIdentifier 
+]
+
+{ #category : #accessing }
+RMDBehaviorDefinitionNode >> verbIdentifier: aString [
+	verbIdentifier := aString.
+	self resetAction
 ]

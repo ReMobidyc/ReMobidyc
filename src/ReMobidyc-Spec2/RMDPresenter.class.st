@@ -58,11 +58,6 @@ RMDPresenter >> newColorDropList: anArrayOfColor [
 ]
 
 { #category : #widgets }
-RMDPresenter >> newExpressionTextInput [
-	^ self instantiate: RMDExpressionTextInputPresenter
-]
-
-{ #category : #widgets }
 RMDPresenter >> newNumberInput [
 	^ self instantiate: RMDNumberInputPresenter
 ]
@@ -72,6 +67,11 @@ RMDPresenter >> newSourceWith: aPP2Node [
 	^ (self instantiate: RMDSourceTextPresenter)
 		parser: aPP2Node;
 		yourself
+]
+
+{ #category : #widgets }
+RMDPresenter >> newSyntaxNodeTextInput [
+	^ self instantiate: RMDSyntaxNodeTextInputPresenter
 ]
 
 { #category : #widgets }

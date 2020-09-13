@@ -36,9 +36,10 @@ RMDCellExpressionRendererPresenter >> initializePresenters [
 		whenLastValidNumberChangedDo: [ :width | 
 			renderer borderWidth: width.
 			self valueChanged ].
-	expressionField := self newExpressionTextInput
+	expressionField := self newSyntaxNodeTextInput
 		autoAccept: true;
-		whenLastValidExpressionChangedDo: [ :expression | 
+		beExpression;
+		whenLastValidSyntaxNodeChangedDo: [ :expression | 
 			renderer expression: expression.
 			self valueChanged ]
 ]
@@ -75,6 +76,5 @@ RMDCellExpressionRendererPresenter >> updateBorderWidthField [
 
 { #category : #updating }
 RMDCellExpressionRendererPresenter >> updateExpressionField [
-	renderer
-		ifNotNil: [ expressionField expression: renderer expression ]
+	renderer ifNotNil: [ expressionField syntaxNode: renderer expression ]
 ]

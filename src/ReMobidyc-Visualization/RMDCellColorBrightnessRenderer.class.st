@@ -24,3 +24,8 @@ RMDCellColorBrightnessRenderer >> colorFrom: aNumber [
 		v: (aNumber min: 1.0 max: 0.005)
 		alpha: color alpha
 ]
+
+{ #category : #accessing }
+RMDCellColorBrightnessRenderer >> name [
+	^ 'color brightness'
+]

@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDWorldDefinitionBrowser class >> on: aRMDInterpreter visualizer: aRMDVisualizer [
+RMDWorldDefinitionBrowser class >> on: aRMDSimulationModel [
 	<script:
-		'(RMDWorldDefinitionBrowser on: RMDInterpreter sugarScape visualizer: RMDVisualizer sugarScape) openWithSpec'>
+		'(RMDWorldDefinitionBrowser on: RMDSimulationModel sugarScape) openWithSpec'>
 	^ self new
-		setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer;
+		setSimulationModel: aRMDSimulationModel;
 		yourself
 ]
 
@@ -20,14 +20,14 @@ RMDWorldDefinitionBrowser >> agentName [
 
 { #category : #accessing }
 RMDWorldDefinitionBrowser >> definitionDo: aBlock [
-	interpreter
-		ifNotNil: [ interpreter worldDefinition ifNotNil: aBlock ]
+	simulationModel
+		ifNotNil: [ simulationModel worldDefinition ifNotNil: aBlock ]
 ]
 
 { #category : #enumerating }
 RMDWorldDefinitionBrowser >> renderersDo: aBlock [
-	visualizer
-		ifNotNil: [ visualizer
+	simulationModel
+		ifNotNil: [ simulationModel
 				renderersDo: [ :renderer | 
 					renderer isWorldRenderer
 						ifTrue: [ aBlock cull: renderer ] ] ]

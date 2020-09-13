@@ -48,6 +48,11 @@ RMDRenderer >> isWorldRenderer [
 	^ false
 ]
 
+{ #category : #accessing }
+RMDRenderer >> name [
+	^ self subclassResponsibility 
+]
+
 { #category : #private }
 RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
 	| cellX cellY |

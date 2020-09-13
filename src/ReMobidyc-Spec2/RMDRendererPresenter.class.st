@@ -34,13 +34,18 @@ RMDRendererPresenter >> initializePresenters [
 				ifNotNil: [ renderer color: color.
 					self valueChanged ] ];
 		yourself.
-	self
+	"self
 		whenBuiltDo: [ self
 				withWidgetDo: [ :w | 
 					w
 						update: #color: with: {Color white};
 						update: #borderColor: with: {Color darkGray};
-						update: #borderWidth: with: {1} ] ]
+						update: #borderWidth: with: {1} ] ]"
+]
+
+{ #category : #accessing }
+RMDRendererPresenter >> name [
+	^ renderer name
 ]
 
 { #category : #accessing }

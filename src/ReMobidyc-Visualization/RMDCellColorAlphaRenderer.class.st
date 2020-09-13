@@ -20,3 +20,8 @@ RMDCellColorAlphaRenderer class >> color: aColor alpha: aRMDExpressionNode betwe
 RMDCellColorAlphaRenderer >> colorFrom: aNumber [
 	^ color alpha: (aNumber min: 1.0 max: 0.0)
 ]
+
+{ #category : #accessing }
+RMDCellColorAlphaRenderer >> name [
+	^ 'color transparency'
+]

@@ -31,6 +31,11 @@ RMDSyntaxNode >> isActionDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isActionIdentifierNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAdditionNode [
 	^ false
 ]
@@ -82,6 +87,11 @@ RMDSyntaxNode >> isBehaviorDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isBinaryRelationNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isBuiltinActionIdentifierNode [
 	^ false
 ]
 
@@ -157,6 +167,11 @@ RMDSyntaxNode >> isLessThanNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isLiteralNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isLocalActionIdentifierNode [
 	^ false
 ]
 

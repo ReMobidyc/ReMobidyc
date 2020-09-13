@@ -2,7 +2,7 @@ Class {
 	#name : #RMDAgentDefinitionBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'interpreter',
+		'simulationModel',
 		'visualizer',
 		'animat',
 		'propertyList',
@@ -22,7 +22,9 @@ Class {
 		'addReplacementButton',
 		'removeReplacementButton',
 		'editReplacementButton',
-		'sourceText'
+		'sourceText',
+		'verbIdentifierField',
+		'objectIdentifierField'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -77,13 +79,17 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 									(SpBoxLayout newHorizontal
 										add: #addBehaviorButton width: self buttonHeight;
 										add: #removeBehaviorButton width: self buttonHeight;
-										add: #editBehaviorButton width: self buttonHeight;
 										yourself)
 									height: self buttonHeight;
 								yourself);
 						add:
 							(SpBoxLayout newVertical
 								add: 'Adaptation' expand: false;
+								add:
+									(SpBoxLayout newHorizontal
+										add: #verbIdentifierField;
+										add: #objectIdentifierField)
+									height: self inputTextHeight;
 								add: #replacementList;
 								add:
 									(SpBoxLayout newHorizontal
@@ -99,9 +105,63 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> acceptObjectIdentifierField [
+	behaviorList selection selectedItem
+		ifNotNil: [ :behaviorDefinition | 
+			| newObjectIdentifier |
+			newObjectIdentifier := objectIdentifierField lastValidSyntaxNode
+				ifEmpty: [ nil ].
+			behaviorDefinition objectIdentifier ~= newObjectIdentifier
+				ifTrue: [ (simulationModel behaviorDefinitions
+						anySatisfy: [ :behavior | 
+							behavior verbIdentifier = verbIdentifierField lastValidSyntaxNode
+								and: [ behavior objectIdentifier = newObjectIdentifier ] ])
+						ifTrue: [ objectIdentifierField beError ]
+						ifFalse: [ behaviorDefinition objectIdentifier: newObjectIdentifier.
+							self updateBehaviorList ] ] ]
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> acceptVerbIdentifierField [
+	behaviorList selection selectedItem
+		ifNotNil: [ :behaviorDefinition | 
+			| newVerb |
+			newVerb := verbIdentifierField lastValidSyntaxNode.
+			behaviorDefinition verbIdentifier ~= newVerb
+				ifTrue: [ (simulationModel behaviorDefinitions
+						anySatisfy: [ :behavior | 
+							behavior verbIdentifier = newVerb
+								and: [ behavior objectIdentifier
+										= (objectIdentifierField lastValidSyntaxNode ifEmpty: [ nil ]) ] ])
+						ifTrue: [ verbIdentifierField beError ]
+						ifFalse: [ behaviorDefinition
+								verbIdentifier: newVerb;
+								resetAction.
+							self
+								updateBehaviorList;
+								updateSourceText ] ] ]
+]
+
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addBehavior [
-	^ self notYetImplemented
+	| actionDefinitionBrowser |
+	actionDefinitionBrowser := RMDActionDefinitionBrowser
+		on: simulationModel.
+	actionDefinitionBrowser openDialogWithSpec
+		okAction: [ | actionIdentifier actionDefinition |
+			actionIdentifier := actionDefinitionBrowser actionIdentifier.
+			actionDefinition := actionIdentifier resolveWith: simulationModel.
+			simulationModel
+				addBehaviorDefinition:
+					(RMDBehaviorDefinitionNode
+						subjectIdentifier: self agentName
+						verbIdentifier: actionIdentifier shortName
+						objectIdentifier: actionDefinition object
+						actionIdentifier: actionIdentifier
+						within: nil
+						propertyBinds: Array new).
+			self updateBehaviorList ]
 ]
 
 { #category : #operations }
@@ -125,7 +185,23 @@ RMDAgentDefinitionBrowser >> addRenderer [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addReplacement [
-	^ self notYetImplemented
+	behaviorList selection selectedItem
+		ifNotNil: [ :behavior | 
+			| bindEditor |
+			(bindEditor := RMDPropertyBindEditor
+				actionDefinition: (behavior actionIdentifier resolveWith: simulationModel)
+				except:
+					(behavior propertyBinds
+						collect: [ :bind | 
+							RMDPropertyVariableNode
+								identifier: bind actionProperty
+								agent: bind actionAgent ])) openDialogWithSpec
+				okAction: [ bindEditor propertyBindNode
+						ifNotNil: [ :bindNode | 
+							behavior propertyBinds: (behavior propertyBinds copyWith: bindNode).
+							self
+								updateReplacementList;
+								updateSourceText ] ] ]
 ]
 
 { #category : #accessing }
@@ -136,11 +212,6 @@ RMDAgentDefinitionBrowser >> agentName [
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 	^ self subclassResponsibility
-]
-
-{ #category : #operations }
-RMDAgentDefinitionBrowser >> editBehavior [
-	^ self notYetImplemented
 ]
 
 { #category : #operations }
@@ -167,7 +238,33 @@ RMDAgentDefinitionBrowser >> editRenderer [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> editReplacement [
-	^ self notYetImplemented
+	replacementList selection selectedItem
+		ifNotNil: [ :oldBind | 
+			behaviorList selection selectedItem
+				ifNotNil: [ :behavior | 
+					| bindEditor |
+					bindEditor := RMDPropertyBindEditor
+						actionDefinition: (behavior actionIdentifier resolveWith: simulationModel)
+						except:
+							(behavior propertyBinds
+								select: [ :bind | bind ~= oldBind ]
+								thenCollect: [ :bind | 
+									RMDPropertyVariableNode
+										identifier: bind actionProperty
+										agent: bind actionAgent ]).
+					bindEditor propertyBindNode: oldBind.
+					bindEditor openDialogWithSpec
+						okAction: [ bindEditor propertyBindNode
+								ifNotNil: [ :newBind | 
+									| index |
+									index := behavior propertyBinds indexOf: oldBind.
+									index > 0
+										ifTrue: [ behavior propertyBinds at: index put: newBind.
+											behavior resetAction ]
+										ifFalse: [ behavior propertyBinds: (behavior propertyBinds copyWith: newBind) ].
+									self
+										updateReplacementList;
+										updateSourceText ] ] ] ]
 ]
 
 { #category : #initialization }
@@ -235,7 +332,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 	behaviorList := self newTable
 		beSingleSelection;
 		beResizable;
-		addColumn: (SpStringTableColumn evaluated: [ :item | item actionIdentifier ]);
+		addColumn: (SpStringTableColumn evaluated: [ :item | item verbIdentifier ]);
 		addColumn:
 			(SpStringTableColumn
 				evaluated: [ :item | item objectIdentifier ifNil: [ '' ] ]);
@@ -243,8 +340,9 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		whenSelectionChangedDo: [ | selected |
 			selected := behaviorList selection selectedItem notNil.
 			removeBehaviorButton enabled: selected.
-			editBehaviorButton enabled: selected.
 			self
+				updateVerbIdentifierField;
+				updateObjectIdentifierField;
 				updateReplacementList;
 				updateActionSourceText;
 				updateSourceText ];
@@ -258,15 +356,21 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		action: [ self removeBehavior ];
 		disable;
 		yourself.
-	editBehaviorButton := self newButton
-		icon: self editIcon;
-		action: [ self editBehavior ];
-		disable;
-		yourself.
 	actionSourceText := (self
 		newSourceWith: RMDGrammar new actionDefinition)
 		enabled: false;
 		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
+		yourself.
+	verbIdentifierField := self newSyntaxNodeTextInput
+		acceptOnCR: true;
+		beIdentifier;
+		whenLastValidSyntaxNodeChangedDo: [ self acceptVerbIdentifierField ];
+		yourself.
+	objectIdentifierField := self newSyntaxNodeTextInput
+		acceptOnCR: true;
+		beAgentIdentifier;
+		allowEmpty;
+		whenLastValidSyntaxNodeChangedDo: [ self acceptObjectIdentifierField ];
 		yourself.
 	replacementList := self newTable
 		beSingleSelection;
@@ -321,7 +425,12 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeBehavior [
-	^ self notYetImplemented
+	behaviorList selection selectedItem
+		ifNotNil: [ :behaviorDefinition | 
+			simulationModel
+				removeBehaviorDefinition: behaviorDefinition
+				ifAbsent: [ KeyNotFound signal: behaviorDefinition ].
+			self updateBehaviorList ]
 ]
 
 { #category : #operations }
@@ -342,12 +451,29 @@ RMDAgentDefinitionBrowser >> removeProperty [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeRenderer [
-	^ self notYetImplemented
+	rendererList selection selectedItem
+		ifNotNil: [ :rendererPresenter | 
+			(self newLabel
+				label: 'OK to remove ' , rendererPresenter name , '?';
+				yourself) openDialogWithSpec
+				title: 'Remove visualization from ' , self agentName;
+				extent: 400 @ (self class buttonHeight * 3.5);
+				okAction: [ simulationModel
+								removeRenderer: rendererPresenter renderer
+								ifAbsent: [  ].
+							self updateRendererList ] ]
 ]
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeReplacement [
-	^ self notYetImplemented
+	replacementList selection selectedItem
+		ifNotNil: [ :bind | 
+			behaviorList selection selectedItem
+				ifNotNil: [ :behavior | 
+					behavior propertyBinds: (behavior propertyBinds copyWithout: bind).
+					self
+						updateReplacementList;
+						updateSourceText ] ]
 ]
 
 { #category : #enumerating }
@@ -356,9 +482,8 @@ RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 ]
 
 { #category : #private }
-RMDAgentDefinitionBrowser >> setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer [
-	interpreter := aRMDInterpreter.
-	visualizer := aRMDVisualizer.
+RMDAgentDefinitionBrowser >> setSimulationModel: aRMDSimulationModel [
+	simulationModel := aRMDSimulationModel.
 	self updatePropertyList.
 	self updateRendererList.
 	self updateBehaviorList
@@ -366,23 +491,37 @@ RMDAgentDefinitionBrowser >> setInterpreter: aRMDInterpreter visualizer: aRMDVis
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateActionSourceText [
-	interpreter
+	simulationModel
 		ifNotNil: [ behaviorList selection selectedItem
 				ifNotNil: [ :behaviorDefinition | 
 					actionSourceText
 						text:
-							((interpreter
-								actionDefinitionAt: behaviorDefinition actionIdentifier
-								ifAbsent: [ nil ]) ifNotNil: #printString ifNil: [ '' ]) ] ]
+							((behaviorDefinition actionIdentifier resolveWith: simulationModel)
+								ifNotNil: #printString
+								ifNil: [ '' ]) ] ]
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateBehaviorList [
-	interpreter
-		ifNotNil: [ behaviorList
+	simulationModel
+		ifNotNil: [ | selectedBehavior |
+			selectedBehavior := behaviorList selection selectedItem.
+			behaviorList
 				items:
-					(interpreter behaviorDefinitions
-						select: [ :behavior | behavior subjectIdentifier = self agentName ]) ]
+					(simulationModel behaviorDefinitions
+						select: [ :behavior | behavior subjectIdentifier = self agentName ]);
+				selectItem: selectedBehavior ]
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> updateObjectIdentifierField [
+	behaviorList selection selectedItem
+		ifNotNil: [ :behaviorDefinition | 
+			behaviorDefinition objectIdentifier
+				ifNotNil: [ :objectIdentifier | objectIdentifierField text: objectIdentifier ]
+				ifNil: [ objectIdentifierField
+						enabled: false;
+						text: '' ] ]
 ]
 
 { #category : #updating }
@@ -401,7 +540,10 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 						renderersDo: [ :renderer | 
 							stream
 								nextPut: (renderer asPresenter enabled: false);
-								yourself ] ])
+								yourself ] ]).
+	rendererList items
+		do:
+			[ :item | item withWidgetDo: [ :w | w update: #color: with: {Color white} ] ]
 ]
 
 { #category : #updating }
@@ -423,8 +565,16 @@ RMDAgentDefinitionBrowser >> updateReplacementList [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateSourceText [
-	interpreter
+	simulationModel
 		ifNotNil: [ behaviorList selection selectedItem
-				ifNotNil:
-					[ :behaviorDefinition | sourceText text: (behaviorDefinition actionWith: interpreter) ] ]
+				ifNotNil: [ :behaviorDefinition | 
+					sourceText
+						text: (behaviorDefinition actionWith: simulationModel) printString asText ] ]
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> updateVerbIdentifierField [
+	behaviorList selection selectedItem
+		ifNotNil:
+			[ :behaviorDefinition | verbIdentifierField text: behaviorDefinition verbIdentifier ]
 ]

@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #accessing }
+RMDRepository >> actionIdentifiers [
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]
@@ -15,6 +20,6 @@ RMDRepository >> actionNames [
 ]
 
 { #category : #accessing }
-RMDRepository >> name [
+RMDRepository >> repositoryName [
 	^ self subclassResponsibility
 ]

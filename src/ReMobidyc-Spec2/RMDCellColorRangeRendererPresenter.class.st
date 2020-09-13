@@ -7,16 +7,16 @@ Class {
 { #category : #initialization }
 RMDCellColorRangeRendererPresenter >> initializePresenters [
 	super initializePresenters.
-	minField := self newExpressionTextInput
+	minField := self newSyntaxNodeTextInput
 		autoAccept: true;
-		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | 
+		beLiteral;
+		whenLastValidSyntaxNodeChangedDo: [ :literal | 
 			renderer min: literal.
 			self valueChanged ].
-	maxField := self newExpressionTextInput
+	maxField := self newSyntaxNodeTextInput
 		autoAccept: true;
-		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :literal | 
+		beLiteral;
+		whenLastValidSyntaxNodeChangedDo: [ :literal | 
 			renderer max: literal.
 			self valueChanged ]
 ]
@@ -31,10 +31,10 @@ RMDCellColorRangeRendererPresenter >> rendererChanged [
 
 { #category : #updating }
 RMDCellColorRangeRendererPresenter >> updateMaxField [
-	renderer ifNotNil: [ maxField expression: renderer max ]
+	renderer ifNotNil: [ maxField syntaxNode: renderer max ]
 ]
 
 { #category : #updating }
 RMDCellColorRangeRendererPresenter >> updateMinField [
-	renderer ifNotNil: [ minField expression: renderer min ]
+	renderer ifNotNil: [ minField syntaxNode: renderer min ]
 ]

@@ -5,12 +5,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAnimatDefinitionBrowser class >> on: aRMDInterpreter visualizer: aRMDVisualizer animat: aString [
+RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModel animat: aString [
 	<script:
-		'(RMDAnimatDefinitionBrowser on: RMDInterpreter sugarScape visualizer: RMDVisualizer sugarScape animat: ''Goat'') openWithSpec'>
+		'(RMDAnimatDefinitionBrowser on: RMDSimulationModel sugarScape animat: ''Goat'') openWithSpec'>
 	^ self new
-		setInterpreter: aRMDInterpreter
-			visualizer: aRMDVisualizer
+		setSimulationModel: aRMDSimulationModel
 			animat: aString;
 		yourself
 ]
@@ -22,24 +21,24 @@ RMDAnimatDefinitionBrowser >> agentName [
 
 { #category : #accessing }
 RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
-	interpreter ifNil: [ ^ nil ].
+	simulationModel ifNil: [ ^ nil ].
 	animat ifNil: [ ^ nil ].
-	(interpreter animatDefinitionAt: animat ifAbsent: [  ])
+	(simulationModel animatDefinitionAt: animat ifAbsent: [  ])
 		ifNotNil: aBlock
 ]
 
 { #category : #accessing }
 RMDAnimatDefinitionBrowser >> renderersDo: aBlock [
-	visualizer ifNil: [ ^ self ].
+	simulationModel ifNil: [ ^ self ].
 	animat ifNil: [ ^ self ].
-	visualizer
+	simulationModel
 		renderersDo: [ :renderer | 
 			(renderer isAnimatRendererFor: animat)
 				ifTrue: [ aBlock cull: renderer ] ]
 ]
 
 { #category : #private }
-RMDAnimatDefinitionBrowser >> setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer animat: aString [
+RMDAnimatDefinitionBrowser >> setSimulationModel: aRMDSimulationModel animat: aString [
 	animat := aString.
-	self setInterpreter: aRMDInterpreter visualizer: aRMDVisualizer
+	self setSimulationModel: aRMDSimulationModel
 ]

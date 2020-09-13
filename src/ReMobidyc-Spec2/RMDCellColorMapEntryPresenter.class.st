@@ -50,10 +50,10 @@ RMDCellColorMapEntryPresenter >> initializePresenters [
 				ifNotNil: [ association value: color.
 					self valueChanged ] ];
 		yourself.
-	minValueField := self newExpressionTextInput
+	minValueField := self newSyntaxNodeTextInput
 		autoAccept: true;
-		isLiteralOnly: true;
-		whenLastValidExpressionChangedDo: [ :expression | 
+		beLiteral;
+		whenLastValidSyntaxNodeChangedDo: [ :expression | 
 			association key: expression.
 			self valueChanged ];
 		yourself
@@ -77,5 +77,5 @@ RMDCellColorMapEntryPresenter >> updateColorDropList [
 
 { #category : #accessing }
 RMDCellColorMapEntryPresenter >> updateMinValueField [
-	association ifNotNil: [ minValueField expression: association key ]
+	association ifNotNil: [ minValueField syntaxNode: association key ]
 ]

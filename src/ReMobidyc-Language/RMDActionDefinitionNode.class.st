@@ -59,8 +59,7 @@ where
 { #category : #'typical instances' }
 RMDActionDefinitionNode class >> gain [
 	<script: 'RMDActionDefinitionNode lose gain'>
-	^ 'to gain is
-	my delta thing'' = my amount.' asRMDActionDefinition
+	^ RMDBuiltinRepository current gain
 ]
 
 { #category : #'typical instances' }

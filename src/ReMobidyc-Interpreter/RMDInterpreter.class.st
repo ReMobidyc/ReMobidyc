@@ -18,7 +18,7 @@ Class {
 { #category : #examples }
 RMDInterpreter class >> exampleSugar [
 	<script: 'RMDInterpreter exampleSugar'>
-	| interpreter memory goat metabolism goats goatMetabolize simulation |
+	| interpreter memory goat metabolism  goatMetabolize simulation |
 	interpreter := RMDInterpreter new.
 	memory := RMDFileMemory
 		on:
@@ -93,41 +93,8 @@ RMDInterpreter class >> sugarScape [
 	interpreter := self new
 		setMemory: RMDOnMemory new;
 		setContext: RMDActionContext new;
+		simulationModel: RMDSimulationModel sugarScape;
 		yourself.
-	interpreter
-		load: RMDWorldDefinitionNode empty;
-		load: RMDCellDefinitionNode grassField;
-		load: RMDAnimatDefinitionNode goat;
-		load: RMDActionDefinitionNode respire;
-		load: RMDActionDefinitionNode move;
-		load: RMDActionDefinitionNode eat_grass;
-		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
-		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
-		load:
-			(RMDBehaviorDefinitionNode
-				goat_eat_grass: '3000 [kcal/day]'
-				upto: '10000[kcal]');
-		load: RMDActionDefinitionNode grow_grass;
-		load:
-			(RMDBehaviorDefinitionNode
-				cell_grow_grass: '2000[kcal/day]'
-				upto: '1000000[kcal]');
-		load:
-			(RMDSimulationDefinitionNode
-				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
-				worldInitializer: RMDWorldInitializerNode empty
-				cellInitializer:
-					(RMDCellInitializerNode
-						grassInitializer: 10
-						by: 10
-						of: '5[km]'
-						grass: '0[kcal]'
-						to: '1000000[kcal]')
-				animatInitializers:
-					{(RMDAnimatInitializerNode
-						goatInitializer: 100
-						bloodSugar: '500[kcal]'
-						to: '1000[kcal]')}).
 	interpreter setupSimulation.
 	^ interpreter
 ]
@@ -140,8 +107,20 @@ RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing - definitions' }
+RMDInterpreter >> actionIdentifiers [
+	^ self actionNames
+		collect: [ :actionName | RMDLocalActionIdentifierNode identifier: actionName ]
+]
+
+{ #category : #'accessing - definitions' }
 RMDInterpreter >> actionNames [
 	^ simulationModel ifNil: [ Array new ] ifNotNil: #actionNames
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> addActionDefinition: aRMDActionDefinitionNode [
+	^ simulationModel
+		ifNotNil: [ simulationModel addActionDefinition: aRMDActionDefinitionNode ]
 ]
 
 { #category : #'accessing - libraries' }
@@ -477,6 +456,15 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 		ifAbsent: errorBlock
 ]
 
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> removeBehaviorDefinition: aRMDBehaviorDefinitionNode ifAbsent: errorBlock [
+	^ simulationModel
+		ifNil: errorBlock
+		ifNotNil: [ simulationModel
+				removeBehaviorDefinition: aRMDBehaviorDefinitionNode
+				ifAbsent: errorBlock ]
+]
+
 { #category : #simulating }
 RMDInterpreter >> removeOutOfBoundsAnimats [
 	individualDirectory
@@ -508,6 +496,11 @@ RMDInterpreter >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBe
 		ifNotNil: [ simulationModel
 				replaceBehavior: aRMDBehaviorDefinitionNode
 				with: anotherRMDBehaviorDefinitionNode ]
+]
+
+{ #category : #'accessing - repository' }
+RMDInterpreter >> repositoryName [
+	^ 'local'
 ]
 
 { #category : #'accessing - definitions' }
@@ -578,6 +571,11 @@ RMDInterpreter >> simulationDefinition [
 { #category : #'accessing - definitions' }
 RMDInterpreter >> simulationModel [
 	^ simulationModel
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> simulationModel: aRMDSimulationModel [
+	simulationModel := aRMDSimulationModel
 ]
 
 { #category : #'space access' }

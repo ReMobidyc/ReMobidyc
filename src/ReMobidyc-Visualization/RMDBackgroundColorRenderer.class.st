@@ -42,3 +42,13 @@ RMDBackgroundColorRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 				extent: (aNumber * xDivisions) ceiling @ (aNumber * yDivisions) ceiling)
 		color: color
 ]
+
+{ #category : #testing }
+RMDBackgroundColorRenderer >> isCellRenderer [
+	^ true
+]
+
+{ #category : #accessing }
+RMDBackgroundColorRenderer >> name [
+	^ 'background color'
+]

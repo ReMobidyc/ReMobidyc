@@ -119,6 +119,25 @@ RMDSimulationModelTest >> testAddBehaviorDefinition [
 ]
 
 { #category : #running }
+RMDSimulationModelTest >> testAddRenderer [
+	| backgroundRenderer colorAlphaRenderer |
+	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
+	colorAlphaRenderer := RMDCellColorAlphaRenderer
+		color: Color white
+		alpha: 'my x' asRMDExpression
+		between: 0
+		and: 100.
+	model
+		addRenderer: backgroundRenderer;
+		addRenderer: colorAlphaRenderer.
+	self
+		assert: model renderers asSet
+		equals:
+			{backgroundRenderer.
+			colorAlphaRenderer} asSet
+]
+
+{ #category : #running }
 RMDSimulationModelTest >> testAnimatDefinitionAtIfAbsent [
 	| animat |
 	animat := parser animatDefinition end
@@ -547,6 +566,29 @@ World with
 	self assert: sim isSimulationDefinitionNode.
 	model simulationDefinition: sim.
 	self assert: model north closeTo: 60
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testRenderersDo [
+	| backgroundRenderer colorAlphaRenderer |
+	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
+	colorAlphaRenderer := RMDCellColorAlphaRenderer
+		color: Color white
+		alpha: 'my x' asRMDExpression
+		between: 0
+		and: 100.
+	model
+		addRenderer: backgroundRenderer;
+		addRenderer: colorAlphaRenderer.
+	self
+		assert:
+			(Array
+				streamContents:
+					[ :stream | model renderersDo: [ :renderer | stream nextPut: renderer ] ])
+				asSet
+		equals:
+			{backgroundRenderer.
+			colorAlphaRenderer} asSet
 ]
 
 { #category : #running }
