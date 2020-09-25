@@ -108,34 +108,34 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 { #category : #updating }
 RMDAgentDefinitionBrowser >> acceptObjectIdentifierField [
 	taskList selection selectedItem
-		ifNotNil: [ :behaviorDefinition | 
+		ifNotNil: [ :taskDefinition | 
 			| newObjectIdentifier |
 			newObjectIdentifier := objectIdentifierField lastValidSyntaxNode
 				ifEmpty: [ nil ].
-			behaviorDefinition objectIdentifier ~= newObjectIdentifier
-				ifTrue: [ (simulationModel behaviorDefinitions
-						anySatisfy: [ :behavior | 
-							behavior verbIdentifier = verbIdentifierField lastValidSyntaxNode
-								and: [ behavior objectIdentifier = newObjectIdentifier ] ])
+			taskDefinition objectIdentifier ~= newObjectIdentifier
+				ifTrue: [ (simulationModel taskDefinitions
+						anySatisfy: [ :task | 
+							task verbIdentifier = verbIdentifierField lastValidSyntaxNode
+								and: [ task objectIdentifier = newObjectIdentifier ] ])
 						ifTrue: [ objectIdentifierField beError ]
-						ifFalse: [ behaviorDefinition objectIdentifier: newObjectIdentifier.
+						ifFalse: [ taskDefinition objectIdentifier: newObjectIdentifier.
 							self updateTaskList ] ] ]
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> acceptVerbIdentifierField [
 	taskList selection selectedItem
-		ifNotNil: [ :behaviorDefinition | 
+		ifNotNil: [ :taskDefinition | 
 			| newVerb |
 			newVerb := verbIdentifierField lastValidSyntaxNode.
-			behaviorDefinition verbIdentifier ~= newVerb
-				ifTrue: [ (simulationModel behaviorDefinitions
-						anySatisfy: [ :behavior | 
-							behavior verbIdentifier = newVerb
-								and: [ behavior objectIdentifier
+			taskDefinition verbIdentifier ~= newVerb
+				ifTrue: [ (simulationModel taskDefinitions
+						anySatisfy: [ :task | 
+							task verbIdentifier = newVerb
+								and: [ task objectIdentifier
 										= (objectIdentifierField lastValidSyntaxNode ifEmpty: [ nil ]) ] ])
 						ifTrue: [ verbIdentifierField beError ]
-						ifFalse: [ behaviorDefinition
+						ifFalse: [ taskDefinition
 								verbIdentifier: newVerb;
 								resetAction.
 							self
@@ -165,19 +165,19 @@ RMDAgentDefinitionBrowser >> addRenderer [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addReplacement [
 	taskList selection selectedItem
-		ifNotNil: [ :behavior | 
+		ifNotNil: [ :task | 
 			| bindEditor |
 			(bindEditor := RMDPropertyBindEditor
-				actionDefinition: (behavior actionIdentifier resolveWith: simulationModel)
+				actionDefinition: (task actionIdentifier resolveWith: simulationModel)
 				except:
-					(behavior propertyBinds
+					(task propertyBinds
 						collect: [ :bind | 
 							RMDPropertyVariableNode
 								identifier: bind actionProperty
 								agent: bind actionAgent ])) openDialogWithSpec
 				okAction: [ bindEditor propertyBindNode
 						ifNotNil: [ :bindNode | 
-							behavior propertyBinds: (behavior propertyBinds copyWith: bindNode).
+							task propertyBinds: (task propertyBinds copyWith: bindNode).
 							self
 								updateReplacementList;
 								updateSourceText ] ] ]
@@ -193,8 +193,8 @@ RMDAgentDefinitionBrowser >> addTask [
 			actionIdentifier := actionDefinitionBrowser actionIdentifier.
 			actionDefinition := actionIdentifier resolveWith: simulationModel.
 			simulationModel
-				addBehaviorDefinition:
-					(RMDBehaviorDefinitionNode
+				addTaskDefinition:
+					(RMDTaskDefinitionNode
 						subjectIdentifier: self agentName
 						verbIdentifier: actionIdentifier shortName
 						objectIdentifier: actionDefinition object
@@ -241,12 +241,12 @@ RMDAgentDefinitionBrowser >> editReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :oldBind | 
 			taskList selection selectedItem
-				ifNotNil: [ :behavior | 
+				ifNotNil: [ :task | 
 					| bindEditor |
 					bindEditor := RMDPropertyBindEditor
-						actionDefinition: (behavior actionIdentifier resolveWith: simulationModel)
+						actionDefinition: (task actionIdentifier resolveWith: simulationModel)
 						except:
-							(behavior propertyBinds
+							(task propertyBinds
 								select: [ :bind | bind ~= oldBind ]
 								thenCollect: [ :bind | 
 									RMDPropertyVariableNode
@@ -257,11 +257,11 @@ RMDAgentDefinitionBrowser >> editReplacement [
 						okAction: [ bindEditor propertyBindNode
 								ifNotNil: [ :newBind | 
 									| index |
-									index := behavior propertyBinds indexOf: oldBind.
+									index := task propertyBinds indexOf: oldBind.
 									index > 0
-										ifTrue: [ behavior propertyBinds at: index put: newBind.
-											behavior resetAction ]
-										ifFalse: [ behavior propertyBinds: (behavior propertyBinds copyWith: newBind) ].
+										ifTrue: [ task propertyBinds at: index put: newBind.
+											task resetAction ]
+										ifFalse: [ task propertyBinds: (task propertyBinds copyWith: newBind) ].
 									self
 										updateReplacementList;
 										updateSourceText ] ] ] ]
@@ -459,8 +459,8 @@ RMDAgentDefinitionBrowser >> removeReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :bind | 
 			taskList selection selectedItem
-				ifNotNil: [ :behavior | 
-					behavior propertyBinds: (behavior propertyBinds copyWithout: bind).
+				ifNotNil: [ :task | 
+					task propertyBinds: (task propertyBinds copyWithout: bind).
 					self
 						updateReplacementList;
 						updateSourceText ] ]
@@ -469,10 +469,10 @@ RMDAgentDefinitionBrowser >> removeReplacement [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeTask [
 	taskList selection selectedItem
-		ifNotNil: [ :behaviorDefinition | 
+		ifNotNil: [ :taskDefinition | 
 			simulationModel
-				removeBehaviorDefinition: behaviorDefinition
-				ifAbsent: [ KeyNotFound signal: behaviorDefinition ].
+				removeTaskDefinition: taskDefinition
+				ifAbsent: [ KeyNotFound signal: taskDefinition ].
 			self updateTaskList ]
 ]
 
@@ -567,7 +567,7 @@ RMDAgentDefinitionBrowser >> updateTaskList [
 			selectedBehavior := taskList selection selectedItem.
 			taskList
 				items:
-					(simulationModel behaviorDefinitions
+					(simulationModel taskDefinitions
 						select: [ :behavior | behavior subjectIdentifier = self agentName ]);
 				selectItem: selectedBehavior ]
 ]

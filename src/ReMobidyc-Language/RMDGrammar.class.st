@@ -235,44 +235,6 @@ RMDGrammar >> assignablePropertyVariableNodeClass [
 	^ RMDAssignablePropertyVariableNode
 ]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> behaviorDefinition [
-	^ (self behaviorDefinitionHeader
-		,
-			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
-				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
-				==> #third) optional , $. asPParser trimBlanks)
-		==> [ :triple | 
-			self bindNodeClass
-				subjectIdentifier: triple first first
-				verbIdentifier: triple first second
-				objectIdentifier: triple first third
-				actionIdentifier: triple first fourth
-				within: triple first fifth
-				propertyBinds: (triple second ifNil: [ Array new ]) ]
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> behaviorDefinitionHeader [
-	^ (self agentIdentifier
-		,
-			((identifier , self agentIdentifier optional
-				, (('namely' asPParser trimBlanks , self actionIdentifier) ==> #second))
-				/
-					((self actionIdentifier , self agentIdentifier optional)
-						==> [ :pair | 
-							{pair first shortName.
-							pair second.
-							pair first} ]))
-		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
-		==> [ :triple | 
-			{triple first.
-			triple second first.
-			triple second second.
-			triple second third.
-			triple third} ]
-]
-
 { #category : #'parsers-conditions' }
 RMDGrammar >> binaryCombinatorFrom: anArray [
 	| operator conds |
@@ -336,7 +298,7 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 
 { #category : #'class access' }
 RMDGrammar >> bindNodeClass [
-	^ RMDBehaviorDefinitionNode
+	^ RMDTaskDefinitionNode
 ]
 
 { #category : #'parsers-definitions' }
@@ -807,6 +769,44 @@ RMDGrammar >> start [
 { #category : #'class access' }
 RMDGrammar >> subtractionNodeClass [
 	^ RMDSubtractionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> taskDefinition [
+	^ (self taskDefinitionHeader
+		,
+			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
+				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
+				==> #third) optional , $. asPParser trimBlanks)
+		==> [ :triple | 
+			self bindNodeClass
+				subjectIdentifier: triple first first
+				verbIdentifier: triple first second
+				objectIdentifier: triple first third
+				actionIdentifier: triple first fourth
+				within: triple first fifth
+				propertyBinds: (triple second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> taskDefinitionHeader [
+	^ (self agentIdentifier
+		,
+			((identifier , self agentIdentifier optional
+				, (('namely' asPParser trimBlanks , self actionIdentifier) ==> #second))
+				/
+					((self actionIdentifier , self agentIdentifier optional)
+						==> [ :pair | 
+							{pair first shortName.
+							pair second.
+							pair first} ]))
+		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
+		==> [ :triple | 
+			{triple first.
+			triple second first.
+			triple second second.
+			triple second third.
+			triple third} ]
 ]
 
 { #category : #units }

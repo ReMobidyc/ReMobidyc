@@ -19,15 +19,6 @@ String >> asRMDAnimatDefinition [
 ]
 
 { #category : #'*ReMobidyc-Language' }
-String >> asRMDBehaviorDefinition [
-	| node |
-	node := RMDGrammar new behaviorDefinition end parse: self.
-	^ node isPetit2Failure
-		ifTrue: [ RMDParseError signalPP2Failure: node ]
-		ifFalse: [ node ]
-]
-
-{ #category : #'*ReMobidyc-Language' }
 String >> asRMDExpression [
 	^ self
 		asRMDExpressionDo: [ :node | node ]
@@ -52,6 +43,15 @@ String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 String >> asRMDSimulationDefinition [
 	| node |
 	node := RMDGrammar new simulationDefinition end parse: self.
+	^ node isPetit2Failure
+		ifTrue: [ RMDParseError signalPP2Failure: node ]
+		ifFalse: [ node ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> asRMDTaskDefinition [
+	| node |
+	node := RMDGrammar new taskDefinition end parse: self.
 	^ node isPetit2Failure
 		ifTrue: [ RMDParseError signalPP2Failure: node ]
 		ifFalse: [ node ]

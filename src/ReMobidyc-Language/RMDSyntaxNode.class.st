@@ -81,11 +81,6 @@ RMDSyntaxNode >> isAssignablePropertyVariableNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isBehaviorDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isBinaryRelationNode [
 	^ false
 ]
@@ -262,6 +257,11 @@ RMDSyntaxNode >> isSpeciesInitializerNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isSubtractionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isTaskDefinitionNode [
 	^ false
 ]
 

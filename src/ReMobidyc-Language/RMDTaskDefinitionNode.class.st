@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDBehaviorDefinitionNode,
+	#name : #RMDTaskDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'subjectIdentifier',
@@ -15,48 +15,48 @@ Class {
 }
 
 { #category : #'typical instances' }
-RMDBehaviorDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
+RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 	<script:
-		'(RMDBehaviorDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
+		'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
 	^ ('Cell grow_grass namely gain_upto where
 	my thing -> here''s grass
 	my amount -> ' , amountString
 		,
 			' * delta time
-	my maximum -> ' , maxString , '.') asRMDBehaviorDefinition
+	my maximum -> ' , maxString , '.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
-RMDBehaviorDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
+RMDTaskDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
 	<script:
-		'(RMDBehaviorDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
+		'(RMDTaskDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
 	^ ('Goat eat_grass@model where
 	my energy -> my blood_sugar
 	my max_energy -> ' , maxString
 		,
 			'
-	my diet -> ' , dietString , '.') asRMDBehaviorDefinition
+	my diet -> ' , dietString , '.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
-RMDBehaviorDefinitionNode class >> goat_respire: aString [
-	<script: '(RMDBehaviorDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
+RMDTaskDefinitionNode class >> goat_respire: aString [
+	<script: '(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
 	^ ('Goat respire@model where
 	my energy -> my blood_sugar
-	my respiration_rate -> ' , aString , '.') asRMDBehaviorDefinition
+	my respiration_rate -> ' , aString , '.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
-RMDBehaviorDefinitionNode class >> goat_walk_for_grass [
+RMDTaskDefinitionNode class >> goat_walk_for_grass [
 	<script:
-		'RMDBehaviorDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
+		'RMDTaskDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
 	^ 'Goat move where
 	my heading -> direction neighbor''s grass
-	my speed -> 1[km/day].' asRMDBehaviorDefinition
+	my speed -> 1[km/day].' asRMDTaskDefinition
 ]
 
 { #category : #'instance creation' }
-RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
 	^ self new
 		subjectIdentifier: agentString1;
 		verbIdentifier: verbString;
@@ -68,7 +68,7 @@ RMDBehaviorDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifie
 ]
 
 { #category : #comparing }
-RMDBehaviorDefinitionNode >> = anObject [
+RMDTaskDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ subjectIdentifier = anObject subjectIdentifier
 				and: [ verbIdentifier = anObject verbIdentifier
@@ -79,19 +79,19 @@ RMDBehaviorDefinitionNode >> = anObject [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> actionIdentifier [
+RMDTaskDefinitionNode >> actionIdentifier [
 	^ actionIdentifier
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
+RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 	actionIdentifier := aRMDActionIdentifierNode.
 	name := nil.
 	self resetAction
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> actionWith: aRMDSimulationModel [
+RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 	^ action
 		ifNil: [ action := ((actionIdentifier resolveWith: aRMDSimulationModel)
 				copyReplace:
@@ -105,31 +105,31 @@ RMDBehaviorDefinitionNode >> actionWith: aRMDSimulationModel [
 ]
 
 { #category : #enumerating }
-RMDBehaviorDefinitionNode >> childrenDo: aBlock [
+RMDTaskDefinitionNode >> childrenDo: aBlock [
 	range ifNotNil: [ aBlock value: range ].
 	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
 ]
 
 { #category : #testing }
-RMDBehaviorDefinitionNode >> hasObject [
+RMDTaskDefinitionNode >> hasObject [
 	^ objectIdentifier notNil
 ]
 
 { #category : #comparing }
-RMDBehaviorDefinitionNode >> hash [
+RMDTaskDefinitionNode >> hash [
 	^ ((((subjectIdentifier hash bitXor: verbIdentifier hash)
 		bitXor: objectIdentifier hash) bitXor: range hash)
 		bitXor: propertyBinds hash) bitXor: actionIdentifier hash
 ]
 
 { #category : #testing }
-RMDBehaviorDefinitionNode >> isBehaviorDefinitionNode [
+RMDTaskDefinitionNode >> isTaskDefinitionNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> name [
+RMDTaskDefinitionNode >> name [
 	^ name
 		ifNil: [ name := String
 				streamContents: [ :stream | 
@@ -144,26 +144,26 @@ RMDBehaviorDefinitionNode >> name [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> objectIdentifier [
+RMDTaskDefinitionNode >> objectIdentifier [
 	^ objectIdentifier
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> objectIdentifier: aString [
+RMDTaskDefinitionNode >> objectIdentifier: aString [
 	objectIdentifier := aString.
 	name := nil.
 	self resetAction
 ]
 
 { #category : #copying }
-RMDBehaviorDefinitionNode >> postCopy [
+RMDTaskDefinitionNode >> postCopy [
 	range := range ifNotNil: #copy.
 	propertyBinds := propertyBinds
 		ifNotNil: [ propertyBinds collect: #copy ]
 ]
 
 { #category : #printing }
-RMDBehaviorDefinitionNode >> printOn: aStream [
+RMDTaskDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: subjectIdentifier;
 		space;
@@ -191,28 +191,28 @@ RMDBehaviorDefinitionNode >> printOn: aStream [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> propertyBinds [
+RMDTaskDefinitionNode >> propertyBinds [
 	^ propertyBinds
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDTaskDefinitionNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
 	propertyBinds := anArrayOfRMDPropertyBindNode.
 	self resetAction
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> range [
+RMDTaskDefinitionNode >> range [
 	^ range
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> range: aRMDLiteral [
+RMDTaskDefinitionNode >> range: aRMDLiteral [
 	range := aRMDLiteral
 ]
 
 { #category : #rewriting }
-RMDBehaviorDefinitionNode >> replaceChildren: aDictionary [
+RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: subjectIdentifier
 		ifPresent: [ :node | subjectIdentifier := node copy ].
@@ -236,29 +236,29 @@ RMDBehaviorDefinitionNode >> replaceChildren: aDictionary [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> resetAction [
+RMDTaskDefinitionNode >> resetAction [
 	action := nil
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> subjectIdentifier [
+RMDTaskDefinitionNode >> subjectIdentifier [
 	^ subjectIdentifier
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> subjectIdentifier: aString [
+RMDTaskDefinitionNode >> subjectIdentifier: aString [
 	subjectIdentifier := aString.
 	name := nil.
 	self resetAction
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> verbIdentifier [
+RMDTaskDefinitionNode >> verbIdentifier [
 	^ verbIdentifier 
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionNode >> verbIdentifier: aString [
+RMDTaskDefinitionNode >> verbIdentifier: aString [
 	verbIdentifier := aString.
 	self resetAction
 ]

@@ -44,7 +44,7 @@ presume my sugar >= 0
 Goat metabolize where
 	my sugar -> my energy
 	my basal_metabolism -> my basal_metabolism.' trim
-		asRMDBehaviorDefinition.
+		asRMDTaskDefinition.
 	interpreter load: goatMetabolize.
 	simulation := '
 Simulation with
@@ -161,16 +161,6 @@ RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 { #category : #'accessing - definitions' }
 RMDInterpreter >> animatNames [
 	^ simulationModel ifNil: [ Array new ] ifNotNil: #animatNames
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> behaviorDefinitions [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #behaviorDefinitions
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> behaviorNames [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #behaviorNames
 ]
 
 { #category : #simulating }
@@ -431,8 +421,8 @@ RMDInterpreter >> north [
 ]
 
 { #category : #simulating }
-RMDInterpreter >> performBehaviors [
-	simulationModel behaviorsDo: [ :behavior | behavior evalIn: self ]
+RMDInterpreter >> performTasks [
+	simulationModel tasksDo: [ :task | task evalIn: self ]
 ]
 
 { #category : #private }
@@ -454,15 +444,6 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 				agent: anotherString
 				ifAbsent: [ ^ errorBlock value ])
 		ifAbsent: errorBlock
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> removeBehaviorDefinition: aRMDBehaviorDefinitionNode ifAbsent: errorBlock [
-	^ simulationModel
-		ifNil: errorBlock
-		ifNotNil: [ simulationModel
-				removeBehaviorDefinition: aRMDBehaviorDefinitionNode
-				ifAbsent: errorBlock ]
 ]
 
 { #category : #simulating }
@@ -491,11 +472,20 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 ]
 
 { #category : #'accessing - definitions' }
-RMDInterpreter >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode [
+RMDInterpreter >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
+	^ simulationModel
+		ifNil: errorBlock
+		ifNotNil: [ simulationModel
+				removeTaskDefinition: aRMDTaskDefinitionNode
+				ifAbsent: errorBlock ]
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
 	^ simulationModel
 		ifNotNil: [ simulationModel
-				replaceBehavior: aRMDBehaviorDefinitionNode
-				with: anotherRMDBehaviorDefinitionNode ]
+				replaceTask: aRMDTaskDefinitionNode
+				with: anotherRMDTaskDefinitionNode ]
 ]
 
 { #category : #'accessing - repository' }
@@ -504,8 +494,8 @@ RMDInterpreter >> repositoryName [
 ]
 
 { #category : #'accessing - definitions' }
-RMDInterpreter >> resetBehaviors [
-	simulationModel behaviorsDo: [ :behavior | behavior resetAction ]
+RMDInterpreter >> resetTasks [
+	simulationModel tasksDo: [ :task | task resetAction ]
 ]
 
 { #category : #private }
@@ -591,11 +581,21 @@ RMDInterpreter >> standardLibrary [
 { #category : #simulating }
 RMDInterpreter >> stepSimulation [
 	^ self time < simulationModel duration
-		and: [ self performBehaviors.
+		and: [ self performTasks.
 			self tick.
 			self bounceOutOfBoundsAnimats.
 			self timeChanged.
 			true ]
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> taskDefinitions [
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #taskDefinitions
+]
+
+{ #category : #'accessing - definitions' }
+RMDInterpreter >> taskNames [
+	^ simulationModel ifNil: [ Array new ] ifNotNil: #taskNames
 ]
 
 { #category : #'animat operations' }

@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDBehaviorDefinitionPresenter,
+	#name : #RMDTaskDefinitionPresenter,
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'source'
@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #specs }
-RMDBehaviorDefinitionPresenter class >> defaultSpec [
+RMDTaskDefinitionPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical add: #source expand: true
 ]
 
 { #category : #initialization }
-RMDBehaviorDefinitionPresenter >> initializePresenters [
+RMDTaskDefinitionPresenter >> initializePresenters [
 	super initializePresenters.
-	source := (self newSourceWith: RMDGrammar new behaviorDefinition)
+	source := (self newSourceWith: RMDGrammar new taskDefinition)
 		whenLastValidSyntaxNodeChangedDo: [ :newNode | 
 			node
 				ifNotNil: [ node subjectIdentifier: newNode subjectIdentifier.
@@ -28,16 +28,16 @@ RMDBehaviorDefinitionPresenter >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionPresenter >> nodeChanged [
+RMDTaskDefinitionPresenter >> nodeChanged [
 	self updateSource
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionPresenter >> preferredHeight [
+RMDTaskDefinitionPresenter >> preferredHeight [
 	^ 100
 ]
 
 { #category : #accessing }
-RMDBehaviorDefinitionPresenter >> updateSource [
+RMDTaskDefinitionPresenter >> updateSource [
 	source text: node printString
 ]

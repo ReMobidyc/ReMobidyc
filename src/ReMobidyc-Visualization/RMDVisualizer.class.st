@@ -24,15 +24,15 @@ RMDVisualizer class >> exampleSugarScape [
 		load: RMDActionDefinitionNode respire;
 		load: RMDActionDefinitionNode move;
 		load: RMDActionDefinitionNode eat_grass;
-		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
-		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load: (RMDTaskDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				goat_eat_grass: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				cell_grow_grass: '2000[kcal/day]'
 				upto: '1000000[kcal]');
 		load:
@@ -83,15 +83,15 @@ RMDVisualizer class >> exampleSugarScapeMap [
 		load: RMDActionDefinitionNode respire;
 		load: RMDActionDefinitionNode move;
 		load: RMDActionDefinitionNode eat_grass;
-		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
-		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load: (RMDTaskDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				goat_eat_grass: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				cell_grow_grass: '2000[kcal/day]'
 				upto: '1000000[kcal]');
 		load:

@@ -7,9 +7,9 @@ Class {
 		'cellDefinition',
 		'worldDefinition',
 		'actionDefinitions',
-		'behaviorDefinitions',
 		'visualizer',
-		'renderers'
+		'renderers',
+		'taskDefinitions'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -23,15 +23,15 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDActionDefinitionNode respire;
 		load: RMDActionDefinitionNode move;
 		load: RMDActionDefinitionNode eat_grass;
-		load: (RMDBehaviorDefinitionNode goat_respire: '2000 [kcal/day]');
-		load: RMDBehaviorDefinitionNode goat_walk_for_grass;
+		load: (RMDTaskDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				goat_eat_grass: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:
-			(RMDBehaviorDefinitionNode
+			(RMDTaskDefinitionNode
 				cell_grow_grass: '2000[kcal/day]'
 				upto: '1000000[kcal]');
 		load:
@@ -76,12 +76,12 @@ RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
 	actionDefinitions
 		at: aRMDActionDefinitionNode identifier
 		put: aRMDActionDefinitionNode.
-	behaviorDefinitions
-		do: [ :behavior | 
-			(behavior actionIdentifier isLocalActionIdentifierNode
-				and: [ behavior actionIdentifier shortName
+	taskDefinitions
+		do: [ :task | 
+			(task actionIdentifier isLocalActionIdentifierNode
+				and: [ task actionIdentifier shortName
 						= aRMDActionDefinitionNode identifier ])
-				ifTrue: [ behavior resetAction ] ].
+				ifTrue: [ task resetAction ] ].
 	^ aRMDActionDefinitionNode
 ]
 
@@ -93,13 +93,13 @@ RMDSimulationModel >> addAnimatDefinition: aRMDAnimatDefinitionNode [
 ]
 
 { #category : #adding }
-RMDSimulationModel >> addBehaviorDefinition: aRMDBehaviorDefinitionNode [
-	^ behaviorDefinitions add: aRMDBehaviorDefinitionNode
+RMDSimulationModel >> addRenderer: aRMDRenderer [
+	renderers add: aRMDRenderer
 ]
 
 { #category : #adding }
-RMDSimulationModel >> addRenderer: aRMDRenderer [
-	renderers add: aRMDRenderer
+RMDSimulationModel >> addTaskDefinition: aRMDTaskDefinitionNode [
+	^ taskDefinitions add: aRMDTaskDefinitionNode
 ]
 
 { #category : #'accessing - definitions' }
@@ -120,21 +120,6 @@ RMDSimulationModel >> animatInitializersDo: aBlock [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> animatNames [
 	^ animatDefinitions keys asSortedCollection
-]
-
-{ #category : #'accessing - definitions' }
-RMDSimulationModel >> behaviorDefinitions [
-	^ Array withAll: behaviorDefinitions
-]
-
-{ #category : #'accessing - definitions' }
-RMDSimulationModel >> behaviorNames [
-	^ (behaviorDefinitions collect: #name) asSortedCollection
-]
-
-{ #category : #enumerating }
-RMDSimulationModel >> behaviorsDo: aBlock [
-	behaviorDefinitions do: aBlock
 ]
 
 { #category : #'accessing - definitions' }
@@ -190,7 +175,7 @@ RMDSimulationModel >> initialize [
 	worldDefinition := RMDWorldDefinitionNode empty.
 	animatDefinitions := Dictionary new.
 	actionDefinitions := Dictionary new.
-	behaviorDefinitions := OrderedCollection new.
+	taskDefinitions := OrderedCollection new.
 	renderers := OrderedCollection new.
 ]
 
@@ -204,8 +189,8 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 		ifTrue: [ ^ self addAnimatDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isActionDefinitionNode
 		ifTrue: [ ^ self addActionDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isBehaviorDefinitionNode
-		ifTrue: [ ^ self addBehaviorDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isTaskDefinitionNode
+		ifTrue: [ ^ self addTaskDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isSimulationDefinitionNode
 		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
@@ -217,13 +202,13 @@ RMDSimulationModel >> north [
 ]
 
 { #category : #adding }
-RMDSimulationModel >> removeBehaviorDefinition: aRMDBehaviorDefinitionNode ifAbsent: errorBlock [
-	^ behaviorDefinitions remove: aRMDBehaviorDefinitionNode ifAbsent: errorBlock
+RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
+	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
 ]
 
 { #category : #adding }
-RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
-	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
+RMDSimulationModel >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
+	^ taskDefinitions remove: aRMDTaskDefinitionNode ifAbsent: errorBlock
 ]
 
 { #category : #'accessing - definitions' }
@@ -237,14 +222,14 @@ RMDSimulationModel >> renderersDo: aBlock [
 ]
 
 { #category : #'accessing - definitions' }
-RMDSimulationModel >> replaceBehavior: aRMDBehaviorDefinitionNode with: anotherRMDBehaviorDefinitionNode [
+RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
 	| index |
-	index := behaviorDefinitions indexOf: aRMDBehaviorDefinitionNode.
+	index := taskDefinitions indexOf: aRMDTaskDefinitionNode.
 	index = 0
-		ifTrue: [ behaviorDefinitions add: anotherRMDBehaviorDefinitionNode ]
+		ifTrue: [ taskDefinitions add: anotherRMDTaskDefinitionNode ]
 		ifFalse:
-			[ behaviorDefinitions at: index put: anotherRMDBehaviorDefinitionNode ].
-	^ anotherRMDBehaviorDefinitionNode
+			[ taskDefinitions at: index put: anotherRMDTaskDefinitionNode ].
+	^ anotherRMDTaskDefinitionNode
 ]
 
 { #category : #accessing }
@@ -265,6 +250,21 @@ RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 { #category : #'accessing - cells' }
 RMDSimulationModel >> south [
 	^ 0.0
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> taskDefinitions [
+	^ Array withAll: taskDefinitions
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> taskNames [
+	^ (taskDefinitions collect: #name) asSortedCollection
+]
+
+{ #category : #enumerating }
+RMDSimulationModel >> tasksDo: aBlock [
+	taskDefinitions do: aBlock
 ]
 
 { #category : #'accessing - cells' }

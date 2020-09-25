@@ -1,7 +1,7 @@
-Extension { #name : #RMDBehaviorDefinitionNode }
+Extension { #name : #RMDTaskDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDBehaviorDefinitionNode >> evalIn: aRMDInterpreter [
+RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 	| species |
 	species := subjectIdentifier = 'Cell'
 		ifTrue: [ aRMDInterpreter cellDefinition ]

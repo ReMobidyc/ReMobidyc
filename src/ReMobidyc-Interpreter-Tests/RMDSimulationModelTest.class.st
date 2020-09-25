@@ -104,21 +104,6 @@ RMDSimulationModelTest >> testAddAnimatDefinition [
 ]
 
 { #category : #running }
-RMDSimulationModelTest >> testAddBehaviorDefinition [
-	| behavior |
-	behavior := parser behaviorDefinition end
-		parse:
-			'Goat walk with
-	my speed -> my walking_speed.'.
-	model addBehaviorDefinition: behavior.
-	self
-		assert:
-			(Array
-				streamContents: [ :stream | model behaviorsDo: [ :b | stream nextPut: b ] ])
-		equals: {behavior}
-]
-
-{ #category : #running }
 RMDSimulationModelTest >> testAddRenderer [
 	| backgroundRenderer colorAlphaRenderer |
 	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
@@ -135,6 +120,21 @@ RMDSimulationModelTest >> testAddRenderer [
 		equals:
 			{backgroundRenderer.
 			colorAlphaRenderer} asSet
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testAddTaskDefinition [
+	| task |
+	task := parser taskDefinition end
+		parse:
+			'Goat walk with
+	my speed -> my walking_speed.'.
+	model addTaskDefinition: task.
+	self
+		assert:
+			(Array
+				streamContents: [ :stream | model tasksDo: [ :b | stream nextPut: b ] ])
+		equals: {task}
 ]
 
 { #category : #running }
@@ -213,78 +213,6 @@ World with
 				streamContents: [ :stream | model animatInitializersDo: [ :i | stream nextPut: i ] ])
 				asSet
 		equals: sim animatInitializers asSet
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testBehaviorDefinitions [
-	| behavior1 behavior2 behavior3 |
-	behavior1 := parser behaviorDefinition end parse: 'Goat walk.'.
-	model addBehaviorDefinition: behavior1.
-	behavior2 := parser behaviorDefinition end
-		parse:
-			'Goat eat where
-	my energy -> my blood_sugar
-	here''s energy -> here''s grass.'.
-	model addBehaviorDefinition: behavior2.
-	behavior3 := parser behaviorDefinition end
-		parse:
-			'Wolf walk where
-	my speed -> my walking_speed.'.
-	model addBehaviorDefinition: behavior3.
-	self
-		assert: model behaviorDefinitions
-		equals:
-			{behavior1.
-			behavior2.
-			behavior3}
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testBehaviorNames [
-	| behavior1 behavior2 behavior3 |
-	behavior1 := parser behaviorDefinition end parse: 'Goat walk.'.
-	model addBehaviorDefinition: behavior1.
-	behavior2 := parser behaviorDefinition end
-		parse:
-			'Goat eat where
-	my energy -> my blood_sugar
-	here''s energy -> here''s grass.'.
-	model addBehaviorDefinition: behavior2.
-	behavior3 := parser behaviorDefinition end
-		parse:
-			'Wolf walk where
-	my speed -> my walking_speed.'.
-	model addBehaviorDefinition: behavior3.
-	self
-		assert: model behaviorNames
-		equals: #('Goat walk' 'Goat eat' 'Wolf walk') asSortedCollection
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testBehaviorsDo [
-	| behavior1 behavior2 behavior3 |
-	behavior1 := parser behaviorDefinition end parse: 'Goat walk.'.
-	model addBehaviorDefinition: behavior1.
-	behavior2 := parser behaviorDefinition end
-		parse:
-			'Goat eat where
-	my energy -> my blood_sugar
-	here''s energy -> here''s grass.'.
-	model addBehaviorDefinition: behavior2.
-	behavior3 := parser behaviorDefinition end
-		parse:
-			'Wolf walk where
-	my speed -> my walking_speed.'.
-	model addBehaviorDefinition: behavior3.
-	self
-		assert:
-			(Array
-				streamContents: [ :stream | model behaviorsDo: [ :b | stream nextPut: b ] ])
-				asSet
-		equals:
-			{behavior1.
-			behavior2.
-			behavior3} asSet
 ]
 
 { #category : #running }
@@ -643,6 +571,78 @@ World with
 	self assert: sim isSimulationDefinitionNode.
 	model simulationDefinition: sim.
 	self assert: model south closeTo: 0
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testTaskDefinitions [
+	| task1 task2 task3 |
+	task1 := parser taskDefinition end parse: 'Goat walk.'.
+	model addTaskDefinition: task1.
+	task2 := parser taskDefinition end
+		parse:
+			'Goat eat where
+	my energy -> my blood_sugar
+	here''s energy -> here''s grass.'.
+	model addTaskDefinition: task2.
+	task3 := parser taskDefinition end
+		parse:
+			'Wolf walk where
+	my speed -> my walking_speed.'.
+	model addTaskDefinition: task3.
+	self
+		assert: model taskDefinitions
+		equals:
+			{task1.
+			task2.
+			task3}
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testTaskDo [
+	| task1 task2 task3 |
+	task1 := parser taskDefinition end parse: 'Goat walk.'.
+	model addTaskDefinition: task1.
+	task2 := parser taskDefinition end
+		parse:
+			'Goat eat where
+	my energy -> my blood_sugar
+	here''s energy -> here''s grass.'.
+	model addTaskDefinition: task2.
+	task3 := parser taskDefinition end
+		parse:
+			'Wolf walk where
+	my speed -> my walking_speed.'.
+	model addTaskDefinition: task3.
+	self
+		assert:
+			(Array
+				streamContents: [ :stream | model tasksDo: [ :b | stream nextPut: b ] ])
+				asSet
+		equals:
+			{task1.
+			task2.
+			task3} asSet
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testTaskNames [
+	| task1 task2 task3 |
+	task1 := parser taskDefinition end parse: 'Goat walk.'.
+	model addTaskDefinition: task1.
+	task2 := parser taskDefinition end
+		parse:
+			'Goat eat where
+	my energy -> my blood_sugar
+	here''s energy -> here''s grass.'.
+	model addTaskDefinition: task2.
+	task3 := parser taskDefinition end
+		parse:
+			'Wolf walk where
+	my speed -> my walking_speed.'.
+	model addTaskDefinition: task3.
+	self
+		assert: model taskNames
+		equals: #('Goat walk' 'Goat eat' 'Wolf walk') asSortedCollection
 ]
 
 { #category : #running }
