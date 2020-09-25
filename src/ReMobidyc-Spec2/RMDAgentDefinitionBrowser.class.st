@@ -13,10 +13,6 @@ Class {
 		'addRendererButton',
 		'removeRendererButton',
 		'editRendererButton',
-		'behaviorList',
-		'addBehaviorButton',
-		'removeBehaviorButton',
-		'editBehaviorButton',
 		'actionSourceText',
 		'replacementList',
 		'addReplacementButton',
@@ -24,7 +20,11 @@ Class {
 		'editReplacementButton',
 		'sourceText',
 		'verbIdentifierField',
-		'objectIdentifierField'
+		'objectIdentifierField',
+		'addTaskButton',
+		'taskList',
+		'editTaskButton',
+		'removeTaskButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -69,22 +69,22 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 						position: 0.6;
 						add:
 							(SpBoxLayout newVertical
-								add: 'Behaviors' expand: false;
+								add: 'Tasks' expand: false;
 								add:
 									(SpPanedLayout newHorizontal
 										position: 0.3;
-										add: #behaviorList;
+										add: #taskList;
 										add: #actionSourceText);
 								add:
 									(SpBoxLayout newHorizontal
-										add: #addBehaviorButton width: self buttonHeight;
-										add: #removeBehaviorButton width: self buttonHeight;
+										add: #addTaskButton width: self buttonHeight;
+										add: #removeTaskButton width: self buttonHeight;
 										yourself)
 									height: self buttonHeight;
 								yourself);
 						add:
 							(SpBoxLayout newVertical
-								add: 'Adaptation' expand: false;
+								add: 'Task Specialization' expand: false;
 								add:
 									(SpBoxLayout newHorizontal
 										add: #verbIdentifierField;
@@ -107,7 +107,7 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> acceptObjectIdentifierField [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil: [ :behaviorDefinition | 
 			| newObjectIdentifier |
 			newObjectIdentifier := objectIdentifierField lastValidSyntaxNode
@@ -119,12 +119,12 @@ RMDAgentDefinitionBrowser >> acceptObjectIdentifierField [
 								and: [ behavior objectIdentifier = newObjectIdentifier ] ])
 						ifTrue: [ objectIdentifierField beError ]
 						ifFalse: [ behaviorDefinition objectIdentifier: newObjectIdentifier.
-							self updateBehaviorList ] ] ]
+							self updateTaskList ] ] ]
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> acceptVerbIdentifierField [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil: [ :behaviorDefinition | 
 			| newVerb |
 			newVerb := verbIdentifierField lastValidSyntaxNode.
@@ -139,29 +139,8 @@ RMDAgentDefinitionBrowser >> acceptVerbIdentifierField [
 								verbIdentifier: newVerb;
 								resetAction.
 							self
-								updateBehaviorList;
+								updateTaskList;
 								updateSourceText ] ] ]
-]
-
-{ #category : #operations }
-RMDAgentDefinitionBrowser >> addBehavior [
-	| actionDefinitionBrowser |
-	actionDefinitionBrowser := RMDActionDefinitionBrowser
-		on: simulationModel.
-	actionDefinitionBrowser openDialogWithSpec
-		okAction: [ | actionIdentifier actionDefinition |
-			actionIdentifier := actionDefinitionBrowser actionIdentifier.
-			actionDefinition := actionIdentifier resolveWith: simulationModel.
-			simulationModel
-				addBehaviorDefinition:
-					(RMDBehaviorDefinitionNode
-						subjectIdentifier: self agentName
-						verbIdentifier: actionIdentifier shortName
-						objectIdentifier: actionDefinition object
-						actionIdentifier: actionIdentifier
-						within: nil
-						propertyBinds: Array new).
-			self updateBehaviorList ]
 ]
 
 { #category : #operations }
@@ -185,7 +164,7 @@ RMDAgentDefinitionBrowser >> addRenderer [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addReplacement [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil: [ :behavior | 
 			| bindEditor |
 			(bindEditor := RMDPropertyBindEditor
@@ -202,6 +181,27 @@ RMDAgentDefinitionBrowser >> addReplacement [
 							self
 								updateReplacementList;
 								updateSourceText ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addTask [
+	| actionDefinitionBrowser |
+	actionDefinitionBrowser := RMDActionDefinitionBrowser
+		on: simulationModel.
+	actionDefinitionBrowser openDialogWithSpec
+		okAction: [ | actionIdentifier actionDefinition |
+			actionIdentifier := actionDefinitionBrowser actionIdentifier.
+			actionDefinition := actionIdentifier resolveWith: simulationModel.
+			simulationModel
+				addBehaviorDefinition:
+					(RMDBehaviorDefinitionNode
+						subjectIdentifier: self agentName
+						verbIdentifier: actionIdentifier shortName
+						objectIdentifier: actionDefinition object
+						actionIdentifier: actionIdentifier
+						within: nil
+						propertyBinds: Array new).
+			self updateTaskList ]
 ]
 
 { #category : #accessing }
@@ -240,7 +240,7 @@ RMDAgentDefinitionBrowser >> editRenderer [
 RMDAgentDefinitionBrowser >> editReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :oldBind | 
-			behaviorList selection selectedItem
+			taskList selection selectedItem
 				ifNotNil: [ :behavior | 
 					| bindEditor |
 					bindEditor := RMDPropertyBindEditor
@@ -329,17 +329,17 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		action: [ self editRenderer ];
 		disable;
 		yourself.
-	behaviorList := self newTable
+	taskList := self newTable
 		beSingleSelection;
 		beResizable;
 		addColumn: (SpStringTableColumn evaluated: [ :item | item verbIdentifier ]);
 		addColumn:
 			(SpStringTableColumn
 				evaluated: [ :item | item objectIdentifier ifNil: [ '' ] ]);
-		whenModelChangedDo: [ behaviorList selectItem: nil ];
+		whenModelChangedDo: [ taskList selectItem: nil ];
 		whenSelectionChangedDo: [ | selected |
-			selected := behaviorList selection selectedItem notNil.
-			removeBehaviorButton enabled: selected.
+			selected := taskList selection selectedItem notNil.
+			removeTaskButton enabled: selected.
 			self
 				updateVerbIdentifierField;
 				updateObjectIdentifierField;
@@ -347,13 +347,13 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 				updateActionSourceText;
 				updateSourceText ];
 		yourself.
-	addBehaviorButton := self newButton
+	addTaskButton := self newButton
 		icon: self addIcon;
-		action: [ self addBehavior ];
+		action: [ self addTask ];
 		yourself.
-	removeBehaviorButton := self newButton
+	removeTaskButton := self newButton
 		icon: self removeIcon;
-		action: [ self removeBehavior ];
+		action: [ self removeTask ];
 		disable;
 		yourself.
 	actionSourceText := (self
@@ -424,16 +424,6 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #operations }
-RMDAgentDefinitionBrowser >> removeBehavior [
-	behaviorList selection selectedItem
-		ifNotNil: [ :behaviorDefinition | 
-			simulationModel
-				removeBehaviorDefinition: behaviorDefinition
-				ifAbsent: [ KeyNotFound signal: behaviorDefinition ].
-			self updateBehaviorList ]
-]
-
-{ #category : #operations }
 RMDAgentDefinitionBrowser >> removeProperty [
 	propertyList selection selectedItem
 		ifNotNil: [ :propertyNode | 
@@ -468,12 +458,22 @@ RMDAgentDefinitionBrowser >> removeRenderer [
 RMDAgentDefinitionBrowser >> removeReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :bind | 
-			behaviorList selection selectedItem
+			taskList selection selectedItem
 				ifNotNil: [ :behavior | 
 					behavior propertyBinds: (behavior propertyBinds copyWithout: bind).
 					self
 						updateReplacementList;
 						updateSourceText ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeTask [
+	taskList selection selectedItem
+		ifNotNil: [ :behaviorDefinition | 
+			simulationModel
+				removeBehaviorDefinition: behaviorDefinition
+				ifAbsent: [ KeyNotFound signal: behaviorDefinition ].
+			self updateTaskList ]
 ]
 
 { #category : #enumerating }
@@ -486,13 +486,13 @@ RMDAgentDefinitionBrowser >> setSimulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
 	self updatePropertyList.
 	self updateRendererList.
-	self updateBehaviorList
+	self updateTaskList
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateActionSourceText [
 	simulationModel
-		ifNotNil: [ behaviorList selection selectedItem
+		ifNotNil: [ taskList selection selectedItem
 				ifNotNil: [ :behaviorDefinition | 
 					actionSourceText
 						text:
@@ -502,20 +502,8 @@ RMDAgentDefinitionBrowser >> updateActionSourceText [
 ]
 
 { #category : #updating }
-RMDAgentDefinitionBrowser >> updateBehaviorList [
-	simulationModel
-		ifNotNil: [ | selectedBehavior |
-			selectedBehavior := behaviorList selection selectedItem.
-			behaviorList
-				items:
-					(simulationModel behaviorDefinitions
-						select: [ :behavior | behavior subjectIdentifier = self agentName ]);
-				selectItem: selectedBehavior ]
-]
-
-{ #category : #updating }
 RMDAgentDefinitionBrowser >> updateObjectIdentifierField [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil: [ :behaviorDefinition | 
 			behaviorDefinition objectIdentifier
 				ifNotNil: [ :objectIdentifier | objectIdentifierField text: objectIdentifier ]
@@ -548,7 +536,7 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateReplacementList [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil: [ :behaviorDefinition | 
 			| font width1 width2 |
 			font := TextStyle defaultFont.
@@ -566,15 +554,27 @@ RMDAgentDefinitionBrowser >> updateReplacementList [
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateSourceText [
 	simulationModel
-		ifNotNil: [ behaviorList selection selectedItem
+		ifNotNil: [ taskList selection selectedItem
 				ifNotNil: [ :behaviorDefinition | 
 					sourceText
 						text: (behaviorDefinition actionWith: simulationModel) printString asText ] ]
 ]
 
 { #category : #updating }
+RMDAgentDefinitionBrowser >> updateTaskList [
+	simulationModel
+		ifNotNil: [ | selectedBehavior |
+			selectedBehavior := taskList selection selectedItem.
+			taskList
+				items:
+					(simulationModel behaviorDefinitions
+						select: [ :behavior | behavior subjectIdentifier = self agentName ]);
+				selectItem: selectedBehavior ]
+]
+
+{ #category : #updating }
 RMDAgentDefinitionBrowser >> updateVerbIdentifierField [
-	behaviorList selection selectedItem
+	taskList selection selectedItem
 		ifNotNil:
 			[ :behaviorDefinition | verbIdentifierField text: behaviorDefinition verbIdentifier ]
 ]

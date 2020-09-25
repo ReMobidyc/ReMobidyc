@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSimulationRunner,
+	#name : #RMDObservatory,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #specs }
-RMDSimulationRunner class >> defaultSpec [
+RMDObservatory class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add:
 			(SpBoxLayout newHorizontal
@@ -32,26 +32,26 @@ RMDSimulationRunner class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-RMDSimulationRunner class >> interpreter: aRMDInterpreter [
+RMDObservatory class >> interpreter: aRMDInterpreter [
 	^ self new
 		setInterpreter: aRMDInterpreter;
 		yourself
 ]
 
 { #category : #examples }
-RMDSimulationRunner class >> sugarScape [
-	<script: 'RMDSimulationRunner sugarScape openWithSpec'>
+RMDObservatory class >> sugarScape [
+	<script: 'RMDObservatory sugarScape openWithSpec'>
 	^ self interpreter: RMDInterpreter sugarScape
 ]
 
 { #category : #api }
-RMDSimulationRunner >> forceKill [
+RMDObservatory >> forceKill [
 	self runState: false.
 	process ifNotNil: #terminate
 ]
 
 { #category : #initialization }
-RMDSimulationRunner >> initializePresenters [
+RMDObservatory >> initializePresenters [
 	super initializePresenters.
 	views := self newNotebook.
 	timeLabel := self newLabel
@@ -83,34 +83,35 @@ RMDSimulationRunner >> initializePresenters [
 		label: 'step';
 		action: [ self stepSimulation ];
 		enabled: true;
-		yourself
+		yourself.
+	self whenDisplayDo: [ (views pageAt: 1) activePresenter updateImage ]
 ]
 
 { #category : #initialization }
-RMDSimulationRunner >> initializeWindow: aWindowPresenter [
+RMDObservatory >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
-		title: 'Re:Mobidyc - Simulation Runner';
+		title: 'Re:Mobidyc - Observatory';
 		initialExtent: 800 @ 600
 ]
 
 { #category : #api }
-RMDSimulationRunner >> resetSimulation [
+RMDObservatory >> resetSimulation [
 	interpreter setupSimulation
 ]
 
 { #category : #api }
-RMDSimulationRunner >> runState [
+RMDObservatory >> runState [
 	^ runButton state == true
 ]
 
 { #category : #api }
-RMDSimulationRunner >> runState: aBoolean [
+RMDObservatory >> runState: aBoolean [
 	runButton state: aBoolean = true
 ]
 
 { #category : #initialization }
-RMDSimulationRunner >> setInterpreter: aRMDInterpreter [
+RMDObservatory >> setInterpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	visualizer := RMDVisualizer new.
@@ -125,18 +126,22 @@ RMDSimulationRunner >> setInterpreter: aRMDInterpreter [
 			(self newNotebookPage
 				presenterProvider: [ visualizer asPresenter
 						interpreter: interpreter;
+						updateImage;
 						yourself ];
+					whenRetrievedDo: [ :content | content updateImage ] ;
 				title: 'Map').
 	timeSlider
 		min: 0.0;
 		max:
 			(interpreter simulationModel simulationDefinition timeDefinition
 				duration evalIn: interpreter).
-	self updateTimeLabel
+	self
+		updateTimeLabel;
+		resetSimulation
 ]
 
 { #category : #api }
-RMDSimulationRunner >> stepSimulation [
+RMDObservatory >> stepSimulation [
 	self runState: false.
 	[ process isNil or: [ process isTerminated ] ]
 		whileFalse: [ 1 milliSecond wait ].
@@ -144,12 +149,12 @@ RMDSimulationRunner >> stepSimulation [
 ]
 
 { #category : #api }
-RMDSimulationRunner >> toggleRunPauseSimulation [
+RMDObservatory >> toggleRunPauseSimulation [
 	self runState: self runState not
 ]
 
 { #category : #updating }
-RMDSimulationRunner >> updateTimeLabel [
+RMDObservatory >> updateTimeLabel [
 	interpreter
 		ifNotNil: [ timeLabel
 				label:

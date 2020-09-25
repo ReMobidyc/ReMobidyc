@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSimulationModelBrowser,
+	#name : #RMDSimulationModeler,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'simulationModel',
@@ -11,27 +11,27 @@ Class {
 }
 
 { #category : #specs }
-RMDSimulationModelBrowser class >> defaultSpec [
+RMDSimulationModeler class >> defaultSpec [
 	^ SpBoxLayout newVertical
 		add: #runButton height: self buttonHeight;
 		add: #views yourself
 ]
 
 { #category : #'instance creation' }
-RMDSimulationModelBrowser class >> on: aRMDSimulationModel [
+RMDSimulationModeler class >> on: aRMDSimulationModel [
 	^ self new
 		setSimulationModel: aRMDSimulationModel;
 		yourself
 ]
 
 { #category : #examples }
-RMDSimulationModelBrowser class >> sugarScape [
-	<script: 'RMDSimulationModelBrowser sugarScape openWithSpec'>
-	^ RMDSimulationModelBrowser on: RMDSimulationModel sugarScape
+RMDSimulationModeler class >> sugarScape [
+	<script: 'RMDSimulationModeler sugarScape openWithSpec'>
+	^ RMDSimulationModeler on: RMDSimulationModel sugarScape
 ]
 
 { #category : #private }
-RMDSimulationModelBrowser >> addAnimatPages [
+RMDSimulationModeler >> addAnimatPages [
 	simulationModel animatNames
 		do: [ :animat | 
 			views
@@ -43,7 +43,7 @@ RMDSimulationModelBrowser >> addAnimatPages [
 ]
 
 { #category : #private }
-RMDSimulationModelBrowser >> addCellPage [
+RMDSimulationModeler >> addCellPage [
 	views
 		addPage:
 			(self newNotebookPage
@@ -52,7 +52,7 @@ RMDSimulationModelBrowser >> addCellPage [
 ]
 
 { #category : #private }
-RMDSimulationModelBrowser >> addWorldPage [
+RMDSimulationModeler >> addWorldPage [
 	views
 		addPage:
 			(self newNotebookPage
@@ -61,13 +61,13 @@ RMDSimulationModelBrowser >> addWorldPage [
 ]
 
 { #category : #initialization }
-RMDSimulationModelBrowser >> initialize [
+RMDSimulationModeler >> initialize [
 	super initialize.
 
 ]
 
 { #category : #initialization }
-RMDSimulationModelBrowser >> initializePresenters [
+RMDSimulationModeler >> initializePresenters [
 	super initializePresenters.
 	views := self newNotebook
 		addPage:
@@ -84,7 +84,7 @@ RMDSimulationModelBrowser >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDSimulationModelBrowser >> initializeWindow: aWindowPresenter [
+RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Re:Mobidyc - Simulation Modeler';
@@ -92,7 +92,7 @@ RMDSimulationModelBrowser >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #api }
-RMDSimulationModelBrowser >> openSimulationRunner [
+RMDSimulationModeler >> openSimulationRunner [
 	| interpreter |
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
@@ -100,13 +100,13 @@ RMDSimulationModelBrowser >> openSimulationRunner [
 		simulationModel: RMDSimulationModel sugarScape;
 		yourself.
 	interpreter setupSimulation.
-	^ (RMDSimulationRunner interpreter: interpreter)
+	^ (RMDObservatory interpreter: interpreter)
 		openWithSpec;
 		yourself
 ]
 
 { #category : #private }
-RMDSimulationModelBrowser >> setSimulationModel: aRMDSimulationModel [
+RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
 	simulationDefinitionPresenter
 		ifNotNil: [ simulationDefinitionPresenter
@@ -118,6 +118,6 @@ RMDSimulationModelBrowser >> setSimulationModel: aRMDSimulationModel [
 ]
 
 { #category : #'api-events' }
-RMDSimulationModelBrowser >> whenRunStateChangedDo: aBlock [
+RMDSimulationModeler >> whenRunStateChangedDo: aBlock [
 	runButton whenStateChangedDo: aBlock
 ]

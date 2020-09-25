@@ -320,7 +320,7 @@ RMDGrammarTest >> testBehaviorDefinition [
 	node := grammar behaviorDefinition end
 		parse:
 			'
-Goat move namely walk@local where
+Goat move namely walk@model where
 	my energy -> sugar
 	my speed -> slow_speed.' trim.
 	self deny: node isPetit2Failure.
