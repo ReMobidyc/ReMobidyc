@@ -68,6 +68,12 @@ RMDBuiltinRepository >> gain_upto [
 	my delta thing'' = min(my amount, my maximum - my thing).' asRMDActionDefinition
 ]
 
+{ #category : #testing }
+RMDBuiltinRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
+	^ aRMDActionIdentifierNode isBuiltinActionIdentifierNode
+		and: [ super includesActionIdentifier: aRMDActionIdentifierNode ]
+]
+
 { #category : #actions }
 RMDBuiltinRepository >> lose [
 	^ RMDActionDefinitionNode lose

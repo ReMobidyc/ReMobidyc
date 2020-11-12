@@ -25,6 +25,15 @@ RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
 ]
 
+{ #category : #enumerating }
+RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
+	self
+		nodesDo: [ :node | 
+			node = aRMDSyntaxNode
+				ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #testing }
 RMDSyntaxNode >> isActionDefinitionNode [
 	^ false

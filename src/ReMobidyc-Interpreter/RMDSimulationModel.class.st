@@ -22,12 +22,12 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDAnimatDefinitionNode goat;
 		load: RMDActionDefinitionNode respire;
 		load: RMDActionDefinitionNode move;
-		load: RMDActionDefinitionNode eat_grass;
+		load: RMDActionDefinitionNode graze;
 		load: (RMDTaskDefinitionNode goat_respire: '2000 [kcal/day]');
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode
-				goat_eat_grass: '3000 [kcal/day]'
+				goat_graze: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:

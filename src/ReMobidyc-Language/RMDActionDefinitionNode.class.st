@@ -45,21 +45,21 @@ where
 ]
 
 { #category : #'typical instances' }
-RMDActionDefinitionNode class >> eat_grass [
-	<script: 'RMDActionDefinitionNode eat_grass inspect'>
-	^ 'to eat_grass is
+RMDActionDefinitionNode class >> gain [
+	<script: 'RMDActionDefinitionNode lose gain'>
+	^ RMDBuiltinRepository current gain
+]
+
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> graze [
+	<script: 'RMDActionDefinitionNode graze inspect'>
+	^ 'to graze is
 presume here''s grass > 0[kcal] and my energy < my max_energy
 	here''s delta grass'' = -amount
 	my delta energy'' = amount
 where
 	amount = min(my max_energy - my energy, my diet * delta time, here''s grass).
 ' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> gain [
-	<script: 'RMDActionDefinitionNode lose gain'>
-	^ RMDBuiltinRepository current gain
 ]
 
 { #category : #'typical instances' }

@@ -27,10 +27,10 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 ]
 
 { #category : #'typical instances' }
-RMDTaskDefinitionNode class >> goat_eat_grass: dietString upto: maxString [
+RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 	<script:
-		'(RMDTaskDefinitionNode goat_eat_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat eat_grass@model where
+		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
+	^ ('Goat graze@model where
 	my energy -> my blood_sugar
 	my max_energy -> ' , maxString
 		,
