@@ -100,14 +100,8 @@ RMDAgentDefinitionBrowser >> addTask [
 	| actionDefinitionBrowser |
 	actionDefinitionBrowser := (RMDTaskDefinitionEditor
 		on: simulationModel)
-		taskDefinition:
-			(RMDTaskDefinitionNode
-				subjectIdentifier: self agentName
-				verbIdentifier: nil
-				objectIdentifier: nil
-				actionIdentifier: nil
-				within: nil
-				propertyBinds: Array new);
+		taskDefinition: nil;
+		agentName: self agentName;
 		yourself.
 	actionDefinitionBrowser openDialogWithSpec
 		okAction: [ actionDefinitionBrowser taskDefinition
@@ -156,6 +150,7 @@ RMDAgentDefinitionBrowser >> editTask [
 			actionDefinitionBrowser := (RMDTaskDefinitionEditor
 				on: simulationModel)
 				taskDefinition: oldTaskDefinition copy;
+				agentName: self agentName;
 				yourself.
 			actionDefinitionBrowser openDialogWithSpec
 				okAction: [ actionDefinitionBrowser taskDefinition

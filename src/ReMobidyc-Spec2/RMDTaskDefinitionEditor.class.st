@@ -3,6 +3,7 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'simulationModel',
+		'agentName',
 		'repositoryList',
 		'actionList',
 		'templateText',
@@ -130,8 +131,40 @@ RMDTaskDefinitionEditor >> actionIdentifier [
 ]
 
 { #category : #operations }
+RMDTaskDefinitionEditor >> addReplacement [
+	self taskDefinition
+		ifNotNil: [ :taskDefinition | 
+			| bindEditor |
+			(bindEditor := RMDPropertyBindEditor
+				actionDefinition: (taskDefinition actionIdentifier resolveWith: simulationModel)
+				except:
+					(taskDefinition propertyBinds
+						collect: [ :bind | 
+							RMDPropertyVariableNode
+								identifier: bind actionProperty
+								agent: bind actionAgent ])) openDialogWithSpec
+				okAction: [ bindEditor propertyBindNode
+						ifNotNil: [ :bindNode | 
+							taskDefinition
+								propertyBinds: (taskDefinition propertyBinds copyWith: bindNode).
+							self
+								updateReplacementList;
+								updateSourceText ] ] ]
+]
+
+{ #category : #operations }
 RMDTaskDefinitionEditor >> addRepository [
 	^ self notYetImplemented
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionEditor >> agentName [
+	^ agentName
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionEditor >> agentName: aString [
+	agentName := aString
 ]
 
 { #category : #operations }
@@ -206,7 +239,8 @@ RMDTaskDefinitionEditor >> initializePresenters [
 				title: 'object'
 				evaluated: [ :item | (item resolveWith: simulationModel) object ifNil: [ '' ] ]);
 		whenModelChangedDo: [ actionList selectItem: nil ];
-		whenSelectionChangedDo: [ self taskDefinition
+		whenSelectionChangedDo: [ self updateTaskDefinition.
+			self taskDefinition
 				ifNotNil: [ :taskDefinition | 
 					self actionIdentifier
 						ifNotNil: [ :actionIdentifier | 
@@ -214,7 +248,6 @@ RMDTaskDefinitionEditor >> initializePresenters [
 							self updateObjectIdentifierField ].
 					self
 						updateTemplateText;
-						updateTaskDefinition;
 						updateReplacementList;
 						updateSourceText ] ];
 		yourself.
@@ -238,20 +271,34 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		beResizable;
 		addColumn:
 			(SpStringTableColumn
-				evaluated:
-					[ :item | item actionAgent ifNil: [ 'my' ] ifNotNil: [ :agent | agent , '''s' ] ])
-				beNotExpandable;
+				evaluated: [ :item | 
+					| agent actionDefinition |
+					agent := (item actionAgent
+						ifNil: [ 'my' ]
+						ifNotNil: [ :name | name , '''s' ]) asText.
+					actionDefinition := self actionDefinition.
+					(actionDefinition isNil
+						or: [ (actionDefinition
+								includesNode:
+									(RMDPropertyVariableNode
+										identifier: item actionProperty
+										agent: item actionAgent)) not ])
+						ifTrue: [ agent makeAllColor: Color red ].
+					agent ]) beNotExpandable;
 		addColumn:
 			(SpStringTableColumn
 				evaluated: [ :item | 
-					(self actionDefinition
-						includesNode:
-							(RMDPropertyVariableNode
-								identifier: item actionProperty
-								agent: item actionAgent))
-						ifTrue: [ item actionProperty ]
-						ifFalse: [ item actionProperty asText makeAllColor: Color red ] ])
-				beNotExpandable;
+					| actionProperty actionDefinition |
+					actionProperty := item actionProperty asText.
+					actionDefinition := self actionDefinition.
+					(actionDefinition isNil
+						or: [ (actionDefinition
+								includesNode:
+									(RMDPropertyVariableNode
+										identifier: item actionProperty
+										agent: item actionAgent)) not ])
+						ifTrue: [ actionProperty makeAllColor: Color red ].
+					actionProperty ]) beNotExpandable;
 		addColumn:
 			((SpImageTableColumn evaluated: [ :item | self replacementIcon ])
 				width: 20);
@@ -417,11 +464,22 @@ RMDTaskDefinitionEditor >> updateSourceText [
 
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateTaskDefinition [
-	self taskDefinition
-		ifNotNil: [ :taskDefinition | 
-			self actionIdentifier
+	self actionIdentifier
+		ifNotNil: [ :actionIdentifier | 
+			self taskDefinition
+				ifNil: [ self
+						taskDefinition:
+							(RMDTaskDefinitionNode
+								subjectIdentifier: self agentName
+								verbIdentifier:
+									(verbIdentifierField text asString trim
+										ifEmpty: [ actionIdentifier shortName ])
+								objectIdentifier: (objectIdentifierField text asString trim ifEmpty: [ nil ])
+								actionIdentifier: actionIdentifier
+								within: nil
+								propertyBinds: Array new) ]
 				ifNotNil:
-					[ :actionIdentifier | taskDefinition actionIdentifier: actionIdentifier ] ]
+					[ :taskDefinition | taskDefinition actionIdentifier: actionIdentifier ] ]
 ]
 
 { #category : #updating }
@@ -440,6 +498,7 @@ RMDTaskDefinitionEditor >> updateTemplateText [
 RMDTaskDefinitionEditor >> updateVerbIdentifierField [
 	objectIdentifierField text asString trim
 		ifEmpty: [ self taskDefinition
-				ifNotNil:
-					[ :taskDefinition | verbIdentifierField text: taskDefinition verbIdentifier ] ]
+				ifNotNil: [ :taskDefinition | 
+					verbIdentifierField
+						text: (taskDefinition verbIdentifier ifNil: [ String new ]) ] ]
 ]
