@@ -81,8 +81,11 @@ RMDActionDefinitionNode class >> lose [
 RMDActionDefinitionNode class >> move [
 	<script: 'RMDActionDefinitionNode move inspect'>
 	^ 'to move is
-	my d/dt x'' = cos(my heading) * my speed
-	my d/dt y'' = sin(my heading) * my speed.' asRMDActionDefinition
+	my d/dt x'' = cos(theta) * r
+	my d/dt y'' = sin(theta) * r
+where
+	theta = my heading
+	r = my speed.' asRMDActionDefinition
 ]
 
 { #category : #'instance creation' }

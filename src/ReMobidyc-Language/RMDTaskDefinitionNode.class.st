@@ -41,9 +41,9 @@ RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
 	<script: '(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
-	^ ('Goat respire@model where
-	my energy -> my blood_sugar
-	my respiration_rate -> ' , aString , '.') asRMDTaskDefinition
+	^ ('Goat respire namely lose where
+	my thing -> my blood_sugar
+	my amount -> min(my blood_sugar, ' , aString , ' * delta time).') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }

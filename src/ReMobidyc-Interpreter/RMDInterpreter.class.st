@@ -41,7 +41,7 @@ presume my sugar >= 0
 ' trim asRMDActionDefinition.
 	interpreter load: metabolism.
 	goatMetabolize := '
-Goat metabolize where
+Goat metabolize@model where
 	my sugar -> my energy
 	my basal_metabolism -> my basal_metabolism.' trim
 		asRMDTaskDefinition.

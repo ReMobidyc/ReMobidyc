@@ -97,7 +97,7 @@ RMDSimulationModeler >> openSimulationRunner [
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
 		setContext: RMDActionContext new;
-		simulationModel: RMDSimulationModel sugarScape;
+		simulationModel: simulationModel;
 		yourself.
 	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)

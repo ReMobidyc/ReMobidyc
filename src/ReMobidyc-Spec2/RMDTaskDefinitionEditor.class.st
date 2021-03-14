@@ -336,7 +336,7 @@ RMDTaskDefinitionEditor >> initializePresenters [
 { #category : #initialization }
 RMDTaskDefinitionEditor >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Actions'.
+	aWindowPresenter title: 'Task definition'.
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 

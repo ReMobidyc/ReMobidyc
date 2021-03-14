@@ -115,7 +115,6 @@ RMDGrammar >> agentIdentifier [
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
 	^ (('my' asPParser, #space asPParser) trimBlanks ==> [ :str | nil ])
-		/ 'the' asPParser trimBlanks
 		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
 ]
 

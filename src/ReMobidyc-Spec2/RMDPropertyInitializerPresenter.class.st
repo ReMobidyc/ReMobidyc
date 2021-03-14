@@ -54,7 +54,8 @@ RMDPropertyInitializerPresenter >> initializePresenters [
 		beIdentifier;
 		autoAccept: true;
 		whenLastValidSyntaxNodeChangedDo: [ node
-				ifNotNil: [ node identifier: identifierField text asString trim ] ];
+				ifNotNil: [ identifierField text asString trim
+						ifNotEmpty: [ :id | node identifier: id ] ] ];
 		yourself.
 	expressionField := self newSyntaxNodeTextInput
 		beExpression;
