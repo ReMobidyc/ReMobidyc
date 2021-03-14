@@ -30,12 +30,10 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat graze@model where
-	my energy -> my blood_sugar
-	my max_energy -> ' , maxString
-		,
-			'
-	my diet -> ' , dietString , '.') asRMDTaskDefinition
+	^ ('Goat graze namely collect where
+	my thing -> my blood_sugar
+	here''s thing -> here''s grass
+	my greed -> min(' , maxString, ' - my blood_sugar, ', dietString, ' * delta time, here''s grass).') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
