@@ -53,6 +53,12 @@ RMDPropertyInitializerNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #'type checking' }
+RMDPropertyInitializerNode >> inferType [
+	self unifyType: expression inferType.
+	^ type
+]
+
 { #category : #printing }
 RMDPropertyInitializerNode >> isPropertyInitializerNode [
 	^ true

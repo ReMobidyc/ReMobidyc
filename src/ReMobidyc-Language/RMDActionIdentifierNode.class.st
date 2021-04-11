@@ -21,6 +21,11 @@ RMDActionIdentifierNode >> hash [
 	^ self class hash bitXor: shortName hash
 ]
 
+{ #category : #'type checking' }
+RMDActionIdentifierNode >> inferType [
+	^ nil
+]
+
 { #category : #testing }
 RMDActionIdentifierNode >> isActionIdentifierNode [
 	^ true

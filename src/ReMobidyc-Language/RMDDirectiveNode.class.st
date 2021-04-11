@@ -27,6 +27,11 @@ RMDDirectiveNode >> hash [
 	^ self class hash bitXor: directive hash
 ]
 
+{ #category : #'type checking' }
+RMDDirectiveNode >> inferType [
+	^ self unifyType: (self typeOfDirective: directive)
+]
+
 { #category : #accessing }
 RMDDirectiveNode >> precedence [
 	^ 1
@@ -37,4 +42,21 @@ RMDDirectiveNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: directive
 		ifPresent: [ :node | directive := node copy ]
+]
+
+{ #category : #'type checking' }
+RMDDirectiveNode >> typeOfDirective: aString [
+	aString = 'directionOfGradient'
+		ifTrue: [ ^ RMDUnit rad ].
+	aString = 'direction'
+		ifTrue: [ ^ RMDUnit rad ].
+	aString = 'distance'
+		ifTrue: [ ^ RMDUnit m ].
+	aString = 'time'
+		ifTrue: [ ^ RMDUnit s ].
+	aString = 'delta time'
+		ifTrue: [ ^ RMDUnit s ].
+	aString = 'terminate'
+		ifTrue: [ ^ RMDUnit noDimension ].
+	^ self error: 'Unknown directive: ' , aString
 ]

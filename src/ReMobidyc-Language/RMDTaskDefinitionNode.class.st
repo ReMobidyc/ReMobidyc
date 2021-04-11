@@ -30,20 +30,18 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat graze@model where
-	my energy -> my blood_sugar
-	my max_energy -> ' , maxString
-		,
-			'
-	my diet -> ' , dietString , '.') asRMDTaskDefinition
+	^ ('Goat graze namely collect where
+	my thing -> my blood_sugar
+	here''s thing -> here''s grass
+	my greed -> min(' , maxString, ' - my blood_sugar, ', dietString, ' * delta time, here''s grass).') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
 	<script: '(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
-	^ ('Goat respire@model where
-	my energy -> my blood_sugar
-	my respiration_rate -> ' , aString , '.') asRMDTaskDefinition
+	^ ('Goat respire namely lose where
+	my thing -> my blood_sugar
+	my amount -> min(my blood_sugar, ' , aString , ' * delta time).') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
@@ -121,6 +119,12 @@ RMDTaskDefinitionNode >> hash [
 	^ ((((subjectIdentifier hash bitXor: verbIdentifier hash)
 		bitXor: objectIdentifier hash) bitXor: range hash)
 		bitXor: propertyBinds hash) bitXor: actionIdentifier hash
+]
+
+{ #category : #'type checking' }
+RMDTaskDefinitionNode >> inferType [
+	action ifNotNil: [ action inferType ].
+	^ type
 ]
 
 { #category : #testing }

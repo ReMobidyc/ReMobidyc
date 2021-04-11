@@ -41,7 +41,7 @@ presume my sugar >= 0
 ' trim asRMDActionDefinition.
 	interpreter load: metabolism.
 	goatMetabolize := '
-Goat metabolize where
+Goat metabolize@model where
 	my sugar -> my energy
 	my basal_metabolism -> my basal_metabolism.' trim
 		asRMDTaskDefinition.
@@ -80,11 +80,7 @@ RMDInterpreter class >> standardLibrary [
 			('sum' -> RMDFunction sum).
 			('sin' -> RMDFunction sin).
 			('cos' -> RMDFunction cos).
-			('exp' -> RMDFunction exp).
-			('log' -> RMDFunction log).
-			('ln' -> RMDFunction ln).
-			('abs' -> RMDFunction abs).
-			('squareRoot' -> RMDFunction squareRoot)} asDictionary ]
+			('abs' -> RMDFunction abs)} asDictionary ]
 ]
 
 { #category : #examples }
@@ -637,6 +633,23 @@ RMDInterpreter >> time: aNumber [
 { #category : #simulating }
 RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
+]
+
+{ #category : #directives }
+RMDInterpreter >> typeOfDirective: aString [
+	aString = 'directionOfGradient'
+		ifTrue: [ ^ RMDUnit rad ].
+	aString = 'direction'
+		ifTrue: [ ^ RMDUnit rad ].
+	aString = 'distance'
+		ifTrue: [ ^ RMDUnit m ].
+	aString = 'time'
+		ifTrue: [ ^ RMDUnit s ].
+	aString = 'delta time'
+		ifTrue: [ ^ RMDUnit s ].
+	aString = 'terminate'
+		ifTrue: [ ^ RMDUnit noDimension ].
+	^ self error: 'Unknown directive: ' , aString
 ]
 
 { #category : #'space access' }

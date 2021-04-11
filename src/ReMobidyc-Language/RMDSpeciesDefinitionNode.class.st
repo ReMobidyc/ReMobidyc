@@ -71,6 +71,12 @@ RMDSpeciesDefinitionNode >> hash [
 	^ self class hash bitXor: propertyDeclarations hash
 ]
 
+{ #category : #'type checking' }
+RMDSpeciesDefinitionNode >> inferType [
+	propertyDeclarations do: [ :node | node inferType ].
+	^ type
+]
+
 { #category : #testing }
 RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
 	^ true

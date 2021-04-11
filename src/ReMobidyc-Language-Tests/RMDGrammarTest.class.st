@@ -360,7 +360,7 @@ RMDGrammarTest >> testCellInitializer [
 	self assert: node xDivisions equals: 10.
 	self assert: node yDivisions equals: 20.
 	self assert: node size literal equals: '5'.
-	self assert: node size type equals: 'm' asRMDUnit.
+	self assert: node size unit equals: 'm' asRMDUnit.
 	self assert: node length closeTo: 5.0.
 	self assert: node propertyInitializers isEmpty.
 	node := grammar cellInitializer
@@ -372,7 +372,7 @@ RMDGrammarTest >> testCellInitializer [
 	self assert: node xDivisions equals: 15.
 	self assert: node yDivisions equals: 30.
 	self assert: node size literal equals: '4'.
-	self assert: node size type equals: 'm^2' asRMDUnit.
+	self assert: node size unit equals: 'm^2' asRMDUnit.
 	self assert: node length closeTo: 2.0.
 	self assert: node propertyInitializers size equals: 2.
 	self
@@ -493,7 +493,7 @@ RMDGrammarTest >> testExpr1 [
 	expr1 := grammar expr1 parse: '1'.
 	self assert: expr1 isLiteralNode.
 	self assert: expr1 numeric closeTo: 1.
-	self assert: expr1 type hasDimension not
+	self assert: expr1 unit hasDimension not
 ]
 
 { #category : #tests }
@@ -502,15 +502,11 @@ RMDGrammarTest >> testExpr2 [
 	expr2 := grammar expr2 parse: 'x'.
 	self assert: expr2 isUtilityVariableNode.
 	self assert: expr2 identifier equals: 'x'.
-	expr2 := grammar expr2 parse: 'x^(y^z)'.
+	expr2 := grammar expr2 parse: 'x^2'.
 	self assert: expr2 isPowerNode.
-	self assert: expr2 expression1 isUtilityVariableNode.
-	self assert: expr2 expression1 identifier equals: 'x'.
-	self assert: expr2 expression2 isPowerNode.
-	self assert: expr2 expression2 expression1 isUtilityVariableNode.
-	self assert: expr2 expression2 expression1 identifier equals: 'y'.
-	self assert: expr2 expression2 expression2 isUtilityVariableNode.
-	self assert: expr2 expression2 expression2 identifier equals: 'z'
+	self assert: expr2 expression isUtilityVariableNode.
+	self assert: expr2 expression identifier equals: 'x'.
+	self assert: expr2 order equals: 2
 ]
 
 { #category : #tests }
@@ -525,15 +521,14 @@ RMDGrammarTest >> testExpr3 [
 	self assert: expr3 expression1 expression1 identifier equals: 'x'.
 	self assert: expr3 expression1 expression2 identifier equals: 'y'.
 	self assert: expr3 expression2 identifier equals: 'z'.
-	expr3 := grammar expr3 end parse: 'x * y^z'.
+	expr3 := grammar expr3 end parse: 'x * y^2'.
 	self assert: expr3 isProductNode.
 	self assert: expr3 expression1 isUtilityVariableNode.
 	self assert: expr3 expression1 identifier equals: 'x'.
 	self assert: expr3 expression2 isPowerNode.
-	self assert: expr3 expression2 expression1 isUtilityVariableNode.
-	self assert: expr3 expression2 expression1 identifier equals: 'y'.
-	self assert: expr3 expression2 expression2 isUtilityVariableNode.
-	self assert: expr3 expression2 expression2 identifier equals: 'z'
+	self assert: expr3 expression2 expression isUtilityVariableNode.
+	self assert: expr3 expression2 expression identifier equals: 'y'.
+	self assert: expr3 expression2 order equals: 2
 ]
 
 { #category : #tests }
@@ -636,23 +631,33 @@ RMDGrammarTest >> testGuardedChoice [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testInt [
+	self assert: (grammar int end parse: '0') equals: 0.
+	self assert: (grammar int end parse: '1') equals: 1.
+	self assert: (grammar int end parse: '2') equals: 2.
+	self assert: (grammar int end parse: '321') equals: 321.
+	self assert: (grammar int end parse: '-123') equals: -123.
+	self assert: (grammar int end parse: '3.14') isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testLiteral [
 	| literal |
 	literal := grammar literal parse: '3.14[]'.
 	self assert: literal literal equals: '3.14'.
-	self assert: literal type equals: RMDUnit noDimension.
+	self assert: literal unit equals: RMDUnit noDimension.
 	self assert: literal numeric closeTo: 3.14.
 	literal := grammar literal parse: '3.14'.
 	self assert: literal literal equals: '3.14'.
-	self assert: literal type equals: RMDUnit noDimension.
+	self assert: literal unit equals: RMDUnit noDimension.
 	self assert: literal numeric closeTo: 3.14.
 	literal := grammar literal parse: '-3.14[]'.
 	self assert: literal literal equals: '-3.14'.
-	self assert: literal type equals: (grammar type parse: '[]').
+	self assert: literal unit equals: (grammar type parse: '[]').
 	self assert: literal numeric closeTo: -3.14.
 	literal := grammar literal parse: '3[m]'.
 	self assert: literal literal equals: '3'.
-	self assert: literal type equals: (grammar type parse: '[m]').
+	self assert: literal unit equals: (grammar type parse: '[m]').
 	self assert: literal numeric closeTo: 3
 ]
 
@@ -763,10 +768,10 @@ RMDGrammarTest >> testSimulationTimeDefinition [
 	node := grammar simulationTimeDefinition parse: 'during 100 [days] by 1 [hour]'.
 	self assert: node isSimulationTimeDefinitionNode.
 	self assert: node duration isLiteralNode.
-	self assert: node duration type equals: 'days' asRMDUnit.
+	self assert: node duration unit equals: 'days' asRMDUnit.
 	self assert: node duration literal equals: '100'.
 	self assert: node step isLiteralNode.
-	self assert: node step type equals: 'hour' asRMDUnit.
+	self assert: node step unit equals: 'hour' asRMDUnit.
 	self assert: node step literal equals: '1'.
 
 

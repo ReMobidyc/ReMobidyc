@@ -16,3 +16,10 @@ RMDPowerNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '(a + x) ^ (y * d)')
 ]
+
+{ #category : #tests }
+RMDPowerNodeTest >> testInferType [
+	self
+		assert: (parser expression end parse: '1[m] ^ 2') inferType
+		equals: RMDUnit m ** 2
+]

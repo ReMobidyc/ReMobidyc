@@ -79,9 +79,9 @@ RMDCellInitializerNode >> isCellInitializerNode [
 { #category : #accessing }
 RMDCellInitializerNode >> length [
 	^ length
-		ifNil: [ length := size type siUnit = RMDUnit m
+		ifNil: [ length := size unit siUnit = RMDUnit m
 				ifTrue: [ size numeric ]
-				ifFalse: [ size type siUnit = RMDUnit m2
+				ifFalse: [ size unit siUnit = RMDUnit m2
 						ifTrue: [ size numeric sqrt ]
 						ifFalse: [ nil ] ] ]
 ]

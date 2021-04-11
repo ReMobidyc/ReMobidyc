@@ -4,6 +4,13 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'type checking' }
+RMDPropertyDefinitionNode >> inferType [
+	self unifyType: definitionBody inferType.
+	self unifyType: variable inferType.
+	^ type
+]
+
 { #category : #testing }
 RMDPropertyDefinitionNode >> isPropertyDefinitionNode [
 	^ true

@@ -6,32 +6,30 @@ Class {
 
 { #category : #'typical instances' }
 RMDFunction class >> abs [
-	^ self block: [ :x | x abs ]
+	^ RMDAbsFunction new
 ]
 
-{ #category : #'typical instances' }
-RMDFunction class >> block: aBlock [
-	^ RMDBlockFunction block: aBlock
+{ #category : #'instance creation' }
+RMDFunction class >> at: aString [
+	aString = 'abs'
+		ifTrue: [ ^ self abs ].
+	aString = 'cos'
+		ifTrue: [ ^ self cos ].
+	aString = 'max'
+		ifTrue: [ ^ self max ].
+	aString = 'mean'
+		ifTrue: [ ^ self mean ].
+	aString = 'min'
+		ifTrue: [ ^ self min ].
+	aString = 'sin'
+		ifTrue: [ ^ self sin ].
+	aString = 'sum'
+		ifTrue: [ ^ self sum ]
 ]
 
 { #category : #'typical instances' }
 RMDFunction class >> cos [
-	^ self block: [ :theta | theta cos ]
-]
-
-{ #category : #'typical instances' }
-RMDFunction class >> exp [
-	^ self block: [ :base :order | base ** order ]
-]
-
-{ #category : #'typical instances' }
-RMDFunction class >> ln [
-	^ self block: [ :x | x ln ]
-]
-
-{ #category : #'typical instances' }
-RMDFunction class >> log [
-	^ self block: [ :base :x | x ln / base ln ]
+	^ RMDCosFunction new
 ]
 
 { #category : #'typical instances' }
@@ -51,17 +49,17 @@ RMDFunction class >> min [
 
 { #category : #'typical instances' }
 RMDFunction class >> sin [
-	^ self block: [ :theta | theta sin ]
-]
-
-{ #category : #'typical instances' }
-RMDFunction class >> squareRoot [
-	^ self block: [ :x | x sqrt ]
+	^ RMDSinFunction new
 ]
 
 { #category : #'typical instances' }
 RMDFunction class >> sum [
 	^ RMDSumFunction new
+]
+
+{ #category : #'type checking' }
+RMDFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
+	^ self subclassResponsibility
 ]
 
 { #category : #private }

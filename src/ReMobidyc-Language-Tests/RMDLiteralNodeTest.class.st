@@ -16,3 +16,10 @@ RMDLiteralNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '10 [J]')
 ]
+
+{ #category : #tests }
+RMDLiteralNodeTest >> testInferType [
+	self
+		assert: (parser expression end parse: '10 [s]') inferType
+		equals: RMDUnit s
+]

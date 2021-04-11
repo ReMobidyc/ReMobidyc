@@ -53,6 +53,12 @@ RMDApplyNode >> hash [
 	^ function hash bitXor: arguments hash
 ]
 
+{ #category : #'type checking' }
+RMDApplyNode >> inferType [
+	^ self
+		unifyType: ((RMDFunction at: function) inferTypeWithArguments: arguments)
+]
+
 { #category : #testing }
 RMDApplyNode >> isApplyNode [
 	^ true

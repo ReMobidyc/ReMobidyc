@@ -59,9 +59,11 @@ String >> asRMDTaskDefinition [
 
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDUnit [
-	| node |
-	node := RMDGrammar new unit end parse: self.
-	^ node isPetit2Failure
-		ifTrue: [ RMDParseError signalPP2Failure: node ]
-		ifFalse: [ node ]
+	^ self
+		ifEmpty: [ RMDUnit noDimension ]
+		ifNotEmpty: [ | node |
+			node := RMDGrammar new unit end parse: self.
+			node isPetit2Failure
+				ifTrue: [ RMDParseError signalPP2Failure: node ]
+				ifFalse: [ node ] ]
 ]

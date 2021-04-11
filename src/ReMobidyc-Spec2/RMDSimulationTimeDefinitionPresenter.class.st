@@ -50,7 +50,7 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 						duration:
 							(RMDLiteralNode
 								literal: val printString
-								type: durationUnitDropList selectedItem) ] ];
+								unit: durationUnitDropList selectedItem) ] ];
 		yourself.
 	durationUnitDropList := self newDropList
 		items:
@@ -66,7 +66,7 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 						duration:
 							(RMDLiteralNode
 								literal: (newUnit fromSI: node duration numeric) printString
-								type: newUnit).
+								unit: newUnit).
 					self updateDurationField ] ];
 		yourself.
 	stepField := self newNumberInput
@@ -78,7 +78,7 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 						step:
 							(RMDLiteralNode
 								literal: val printString
-								type: stepUnitDropList selectedItem) ] ];
+								unit: stepUnitDropList selectedItem) ] ];
 		yourself.
 	stepUnitDropList := self newDropList
 		items:
@@ -94,7 +94,7 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 						step:
 							(RMDLiteralNode
 								literal: (newUnit fromSI: node step numeric) printString
-								type: newUnit).
+								unit: newUnit).
 					self updateStepField ] ];
 		yourself
 ]
@@ -128,13 +128,13 @@ RMDSimulationTimeDefinitionPresenter >> updateDurationField [
 		number:
 			(node
 				ifNil: [ 0 ]
-				ifNotNil: [ node duration type fromSI: node duration numeric ])
+				ifNotNil: [ node duration unit fromSI: node duration numeric ])
 ]
 
 { #category : #updating }
 RMDSimulationTimeDefinitionPresenter >> updateDurationUnit [
 	node
-		ifNotNil: [ durationUnitDropList selectItem: node duration type ]
+		ifNotNil: [ durationUnitDropList selectItem: node duration unit ]
 ]
 
 { #category : #updating }
@@ -143,10 +143,10 @@ RMDSimulationTimeDefinitionPresenter >> updateStepField [
 		number:
 			(node
 				ifNil: [ 0 ]
-				ifNotNil: [ node step type fromSI: node step numeric ])
+				ifNotNil: [ node step unit fromSI: node step numeric ])
 ]
 
 { #category : #updating }
 RMDSimulationTimeDefinitionPresenter >> updateStepUnit [
-	node ifNotNil: [ stepUnitDropList selectItem: node step type ]
+	node ifNotNil: [ stepUnitDropList selectItem: node step unit ]
 ]

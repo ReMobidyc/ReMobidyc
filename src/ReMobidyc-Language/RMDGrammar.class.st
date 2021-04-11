@@ -115,7 +115,6 @@ RMDGrammar >> agentIdentifier [
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
 	^ (('my' asPParser, #space asPParser) trimBlanks ==> [ :str | nil ])
-		/ 'the' asPParser trimBlanks
 		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
 ]
 
@@ -475,14 +474,12 @@ RMDGrammar >> expr1 [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr2 [
-	| expr1 |
-	expr1 := self expr1.
-	^ (expr1 , (($^ asPParser trimBlanks , expr1) ==> #second) optional)
+	^ (self expr1
+		, (($^ asPParser trimBlanks , self int) ==> #second) optional)
 		==> [ :pair | 
 			pair second
 				ifNil: [ pair first ]
-				ifNotNil:
-					[ self powerNodeClass expression: pair first expression: pair second ] ]
+				ifNotNil: [ self powerNodeClass expression: pair first order: pair second ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -582,6 +579,14 @@ RMDGrammar >> identifier [
 								message: 'An identifier must start with a lowercase letter.' ] ] ]
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> int [
+	^ ($- asPParser optional , #digit asPParser plus)
+		==> [ :pair | 
+			(pair first ifNil: [ 1 ] ifNotNil: [ -1 ])
+				* (pair second inject: 0 into: [ :i :c | i * 10 + c digitValue ]) ]
+]
+
 { #category : #accessing }
 RMDGrammar >> keywords [
 	^ Keywords
@@ -606,7 +611,7 @@ RMDGrammar >> literal [
 		==> [ :pair | 
 			self literalNodeClass
 				literal: pair first
-				type: (pair second ifNil: [ RMDUnit noDimension ]) ]
+				unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
 { #category : #'class access' }

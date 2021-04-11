@@ -77,7 +77,7 @@ RMDCellInitializerPresenter >> initializePresenters [
 						size:
 							(RMDLiteralNode
 								literal: (newUnit fromSI: numeric) printString
-								type: newUnit).
+								unit: newUnit).
 					self updateSizeField ] ];
 		yourself
 ]
@@ -114,7 +114,7 @@ RMDCellInitializerPresenter >> updateSizeField [
 
 { #category : #updating }
 RMDCellInitializerPresenter >> updateSizeUnitField [
-	node ifNotNil: [ sizeUnitDropList selectItem: node size type ]
+	node ifNotNil: [ sizeUnitDropList selectItem: node size unit ]
 ]
 
 { #category : #updating }

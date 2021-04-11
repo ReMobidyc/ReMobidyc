@@ -13,6 +13,23 @@ RMDMaxFunctionTest >> setUp [
 ]
 
 { #category : #tests }
+RMDMaxFunctionTest >> testInferTypeWithArguments [
+	self
+		assert:
+			(max
+				inferTypeWithArguments:
+					{'1 [m]' asRMDExpression.
+					'3 [cm]' asRMDExpression})
+		equals: 'm' asRMDUnit.
+	self
+		should: [ max
+				inferTypeWithArguments:
+					{'1 [m]' asRMDExpression.
+					'3 [m/s]' asRMDExpression} ]
+		raise: RMDTypeError
+]
+
+{ #category : #tests }
 RMDMaxFunctionTest >> testValue [
 	self assert: (max value: 10) equals: 10
 ]

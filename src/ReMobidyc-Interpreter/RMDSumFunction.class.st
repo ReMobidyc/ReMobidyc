@@ -4,6 +4,18 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #'type checking' }
+RMDSumFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
+	| type |
+	type := nil.
+	anArrayOfRMDExpression
+		do: [ :expression | 
+			type := expression
+				inferType;
+				unifyType: type ].
+	^ type
+]
+
 { #category : #accessing }
 RMDSumFunction >> value: aNumber [
 	^ aNumber

@@ -13,14 +13,6 @@ RMDFunctionTest >> testAbs [
 ]
 
 { #category : #tests }
-RMDFunctionTest >> testBlock [
-	| f |
-	f := RMDFunction block: [ :x | x ].
-	self assert: (f value: -10) equals: -10.
-	self assert: (f value: 10) equals: 10
-]
-
-{ #category : #tests }
 RMDFunctionTest >> testCos [
 	| f |
 	f := RMDFunction cos.
@@ -28,27 +20,6 @@ RMDFunctionTest >> testCos [
 	self assert: (f value: Float pi / 2) closeTo: 0.0.
 	self assert: (f value: Float pi) closeTo: -1.0.
 
-]
-
-{ #category : #tests }
-RMDFunctionTest >> testExp [
-	| f |
-	f := RMDFunction exp.
-	self assert: (f value: 2 value: 3) closeTo: 8
-]
-
-{ #category : #tests }
-RMDFunctionTest >> testLn [
-	| f |
-	f := RMDFunction ln.
-	self assert: Float e ** (f value: 5.0) closeTo: 5.0
-]
-
-{ #category : #tests }
-RMDFunctionTest >> testLog [
-	| f |
-	f := RMDFunction log.
-	self assert: 3.0 ** (f value: 3.0 value: 5.0) closeTo: 5.0
 ]
 
 { #category : #tests }
@@ -80,13 +51,6 @@ RMDFunctionTest >> testSin [
 	self assert: (f value: Float pi / 2) closeTo: 1.0.
 	self assert: (f value: Float pi) closeTo: 0.0.
 
-]
-
-{ #category : #tests }
-RMDFunctionTest >> testSquareRoot [
-	| f |
-	f := RMDFunction squareRoot.
-	self assert: (f value: 3.0) closeTo: 3.0 sqrt
 ]
 
 { #category : #tests }

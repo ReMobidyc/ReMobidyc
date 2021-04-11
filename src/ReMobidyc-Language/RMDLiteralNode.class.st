@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'literal',
 		'numeric',
-		'type'
+		'unit'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -14,6 +14,14 @@ RMDLiteralNode class >> literal: aString type: aRMDUnit [
 	^ self new
 		literal: aString;
 		type: aRMDUnit;
+		yourself
+]
+
+{ #category : #'instance creation' }
+RMDLiteralNode class >> literal: aString unit: aRMDUnit [
+	^ self new
+		literal: aString;
+		unit: aRMDUnit;
 		yourself
 ]
 
@@ -29,12 +37,17 @@ RMDLiteralNode >> childrenDo: aBlock [
 
 { #category : #private }
 RMDLiteralNode >> computeNumeric [
-	^ type toSI: literal asNumber
+	^ unit toSI: literal asNumber
 ]
 
 { #category : #comparing }
 RMDLiteralNode >> hash [
 	^ literal hash
+]
+
+{ #category : #'type checking' }
+RMDLiteralNode >> inferType [
+	^ self unifyType: unit siUnit
 ]
 
 { #category : #testing }
@@ -70,9 +83,9 @@ RMDLiteralNode >> precedence [
 { #category : #printing }
 RMDLiteralNode >> printOn: aStream [
 	aStream nextPutAll: self literal.
-	type hasDimension
+	unit hasDimension
 		ifTrue: [ aStream nextPutAll: ' ['.
-			type printOn: aStream.
+			unit printOn: aStream.
 			aStream nextPut: $] ]
 ]
 
@@ -84,18 +97,18 @@ RMDLiteralNode >> replaceChildren: aDictionary [
 			literal := node copy.
 			numeric := nil ].
 	aDictionary
-		at: type
+		at: unit
 		ifPresent: [ :node | 
-			type := node copy.
+			unit := node copy.
 			numeric := nil ]
 ]
 
 { #category : #accessing }
-RMDLiteralNode >> type [
-	^ type
+RMDLiteralNode >> unit [
+	^ unit
 ]
 
 { #category : #accessing }
-RMDLiteralNode >> type: aRMDUnit [
-	type := aRMDUnit
+RMDLiteralNode >> unit: aRMDUnit [
+	unit := aRMDUnit
 ]
