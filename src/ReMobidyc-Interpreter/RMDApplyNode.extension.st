@@ -7,3 +7,10 @@ RMDApplyNode >> evalIn: aRMDInterpreter [
 		ifAbsent: [ ^ KeyNotFound signal: function , ' not found.' ])
 		valueWithArguments: (arguments collect: [ :arg | arg evalIn: aRMDInterpreter ])
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDApplyNode >> typecheckIn: aRMDInterpreter [
+	^ (RMDFunction at: function)
+		typecheckWithArguments: arguments
+		in: aRMDInterpreter
+]

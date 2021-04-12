@@ -8,3 +8,8 @@ RMDAssignableDeltaPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 		agent: self agent
 		ifAbsent: [ KeyNotFound signal ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDAssignableDeltaPropertyVariableNode >> typecheckIn: aRMDInterpreter [
+	^ propertyVariable typecheckIn: aRMDInterpreter
+]

@@ -129,6 +129,14 @@ RMDSpeciesDefinitionNode >> propertyOffsetsDo: aBlock [
 	self propertyOffsets keysAndValuesDo: aBlock
 ]
 
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> propertyUnitsDo: aBlock [
+	self builtinProperties
+		do: [ :assoc | aBlock value: assoc key value: assoc value ].
+	self
+		propertyDeclarationsDo: [ :decl | aBlock value: decl identifier value: decl unit ]
+]
+
 { #category : #rewriting }
 RMDSpeciesDefinitionNode >> replaceChildren: aDictionary [
 	propertyDeclarations := propertyDeclarations

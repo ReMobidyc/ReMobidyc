@@ -202,6 +202,11 @@ RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
+{ #category : #testing }
+RMDActionDefinitionNode >> hasObject [
+	^ object notNil
+]
+
 { #category : #comparing }
 RMDActionDefinitionNode >> hash [
 	^ (((identifier hash bitXor: guard hash)

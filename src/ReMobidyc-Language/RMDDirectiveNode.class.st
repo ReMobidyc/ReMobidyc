@@ -27,6 +27,11 @@ RMDDirectiveNode >> hash [
 	^ self class hash bitXor: directive hash
 ]
 
+{ #category : #'type checking' }
+RMDDirectiveNode >> inferType [
+	^ self unifyType: (self typeOfDirective: directive)
+]
+
 { #category : #accessing }
 RMDDirectiveNode >> precedence [
 	^ 1

@@ -20,3 +20,8 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 						species: species
 						do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
+	(self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter
+]

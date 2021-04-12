@@ -164,12 +164,12 @@ RMDObservatory >> updateTimeLabel [
 							interpreter simulationModel simulationDefinition timeDefinition
 								printOn: stream.
 							stream nextPutAll: ' - now '.
-							(interpreter simulationDefinition timeDefinition duration type
+							(interpreter simulationDefinition timeDefinition duration unit
 								fromSI: interpreter time)
 								printOn: stream
 								showingDecimalPlaces: 3.
 							stream nextPutAll: ' [ '.
-							interpreter simulationDefinition timeDefinition duration type
+							interpreter simulationDefinition timeDefinition duration unit
 								printOn: stream.
 							stream nextPutAll: ' ]' ]).
 			timeSlider value: (timeSlider scaleValue: interpreter time) ]

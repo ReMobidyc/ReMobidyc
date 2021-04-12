@@ -13,6 +13,23 @@ RMDMinFunctionTest >> setUp [
 ]
 
 { #category : #tests }
+RMDMinFunctionTest >> testInferTypeWithArguments [
+	self
+		assert:
+			(min
+				inferTypeWithArguments:
+					{'1 [m]' asRMDExpression.
+					'3 [cm]' asRMDExpression})
+		equals: 'm' asRMDUnit.
+	self
+		should: [ min
+				inferTypeWithArguments:
+					{'1 [m]' asRMDExpression.
+					'3 [m/s]' asRMDExpression} ]
+		raise: RMDTypeError
+]
+
+{ #category : #tests }
 RMDMinFunctionTest >> testValue [
 	self assert: (min value: 10) equals: 10
 ]

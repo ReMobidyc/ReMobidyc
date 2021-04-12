@@ -4,6 +4,16 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #'type checking' }
+RMDMaxFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+	| type |
+	type := RMDType any.
+	anArrayOfRMDExpression
+		do:
+			[ :expression | type := type unify: (expression typecheckIn: aRMDInterpreter) ].
+	^ type
+]
+
 { #category : #accessing }
 RMDMaxFunction >> value: aNumber [
 	^ aNumber

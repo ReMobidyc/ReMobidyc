@@ -4,3 +4,8 @@ Extension { #name : #RMDExpressionNode }
 RMDExpressionNode >> evalIn: aRMDInterpreter [
 	^ self subclassResponsibility
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDExpressionNode >> typecheckIn: aRMDInterpreter [
+	^ self subclassResponsibility
+]

@@ -8,3 +8,8 @@ RMDAssignablePropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 		agent: self agent
 		ifAbsent: [ KeyNotFound signal ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDAssignablePropertyVariableNode >> typecheckIn: aRMDInterpreter [
+	^ propertyVariable typecheckIn: aRMDInterpreter
+]
