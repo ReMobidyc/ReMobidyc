@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDObserverContext,
-	#superclass : #RMDContext,
+	#superclass : #RMDIndividualContext,
 	#category : #'ReMobidyc-Interpreter'
 }

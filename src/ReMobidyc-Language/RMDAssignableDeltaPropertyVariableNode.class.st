@@ -4,11 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #'type checking' }
-RMDAssignableDeltaPropertyVariableNode >> inferType [
-	^ self unifyType: propertyVariable inferType
-]
-
 { #category : #testing }
 RMDAssignableDeltaPropertyVariableNode >> isAssignableDeltaVariableNode [
 	^ true

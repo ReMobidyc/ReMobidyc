@@ -67,11 +67,6 @@ RMDPropertyBindNode >> hash [
 		bitXor: actionProperty hash) bitXor: expression hash
 ]
 
-{ #category : #'type checking' }
-RMDPropertyBindNode >> inferType [
-	^ type
-]
-
 { #category : #testing }
 RMDPropertyBindNode >> isPropertyBindNode [
 	^ true

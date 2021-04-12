@@ -11,6 +11,11 @@ RMDActionIdentifierNode >> resolveWith: aRMDSimulationModel [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
+RMDActionIdentifierNode >> typecheckIn: aRMDInterpreter [
+	^ self subclassResponsibility 
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
 RMDActionIdentifierNode >> writeActionDefinition: aRMDActionDefinitionNode in: aRMDInterpreter [
 	^ self error: 'Failed to update an action definition'
 ]

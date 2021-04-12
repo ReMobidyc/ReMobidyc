@@ -40,12 +40,6 @@ RMDBinaryCombinatorNode >> hash [
 	^ self class hash bitXor: conditions hash
 ]
 
-{ #category : #'type checking' }
-RMDBinaryCombinatorNode >> inferType [
-	conditions do: [ :condition | self unifyType: condition inferType ].
-	^ type
-]
-
 { #category : #accessing }
 RMDBinaryCombinatorNode >> operator [
 	^ self subclassResponsibility

@@ -11,6 +11,6 @@ RMDAssignableDifferentialPropertyVariableNode >> assign: aNumber in: aRMDInterpr
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialPropertyVariableNode >> typecheckIn: aRMDInterpreter [
-	^ self
-		unifyType: (aRMDInterpreter type: propertyVariable) / RMDUnit s
+	^ RMDType
+		unit: (propertyVariable typecheckIn: aRMDInterpreter) unit / RMDUnit s
 ]

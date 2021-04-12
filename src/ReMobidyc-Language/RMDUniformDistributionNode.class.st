@@ -45,13 +45,6 @@ RMDUniformDistributionNode >> hash [
 	^ (self class hash bitXor: fromLiteral hash) bitXor: toLiteral hash
 ]
 
-{ #category : #'type checking' }
-RMDUniformDistributionNode >> inferType [
-	self unifyType: fromLiteral inferType.
-	self unifyType: toLiteral inferType.
-	^ type
-]
-
 { #category : #testing }
 RMDUniformDistributionNode >> isUniformDistributionNode [
 	^ true

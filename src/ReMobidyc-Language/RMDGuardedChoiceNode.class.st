@@ -44,16 +44,6 @@ RMDGuardedChoiceNode >> hash [
 	^ self class hash bitXor: guardsAndChoices hash
 ]
 
-{ #category : #'type checking' }
-RMDGuardedChoiceNode >> inferType [
-	guardsAndChoices
-		do: [ :assoc | 
-			assoc key = true
-				ifFalse: [ assoc key inferType ].
-			self unifyType: assoc value inferType ].
-	^ type
-]
-
 { #category : #testing }
 RMDGuardedChoiceNode >> isGuardedChoiceNode [
 	^ true

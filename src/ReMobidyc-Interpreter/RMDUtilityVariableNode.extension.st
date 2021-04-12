@@ -6,3 +6,10 @@ RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
 		readUtility: identifier
 		ifAbsent: [ KeyNotFound signal ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDUtilityVariableNode >> typecheckIn: aRMDInterpreter [
+	^ aRMDInterpreter
+		typeOfUtilityVariable: identifier
+		ifAbsent: [ KeyNotFound signal: self printString ]
+]

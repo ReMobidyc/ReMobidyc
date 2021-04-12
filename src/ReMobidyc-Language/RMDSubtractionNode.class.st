@@ -12,14 +12,6 @@ RMDSubtractionNode class >> expression: aRMDExpression1 expression: aRMDExpressi
 		yourself
 ]
 
-{ #category : #'type checking' }
-RMDSubtractionNode >> inferType [
-	self
-		unifyType: expression1 inferType;
-		unifyType: expression2 inferType.
-	^ type
-]
-
 { #category : #testing }
 RMDSubtractionNode >> isSubtractionNode [
 	^ true

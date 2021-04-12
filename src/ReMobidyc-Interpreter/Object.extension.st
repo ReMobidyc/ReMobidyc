@@ -4,3 +4,8 @@ Extension { #name : #Object }
 Object >> evalIn: aRMDInterpreter [
 	
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+Object >> typecheckIn: aRMDInterpreter [
+	
+]

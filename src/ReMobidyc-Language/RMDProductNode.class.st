@@ -12,16 +12,6 @@ RMDProductNode class >> expression: aRMDExpression1 expression: aRMDExpression2 
 		yourself
 ]
 
-{ #category : #'type checking' }
-RMDProductNode >> inferType [
-	| type1 type2 |
-	type1 := expression1 inferType.
-	type2 := expression2 inferType.
-	(type1 notNil and: [ type2 notNil ])
-		ifTrue: [ self unifyType: type1 * type2 ].
-	^ type
-]
-
 { #category : #testing }
 RMDProductNode >> isProductNode [ 
 	^ true

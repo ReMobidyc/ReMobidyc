@@ -5,9 +5,10 @@ Class {
 }
 
 { #category : #'type checking' }
-RMDAbsFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
-	^ anArrayOfRMDExpression size = 1
-		ifTrue: [ anArrayOfRMDExpression first inferType ]
+RMDAbsFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+	anArrayOfRMDExpression size = 1
+		ifFalse: [ ^ (RMDTypeError on: self with: anArrayOfRMDExpression) signal ].
+	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
 { #category : #accessing }

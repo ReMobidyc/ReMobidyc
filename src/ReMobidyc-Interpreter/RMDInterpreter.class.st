@@ -85,6 +85,7 @@ RMDInterpreter class >> standardLibrary [
 
 { #category : #examples }
 RMDInterpreter class >> sugarScape [
+	<script: 'RMDInterpreter sugarScape inspect'>
 	| interpreter |
 	interpreter := self new
 		setMemory: RMDOnMemory new;
@@ -411,6 +412,60 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
+{ #category : #'type checking' }
+RMDInterpreter >> newTypecheckContext [
+	^ RMDTypecheckContext new
+		cellDefinition: self cellDefinition;
+		worldDefinition: self worldDefinition;
+		yourself
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> newTypecheckContextForAnimat: aString [
+	^ self newTypecheckContext
+		subjectDefinition:
+			(self
+				animatDefinitionAt: aString
+				ifAbsent: [ ^ KeyNotFound signal: aString ]);
+		yourself
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> newTypecheckContextForCell [
+	^ self newTypecheckContext 
+		subjectDefinition: self cellDefinition;
+		yourself
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
+	| subject newContext |
+	subject := aRMDTaskDefinitionNode subjectIdentifier.
+	newContext := subject = 'World'
+		ifTrue: [ self newTypecheckContextForWorld ]
+		ifFalse: [ subject = 'Cell'
+				ifTrue: [ self newTypecheckContextForCell ]
+				ifFalse: [ self newTypecheckContextForAnimat: subject ] ].
+	newContext action: (aRMDTaskDefinitionNode actionWith: self).
+	aRMDTaskDefinitionNode hasObject
+		ifTrue: [ | object |
+			object := aRMDTaskDefinitionNode objectIdentifier.
+			newContext
+				object: object
+				definition:
+					(self
+						animatDefinitionAt: object
+						ifAbsent: [ ^ KeyNotFound signal: object ]) ].
+	^ newContext
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> newTypecheckContextForWorld [
+	^ self newTypecheckContext 
+		subjectDefinition: self worldDefinition;
+		yourself
+]
+
 { #category : #'space access' }
 RMDInterpreter >> north [
 	^ simulationModel north
@@ -635,21 +690,71 @@ RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
 ]
 
-{ #category : #directives }
+{ #category : #'type checking' }
 RMDInterpreter >> typeOfDirective: aString [
 	aString = 'directionOfGradient'
-		ifTrue: [ ^ RMDUnit rad ].
+		ifTrue: [ ^ RMDType rad ].
 	aString = 'direction'
-		ifTrue: [ ^ RMDUnit rad ].
+		ifTrue: [ ^ RMDType rad ].
 	aString = 'distance'
-		ifTrue: [ ^ RMDUnit m ].
+		ifTrue: [ ^ RMDType m ].
 	aString = 'time'
-		ifTrue: [ ^ RMDUnit s ].
+		ifTrue: [ ^ RMDType s ].
 	aString = 'delta time'
-		ifTrue: [ ^ RMDUnit s ].
+		ifTrue: [ ^ RMDType s ].
 	aString = 'terminate'
-		ifTrue: [ ^ RMDUnit noDimension ].
+		ifTrue: [ ^ RMDType noDimension ].
 	^ self error: 'Unknown directive: ' , aString
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
+	^ (self context typeAt: aString ifAbsent: errorBlock)
+		typecheckIn: self
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typeOfVariable: aString agent: anotherString ifAbsent: errorBlock [
+	^ context
+		typeOfVariable: aString
+		agent: anotherString
+		ifAbsent: errorBlock
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typeUtilityVariable: aString as: aRMDType [
+	self context typeAt: aString put: aRMDType
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typecheck [
+	self
+		typecheckInitializers;
+		typecheckTasks
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typecheckInitializers [
+	self
+		withContext: self newTypecheckContextForWorld
+		do: [ simulationModel worldInitializer typecheckIn: self ].
+	self
+		withContext: self newTypecheckContextForCell
+		do: [ simulationModel cellInitializer typecheckIn: self ].
+	simulationModel
+		animatInitializersDo: [ :animatInitializer | 
+			self
+				withContext: (self newTypecheckContextForAnimat: animatInitializer animat)
+				do: [ animatInitializer typecheckIn: self ] ]
+]
+
+{ #category : #'type checking' }
+RMDInterpreter >> typecheckTasks [
+	simulationModel
+		taskDefinitionsDo: [ :taskDefinition | 
+			self
+				withContext: (self newTypecheckContextForTask: taskDefinition)
+				do: [ taskDefinition typecheckIn: self ] ]
 ]
 
 { #category : #'space access' }
@@ -659,15 +764,12 @@ RMDInterpreter >> west [
 
 { #category : #'context controls' }
 RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode do: aBlock [
-	^ contextSemaphore
-		critical: [ | originalContext |
-			originalContext := context.
-			self
-				setContext:
-					(RMDActionContext
-						subject: anInteger
-						definition: aRMDAnimatDefinitionNode).
-			aRMDAnimatDefinitionNode isAnimatDefinitionNode
+	^ self
+		withContext:
+			(RMDActionContext
+				subject: anInteger
+				definition: aRMDAnimatDefinitionNode)
+		do: [ aRMDAnimatDefinitionNode isAnimatDefinitionNode
 				ifTrue: [ | here |
 					here := individualDirectory
 						cellAtXIndex:
@@ -720,36 +822,37 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimat
 								location: north
 								definition: simulationModel cellDefinition
 								agent: 'north' ] ].
+			aBlock cull: self cull: context ]
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withContext: aRMDContext do: aBlock [
+	^ contextSemaphore
+		critical: [ | originalContext |
+			originalContext := context.
+			self setContext: aRMDContext.
 			[ aBlock cull: self cull: context ]
 				ensure: [ context := originalContext ] ]
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesInitializerNode do: aBlock [
-	^ contextSemaphore
-		critical: [ | originalContext |
-			originalContext := context.
-			self
-				setContext:
-					(RMDInitializerContext
-						subject: anInteger
-						definition: aRMDSpeciesInitializerNode).
-			[ aBlock cull: self cull: context ]
-				ensure: [ context := originalContext ] ]
+RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
+	^ self
+		withContext:
+			(RMDInitializerContext
+				subject: anInteger
+				definition: aRMDSpeciesDefinitionNode)
+		do: aBlock
 ]
 
 { #category : #'context controls' }
 RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpeciesInitializerNode do: aBlock [
-	^ contextSemaphore
-		critical: [ | originalContext |
-			originalContext := context.
-			self
-				setContext:
-					(RMDObserverContext
-						subject: anInteger
-						definition: aRMDSpeciesInitializerNode).
-			[ aBlock cull: self cull: context ]
-				ensure: [ context := originalContext ] ]
+	^ self
+		withContext:
+			(RMDObserverContext
+				subject: anInteger
+				definition: aRMDSpeciesInitializerNode)
+		do: aBlock
 ]
 
 { #category : #'accessing - definitions' }

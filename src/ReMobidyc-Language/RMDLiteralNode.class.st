@@ -45,11 +45,6 @@ RMDLiteralNode >> hash [
 	^ literal hash
 ]
 
-{ #category : #'type checking' }
-RMDLiteralNode >> inferType [
-	^ self unifyType: unit siUnit
-]
-
 { #category : #testing }
 RMDLiteralNode >> isLiteralNode [
 	^ true

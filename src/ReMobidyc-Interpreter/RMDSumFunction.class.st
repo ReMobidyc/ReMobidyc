@@ -5,14 +5,12 @@ Class {
 }
 
 { #category : #'type checking' }
-RMDSumFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
+RMDSumFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
 	| type |
-	type := nil.
+	type := RMDType any.
 	anArrayOfRMDExpression
-		do: [ :expression | 
-			type := expression
-				inferType;
-				unifyType: type ].
+		do:
+			[ :expression | type := type unify: (expression typecheckIn: aRMDInterpreter) ].
 	^ type
 ]
 

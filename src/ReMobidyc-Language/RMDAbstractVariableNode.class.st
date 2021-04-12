@@ -27,11 +27,6 @@ RMDAbstractVariableNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #'type checking' }
-RMDAbstractVariableNode >> inferType [
-	^ type
-]
-
 { #category : #copying }
 RMDAbstractVariableNode >> postCopy [
 	

@@ -27,12 +27,6 @@ RMDUniformDistributionYNode >> hash [
 	^ self class hash
 ]
 
-{ #category : #'type checking' }
-RMDUniformDistributionYNode >> inferType [
-	self unifyType: RMDUnit m.
-	^ type
-]
-
 { #category : #copying }
 RMDUniformDistributionYNode >> postCopy [
 	

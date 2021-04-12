@@ -5,12 +5,13 @@ Class {
 }
 
 { #category : #'type checking' }
-RMDSinFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
-	^ anArrayOfRMDExpression size = 1
-		ifTrue: [ anArrayOfRMDExpression first
-				inferType;
-				unifyType: RMDUnit rad.
-			RMDUnit noDimension ]
+RMDSinFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+	| argType |
+	anArrayOfRMDExpression size = 1
+		ifFalse: [ ^ (RMDTypeError on: self with: anArrayOfRMDExpression) signal ].
+	argType := anArrayOfRMDExpression first typecheckIn: aRMDInterpreter.
+	argType unify: RMDType rad.
+	^ RMDType noDimension
 ]
 
 { #category : #accessing }

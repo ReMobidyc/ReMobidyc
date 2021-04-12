@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDInitializerContext,
-	#superclass : #RMDContext,
+	#superclass : #RMDIndividualContext,
 	#category : #'ReMobidyc-Interpreter'
 }

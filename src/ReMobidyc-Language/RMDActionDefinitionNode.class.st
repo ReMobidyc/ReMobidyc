@@ -202,6 +202,11 @@ RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
+{ #category : #testing }
+RMDActionDefinitionNode >> hasObject [
+	^ object notNil
+]
+
 { #category : #comparing }
 RMDActionDefinitionNode >> hash [
 	^ (((identifier hash bitXor: guard hash)
@@ -217,24 +222,6 @@ RMDActionDefinitionNode >> identifier [
 { #category : #accessing }
 RMDActionDefinitionNode >> identifier: aString [
 	identifier := aString
-]
-
-{ #category : #'type checking' }
-RMDActionDefinitionNode >> inferType [
-	[ | changed |
-	changed := false.
-	utilityDefinitions
-		do: [ :def | 
-			def type
-				ifNil: [ def inferType
-						ifNotNil: [ changed := true.
-							self
-								utilityVariableNodesDo: [ :v | 
-									v = def variable
-										ifTrue: [ v unifyType: def type ] ] ] ] ].
-	changed ] whileTrue.
-	guard ifNotNil: #inferType.
-	propertyDefinitions do: #inferType
 ]
 
 { #category : #testing }

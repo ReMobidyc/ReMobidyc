@@ -11,5 +11,5 @@ RMDAssignableDeltaPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDeltaPropertyVariableNode >> typecheckIn: aRMDInterpreter [
-	^ self unifyType: (aRMDInterpreter type: propertyVariable)
+	^ propertyVariable typecheckIn: aRMDInterpreter
 ]

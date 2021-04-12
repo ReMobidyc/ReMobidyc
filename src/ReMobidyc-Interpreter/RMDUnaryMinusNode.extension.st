@@ -4,3 +4,8 @@ Extension { #name : #RMDUnaryMinusNode }
 RMDUnaryMinusNode >> evalIn: aRMDInterpreter [
 	^ (expression evalIn: aRMDInterpreter) negated
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDUnaryMinusNode >> typecheckIn: aRMDInterpreter [
+	^ expression typecheckIn: aRMDInterpreter
+]

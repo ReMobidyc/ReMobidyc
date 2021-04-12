@@ -39,11 +39,6 @@ RMDNegationNode >> hash [
 	^ self class hash bitXor: condition hash
 ]
 
-{ #category : #'type checking' }
-RMDNegationNode >> inferType [
-	^ self unifyType: condition inferType
-]
-
 { #category : #testing }
 RMDNegationNode >> isNegationNode [
 	^ true

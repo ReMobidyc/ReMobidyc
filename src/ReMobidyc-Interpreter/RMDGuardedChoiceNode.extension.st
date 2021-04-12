@@ -8,3 +8,14 @@ RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 				ifTrue: [ ^ assoc value evalIn: aRMDInterpreter ] ].
 	^ self error: 'All guards failed'
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDGuardedChoiceNode >> typecheckIn: aRMDInterpreter [
+	| type |
+	type := RMDType any.
+	guardsAndChoices
+		do: [ :assoc | 
+			assoc key typecheckIn: aRMDInterpreter.
+			type := type unify: (assoc value typecheckIn: aRMDInterpreter) ].
+	^ type
+]

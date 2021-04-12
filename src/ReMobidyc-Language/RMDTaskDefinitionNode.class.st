@@ -121,12 +121,6 @@ RMDTaskDefinitionNode >> hash [
 		bitXor: propertyBinds hash) bitXor: actionIdentifier hash
 ]
 
-{ #category : #'type checking' }
-RMDTaskDefinitionNode >> inferType [
-	action ifNotNil: [ action inferType ].
-	^ type
-]
-
 { #category : #testing }
 RMDTaskDefinitionNode >> isTaskDefinitionNode [
 	^ true

@@ -6,3 +6,10 @@ RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
 	(guard isNil or: [ guard evalIn: aRMDInterpreter ])
 		ifTrue: [ propertyDefinitions do: [ :def | def evalIn: aRMDInterpreter ] ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDActionDefinitionNode >> typecheckIn: aRMDInterpreter [
+	utilityDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ].
+	guard ifNotNil: [ guard typecheckIn: aRMDInterpreter ].
+	propertyDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ]
+]

@@ -43,11 +43,6 @@ RMDPowerNode >> hash [
 	^ self class hash bitXor: (expression hash bitXor: order hash)
 ]
 
-{ #category : #'type checking' }
-RMDPowerNode >> inferType [
-	^ expression inferType ifNotNil: [ :t | t ** order ]
-]
-
 { #category : #testing }
 RMDPowerNode >> isPowerNode [
 	^ true

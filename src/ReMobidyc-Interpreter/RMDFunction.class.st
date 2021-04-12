@@ -57,14 +57,14 @@ RMDFunction class >> sum [
 	^ RMDSumFunction new
 ]
 
-{ #category : #'type checking' }
-RMDFunction >> inferTypeWithArguments: anArrayOfRMDExpression [
-	^ self subclassResponsibility
-]
-
 { #category : #private }
 RMDFunction >> numArgsError [
 	^ RMDNumArgsError signal
+]
+
+{ #category : #'type checking' }
+RMDFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

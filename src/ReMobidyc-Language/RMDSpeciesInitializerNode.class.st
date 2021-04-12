@@ -23,12 +23,6 @@ RMDSpeciesInitializerNode >> hash [
 	^ propertyInitializers hash
 ]
 
-{ #category : #'type checking' }
-RMDSpeciesInitializerNode >> inferType [
-	propertyInitializers do: [ :node | node inferType ].
-	^ type
-]
-
 { #category : #testing }
 RMDSpeciesInitializerNode >> isSpeciesInitializerNode [
 	^ true

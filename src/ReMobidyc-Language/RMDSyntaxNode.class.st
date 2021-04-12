@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDSyntaxNode,
 	#superclass : #Object,
-	#instVars : [
-		'type'
-	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
@@ -15,12 +12,6 @@ RMDSyntaxNode >> = anObject [
 { #category : #enumerating }
 RMDSyntaxNode >> childrenDo: aBlock [
 	^ self subclassResponsibility
-]
-
-{ #category : #'type checking' }
-RMDSyntaxNode >> clearType [
-	type := nil.
-	self childrenDo: #clearType
 ]
 
 { #category : #rewriting }
@@ -41,11 +32,6 @@ RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
 			node = aRMDSyntaxNode
 				ifTrue: [ ^ true ] ].
 	^ false
-]
-
-{ #category : #'type checking' }
-RMDSyntaxNode >> inferType [
-	^ self subclassResponsibility
 ]
 
 { #category : #testing }
@@ -352,22 +338,6 @@ RMDSyntaxNode >> propertyVariableNodesDo: aBlock [
 { #category : #rewriting }
 RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
-]
-
-{ #category : #'type checking' }
-RMDSyntaxNode >> type [
-	^ type
-]
-
-{ #category : #'type checking' }
-RMDSyntaxNode >> unifyType: aRMDUnit [
-	^ aRMDUnit
-		ifNil: [ type ]
-		ifNotNil: [ type
-				ifNil: [ type := aRMDUnit ]
-				ifNotNil: [ type = aRMDUnit
-						ifFalse: [ (RMDTypeError on: self with: aRMDUnit) signal ].
-					type ] ]
 ]
 
 { #category : #enumerating }

@@ -43,20 +43,3 @@ RMDDirectiveNode >> replaceChildren: aDictionary [
 		at: directive
 		ifPresent: [ :node | directive := node copy ]
 ]
-
-{ #category : #'type checking' }
-RMDDirectiveNode >> typeOfDirective: aString [
-	aString = 'directionOfGradient'
-		ifTrue: [ ^ RMDUnit rad ].
-	aString = 'direction'
-		ifTrue: [ ^ RMDUnit rad ].
-	aString = 'distance'
-		ifTrue: [ ^ RMDUnit m ].
-	aString = 'time'
-		ifTrue: [ ^ RMDUnit s ].
-	aString = 'delta time'
-		ifTrue: [ ^ RMDUnit s ].
-	aString = 'terminate'
-		ifTrue: [ ^ RMDUnit noDimension ].
-	^ self error: 'Unknown directive: ' , aString
-]

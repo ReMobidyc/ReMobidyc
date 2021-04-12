@@ -16,12 +16,3 @@ RMDSubtractionNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '(a + x) - (y * d)')
 ]
-
-{ #category : #tests }
-RMDSubtractionNodeTest >> testInferType [
-	| node |
-	node := parser expression end parse: '1[m/s] - 2[m/s]'.
-	self assert: node inferType equals: RMDUnit m / RMDUnit s.
-	node := parser expression end parse: '1[m/s] - 2[m]'.
-	self should: [ node inferType ] raise: RMDTypeError
-]

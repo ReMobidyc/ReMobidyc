@@ -40,13 +40,6 @@ RMDBinaryRelationNode >> hash [
 	^ self class hash bitXor: expressions hash
 ]
 
-{ #category : #'type checking' }
-RMDBinaryRelationNode >> inferType [
-	expressions
-		do: [ :expression | self unifyType: expression inferType ].
-	^ type
-]
-
 { #category : #testing }
 RMDBinaryRelationNode >> isBinaryRelationNode [
 	^ true

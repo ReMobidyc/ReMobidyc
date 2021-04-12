@@ -13,3 +13,10 @@ RMDBuiltinActionIdentifierNode >> resolveWith: aRMDSimulationModel [
 		actionNamed: shortName
 		ifAbsent: [ KeyNotFound signal: shortName ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDBuiltinActionIdentifierNode >> typecheckIn: aRMDInterpreter [
+	RMDBuiltinRepository
+		actionNamed: shortName
+		ifAbsent: [ ^ KeyNotFound signal: shortName ]
+]

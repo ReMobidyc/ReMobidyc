@@ -48,12 +48,6 @@ RMDPropertyDeclarationNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #'type checking' }
-RMDPropertyDeclarationNode >> inferType [
-	self unifyType: unit.
-	^ type
-]
-
 { #category : #testing }
 RMDPropertyDeclarationNode >> isPropertyDeclarationNode [
 	^ true

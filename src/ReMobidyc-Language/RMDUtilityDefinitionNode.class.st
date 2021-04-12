@@ -4,13 +4,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #'type checking' }
-RMDUtilityDefinitionNode >> inferType [
-	self unifyType: variable inferType.
-	self unifyType: definitionBody inferType.
-	^ type
-]
-
 { #category : #testing }
 RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 	^ true

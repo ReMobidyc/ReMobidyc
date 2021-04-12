@@ -27,12 +27,6 @@ RMDUniformDistributionXNode >> hash [
 	^ self class hash
 ]
 
-{ #category : #'type checking' }
-RMDUniformDistributionXNode >> inferType [
-	self unifyType: RMDUnit m.
-	^ type
-]
-
 { #category : #copying }
 RMDUniformDistributionXNode >> postCopy [
 	

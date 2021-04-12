@@ -17,12 +17,3 @@ RMDAdditionNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '10 [kcal] + 20 [kcal]')
 ]
-
-{ #category : #tests }
-RMDAdditionNodeTest >> testInferType [
-	| node |
-	node := parser expression end parse: '1[m/s] + 2[m/s]'.
-	self assert: node inferType equals: RMDUnit m / RMDUnit s.
-	node := parser expression end parse: '1[m/s] + 2[m]'.
-	self should: [ node inferType ] raise: RMDTypeError
-]

@@ -79,12 +79,6 @@ RMDSimulationDefinitionNode >> hash [
 		bitXor: cellInitializer hash) bitXor: animatInitializers hash
 ]
 
-{ #category : #'type checking' }
-RMDSimulationDefinitionNode >> inferType [
-	self childrenDo: [ :node | node inferType ].
-	^ type
-]
-
 { #category : #testing }
 RMDSimulationDefinitionNode >> isSimulationDefinitionNode [
 	^ true

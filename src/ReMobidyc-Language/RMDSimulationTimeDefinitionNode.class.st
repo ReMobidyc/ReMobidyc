@@ -60,14 +60,6 @@ RMDSimulationTimeDefinitionNode >> hash [
 	^ duration hash bitXor: step hash
 ]
 
-{ #category : #'type checking' }
-RMDSimulationTimeDefinitionNode >> inferType [
-	self unifyType: RMDUnit s.
-	self unifyType: duration inferType.
-	self unifyType: step inferType.
-	^ type
-]
-
 { #category : #testing }
 RMDSimulationTimeDefinitionNode >> isSimulationTimeDefinitionNode [
 	^ true
