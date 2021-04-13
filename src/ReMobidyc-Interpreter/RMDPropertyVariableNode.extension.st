@@ -13,5 +13,5 @@ RMDPropertyVariableNode >> typecheckIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		typeOfVariable: identifier
 		agent: agent
-		ifAbsent: [ KeyNotFound signal: self printString ]
+		ifAbsent: [ (RMDUnresolvedReferenceError on: self) signal ]
 ]

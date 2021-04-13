@@ -82,7 +82,7 @@ RMDTypechecker >> typeOfDirective: aString [
 		ifTrue: [ ^ RMDType s ].
 	aString = 'terminate'
 		ifTrue: [ ^ RMDType noDimension ].
-	^ self error: 'Unknown directive: ' , aString
+	^ KeyNotFound signal: aString
 ]
 
 { #category : #'type checking' }

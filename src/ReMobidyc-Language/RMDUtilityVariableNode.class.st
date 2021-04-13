@@ -30,3 +30,12 @@ RMDUtilityVariableNode >> precedence [
 RMDUtilityVariableNode >> printOn: aStream [
 	aStream nextPutAll: identifier
 ]
+
+{ #category : #printing }
+RMDUtilityVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: identifier.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]

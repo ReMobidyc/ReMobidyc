@@ -8,6 +8,8 @@ RMDUniformDistributionNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionNode >> typecheckIn: aRMDInterpreter [
-	^ (fromLiteral typecheckIn: aRMDInterpreter)
-		unify: (toLiteral typecheckIn: aRMDInterpreter)
+	^ [ (fromLiteral typecheckIn: aRMDInterpreter)
+		unify: (toLiteral typecheckIn: aRMDInterpreter) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
 ]

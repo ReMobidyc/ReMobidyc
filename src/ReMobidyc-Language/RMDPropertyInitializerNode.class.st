@@ -71,6 +71,21 @@ RMDPropertyInitializerNode >> printOn: aStream [
 	expression printOn: aStream
 ]
 
+{ #category : #printing }
+RMDPropertyInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: identifier;
+		nextPutAll: ' = '.
+	expression
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDPropertyInitializerNode >> replaceChildren: aDictionary [
 	aDictionary

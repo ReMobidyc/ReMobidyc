@@ -108,6 +108,40 @@ RMDCellInitializerNode >> printOn: aStream [
 	aStream nextPut: $,
 ]
 
+{ #category : #printing }
+RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	xDivisions
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPutAll: ' x '.
+	yDivisions
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPutAll: ' cells, '.
+	size
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPutAll: ' each side'.
+	propertyInitializers
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyInitializers
+				do: [ :init | 
+					init
+						printOn: aStream
+						ifIncludedIn: aCollectionOfRMDSyntaxNode
+						addSectionTo: aCollection ] ].
+	aStream nextPut: $,.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDCellInitializerNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.

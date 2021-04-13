@@ -188,6 +188,44 @@ RMDTaskDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
+{ #category : #printing }
+RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: subjectIdentifier;
+		space;
+		nextPutAll: verbIdentifier.
+	objectIdentifier
+		ifNotNil: [ aStream
+				space;
+				nextPutAll: objectIdentifier ].
+	aStream
+		space;
+		nextPutAll: 'namely';
+		space.
+	actionIdentifier
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(propertyBinds notNil and: [ propertyBinds notEmpty ])
+		ifTrue: [ aStream
+				space;
+				nextPutAll: 'where';
+				nextPut: Character cr.
+			propertyBinds
+				do: [ :bind | 
+					aStream nextPutAll: '    '.
+					bind
+						printOn: aStream
+						ifIncludedIn: aCollectionOfRMDSyntaxNode
+						addSectionTo: aCollection ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream nextPut: $..
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #accessing }
 RMDTaskDefinitionNode >> propertyBinds [
 	^ propertyBinds

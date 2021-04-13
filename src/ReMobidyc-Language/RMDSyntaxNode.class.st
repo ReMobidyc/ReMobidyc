@@ -327,6 +327,11 @@ RMDSyntaxNode >> printOn: aStream [
 	^ self subclassResponsibility
 ]
 
+{ #category : #printing }
+RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	^ self subclassResponsibility
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> propertyVariableNodesDo: aBlock [
 	self

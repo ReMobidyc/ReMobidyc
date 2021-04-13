@@ -60,6 +60,20 @@ RMDPropertyVariableNode >> printOn: aStream [
 	aStream nextPutAll: identifier
 ]
 
+{ #category : #printing }
+RMDPropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	agent
+		ifNil: [ aStream nextPutAll: 'my ' ]
+		ifNotNil: [ aStream
+				nextPutAll: agent;
+				nextPutAll: '''s ' ].
+	aStream nextPutAll: identifier.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDPropertyVariableNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.

@@ -23,3 +23,23 @@ RMDUtilityDefinitionNode >> printOn: aStream [
 		nextPut: Character space.
 	definitionBody printOn: aStream
 ]
+
+{ #category : #printing }
+RMDUtilityDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	variable
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream
+		nextPut: Character space;
+		nextPutAll: self operator;
+		nextPut: Character space.
+	definitionBody
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]

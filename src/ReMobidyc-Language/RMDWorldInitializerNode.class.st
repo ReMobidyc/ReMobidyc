@@ -39,3 +39,23 @@ RMDWorldInitializerNode >> printOn: aStream [
 			propertyInitializers do: [ :init | init printOn: aStream ] ].
 	aStream nextPut: $,
 ]
+
+{ #category : #printing }
+RMDWorldInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'World'.
+	propertyInitializers
+		ifNotEmpty: [ aStream
+				nextPutAll: ' with';
+				nextPut: Character cr.
+			propertyInitializers
+				do: [ :init | 
+					init
+						printOn: aStream
+						ifIncludedIn: aCollectionOfRMDSyntaxNode
+						addSectionTo: aCollection ] ].
+	aStream nextPut: $,.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]

@@ -11,5 +11,5 @@ RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
 RMDUtilityVariableNode >> typecheckIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		typeOfUtilityVariable: identifier
-		ifAbsent: [ KeyNotFound signal: self printString ]
+		ifAbsent: [ (RMDUnresolvedReferenceError on: self) signal ]
 ]

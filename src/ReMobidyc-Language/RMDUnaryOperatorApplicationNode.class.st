@@ -60,6 +60,23 @@ RMDUnaryOperatorApplicationNode >> printOn: aStream [
 		ifTrue: [ aStream nextPut: $) ]
 ]
 
+{ #category : #printing }
+RMDUnaryOperatorApplicationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: self operator.
+	self precedence < expression precedence
+		ifTrue: [ aStream nextPut: $( ].
+	expression
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	self precedence < expression precedence
+		ifTrue: [ aStream nextPut: $) ].
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDUnaryOperatorApplicationNode >> replaceChildren: aDictionary [
 	expression := expression copyReplace: aDictionary

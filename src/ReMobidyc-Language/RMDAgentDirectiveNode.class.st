@@ -69,6 +69,27 @@ RMDAgentDirectiveNode >> printOn: aStream [
 				nextPutAll: agentIdentifier ]
 ]
 
+{ #category : #printing }
+RMDAgentDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	directive = 'delta time'
+		ifTrue: [ aStream nextPutAll: 'Δtime'.
+			^ self ].
+	directive = 'directionOfGradient'
+		ifTrue: [ aStream
+				nextPutAll: 'direction grad ';
+				nextPutAll: agentIdentifier.
+			^ self ].
+	aStream nextPutAll: directive.
+	agentIdentifier
+		ifNotNil: [ aStream
+				nextPut: Character space;
+				nextPutAll: agentIdentifier ].
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDAgentDirectiveNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.

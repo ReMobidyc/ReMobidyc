@@ -42,6 +42,15 @@ RMDUniformDistributionXNode >> printOn: aStream [
 	aStream nextPutAll: 'uniform west to east'
 ]
 
+{ #category : #printing }
+RMDUniformDistributionXNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'uniform west to east'.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDUniformDistributionXNode >> replaceChildren: aDictionary [
 	

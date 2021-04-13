@@ -67,6 +67,21 @@ RMDBinaryRelationNode >> printOn: aStream [
 		separatedBy: [ aStream nextPutAll: self operator ]
 ]
 
+{ #category : #printing }
+RMDBinaryRelationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	expressions
+		do: [ :expr | 
+			expr
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection ]
+		separatedBy: [ aStream nextPutAll: self operator ].
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDBinaryRelationNode >> replaceChildren: aDictionary [
 	expressions := expressions

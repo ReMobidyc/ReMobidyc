@@ -79,6 +79,24 @@ RMDSimulationTimeDefinitionNode >> printOn: aStream [
 	step printOn: aStream
 ]
 
+{ #category : #printing }
+RMDSimulationTimeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'during '.
+	duration
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPutAll: ' step by '.
+	step
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDSimulationTimeDefinitionNode >> replaceChildren: aDictionary [
 	duration := duration copyReplace: aDictionary.

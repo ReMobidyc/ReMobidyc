@@ -10,9 +10,11 @@ RMDPropertyInitializerNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPropertyInitializerNode >> typecheckIn: aRMDInterpreter [
-	^ (aRMDInterpreter
+	^ [ (aRMDInterpreter
 		typeOfVariable: identifier
 		agent: nil
-		ifAbsent: [ ^ KeyNotFound signal: identifier ])
-		unify: (expression typecheckIn: aRMDInterpreter)
+		ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ])
+		unify: (expression typecheckIn: aRMDInterpreter) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
 ]

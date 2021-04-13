@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDTypeUnificationError,
-	#superclass : #Error,
+	#superclass : #Exception,
 	#instVars : [
 		'type1',
 		'type2'
@@ -15,6 +15,11 @@ RMDTypeUnificationError class >> on: aRMDType and: anotherRMDType [
 		type2: anotherRMDType;
 		messageText: aRMDType printString , ' and ' , anotherRMDType printString;
 		yourself
+]
+
+{ #category : #accessing }
+RMDTypeUnificationError >> defaultAction [
+	^ UnhandledError signalForException: self
 ]
 
 { #category : #accessing }

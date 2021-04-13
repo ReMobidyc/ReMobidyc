@@ -67,6 +67,25 @@ RMDBinaryCombinatorNode >> printOn: aStream [
 		separatedBy: [ aStream nextPutAll: self operator ]
 ]
 
+{ #category : #printing }
+RMDBinaryCombinatorNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	conditions
+		do: [ :cond | 
+			self precedence <= cond precedence
+				ifTrue: [ aStream nextPut: $( ].
+			cond
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection.
+			self precedence <= cond precedence
+				ifTrue: [ aStream nextPut: $) ] ]
+		separatedBy: [ aStream nextPutAll: self operator ].
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDBinaryCombinatorNode >> replaceChildren: aDictionary [
 	conditions := conditions

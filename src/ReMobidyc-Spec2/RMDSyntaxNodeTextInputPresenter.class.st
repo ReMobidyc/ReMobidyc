@@ -83,11 +83,6 @@ RMDSyntaxNodeTextInputPresenter >> beLiteral [
 	self parser: RMDGrammar new literal end
 ]
 
-{ #category : #initialization }
-RMDSyntaxNodeTextInputPresenter >> initialize [
-	super initialize.
-]
-
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
@@ -111,11 +106,15 @@ RMDSyntaxNodeTextInputPresenter >> syntaxNode [
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 	syntaxNode := aRMDSyntaxNode.
-	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
+	syntaxNode isString
 		ifTrue: [ self beOk.
-			lastValidSyntaxNode := aRMDSyntaxNode ]
-		ifFalse: [ self beError ].
-	text := aRMDSyntaxNode printString
+			lastValidSyntaxNode := aRMDSyntaxNode.
+			text := aRMDSyntaxNode ]
+		ifFalse: [ (aRMDSyntaxNode isKindOf: RMDSyntaxNode)
+				ifTrue: [ self beOk.
+					lastValidSyntaxNode := aRMDSyntaxNode ]
+				ifFalse: [ self beError ].
+			text := aRMDSyntaxNode printString ]
 ]
 
 { #category : #api }
@@ -123,7 +122,7 @@ RMDSyntaxNodeTextInputPresenter >> text: aString [
 	| newText node |
 	newText := aString asText.
 	node := parser end parse: aString asString.
-	node isPetit2Failure
+	^ node isPetit2Failure
 		ifTrue: [ | node2 |
 			node2 := parser parse: aString asString.
 			node2 isPetit2Failure
@@ -133,11 +132,9 @@ RMDSyntaxNodeTextInputPresenter >> text: aString [
 				from: (node position + 1 min: aString size max: 1)
 				to: aString size.
 			self beError.
-			syntaxNode := nil ]
-		ifFalse: [ self beOk.
-			syntaxNode := node.
-			lastValidSyntaxNode := node ].
-	^ super text: newText
+			syntaxNode := nil.
+			super text: newText ]
+		ifFalse: [ self syntaxNode: node ]
 ]
 
 { #category : #'api-events' }

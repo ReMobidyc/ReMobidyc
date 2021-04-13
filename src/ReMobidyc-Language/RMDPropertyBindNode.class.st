@@ -90,6 +90,26 @@ RMDPropertyBindNode >> printOn: aStream [
 	expression printOn: aStream
 ]
 
+{ #category : #printing }
+RMDPropertyBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	actionAgent
+		ifNil: [ aStream nextPutAll: 'my ' ]
+		ifNotNil: [ aStream
+				nextPutAll: actionAgent;
+				nextPutAll: '''s ' ].
+	aStream
+		nextPutAll: actionProperty;
+		nextPutAll: ' -> '.
+	expression
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDPropertyBindNode >> replaceChildren: aDictionary [
 	aDictionary

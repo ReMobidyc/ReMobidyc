@@ -1,11 +1,11 @@
 Class {
 	#name : #RMDTypeError,
-	#superclass : #Error,
+	#superclass : #Exception,
 	#instVars : [
 		'ast',
 		'unit'
 	],
-	#category : #'ReMobidyc-Units'
+	#category : #'ReMobidyc-Language-Type'
 }
 
 { #category : #'instance creation' }
@@ -13,10 +13,8 @@ RMDTypeError class >> on: aRMDSyntaxNode with: aRMDUnit [
 	^ self new
 		ast: aRMDSyntaxNode;
 		unit: aRMDUnit;
-		messageText:
-			'Conflicting units ' , aRMDSyntaxNode type printString , ' and '
-				, aRMDUnit printString , ' at '
-				, aRMDSyntaxNode printString yourself
+		messageText: aRMDSyntaxNode printString , ' [' , aRMDUnit printString , ']';
+		yourself
 ]
 
 { #category : #accessing }
@@ -27,6 +25,11 @@ RMDTypeError >> ast [
 { #category : #accessing }
 RMDTypeError >> ast: aRMDSyntaxNode [
 	ast := aRMDSyntaxNode
+]
+
+{ #category : #accessing }
+RMDTypeError >> defaultAction [
+	^ UnhandledError signalForException: self
 ]
 
 { #category : #accessing }

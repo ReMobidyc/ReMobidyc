@@ -284,6 +284,55 @@ RMDActionDefinitionNode >> printOn: aStream [
 		nextPut: Character cr
 ]
 
+{ #category : #printing }
+RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: 'to ';
+		nextPutAll: identifier.
+	object
+		ifNotNil: [ aStream
+				nextPut: Character space;
+				nextPutAll: object ].
+	aStream nextPutAll: ' is'.
+	guard notNil
+		ifTrue: [ aStream
+				nextPut: Character cr;
+				nextPutAll: '    presume '.
+			guard
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection ].
+	propertyDefinitions
+		do: [ :def | 
+			aStream
+				nextPut: Character cr;
+				nextPutAll: '    '.
+			def
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection ].
+	utilityDefinitions
+		ifNotEmpty: [ aStream
+				nextPut: Character cr;
+				nextPutAll: 'where';
+				nextPut: Character cr.
+			utilityDefinitions
+				do: [ :def | 
+					aStream nextPutAll: '    '.
+					def
+						printOn: aStream
+						ifIncludedIn: aCollectionOfRMDSyntaxNode
+						addSectionTo: aCollection ]
+				separatedBy: [ aStream nextPut: Character cr ] ].
+	aStream
+		nextPut: $.;
+		nextPut: Character cr.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #accessing }
 RMDActionDefinitionNode >> propertyDefinitions [
 	^ propertyDefinitions

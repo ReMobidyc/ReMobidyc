@@ -18,7 +18,7 @@ RMDLocalActionIdentifierNode >> resolveWith: aRMDSimulationModel [
 RMDLocalActionIdentifierNode >> typecheckIn: aRMDInterpreter [
 	aRMDInterpreter
 		actionDefinitionAt: shortName
-		ifAbsent: [ ^ KeyNotFound signal: shortName ]
+		ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

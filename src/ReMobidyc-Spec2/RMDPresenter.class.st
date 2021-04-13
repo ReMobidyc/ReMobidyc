@@ -58,6 +58,11 @@ RMDPresenter >> newColorDropList: anArrayOfColor [
 ]
 
 { #category : #widgets }
+RMDPresenter >> newHighlightingSyntaxNodeTextInput [
+	^ self instantiate: RMDHighlightingSyntaxNodeTextInputPresenter
+]
+
+{ #category : #widgets }
 RMDPresenter >> newNumberInput [
 	^ self instantiate: RMDNumberInputPresenter
 ]

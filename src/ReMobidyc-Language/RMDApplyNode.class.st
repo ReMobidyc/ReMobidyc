@@ -78,6 +78,24 @@ RMDApplyNode >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
+{ #category : #printing }
+RMDApplyNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: function.
+	aStream nextPut: $(.
+	arguments
+		do: [ :expression | 
+			expression
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection ]
+		separatedBy: [ aStream nextPutAll: ', ' ].
+	aStream nextPut: $).
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDApplyNode >> replaceChildren: aDictionary [
 	aDictionary at: function ifPresent: [ :node | function := node copy ].

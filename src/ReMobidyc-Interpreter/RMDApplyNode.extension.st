@@ -10,7 +10,11 @@ RMDApplyNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDApplyNode >> typecheckIn: aRMDInterpreter [
-	^ (RMDFunction at: function)
+	^ [ [ (RMDFunction at: function)
 		typecheckWithArguments: arguments
-		in: aRMDInterpreter
+		in: aRMDInterpreter ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ] ]
+		on: KeyNotFound
+		do: [ :ex | ex resignalAs: (RMDUnresolvedReferenceError on: self) ]
 ]

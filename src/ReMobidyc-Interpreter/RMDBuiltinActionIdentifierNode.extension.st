@@ -18,5 +18,5 @@ RMDBuiltinActionIdentifierNode >> resolveWith: aRMDSimulationModel [
 RMDBuiltinActionIdentifierNode >> typecheckIn: aRMDInterpreter [
 	RMDBuiltinRepository
 		actionNamed: shortName
-		ifAbsent: [ ^ KeyNotFound signal: shortName ]
+		ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ]
 ]

@@ -58,3 +58,15 @@ RMDCellDirectiveNode >> printOn: aStream [
 		nextPutAll: ' neighbor''s ';
 		nextPutAll: cellPropertyVariable identifier
 ]
+
+{ #category : #printing }
+RMDCellDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: directive;
+		nextPutAll: ' neighbor''s ';
+		nextPutAll: cellPropertyVariable identifier.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]

@@ -109,6 +109,37 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
+{ #category : #printing }
+RMDSimulationDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: 'Simulation with';
+		nextPut: Character cr.
+	cellInitializer
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPut: Character cr.
+	timeDefinition
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPut: Character cr.
+	animatInitializers
+		do: [ :def | 
+			def
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection ]
+		separatedBy: [ aStream
+				nextPut: $,;
+				nextPut: Character cr ].
+	aStream nextPut: $..
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDSimulationDefinitionNode >> replaceChildren: aDictionary [
 	timeDefinition := timeDefinition copyReplace: aDictionary.

@@ -27,3 +27,14 @@ RMDLocalActionIdentifierNode >> printOn: aStream [
 		nextPutAll: shortName;
 		nextPutAll: '@model'
 ]
+
+{ #category : #printing }
+RMDLocalActionIdentifierNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream
+		nextPutAll: shortName;
+		nextPutAll: '@model'.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]

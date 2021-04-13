@@ -346,9 +346,19 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 RMDAgentDefinitionBrowser >> updateSourceText [
 	simulationModel
 		ifNotNil: [ taskList selection selectedItem
-				ifNotNil: [ :behaviorDefinition | 
+				ifNotNil: [ :taskDefinition | 
+					| highlights |
+					highlights := Set new: 10.
+					[ [ simulationModel typecheck: taskDefinition ]
+						on: RMDTypeError
+						do: [ :ex | 
+							highlights add: ex ast.
+							ex resume: ex unit ] ]
+						on: RMDUnresolvedReferenceError
+						do: [ :ex | highlights add: ex ast ].
+					sourceText highlights: highlights.
 					sourceText
-						text: (behaviorDefinition actionWith: simulationModel) printString asText ]
+						text: (taskDefinition actionWith: simulationModel) printString asText ]
 				ifNil: [ sourceText text: '' ] ]
 ]
 

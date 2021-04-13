@@ -39,7 +39,7 @@ RMDUnitType >> unify: aRMDType [
 { #category : #'type checking' }
 RMDUnitType >> unifyWithUnitType: aRMDType [
 	unit = aRMDType unit
-		ifFalse: [ ^ RMDTypeUnificationError on: aRMDType and: self ].
+		ifFalse: [ ^ (RMDTypeUnificationError on: aRMDType and: self) signal ].
 	^ self
 ]
 

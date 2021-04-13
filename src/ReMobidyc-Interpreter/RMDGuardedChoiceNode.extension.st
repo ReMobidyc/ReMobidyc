@@ -11,11 +11,13 @@ RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDGuardedChoiceNode >> typecheckIn: aRMDInterpreter [
-	| type |
+	[ | type |
 	type := RMDType any.
 	guardsAndChoices
 		do: [ :assoc | 
 			assoc key typecheckIn: aRMDInterpreter.
 			type := type unify: (assoc value typecheckIn: aRMDInterpreter) ].
-	^ type
+	^ type ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
 ]

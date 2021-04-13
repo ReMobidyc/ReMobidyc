@@ -69,6 +69,24 @@ RMDUniformDistributionNode >> printOn: aStream [
 	toLiteral printOn: aStream
 ]
 
+{ #category : #printing }
+RMDUniformDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'uniform '.
+	fromLiteral
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	aStream nextPutAll: ' to '.
+	toLiteral
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDUniformDistributionNode >> replaceChildren: aDictionary [
 	fromLiteral := fromLiteral copyReplace: aDictionary.

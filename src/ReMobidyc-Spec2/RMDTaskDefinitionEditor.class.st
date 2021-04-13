@@ -458,8 +458,18 @@ RMDTaskDefinitionEditor >> updateSourceText [
 	simulationModel
 		ifNotNil: [ self taskDefinition
 				ifNotNil: [ :taskDefinition | 
+					| highlights |
+					highlights := Set new: 10.
+					[ [ simulationModel typecheck: taskDefinitionNode ]
+						on: RMDTypeError
+						do: [ :ex | 
+							highlights add: ex ast.
+							ex resume: ex unit ] ]
+						on: RMDUnresolvedReferenceError
+						do: [ :ex | highlights add: ex ast ].
+					sourceText highlights: highlights.
 					sourceText
-						text: (taskDefinition actionWith: simulationModel) printString asText ] ]
+						text: (taskDefinitionNode actionWith: simulationModel) printString asText ] ]
 ]
 
 { #category : #updating }

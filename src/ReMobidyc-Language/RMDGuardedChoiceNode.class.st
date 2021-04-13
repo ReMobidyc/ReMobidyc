@@ -95,6 +95,15 @@ RMDGuardedChoiceNode >> printOn: aStream [
 	self printInlineOn: aStream
 ]
 
+{ #category : #printing }
+RMDGuardedChoiceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	self printInlineOn: aStream.
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDGuardedChoiceNode >> replaceChildren: aDictionary [
 	guardsAndChoices := guardsAndChoices

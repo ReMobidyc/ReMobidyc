@@ -6,6 +6,8 @@ Class {
 	#instVars : [
 		'#syntaxNode => SpObservableSlot',
 		'#lastValidSyntaxNode => SpObservableSlot',
+		'#highlights => SpObservableSlot',
+		'#highlightColor => SpObservableSlot',
 		'#parser'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
@@ -21,9 +23,38 @@ RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
 	self acceptText: aRMDSyntaxNode printString
 ]
 
+{ #category : #private }
+RMDSourceTextPresenter >> highlightedTextFrom: aRMDSyntaxNode [
+	| sections newText |
+	sections := OrderedCollection new: 10.
+	newText := (String
+		streamContents: [ :stream | 
+			aRMDSyntaxNode
+				printOn: stream
+				ifIncludedIn: highlights asSet
+				addSectionTo: sections ]) asText.
+	sections
+		do:
+			[ :section | newText makeColor: highlightColor from: section first to: section last ].
+	^ newText
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> highlights [
+	^ highlights
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
+	highlights := aCollectionOfRMDSyntaxNode.
+	syntaxNode ifNotNil: [ text := self highlightedTextFrom: syntaxNode ]
+]
+
 { #category : #initialization }
 RMDSourceTextPresenter >> initialize [
 	super initialize.
+	highlightColor := Color red darker.
+	highlights := Array with: '10000 [kcal]' asRMDExpression
 ]
 
 { #category : #api }
@@ -48,13 +79,14 @@ RMDSourceTextPresenter >> syntaxNode [
 
 { #category : #api }
 RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
-	syntaxNode == aRMDSyntaxNode ifTrue: [ ^self ].
+	syntaxNode == aRMDSyntaxNode
+		ifTrue: [ ^ self ].
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
 		ifTrue: [ self beOk.
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	super text: aRMDSyntaxNode printString
+	super text: (self highlightedTextFrom: aRMDSyntaxNode)
 ]
 
 { #category : #api }
@@ -76,11 +108,8 @@ RMDSourceTextPresenter >> text: aString [
 						to: aString size.
 					self beError.
 					syntaxNode := nil ]
-				ifFalse: [ self beOk.
-					syntaxNode := node.
-					lastValidSyntaxNode := node.
-					aText := node printString ] ].
-	super text: aText
+				ifFalse: [ ^ self syntaxNode: node ] ].
+	^ super text: aText
 ]
 
 { #category : #'api-events' }

@@ -64,6 +64,23 @@ RMDNegationNode >> printOn: aStream [
 		ifFalse: [ aStream nextPut: $) ]
 ]
 
+{ #category : #printing }
+RMDNegationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'not '.
+	self precedence <= condition precedence
+		ifFalse: [ aStream nextPut: $( ].
+	condition
+		printOn: aStream
+		ifIncludedIn: aCollectionOfRMDSyntaxNode
+		addSectionTo: aCollection.
+	self precedence <= condition precedence
+		ifFalse: [ aStream nextPut: $) ].
+	(aCollectionOfRMDSyntaxNode includes: self)
+		ifTrue: [ aCollection add: (start to: aStream position) ]
+]
+
 { #category : #rewriting }
 RMDNegationNode >> replaceChildren: aDictionary [
 	condition := condition copyReplace: aDictionary
