@@ -11,3 +11,11 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 			with: [ RMDUniformDistributionYNode current evalIn: aRMDInterpreter ]
 			ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ]
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
+	aRMDInterpreter
+		withContext: (aRMDInterpreter newTypecheckContextForAnimat: self animat)
+		do: [ propertyInitializers
+				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
+]

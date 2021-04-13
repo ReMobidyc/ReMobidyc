@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDActionContext,
-	#superclass : #RMDIndividualContext,
+	#superclass : #RMDExecutionContext,
 	#instVars : [
 		'action',
 		'utilities',

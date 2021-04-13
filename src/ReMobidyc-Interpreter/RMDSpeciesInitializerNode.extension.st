@@ -8,6 +8,5 @@ RMDSpeciesInitializerNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDSpeciesInitializerNode >> typecheckIn: aRMDInterpreter [
-	propertyInitializers
-		do: [ :initializer | initializer typecheckIn: aRMDInterpreter ]
+	^ self subclassResponsibility
 ]

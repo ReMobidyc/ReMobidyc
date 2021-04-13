@@ -86,3 +86,25 @@ RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
 RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
 	^ self numArgsError
 ]
+
+{ #category : #accessing }
+RMDFunction >> valueWithArguments: anArrayOfNumber [
+	| arity |
+	arity := anArrayOfNumber size.
+	arity = 1
+		ifTrue: [ ^ self value: anArrayOfNumber first ].
+	arity = 2
+		ifTrue: [ ^ self value: anArrayOfNumber first value: anArrayOfNumber second ].
+	arity = 3
+		ifTrue: [ ^ self
+				value: anArrayOfNumber first
+				value: anArrayOfNumber second
+				value: anArrayOfNumber third ].
+	arity = 4
+		ifTrue: [ ^ self
+				value: anArrayOfNumber first
+				value: anArrayOfNumber second
+				value: anArrayOfNumber third
+				value: anArrayOfNumber fourth ].
+	^ self numArgsError
+]

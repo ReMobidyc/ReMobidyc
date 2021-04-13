@@ -1,16 +1,10 @@
 Class {
 	#name : #RMDInterpreter,
-	#superclass : #Model,
+	#superclass : #RMDAbstractInterpreter,
 	#instVars : [
 		'memory',
 		'libraries',
-		'context',
-		'contextSemaphore',
-		'individualDirectory',
-		'simulationModel'
-	],
-	#classInstVars : [
-		'standardLibrary'
+		'individualDirectory'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -71,18 +65,6 @@ Simulation with
 		inspect
 ]
 
-{ #category : #'library access' }
-RMDInterpreter class >> standardLibrary [
-	^ standardLibrary
-		ifNil: [ standardLibrary := {('min' -> RMDFunction min).
-			('max' -> RMDFunction max).
-			('mean' -> RMDFunction mean).
-			('sum' -> RMDFunction sum).
-			('sin' -> RMDFunction sin).
-			('cos' -> RMDFunction cos).
-			('abs' -> RMDFunction abs)} asDictionary ]
-]
-
 { #category : #examples }
 RMDInterpreter class >> sugarScape [
 	<script: 'RMDInterpreter sugarScape inspect'>
@@ -97,27 +79,9 @@ RMDInterpreter class >> sugarScape [
 ]
 
 { #category : #'accessing - definitions' }
-RMDInterpreter >> actionDefinitionAt: aString ifAbsent: errorBlock [
-	^ simulationModel
-		ifNil: errorBlock
-		ifNotNil: [ simulationModel actionDefinitionAt: aString ifAbsent: errorBlock ]
-]
-
-{ #category : #'accessing - definitions' }
 RMDInterpreter >> actionIdentifiers [
 	^ self actionNames
 		collect: [ :actionName | RMDLocalActionIdentifierNode identifier: actionName ]
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> actionNames [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #actionNames
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> addActionDefinition: aRMDActionDefinitionNode [
-	^ simulationModel
-		ifNotNil: [ simulationModel addActionDefinition: aRMDActionDefinitionNode ]
 ]
 
 { #category : #'accessing - libraries' }
@@ -146,18 +110,6 @@ RMDInterpreter >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteg
 { #category : #'animat operations' }
 RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
 	^ individualDirectory allocateWorld: aRMDWorldDefinitionNode
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
-	^ simulationModel
-		ifNil: errorBlock
-		ifNotNil: [ simulationModel animatDefinitionAt: aString ifAbsent: errorBlock ]
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> animatNames [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #animatNames
 ]
 
 { #category : #simulating }
@@ -200,51 +152,11 @@ RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
 	^ individualDirectory cellAtXIndex: anInteger yIndex: anotherInteger
 ]
 
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> cellDefinition [
-	^ simulationModel cellDefinition
-]
-
 { #category : #directives }
 RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
 	aString = 'direction'
 		ifTrue: [ ^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
 	^ self error: 'Unknown directive: ' , aString
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellLength [
-	^ simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellX: aNumber [
-	^ (aNumber - self west) / simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellXDivisions [
-	^ simulationModel cellXDivisions
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellY: aNumber [
-	^ (aNumber - self south) / simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellYDivisions [
-	^ simulationModel cellYDivisions
-]
-
-{ #category : #private }
-RMDInterpreter >> context [
-	^ context
-]
-
-{ #category : #timing }
-RMDInterpreter >> deltaTime [
-	^ simulationModel deltaTime
 ]
 
 { #category : #directives }
@@ -328,11 +240,6 @@ RMDInterpreter >> distance: aString [
 	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
 ]
 
-{ #category : #'space access' }
-RMDInterpreter >> east [
-	^ simulationModel east
-]
-
 { #category : #'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
@@ -374,10 +281,8 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 { #category : #initialization }
 RMDInterpreter >> initialize [
 	super initialize.
-	simulationModel := RMDSimulationModel new.
 	libraries := OrderedCollection with: self standardLibrary.
-	individualDirectory := RMDIndividualDirectory new.
-	contextSemaphore := Semaphore forMutualExclusion
+	individualDirectory := RMDIndividualDirectory new
 ]
 
 { #category : #'variable access' }
@@ -402,73 +307,9 @@ RMDInterpreter >> initializeVariableIfNotInitialized: aString with: aBlock ifAbs
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> load: aRMDSyntaxNode [
-	simulationModel load: aRMDSyntaxNode
-]
-
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> newTypecheckContext [
-	^ RMDTypecheckContext new
-		cellDefinition: self cellDefinition;
-		worldDefinition: self worldDefinition;
-		yourself
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> newTypecheckContextForAnimat: aString [
-	^ self newTypecheckContext
-		subjectDefinition:
-			(self
-				animatDefinitionAt: aString
-				ifAbsent: [ ^ KeyNotFound signal: aString ]);
-		yourself
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> newTypecheckContextForCell [
-	^ self newTypecheckContext 
-		subjectDefinition: self cellDefinition;
-		yourself
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
-	| subject newContext |
-	subject := aRMDTaskDefinitionNode subjectIdentifier.
-	newContext := subject = 'World'
-		ifTrue: [ self newTypecheckContextForWorld ]
-		ifFalse: [ subject = 'Cell'
-				ifTrue: [ self newTypecheckContextForCell ]
-				ifFalse: [ self newTypecheckContextForAnimat: subject ] ].
-	newContext action: (aRMDTaskDefinitionNode actionWith: self).
-	aRMDTaskDefinitionNode hasObject
-		ifTrue: [ | object |
-			object := aRMDTaskDefinitionNode objectIdentifier.
-			newContext
-				object: object
-				definition:
-					(self
-						animatDefinitionAt: object
-						ifAbsent: [ ^ KeyNotFound signal: object ]) ].
-	^ newContext
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> newTypecheckContextForWorld [
-	^ self newTypecheckContext 
-		subjectDefinition: self worldDefinition;
-		yourself
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> north [
-	^ simulationModel north
 ]
 
 { #category : #simulating }
@@ -522,23 +363,6 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 						ifFalse: [ self terminate: individual animat: animatDef ] ] ]
 ]
 
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
-	^ simulationModel
-		ifNil: errorBlock
-		ifNotNil: [ simulationModel
-				removeTaskDefinition: aRMDTaskDefinitionNode
-				ifAbsent: errorBlock ]
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
-	^ simulationModel
-		ifNotNil: [ simulationModel
-				replaceTask: aRMDTaskDefinitionNode
-				with: anotherRMDTaskDefinitionNode ]
-]
-
 { #category : #'accessing - repository' }
 RMDInterpreter >> repositoryName [
 	^ 'local'
@@ -547,11 +371,6 @@ RMDInterpreter >> repositoryName [
 { #category : #'accessing - definitions' }
 RMDInterpreter >> resetTasks [
 	simulationModel tasksDo: [ :task | task resetAction ]
-]
-
-{ #category : #private }
-RMDInterpreter >> setContext: aRMDContext [
-	context := aRMDContext
 ]
 
 { #category : #private }
@@ -604,26 +423,6 @@ RMDInterpreter >> setupSimulation [
 	self timeChanged
 ]
 
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> simulationDefinition [
-	^ simulationModel simulationDefinition
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> simulationModel [
-	^ simulationModel
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> simulationModel: aRMDSimulationModel [
-	simulationModel := aRMDSimulationModel
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> south [
-	^ simulationModel south
-]
-
 { #category : #'accessing - libraries' }
 RMDInterpreter >> standardLibrary [
 	^ self class standardLibrary 
@@ -637,16 +436,6 @@ RMDInterpreter >> stepSimulation [
 			self bounceOutOfBoundsAnimats.
 			self timeChanged.
 			true ]
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> taskDefinitions [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #taskDefinitions
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> taskNames [
-	^ simulationModel ifNil: [ Array new ] ifNotNil: #taskNames
 ]
 
 { #category : #'animat operations' }
@@ -688,78 +477,6 @@ RMDInterpreter >> time: aNumber [
 { #category : #simulating }
 RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typeOfDirective: aString [
-	aString = 'directionOfGradient'
-		ifTrue: [ ^ RMDType rad ].
-	aString = 'direction'
-		ifTrue: [ ^ RMDType rad ].
-	aString = 'distance'
-		ifTrue: [ ^ RMDType m ].
-	aString = 'time'
-		ifTrue: [ ^ RMDType s ].
-	aString = 'delta time'
-		ifTrue: [ ^ RMDType s ].
-	aString = 'terminate'
-		ifTrue: [ ^ RMDType noDimension ].
-	^ self error: 'Unknown directive: ' , aString
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
-	^ (self context typeAt: aString ifAbsent: errorBlock)
-		typecheckIn: self
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typeOfVariable: aString agent: anotherString ifAbsent: errorBlock [
-	^ context
-		typeOfVariable: aString
-		agent: anotherString
-		ifAbsent: errorBlock
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typeUtilityVariable: aString as: aRMDType [
-	self context typeAt: aString put: aRMDType
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typecheck [
-	self
-		typecheckInitializers;
-		typecheckTasks
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typecheckInitializers [
-	self
-		withContext: self newTypecheckContextForWorld
-		do: [ simulationModel worldInitializer typecheckIn: self ].
-	self
-		withContext: self newTypecheckContextForCell
-		do: [ simulationModel cellInitializer typecheckIn: self ].
-	simulationModel
-		animatInitializersDo: [ :animatInitializer | 
-			self
-				withContext: (self newTypecheckContextForAnimat: animatInitializer animat)
-				do: [ animatInitializer typecheckIn: self ] ]
-]
-
-{ #category : #'type checking' }
-RMDInterpreter >> typecheckTasks [
-	simulationModel
-		taskDefinitionsDo: [ :taskDefinition | 
-			self
-				withContext: (self newTypecheckContextForTask: taskDefinition)
-				do: [ taskDefinition typecheckIn: self ] ]
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> west [
-	^ simulationModel west
 ]
 
 { #category : #'context controls' }
@@ -826,16 +543,6 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimat
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withContext: aRMDContext do: aBlock [
-	^ contextSemaphore
-		critical: [ | originalContext |
-			originalContext := context.
-			self setContext: aRMDContext.
-			[ aBlock cull: self cull: context ]
-				ensure: [ context := originalContext ] ]
-]
-
-{ #category : #'context controls' }
 RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
 	^ self
 		withContext:
@@ -853,11 +560,6 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpecies
 				subject: anInteger
 				definition: aRMDSpeciesInitializerNode)
 		do: aBlock
-]
-
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> worldDefinition [
-	^ simulationModel worldDefinition
 ]
 
 { #category : #'variable access' }

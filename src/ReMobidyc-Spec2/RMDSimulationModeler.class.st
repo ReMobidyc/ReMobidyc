@@ -17,6 +17,27 @@ RMDSimulationModeler class >> defaultSpec [
 		add: #views yourself
 ]
 
+{ #category : #menus }
+RMDSimulationModeler class >> golapMenuOn: aBuilder [
+	<worldMenu>
+	(aBuilder item: #ReMobidyc)
+		label: 're:Mobidyc';
+		order: 1;
+		with: [ (aBuilder item: #OpenNew)
+				parent: 'ReMobidyc';
+				label: 'Modeler';
+				action: [ (RMDSimulationModeler on: RMDSimulationModel new) openWithSpec ];
+				help: 'Open a modeler window with a new simulation model'.
+			(aBuilder item: #Examples)
+				parent: 'ReMobidyc';
+				label: 'Examples';
+				with: [ (aBuilder item: #SugarScape)
+						parent: #Examples;
+						label: 'sugar scape';
+						action: [ RMDSimulationModeler sugarScape openWithSpec ];
+						help: 'A simple simulation of an energy cycle.' ] ]
+]
+
 { #category : #'instance creation' }
 RMDSimulationModeler class >> on: aRMDSimulationModel [
 	^ self new

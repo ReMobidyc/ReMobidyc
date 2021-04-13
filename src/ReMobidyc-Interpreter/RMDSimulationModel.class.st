@@ -109,6 +109,11 @@ RMDSimulationModel >> animatDefinitionsDo: aBlock [
 	animatDefinitions valuesDo: aBlock
 ]
 
+{ #category : #'accessing - initializers' }
+RMDSimulationModel >> animatInitializers [
+	^ simulationDefinition animatInitializers
+]
+
 { #category : #enumerating }
 RMDSimulationModel >> animatInitializersDo: aBlock [
 	simulationDefinition animatInitializers do: aBlock
@@ -267,6 +272,23 @@ RMDSimulationModel >> taskNames [
 { #category : #enumerating }
 RMDSimulationModel >> tasksDo: aBlock [
 	taskDefinitions do: aBlock
+]
+
+{ #category : #'type checking' }
+RMDSimulationModel >> typecheck [
+	self typechecker typecheck
+]
+
+{ #category : #'type checking' }
+RMDSimulationModel >> typecheck: aRMDSyntaxNode [
+	aRMDSyntaxNode typecheckIn: self typechecker
+]
+
+{ #category : #'type checking' }
+RMDSimulationModel >> typechecker [
+	^ RMDTypechecker new
+		simulationModel: self;
+		yourself
 ]
 
 { #category : #'accessing - cells' }

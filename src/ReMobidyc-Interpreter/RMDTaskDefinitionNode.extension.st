@@ -23,5 +23,7 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
-	(self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter
+	aRMDInterpreter
+		withContext: (aRMDInterpreter newTypecheckContextForTask: self)
+		do: [ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
 ]
