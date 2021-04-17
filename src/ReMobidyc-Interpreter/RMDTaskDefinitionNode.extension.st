@@ -16,9 +16,10 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 				individualsOf: species
 				do: [ :animat | 
 					aRMDInterpreter
+						setupRandomForIndividual: animat task: self;
 						withActionContextWithIndividual: animat
-						species: species
-						do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
+							species: species
+							do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

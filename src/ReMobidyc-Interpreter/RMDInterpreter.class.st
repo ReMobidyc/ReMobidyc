@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'individualDirectory'
+		'individualDirectory',
+		'randomSeed',
+		'randomGenerator'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -282,7 +284,9 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 RMDInterpreter >> initialize [
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
-	individualDirectory := RMDIndividualDirectory new
+	individualDirectory := RMDIndividualDirectory new.
+	randomSeed := 1.
+	randomGenerator := RMDFishmanMooreRandomGenerator new
 ]
 
 { #category : #'variable access' }
@@ -317,9 +321,19 @@ RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
 ]
 
-{ #category : #private }
+{ #category : #'random numbers' }
 RMDInterpreter >> random [
-	^ SharedRandom globalGenerator next
+	^ randomGenerator next
+]
+
+{ #category : #'random numbers' }
+RMDInterpreter >> randomSeed [
+	^ randomSeed
+]
+
+{ #category : #'random numbers' }
+RMDInterpreter >> randomSeed: anInteger [
+	randomSeed := anInteger asInteger
 ]
 
 { #category : #'variable access' }
@@ -378,6 +392,25 @@ RMDInterpreter >> setMemory: aRMDMemory [
 	memory := aRMDMemory
 ]
 
+{ #category : #'random numbers' }
+RMDInterpreter >> setupRandomForIndividual: anInteger [
+	randomGenerator
+		initializeWithAll:
+			{randomSeed.
+			memory time.
+			anInteger}
+]
+
+{ #category : #'random numbers' }
+RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
+	randomGenerator
+		initializeWithAll:
+			{randomSeed.
+			memory time.
+			anInteger.
+			(self taskDefinitions indexOf: aRMDTaskDefinitionNode)}
+]
+
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 	memory time: 0.
@@ -398,15 +431,17 @@ RMDInterpreter >> setupSimulation [
 	individualDirectory
 		worldDo: [ :world | 
 			self
+				setupRandomForIndividual: world;
 				withInitializerContextWithSubject: world
-				species: simulationModel worldDefinition
-				do: [ simulationModel worldInitializer evalIn: self ] ].
+					species: simulationModel worldDefinition
+					do: [ simulationModel worldInitializer evalIn: self ] ].
 	individualDirectory
 		cellsDo: [ :cell | 
 			self
+				setupRandomForIndividual: cell;
 				withInitializerContextWithSubject: cell
-				species: simulationModel cellDefinition
-				do: [ simulationModel cellInitializer evalIn: self ] ].
+					species: simulationModel cellDefinition
+					do: [ simulationModel cellInitializer evalIn: self ] ].
 	simulationModel
 		animatInitializersDo: [ :initializer | 
 			individualDirectory
@@ -417,9 +452,10 @@ RMDInterpreter >> setupSimulation [
 						animatDefinitionAt: initializer animat
 						ifAbsent: [ ^ KeyNotFound signal: initializer animat ].
 					self
+						setupRandomForIndividual: animat;
 						withInitializerContextWithSubject: animat
-						species: species
-						do: [ initializer evalIn: self ] ] ].
+							species: species
+							do: [ initializer evalIn: self ] ] ].
 	self timeChanged
 ]
 
