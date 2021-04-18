@@ -9,7 +9,9 @@ Class {
 		'visualizer',
 		'stepButton',
 		'timeLabel',
-		'timeSlider'
+		'timeSlider',
+		'time',
+		'duration'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -61,7 +63,10 @@ RMDObservatory >> initializePresenters [
 		min: 0;
 		max: 1;
 		value: 0;
-		enabled: false;
+		whenValueChangedDo: [ interpreter
+				ifNotNil: [ runButton state
+						ifFalse: [ (time / duration - timeSlider value) abs > 1.0e-8
+								ifTrue: [ interpreter time: timeSlider value * duration ] ] ] ];
 		yourself.
 	runButton := self newButton
 		label: 'run';
@@ -70,13 +75,15 @@ RMDObservatory >> initializePresenters [
 		whenStateChangedDo: [ :state | 
 			state == true
 				ifTrue: [ process := [ stepButton enabled: false.
+					timeSlider enabled: false.
 					[ self runState == true ]
 						whileTrue: [ interpreter
 								ifNotNil: [ interpreter stepSimulation
 										ifFalse: [ self runState: false ].
 									0 milliSecond wait ] ].
 					process := nil.
-					stepButton enabled: true ]
+					stepButton enabled: true.
+					timeSlider enabled: true ]
 						forkAt: Processor userBackgroundPriority ] ];
 		yourself.
 	stepButton := self newButton
@@ -128,13 +135,11 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 						interpreter: interpreter;
 						updateImage;
 						yourself ];
-					whenRetrievedDo: [ :content | content updateImage ] ;
+				whenRetrievedDo: [ :content | content updateImage ];
 				title: 'Map').
-	timeSlider
-		min: 0.0;
-		max:
-			(interpreter simulationModel simulationDefinition timeDefinition
-				duration evalIn: interpreter).
+	duration := interpreter simulationModel simulationDefinition
+		timeDefinition duration evalIn: interpreter.
+	timeSlider quantum: interpreter deltaTime / interpreter duration.
 	self
 		updateTimeLabel;
 		resetSimulation
@@ -156,7 +161,8 @@ RMDObservatory >> toggleRunPauseSimulation [
 { #category : #updating }
 RMDObservatory >> updateTimeLabel [
 	interpreter
-		ifNotNil: [ timeLabel
+		ifNotNil: [ time := interpreter time.
+			timeLabel
 				label:
 					(String
 						streamContents: [ :stream | 
@@ -165,12 +171,10 @@ RMDObservatory >> updateTimeLabel [
 								printOn: stream.
 							stream nextPutAll: ' - now '.
 							(interpreter simulationDefinition timeDefinition duration unit
-								fromSI: interpreter time)
-								printOn: stream
-								showingDecimalPlaces: 3.
+								fromSI: time) printOn: stream showingDecimalPlaces: 3.
 							stream nextPutAll: ' [ '.
 							interpreter simulationDefinition timeDefinition duration unit
 								printOn: stream.
 							stream nextPutAll: ' ]' ]).
-			timeSlider value: (timeSlider scaleValue: interpreter time) ]
+			timeSlider value: time / duration ]
 ]

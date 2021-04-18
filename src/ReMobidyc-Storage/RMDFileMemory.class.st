@@ -30,7 +30,7 @@ RMDFileMemory >> basePath: aFileReference [
 
 { #category : #defaults }
 RMDFileMemory >> defaultDigitsForTime [
-	^ 3
+	^ 6
 ]
 
 { #category : #defaults }
@@ -78,6 +78,34 @@ RMDFileMemory >> initialize [
 	super initialize.
 	digitsForTime := self defaultDigitsForTime.
 	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel
+]
+
+{ #category : #timing }
+RMDFileMemory >> latestTime [
+	| dirRef |
+	dirRef := self basePath asFileReference.
+	^ (String
+		streamContents: [ :stream | 
+			(self digitsForTime - 1) // self digitsPerDirectoryLevel
+				timesRepeat: [ dirRef := dirRef
+						/
+							((dirRef directoryNames
+								select: [ :name | 
+									name size = self digitsPerDirectoryLevel
+										and: [ name allSatisfy: #isDigit ] ]
+								thenCollect: [ :name | name asInteger -> name ])
+								ifEmpty: [ ^ 0 ]
+								ifNotEmpty: #max) value.
+					stream nextPutAll: dirRef basename ].
+			stream
+				nextPutAll:
+					((dirRef fileNames
+						select: [ :name | 
+							name size = self digitsPerDirectoryLevel
+								and: [ name allSatisfy: #isDigit ] ]
+						thenCollect: [ :name | name asInteger -> name ])
+						ifEmpty: [ ^ 0 ]
+						ifNotEmpty: #max) value ]) asInteger
 ]
 
 { #category : #'accessing-storage' }

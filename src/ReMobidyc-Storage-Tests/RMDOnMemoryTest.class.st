@@ -28,6 +28,5 @@ RMDOnMemoryTest >> testChangeStorageCapacityTo [
 	self assert: (memory at: 1) equals: 1.
 	memory time: 1.
 	self assert: (memory at: 1) equals: 2.
-	memory time: 3.
-	self should: [ memory at: 1 ] raise: KeyNotFound
+	self should: [ memory time: 3 ] raise: SubscriptOutOfBounds
 ]

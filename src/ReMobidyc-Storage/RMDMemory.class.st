@@ -65,6 +65,11 @@ RMDMemory >> initialize [
 	nextValuesDirty := false
 ]
 
+{ #category : #timing }
+RMDMemory >> latestTime [
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDMemory >> nextAt: anInteger [
 	^ self nextAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
@@ -112,14 +117,11 @@ RMDMemory >> readValuesForTime: anInteger [
 
 { #category : #timing }
 RMDMemory >> sunrise [
-	oldValues := time >= 2
-		ifTrue: [ self readValuesForTime: time - 2 ]
-		ifFalse: [ Dictionary new ].
 	oldValues := time >= 1
 		ifTrue: [ self readValuesForTime: time - 1 ]
 		ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time.
-	nextValues := self readValuesForTime: time + 1.
+	nextValues := values copy.
 	nextDeltas := Dictionary new
 ]
 
@@ -160,7 +162,8 @@ RMDMemory >> time [
 
 { #category : #timing }
 RMDMemory >> time: anInteger [
-	(anInteger isInteger and: [ anInteger >= 0 ])
+	(anInteger isInteger
+		and: [ anInteger between: 0 and: self latestTime ])
 		ifFalse: [ ^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.

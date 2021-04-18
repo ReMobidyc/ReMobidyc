@@ -242,6 +242,11 @@ RMDInterpreter >> distance: aString [
 	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
 ]
 
+{ #category : #timing }
+RMDInterpreter >> duration [
+	^ simulationModel duration
+]
+
 { #category : #'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
@@ -467,9 +472,11 @@ RMDInterpreter >> standardLibrary [
 { #category : #simulating }
 RMDInterpreter >> stepSimulation [
 	^ self time < simulationModel duration
-		and: [ self performTasks.
-			self tick.
-			self bounceOutOfBoundsAnimats.
+		and: [ memory time + 1 <= memory latestTime
+				ifTrue: [ memory time: memory time + 1 ]
+				ifFalse: [ self performTasks.
+					self tick.
+					self bounceOutOfBoundsAnimats ].
 			self timeChanged.
 			true ]
 ]
@@ -507,7 +514,18 @@ RMDInterpreter >> time [
 
 { #category : #timing }
 RMDInterpreter >> time: aNumber [
-	memory time: aNumber // self deltaTime
+	| newTime lastTime |
+	newTime := (aNumber / self deltaTime) rounded.
+	lastTime := memory latestTime.
+	lastTime < newTime
+		ifTrue: [ Cursor wait
+				showWhile: [ memory time: lastTime.
+					[ memory time < newTime ]
+						whileTrue: [ self performTasks.
+							self tick.
+							self bounceOutOfBoundsAnimats ] ] ]
+		ifFalse: [ memory time: newTime ].
+	self timeChanged
 ]
 
 { #category : #simulating }

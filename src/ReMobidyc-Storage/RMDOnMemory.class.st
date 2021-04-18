@@ -29,6 +29,15 @@ RMDOnMemory >> initialize [
 	storage := Array new: 1024
 ]
 
+{ #category : #timing }
+RMDOnMemory >> latestTime [
+	| index |
+	index := storage findFirst: #isNil.
+	^ index = 0
+		ifTrue: [ storage size - 1 ]
+		ifFalse: [ index - 2 max: 0 ]
+]
+
 { #category : #'accessing-storage' }
 RMDOnMemory >> readValuesForTime: anInteger [
 	anInteger >= storage size
