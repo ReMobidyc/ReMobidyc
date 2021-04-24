@@ -60,7 +60,7 @@ RMDFileMemory >> digitsPerDirectoryLevel: anInteger [
 ]
 
 { #category : #'accessing-storage' }
-RMDFileMemory >> fileReferenceForId: anInteger [
+RMDFileMemory >> directoryForId: anInteger [
 	| stringId |
 	stringId := anInteger asString.
 	(String new: self digitsForTime - stringId size withAll: $0)
@@ -87,7 +87,7 @@ RMDFileMemory >> initializeLatestTime [
 	dirRef := self basePath asFileReference.
 	latestTime := (String
 		streamContents: [ :stream | 
-			(self digitsForTime - 1) // self digitsPerDirectoryLevel
+			(self digitsForTime - 1) // self digitsPerDirectoryLevel + 1
 				timesRepeat: [ dirRef := dirRef
 						/
 							((dirRef directoryNames
@@ -97,22 +97,13 @@ RMDFileMemory >> initializeLatestTime [
 								thenCollect: [ :name | name asInteger -> name ])
 								ifEmpty: [ ^ 0 ]
 								ifNotEmpty: #max) value.
-					stream nextPutAll: dirRef basename ].
-			stream
-				nextPutAll:
-					((dirRef fileNames
-						select: [ :name | 
-							name size = self digitsPerDirectoryLevel
-								and: [ name allSatisfy: #isDigit ] ]
-						thenCollect: [ :name | name asInteger -> name ])
-						ifEmpty: [ ^ 0 ]
-						ifNotEmpty: #max) value ]) asInteger
+					stream nextPutAll: dirRef basename ] ]) asInteger
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
 	| ref |
-	ref := self fileReferenceForId: anInteger.
+	ref := (self directoryForId: anInteger) / self valuesFileBasename.
 	ref exists
 		ifFalse: [ ^ Dictionary new ].
 	ref
@@ -131,10 +122,16 @@ RMDFileMemory >> readValuesForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDFileMemory >> valuesFileBasename [
+	^ 'values.csv'
+]
+
+{ #category : #'accessing-storage' }
 RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
-	(self fileReferenceForId: anInteger)
+	((self directoryForId: anInteger) ensureCreateDirectory
+		/ self valuesFileBasename)
+		ensureDelete;
 		writeStreamDo: [ :csvStream | 
-			csvStream position: 0.
 			aDictionary
 				keysAndValuesDo: [ :id :value | 
 					id storeOn: csvStream.
