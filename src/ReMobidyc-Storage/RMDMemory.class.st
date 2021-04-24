@@ -9,10 +9,49 @@ Class {
 		'oldValues',
 		'old2Values',
 		'valuesDirty',
-		'nextValuesDirty'
+		'nextValuesDirty',
+		'nextAvailableSlot',
+		'world',
+		'cell',
+		'xCells',
+		'yCells',
+		'cellSize',
+		'animats'
 	],
 	#category : #'ReMobidyc-Storage'
 }
+
+{ #category : #allocating }
+RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
+	| individual |
+	nextAvailableSlot := (individual := nextAvailableSlot)
+		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+	(animats
+		at: aRMDAnimatDefinitionNode identifier
+		ifAbsentPut: [ Set new: 1024 ]) add: individual.
+	^ individual
+]
+
+{ #category : #allocating }
+RMDMemory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
+	nextAvailableSlot := (cellSize := aRMDCellDefinitionNode
+		totalNumberOfProperties max: 1) * (xCells := anInteger1)
+		* (yCells := anInteger2) + (cell := nextAvailableSlot).
+	^ cell
+]
+
+{ #category : #allocating }
+RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
+	nextAvailableSlot := aRMDWorldDefinitionNode totalNumberOfProperties
+		+ (world := nextAvailableSlot).
+	^ world
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> animatsOf: aString do: aBlock [
+	(animats at: aString ifAbsent: [ ^ self ]) asArray
+		do: [ :id | aBlock value: id ]
+]
 
 { #category : #accessing }
 RMDMemory >> at: anInteger [
@@ -35,6 +74,34 @@ RMDMemory >> at: anInteger ifAbsentPut: aBlock [
 RMDMemory >> at: anInteger put: aNumber [
 	valuesDirty := true.
 	^ values at: anInteger put: aNumber
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> cell [
+	^ cell
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> cellAtXIndex: anInteger yIndex: anotherInteger [
+	^ ((anotherInteger - 1) * xCells + anInteger - 1) * cellSize + cell
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> cellSize [
+	^ cellSize
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> cellsDo: aBlock [
+	cellSize > 0
+		ifTrue:
+			[ cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> eastOf: anInteger do: aBlock [
+	(self xCellOf: anInteger) < xCells
+		ifTrue: [ aBlock value: anInteger + cellSize ]
 ]
 
 { #category : #timing }
@@ -62,7 +129,14 @@ RMDMemory >> initialize [
 	old2Values := Dictionary new.
 	nextDeltas := Dictionary new.
 	valuesDirty := false.
-	nextValuesDirty := false
+	nextValuesDirty := false.
+	nextAvailableSlot := 1.
+	xCells := 0.
+	yCells := 0.
+	cellSize := 0.
+	world := 1.
+	cell := nil.
+	animats := Dictionary new
 ]
 
 { #category : #timing }
@@ -100,6 +174,12 @@ RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 		put: (nextDeltas at: anInteger ifAbsent: [ 0 ]) + aNumber
 ]
 
+{ #category : #'accessing-individuals' }
+RMDMemory >> northOf: anInteger do: aBlock [
+	(self yCellOf: anInteger) < yCells
+		ifTrue: [ aBlock value: anInteger + (cellSize * xCells) ]
+]
+
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger [
 	^ self oldAt: anInteger ifAbsent: [ KeyNotFound signal ]
@@ -113,6 +193,21 @@ RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
 { #category : #'accessing-storage' }
 RMDMemory >> readValuesForTime: anInteger [
 	^ self subclassResponsibility
+]
+
+{ #category : #allocating }
+RMDMemory >> remove: anInteger animat: aRMDAnimatDefinitionNode ifAbsent: errorBlock [
+	^ (animats
+		at: aRMDAnimatDefinitionNode identifier
+		ifAbsent: [ ^ errorBlock value ])
+		remove: anInteger
+		ifAbsent: errorBlock
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> southOf: anInteger do: aBlock [
+	(self yCellOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - (cellSize * xCells) ]
 ]
 
 { #category : #timing }
@@ -170,7 +265,33 @@ RMDMemory >> time: anInteger [
 	self sunrise
 ]
 
+{ #category : #'accessing-individuals' }
+RMDMemory >> westOf: anInteger do: aBlock [
+	(self xCellOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - cellSize ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> world [
+	^ world
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> worldDo: aBlock [
+	aBlock value: world
+]
+
 { #category : #'accessing-storage' }
 RMDMemory >> writeValues: aDictionary forTime: anInteger [
 	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> xCellOf: anInteger [
+	^ (anInteger - cell) // cellSize \\ xCells + 1
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> yCellOf: anInteger [
+	^ (anInteger - cell) // cellSize // xCells + 1
 ]

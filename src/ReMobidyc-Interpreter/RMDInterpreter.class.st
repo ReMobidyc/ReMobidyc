@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'individualDirectory',
 		'randomSeed',
 		'randomGenerator'
 	],
@@ -98,12 +97,12 @@ RMDInterpreter >> addLibrary: aDictionary [
 
 { #category : #'animat operations' }
 RMDInterpreter >> allocateAnimat: aRMDAnimatDefinitionNode [
-	^ individualDirectory allocateAnimat: aRMDAnimatDefinitionNode
+	^ memory allocateAnimat: aRMDAnimatDefinitionNode
 ]
 
 { #category : #'animat operations' }
 RMDInterpreter >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
-	^ individualDirectory
+	^ memory
 		allocateCells: aRMDCellDefinitionNode
 		x: anInteger1
 		y: anInteger2
@@ -111,25 +110,22 @@ RMDInterpreter >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteg
 
 { #category : #'animat operations' }
 RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
-	^ individualDirectory allocateWorld: aRMDWorldDefinitionNode
+	^ memory allocateWorld: aRMDWorldDefinitionNode
 ]
 
 { #category : #simulating }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
-	individualDirectory
-		animatNamesDo: [ :animatName | 
-			| animatDef xOffset yOffset |
-			animatDef := simulationModel
-				animatDefinitionAt: animatName
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: animatName ].
+	simulationModel
+		animatDefinitionsDo: [ :animatDef | 
+			| xOffset yOffset |
 			xOffset := animatDef
 				propertyOffsetAt: 'x'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
 				propertyOffsetAt: 'y'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
-			individualDirectory
-				animatsOf: animatName
+			memory
+				animatsOf: animatDef identifier
 				do: [ :individual | 
 					| x y |
 					x := memory at: individual + xOffset ifAbsent: [ nil ].
@@ -151,7 +147,7 @@ RMDInterpreter >> byChanceOf: aNumber [
 
 { #category : #'space access' }
 RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ individualDirectory cellAtXIndex: anInteger yIndex: anotherInteger
+	^ memory cellAtXIndex: anInteger yIndex: anotherInteger
 ]
 
 { #category : #directives }
@@ -266,21 +262,21 @@ RMDInterpreter >> here [
 	cellY := (self cellY: y) floor + 1
 		min: 1
 		max: simulationModel cellYDivisions.
-	^ individualDirectory cellAtXIndex: cellX yIndex: cellY
+	^ memory cellAtXIndex: cellX yIndex: cellY
 ]
 
 { #category : #'animat operations' }
 RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 	aRMDSpeciesDefinitionNode isAnimatDefinitionNode
-		ifTrue: [ individualDirectory
+		ifTrue: [ memory
 				animatsOf: aRMDSpeciesDefinitionNode identifier
 				do: aBlock.
 			^ self ].
 	aRMDSpeciesDefinitionNode isCellDefinitionNode
-		ifTrue: [ individualDirectory cellsDo: aBlock.
+		ifTrue: [ memory cellsDo: aBlock.
 			^ self ].
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
-		ifTrue: [ individualDirectory worldDo: aBlock.
+		ifTrue: [ memory worldDo: aBlock.
 			^ self ].
 	^ self error: 'Unknown species type'
 ]
@@ -289,7 +285,6 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 RMDInterpreter >> initialize [
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
-	individualDirectory := RMDIndividualDirectory new.
 	randomSeed := 1.
 	randomGenerator := RMDFishmanMooreRandomGenerator new
 ]
@@ -359,20 +354,17 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 
 { #category : #simulating }
 RMDInterpreter >> removeOutOfBoundsAnimats [
-	individualDirectory
-		animatNamesDo: [ :animatName | 
-			| animatDef xOffset yOffset |
-			animatDef := simulationModel
-				animatDefinitionAt: animatName
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: animatName ].
+	simulationModel
+		animatDefinitionsDo: [ :animatDef | 
+			| xOffset yOffset |
 			xOffset := animatDef
 				propertyOffsetAt: 'x'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
 				propertyOffsetAt: 'y'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
-			individualDirectory
-				animatsOf: animatName
+			memory
+				animatsOf: animatDef identifier
 				do: [ :individual | 
 					| x y |
 					x := memory at: individual + xOffset ifAbsent: [ nil ].
@@ -419,7 +411,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 	memory time: 0.
-	individualDirectory
+	memory
 		initialize;
 		allocateWorld: simulationModel worldDefinition;
 		allocateCells: simulationModel cellDefinition
@@ -428,19 +420,19 @@ RMDInterpreter >> setupSimulation [
 	simulationModel
 		animatInitializersDo: [ :initializer | 
 			initializer population
-				timesRepeat: [ individualDirectory
+				timesRepeat: [ memory
 						allocateAnimat:
 							(simulationModel
 								animatDefinitionAt: initializer animat
 								ifAbsent: [ ^ KeyNotFound signal: initializer animat ]) ] ].
-	individualDirectory
+	memory
 		worldDo: [ :world | 
 			self
 				setupRandomForIndividual: world;
 				withInitializerContextWithSubject: world
 					species: simulationModel worldDefinition
 					do: [ simulationModel worldInitializer evalIn: self ] ].
-	individualDirectory
+	memory
 		cellsDo: [ :cell | 
 			self
 				setupRandomForIndividual: cell;
@@ -449,7 +441,7 @@ RMDInterpreter >> setupSimulation [
 					do: [ simulationModel cellInitializer evalIn: self ] ].
 	simulationModel
 		animatInitializersDo: [ :initializer | 
-			individualDirectory
+			memory
 				animatsOf: initializer animat
 				do: [ :animat | 
 					| species |
@@ -491,7 +483,7 @@ RMDInterpreter >> terminate: aString [
 
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
-	individualDirectory
+	memory
 		remove: anInteger
 		animat: aRMDAnimatDefinitionNode
 		ifAbsent: [ ^ NotFound
@@ -542,7 +534,7 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimat
 				definition: aRMDAnimatDefinitionNode)
 		do: [ aRMDAnimatDefinitionNode isAnimatDefinitionNode
 				ifTrue: [ | here |
-					here := individualDirectory
+					here := memory
 						cellAtXIndex:
 							((self
 								cellX:
@@ -565,28 +557,28 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimat
 						location: here
 						definition: simulationModel cellDefinition
 						agent: 'here'.
-					individualDirectory
+					memory
 						eastOf: here
 						do: [ :east | 
 							context
 								location: east
 								definition: simulationModel cellDefinition
 								agent: 'east' ].
-					individualDirectory
+					memory
 						westOf: here
 						do: [ :west | 
 							context
 								location: west
 								definition: simulationModel cellDefinition
 								agent: 'west' ].
-					individualDirectory
+					memory
 						southOf: here
 						do: [ :south | 
 							context
 								location: south
 								definition: simulationModel cellDefinition
 								agent: 'south' ].
-					individualDirectory
+					memory
 						northOf: here
 						do: [ :north | 
 							context

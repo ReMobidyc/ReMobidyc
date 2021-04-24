@@ -2,7 +2,8 @@ Class {
 	#name : #RMDMemoryTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'memory'
+		'memory',
+		'parser'
 	],
 	#category : #'ReMobidyc-Storage-Tests'
 }
@@ -24,12 +25,83 @@ RMDMemoryTest >> destroyMemory [
 
 { #category : #running }
 RMDMemoryTest >> setUp [
-	memory := self createMemory
+	memory := self createMemory.
+	parser := RMDGrammar new
 ]
 
 { #category : #running }
 RMDMemoryTest >> tearDown [
 	self destroyMemory
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testAllocateAnimat [
+	| animat individual |
+	animat := parser animatDefinition end
+		parse:
+			'Goat is Animat with
+	blood_sugar [kcal]
+	speed [km/h].'.
+	individual := memory allocateAnimat: animat.
+	self
+		assert: individual + animat totalNumberOfProperties
+		equals:
+			(memory
+				allocateAnimat:
+					(parser animatDefinition end
+						parse:
+							'Goat is Animat.'))
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testAllocateCellsXY [
+	| cell individual |
+	cell := parser cellDefinition end
+		parse:
+			'Cell with
+	grass [kcal]
+	fertility [kcal].'.
+	individual := memory allocateCells: cell x: 2 y: 3.
+	self
+		assert: individual + (cell totalNumberOfProperties * 2 * 3)
+		equals:
+			(memory
+				allocateAnimat: (parser animatDefinition end parse: 'Goat is Animat.'))
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testAllocateWorld [
+	| world individual |
+	world := parser worldDefinition end
+		parse:
+			'World with
+	temperature [C]
+	humidity [].'.
+	individual := memory allocateWorld: world.
+	self
+		assert: individual + world totalNumberOfProperties
+		equals:
+			(memory
+				allocateAnimat: (parser animatDefinition end parse: 'Goat is Animat.'))
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testAnimatsOfDo [
+	| animat individuals |
+	animat := parser animatDefinition end
+		parse:
+			'Goat is Animat with
+	blood_sugar [kcal]
+	speed [km/h].'.
+	individuals := Array
+		streamContents: [ :stream | 
+			10
+				timesRepeat: [ stream nextPut: (memory allocateAnimat: animat) ] ].
+	self
+		assert: individuals
+		equals:
+			(individuals first to: individuals first + (animat totalNumberOfProperties * 9)
+			by: animat totalNumberOfProperties) asArray
 ]
 
 { #category : #tests }
@@ -69,6 +141,96 @@ RMDMemoryTest >> testAtPut [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testCell [
+	| cell individual |
+	cell := parser cellDefinition end
+		parse:
+			'Cell with
+	grass [kcal]
+	fertility [kcal].'.
+	individual := memory allocateCells: cell x: 2 y: 3.
+	self assert: memory cell equals: individual
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testCellAtXIndexYIndex [
+	| cell |
+	cell := parser cellDefinition end
+		parse:
+			'Cell with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocateCells: cell x: 2 y: 3.
+	self
+		assert:
+			(Array
+				streamContents: [ :stream | 
+					1 to: 2 do: [ :x | 
+						1 to: 3 do:
+							[ :y | stream nextPut: (memory cellAtXIndex: x yIndex: y) ] ] ])
+				asSortedCollection asArray
+		equals:
+			(memory cell to: memory cell + (cell totalNumberOfProperties * 5)
+			by: cell totalNumberOfProperties) asArray
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testCellSize [
+	| cell |
+	cell := parser cellDefinition end
+		parse:
+			'Cell with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocateCells: cell x: 2 y: 3.
+	self
+		assert: memory cellSize
+		equals: cell totalNumberOfProperties
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testCellsDo [
+	| cell |
+	cell := parser cellDefinition end
+		parse:
+			'Cell with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocateCells: cell x: 2 y: 3.
+	self
+		assert:
+			(Array
+				streamContents:
+					[ :stream | memory cellsDo: [ :individual | stream nextPut: individual ] ])
+		equals:
+			(memory cell to: memory cell + (cell totalNumberOfProperties * 5) by: cell totalNumberOfProperties)
+				asArray
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testEastOfDo [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	memory
+		eastOf: (memory cellAtXIndex: 2 yIndex: 2)
+		do: [ :cell | self fail ].
+	self
+		should: [ memory
+				eastOf: (memory cellAtXIndex: 1 yIndex: 2)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+					Error signal ] ]
+		raise: Error
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testNextAt [
 	memory nextAt: 1 put: 2.
 	self assert: (memory nextAt: 1) equals: 2.
@@ -105,6 +267,36 @@ RMDMemoryTest >> testNextAtPut [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testNorthOfDo [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	memory
+		northOf: (memory cellAtXIndex: 2 yIndex: 3)
+		do: [ :cell | self fail ].
+	self
+		should: [ memory
+				northOf: (memory cellAtXIndex: 2 yIndex: 2)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 3).
+					Error signal ] ]
+		raise: Error.
+	self
+		should: [ memory
+				northOf: (memory cellAtXIndex: 2 yIndex: 1)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+					Error signal ] ]
+		raise: Error
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testOldAt [
 	memory
 		at: 1 put: 2;
@@ -131,6 +323,56 @@ RMDMemoryTest >> testOldAtIfAbsent [
 	self assert: (memory oldAt: 3 ifAbsent: [ 9 ]) equals: 4.
 	self should: [ memory oldAt: 6 ] raise: KeyNotFound.
 	self assert: (memory oldAt: 6 ifAbsent: [ 10 ]) equals: 10
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testRemoveAnimatIfAbsent [
+	| animat goat1 goat2 |
+	animat := parser animatDefinition end
+		parse:
+			'Goat is Animat with
+	blood_sugar [kcal]
+	speed [km/h].'.
+	goat1 := memory allocateAnimat: animat.
+	goat2 := memory allocateAnimat: animat.
+	memory remove: goat1 animat: animat ifAbsent: [ self fail ].
+	self
+		assert:
+			(Array
+				streamContents:
+					[ :stream | memory animatsOf: 'Goat' do: [ :goat | stream nextPut: goat ] ])
+				asSet
+		equals: (Set with: goat2)
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testSouthOfDo [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	memory
+		southOf: (memory cellAtXIndex: 2 yIndex: 1)
+		do: [ :cell | self fail ].
+	self
+		should: [ memory
+				southOf: (memory cellAtXIndex: 2 yIndex: 2)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 1).
+					Error signal ] ]
+		raise: Error.
+	self
+		should: [ memory
+				southOf: (memory cellAtXIndex: 2 yIndex: 3)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+					Error signal ] ]
+		raise: Error
 ]
 
 { #category : #tests }
@@ -174,4 +416,105 @@ RMDMemoryTest >> testTime [
 	self assert: (memory oldAt: 1) equals: 5.
 	self assert: (memory oldAt: 3) equals: 6.
 	self assert: (memory oldAt: 8 ifAbsent: [ 11 ]) equals: 11
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testWestOfDo [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	memory
+		westOf: (memory cellAtXIndex: 1 yIndex: 2)
+		do: [ :cell | self fail ].
+	self
+		should: [ memory
+				westOf: (memory cellAtXIndex: 2 yIndex: 2)
+				do: [ :cell | 
+					self assert: cell equals: (memory cellAtXIndex: 1 yIndex: 2).
+					Error signal ] ]
+		raise: Error
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testWorld [
+	| world individual |
+	world := parser worldDefinition end
+		parse:
+			'World with
+	temperature [C]
+	humidity [].'.
+	individual := memory allocateWorld: world.
+	self assert: memory world equals: individual
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testWorldDo [
+	| world individual |
+	world := parser worldDefinition end
+		parse:
+			'World with
+	temperature [C]
+	humidity [].'.
+	individual := memory allocateWorld: world.
+	self
+		assert:
+			(Array
+				streamContents: [ :stream | memory worldDo: [ :w | stream nextPut: w ] ])
+		equals: {individual}
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testXCellOf [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	self
+		assert: (memory xCellOf: (memory cellAtXIndex: 1 yIndex: 1))
+		equals: 1.
+	self
+		assert: (memory xCellOf: (memory cellAtXIndex: 2 yIndex: 1))
+		equals: 2.
+	self
+		assert: (memory xCellOf: (memory cellAtXIndex: 1 yIndex: 2))
+		equals: 1.
+	self
+		assert: (memory xCellOf: (memory cellAtXIndex: 2 yIndex: 2))
+		equals: 2
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testYCellOf [
+	memory
+		allocateCells:
+			(parser cellDefinition end
+				parse:
+					'Cell with
+	grass [kcal]
+	fertility [kcal].')
+		x: 2
+		y: 3.
+	self
+		assert: (memory yCellOf: (memory cellAtXIndex: 1 yIndex: 1))
+		equals: 1.
+	self
+		assert: (memory yCellOf: (memory cellAtXIndex: 2 yIndex: 1))
+		equals: 1.
+	self
+		assert: (memory yCellOf: (memory cellAtXIndex: 1 yIndex: 2))
+		equals: 2.
+	self
+		assert: (memory yCellOf: (memory cellAtXIndex: 2 yIndex: 2))
+		equals: 2
 ]
