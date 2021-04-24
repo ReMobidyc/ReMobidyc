@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'time',
+		'latestTime',
 		'nextValues',
 		'nextDeltas',
 		'values',
@@ -123,6 +124,7 @@ RMDMemory >> fastSunset [
 RMDMemory >> initialize [
 	super initialize.
 	time := 0.
+	latestTime := 0.
 	nextValues := Dictionary new.
 	values := Dictionary new.
 	oldValues := Dictionary new.
@@ -139,9 +141,9 @@ RMDMemory >> initialize [
 	animats := Dictionary new
 ]
 
-{ #category : #timing }
+{ #category : #accessing }
 RMDMemory >> latestTime [
-	^ self subclassResponsibility
+	^ latestTime
 ]
 
 { #category : #accessing }
@@ -247,6 +249,7 @@ RMDMemory >> sunset [
 RMDMemory >> tick [
 	self fastSunset.
 	time := time + 1.
+	latestTime := latestTime max: time.
 	self fastSunrise
 ]
 
@@ -262,6 +265,7 @@ RMDMemory >> time: anInteger [
 		ifFalse: [ ^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
+	latestTime := latestTime max: time.
 	self sunrise
 ]
 

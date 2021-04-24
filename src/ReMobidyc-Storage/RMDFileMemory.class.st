@@ -25,7 +25,8 @@ RMDFileMemory >> basePath [
 RMDFileMemory >> basePath: aFileReference [
 	basePath := aFileReference
 		ensureCreateDirectory;
-		yourself
+		yourself.
+	self initializeLatestTime
 ]
 
 { #category : #defaults }
@@ -80,11 +81,11 @@ RMDFileMemory >> initialize [
 	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel
 ]
 
-{ #category : #timing }
-RMDFileMemory >> latestTime [
+{ #category : #initialization }
+RMDFileMemory >> initializeLatestTime [
 	| dirRef |
 	dirRef := self basePath asFileReference.
-	^ (String
+	latestTime := (String
 		streamContents: [ :stream | 
 			(self digitsForTime - 1) // self digitsPerDirectoryLevel
 				timesRepeat: [ dirRef := dirRef
