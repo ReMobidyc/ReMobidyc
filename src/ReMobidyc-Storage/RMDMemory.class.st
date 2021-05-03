@@ -17,19 +17,22 @@ Class {
 		'xCells',
 		'yCells',
 		'cellSize',
-		'animats'
+		'animats',
+		'stages'
 	],
 	#category : #'ReMobidyc-Storage'
 }
 
 { #category : #allocating }
 RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
-	| individual |
+	| individual animat |
 	nextAvailableSlot := (individual := nextAvailableSlot)
 		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
-	(animats
-		at: aRMDAnimatDefinitionNode identifier
-		ifAbsentPut: [ Set new: 1024 ]) add: individual.
+	animat := aRMDAnimatDefinitionNode identifier.
+	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add: individual.
+	stages
+		at: individual
+		put: (OrderedCollection with: animat -> individual).
 	^ individual
 ]
 
@@ -138,12 +141,23 @@ RMDMemory >> initialize [
 	cellSize := 0.
 	world := 1.
 	cell := nil.
-	animats := Dictionary new
+	animats := Dictionary new.
+	stages := Dictionary new
 ]
 
 { #category : #accessing }
 RMDMemory >> latestTime [
 	^ latestTime
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> migrate: anInteger animat: aString to: anotherInteger animat: anotherString [
+	stages
+		at: anotherInteger
+		put:
+			((stages at: anInteger)
+				add: anotherString -> anotherInteger;
+				yourself)
 ]
 
 { #category : #accessing }
@@ -190,6 +204,11 @@ RMDMemory >> oldAt: anInteger [
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
 	^ oldValues at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> readAnimatsForTime: anInteger [
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-storage' }
@@ -283,6 +302,11 @@ RMDMemory >> world [
 { #category : #'accessing-individuals' }
 RMDMemory >> worldDo: aBlock [
 	aBlock value: world
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> writeAnimats: aDictionary forTime: anInteger [
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-storage' }

@@ -17,6 +17,11 @@ RMDFileMemory class >> on: aFileReference [
 ]
 
 { #category : #'accessing-storage' }
+RMDFileMemory >> animatsFileBasename [
+	^ 'animats.csv'
+]
+
+{ #category : #'accessing-storage' }
 RMDFileMemory >> basePath [
 	^ basePath
 ]
@@ -101,6 +106,25 @@ RMDFileMemory >> initializeLatestTime [
 ]
 
 { #category : #'accessing-storage' }
+RMDFileMemory >> readAnimatsForTime: anInteger [
+	| ref |
+	ref := (self directoryForId: anInteger) / self valuesFileBasename.
+	ref exists
+		ifFalse: [ ^ Dictionary new ].
+	ref
+		readStreamDo: [ :csvStream | 
+			| vals |
+			vals := Dictionary new.
+			[ [ csvStream atEnd not and: [ csvStream peek isSeparator ] ]
+				whileTrue: [ csvStream skip ].
+			csvStream atEnd ]
+				whileFalse: [ ((csvStream upTo: Character lf) substrings: ',')
+						ifNotEmpty:
+							[ :row | vals at: row first put: (row copyWithoutFirst collect: #asInteger) ] ].
+			^ vals ]
+]
+
+{ #category : #'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
 	| ref |
 	ref := (self directoryForId: anInteger) / self valuesFileBasename.
@@ -122,8 +146,34 @@ RMDFileMemory >> readValuesForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDFileMemory >> stagesFileBasename [
+	^ 'stages.csv'
+]
+
+{ #category : #'accessing-storage' }
 RMDFileMemory >> valuesFileBasename [
 	^ 'values.csv'
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
+	((self directoryForId: anInteger) ensureCreateDirectory
+		/ self animatsFileBasename)
+		ensureDelete;
+		writeStreamDo: [ :csvStream | 
+			aDictionary
+				keysAndValuesDo: [ :animat :individuals | 
+					animat printOn: csvStream.
+					csvStream nextPut: $,.
+					individuals
+						do: [ :id | id storeOn: csvStream ]
+						separatedBy: [ csvStream nextPut: $, ].
+					csvStream lf ] ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> writeStages [
+	
 ]
 
 { #category : #'accessing-storage' }

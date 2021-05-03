@@ -2,7 +2,9 @@ Class {
 	#name : #RMDOnMemory,
 	#superclass : #RMDMemory,
 	#instVars : [
-		'storage'
+		'valuesStorage',
+		'animatsStorage',
+		'stagesStorage'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -16,31 +18,60 @@ RMDOnMemory class >> new: anInteger [
 
 { #category : #private }
 RMDOnMemory >> changeStorageCapacityTo: anInteger [
-	storage := (Array new: anInteger)
+	valuesStorage := (Array new: anInteger)
 		replaceFrom: 1
-		to: (anInteger min: storage size)
-		with: storage
+		to: (anInteger min: valuesStorage size)
+		with: valuesStorage
+		startingAt: 1.
+	animatsStorage := (Array new: anInteger)
+		replaceFrom: 1
+		to: (anInteger min: animatsStorage size)
+		with: animatsStorage
+		startingAt: 1.
+	stagesStorage := (Array new: anInteger)
+		replaceFrom: 1
+		to: (anInteger min: stagesStorage size)
+		with: stagesStorage
 		startingAt: 1
 ]
 
 { #category : #initialization }
 RMDOnMemory >> initialize [
 	super initialize.
-	storage := Array new: 1024
+	valuesStorage := Array new: 1024.
+	animatsStorage := Array new: 1024.
+	stagesStorage := Array new: 1024.
+
 ]
 
 { #category : #'accessing-storage' }
-RMDOnMemory >> readValuesForTime: anInteger [
-	anInteger >= storage size
+RMDOnMemory >> readAnimatsForTime: anInteger [
+	anInteger >= animatsStorage size
 		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
-	^ (storage at: anInteger + 1 ifAbsent: [ nil ])
+	^ (animatsStorage at: anInteger + 1 ifAbsent: [ nil ])
 		ifNotNil: [ :dict | dict copy ]
 		ifNil: [ Dictionary new ]
 ]
 
 { #category : #'accessing-storage' }
-RMDOnMemory >> writeValues: aDictionary forTime: anInteger [
-	anInteger >= storage size
+RMDOnMemory >> readValuesForTime: anInteger [
+	anInteger >= valuesStorage size
 		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
-	^ storage at: anInteger + 1 put: aDictionary copy
+	^ (valuesStorage at: anInteger + 1 ifAbsent: [ nil ])
+		ifNotNil: [ :dict | dict copy ]
+		ifNil: [ Dictionary new ]
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
+	anInteger >= animatsStorage size
+		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
+	^ animatsStorage at: anInteger + 1 put: aDictionary copy
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> writeValues: aDictionary forTime: anInteger [
+	anInteger >= valuesStorage size
+		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
+	^ valuesStorage at: anInteger + 1 put: aDictionary copy
 ]
