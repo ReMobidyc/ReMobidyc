@@ -32,6 +32,23 @@ RMDSimulationModelTest >> testActionDefinitionAtIfAbsent [
 ]
 
 { #category : #running }
+RMDSimulationModelTest >> testActionDefinitionAtIfPresent [
+	| action |
+	action := parser actionDefinition end
+		parse:
+			'to walk is
+	my d/dt x'' = cos(heading) * my speed
+	my d/dt y'' = sin(heading) * my speed.'.
+	model addActionDefinition: action.
+	self
+		assert: (model actionDefinitionAt: 'walk' ifPresent: [:def | def ])
+		equals: action.
+	self
+		assert: (model actionDefinitionAt: 'run' ifPresent: [ nil ])
+		equals: nil
+]
+
+{ #category : #running }
 RMDSimulationModelTest >> testActionNames [
 	model
 		addActionDefinition:
@@ -150,6 +167,22 @@ RMDSimulationModelTest >> testAnimatDefinitionAtIfAbsent [
 		equals: animat.
 	self
 		assert: (model animatDefinitionAt: 'Wolf' ifAbsent: [ nil ])
+		equals: nil
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testAnimatDefinitionAtIfPresent [
+	| animat |
+	animat := parser animatDefinition end
+		parse:
+			'Goat is Animat with
+	speed [km/h].'.
+	model addAnimatDefinition: animat.
+	self
+		assert: (model animatDefinitionAt: 'Goat' ifPresent: [ :def | def ])
+		equals: animat.
+	self
+		assert: (model animatDefinitionAt: 'Wolf' ifPresent: [ :def | def ])
 		equals: nil
 ]
 

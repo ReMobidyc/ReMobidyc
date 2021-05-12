@@ -20,7 +20,7 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDWorldDefinitionNode empty;
 		load: RMDCellDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
-		load: (RMDTaskDefinitionNode goat_respire: '2000 [kcal/day]');
+		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode
@@ -41,7 +41,7 @@ RMDSimulationModel class >> sugarScape [
 						by: 10
 						of: '5[km]'
 						grass: '0[kcal]'
-						to: '1000000[kcal]')
+						to: '700000[kcal]')
 				animatInitializers:
 					{(RMDAnimatInitializerNode
 						goatInitializer: 100
@@ -61,6 +61,11 @@ RMDSimulationModel class >> sugarScape [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ actionDefinitions at: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> actionDefinitionAt: aString ifPresent: aBlock [
+	^ actionDefinitions at: aString ifPresent: aBlock
 ]
 
 { #category : #'accessing - definitions' }
@@ -102,6 +107,11 @@ RMDSimulationModel >> addTaskDefinition: aRMDTaskDefinitionNode [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ animatDefinitions at: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> animatDefinitionAt: aString ifPresent: aBlock [
+	^ animatDefinitions at: aString ifPresent: aBlock
 ]
 
 { #category : #enumerating }

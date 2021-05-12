@@ -129,14 +129,27 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 		send: #updateTimeLabel
 		to: self.
 	views
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ visualizer asPresenter
-						interpreter: interpreter;
-						updateImage;
-						yourself ];
-				whenRetrievedDo: [ :content | content updateImage ];
-				title: 'Map').
+		pages:
+			(Array
+				streamContents: [ :stream | 
+					stream
+						nextPut:
+							(self newNotebookPage
+								presenterProvider: [ visualizer asPresenter
+										interpreter: interpreter;
+										updateImage;
+										yourself ];
+								whenRetrievedDo: [ :content | content updateImage ];
+								title: 'Map').
+					interpreter animatNames
+						do: [ :animat | 
+							stream
+								nextPut:
+									(self newNotebookPage
+										presenterProvider: [ RMDAnimatTabularInspector new
+												interpreter: interpreter;
+												animat: animat ];
+										title: animat) ] ]).
 	duration := interpreter simulationModel simulationDefinition
 		timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.

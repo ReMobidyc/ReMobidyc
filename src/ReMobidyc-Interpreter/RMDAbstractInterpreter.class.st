@@ -50,6 +50,12 @@ RMDAbstractInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing - definitions' }
+RMDAbstractInterpreter >> animatDefinitionAt: aString ifPresent: aBlock [
+	^ simulationModel
+		ifNotNil: [ simulationModel animatDefinitionAt: aString ifPresent: aBlock ]
+]
+
+{ #category : #'accessing - definitions' }
 RMDAbstractInterpreter >> animatNames [
 	^ simulationModel ifNil: [ Array new ] ifNotNil: #animatNames
 ]

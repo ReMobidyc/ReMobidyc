@@ -599,12 +599,12 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpec
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpeciesInitializerNode do: aBlock [
+RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
 	^ self
 		withContext:
 			(RMDObserverContext
 				subject: anInteger
-				definition: aRMDSpeciesInitializerNode)
+				definition: aRMDSpeciesDefinitionNode)
 		do: aBlock
 ]
 

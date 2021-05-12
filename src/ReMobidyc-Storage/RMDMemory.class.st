@@ -26,8 +26,10 @@ Class {
 { #category : #allocating }
 RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 	| individual animat |
-	nextAvailableSlot := (individual := nextAvailableSlot)
-		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+	self
+		nextAvailableSlot:
+			(individual := self nextAvailableSlot)
+				+ aRMDAnimatDefinitionNode totalNumberOfProperties.
 	animat := aRMDAnimatDefinitionNode identifier.
 	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add: individual.
 	stages
@@ -38,16 +40,32 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 
 { #category : #allocating }
 RMDMemory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
-	nextAvailableSlot := (cellSize := aRMDCellDefinitionNode
-		totalNumberOfProperties max: 1) * (xCells := anInteger1)
-		* (yCells := anInteger2) + (cell := nextAvailableSlot).
-	^ cell
+	self
+		nextAvailableSlot:
+			(self
+				cellSize: (aRMDCellDefinitionNode totalNumberOfProperties max: 1);
+				cellSize)
+				*
+					(self
+						xCells: anInteger1;
+						xCells)
+				*
+					(self
+						yCells: anInteger2;
+						yCells)
+				+
+					(self
+						cell: self nextAvailableSlot;
+						cell).
+	^ self cell
 ]
 
 { #category : #allocating }
 RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
-	nextAvailableSlot := aRMDWorldDefinitionNode totalNumberOfProperties
-		+ (world := nextAvailableSlot).
+	self
+		nextAvailableSlot:
+			aRMDWorldDefinitionNode totalNumberOfProperties
+				+ (world := self nextAvailableSlot).
 	^ world
 ]
 
@@ -86,8 +104,14 @@ RMDMemory >> cell [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> cell: anInteger [
+	cell := anInteger
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ ((anotherInteger - 1) * xCells + anInteger - 1) * cellSize + cell
+	^ ((anotherInteger - 1) * self xCells + anInteger - 1)
+		* self cellSize + self cell
 ]
 
 { #category : #'accessing-individuals' }
@@ -96,16 +120,22 @@ RMDMemory >> cellSize [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> cellSize: anInteger [
+	cellSize := anInteger
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> cellsDo: aBlock [
-	cellSize > 0
+	self cellSize > 0
 		ifTrue:
-			[ cell to: cellSize * xCells * yCells + cell - 1 by: cellSize do: aBlock ]
+			[ self cell to: self cellSize * self xCells * self yCells + self cell - 1
+			by: self cellSize do: aBlock ]
 ]
 
 { #category : #'accessing-individuals' }
 RMDMemory >> eastOf: anInteger do: aBlock [
-	(self xCellOf: anInteger) < xCells
-		ifTrue: [ aBlock value: anInteger + cellSize ]
+	(self xCellOf: anInteger) < self xCells
+		ifTrue: [ aBlock value: anInteger + self cellSize ]
 ]
 
 { #category : #timing }
@@ -150,6 +180,11 @@ RMDMemory >> latestTime [
 	^ latestTime
 ]
 
+{ #category : #accessing }
+RMDMemory >> latestTime: anInteger [
+	latestTime := anInteger
+]
+
 { #category : #'accessing-individuals' }
 RMDMemory >> migrate: anInteger animat: aString to: anotherInteger animat: anotherString [
 	stages
@@ -184,6 +219,16 @@ RMDMemory >> nextAt: anInteger put: aNumber [
 ]
 
 { #category : #accessing }
+RMDMemory >> nextAvailableSlot [
+	^ nextAvailableSlot
+]
+
+{ #category : #accessing }
+RMDMemory >> nextAvailableSlot: anInteger [
+	nextAvailableSlot := anInteger
+]
+
+{ #category : #accessing }
 RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 	^ nextDeltas
 		at: anInteger
@@ -192,8 +237,8 @@ RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> northOf: anInteger do: aBlock [
-	(self yCellOf: anInteger) < yCells
-		ifTrue: [ aBlock value: anInteger + (cellSize * xCells) ]
+	(self yCellOf: anInteger) < self yCells
+		ifTrue: [ aBlock value: anInteger + (self cellSize * self xCells) ]
 ]
 
 { #category : #accessing }
@@ -228,7 +273,7 @@ RMDMemory >> remove: anInteger animat: aRMDAnimatDefinitionNode ifAbsent: errorB
 { #category : #'accessing-individuals' }
 RMDMemory >> southOf: anInteger do: aBlock [
 	(self yCellOf: anInteger) > 1
-		ifTrue: [ aBlock value: anInteger - (cellSize * xCells) ]
+		ifTrue: [ aBlock value: anInteger - (self cellSize * self xCells) ]
 ]
 
 { #category : #timing }
@@ -268,7 +313,7 @@ RMDMemory >> sunset [
 RMDMemory >> tick [
 	self fastSunset.
 	time := time + 1.
-	latestTime := latestTime max: time.
+	self latestTime: (latestTime max: time).
 	self fastSunrise
 ]
 
@@ -284,14 +329,14 @@ RMDMemory >> time: anInteger [
 		ifFalse: [ ^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
-	latestTime := latestTime max: time.
+	self latestTime: (latestTime max: time).
 	self sunrise
 ]
 
 { #category : #'accessing-individuals' }
 RMDMemory >> westOf: anInteger do: aBlock [
 	(self xCellOf: anInteger) > 1
-		ifTrue: [ aBlock value: anInteger - cellSize ]
+		ifTrue: [ aBlock value: anInteger - self cellSize ]
 ]
 
 { #category : #'accessing-individuals' }
@@ -316,10 +361,30 @@ RMDMemory >> writeValues: aDictionary forTime: anInteger [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> xCellOf: anInteger [
-	^ (anInteger - cell) // cellSize \\ xCells + 1
+	^ (anInteger - self cell) // self cellSize \\ self xCells + 1
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> xCells [
+	^ xCells
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> xCells: anInteger [
+	xCells := anInteger
 ]
 
 { #category : #'accessing-individuals' }
 RMDMemory >> yCellOf: anInteger [
-	^ (anInteger - cell) // cellSize // xCells + 1
+	^ (anInteger - self cell) // self cellSize // self xCells + 1
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> yCells [
+	^ yCells
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> yCells: anInteger [
+	yCells := anInteger
 ]
