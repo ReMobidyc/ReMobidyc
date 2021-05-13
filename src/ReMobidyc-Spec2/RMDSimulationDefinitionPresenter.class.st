@@ -7,12 +7,9 @@ Class {
 { #category : #specs }
 RMDSimulationDefinitionPresenter class >> defaultSpec [
 	<spec>
-	^ SpScrollableLayout new
-		add:
-			(SpBoxLayout newVertical
-				spacing: 10;
-				add: 'N/A' expand: false;
-				yourself);
+	^ SpBoxLayout newVertical
+		spacing: 10;
+		add: 'N/A' expand: false;
 		yourself
 ]
 
@@ -40,7 +37,7 @@ RMDSimulationDefinitionPresenter >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDSimulationDefinitionPresenter >> nodeChanged [
 	layout
-		ifNotNil: [ layout presenters first removeAll.
+		ifNotNil: [ layout removeAll.
 			self
 				add: node timeDefinition asPresenter;
 				add: node worldInitializer asPresenter;
@@ -56,5 +53,5 @@ RMDSimulationDefinitionPresenter >> preferredHeight [
 
 { #category : #private }
 RMDSimulationDefinitionPresenter >> theLayout [
-	^ layout ifNotNil: [ layout presenters first ]
+	^ layout
 ]

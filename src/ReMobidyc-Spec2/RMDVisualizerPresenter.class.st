@@ -15,6 +15,20 @@ RMDVisualizerPresenter class >> defaultSpec [
 	^ SpPanedLayout newHorizontal
 		add: #image;
 		add:
+			(SpBoxLayout newVertical
+				spacing: 10;
+				beNotHomogeneous;
+				add: 'N/A' expand: false;
+				yourself);
+		yourself
+]
+
+{ #category : #specs }
+RMDVisualizerPresenter class >> defaultSpec0 [
+	<spec>
+	^ SpPanedLayout newHorizontal
+		add: #image;
+		add:
 			(SpScrollableLayout new
 				add:
 					(SpBoxLayout newVertical
@@ -88,7 +102,7 @@ RMDVisualizerPresenter >> updateImage [
 RMDVisualizerPresenter >> updateRendererPresenters [
 	layout
 		ifNotNil: [ | theLayout |
-			theLayout := layout presenters second presenters first.
+			theLayout := layout presenters second.
 			theLayout removeAll.
 			visualizer
 				ifNotNil: [ visualizer

@@ -141,6 +141,18 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 										yourself ];
 								whenRetrievedDo: [ :content | content updateImage ];
 								title: 'Map').
+					interpreter worldDefinition propertyDeclarations
+						ifNotEmpty: [ stream
+								nextPut:
+									(self newNotebookPage
+										presenterProvider: [ RMDWorldTabularInspector new interpreter: interpreter ];
+										title: 'World') ].
+					interpreter cellDefinition propertyDeclarations
+						ifNotEmpty: [ stream
+								nextPut:
+									(self newNotebookPage
+										presenterProvider: [ RMDCellTabularInspector new interpreter: interpreter ];
+										title: 'Cell') ].
 					interpreter animatNames
 						do: [ :animat | 
 							stream
