@@ -316,6 +316,15 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> numberOfIndivisualsOf: aRMDSpeciesDefinitionNode [
+	aRMDSpeciesDefinitionNode isWorldDefinitionNode
+		ifTrue: [ ^ 1 ].
+	aRMDSpeciesDefinitionNode isCellDefinitionNode
+		ifTrue: [ ^ memory xCells * memory yCells ].
+	^ memory numberOfAnimats: aRMDSpeciesDefinitionNode identifier
+]
+
 { #category : #simulating }
 RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]

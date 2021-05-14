@@ -46,6 +46,51 @@ RMDObservatory class >> sugarScape [
 	^ self interpreter: RMDInterpreter sugarScape
 ]
 
+{ #category : #private }
+RMDObservatory >> animatInspector: aString [
+	^ self newNotebook
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDAnimatTabularInspector new
+						interpreter: interpreter;
+						animat: aString ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Table';
+				yourself);
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDAnimatDistributionInspector new
+						interpreter: interpreter;
+						animat: aString;
+						updateObservation;
+						yourself ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Percentile';
+				yourself);
+		yourself
+]
+
+{ #category : #private }
+RMDObservatory >> cellInspector [
+	^ self newNotebook
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDCellTabularInspector new interpreter: interpreter ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Table';
+				yourself);
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDCellDistributionInspector new
+						interpreter: interpreter;
+						updateObservation;
+						yourself ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Percentile';
+				yourself);
+		yourself
+]
+
 { #category : #api }
 RMDObservatory >> forceKill [
 	self runState: false.
@@ -145,22 +190,20 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 						ifNotEmpty: [ stream
 								nextPut:
 									(self newNotebookPage
-										presenterProvider: [ RMDWorldTabularInspector new interpreter: interpreter ];
+										presenterProvider: [ self worldInspector ];
 										title: 'World') ].
 					interpreter cellDefinition propertyDeclarations
 						ifNotEmpty: [ stream
 								nextPut:
 									(self newNotebookPage
-										presenterProvider: [ RMDCellTabularInspector new interpreter: interpreter ];
+										presenterProvider: [ self cellInspector ];
 										title: 'Cell') ].
 					interpreter animatNames
 						do: [ :animat | 
 							stream
 								nextPut:
 									(self newNotebookPage
-										presenterProvider: [ RMDAnimatTabularInspector new
-												interpreter: interpreter;
-												animat: animat ];
+										presenterProvider: [ self animatInspector: animat ];
 										title: animat) ] ]).
 	duration := interpreter simulationModel simulationDefinition
 		timeDefinition duration evalIn: interpreter.
@@ -202,4 +245,24 @@ RMDObservatory >> updateTimeLabel [
 								printOn: stream.
 							stream nextPutAll: ' ]' ]).
 			timeSlider value: time / duration ]
+]
+
+{ #category : #private }
+RMDObservatory >> worldInspector [
+	^ self newNotebook
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDWorldTabularInspector new interpreter: interpreter ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Table';
+				yourself);
+		addPage:
+			(self newNotebookPage
+				presenterProvider: [ RMDWorldDistributionInspector new
+						interpreter: interpreter updateObservation;
+						yourself ];
+				whenRetrievedDo: [ :content | content updateObservation ];
+				title: 'Percentile';
+				yourself);
+		yourself
 ]

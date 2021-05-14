@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatTabularInspector,
-	#superclass : #RMDTabularInspector,
+	#name : #RMDAnimatDistributionInspector,
+	#superclass : #RMDDistributionInspector,
 	#traits : 'TRMDAnimatObservatory',
 	#classTraits : 'TRMDAnimatObservatory classTrait',
 	#instVars : [
@@ -10,17 +10,17 @@ Class {
 }
 
 { #category : #accessing }
-RMDAnimatTabularInspector >> animat [
+RMDAnimatDistributionInspector >> animat [
 	^ animat
 ]
 
 { #category : #accessing }
-RMDAnimatTabularInspector >> animat: aString [
+RMDAnimatDistributionInspector >> animat: aString [
 	animat := aString
 ]
 
 { #category : #initialization }
-RMDAnimatTabularInspector >> initialize [
+RMDAnimatDistributionInspector >> initialize [
 	super initialize.
-	self property: #animat whenChangedDo: [ self updateTable ]
+	self property: #animat whenChangedDo: [ self updateImage ]
 ]

@@ -241,6 +241,11 @@ RMDMemory >> northOf: anInteger do: aBlock [
 		ifTrue: [ aBlock value: anInteger + (self cellSize * self xCells) ]
 ]
 
+{ #category : #'accessing-individuals' }
+RMDMemory >> numberOfAnimats: aString [
+	^ (animats at: aString ifAbsent: [ ^ 0 ]) size
+]
+
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger [
 	^ self oldAt: anInteger ifAbsent: [ KeyNotFound signal ]

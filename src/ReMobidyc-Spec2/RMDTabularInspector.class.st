@@ -1,9 +1,8 @@
 Class {
 	#name : #RMDTabularInspector,
-	#superclass : #RMDPresenter,
+	#superclass : #RMDSpeciesObservatory,
 	#instVars : [
-		'#table',
-		'#interpreter => SpObservableSlot'
+		'table'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -12,12 +11,6 @@ Class {
 RMDTabularInspector class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical add: #table
-]
-
-{ #category : #initialization }
-RMDTabularInspector >> initialize [
-	super initialize.
-	self property: #interpreter whenChangedDo: [ self updateTable ]
 ]
 
 { #category : #initialization }
@@ -32,28 +25,13 @@ RMDTabularInspector >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDTabularInspector >> interpreter [
-	^ interpreter
-]
-
-{ #category : #accessing }
-RMDTabularInspector >> interpreter: aRMDInterpreter [
-	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
-	interpreter := aRMDInterpreter.
-	interpreter announcer weak
-		when: RMDTimeChanged
-		send: #updateTable
-		to: self
+RMDTabularInspector >> table [
+	^ table
 ]
 
 { #category : #private }
-RMDTabularInspector >> speciesDefinitionDo: aBlock [
-	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
-RMDTabularInspector >> table [
-	^ table
+RMDTabularInspector >> updateObservation [
+	self updateTable
 ]
 
 { #category : #private }
@@ -61,28 +39,30 @@ RMDTabularInspector >> updateTable [
 	table ifNil: [ ^ self ].
 	self
 		speciesDefinitionDo: [ :def | 
-			table
-				columns:
-					(Array
-						streamContents: [ :stream | 
-							stream
-								nextPut: (SpStringTableColumn title: 'ID' evaluated: [ :id | id printString ]).
-							def
-								propertyDeclarationsDo: [ :propertyDef | 
+			table columns
+				ifEmpty: [ table
+						columns:
+							(Array
+								streamContents: [ :stream | 
 									stream
-										nextPut:
-											(SpStringTableColumn
-												title: propertyDef printString
-												evaluated: [ :id | 
-													interpreter
-														withObserverContextWithSubject: id
-														species: def
-														do: [ (propertyDef unit
-																fromSI:
-																	(interpreter
-																		readVariable: propertyDef identifier
-																		agent: nil
-																		ifAbsent: [ nil ])) printShowingDecimalPlaces: 2 ] ]) ] ]);
+										nextPut: (SpStringTableColumn title: 'ID' evaluated: [ :id | id printString ]).
+									def
+										propertyDeclarationsDo: [ :propertyDef | 
+											stream
+												nextPut:
+													(SpStringTableColumn
+														title: propertyDef printString
+														evaluated: [ :id | 
+															interpreter
+																withObserverContextWithSubject: id
+																species: def
+																do: [ (propertyDef unit
+																		fromSI:
+																			(interpreter
+																				readVariable: propertyDef identifier
+																				agent: nil
+																				ifAbsent: [ nil ])) printShowingDecimalPlaces: 2 ] ]) ] ]) ].
+			table
 				items:
 					(Array
 						streamContents:
