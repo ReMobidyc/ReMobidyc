@@ -47,6 +47,14 @@ RMDSpeciesDefinitionNode >> = anObject [
 		and: [ propertyDeclarations = anObject propertyDeclarations ]
 ]
 
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> allPropertyDeclarations [
+	^ (self builtinProperties
+		collect:
+			[ :assoc | RMDPropertyDeclarationNode identifier: assoc key unit: assoc value ])
+		, self propertyDeclarations
+]
+
 { #category : #utilities }
 RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 	^ (self propertyOffsets associations

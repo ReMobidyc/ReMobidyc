@@ -14,7 +14,7 @@ Class {
 RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesDefinitionNode [
 	| propertyDeclarations propertyValues ids individualIndex propertyStats |
 	propertyDeclarations := aRMDSpeciesDefinitionNode
-		propertyDeclarations.
+		allPropertyDeclarations.
 	ids := Array
 		new: (aRMDInterpreter numberOfIndivisualsOf: aRMDSpeciesDefinitionNode).
 	propertyValues := (1 to: propertyDeclarations size)
@@ -27,7 +27,7 @@ RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesD
 			aRMDInterpreter
 				withObserverContextWithSubject: id
 				species: aRMDSpeciesDefinitionNode
-				do: [ aRMDSpeciesDefinitionNode propertyDeclarations
+				do: [ aRMDSpeciesDefinitionNode allPropertyDeclarations
 						doWithIndex: [ :propertyDef :propertyIndex | 
 							(propertyValues at: propertyIndex)
 								at: individualIndex
