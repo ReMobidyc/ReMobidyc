@@ -26,7 +26,7 @@ RMDObservatory class >> defaultSpec [
 				add:
 					(SpBoxLayout newVertical
 						add: #timeLabel;
-						add: #timeSlider;
+						add: (SpBoxLayout newHorizontal add: #timeSlider width: 500);
 						yourself);
 				yourself)
 			height: self buttonHeight;
