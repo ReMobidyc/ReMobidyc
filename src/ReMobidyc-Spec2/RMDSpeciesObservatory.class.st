@@ -34,6 +34,18 @@ RMDSpeciesObservatory >> interpreterDo: aBlock [
 ]
 
 { #category : #private }
+RMDSpeciesObservatory >> propertyValuesDo: aBlock [
+	interpreter
+		ifNotNil: [ self
+				speciesDefinitionDo: [ :speciesDefinition | 
+					^ aBlock
+						cull:
+							(RMDPropertyValues
+								fromInterpreter: interpreter
+								animat: speciesDefinition) ] ]
+]
+
+{ #category : #private }
 RMDSpeciesObservatory >> speciesDefinitionDo: aBlock [
 	^ self subclassResponsibility
 ]

@@ -38,33 +38,29 @@ RMDTabularInspector >> updateObservation [
 RMDTabularInspector >> updateTable [
 	table ifNil: [ ^ self ].
 	self
-		speciesDefinitionDo: [ :def | 
-			table columns
-				ifEmpty: [ table
-						columns:
-							(Array
-								streamContents: [ :stream | 
-									stream
-										nextPut: (SpStringTableColumn title: 'ID' evaluated: [ :id | id printString ]).
-									def
-										propertyDeclarationsDo: [ :propertyDef | 
-											stream
-												nextPut:
-													(SpStringTableColumn
-														title: propertyDef printString
-														evaluated: [ :id | 
-															interpreter
-																withObserverContextWithSubject: id
-																species: def
-																do: [ (propertyDef unit
-																		fromSI:
-																			(interpreter
-																				readVariable: propertyDef identifier
-																				agent: nil
-																				ifAbsent: [ nil ])) printShowingDecimalPlaces: 2 ] ]) ] ]) ].
+		propertyValuesDo: [ :propertyValues | 
 			table
-				items:
+				columns:
 					(Array
-						streamContents:
-							[ :stream | interpreter individualsOf: def do: [ :id | stream nextPut: id ] ]) ]
+						streamContents: [ :stream | 
+							stream
+								nextPut:
+									(SpStringTableColumn
+										title: 'ID'
+										evaluated: [ :index | 
+											index isInteger
+												ifTrue: [ (propertyValues ids at: index) printString ]
+												ifFalse: [ index ] ]).
+							propertyValues
+								propertiesDo: [ :propertyDef :values :stats | 
+									stream
+										nextPut:
+											(SpStringTableColumn
+												title: propertyDef printString
+												evaluated: [ :index | 
+													(index isInteger
+														ifTrue: [ values at: index ]
+														ifFalse: [ stats at: index ])
+														printShowingDecimalPlaces: 2 ]) ] ]);
+				items: #(min max mean sd) , (1 to: propertyValues numberOfValues) ]
 ]

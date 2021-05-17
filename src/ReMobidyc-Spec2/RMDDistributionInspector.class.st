@@ -2,15 +2,31 @@ Class {
 	#name : #RMDDistributionInspector,
 	#superclass : #RMDSpeciesObservatory,
 	#instVars : [
-		'image'
+		'image',
+		'showsPercentiles',
+		'showsMin',
+		'showsMax',
+		'showsMean',
+		'showsSd'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
 RMDDistributionInspector class >> defaultSpec [
-
-	^ SpBoxLayout newVertical add: #image
+	^ SpBoxLayout newVertical
+		add:
+			(SpBoxLayout newHorizontal
+				add: #showsPercentiles;
+				add: #showsMin;
+				add: #showsMax;
+				add: #showsMean;
+				add: #showsSd)
+			height: self buttonHeight;
+		add: #image
+			expand: true
+			fill: false
+			padding: 0
 ]
 
 { #category : #accessing }
@@ -22,6 +38,41 @@ RMDDistributionInspector >> image [
 RMDDistributionInspector >> initializePresenters [
 	super initializePresenters.
 	image := self newImage.
+	showsPercentiles := self newCheckBox
+		labelOnRight;
+		label: 'percentiles';
+		state: true;
+		labelClickable: true;
+		whenChangedDo: [ self updateObservation ];
+		yourself.
+	showsMin := self newCheckBox
+		labelOnRight;
+		label: 'min';
+		state: true;
+		labelClickable: true;
+		whenChangedDo: [ self updateObservation ];
+		yourself.
+	showsMax := self newCheckBox
+		labelOnRight;
+		label: 'max';
+		state: true;
+		labelClickable: true;
+		whenChangedDo: [ self updateObservation ];
+		yourself.
+	showsMean := self newCheckBox
+		labelOnRight;
+		label: 'mean';
+		state: true;
+		labelClickable: true;
+		whenChangedDo: [ self updateObservation ];
+		yourself.
+	showsSd := self newCheckBox
+		labelOnRight;
+		label: 'sigma';
+		state: true;
+		labelClickable: true;
+		whenChangedDo: [ self updateObservation ];
+		yourself.
 	self updateImage
 ]
 
@@ -29,60 +80,55 @@ RMDDistributionInspector >> initializePresenters [
 RMDDistributionInspector >> updateImage [
 	image ifNil: [ ^ self ].
 	self
-		speciesDefinitionDo: [ :def | 
-			((interpreter numberOfIndivisualsOf: def) > 0
-				and: [ def propertyDeclarations notEmpty ])
-				ifTrue:
-					[ | valuesArray individualIndex font fontHeight chartHeight chartWidth form canvas |
-					valuesArray := (1 to: def propertyDeclarations size)
-						collect: [ :i | Array new: (interpreter numberOfIndivisualsOf: def) ].
-					individualIndex := 1.
-					interpreter
-						individualsOf: def
-						do: [ :id | 
-							interpreter
-								withObserverContextWithSubject: id
-								species: def
-								do: [ def propertyDeclarations
-										doWithIndex: [ :propertyDef :propertyIndex | 
-											(valuesArray at: propertyIndex)
-												at: individualIndex
-												put:
-													(propertyDef unit
-														fromSI:
-															(interpreter
-																readVariable: propertyDef identifier
-																agent: nil
-																ifAbsent: [ nil ])) ] ].
-							individualIndex := individualIndex + 1 ].
-					font := TextStyle defaultFont.
-					fontHeight := font height.
-					chartHeight := 100.
-					chartWidth := 300.
-					self withWidgetDo: [ :w | chartWidth := w extent x ].
-					form := Form
-						extent:
-							chartWidth
-								@ ((chartHeight + fontHeight) * valuesArray size + fontHeight).
-					canvas := form getCanvas.
-					canvas
+		propertyValuesDo: [ :propertyValues | 
+			| font fontHeight chartHeight chartWidth form canvas yOffset |
+			font := TextStyle defaultFont.
+			fontHeight := font height.
+			chartHeight := 200.
+			chartWidth := 300.
+			self withWidgetDo: [ :w | chartWidth := w extent x ].
+			form := Form
+				extent:
+					chartWidth
+						@
+							((chartHeight + fontHeight) * propertyValues numberOfProperties
+								+ fontHeight)
+				depth: 32.
+			canvas := form getCanvas.
+			canvas fillColor: Color white.
+			showsPercentiles state
+				ifTrue: [ canvas
 						drawString: '0'
 							at: 0 @ (form height - fontHeight)
 							font: font
 							color: Color darkGray;
+						line: (form width // 4) @ 0
+							to: (form width // 4) @ (form height - fontHeight)
+							width: 2
+							color: Color lightGray;
 						drawString: '25'
-							at: (form width // 4) @ (form height - fontHeight)
+							at:
+							(form width // 4 - ((font widthOfString: '25') // 2))
+									@ (form height - fontHeight)
 							font: font
 							color: Color darkGray;
+						line: (form width // 2) @ 0
+							to: (form width // 2) @ (form height - fontHeight)
+							width: 2
+							color: Color lightGray;
 						drawString: '50'
 							at:
 							((form width - (font widthOfString: '50')) // 2)
 									@ (form height - fontHeight)
 							font: font
 							color: Color darkGray;
+						line: (form width * 3 // 4) @ 0
+							to: (form width * 3 // 4) @ (form height - fontHeight)
+							width: 2
+							color: Color lightGray;
 						drawString: '75'
 							at:
-							(form width * 3 // 4 - (font widthOfString: '75'))
+							(form width * 3 // 4 - ((font widthOfString: '75') // 2))
 									@ (form height - fontHeight)
 							font: font
 							color: Color darkGray;
@@ -91,47 +137,123 @@ RMDDistributionInspector >> updateImage [
 							(form width - (font widthOfString: '100'))
 									@ (form height - fontHeight)
 							font: font
-							color: Color darkGray.
-					valuesArray
-						doWithIndex: [ :vs :chartIndex | 
-							| values yOffset propertyDef resolution min max |
-							values := vs asSortedCollection.
-							yOffset := (chartIndex - 1) * (chartHeight + fontHeight).
-							propertyDef := def propertyDeclarations at: chartIndex.
-							canvas
-								drawString: propertyDef identifier , ' [' , propertyDef unit printString , ']'
-								at: 0 @ yOffset
-								font: font
+							color: Color darkGray ].
+			yOffset := 0.
+			propertyValues
+				propertiesDo: [ :propertyDef :vals :stats | 
+					| values resolution min max |
+					values := vals asSortedCollection.
+					canvas
+						drawString: propertyDef identifier , ' [' , propertyDef unit printString , ']'
+						at: 0 @ yOffset
+						font: font
+						color: Color black.
+					resolution := values size min: chartWidth.
+					min := stats at: #min.
+					max := stats at: #max.
+					min = max
+						ifTrue: [ canvas
+								line: 0 @ (chartHeight // 2 + fontHeight + yOffset)
+								to: chartWidth @ (chartHeight // 2 + fontHeight + yOffset)
+								width: 2
 								color: Color black.
-							resolution := values size min: chartWidth.
-							min := values min.
-							max := values max.
-							min = max
+							showsMean state
 								ifTrue: [ canvas
-										line: 0 @ (chartHeight // 2 + fontHeight + yOffset)
-										to: chartWidth @ (chartHeight // 2 + fontHeight + yOffset)
-										width: 1
-										color: Color black ]
-								ifFalse: [ 0 to: resolution - 1 do: [ :i | 
-										| value0 value1 |
-										value0 := values
-											at: (i * (values size - 1) / resolution asFloat) rounded + 1.
-										value1 := values
-											at: ((i + 1) * (values size - 1) / resolution asFloat) rounded + 1.
-										canvas
-											line:
-												(i * chartWidth / resolution asFloat)
-													@
-														((value0 - min) * chartHeight / (min - max) asFloat + fontHeight
-															+ chartHeight + yOffset)
-											to:
-												((i + 1) * chartWidth / resolution asFloat)
-													@
-														((value1 - min) * chartHeight / (min - max) asFloat + fontHeight
-															+ chartHeight + yOffset)
-											width: 1
-											color: Color black ] ] ].
-					image image: form ] ]
+										drawString: 'mean=' , ((stats at: #mean) printShowingDecimalPlaces: 2)
+										at: 10 @ (chartHeight // 2 + fontHeight + 2 + yOffset)
+										font: font
+										color: Color black ] ]
+						ifFalse: [ | vmean ymean vsd ysd |
+							showsMin state
+								ifTrue: [ canvas
+										drawString: 'min=' , ((stats at: #min) printShowingDecimalPlaces: 2)
+										at: 10 @ (chartHeight + yOffset)
+										font: font
+										color: Color black ].
+							showsMax state
+								ifTrue: [ canvas
+										drawString: 'max=' , ((stats at: #max) printShowingDecimalPlaces: 2)
+										at: 10 @ (fontHeight + yOffset)
+										font: font
+										color: Color black ].
+							vmean := stats at: #mean.
+							ymean := (vmean - min) * chartHeight / (min - max) asFloat
+								+ fontHeight + chartHeight + yOffset.
+							(showsMean state or: [ showsSd state ])
+								ifTrue: [ canvas
+										line: 0 @ ymean
+										to: chartWidth @ ymean
+										width: 2
+										color: Color black ].
+							showsMean state
+								ifTrue: [ canvas
+										drawString: 'mean=' , ((stats at: #mean) printShowingDecimalPlaces: 2)
+										at: 10 @ (ymean + 2)
+										font: font
+										color: Color black ].
+							showsSd state
+								ifTrue: [ vsd := vmean + (stats at: #sd).
+									ysd := (vsd - min) * chartHeight / (min - max) asFloat
+										+ fontHeight + chartHeight + yOffset.
+									canvas
+										drawString: 'sigma=' , ((stats at: #sd) printShowingDecimalPlaces: 2)
+										at: 20 @ ((ymean + ysd) * 0.5 - (fontHeight * 0.5))
+										font: font
+										color: Color black.
+									canvas
+										line: 0 @ ysd
+											to: chartWidth @ ysd
+											width: 2
+											color: Color lightGray;
+										line: 10 @ ysd
+											to: 5 @ (ysd + 5)
+											width: 2
+											color: Color lightGray;
+										line: 10 @ ysd
+											to: 15 @ (ysd + 5)
+											width: 2
+											color: Color lightGray;
+										line: 10 @ ymean
+											to: 5 @ (ymean - 5)
+											width: 2
+											color: Color lightGray;
+										line: 10 @ ymean
+											to: 15 @ (ymean - 5)
+											width: 2
+											color: Color lightGray;
+										line: 10 @ ymean
+											to: 10 @ ysd
+											width: 2
+											color: Color lightGray.
+									vsd := vmean - (stats at: #sd).
+									ysd := (vsd - min) * chartHeight / (min - max) asFloat
+										+ fontHeight + chartHeight + yOffset.
+									canvas
+										line: 0 @ ysd
+										to: chartWidth @ ysd
+										width: 2
+										color: Color lightGray ].
+							0 to: resolution - 1 do: [ :i | 
+								| value0 value1 |
+								value0 := values
+									at: (i * (values size - 1) / resolution asFloat) rounded + 1.
+								value1 := values
+									at: ((i + 1) * (values size - 1) / resolution asFloat) rounded + 1.
+								canvas
+									line:
+										(i * chartWidth / resolution asFloat)
+											@
+												((value0 - min) * chartHeight / (min - max) asFloat + fontHeight
+													+ chartHeight + yOffset)
+									to:
+										((i + 1) * chartWidth / resolution asFloat)
+											@
+												((value1 - min) * chartHeight / (min - max) asFloat + fontHeight
+													+ chartHeight + yOffset)
+									width: 1
+									color: Color black ] ].
+					yOffset := yOffset + (chartHeight + fontHeight) ].
+			image image: form ]
 ]
 
 { #category : #private }
