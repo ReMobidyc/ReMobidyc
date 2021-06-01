@@ -76,6 +76,11 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #private }
+RMDAgentDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+	^ self subclassResponsibility 
+]
+
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addProperty [
 	| propertyNode |
@@ -87,6 +92,7 @@ RMDAgentDefinitionBrowser >> addProperty [
 				definitionDo: [ :definition | 
 					definition
 						propertyDeclarations: (definition propertyDeclarations copyWith: propertyNode).
+					self addInitializerWithProperty: propertyNode animat: animat.
 					self updatePropertyList ] ]
 ]
 
@@ -134,6 +140,10 @@ RMDAgentDefinitionBrowser >> editProperty [
 								propertyDeclarations:
 									((definition propertyDeclarations copyWithout: originalPropertyNode)
 										copyWith: newPropertyNode).
+							self
+								removeInitializerWithProperty: originalPropertyNode
+									animat: animat;
+								addInitializerWithProperty: newPropertyNode animat: animat.
 							self updatePropertyList ] ] ]
 ]
 
@@ -266,6 +276,11 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
+{ #category : #private }
+RMDAgentDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+	^ self subclassResponsibility 
+]
+
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeProperty [
 	propertyList selection selectedItem
@@ -279,6 +294,9 @@ RMDAgentDefinitionBrowser >> removeProperty [
 								definitionDo: [ :definitionNode | 
 									definitionNode
 										propertyDeclarations: (definitionNode propertyDeclarations copyWithout: propertyNode).
+									self
+										removeInitializerWithProperty: propertyNode
+										animat: animat.
 									self updatePropertyList ] ] ]
 ]
 

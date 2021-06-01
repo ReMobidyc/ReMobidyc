@@ -10,14 +10,6 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDLiteralNode class >> literal: aString type: aRMDUnit [
-	^ self new
-		literal: aString;
-		type: aRMDUnit;
-		yourself
-]
-
-{ #category : #'instance creation' }
 RMDLiteralNode class >> literal: aString unit: aRMDUnit [
 	^ self new
 		literal: aString;

@@ -93,9 +93,12 @@ RMDSimulationModeler >> initializePresenters [
 	views := self newNotebook
 		addPage:
 			(self newNotebookPage
-				presenterProvider: [RMDScrollPresenter  with: (simulationDefinitionPresenter := RMDSimulationDefinitionPresenter
-						on: (simulationModel ifNotNil: #simulationDefinition)) ];
+				presenterProvider: [ RMDScrollPresenter
+						with:
+							(simulationDefinitionPresenter := RMDSimulationDefinitionPresenter
+								on: (simulationModel ifNotNil: #simulationDefinition)) ];
 				title: 'Time & Space');
+		whenSelectedPageChangedDo: [ simulationDefinitionPresenter ifNotNil: #nodeChanged ];
 		yourself.
 	runButton := self newButton
 		label: 'run';

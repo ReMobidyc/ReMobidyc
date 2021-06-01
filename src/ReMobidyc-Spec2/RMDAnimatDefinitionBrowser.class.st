@@ -14,6 +14,20 @@ RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModel animat: aString [
 		yourself
 ]
 
+{ #category : #private }
+RMDAnimatDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: aString [
+	simulationModel simulationDefinition animatInitializers
+		do: [ :animatInitializer | 
+			animatInitializer animat = aString
+				ifTrue: [ animatInitializer
+						propertyInitializers:
+							(animatInitializer propertyInitializers
+								copyWith:
+									(RMDPropertyInitializerNode
+										identifier: aRMDPropertyNode identifier
+										expression: (RMDLiteralNode literal: '0' unit: aRMDPropertyNode unit))) ] ]
+]
+
 { #category : #accessing }
 RMDAnimatDefinitionBrowser >> agentName [
 	^ animat
@@ -25,6 +39,17 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 	animat ifNil: [ ^ nil ].
 	(simulationModel animatDefinitionAt: animat ifAbsent: [  ])
 		ifNotNil: aBlock
+]
+
+{ #category : #private }
+RMDAnimatDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: aString [
+	simulationModel simulationDefinition animatInitializers
+		do: [ :animatInitializer | 
+			animatInitializer animat = aString
+				ifTrue: [ animatInitializer
+						propertyInitializers:
+							(animatInitializer propertyInitializers
+								reject: [ :initializer | initializer identifier = aRMDPropertyNode identifier ]) ] ]
 ]
 
 { #category : #accessing }

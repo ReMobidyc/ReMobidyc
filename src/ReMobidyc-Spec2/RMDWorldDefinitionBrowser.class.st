@@ -13,6 +13,19 @@ RMDWorldDefinitionBrowser class >> on: aRMDSimulationModel [
 		yourself
 ]
 
+{ #category : #private }
+RMDWorldDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+	simulationModel simulationDefinition worldInitializer
+		ifNotNil: [ :initializer | 
+			initializer
+				propertyInitializers:
+					(initializer propertyInitializers
+						copyWith:
+							(RMDPropertyInitializerNode
+								identifier: aRMDPropertyNode identifier
+								expression: (RMDLiteralNode literal: '0' unit: aRMDPropertyNode unit))) ]
+]
+
 { #category : #accessing }
 RMDWorldDefinitionBrowser >> agentName [
 	^ 'World'
@@ -22,6 +35,17 @@ RMDWorldDefinitionBrowser >> agentName [
 RMDWorldDefinitionBrowser >> definitionDo: aBlock [
 	simulationModel
 		ifNotNil: [ simulationModel worldDefinition ifNotNil: aBlock ]
+]
+
+{ #category : #private }
+RMDWorldDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+	simulationModel simulationDefinition worldInitializer
+		ifNotNil: [ :initializer | 
+			initializer
+				propertyInitializers:
+					(initializer propertyInitializers
+						reject:
+							[ :propertyInitializer | propertyInitializer identifier = aRMDPropertyNode identifier ]) ]
 ]
 
 { #category : #enumerating }
