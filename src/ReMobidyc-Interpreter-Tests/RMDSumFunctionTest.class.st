@@ -12,23 +12,6 @@ RMDSumFunctionTest >> setUp [
 	sum := RMDSumFunction new
 ]
 
-{ #category : #running }
-RMDSumFunctionTest >> testInferTypeWithArguments [
-	self
-		assert:
-			(sum
-				inferTypeWithArguments:
-					{'1 [m]' asRMDExpression.
-					'3 [cm]' asRMDExpression})
-		equals: 'm' asRMDUnit.
-	self
-		should: [ sum
-				inferTypeWithArguments:
-					{'1 [m]' asRMDExpression.
-					'3 [m/s]' asRMDExpression} ]
-		raise: RMDTypeError
-]
-
 { #category : #tests }
 RMDSumFunctionTest >> testValue [
 	self assert: (sum value: 10) equals: 10

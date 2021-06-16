@@ -10,7 +10,7 @@ Class {
 
 { #category : #running }
 RMDContextTest >> setUp [
-	context := RMDContext new.
+	context := RMDActionContext new.
 	parser := RMDGrammar new
 ]
 

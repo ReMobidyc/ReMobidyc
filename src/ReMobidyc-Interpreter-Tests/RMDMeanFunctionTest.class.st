@@ -12,23 +12,6 @@ RMDMeanFunctionTest >> setUp [
 	mean := RMDMeanFunction new
 ]
 
-{ #category : #running }
-RMDMeanFunctionTest >> testInferTypeWithArguments [
-	self
-		assert:
-			(mean
-				inferTypeWithArguments:
-					{'1 [m]' asRMDExpression.
-					'3 [cm]' asRMDExpression})
-		equals: 'm' asRMDUnit.
-	self
-		should: [ mean
-				inferTypeWithArguments:
-					{'1 [m]' asRMDExpression.
-					'3 [m/s]' asRMDExpression} ]
-		raise: RMDTypeError
-]
-
 { #category : #tests }
 RMDMeanFunctionTest >> testValue [
 	self assert: (mean value: 10) equals: 10

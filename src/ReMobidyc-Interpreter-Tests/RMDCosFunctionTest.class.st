@@ -13,16 +13,6 @@ RMDCosFunctionTest >> setUp [
 ]
 
 { #category : #tests }
-RMDCosFunctionTest >> testInferTypeWithArguments [
-	self
-		assert: (cos inferTypeWithArguments: {'0 [degree]' asRMDExpression})
-		equals: '' asRMDUnit.
-	self
-		should: [ cos inferTypeWithArguments: {'0 [day]' asRMDExpression} ]
-		raise: RMDTypeError
-]
-
-{ #category : #tests }
 RMDCosFunctionTest >> testValue [
 	self assert: (cos value: 0) closeTo: 1.0.
 	self assert: (cos value: Float pi / 2.0) closeTo: 0.0.

@@ -13,13 +13,6 @@ RMDAbsFunctionTest >> setUp [
 ]
 
 { #category : #tests }
-RMDAbsFunctionTest >> testInferTypeWithArguments [
-	self
-		assert: (abs inferTypeWithArguments: {'1.23 [m/s]' asRMDExpression})
-		equals: 'm/s' asRMDUnit
-]
-
-{ #category : #tests }
 RMDAbsFunctionTest >> testValue [
 	self assert: (abs value: -1.0) closeTo: 1.0.
 	self assert: (abs value: 1.0) closeTo: 1.0.
