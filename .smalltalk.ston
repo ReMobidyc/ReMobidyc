@@ -1,0 +1,12 @@
+SmalltalkCISpec {
+  #name : 'ReMobidyc',
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'ReMobidyc',
+      #directory : 'src',
+      #platforms : [ #pharo ]
+    }
+  ],
+  #testing : {
+  }  
+}
