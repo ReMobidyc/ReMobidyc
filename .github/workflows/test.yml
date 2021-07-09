@@ -8,10 +8,7 @@ on:
       - main
     paths-ignore:
       - '**.md'
-      - 'docs/**'
-      - 'JavaScript/**'
-      - 'Tutorials/**'
-      - 'scripts/**'
+      - 'images/**'
   pull_request:
     types: [assigned, opened, synchronize, reopened]
 
