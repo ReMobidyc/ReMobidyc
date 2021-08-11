@@ -101,10 +101,10 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 
 { #category : #accessing }
 RMDSimulationTimeDefinitionPresenter >> nodeChanged [
-	self updateDurationField.
 	self updateDurationUnit.
-	self updateStepField.
-	self updateStepUnit
+	self updateDurationField.
+	self updateStepUnit.
+	self updateStepField
 ]
 
 { #category : #accessing }
