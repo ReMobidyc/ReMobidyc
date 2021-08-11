@@ -2,6 +2,7 @@ Class {
 	#name : #RMDObservatory,
 	#superclass : #RMDPresenter,
 	#instVars : [
+		'modelName',
 		'interpreter',
 		'views',
 		'runButton',
@@ -97,6 +98,14 @@ RMDObservatory >> forceKill [
 	process ifNotNil: #terminate
 ]
 
+{ #category : #updating }
+RMDObservatory >> informServer [
+	RMDClient
+		informModel: self modelName
+		progress: time / duration asFloat
+		from: self
+]
+
 { #category : #initialization }
 RMDObservatory >> initializePresenters [
 	super initializePresenters.
@@ -147,6 +156,26 @@ RMDObservatory >> initializeWindow: aWindowPresenter [
 		initialExtent: 800 @ 600
 ]
 
+{ #category : #accessing }
+RMDObservatory >> modelName [
+	^ modelName ifNil: [ modelName := self requestModelName ]
+]
+
+{ #category : #accessing }
+RMDObservatory >> modelName: aString [
+	modelName := aString
+]
+
+{ #category : #api }
+RMDObservatory >> progress [
+	^ time / duration
+]
+
+{ #category : #accessing }
+RMDObservatory >> requestModelName [
+	^ UIManager default request: 'model name' initialAnswer: 'Sugar Scape'
+]
+
 { #category : #api }
 RMDObservatory >> resetSimulation [
 	interpreter setupSimulation
@@ -171,7 +200,7 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 		renderersDo: [ :renderer | visualizer addRenderer: renderer ].
 	interpreter announcer weak
 		when: RMDTimeChanged
-		send: #updateTimeLabel
+		send: #timeChanged
 		to: self.
 	views
 		pages:
@@ -219,6 +248,13 @@ RMDObservatory >> stepSimulation [
 	[ process isNil or: [ process isTerminated ] ]
 		whileFalse: [ 1 milliSecond wait ].
 	interpreter stepSimulation
+]
+
+{ #category : #updating }
+RMDObservatory >> timeChanged [
+	self
+		informServer;
+		updateTimeLabel
 ]
 
 { #category : #api }
