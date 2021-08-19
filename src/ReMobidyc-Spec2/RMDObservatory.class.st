@@ -12,7 +12,8 @@ Class {
 		'timeLabel',
 		'timeSlider',
 		'time',
-		'duration'
+		'duration',
+		'lastServerUpdate'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -71,6 +72,15 @@ RMDObservatory >> animatInspector: aString [
 		yourself
 ]
 
+{ #category : #updating }
+RMDObservatory >> basicInformServer [
+	lastServerUpdate := DateAndTime now.
+	RMDClient
+		informModel: self modelName
+		progress: (time / duration asFloat * 100.0) asInteger
+		from: self
+]
+
 { #category : #private }
 RMDObservatory >> cellInspector [
 	^ self newNotebook
@@ -100,10 +110,9 @@ RMDObservatory >> forceKill [
 
 { #category : #updating }
 RMDObservatory >> informServer [
-	RMDClient
-		informModel: self modelName
-		progress: time / duration asFloat
-		from: self
+	(lastServerUpdate isNil
+		or: [ DateAndTime now - lastServerUpdate >= self serverUpdateInterval ])
+		ifTrue: [ self basicInformServer ]
 ]
 
 { #category : #initialization }
@@ -189,6 +198,11 @@ RMDObservatory >> runState [
 { #category : #api }
 RMDObservatory >> runState: aBoolean [
 	runButton state: aBoolean = true
+]
+
+{ #category : #accessing }
+RMDObservatory >> serverUpdateInterval [
+	^ 10 seconds
 ]
 
 { #category : #initialization }
