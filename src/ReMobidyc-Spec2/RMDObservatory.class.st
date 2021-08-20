@@ -77,7 +77,7 @@ RMDObservatory >> basicInformServer [
 	lastServerUpdate := DateAndTime now.
 	RMDClient
 		informModel: self modelName
-		progress: (time / duration asFloat * 100.0) asInteger
+		progress: time / duration asFloat
 		from: self
 ]
 
