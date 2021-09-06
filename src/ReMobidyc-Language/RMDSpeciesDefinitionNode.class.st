@@ -97,7 +97,8 @@ RMDSpeciesDefinitionNode >> propertyDeclarations [
 
 { #category : #accessing }
 RMDSpeciesDefinitionNode >> propertyDeclarations: anArrayOfPropertyDeclaration [
-	propertyDeclarations := anArrayOfPropertyDeclaration
+	propertyDeclarations := anArrayOfPropertyDeclaration.
+	propertyOffsets := nil
 ]
 
 { #category : #enumerating }

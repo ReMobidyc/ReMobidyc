@@ -25,6 +25,12 @@ RMDClient class >> forLocalServer [
 ]
 
 { #category : #'instance creation' }
+RMDClient class >> forNone [
+	<script: 'RMDClient forNone'>
+	Servers := {}
+]
+
+{ #category : #'instance creation' }
 RMDClient class >> forPublicServer [
 	<script: 'RMDClient forPublicServer'>
 	Servers := {self publicServer}
