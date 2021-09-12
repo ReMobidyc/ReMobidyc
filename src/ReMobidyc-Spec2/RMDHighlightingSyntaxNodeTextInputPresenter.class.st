@@ -2,8 +2,8 @@ Class {
 	#name : #RMDHighlightingSyntaxNodeTextInputPresenter,
 	#superclass : #RMDSyntaxNodeTextInputPresenter,
 	#instVars : [
-		'#highlights => SpObservableSlot',
-		'#highlightColor => SpObservableSlot'
+		'#highlights => ObservableSlot',
+		'#highlightColor => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }

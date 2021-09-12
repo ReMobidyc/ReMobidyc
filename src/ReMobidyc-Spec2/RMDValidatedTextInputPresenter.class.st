@@ -4,9 +4,9 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#validation => SpObservableSlot',
-		'#lastValidText => SpObservableSlot',
-		'#invalidIsWarning => SpObservableSlot'
+		'#validation => ObservableSlot',
+		'#lastValidText => ObservableSlot',
+		'#invalidIsWarning => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }

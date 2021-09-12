@@ -4,10 +4,10 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#syntaxNode => SpObservableSlot',
-		'#lastValidSyntaxNode => SpObservableSlot',
-		'#highlights => SpObservableSlot',
-		'#highlightColor => SpObservableSlot',
+		'#syntaxNode => ObservableSlot',
+		'#lastValidSyntaxNode => ObservableSlot',
+		'#highlights => ObservableSlot',
+		'#highlightColor => ObservableSlot',
 		'#parser'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'

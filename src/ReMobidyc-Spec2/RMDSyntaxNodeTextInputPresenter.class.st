@@ -4,8 +4,8 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#syntaxNode => SpObservableSlot',
-		'#lastValidSyntaxNode => SpObservableSlot',
+		'#syntaxNode => ObservableSlot',
+		'#lastValidSyntaxNode => ObservableSlot',
 		'#parser'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'

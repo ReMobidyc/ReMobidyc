@@ -4,7 +4,7 @@ Class {
 	#traits : 'TRMDAnimatObservatory',
 	#classTraits : 'TRMDAnimatObservatory classTrait',
 	#instVars : [
-		'#animat => SpObservableSlot'
+		'#animat => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }

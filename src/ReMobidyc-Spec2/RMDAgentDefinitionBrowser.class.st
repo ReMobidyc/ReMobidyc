@@ -24,56 +24,48 @@ Class {
 
 { #category : #specs }
 RMDAgentDefinitionBrowser class >> defaultSpec [
+
 	^ SpPanedLayout newVertical
-		position: 0.3;
-		add:
-			(SpPanedLayout newHorizontal
-				position: 0.5;
-				add:
-					(SpBoxLayout newVertical
-						add: 'Properties' expand: false;
-						add: #propertyList;
-						add:
-							(SpBoxLayout newHorizontal
-								add: #addPropertyButton width: self buttonHeight;
-								add: #removePropertyButton width: self buttonHeight;
-								add: #editPropertyButton width: self buttonHeight;
-								yourself)
-							height: self buttonHeight;
-						yourself);
-				add:
-					(SpBoxLayout newVertical
-						add: 'Visualization' expand: false;
-						add: #rendererList;
-						add:
-							(SpBoxLayout newHorizontal
-								add: #addRendererButton width: self buttonHeight;
-								add: #removeRendererButton width: self buttonHeight;
-								add: #editRendererButton width: self buttonHeight;
-								yourself)
-							height: self buttonHeight;
-						yourself);
-				yourself);
-		add:
-			(SpBoxLayout newVertical
-				add: 'Tasks' expand: false;
-				add:
-					(SpPanedLayout newHorizontal
-						position: 0.4;
-						add:
-							(SpBoxLayout newVertical
-								add: #taskList;
-								add:
-									(SpBoxLayout newHorizontal
-										add: #addTaskButton width: self buttonHeight;
-										add: #removeTaskButton width: self buttonHeight;
-										add: #editTaskButton width: self buttonHeight;
-										yourself)
-									height: self buttonHeight;
-								yourself);
-						add: #sourceText);
-				yourself);
-		yourself
+		  positionOfSlider: 0.3;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.5;
+				   add: (SpBoxLayout newVertical
+						    add: 'Properties' expand: false;
+						    add: #propertyList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #addPropertyButton width: self buttonHeight;
+								     add: #removePropertyButton width: self buttonHeight;
+								     add: #editPropertyButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Visualization' expand: false;
+						    add: #rendererList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #addRendererButton width: self buttonHeight;
+								     add: #removeRendererButton width: self buttonHeight;
+								     add: #editRendererButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
+						    yourself);
+				   yourself);
+		  add: (SpBoxLayout newVertical
+				   add: 'Tasks' expand: false;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.4;
+						    add: (SpBoxLayout newVertical
+								     add: #taskList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addTaskButton width: self buttonHeight;
+										      add: #removeTaskButton width: self buttonHeight;
+										      add: #editTaskButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
+								     yourself);
+						    add: #sourceText);
+				   yourself);
+		  yourself
 ]
 
 { #category : #private }
