@@ -74,11 +74,13 @@ RMDObservatory >> animatInspector: aString [
 
 { #category : #updating }
 RMDObservatory >> basicInformServer [
+
 	lastServerUpdate := DateAndTime now.
-	RMDClient
-		informModel: self modelName
-		progress: time / duration asFloat
-		from: self
+	Smalltalk at: #RMDClient ifPresent: [ :clientClass | 
+		clientClass
+			informModel: self modelName
+			progress: time / duration asFloat
+			from: self ]
 ]
 
 { #category : #private }
