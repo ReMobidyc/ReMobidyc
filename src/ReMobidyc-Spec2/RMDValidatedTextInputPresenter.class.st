@@ -12,16 +12,6 @@ Class {
 }
 
 { #category : #api }
-RMDValidatedTextInputPresenter >> accept: aStringOrText [
-	(validation notNil and: [ (validation cull: aStringOrText) ~= true ])
-		ifTrue: [ self beInvalid.
-			^ nil ].
-	self beOk.
-	lastValidText := aStringOrText.
-	^ super accept: aStringOrText
-]
-
-{ #category : #api }
 RMDValidatedTextInputPresenter >> beInvalid [
 	self color: self invalidColor
 ]

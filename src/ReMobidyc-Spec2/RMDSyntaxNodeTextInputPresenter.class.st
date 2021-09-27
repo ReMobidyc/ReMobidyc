@@ -44,16 +44,6 @@ RMDSyntaxNodeTextInputPresenter class >> on: aParser [
 ]
 
 { #category : #api }
-RMDSyntaxNodeTextInputPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
-	syntaxNode := aRMDSyntaxNode.
-	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ self beOk.
-			lastValidSyntaxNode := aRMDSyntaxNode ]
-		ifFalse: [ self beError ].
-	self accept: aRMDSyntaxNode printString
-]
-
-{ #category : #api }
 RMDSyntaxNodeTextInputPresenter >> allowEmpty [
 	parser := parser / '' asPParser end
 ]

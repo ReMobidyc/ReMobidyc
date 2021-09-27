@@ -17,7 +17,7 @@ RMDNumberInputPresenter >> acceptNumebr: aNumber [
 		ifFalse: [ aNumber asFloat ].
 	lastValidNumber := number.
 	self beOk.
-	self accept: number printString
+	self text: number printString
 ]
 
 { #category : #initialization }

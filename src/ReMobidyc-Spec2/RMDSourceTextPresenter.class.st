@@ -15,12 +15,14 @@ Class {
 
 { #category : #api }
 RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
+
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ self beOk.
+		ifTrue: [ 
+			self beOk.
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	self acceptText: aRMDSyntaxNode printString
+	self text: aRMDSyntaxNode printString
 ]
 
 { #category : #private }

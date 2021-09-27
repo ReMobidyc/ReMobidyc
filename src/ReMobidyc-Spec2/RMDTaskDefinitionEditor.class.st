@@ -24,62 +24,53 @@ Class {
 
 { #category : #specs }
 RMDTaskDefinitionEditor class >> defaultSpec [
+
 	^ SpPanedLayout newVertical
-		position: 0.5;
-		add:
-			(SpPanedLayout newHorizontal
-				position: 0.6;
-				add:
-					(SpPanedLayout newHorizontal
-						position: 0.4;
-						add:
-							(SpBoxLayout newVertical
-								add: 'Repositories' expand: false;
-								add: #repositoryList;
-								add:
-									(SpBoxLayout newHorizontal
-										add: #addRepositoryButton width: self buttonHeight;
-										add: #removeRepositoryButton width: self buttonHeight;
-										add: #editRepositoryButton width: self buttonHeight;
-										yourself)
-									height: self buttonHeight;
-								yourself);
-						add:
-							(SpBoxLayout newVertical
-								add: 'Actions' expand: false;
-								add: #actionList;
-								yourself);
-						yourself);
-				add:
-					(SpBoxLayout newVertical
-						add: 'Template' expand: false;
-						add: #templateText;
-						yourself));
-		add:
-			(SpBoxLayout newVertical
-				add: 'Task Specialization' expand: false;
-				add:
-					(SpPanedLayout newHorizontal
-						position: 0.4;
-						add:
-							(SpBoxLayout newVertical
-								add:
-									(SpBoxLayout newHorizontal
-										add: #verbIdentifierField;
-										add: #objectIdentifierField)
-									height: self inputTextHeight;
-								add: #replacementList;
-								add:
-									(SpBoxLayout newHorizontal
-										add: #addReplacementButton width: self buttonHeight;
-										add: #removeReplacementButton width: self buttonHeight;
-										add: #editReplacementButton width: self buttonHeight;
-										yourself)
-									height: self buttonHeight;
-								yourself);
-						add: #sourceText;
-						yourself));
-		yourself
+		  positionOfSlider: 0.5;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.6;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.4;
+						    add: (SpBoxLayout newVertical
+								     add: 'Repositories' expand: false;
+								     add: #repositoryList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addRepositoryButton width: self buttonHeight;
+										      add: #removeRepositoryButton width: self buttonHeight;
+										      add: #editRepositoryButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
+								     yourself);
+						    add: (SpBoxLayout newVertical
+								     add: 'Actions' expand: false;
+								     add: #actionList;
+								     yourself);
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Template' expand: false;
+						    add: #templateText;
+						    yourself));
+		  add: (SpBoxLayout newVertical
+				   add: 'Task Specialization' expand: false;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.4;
+						    add: (SpBoxLayout newVertical
+								     add: (SpBoxLayout newHorizontal
+										      add: #verbIdentifierField;
+										      add: #objectIdentifierField)
+								     height: self inputTextHeight;
+								     add: #replacementList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addReplacementButton width: self buttonHeight;
+										      add: #removeReplacementButton
+										      width: self buttonHeight;
+										      add: #editReplacementButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
+								     yourself);
+						    add: #sourceText;
+						    yourself));
+		  yourself
 ]
 
 { #category : #'instance creation' }
@@ -256,12 +247,10 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
-		acceptOnCR: true;
 		beIdentifier;
 		whenLastValidSyntaxNodeChangedDo: [ self acceptVerbIdentifierField ];
 		yourself.
 	objectIdentifierField := self newSyntaxNodeTextInput
-		acceptOnCR: true;
 		beAgentIdentifier;
 		allowEmpty;
 		whenLastValidSyntaxNodeChangedDo: [ self acceptObjectIdentifierField ];
