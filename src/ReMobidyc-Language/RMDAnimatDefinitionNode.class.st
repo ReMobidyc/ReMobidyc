@@ -7,6 +7,13 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'typical instances' }
+RMDAnimatDefinitionNode class >> ant [
+	<script: 'RMDAnimatDefinitionNode ant inspect'>
+	^ RMDGrammar new animatDefinition end parse: 'Ant is Animat with
+	sugar [kcal].'
+]
+
 { #category : #accessing }
 RMDAnimatDefinitionNode class >> createBuiltinProperties [
 	^ {('x' -> RMDUnit m).

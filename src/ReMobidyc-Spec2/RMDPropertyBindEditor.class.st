@@ -21,19 +21,18 @@ RMDPropertyBindEditor class >> actionDefinition: aRMDActionDefinitionNode except
 
 { #category : #specs }
 RMDPropertyBindEditor class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add:
-			(SpPanedLayout newHorizontal
-				position: 0.4;
-				add:
-					(SpBoxLayout newHorizontal
-						add: #propertyVariableList;
-						add: #replacementIcon width: 48;
-						yourself);
-				add: #expressionField;
-				yourself)
-			height: self inputTextHeight;
-		yourself
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.4;
+				   add: (SpBoxLayout newHorizontal
+						    add: #propertyVariableList;
+						    add: #replacementIcon width: 48;
+						    yourself);
+				   add: #expressionField;
+				   yourself)
+		  height: self inputTextHeight;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -69,7 +68,6 @@ RMDPropertyBindEditor >> initializePresenters [
 		yourself.
 	expressionField := self newSyntaxNodeTextInput
 		beExpression;
-		autoAccept: true;
 		whenSyntaxNodeChangedDo:
 			[ self owner
 				ifNotNil:

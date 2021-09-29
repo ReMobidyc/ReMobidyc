@@ -8,13 +8,11 @@ Class {
 RMDCellColorRangeRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	minField := self newSyntaxNodeTextInput
-		autoAccept: true;
 		beLiteral;
 		whenLastValidSyntaxNodeChangedDo: [ :literal | 
 			renderer min: literal.
 			self valueChanged ].
 	maxField := self newSyntaxNodeTextInput
-		autoAccept: true;
 		beLiteral;
 		whenLastValidSyntaxNodeChangedDo: [ :literal | 
 			renderer max: literal.

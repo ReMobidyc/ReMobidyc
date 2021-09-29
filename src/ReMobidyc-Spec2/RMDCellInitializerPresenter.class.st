@@ -33,7 +33,6 @@ RMDCellInitializerPresenter >> initializePresenters [
 	super initializePresenters.
 	xDivisionsField := self newNumberInput
 		beInteger;
-		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :int | 
 			| nat |
 			nat := int max: 1.
@@ -42,7 +41,6 @@ RMDCellInitializerPresenter >> initializePresenters [
 		yourself.
 	yDivisionsField := self newNumberInput
 		beInteger;
-		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :int | 
 			| nat |
 			nat := int max: 1.
@@ -51,7 +49,6 @@ RMDCellInitializerPresenter >> initializePresenters [
 		yourself.
 	sizeField := self newNumberInput
 		beFloat;
-		autoAccept: true;
 		whenLastValidNumberChangedDo:
 				[ :val | node ifNotNil: [ node size literal: val printString ] ];
 		yourself.

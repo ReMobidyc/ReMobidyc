@@ -37,9 +37,6 @@ RMDDistributionInspector >> image [
 { #category : #initialization }
 RMDDistributionInspector >> initializePresenters [
 	super initializePresenters.
-	"image := self newImage
-		autoScale: false;
-		yourself."
 	image := self newComponentList.
 	showsPercentiles := self newCheckBox
 		labelOnRight;
@@ -271,5 +268,6 @@ RMDDistributionInspector >> updateImage [
 
 { #category : #private }
 RMDDistributionInspector >> updateObservation [
-	self updateImage
+	self updateImage.
+	self changed
 ]

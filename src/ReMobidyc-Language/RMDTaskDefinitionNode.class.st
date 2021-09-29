@@ -27,6 +27,16 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 ]
 
 { #category : #'typical instances' }
+RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
+	<script:
+		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
+	^ ('Goat eat namely collect where
+	my thing -> my blood_sugar
+	here''s thing -> here''s grass
+	my greed -> min(' , maxString, ' - my blood_sugar, ', dietString, ' * delta time, here''s grass).') asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>

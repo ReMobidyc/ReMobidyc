@@ -24,6 +24,50 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode
+				goat_eat: '3000 [kcal/day]'
+				upto: '10000[kcal]');
+		load: RMDActionDefinitionNode grow_grass;
+		load:
+			(RMDTaskDefinitionNode
+				cell_grow_grass: '2000[kcal/day]'
+				upto: '1000000[kcal]');
+		load:
+			(RMDSimulationDefinitionNode
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				worldInitializer: RMDWorldInitializerNode empty
+				cellInitializer:
+					(RMDCellInitializerNode
+						grassInitializer: 10
+						by: 10
+						of: '5[km]'
+						grass: '0[kcal]'
+						to: '700000[kcal]')
+				animatInitializers:
+					{(RMDAnimatInitializerNode
+						goatInitializer: 100
+						bloodSugar: '500[kcal]'
+						to: '1000[kcal]')});
+		addRenderer: (RMDBackgroundColorRenderer color: Color brown);
+		addRenderer:
+			(RMDCellColorAlphaRenderer
+				color: Color green
+				alpha: 'here''s grass' asRMDExpression
+				between: '0[kcal]' asRMDExpression
+				and: '1000000[kcal]' asRMDExpression);
+		addRenderer: (RMDAnimatDotRenderer on: 'Goat' diameter: 7 color: Color yellow);
+		yourself
+]
+
+{ #category : #'instance creation' }
+RMDSimulationModel class >> sugarScape_original [
+	^ self new
+		load: RMDWorldDefinitionNode empty;
+		load: RMDCellDefinitionNode grassField;
+		load: RMDAnimatDefinitionNode goat;
+		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
+		load: RMDTaskDefinitionNode goat_walk_for_grass;
+		load:
+			(RMDTaskDefinitionNode
 				goat_graze: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;

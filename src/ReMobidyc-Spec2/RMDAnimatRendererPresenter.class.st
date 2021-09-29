@@ -21,7 +21,6 @@ RMDAnimatRendererPresenter >> enableAgentFields [
 RMDAnimatRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	animatField := self newAnimatInput
-		autoAccept: true;
 		whenLastValidTextChangedDo: [ :animat | 
 			renderer animat: animat.
 			self valueChanged ]

@@ -48,7 +48,6 @@ RMDAnimatInitializerPresenter >> initializePresenters [
 	super initializePresenters.
 	populationField := self newNumberInput
 		beInteger;
-		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :int | 
 			| nat |
 			nat := int max: 1.
@@ -56,7 +55,6 @@ RMDAnimatInitializerPresenter >> initializePresenters [
 			populationField text: nat printString ];
 		yourself.
 	animatField := self newAnimatInput
-		autoAccept: true;
 		whenLastValidTextChangedDo: [ :text | node animat: text asString ];
 		yourself
 ]
