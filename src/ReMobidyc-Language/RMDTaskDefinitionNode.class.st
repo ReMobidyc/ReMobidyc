@@ -18,22 +18,23 @@ Class {
 RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Cell grow_grass namely gain_upto where
+	^ ('Cell grow namely gain_if_below where
 	my thing -> here''s grass
 	my amount -> ' , amountString
 		,
 			' * delta time
-	my maximum -> ' , maxString , '.') asRMDTaskDefinition
+	my threshold -> ' , maxString , '.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat graze namely collect where
+	^ ('Goat eat namely collect_if_below where
 	my thing -> my blood_sugar
 	here''s thing -> here''s grass
-	my greed -> min(' , maxString, ' - my blood_sugar, ', dietString, ' * delta time, here''s grass).') asRMDTaskDefinition
+	my threshold -> ', maxString, '
+	my greed -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }

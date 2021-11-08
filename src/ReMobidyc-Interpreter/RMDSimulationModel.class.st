@@ -47,7 +47,7 @@ RMDSimulationModel class >> sugarScape [
 						goatInitializer: 100
 						bloodSugar: '500[kcal]'
 						to: '1000[kcal]')});
-		addRenderer: (RMDBackgroundColorRenderer color: Color brown);
+		addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		addRenderer:
 			(RMDCellColorAlphaRenderer
 				color: Color green
