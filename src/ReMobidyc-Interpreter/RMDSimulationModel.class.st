@@ -24,7 +24,7 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode
-				goat_eat: '3000 [kcal/day]'
+				goat_graze: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:
@@ -47,7 +47,7 @@ RMDSimulationModel class >> sugarScape [
 						goatInitializer: 100
 						bloodSugar: '500[kcal]'
 						to: '1000[kcal]')});
-		addRenderer: (RMDBackgroundColorRenderer color: Color brown);
+		addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		addRenderer:
 			(RMDCellColorAlphaRenderer
 				color: Color green

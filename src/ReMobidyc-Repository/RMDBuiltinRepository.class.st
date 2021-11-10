@@ -47,6 +47,11 @@ RMDBuiltinRepository >> collect [
 ]
 
 { #category : #actions }
+RMDBuiltinRepository >> collect_if_below [
+	^ RMDActionDefinitionNode collect_if_below
+]
+
+{ #category : #actions }
 RMDBuiltinRepository >> convert [
 	^ RMDActionDefinitionNode convert
 ]
@@ -59,6 +64,13 @@ RMDBuiltinRepository >> diffuse [
 { #category : #actions }
 RMDBuiltinRepository >> gain [
 	^ 'to gain is
+	my delta thing'' = my amount.' asRMDActionDefinition
+]
+
+{ #category : #actions }
+RMDBuiltinRepository >> gain_if_below [
+	^ 'to gain_if_below is
+	presume my thing < my threshold
 	my delta thing'' = my amount.' asRMDActionDefinition
 ]
 

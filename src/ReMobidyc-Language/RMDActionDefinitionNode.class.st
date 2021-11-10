@@ -18,7 +18,19 @@ RMDActionDefinitionNode class >> collect [
 	here''s delta thing'' = - amount
 	my delta thing'' = amount
 where
-	amount = my greed.
+	amount = min(my greed, here''s thing).
+' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> collect_if_below [
+	<script: 'RMDActionDefinitionNode collect_if_below inspect'>
+	^ 'to collect_if_below is
+	presume my thing < my threshold
+	here''s delta thing'' = - amount
+	my delta thing'' = amount
+where
+	amount = min(my greed, here''s thing).
 ' asRMDActionDefinition
 ]
 
@@ -188,6 +200,7 @@ RMDActionDefinitionNode >> = anObject [
 { #category : #enumerating }
 RMDActionDefinitionNode >> childrenDo: aBlock [
 	aBlock value: aBlock.
+	guard ifNotNil: aBlock.
 	propertyDefinitions do: aBlock.
 	utilityDefinitions do: aBlock
 ]
