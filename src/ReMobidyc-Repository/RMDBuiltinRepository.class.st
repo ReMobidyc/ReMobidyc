@@ -70,7 +70,7 @@ RMDBuiltinRepository >> gain [
 { #category : #actions }
 RMDBuiltinRepository >> gain_if_below [
 	^ 'to gain_if_below is
-	presume my thing < my threshold
+	when my thing < my threshold
 	my delta thing'' = my amount.' asRMDActionDefinition
 ]
 

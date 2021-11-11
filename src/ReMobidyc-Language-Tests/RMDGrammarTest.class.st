@@ -125,7 +125,7 @@ RMDGrammarTest >> testActionDefinition [
 	node := grammar actionDefinition
 		parse:
 			'to walk is
-	presume my energy > 0
+	when my energy > 0
 	my delta x'' = sin(my heading) * walking_distance
 	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
 where

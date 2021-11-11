@@ -31,7 +31,7 @@ Goat is Animat with
 	interpreter load: goat.
 	metabolism := '
 to metabolize is
-presume my sugar >= 0
+when my sugar >= 0
 	my delta sugar'' = - my basal_metabolism.
 ' trim asRMDActionDefinition.
 	interpreter load: metabolism.

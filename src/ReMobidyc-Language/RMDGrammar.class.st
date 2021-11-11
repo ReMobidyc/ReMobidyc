@@ -27,7 +27,7 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
 	^ (self actionDefinitionHeaderLine
-		, self actionDefinitionPresumeLine optional
+		, self actionDefinitionWhenClause optional
 		, self actionDefinitionPropertyPart
 		, self actionDefinitionUtilityPart optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
@@ -56,12 +56,6 @@ RMDGrammar >> actionDefinitionNodeClass [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> actionDefinitionPresumeLine [
-	^ ('presume' asPParser trimBlanks , condition
-		, #newline asPParser trimBlanks) ==> #second
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionPropertyPart [
 	^ ((self propertyDefinition
 		onlySeparatedBy: #newline asPParser trimBlanks)
@@ -74,6 +68,12 @@ RMDGrammar >> actionDefinitionUtilityPart [
 		,
 			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
 		, #newline asPParser trimBlanks optional) ==> #third
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionWhenClause [
+	^ ('when' asPParser trimBlanks , condition
+		, #newline asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-definitions' }

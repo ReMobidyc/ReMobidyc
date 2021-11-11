@@ -26,7 +26,7 @@ where
 RMDActionDefinitionNode class >> collect_if_below [
 	<script: 'RMDActionDefinitionNode collect_if_below inspect'>
 	^ 'to collect_if_below is
-	presume my thing < my threshold
+	when my thing < my threshold
 	here''s delta thing'' = - amount
 	my delta thing'' = amount
 where
@@ -66,7 +66,7 @@ RMDActionDefinitionNode class >> gain [
 RMDActionDefinitionNode class >> graze [
 	<script: 'RMDActionDefinitionNode graze inspect'>
 	^ 'to graze is
-presume here''s grass > 0[kcal] and my energy < my max_energy
+when here''s grass > 0[kcal] and my energy < my max_energy
 	here''s delta grass'' = -amount
 	my delta energy'' = amount
 where
@@ -78,7 +78,7 @@ where
 RMDActionDefinitionNode class >> grow_grass [
 	<script: 'RMDActionDefinitionNode grow_grass inspect'>
 	^ 'to grow_grass is
-presume here''s grass < here''s max_grass
+when here''s grass < here''s max_grass
 	here''s delta grass'' = min(here''s growth_rate * delta time, here''s max_grass - here''s grass).' asRMDActionDefinition
 ]
 
@@ -274,7 +274,7 @@ RMDActionDefinitionNode >> printOn: aStream [
 	guard notNil
 		ifTrue: [ aStream
 				nextPut: Character cr;
-				nextPutAll: '    presume '.
+				nextPutAll: '    when '.
 			guard printOn: aStream ].
 	propertyDefinitions
 		do: [ :def | 
@@ -312,7 +312,7 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 	guard notNil
 		ifTrue: [ aStream
 				nextPut: Character cr;
-				nextPutAll: '    presume '.
+				nextPutAll: '    when '.
 			guard
 				printOn: aStream
 				ifIncludedIn: aCollectionOfRMDSyntaxNode
