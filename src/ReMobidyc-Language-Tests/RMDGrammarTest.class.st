@@ -457,6 +457,24 @@ RMDGrammarTest >> testCondition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testConditionPlaceholder [
+
+	| cond |
+	cond := grammar condition parse: 'the condition'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConditionPlaceholderNode.
+	cond := grammar condition parse: 'the condition and (1 = 2)'.
+	self deny: cond isPetit2Failure.
+	self assert: cond isConjunctionNode.
+	self
+		assert: cond conditions first
+		equals: (grammar condition parse: 'the condition').
+	self
+		assert: cond conditions second
+		equals: (grammar condition parse: '1 = 2')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testExpr1 [
 	| expr1 |
 	expr1 := grammar expr1 parse: 'x'.
@@ -593,6 +611,22 @@ RMDGrammarTest >> testExpression [
 	self assert: expr expression1 isGuardedChoiceNode.
 	expr := grammar expression end parse: '1 if x = y, 2 if x = z, 3'.
 	self assert: expr isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testExpressionPlaceholder [
+
+	| exp |
+	exp := grammar expression parse: 'the expression'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isExpressionPlaceholderNode.
+	exp := grammar expression parse: 'the expression + 1'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isAdditionNode.
+	self
+		assert: exp expression1
+		equals: (grammar expression parse: 'the expression').
+	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
 { #category : #tests }

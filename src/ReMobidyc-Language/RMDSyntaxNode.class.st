@@ -115,6 +115,11 @@ RMDSyntaxNode >> isCellInitializerNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isConditionPlaceholderNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
 ]
@@ -136,6 +141,11 @@ RMDSyntaxNode >> isEqualityNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isExpressionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isExpressionPlaceholderNode [
 	^ false
 ]
 

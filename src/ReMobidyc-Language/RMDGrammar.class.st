@@ -371,7 +371,9 @@ RMDGrammar >> cellInitializerNodeClass [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> cond1 [
-	^ ($( asPParser trimBlanks, condition, $) asPParser trimBlanks ==> #second) / self binaryRelation
+
+	^ $( asPParser trimBlanks , condition , $) asPParser trimBlanks
+	  ==> #second / self conditionPlaceholder / self binaryRelation
 ]
 
 { #category : #'parsers-conditions' }
@@ -393,6 +395,14 @@ RMDGrammar >> cond3 [
 { #category : #'parsers-conditions' }
 RMDGrammar >> condition [
 	^ self cond3
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> conditionPlaceholder [
+
+	^ 'the' asPParser trimBlanks , identifier
+	  ==> [ :pair | 
+	  RMDConditionPlaceholderNode identifier: pair second ]
 ]
 
 { #category : #'class access' }
@@ -460,16 +470,14 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ literal
-		/
-			(('-' asPParser trimBlanks optional
-				,
-					(self parenExpression / self agentDirective / self uniformDistribution
-						/ self apply / self propertyVariable / self utilityVariable))
-				==> [ :pair | 
-					pair first
-						ifNil: [ pair second ]
-						ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
+
+	^ literal / ('-' asPParser trimBlanks optional
+	   , (self parenExpression / self expressionPlaceholder
+		    / self agentDirective / self uniformDistribution / self apply
+		    / self propertyVariable / self utilityVariable) ==> [ :pair | 
+	   pair first
+		   ifNil: [ pair second ]
+		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
 ]
 
 { #category : #'parsers-expressions' }
@@ -529,6 +537,14 @@ RMDGrammar >> expr5 [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expression [
 	^ self expr5
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> expressionPlaceholder [
+
+	^ 'the' asPParser trimBlanks , identifier
+	  ==> [ :pair | 
+	  RMDExpressionPlaceholderNode identifier: pair second ]
 ]
 
 { #category : #'class access' }
