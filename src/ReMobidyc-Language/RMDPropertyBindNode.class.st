@@ -79,11 +79,14 @@ RMDPropertyBindNode >> postCopy [
 
 { #category : #printing }
 RMDPropertyBindNode >> printOn: aStream [
-	actionAgent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ aStream
-				nextPutAll: actionAgent;
-				nextPutAll: '''s ' ].
+
+	actionAgent ifNil: [ aStream nextPutAll: 'my ' ] ifNotNil: [ 
+		actionAgent = #the
+			ifTrue: [ aStream nextPutAll: 'the ' ]
+			ifFalse: [ 
+				aStream
+					nextPutAll: actionAgent;
+					nextPutAll: '''s ' ] ].
 	aStream
 		nextPutAll: actionProperty;
 		nextPutAll: ' -> '.
@@ -92,13 +95,16 @@ RMDPropertyBindNode >> printOn: aStream [
 
 { #category : #printing }
 RMDPropertyBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
-	actionAgent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ aStream
-				nextPutAll: actionAgent;
-				nextPutAll: '''s ' ].
+	actionAgent ifNil: [ aStream nextPutAll: 'my ' ] ifNotNil: [ 
+		actionAgent = #the
+			ifTrue: [ aStream nextPutAll: 'the ' ]
+			ifFalse: [ 
+				aStream
+					nextPutAll: actionAgent;
+					nextPutAll: '''s ' ] ].
 	aStream
 		nextPutAll: actionProperty;
 		nextPutAll: ' -> '.
@@ -106,8 +112,8 @@ RMDPropertyBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }

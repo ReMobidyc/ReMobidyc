@@ -196,129 +196,137 @@ RMDTaskDefinitionEditor >> editRepository [
 
 { #category : #initialization }
 RMDTaskDefinitionEditor >> initializePresenters [
+
 	super initializePresenters.
 	repositoryList := self newList
-		beSingleSelection;
-		whenModelChangedDo: [ repositoryList selectItem: nil ];
-		whenSelectionChangedDo: [ self updateActionList ];
-		display: [ :item | item repositoryName ];
-		yourself.
+		                  beSingleSelection;
+		                  whenModelChangedDo: [ 
+			                  repositoryList selectItem: nil ];
+		                  whenSelectionChangedDo: [ self updateActionList ];
+		                  display: [ :item | item repositoryName ];
+		                  yourself.
 	addRepositoryButton := self newButton
-		icon: self addIcon;
-		action: [ self addRepository ];
-		yourself.
+		                       icon: self addIcon;
+		                       action: [ self addRepository ];
+		                       yourself.
 	removeRepositoryButton := self newButton
-		icon: self removeIcon;
-		action: [ self removeRepository ];
-		disable;
-		yourself.
+		                          icon: self removeIcon;
+		                          action: [ self removeRepository ];
+		                          disable;
+		                          yourself.
 	editRepositoryButton := self newButton
-		icon: self editIcon;
-		action: [ self editRepository ];
-		disable;
-		yourself.
+		                        icon: self editIcon;
+		                        action: [ self editRepository ];
+		                        disable;
+		                        yourself.
 	actionList := self newTable
-		beSingleSelection;
-		beResizable;
-		showColumnHeaders;
-		addColumn:
-			(SpStringTableColumn
-				title: 'verb'
-				evaluated: [ :item | (item resolveWith: simulationModel) identifier ]);
-		addColumn:
-			(SpStringTableColumn
-				title: 'object'
-				evaluated: [ :item | (item resolveWith: simulationModel) object ifNil: [ '' ] ]);
-		whenModelChangedDo: [ actionList selectItem: nil ];
-		whenSelectionChangedDo: [ self updateTaskDefinition.
-			self taskDefinition
-				ifNotNil: [ :taskDefinition | 
-					self actionIdentifier
-						ifNotNil: [ :actionIdentifier | 
-							self updateVerbIdentifierField.
-							self updateObjectIdentifierField ].
-					self
-						updateTemplateText;
-						updateReplacementList;
-						updateSourceText ] ];
-		yourself.
+		              beSingleSelection;
+		              beResizable;
+		              showColumnHeaders;
+		              addColumn: (SpStringTableColumn
+				               title: 'verb'
+				               evaluated: [ :item | 
+					               (item resolveWith: simulationModel) identifier ]);
+		              addColumn: (SpStringTableColumn
+				               title: 'object'
+				               evaluated: [ :item | 
+					               (item resolveWith: simulationModel) object ifNil: [ 
+							               '' ] ]);
+		              whenModelChangedDo: [ actionList selectItem: nil ];
+		              whenSelectionChangedDo: [ 
+			              self updateTaskDefinition.
+			              self taskDefinition ifNotNil: [ :taskDefinition | 
+					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
+							              self updateVerbIdentifierField.
+							              self updateObjectIdentifierField ].
+					              self
+						              updateTemplateText;
+						              updateReplacementList;
+						              updateSourceText ] ];
+		              yourself.
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
-		enabled: false;
-		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
-		yourself.
+		                enabled: false;
+		                whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
+		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
-		beIdentifier;
-		whenLastValidSyntaxNodeChangedDo: [ self acceptVerbIdentifierField ];
-		yourself.
+		                       beIdentifier;
+		                       whenLastValidSyntaxNodeChangedDo: [ 
+			                       self acceptVerbIdentifierField ];
+		                       yourself.
 	objectIdentifierField := self newSyntaxNodeTextInput
-		beAgentIdentifier;
-		allowEmpty;
-		whenLastValidSyntaxNodeChangedDo: [ self acceptObjectIdentifierField ];
-		yourself.
+		                         beAgentIdentifier;
+		                         allowEmpty;
+		                         whenLastValidSyntaxNodeChangedDo: [ 
+			                         self acceptObjectIdentifierField ];
+		                         yourself.
 	replacementList := self newTable
-		beSingleSelection;
-		beResizable;
-		addColumn:
-			(SpStringTableColumn
-				evaluated: [ :item | 
-					| agent actionDefinition |
-					agent := (item actionAgent
-						ifNil: [ 'my' ]
-						ifNotNil: [ :name | name , '''s' ]) asText.
-					actionDefinition := self actionDefinition.
-					(actionDefinition isNil
-						or: [ (actionDefinition
-								includesNode:
-									(RMDPropertyVariableNode
-										identifier: item actionProperty
-										agent: item actionAgent)) not ])
-						ifTrue: [ agent makeAllColor: Color red ].
-					agent ]) beNotExpandable;
-		addColumn:
-			(SpStringTableColumn
-				evaluated: [ :item | 
-					| actionProperty actionDefinition |
-					actionProperty := item actionProperty asText.
-					actionDefinition := self actionDefinition.
-					(actionDefinition isNil
-						or: [ (actionDefinition
-								includesNode:
-									(RMDPropertyVariableNode
-										identifier: item actionProperty
-										agent: item actionAgent)) not ])
-						ifTrue: [ actionProperty makeAllColor: Color red ].
-					actionProperty ]) beNotExpandable;
-		addColumn:
-			((SpImageTableColumn evaluated: [ :item | self replacementIcon ])
-				width: 20);
-		addColumn:
-			((SpStringTableColumn
-				evaluated: [ :item | item expression printString ]) width: 200)
-				beExpandable;
-		whenModelChangedDo: [ replacementList selectItem: nil ];
-		whenSelectionChangedDo: [ | selected |
-			selected := replacementList selection selectedItem notNil.
-			removeReplacementButton enabled: selected.
-			editReplacementButton enabled: selected ];
-		yourself.
+		                   beSingleSelection;
+		                   beResizable;
+		                   addColumn:
+			                   (SpStringTableColumn evaluated: [ :item | 
+					                    | agent actionDefinition |
+					                    agent := (item actionAgent
+						                              ifNil: [ 'my' ]
+						                              ifNotNil: [ :name | 
+							                              name = #the
+								                              ifTrue: [ 'the' ]
+								                              ifFalse: [ name , '''s' ] ])
+						                             asText.
+					                    actionDefinition := self actionDefinition.
+					                    (actionDefinition isNil or: [ 
+							                     (actionDefinition includesNode:
+									                      (RMDPropertyVariableNode
+										                       identifier: item actionProperty
+										                       agent: item actionAgent)) not ]) 
+						                    ifTrue: [ agent makeAllColor: Color red ].
+					                    agent ]) beNotExpandable;
+		                   addColumn:
+			                   (SpStringTableColumn evaluated: [ :item | 
+					                    | actionProperty actionDefinition |
+					                    actionProperty := item actionProperty asText.
+					                    actionDefinition := self actionDefinition.
+					                    (actionDefinition isNil or: [ 
+							                     (actionDefinition includesNode:
+									                      (RMDPropertyVariableNode
+										                       identifier: item actionProperty
+										                       agent: item actionAgent)) not ]) 
+						                    ifTrue: [ 
+							                    actionProperty makeAllColor: Color red ].
+					                    actionProperty ]) beNotExpandable;
+		                   addColumn:
+			                   ((SpImageTableColumn evaluated: [ :item | 
+					                     self replacementIcon ]) width: 20);
+		                   addColumn:
+			                   ((SpStringTableColumn evaluated: [ :item | 
+					                     item expression printString ]) width: 200)
+				                   beExpandable;
+		                   whenModelChangedDo: [ 
+			                   replacementList selectItem: nil ];
+		                   whenSelectionChangedDo: [ 
+			                   | selected |
+			                   selected := replacementList selection
+				                               selectedItem notNil.
+			                   removeReplacementButton enabled: selected.
+			                   editReplacementButton enabled: selected ];
+		                   yourself.
 	addReplacementButton := self newButton
-		icon: self addIcon;
-		action: [ self addReplacement ];
-		yourself.
+		                        icon: self addIcon;
+		                        action: [ self addReplacement ];
+		                        yourself.
 	removeReplacementButton := self newButton
-		icon: self removeIcon;
-		action: [ self removeReplacement ];
-		disable;
-		yourself.
+		                           icon: self removeIcon;
+		                           action: [ self removeReplacement ];
+		                           disable;
+		                           yourself.
 	editReplacementButton := self newButton
-		icon: self editIcon;
-		action: [ self editReplacement ];
-		disable;
-		yourself.
+		                         icon: self editIcon;
+		                         action: [ self editReplacement ];
+		                         disable;
+		                         yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
-		enabled: false;
-		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
-		yourself.
+		              enabled: false;
+		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
+		              yourself.
 	self updateRepositoryList
 ]
 

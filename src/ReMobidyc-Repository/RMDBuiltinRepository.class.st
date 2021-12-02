@@ -42,42 +42,18 @@ RMDBuiltinRepository >> actionNames [
 ]
 
 { #category : #actions }
-RMDBuiltinRepository >> collect [
-	^ RMDActionDefinitionNode collect
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> collect_if_below [
-	^ RMDActionDefinitionNode collect_if_below
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> convert [
-	^ RMDActionDefinitionNode convert
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> diffuse [
-	^ RMDActionDefinitionNode diffuse
-]
-
-{ #category : #actions }
 RMDBuiltinRepository >> gain [
 	^ 'to gain is
-	my delta thing'' = my amount.' asRMDActionDefinition
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> gain_if_below [
-	^ 'to gain_if_below is
-	when my thing < my threshold
-	my delta thing'' = my amount.' asRMDActionDefinition
+	the delta thing'' = the amount.' asRMDActionDefinition
 ]
 
 { #category : #actions }
 RMDBuiltinRepository >> gain_upto [
 	^ 'to gain_upto is
-	my delta thing'' = min(my amount, my maximum - my thing).' asRMDActionDefinition
+	when the thing < the maximum
+	the delta thing'' = amount
+	where
+	amount = positive(min(the amount, the maximum - the thing)).' asRMDActionDefinition
 ]
 
 { #category : #testing }
@@ -88,12 +64,30 @@ RMDBuiltinRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
 
 { #category : #actions }
 RMDBuiltinRepository >> lose [
-	^ RMDActionDefinitionNode lose
+	^ 'to lose is
+	the delta thing'' = - amount
+	where
+	amount = positive(min(the amount, the thing)).' asRMDActionDefinition
+]
+
+{ #category : #actions }
+RMDBuiltinRepository >> lose_downto [
+
+	^ 'to lose is
+	the delta thing'' = - amount
+	where
+	amount = positive(min(the amount, the minimum)).' asRMDActionDefinition
 ]
 
 { #category : #actions }
 RMDBuiltinRepository >> move [
-	^ RMDActionDefinitionNode move
+
+	^ 'to move is
+	my d/dt x'' = cos(theta) * r
+	my d/dt y'' = sin(theta) * r
+where
+	theta = the heading
+	r = the speed.' asRMDActionDefinition
 ]
 
 { #category : #accessing }
@@ -107,6 +101,23 @@ RMDBuiltinRepository >> repositoryName [
 ]
 
 { #category : #actions }
-RMDBuiltinRepository >> respire [
-	^ RMDActionDefinitionNode respire
+RMDBuiltinRepository >> transfer [
+
+	^ 'to transfer is
+	the delta source'' = - amount
+	the delta destination'' = amount
+where
+	amount = positive(min(the amount, the source)).
+' asRMDActionDefinition
+]
+
+{ #category : #actions }
+RMDBuiltinRepository >> transfer_upto [
+
+	^ 'to transfer_upto is
+	the delta source'' = - amount
+	the delta destination'' = amount
+where
+	amount = positive(min(the amount, the source, the maximum - the destination)).
+' asRMDActionDefinition
 ]

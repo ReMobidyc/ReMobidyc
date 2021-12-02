@@ -16,43 +16,35 @@ Class {
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
+
 	<script:
-		'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Cell grow namely gain_if_below where
-	my thing -> here''s grass
-	my amount -> ' , amountString
-		,
-			' * delta time
-	my threshold -> ' , maxString , '.') asRMDTaskDefinition
+	'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Cell grow namely gain_upto where
+	the thing -> here''s grass
+	the maximum -> ' , maxString , '
+	the amount -> ' , amountString , ' * delta time .') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
-		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat eat namely collect where
-	my thing -> my blood_sugar
-	here''s thing -> here''s grass
-	my greed -> min(' , maxString, ' - my blood_sugar, ', dietString, ' * delta time, here''s grass).') asRMDTaskDefinition
-]
-
-{ #category : #'typical instances' }
-RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
-	<script:
 		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat eat namely collect_if_below where
-	my thing -> my blood_sugar
-	here''s thing -> here''s grass
-	my threshold -> ', maxString, '
-	my greed -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
+	^ ('Goat eat namely transfer_upto where
+	the destination -> my blood_sugar
+	the source -> here''s grass
+	the maximum -> ', maxString, '
+	the amount -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
-	<script: '(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
+
+	<script:
+	'(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
 	^ ('Goat respire namely lose where
-	my thing -> my blood_sugar
-	my amount -> min(my blood_sugar, ' , aString , ' * delta time).') asRMDTaskDefinition
+	the thing -> my blood_sugar
+	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
+		  asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
@@ -60,8 +52,8 @@ RMDTaskDefinitionNode class >> goat_walk_for_grass [
 	<script:
 		'RMDTaskDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
 	^ 'Goat move where
-	my heading -> direction neighbor''s grass
-	my speed -> 1[km/day].' asRMDTaskDefinition
+	the heading -> direction neighbor''s grass
+	the speed -> 1[km/day].' asRMDTaskDefinition
 ]
 
 { #category : #'instance creation' }
@@ -101,16 +93,21 @@ RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 
 { #category : #accessing }
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
-	^ action
-		ifNil: [ action := ((actionIdentifier resolveWith: aRMDSimulationModel)
-				copyReplace:
-				(propertyBinds
-				collect: [ :bind | 
-					(RMDPropertyVariableNode
-						identifier: bind actionProperty
-						agent: bind actionAgent) -> bind expression ]) asDictionary)
-				identifier: verbIdentifier;
-				yourself ]
+
+	^ action ifNil: [ 
+		  action := ((actionIdentifier resolveWith: aRMDSimulationModel) 
+			             copyReplace: (propertyBinds collect: [ :bind | 
+						              (bind actionAgent = #the
+							               ifTrue: [ 
+								               RMDVariablePlaceholderNode identifier:
+										               bind actionProperty ]
+							               ifFalse: [ 
+								               RMDPropertyVariableNode
+									               identifier: bind actionProperty
+									               agent: bind actionAgent ]) -> bind expression ])
+					             asDictionary)
+			            identifier: verbIdentifier;
+			            yourself ]
 ]
 
 { #category : #enumerating }

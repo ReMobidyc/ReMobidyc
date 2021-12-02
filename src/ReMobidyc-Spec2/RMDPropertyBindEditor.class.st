@@ -113,11 +113,7 @@ RMDPropertyBindEditor >> updatePropertyVariableDropList [
 
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].
 	propertyVariableList items: (Array streamContents: [ :stream | 
-			 actionDefinitionNode
-				 placeholderNodesDo: [ :node | 
-					 (exceptVariableNodes includes: node) ifFalse: [ 
-							 stream nextPut: node ] ];
-				 propertyVariableNodesDo: [ :node | 
-					 (exceptVariableNodes includes: node) ifFalse: [ 
-							 stream nextPut: node ] ] ])
+			 actionDefinitionNode placeholderNodesDo: [ :node | 
+				 (exceptVariableNodes includes: node) ifFalse: [ 
+					 stream nextPut: node ] ] ])
 ]

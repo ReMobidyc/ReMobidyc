@@ -11,6 +11,11 @@ RMDVariablePlaceholderNode class >> identifier: aString [
 		yourself
 ]
 
+{ #category : #accessing }
+RMDVariablePlaceholderNode >> agent [
+	^ #the
+]
+
 { #category : #enumerating }
 RMDVariablePlaceholderNode >> childrenDo: aBlock [
 

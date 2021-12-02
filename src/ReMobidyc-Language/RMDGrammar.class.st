@@ -256,12 +256,12 @@ RMDGrammar >> binaryCombinatorFrom: anArray [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> binaryRelation [
-	^ (expression
-		separatedBy:
-			('=' asPParser / '/=' asPParser
-				/ ($< asPParser , $= asPParser optional) flatten
-				/ ($> asPParser , $= asPParser optional) flatten) trimBlanks)
-		==> [ :array | self binaryRelationFrom: array ]
+
+	^ expression , self binaryRelationOperator
+	  , (expression separatedBy: self binaryRelationOperator)
+	  ==> [ :triple | 
+		  self binaryRelationFrom:
+			  (Array with: triple first with: triple second) , triple third ]
 ]
 
 { #category : #'parsers-conditions' }
@@ -295,6 +295,14 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 	aString = '>'
 		ifTrue: [ ^ RMDGreaterThanNode ].
 	^ RMDNotEqualNode
+]
+
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryRelationOperator [
+
+	^ ('=' asPParser / '/=' asPParser
+	   / ($< asPParser , $= asPParser optional) flatten
+	   / ($> asPParser , $= asPParser optional) flatten) trimBlanks
 ]
 
 { #category : #'class access' }
@@ -375,7 +383,7 @@ RMDGrammar >> cellInitializerNodeClass [
 RMDGrammar >> cond1 [
 
 	^ $( asPParser trimBlanks , condition , $) asPParser trimBlanks
-	  ==> #second / self conditionPlaceholder / self binaryRelation
+	  ==> #second / self binaryRelation / self conditionPlaceholder
 ]
 
 { #category : #'parsers-conditions' }
@@ -396,6 +404,7 @@ RMDGrammar >> cond3 [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> condition [
+
 	^ self cond3
 ]
 

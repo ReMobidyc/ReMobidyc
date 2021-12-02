@@ -64,19 +64,23 @@ RMDAbstractAssignablePropertyVariableNode >> printOn: aStream [
 
 { #category : #printing }
 RMDAbstractAssignablePropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	self agent
 		ifNil: [ aStream nextPutAll: 'my ' ]
 		ifNotNil: [ :agent | 
-			aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
+			agent = #the
+				ifTrue: [ aStream nextPutAll: 'the ' ]
+				ifFalse: [ 
+					aStream
+						nextPutAll: agent;
+						nextPutAll: '''s ' ] ].
 	aStream nextPutAll: self operator.
 	aStream nextPutAll: self identifier.
-	((aCollectionOfRMDSyntaxNode includes: self)
-		or: [ aCollectionOfRMDSyntaxNode includes: propertyVariable ])
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	((aCollectionOfRMDSyntaxNode includes: self) or: [ 
+		 aCollectionOfRMDSyntaxNode includes: propertyVariable ]) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #accessing }
