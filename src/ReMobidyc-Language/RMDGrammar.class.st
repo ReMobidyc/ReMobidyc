@@ -114,8 +114,10 @@ RMDGrammar >> agentIdentifier [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
-	^ (('my' asPParser, #space asPParser) trimBlanks ==> [ :str | nil ])
-		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
+
+	^ ('my' asPParser , #space asPParser) trimBlanks ==> [ :str | nil ]
+	  / (('the' asPParser , #blank asPParser) trimBlanks ==> #first)
+	  / (identifier , '''s ' asPParser trimBlanks ==> #first)
 ]
 
 { #category : #units }
@@ -400,9 +402,9 @@ RMDGrammar >> condition [
 { #category : #'parsers-conditions' }
 RMDGrammar >> conditionPlaceholder [
 
-	^ 'the' asPParser trimBlanks , identifier
-	  ==> [ :pair | 
-	  RMDConditionPlaceholderNode identifier: pair second ]
+	^ 'the' asPParser , #blank asPParser plus , identifier
+	  ==> [ :triple | 
+	  RMDConditionPlaceholderNode identifier: triple third ]
 ]
 
 { #category : #'class access' }
@@ -472,9 +474,10 @@ RMDGrammar >> energyUnits [
 RMDGrammar >> expr1 [
 
 	^ literal / ('-' asPParser trimBlanks optional
-	   , (self parenExpression / self expressionPlaceholder
-		    / self agentDirective / self uniformDistribution / self apply
-		    / self propertyVariable / self utilityVariable) ==> [ :pair | 
+	   ,
+		   (self parenExpression / self agentDirective
+		    / self uniformDistribution / self apply / self propertyVariable
+		    / self utilityVariable) ==> [ :pair | 
 	   pair first
 		   ifNil: [ pair second ]
 		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
@@ -537,14 +540,6 @@ RMDGrammar >> expr5 [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expression [
 	^ self expr5
-]
-
-{ #category : #'parsers-expressions' }
-RMDGrammar >> expressionPlaceholder [
-
-	^ 'the' asPParser trimBlanks , identifier
-	  ==> [ :pair | 
-	  RMDExpressionPlaceholderNode identifier: pair second ]
 ]
 
 { #category : #'class access' }

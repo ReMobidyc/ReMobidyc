@@ -9,10 +9,17 @@ Class {
 
 { #category : #'instance creation' }
 RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
-	^ self new
-		identifier: aString;
-		agent: anotherString;
-		yourself
+
+	^ anotherString = 'the'
+		  ifTrue: [ 
+			  RMDVariablePlaceholderNode new
+				  identifier: aString;
+				  yourself ]
+		  ifFalse: [ 
+			  self new
+				  identifier: aString;
+				  agent: anotherString;
+				  yourself ]
 ]
 
 { #category : #comparing }

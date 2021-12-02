@@ -272,45 +272,65 @@ RMDGrammarTest >> testApply [
 
 { #category : #tests }
 RMDGrammarTest >> testAssignableDeltaPropertyVariable [
+
 	| variable |
-	variable := grammar assignableDeltaPropertyVariable parse: 'my delta foo'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'my delta foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'my delta Foo'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'my delta Foo'.
 	self assert: variable isPetit2Failure.
 	variable := grammar assignableDeltaPropertyVariable parse: 'my Δfoo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s delta bar'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'foo''s delta bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s Δbar'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'foo''s Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
+	self assert: variable identifier equals: 'bar'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'the Δbar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable propertyVariable isVariablePlaceholderNode.
 	self assert: variable identifier equals: 'bar'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
+
 	| variable |
-	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt foo'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'my d/dt foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDifferentialPropertyVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt X'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'my d/dt X'.
 	self assert: variable isPetit2Failure.
-	variable := grammar assignableDifferentialPropertyVariable parse: 'foo''s d/dt bar'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'foo''s d/dt bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDifferentialPropertyVariableNode.
 	self assert: variable agent equals: 'foo'.
+	self assert: variable identifier equals: 'bar'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'the d/dt bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable propertyVariable isVariablePlaceholderNode.
 	self assert: variable identifier equals: 'bar'
 ]
 
@@ -611,22 +631,6 @@ RMDGrammarTest >> testExpression [
 	self assert: expr expression1 isGuardedChoiceNode.
 	expr := grammar expression end parse: '1 if x = y, 2 if x = z, 3'.
 	self assert: expr isPetit2Failure
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testExpressionPlaceholder [
-
-	| exp |
-	exp := grammar expression parse: 'the expression'.
-	self deny: exp isPetit2Failure.
-	self assert: exp isExpressionPlaceholderNode.
-	exp := grammar expression parse: 'the expression + 1'.
-	self deny: exp isPetit2Failure.
-	self assert: exp isAdditionNode.
-	self
-		assert: exp expression1
-		equals: (grammar expression parse: 'the expression').
-	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
 { #category : #tests }
@@ -979,6 +983,22 @@ RMDGrammarTest >> testVariable [
 	self assert: variable isPropertyVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testVariablePlaceholder [
+
+	| exp |
+	exp := grammar expression parse: 'the expression'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isVariablePlaceholderNode.
+	exp := grammar expression parse: 'the expression + 1'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isAdditionNode.
+	self
+		assert: exp expression1
+		equals: (grammar expression parse: 'the expression').
+	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
 { #category : #tests }
