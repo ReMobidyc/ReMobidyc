@@ -14,14 +14,18 @@ Class {
 
 { #category : #'library access' }
 RMDAbstractInterpreter class >> standardLibrary [
-	^ StandardLibrary
-		ifNil: [ StandardLibrary := {('min' -> RMDFunction min).
-			('max' -> RMDFunction max).
-			('mean' -> RMDFunction mean).
-			('sum' -> RMDFunction sum).
-			('sin' -> RMDFunction sin).
-			('cos' -> RMDFunction cos).
-			('abs' -> RMDFunction abs)} asDictionary ]
+
+	^ StandardLibrary ifNil: [ 
+		  StandardLibrary := { 
+			                     ('min' -> RMDFunction min).
+			                     ('max' -> RMDFunction max).
+			                     ('mean' -> RMDFunction mean).
+			                     ('sum' -> RMDFunction sum).
+			                     ('sin' -> RMDFunction sin).
+			                     ('cos' -> RMDFunction cos).
+			                     ('abs' -> RMDFunction abs).
+			                     ('positive' -> RMDFunction positive) }
+			                     asDictionary ]
 ]
 
 { #category : #'accessing - definitions' }

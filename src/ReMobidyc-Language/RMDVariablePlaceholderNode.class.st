@@ -4,6 +4,13 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'instance creation' }
+RMDVariablePlaceholderNode class >> identifier: aString [
+	^ self new
+		identifier: aString;
+		yourself
+]
+
 { #category : #enumerating }
 RMDVariablePlaceholderNode >> childrenDo: aBlock [
 
