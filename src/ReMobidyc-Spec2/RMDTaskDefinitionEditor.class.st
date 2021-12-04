@@ -123,24 +123,22 @@ RMDTaskDefinitionEditor >> actionIdentifier [
 
 { #category : #operations }
 RMDTaskDefinitionEditor >> addReplacement [
-	self taskDefinition
-		ifNotNil: [ :taskDefinition | 
-			| bindEditor |
-			(bindEditor := RMDPropertyBindEditor
-				actionDefinition: (taskDefinition actionIdentifier resolveWith: simulationModel)
-				except:
-					(taskDefinition propertyBinds
-						collect: [ :bind | 
-							RMDPropertyVariableNode
-								identifier: bind actionProperty
-								agent: bind actionAgent ])) openDialogWithSpec
-				okAction: [ bindEditor propertyBindNode
-						ifNotNil: [ :bindNode | 
-							taskDefinition
-								propertyBinds: (taskDefinition propertyBinds copyWith: bindNode).
-							self
-								updateReplacementList;
-								updateSourceText ] ] ]
+
+	self taskDefinition ifNotNil: [ :taskDefinition | 
+		| bindEditor |
+		(bindEditor := RMDPropertyBindEditor
+			               actionDefinition:
+			               (taskDefinition actionIdentifier resolveWith:
+				                simulationModel)
+			               except:
+			               (taskDefinition propertyBinds collect: #placeholder))
+			openDialogWithSpec okAction: [ 
+			bindEditor propertyBindNode ifNotNil: [ :bindNode | 
+				taskDefinition propertyBinds:
+					(taskDefinition propertyBinds copyWith: bindNode).
+				self
+					updateReplacementList;
+					updateSourceText ] ] ]
 ]
 
 { #category : #operations }
@@ -160,33 +158,32 @@ RMDTaskDefinitionEditor >> agentName: aString [
 
 { #category : #operations }
 RMDTaskDefinitionEditor >> editReplacement [
-	replacementList selection selectedItem
-		ifNotNil: [ :oldBind | 
-			self taskDefinition
-				ifNotNil: [ :taskModel | 
-					| bindEditor |
-					bindEditor := RMDPropertyBindEditor
-						actionDefinition: (taskModel actionIdentifier resolveWith: simulationModel)
-						except:
-							(taskModel propertyBinds
-								select: [ :bind | bind ~= oldBind ]
-								thenCollect: [ :bind | 
-									RMDPropertyVariableNode
-										identifier: bind actionProperty
-										agent: bind actionAgent ]).
-					bindEditor propertyBindNode: oldBind.
-					bindEditor openDialogWithSpec
-						okAction: [ bindEditor propertyBindNode
-								ifNotNil: [ :newBind | 
-									| index |
-									index := taskModel propertyBinds indexOf: oldBind.
-									index > 0
-										ifTrue: [ taskModel propertyBinds at: index put: newBind.
-											taskModel resetAction ]
-										ifFalse: [ taskModel propertyBinds: (taskModel propertyBinds copyWith: newBind) ].
-									self
-										updateReplacementList;
-										updateSourceText ] ] ] ]
+
+	replacementList selection selectedItem ifNotNil: [ :oldBind | 
+		self taskDefinition ifNotNil: [ :taskModel | 
+			| bindEditor |
+			bindEditor := RMDPropertyBindEditor
+				              actionDefinition:
+				              (taskModel actionIdentifier resolveWith:
+					               simulationModel)
+				              except: (taskModel propertyBinds
+						               select: [ :bind | bind ~= oldBind ]
+						               thenCollect: #placeholder).
+			bindEditor propertyBindNode: oldBind.
+			bindEditor openDialogWithSpec okAction: [ 
+				bindEditor propertyBindNode ifNotNil: [ :newBind | 
+					| index |
+					index := taskModel propertyBinds indexOf: oldBind.
+					index > 0
+						ifTrue: [ 
+							taskModel propertyBinds at: index put: newBind.
+							taskModel resetAction ]
+						ifFalse: [ 
+							taskModel propertyBinds:
+								(taskModel propertyBinds copyWith: newBind) ].
+					self
+						updateReplacementList;
+						updateSourceText ] ] ] ]
 ]
 
 { #category : #operations }
@@ -265,32 +262,22 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                   addColumn:
 			                   (SpStringTableColumn evaluated: [ :item | 
 					                    | agent actionDefinition |
-					                    agent := (item actionAgent
-						                              ifNil: [ 'my' ]
-						                              ifNotNil: [ :name | 
-							                              name = #the
-								                              ifTrue: [ 'the' ]
-								                              ifFalse: [ name , '''s' ] ])
-						                             asText.
+					                    agent := 'the' asText.
 					                    actionDefinition := self actionDefinition.
 					                    (actionDefinition isNil or: [ 
 							                     (actionDefinition includesNode:
-									                      (RMDPropertyVariableNode
-										                       identifier: item actionProperty
-										                       agent: item actionAgent)) not ]) 
-						                    ifTrue: [ agent makeAllColor: Color red ].
+									                      item placeholder) not ]) ifTrue: [ 
+							                    agent makeAllColor: Color red ].
 					                    agent ]) beNotExpandable;
 		                   addColumn:
 			                   (SpStringTableColumn evaluated: [ :item | 
 					                    | actionProperty actionDefinition |
-					                    actionProperty := item actionProperty asText.
+					                    actionProperty := item placeholder identifier
+						                                      asText.
 					                    actionDefinition := self actionDefinition.
 					                    (actionDefinition isNil or: [ 
 							                     (actionDefinition includesNode:
-									                      (RMDPropertyVariableNode
-										                       identifier: item actionProperty
-										                       agent: item actionAgent)) not ]) 
-						                    ifTrue: [ 
+									                      item placeholder) not ]) ifTrue: [ 
 							                    actionProperty makeAllColor: Color red ].
 					                    actionProperty ]) beNotExpandable;
 		                   addColumn:
@@ -298,7 +285,7 @@ RMDTaskDefinitionEditor >> initializePresenters [
 					                     self replacementIcon ]) width: 20);
 		                   addColumn:
 			                   ((SpStringTableColumn evaluated: [ :item | 
-					                     item expression printString ]) width: 200)
+					                     item replacement printString ]) width: 200)
 				                   beExpandable;
 		                   whenModelChangedDo: [ 
 			                   replacementList selectItem: nil ];
@@ -430,19 +417,19 @@ RMDTaskDefinitionEditor >> updateObjectIdentifierField [
 
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateReplacementList [
+
 	| font width1 width2 |
-	self taskDefinition
-		ifNotNil: [ :taskDefinition | 
-			font := TextStyle defaultFont.
-			width1 := width2 := 0.
-			taskDefinition propertyBinds
-				do: [ :bind | 
-					width1 := width1 max: (font widthOfString: bind actionAgent).
-					width2 := width2 max: (font widthOfString: bind actionProperty) ].
-			replacementList columns first width: width1 + 40.
-			replacementList columns second width: width2 + 20.
-			replacementList columns: replacementList columns.
-			replacementList items: taskDefinition propertyBinds ]
+	self taskDefinition ifNotNil: [ :taskDefinition | 
+		font := TextStyle defaultFont.
+		width1 := width2 := 0.
+		taskDefinition propertyBinds do: [ :bind | 
+			width1 := width1 max: (font widthOfString: 'the').
+			width2 := width2 max:
+				          (font widthOfString: bind placeholder identifier) ].
+		replacementList columns first width: width1 + 40.
+		replacementList columns second width: width2 + 20.
+		replacementList columns: replacementList columns.
+		replacementList items: taskDefinition propertyBinds ]
 ]
 
 { #category : #updating }

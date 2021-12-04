@@ -660,6 +660,14 @@ RMDGrammar >> parenExpression [
 	^ ($( asPParser , guardedChoice , $) asPParser) ==> #second
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> placeholder [
+
+	^ 'the' asPParser , #blank asPParser plus , identifier
+	  ==> [ :triple | 
+	  RMDVariablePlaceholderNode identifier: triple third ]
+]
+
 { #category : #'class access' }
 RMDGrammar >> powerNodeClass [
 	^ RMDPowerNode
@@ -672,13 +680,12 @@ RMDGrammar >> productNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyBind [
-	^ (self agentReference , identifier , '->' asPParser trimBlanks
-		, expression)
-		==> [ :quad | 
-			self propertyBindNodeClass
-				actionAgent: quad first
-				property: quad second
-				expression: quad fourth ]
+
+	^ self placeholder , '->' asPParser trimBlanks , expression
+	  ==> [ :triple | 
+		  self propertyBindNodeClass
+			  placeholder: triple first
+			  replacement: triple third ]
 ]
 
 { #category : #'class access' }

@@ -85,26 +85,23 @@ RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
 
 { #category : #accessing }
 RMDPropertyBindEditor >> propertyBindNode [
-	^ propertyVariableList selectedItem
-		ifNotNil: [ :propertyVariable | 
-			expressionField syntaxNode
-				ifNotNil: [ :expression | 
-					RMDPropertyBindNode
-						actionAgent: propertyVariable agent
-						property: propertyVariable identifier
-						expression: expression ] ]
+
+	^ propertyVariableList selectedItem ifNotNil: [ :placeholder | 
+		  expressionField syntaxNode ifNotNil: [ :replacement | 
+			  RMDPropertyBindNode
+				  placeholder: placeholder
+				  replacement: replacement ] ]
 ]
 
 { #category : #accessing }
 RMDPropertyBindEditor >> propertyBindNode: aRMDPropertyBindNode [
+
 	aRMDPropertyBindNode
-		ifNotNil: [ propertyVariableList
-				selectItem:
-					(RMDPropertyVariableNode
-						identifier: aRMDPropertyBindNode actionProperty
-						agent: aRMDPropertyBindNode actionAgent).
-			expressionField syntaxNode: aRMDPropertyBindNode expression ]
-		ifNil: [ propertyVariableList selectItem: nil.
+		ifNotNil: [ 
+			propertyVariableList selectItem: aRMDPropertyBindNode placeholder.
+			expressionField syntaxNode: aRMDPropertyBindNode replacement ]
+		ifNil: [ 
+			propertyVariableList selectItem: nil.
 			expressionField text: '' ]
 ]
 

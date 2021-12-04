@@ -97,14 +97,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 	^ action ifNil: [ 
 		  action := ((actionIdentifier resolveWith: aRMDSimulationModel) 
 			             copyReplace: (propertyBinds collect: [ :bind | 
-						              (bind actionAgent = #the
-							               ifTrue: [ 
-								               RMDVariablePlaceholderNode identifier:
-										               bind actionProperty ]
-							               ifFalse: [ 
-								               RMDPropertyVariableNode
-									               identifier: bind actionProperty
-									               agent: bind actionAgent ]) -> bind expression ])
+						              bind placeholder -> bind replacement ])
 					             asDictionary)
 			            identifier: verbIdentifier;
 			            yourself ]

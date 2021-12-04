@@ -701,21 +701,24 @@ RMDGrammarTest >> testLiteral [
 
 { #category : #tests }
 RMDGrammarTest >> testPropertyBind [
+
 	| node |
-	node := grammar propertyBind
-		parse: 'my energy -> my sugar'.
+	node := grammar propertyBind parse: 'the energy -> my sugar'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node actionAgent equals: nil.
-	self assert: node actionProperty equals: 'energy'.
-	self assert: node expression equals: (grammar expression parse: 'my sugar').
-	node := grammar propertyBind
-		parse: 'target''s energy -> 10 [m]'.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: 'my sugar').
+	node := grammar propertyBind parse: 'the energy -> 10 [m]'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node actionAgent equals: 'target'.
-	self assert: node actionProperty equals: 'energy'.
-	self assert: node expression equals: (grammar expression parse: '10 [m]')
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: '10 [m]')
 ]
 
 { #category : #tests }
@@ -822,8 +825,8 @@ RMDGrammarTest >> testTaskDefinition [
 		parse:
 			'
 Goat move namely walk@model where
-	my energy -> sugar
-	my speed -> slow_speed.' trim.
+	the energy -> sugar
+	the speed -> slow_speed.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Goat'.
@@ -836,8 +839,7 @@ Goat move namely walk@model where
 		parse:
 			'
 Wolf eat Goat within 1[m] where
-	my energy -> sugar
-	food''s energy -> sugar.' trim.
+	the energy -> my sugar.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
@@ -845,7 +847,7 @@ Wolf eat Goat within 1[m] where
 	self assert: node actionIdentifier shortName equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node propertyBinds size = 2
+	self assert: node propertyBinds size = 1
 ]
 
 { #category : #tests }
