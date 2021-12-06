@@ -122,11 +122,6 @@ RMDSyntaxNode >> isCellInitializerNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isConditionPlaceholderNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
 ]
@@ -214,8 +209,7 @@ RMDSyntaxNode >> isOldNode [
 { #category : #testing }
 RMDSyntaxNode >> isPlaceholderNode [
 
-	^ self isConditionPlaceholderNode or: [ 
-		  self isVariablePlaceholderNode ]
+	^ false
 ]
 
 { #category : #testing }
@@ -310,11 +304,6 @@ RMDSyntaxNode >> isUtilityDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isUtilityVariableNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isVariablePlaceholderNode [
 	^ false
 ]
 

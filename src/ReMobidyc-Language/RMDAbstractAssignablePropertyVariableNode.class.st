@@ -14,6 +14,14 @@ RMDAbstractAssignablePropertyVariableNode class >> identifier: aString agent: an
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDAbstractAssignablePropertyVariableNode class >> propertyVariable: aRMDPropertyVariableNode [
+
+	^ self new
+		  propertyVariable: aRMDPropertyVariableNode;
+		  yourself
+]
+
 { #category : #comparing }
 RMDAbstractAssignablePropertyVariableNode >> = anObject [
 	^ self class = anObject class

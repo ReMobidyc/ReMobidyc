@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDConditionPlaceholderNode,
-	#superclass : #RMDConditionNode,
+	#name : #RMDPlaceholderNode,
+	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDConditionPlaceholderNode class >> identifier: aString [
+RMDPlaceholderNode class >> identifier: aString [
 
 	^ self new
 		  identifier: aString;
@@ -16,55 +16,55 @@ RMDConditionPlaceholderNode class >> identifier: aString [
 ]
 
 { #category : #comparing }
-RMDConditionPlaceholderNode >> = anObject [
+RMDPlaceholderNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  identifier = anObject identifier ]
 ]
 
 { #category : #enumerating }
-RMDConditionPlaceholderNode >> childrenDo: aBlock [
+RMDPlaceholderNode >> childrenDo: aBlock [
 
 	
 ]
 
 { #category : #comparing }
-RMDConditionPlaceholderNode >> hash [
+RMDPlaceholderNode >> hash [
 
 	^ self class hash bitXor: identifier hash
 ]
 
 { #category : #accessing }
-RMDConditionPlaceholderNode >> identifier [
+RMDPlaceholderNode >> identifier [
 
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDConditionPlaceholderNode >> identifier: aString [
+RMDPlaceholderNode >> identifier: aString [
 
 	identifier := aString
 ]
 
 { #category : #testing }
-RMDConditionPlaceholderNode >> isConditionPlaceholderNode [
+RMDPlaceholderNode >> isPlaceholderNode [
 
 	^ true
 ]
 
 { #category : #copying }
-RMDConditionPlaceholderNode >> postCopy [
+RMDPlaceholderNode >> postCopy [
 
 	
 ]
 
 { #category : #accessing }
-RMDConditionPlaceholderNode >> precedence [
+RMDPlaceholderNode >> precedence [
 	^ 1
 ]
 
 { #category : #printing }
-RMDConditionPlaceholderNode >> printOn: aStream [
+RMDPlaceholderNode >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'the ';
@@ -72,7 +72,7 @@ RMDConditionPlaceholderNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDConditionPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -83,7 +83,7 @@ RMDConditionPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 ]
 
 { #category : #rewriting }
-RMDConditionPlaceholderNode >> replaceChildren: aDictionary [
+RMDPlaceholderNode >> replaceChildren: aDictionary [
 
 	aDictionary
 		at: identifier

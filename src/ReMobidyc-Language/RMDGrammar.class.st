@@ -116,7 +116,6 @@ RMDGrammar >> agentIdentifier [
 RMDGrammar >> agentReference [
 
 	^ ('my' asPParser , #space asPParser) trimBlanks ==> [ :str | nil ]
-	  / (('the' asPParser , #blank asPParser) trimBlanks ==> #first)
 	  / (identifier , '''s ' asPParser trimBlanks ==> #first)
 ]
 
@@ -198,11 +197,14 @@ RMDGrammar >> applyNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignableDeltaPropertyVariable [
-	^ (agentReference , self delta , identifier)
-		==> [ :triple | 
-			self assignableDeltaPropertyVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
+
+	^ agentReference , self delta , identifier ==> [ :triple | 
+	  self assignableDeltaPropertyVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self delta , identifier ==> [ :triple | 
+		   self assignableDeltaPropertyVariableNodeClass propertyVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
 { #category : #'class access' }
@@ -212,11 +214,15 @@ RMDGrammar >> assignableDeltaPropertyVariableNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignableDifferentialPropertyVariable [
-	^ (agentReference , self differential , identifier)
-		==> [ :triple | 
-			self assignableDifferentialPropertyVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
+
+	^ agentReference , self differential , identifier ==> [ :triple | 
+	  self assignableDifferentialPropertyVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self differential , identifier ==> [ :triple | 
+		   self assignableDifferentialPropertyVariableNodeClass 
+			   propertyVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
 { #category : #'class access' }
@@ -226,9 +232,13 @@ RMDGrammar >> assignableDifferentialPropertyVariableNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignablePropertyVariable [
-	^ (agentReference , identifier)
-		==>
-			[ :pair | self assignablePropertyVariableNodeClass identifier: pair second agent: pair first ]
+
+	^ agentReference , identifier ==> [ :pair | 
+	  self assignablePropertyVariableNodeClass
+		  identifier: pair second
+		  agent: pair first ] / (self the , identifier ==> [ :pair | 
+	   self assignablePropertyVariableNodeClass propertyVariable:
+		   (self placeholderNodeClass identifier: pair third) ])
 ]
 
 { #category : #'class access' }
@@ -321,14 +331,6 @@ RMDGrammar >> builtinActionIdentifierNodeClass [
 	^ RMDBuiltinActionIdentifierNode 
 ]
 
-{ #category : #accessing }
-RMDGrammar >> builtins [
-	^ Builtins
-		ifNil:
-			[ Builtins := 'World Cell Animat x y heading North South West East world cell north south east west'
-				substrings asSet ]
-]
-
 { #category : #'parsers-definitions' }
 RMDGrammar >> cellDefinition [
 	^ ('Cell' asPParser
@@ -383,7 +385,7 @@ RMDGrammar >> cellInitializerNodeClass [
 RMDGrammar >> cond1 [
 
 	^ $( asPParser trimBlanks , condition , $) asPParser trimBlanks
-	  ==> #second / self binaryRelation / self conditionPlaceholder
+	  ==> #second / self binaryRelation / self placeholder
 ]
 
 { #category : #'parsers-conditions' }
@@ -406,14 +408,6 @@ RMDGrammar >> cond3 [
 RMDGrammar >> condition [
 
 	^ self cond3
-]
-
-{ #category : #'parsers-conditions' }
-RMDGrammar >> conditionPlaceholder [
-
-	^ 'the' asPParser , #blank asPParser plus , identifier
-	  ==> [ :triple | 
-	  RMDConditionPlaceholderNode identifier: triple third ]
 ]
 
 { #category : #'class access' }
@@ -486,7 +480,7 @@ RMDGrammar >> expr1 [
 	   ,
 		   (self parenExpression / self agentDirective
 		    / self uniformDistribution / self apply / self propertyVariable
-		    / self utilityVariable) ==> [ :pair | 
+		    / self placeholder / self utilityVariable) ==> [ :pair | 
 	   pair first
 		   ifNil: [ pair second ]
 		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
@@ -611,7 +605,7 @@ RMDGrammar >> int [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta is with if where become otherwise time'
+			[ Keywords := 'nearest distance direction delta is with if where become otherwise time my the'
 				substrings asSet ]
 ]
 
@@ -665,7 +659,12 @@ RMDGrammar >> placeholder [
 
 	^ 'the' asPParser , #blank asPParser plus , identifier
 	  ==> [ :triple | 
-	  RMDVariablePlaceholderNode identifier: triple third ]
+	  self placeholderNodeClass identifier: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> placeholderNodeClass [
+	^ RMDPlaceholderNode
 ]
 
 { #category : #'class access' }
@@ -853,6 +852,12 @@ RMDGrammar >> terminateDirective [
 	^ ('terminate' asPParser trimBlanks , identifier optional)
 		==>
 			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> the [
+
+	^ 'the' asPParser , #blank asPParser plus ==> #first
 ]
 
 { #category : #'parsers-directives' }

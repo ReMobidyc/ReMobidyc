@@ -12,7 +12,7 @@ RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
 
 	^ anotherString = 'the'
 		  ifTrue: [ 
-			  RMDVariablePlaceholderNode new
+			  RMDPlaceholderNode new
 				  identifier: aString;
 				  yourself ]
 		  ifFalse: [ 

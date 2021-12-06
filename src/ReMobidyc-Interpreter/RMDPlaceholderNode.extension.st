@@ -1,13 +1,13 @@
-Extension { #name : #RMDVariablePlaceholderNode }
+Extension { #name : #RMDPlaceholderNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDVariablePlaceholderNode >> evalIn: aRMDInterpreter [
+RMDPlaceholderNode >> evalIn: aRMDInterpreter [
 
 	^ (RMDUnresolvedReferenceError on: self) signal
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDVariablePlaceholderNode >> typecheckIn: aRMDInterpreter [
+RMDPlaceholderNode >> typecheckIn: aRMDInterpreter [
 
 	^ (RMDUnresolvedReferenceError on: self) signal
 ]

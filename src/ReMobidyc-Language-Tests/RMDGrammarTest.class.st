@@ -303,8 +303,13 @@ RMDGrammarTest >> testAssignableDeltaPropertyVariable [
 	variable := grammar assignableDeltaPropertyVariable parse: 'the Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
-	self assert: variable propertyVariable isVariablePlaceholderNode.
-	self assert: variable identifier equals: 'bar'
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'the delta bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'
 ]
 
 { #category : #tests }
@@ -330,8 +335,8 @@ RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
 		            'the d/dt bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDifferentialPropertyVariableNode.
-	self assert: variable propertyVariable isVariablePlaceholderNode.
-	self assert: variable identifier equals: 'bar'
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'
 ]
 
 { #category : #tests }
@@ -474,24 +479,6 @@ RMDGrammarTest >> testCondition [
 	self
 		assert: cond conditions third conditions second
 		equals: (grammar condition parse: '7 = 8')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testConditionPlaceholder [
-
-	| cond |
-	cond := grammar condition parse: 'the condition'.
-	self deny: cond isPetit2Failure.
-	self assert: cond isConditionPlaceholderNode.
-	cond := grammar condition parse: 'the condition and (1 = 2)'.
-	self deny: cond isPetit2Failure.
-	self assert: cond isConjunctionNode.
-	self
-		assert: cond conditions first
-		equals: (grammar condition parse: 'the condition').
-	self
-		assert: cond conditions second
-		equals: (grammar condition parse: '1 = 2')
 ]
 
 { #category : #tests }
@@ -697,6 +684,22 @@ RMDGrammarTest >> testLiteral [
 	self assert: literal literal equals: '3'.
 	self assert: literal unit equals: (grammar type parse: '[m]').
 	self assert: literal numeric closeTo: 3
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPlaceholder [
+
+	| exp |
+	exp := grammar expression parse: 'the expression'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isPlaceholderNode.
+	exp := grammar expression parse: 'the expression + 1'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isAdditionNode.
+	self
+		assert: exp expression1
+		equals: (grammar expression parse: 'the expression').
+	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
 { #category : #tests }
@@ -985,22 +988,6 @@ RMDGrammarTest >> testVariable [
 	self assert: variable isPropertyVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testVariablePlaceholder [
-
-	| exp |
-	exp := grammar expression parse: 'the expression'.
-	self deny: exp isPetit2Failure.
-	self assert: exp isVariablePlaceholderNode.
-	exp := grammar expression parse: 'the expression + 1'.
-	self deny: exp isPetit2Failure.
-	self assert: exp isAdditionNode.
-	self
-		assert: exp expression1
-		equals: (grammar expression parse: 'the expression').
-	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
 { #category : #tests }

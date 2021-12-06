@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDConditionPlaceholderNodeTest,
+	#name : #RMDPlaceholderNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDConditionPlaceholderNodeTest >> testCopyReplace [
+RMDPlaceholderNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end
 		parse: 'the condition and a1 = a2'.
