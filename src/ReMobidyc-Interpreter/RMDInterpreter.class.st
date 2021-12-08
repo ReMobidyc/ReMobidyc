@@ -79,6 +79,13 @@ RMDInterpreter class >> sugarScape [
 	^ interpreter
 ]
 
+{ #category : #directives }
+RMDInterpreter >> actionDirective: aString object: anotherString [
+
+	aString = 'die' ifTrue: [ ^ self terminateAnimat ].
+	self unknownDirectiveError: aString
+]
+
 { #category : #'accessing - definitions' }
 RMDInterpreter >> actionIdentifiers [
 	^ self actionNames
@@ -152,9 +159,10 @@ RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
 
 { #category : #directives }
 RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
-	aString = 'direction'
-		ifTrue: [ ^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
-	^ self error: 'Unknown directive: ' , aString
+
+	aString = 'direction' ifTrue: [ 
+		^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
+	^ self unknownDirectiveError: aString
 ]
 
 { #category : #directives }
@@ -201,19 +209,15 @@ RMDInterpreter >> directionOfGradient: aString [
 
 { #category : #directives }
 RMDInterpreter >> directive: aString object: anotherString [
-	aString = 'directionOfGradient'
-		ifTrue: [ ^ self directionOfGradient: anotherString ].
-	aString = 'direction'
-		ifTrue: [ ^ self direction: anotherString ].
-	aString = 'distance'
-		ifTrue: [ ^ self distance: anotherString ].
-	aString = 'time'
-		ifTrue: [ ^ self time ].
-	aString = 'delta time'
-		ifTrue: [ ^ self deltaTime ].
-	aString = 'terminate'
-		ifTrue: [ ^ self terminate: anotherString ].
-	^ self error: 'Unknown directive: ' , aString
+
+	aString = 'directionOfGradient' ifTrue: [ 
+		^ self directionOfGradient: anotherString ].
+	aString = 'direction' ifTrue: [ ^ self direction: anotherString ].
+	aString = 'distance' ifTrue: [ ^ self distance: anotherString ].
+	aString = 'time' ifTrue: [ ^ self time ].
+	aString = 'delta time' ifTrue: [ ^ self deltaTime ].
+	aString = 'terminate' ifTrue: [ ^ self terminate: anotherString ].
+	^ self unknownDirectiveError: aString
 ]
 
 { #category : #directives }
@@ -503,6 +507,12 @@ RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 	do: [ :slot | memory nextAt: slot put: nil ]
 ]
 
+{ #category : #directives }
+RMDInterpreter >> terminateAnimat [
+
+	^ self notYetImplemented
+]
+
 { #category : #timing }
 RMDInterpreter >> tick [
 	memory tick
@@ -532,6 +542,12 @@ RMDInterpreter >> time: aNumber [
 { #category : #simulating }
 RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
+]
+
+{ #category : #directives }
+RMDInterpreter >> unknownDirectiveError: aString [
+
+	^ self error: 'Unknown directive: ' , aString
 ]
 
 { #category : #'context controls' }

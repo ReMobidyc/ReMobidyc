@@ -1,12 +1,10 @@
 Class {
 	#name : #RMDActionDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#superclass : #RMDAbstractActionDefinitionNode,
 	#instVars : [
-		'identifier',
 		'guard',
 		'propertyDefinitions',
-		'utilityDefinitions',
-		'object'
+		'utilityDefinitions'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -189,17 +187,15 @@ RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 
 { #category : #comparing }
 RMDActionDefinitionNode >> = anObject [
-	^ self class = anObject class
-		and: [ identifier = anObject identifier
-				and: [ guard = anObject guard
-						and: [ propertyDefinitions = anObject propertyDefinitions
-								and: [ utilityDefinitions = anObject utilityDefinitions
-										and: [ object = anObject object ] ] ] ] ]
+
+	^ super = anObject and: [ 
+		  guard = anObject guard and: [ 
+			  propertyDefinitions = anObject propertyDefinitions and: [ 
+				  utilityDefinitions = anObject utilityDefinitions ] ] ]
 ]
 
 { #category : #enumerating }
 RMDActionDefinitionNode >> childrenDo: aBlock [
-	aBlock value: aBlock.
 	guard ifNotNil: aBlock.
 	propertyDefinitions do: aBlock.
 	utilityDefinitions do: aBlock
@@ -215,41 +211,16 @@ RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
-{ #category : #testing }
-RMDActionDefinitionNode >> hasObject [
-	^ object notNil
-]
-
 { #category : #comparing }
 RMDActionDefinitionNode >> hash [
-	^ (((identifier hash bitXor: guard hash)
-		bitXor: propertyDefinitions hash) bitXor: utilityDefinitions hash)
-		bitXor: object hash
-]
 
-{ #category : #accessing }
-RMDActionDefinitionNode >> identifier [
-	^ identifier
-]
-
-{ #category : #accessing }
-RMDActionDefinitionNode >> identifier: aString [
-	identifier := aString
+	^ ((super hash bitXor: guard hash) bitXor: propertyDefinitions hash) 
+		  bitXor: utilityDefinitions hash
 ]
 
 { #category : #testing }
 RMDActionDefinitionNode >> isActionDefinitionNode [
 	^ true
-]
-
-{ #category : #accessing }
-RMDActionDefinitionNode >> object [
-	^ object
-]
-
-{ #category : #accessing }
-RMDActionDefinitionNode >> object: aString [
-	object := aString
 ]
 
 { #category : #copying }
@@ -358,17 +329,16 @@ RMDActionDefinitionNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
 
 { #category : #rewriting }
 RMDActionDefinitionNode >> replaceChildren: aDictionary [
-	aDictionary
-		at: identifier
-		ifPresent: [ :node | identifier := node copy ].
+
+	super replaceChildren: aDictionary.
 	(guard isKindOf: RMDSyntaxNode)
 		ifTrue: [ guard := guard copyReplace: aDictionary ]
-		ifFalse: [ aDictionary at: guard ifPresent: [ :node | guard := node copy ] ].
-	propertyDefinitions := propertyDefinitions
-		collect: [ :node | node copyReplace: aDictionary ].
-	utilityDefinitions := utilityDefinitions
-		collect: [ :node | node copyReplace: aDictionary ].
-	aDictionary at: object ifPresent: [ :node | object := node copy ]
+		ifFalse: [ 
+		aDictionary at: guard ifPresent: [ :node | guard := node copy ] ].
+	propertyDefinitions := propertyDefinitions collect: [ :node | 
+		                       node copyReplace: aDictionary ].
+	utilityDefinitions := utilityDefinitions collect: [ :node | 
+		                      node copyReplace: aDictionary ]
 ]
 
 { #category : #accessing }
