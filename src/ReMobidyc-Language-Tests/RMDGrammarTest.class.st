@@ -827,7 +827,9 @@ RMDGrammarTest >> testTaskDefinition [
 	node := grammar taskDefinition end
 		parse:
 			'
-Goat move namely walk@model where
+Goat move namely walk@model
+when my blood_sugar > my hunger
+where
 	the energy -> sugar
 	the speed -> slow_speed.' trim.
 	self deny: node isPetit2Failure.
@@ -841,7 +843,8 @@ Goat move namely walk@model where
 	node := grammar taskDefinition
 		parse:
 			'
-Wolf eat Goat within 1[m] where
+Wolf eat Goat within 1[m]
+where
 	the energy -> my sugar.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
@@ -856,7 +859,8 @@ Wolf eat Goat within 1[m] where
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
-	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]'.
+	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
+when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
 ]
 

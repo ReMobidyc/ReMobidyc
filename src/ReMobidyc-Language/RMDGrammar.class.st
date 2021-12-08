@@ -804,40 +804,46 @@ RMDGrammar >> subtractionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
-	^ (self taskDefinitionHeader
-		,
-			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
-				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
-				==> #third) optional , $. asPParser trimBlanks)
-		==> [ :triple | 
-			self bindNodeClass
-				subjectIdentifier: triple first first
-				verbIdentifier: triple first second
-				objectIdentifier: triple first third
-				actionIdentifier: triple first fourth
-				within: triple first fifth
-				propertyBinds: (triple second ifNil: [ Array new ]) ]
+
+	^ self taskDefinitionHeader
+	  , (#newline asPParser , 'where' asPParser trimBlanks
+		   , #newline asPParser trimBlanks
+		   ,
+		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :triple | 
+	  self bindNodeClass
+		  subjectIdentifier: triple first first
+		  verbIdentifier: triple first second
+		  objectIdentifier: triple first third
+		  actionIdentifier: triple first fourth
+		  within: triple first fifth
+		  guard: triple first sixth
+		  propertyBinds: (triple second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeader [
-	^ (self agentIdentifier
-		,
-			((identifier , self agentIdentifier optional
-				, (('namely' asPParser trimBlanks , self actionIdentifier) ==> #second))
-				/
-					((self actionIdentifier , self agentIdentifier optional)
-						==> [ :pair | 
-							{pair first shortName.
-							pair second.
-							pair first} ]))
-		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
-		==> [ :triple | 
-			{triple first.
-			triple second first.
-			triple second second.
-			triple second third.
-			triple third} ]
+
+	^ self agentIdentifier , (identifier , self agentIdentifier optional
+	   ,
+	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
+	   /
+		   (self actionIdentifier , self agentIdentifier optional
+		    ==> [ :pair | 
+			    { 
+				    pair first shortName.
+				    pair second.
+				    pair first } ]))
+	  , ('within' asPParser trimBlanks , literal ==> #second) optional
+	  , (#newline asPParser trimBlanks , 'when' asPParser trimBlanks
+		   , condition ==> #third) optional ==> [ :triple | 
+	  { 
+		  triple first.
+		  triple second first.
+		  triple second second.
+		  triple second third.
+		  triple third.
+		  triple fourth } ]
 ]
 
 { #category : #units }

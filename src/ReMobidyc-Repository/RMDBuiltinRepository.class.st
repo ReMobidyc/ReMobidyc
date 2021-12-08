@@ -107,7 +107,7 @@ RMDBuiltinRepository >> transfer [
 	the delta source'' = - amount
 	the delta destination'' = amount
 where
-	amount = positive(min(the amount, the source)).
+	amount = the amount.
 ' asRMDActionDefinition
 ]
 

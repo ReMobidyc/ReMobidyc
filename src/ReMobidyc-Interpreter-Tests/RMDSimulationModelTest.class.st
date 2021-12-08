@@ -664,12 +664,14 @@ RMDSimulationModelTest >> testTaskNames [
 	model addTaskDefinition: task1.
 	task2 := parser taskDefinition end
 		parse:
-			'Goat eat where
+			'Goat eat
+where
 	the energy -> my blood_sugar.'.
 	model addTaskDefinition: task2.
 	task3 := parser taskDefinition end
 		parse:
-			'Wolf walk where
+			'Wolf walk
+where
 	the speed -> my walking_speed.'.
 	model addTaskDefinition: task3.
 	self

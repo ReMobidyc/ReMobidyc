@@ -75,12 +75,12 @@ RMDAbstractAssignablePropertyVariableNode >> printOn: aStream ifIncludedIn: aCol
 
 	| start |
 	start := aStream position + 1.
-	self agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ :agent | 
-			agent = #the
-				ifTrue: [ aStream nextPutAll: 'the ' ]
-				ifFalse: [ 
+	propertyVariable isPlaceholderNode
+		ifTrue: [ aStream nextPutAll: 'the ' ]
+		ifFalse: [ 
+			self agent
+				ifNil: [ aStream nextPutAll: 'my ' ]
+				ifNotNil: [ :agent | 
 					aStream
 						nextPutAll: agent;
 						nextPutAll: '''s ' ] ].

@@ -458,22 +458,23 @@ RMDTaskDefinitionEditor >> updateSourceText [
 
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateTaskDefinition [
-	self actionIdentifier
-		ifNotNil: [ :actionIdentifier | 
-			self taskDefinition
-				ifNil: [ self
-						taskDefinition:
-							(RMDTaskDefinitionNode
-								subjectIdentifier: self agentName
-								verbIdentifier:
-									(verbIdentifierField text asString trim
-										ifEmpty: [ actionIdentifier shortName ])
-								objectIdentifier: (objectIdentifierField text asString trim ifEmpty: [ nil ])
-								actionIdentifier: actionIdentifier
-								within: nil
-								propertyBinds: Array new) ]
-				ifNotNil:
-					[ :taskDefinition | taskDefinition actionIdentifier: actionIdentifier ] ]
+
+	self actionIdentifier ifNotNil: [ :actionIdentifier | 
+		self taskDefinition
+			ifNil: [ 
+				self taskDefinition: (RMDTaskDefinitionNode
+						 subjectIdentifier: self agentName
+						 verbIdentifier:
+							 (verbIdentifierField text asString trim ifEmpty: [ 
+								  actionIdentifier shortName ])
+						 objectIdentifier:
+						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
+						 actionIdentifier: actionIdentifier
+						 within: nil
+						 guard: nil
+						 propertyBinds: Array new) ]
+			ifNotNil: [ :taskDefinition | 
+			taskDefinition actionIdentifier: actionIdentifier ] ]
 ]
 
 { #category : #updating }

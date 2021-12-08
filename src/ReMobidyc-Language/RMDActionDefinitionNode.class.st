@@ -372,6 +372,15 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 ]
 
 { #category : #accessing }
+RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
+
+	aRMDConditionNode ifNil: [ ^ self ].
+	guard := guard
+		         ifNil: [ aRMDConditionNode ]
+		         ifNotNil: [ guard & aRMDConditionNode ]
+]
+
+{ #category : #accessing }
 RMDActionDefinitionNode >> utilityDefinitions [
 	^ utilityDefinitions
 ]
