@@ -865,6 +865,43 @@ when my blood_sugar < my full'.
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testTerminalTaskDefinition [
+
+	| node |
+	node := grammar terminalTaskDefinition end parse: '
+Goat die
+when my blood_sugar < my sturvation_limit.' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isTerminalTaskDefinitionNode.
+	self assert: node subjectIdentifier equals: 'Goat'.
+	self assert: node guard isConditionNode.
+	self assert: node propertyDefinitions isEmpty.
+	self assert: node utilityDefinitions isEmpty.
+	node := grammar terminalTaskDefinition end parse: '
+Goat die
+when my blood_sugar < my sturvation_limit
+	here''s delta soil'' = my blood_sugar.' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isTerminalTaskDefinitionNode.
+	self assert: node subjectIdentifier equals: 'Goat'.
+	self assert: node guard isConditionNode.
+	self assert: node propertyDefinitions size equals: 1.
+	self assert: node utilityDefinitions isEmpty.
+	node := grammar terminalTaskDefinition end parse: '
+Goat die
+when my blood_sugar < my sturvation_limit
+	here''s delta soil'' = my blood_sugar * rate
+where
+	rate = 0.9.' trim.
+	self deny: node isPetit2Failure.
+	self assert: node isTerminalTaskDefinitionNode.
+	self assert: node subjectIdentifier equals: 'Goat'.
+	self assert: node guard isConditionNode.
+	self assert: node propertyDefinitions size equals: 1.
+	self assert: node utilityDefinitions size equals: 1
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testType [
 	| type |
 	type := grammar type parse: '[m]'.

@@ -122,6 +122,11 @@ RMDSyntaxNode >> isCellInitializerNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isConditionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
 ]
@@ -284,6 +289,11 @@ RMDSyntaxNode >> isSubtractionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isTaskDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isTerminalTaskDefinitionNode [
 	^ false
 ]
 

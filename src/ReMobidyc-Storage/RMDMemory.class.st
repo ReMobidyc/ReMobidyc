@@ -18,23 +18,33 @@ Class {
 		'yCells',
 		'cellSize',
 		'animats',
-		'stages'
+		'ins',
+		'outs'
 	],
 	#category : #'ReMobidyc-Storage'
 }
 
 { #category : #allocating }
-RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
+RMDMemory >> addAnimat: aRMDAnimatDefinitionNode anscestry: anArrayOfInteger [
+
 	| individual animat |
-	self
-		nextAvailableSlot:
-			(individual := self nextAvailableSlot)
-				+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+	self nextAvailableSlot: (individual := self nextAvailableSlot)
+		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
 	animat := aRMDAnimatDefinitionNode identifier.
-	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add: individual.
-	stages
-		at: individual
-		put: (OrderedCollection with: animat -> individual).
+	(ins at: animat ifAbsentPut: [ Set new: 1024 ]) add:
+		(anArrayOfInteger copyWith: individual).
+	^ individual
+]
+
+{ #category : #allocating }
+RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
+
+	| individual animat |
+	self nextAvailableSlot: (individual := self nextAvailableSlot)
+		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+	animat := aRMDAnimatDefinitionNode identifier.
+	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add:
+		(Array with: individual).
 	^ individual
 ]
 
@@ -71,8 +81,9 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> animatsOf: aString do: aBlock [
-	(animats at: aString ifAbsent: [ ^ self ]) asArray
-		do: [ :id | aBlock value: id ]
+
+	(animats at: aString ifAbsent: [ ^ self ]) asArray do: [ :ids | 
+		aBlock value: ids last ]
 ]
 
 { #category : #accessing }
@@ -132,6 +143,20 @@ RMDMemory >> cellsDo: aBlock [
 			by: self cellSize do: aBlock ]
 ]
 
+{ #category : #allocating }
+RMDMemory >> commitAllocations [
+
+	animats keysAndValuesDo: [ :animatName :individuals | 
+		individuals asArray do: [ :individual | 
+			(outs includes: individual last) ifTrue: [ 
+				individuals remove: individual ifAbsent: [  ] ] ] ].
+	outs removeAll.
+	ins keysAndValuesDo: [ :animatName :individuals | 
+		(animats at: animatName ifAbsentPut: [ Set new: 1024 ]) addAll:
+			individuals ].
+	ins removeAll
+]
+
 { #category : #'accessing-individuals' }
 RMDMemory >> eastOf: anInteger do: aBlock [
 	(self xCellOf: anInteger) < self xCells
@@ -140,6 +165,7 @@ RMDMemory >> eastOf: anInteger do: aBlock [
 
 { #category : #timing }
 RMDMemory >> fastSunrise [
+
 	old2Values := oldValues.
 	oldValues := values.
 	values := nextValues copy.
@@ -155,6 +181,7 @@ RMDMemory >> fastSunset [
 
 { #category : #initialization }
 RMDMemory >> initialize [
+
 	super initialize.
 	time := 0.
 	latestTime := 0.
@@ -172,7 +199,8 @@ RMDMemory >> initialize [
 	world := 1.
 	cell := nil.
 	animats := Dictionary new.
-	stages := Dictionary new
+	ins := Dictionary new.
+	outs := Set new: 1024
 ]
 
 { #category : #accessing }
@@ -183,16 +211,6 @@ RMDMemory >> latestTime [
 { #category : #accessing }
 RMDMemory >> latestTime: anInteger [
 	latestTime := anInteger
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> migrate: anInteger animat: aString to: anotherInteger animat: anotherString [
-	stages
-		at: anotherInteger
-		put:
-			((stages at: anInteger)
-				add: anotherString -> anotherInteger;
-				yourself)
 ]
 
 { #category : #accessing }
@@ -267,12 +285,9 @@ RMDMemory >> readValuesForTime: anInteger [
 ]
 
 { #category : #allocating }
-RMDMemory >> remove: anInteger animat: aRMDAnimatDefinitionNode ifAbsent: errorBlock [
-	^ (animats
-		at: aRMDAnimatDefinitionNode identifier
-		ifAbsent: [ ^ errorBlock value ])
-		remove: anInteger
-		ifAbsent: errorBlock
+RMDMemory >> removeAnimat: anInteger [
+
+	^ outs add: anInteger
 ]
 
 { #category : #'accessing-individuals' }
@@ -288,34 +303,36 @@ RMDMemory >> sunrise [
 		ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time.
 	nextValues := values copy.
-	nextDeltas := Dictionary new
+	nextDeltas := Dictionary new.
+	animats := self readAnimatsForTime: time
 ]
 
 { #category : #timing }
 RMDMemory >> sunset [
-	values
-		keysAndValuesDo: [ :id :value | nextValues at: id ifAbsentPut: [ value ] ].
-	nextDeltas
-		ifNotEmpty: [ nextValuesDirty := true.
-			nextDeltas
-				keysAndValuesDo: [ :id :delta | 
-					| nextValue |
-					nextValue := nextValues at: id ifAbsent: [ values at: id ].
-					nextValue ifNotNil: [ nextValues at: id put: nextValue + delta ] ] ].
-	nextValues
-		keysAndValuesRemove: [ :id :value | 
-			value isNil
-				and: [ nextDeltas removeKey: id ifAbsent: [].
-					nextValuesDirty := true.
-					true ] ].
-	valuesDirty
-		ifTrue: [ self writeValues: values forTime: time ].
-	nextValuesDirty
-		ifTrue: [ self writeValues: nextValues forTime: time + 1 ]
+
+	self commitAllocations.
+	values keysAndValuesDo: [ :id :value | 
+		nextValues at: id ifAbsentPut: [ value ] ].
+	nextDeltas ifNotEmpty: [ 
+		nextValuesDirty := true.
+		nextDeltas keysAndValuesDo: [ :id :delta | 
+			| nextValue |
+			nextValue := nextValues at: id ifAbsent: [ values at: id ].
+			nextValue ifNotNil: [ nextValues at: id put: nextValue + delta ] ] ].
+	nextValues keysAndValuesRemove: [ :id :value | 
+		value isNil and: [ 
+			nextDeltas removeKey: id ifAbsent: [  ].
+			nextValuesDirty := true.
+			true ] ].
+	valuesDirty ifTrue: [ self writeValues: values forTime: time ].
+	nextValuesDirty ifTrue: [ 
+		self writeValues: nextValues forTime: time + 1 ].
+	self writeAnimats: animats forTime: time
 ]
 
 { #category : #timing }
 RMDMemory >> tick [
+
 	self fastSunset.
 	time := time + 1.
 	self latestTime: (latestTime max: time).
@@ -329,9 +346,10 @@ RMDMemory >> time [
 
 { #category : #timing }
 RMDMemory >> time: anInteger [
-	(anInteger isInteger
-		and: [ anInteger between: 0 and: self latestTime ])
-		ifFalse: [ ^ SubscriptOutOfBounds signal ].
+
+	(anInteger isInteger and: [ 
+		 anInteger between: 0 and: self latestTime ]) ifFalse: [ 
+		^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
 	self latestTime: (latestTime max: time).

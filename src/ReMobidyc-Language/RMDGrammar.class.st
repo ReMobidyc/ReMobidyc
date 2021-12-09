@@ -27,7 +27,7 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
 	^ (self actionDefinitionHeaderLine
-		, self actionDefinitionWhenClause optional
+		, self whenClause optional
 		, self actionDefinitionPropertyPart
 		, self actionDefinitionUtilityPart optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
@@ -42,12 +42,12 @@ RMDGrammar >> actionDefinition [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionHeaderLine [
-	^ ('to' asPParser trimBlanks , identifier trimBlanks
-		, identifier optional , 'is' asPParser trimBlanks
-		, #newline asPParser trimBlanks)
-		==> [ :array | 
-			{array second.
-			array third} ]
+
+	^ 'to' asPParser trimBlanks , identifier trimBlanks
+	  , identifier optional , 'is' asPParser trimBlanks ==> [ :array | 
+	  { 
+		  array second.
+		  array third } ]
 ]
 
 { #category : #'class access' }
@@ -57,23 +57,21 @@ RMDGrammar >> actionDefinitionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionPropertyPart [
-	^ ((self propertyDefinition
-		onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #first
+
+	^ #newline asPParser trimBlanks optional
+	  , (self propertyDefinition onlySeparatedBy:
+			   #newline asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionUtilityPart [
-	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
-		,
-			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #third
-]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> actionDefinitionWhenClause [
-	^ ('when' asPParser trimBlanks , condition
-		, #newline asPParser trimBlanks) ==> #second
+	^ #newline asPParser trimBlanks , 'where' asPParser trimBlanks
+	  , #newline asPParser trimBlanks
+	  ,
+	  (self utilityDefinition onlySeparatedBy:
+		   #newline asPParser trimBlanks)
+	  , #newline asPParser trimBlanks optional ==> #fourth
 ]
 
 { #category : #'parsers-definitions' }
@@ -805,20 +803,20 @@ RMDGrammar >> subtractionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
 
-	^ self taskDefinitionHeader
-	  , (#newline asPParser , 'where' asPParser trimBlanks
+	^ self taskDefinitionHeader , self whenClause optional
+	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
 		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
-		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :triple | 
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
 	  self bindNodeClass
-		  subjectIdentifier: triple first first
-		  verbIdentifier: triple first second
-		  objectIdentifier: triple first third
-		  actionIdentifier: triple first fourth
-		  within: triple first fifth
-		  guard: triple first sixth
-		  propertyBinds: (triple second ifNil: [ Array new ]) ]
+		  subjectIdentifier: quad first first
+		  verbIdentifier: quad first second
+		  objectIdentifier: quad first third
+		  actionIdentifier: quad first fourth
+		  within: quad first fifth
+		  guard: quad second
+		  propertyBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -835,15 +833,13 @@ RMDGrammar >> taskDefinitionHeader [
 				    pair second.
 				    pair first } ]))
 	  , ('within' asPParser trimBlanks , literal ==> #second) optional
-	  , (#newline asPParser trimBlanks , 'when' asPParser trimBlanks
-		   , condition ==> #third) optional ==> [ :triple | 
-	  { 
-		  triple first.
-		  triple second first.
-		  triple second second.
-		  triple second third.
-		  triple third.
-		  triple fourth } ]
+	  ==> [ :triple | 
+		  { 
+			  triple first.
+			  triple second first.
+			  triple second second.
+			  triple second third.
+			  triple third } ]
 ]
 
 { #category : #units }
@@ -851,6 +847,33 @@ RMDGrammar >> temperatureUnits [
 	^ {('K' -> #(1.0 nil 'K')).
 	('C' -> #(1.0 273.15 'K')).
 	('F' -> #(0.5555555555555556 255.3722222222222 'J'))} asDictionary
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> terminalTaskDefinition [
+
+	^ self terminalTaskDefinitionHeaderLine , self whenClause
+	  , self actionDefinitionPropertyPart optional
+	  , self actionDefinitionUtilityPart optional
+	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
+	  ==> [ :quad | 
+		  self terminalTaskDefinitionNodeClass
+			  subjectIdentifier: quad first
+			  guard: quad second
+			  propertyDefinitions: (quad third ifNil: [ Array new ])
+			  utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> terminalTaskDefinitionHeaderLine [
+
+	^ self agentIdentifier , 'die' asPParser trimBlanks ==> #first
+]
+
+{ #category : #'class access' }
+RMDGrammar >> terminalTaskDefinitionNodeClass [
+
+	^ RMDTerminalTaskDefinitionNode
 ]
 
 { #category : #'parsers-directives' }
@@ -984,6 +1007,13 @@ RMDGrammar >> weightUnits [
 	('kg' -> #(1 nil 'kg')).
 	('g' -> #(0.001 nil 'kg')).
 	('mg' -> #(0.000001 nil 'kg'))} asDictionary
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> whenClause [
+
+	^ #newline asPParser trimBlanks , 'when' asPParser trimBlanks
+	  , condition ==> #third
 ]
 
 { #category : #'parsers-definitions' }

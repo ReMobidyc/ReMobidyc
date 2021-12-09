@@ -143,16 +143,6 @@ RMDFileMemory >> latestTime: anInteger [
 		ifTrue: [ allocationDirty := true ]
 ]
 
-{ #category : #'accessing-individuals' }
-RMDFileMemory >> migrate: anInteger animat: aString to: anotherInteger animat: anotherString [
-	super
-		migrate: anInteger
-		animat: aString
-		to: anotherInteger
-		animat: anotherString.
-	stagesDirty := true
-]
-
 { #category : #accessing }
 RMDFileMemory >> nextAvailableSlot: anInteger [
 	| oldSlot |
@@ -179,21 +169,23 @@ RMDFileMemory >> readAllocation [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> readAnimatsForTime: anInteger [
+
 	| ref |
-	ref := (self directoryForId: anInteger) / self valuesFileBasename.
-	ref exists
-		ifFalse: [ ^ Dictionary new ].
-	ref
-		readStreamDo: [ :csvStream | 
-			| vals |
-			vals := Dictionary new.
-			[ [ csvStream atEnd not and: [ csvStream peek isSeparator ] ]
-				whileTrue: [ csvStream skip ].
-			csvStream atEnd ]
-				whileFalse: [ ((csvStream upTo: Character lf) substrings: ',')
-						ifNotEmpty:
-							[ :row | vals at: row first put: (row copyWithoutFirst collect: #asInteger) ] ].
-			^ vals ]
+	ref := (self directoryForId: anInteger) / self animatsFileBasename.
+	ref exists ifFalse: [ ^ Dictionary new ].
+	ref readStreamDo: [ :csvStream | 
+		| vals |
+		vals := Dictionary new.
+		[ 
+		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
+			whileTrue: [ csvStream skip ].
+		csvStream atEnd ] whileFalse: [ 
+			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
+				vals
+					at: row first
+					put: (row copyWithoutFirst collect: [ :anscestry | 
+							 (anscestry substrings: '-') collect: #asInteger ]) ] ].
+		^ vals ]
 ]
 
 { #category : #'accessing-storage' }
@@ -209,21 +201,6 @@ RMDFileMemory >> readSpace [
 							pair size = 2
 								ifTrue: [ params at: pair first put: pair second asInteger ] ] ].
 			^ params ]
-]
-
-{ #category : #'accessing-storage' }
-RMDFileMemory >> readStages [
-	self stagesFile
-		ensureCreateFile;
-		readStreamDo: [ :stream | 
-			| newStages |
-			newStages := Dictionary new: stages size * 3 // 2.
-			[ stream atEnd ]
-				whileFalse: [ | ids |
-					ids := (stream nextLine truncate substrings: ',')
-						collect: #asInteger.
-					ids do: [ :id | newStages at: id put: ids ] ].
-			^ newStages ]
 ]
 
 { #category : #'accessing-storage' }
@@ -298,16 +275,19 @@ RMDFileMemory >> writeAllocation [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
+
 	((self directoryForId: anInteger) ensureCreateDirectory
-		/ self animatsFileBasename)
+	 / self animatsFileBasename)
 		ensureDelete;
 		writeStreamDo: [ :csvStream | 
-			aDictionary
-				keysAndValuesDo: [ :animat :individuals | 
+			aDictionary keysAndValuesDo: [ :animat :individuals | 
 					animat printOn: csvStream.
 					csvStream nextPut: $,.
 					individuals
-						do: [ :id | id storeOn: csvStream ]
+						do: [ :anscestry | 
+							anscestry
+								do: [ :id | id printOn: csvStream ]
+								separatedBy: [ csvStream nextPut: $- ] ]
 						separatedBy: [ csvStream nextPut: $, ].
 					csvStream lf ] ]
 ]
@@ -329,19 +309,6 @@ RMDFileMemory >> writeSpace [
 			stream nextPutAll: 'cellSize'.
 			cellSize storeOn: stream.
 			stream lf ]
-]
-
-{ #category : #'accessing-storage' }
-RMDFileMemory >> writeStages [
-	self stagesFile
-		ensureDelete;
-		writeStreamDo: [ :stream | 
-			stages values asIdentitySet
-				do: [ :individuals | 
-					individuals
-						do: [ :id | id storeOn: stream ]
-						separatedBy: [ stream nextPut: $, ].
-					stream nextPut: Character lf ] ]
 ]
 
 { #category : #'accessing-storage' }

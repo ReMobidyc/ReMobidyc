@@ -35,6 +35,16 @@ RMDOnMemory >> changeStorageCapacityTo: anInteger [
 		startingAt: 1
 ]
 
+{ #category : #private }
+RMDOnMemory >> deepCopyAnimats: aDictionary [
+
+	| copy |
+	copy := Dictionary new: aDictionary size.
+	aDictionary keysAndValuesDo: [ :animatName :individuals | 
+		copy at: animatName put: individuals copy ].
+	^ copy
+]
+
 { #category : #initialization }
 RMDOnMemory >> initialize [
 	super initialize.
@@ -46,11 +56,12 @@ RMDOnMemory >> initialize [
 
 { #category : #'accessing-storage' }
 RMDOnMemory >> readAnimatsForTime: anInteger [
-	anInteger >= animatsStorage size
-		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
+
+	anInteger >= animatsStorage size ifTrue: [ 
+		self changeStorageCapacityTo: anInteger + 1024 ].
 	^ (animatsStorage at: anInteger + 1 ifAbsent: [ nil ])
-		ifNotNil: [ :dict | dict copy ]
-		ifNil: [ Dictionary new ]
+		  ifNotNil: [ :dict | self deepCopyAnimats: dict ]
+		  ifNil: [ Dictionary new ]
 ]
 
 { #category : #'accessing-storage' }
@@ -64,9 +75,12 @@ RMDOnMemory >> readValuesForTime: anInteger [
 
 { #category : #'accessing-storage' }
 RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
-	anInteger >= animatsStorage size
-		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
-	^ animatsStorage at: anInteger + 1 put: aDictionary copy
+
+	anInteger >= animatsStorage size ifTrue: [ 
+		self changeStorageCapacityTo: anInteger + 1024 ].
+	^ animatsStorage
+		  at: anInteger + 1
+		  put: (self deepCopyAnimats: aDictionary)
 ]
 
 { #category : #'accessing-storage' }

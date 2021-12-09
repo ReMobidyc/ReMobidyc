@@ -1,7 +1,9 @@
 Class {
 	#name : #RMDActionDefinitionNode,
-	#superclass : #RMDAbstractActionDefinitionNode,
+	#superclass : #RMDSyntaxNode,
 	#instVars : [
+		'identifier',
+		'object',
 		'guard',
 		'propertyDefinitions',
 		'utilityDefinitions'
@@ -188,10 +190,12 @@ RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 { #category : #comparing }
 RMDActionDefinitionNode >> = anObject [
 
-	^ super = anObject and: [ 
-		  guard = anObject guard and: [ 
-			  propertyDefinitions = anObject propertyDefinitions and: [ 
-				  utilityDefinitions = anObject utilityDefinitions ] ] ]
+	^ self class = anObject class and: [ 
+		  identifier = anObject identifier and: [ 
+			  object = anObject object and: [ 
+				  guard = anObject guard and: [ 
+					  propertyDefinitions = anObject propertyDefinitions and: [ 
+						  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ]
 ]
 
 { #category : #enumerating }
@@ -211,16 +215,41 @@ RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
+{ #category : #testing }
+RMDActionDefinitionNode >> hasObject [
+	^ object notNil
+]
+
 { #category : #comparing }
 RMDActionDefinitionNode >> hash [
 
-	^ ((super hash bitXor: guard hash) bitXor: propertyDefinitions hash) 
-		  bitXor: utilityDefinitions hash
+	^ (((identifier hash bitXor: object hash) bitXor: guard hash) 
+		   bitXor: propertyDefinitions hash) bitXor: utilityDefinitions hash
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> identifier [
+	^ identifier
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> identifier: aString [
+	identifier := aString
 ]
 
 { #category : #testing }
 RMDActionDefinitionNode >> isActionDefinitionNode [
 	^ true
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> object [
+	^ object
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> object: aString [
+	object := aString
 ]
 
 { #category : #copying }
@@ -330,7 +359,10 @@ RMDActionDefinitionNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
 { #category : #rewriting }
 RMDActionDefinitionNode >> replaceChildren: aDictionary [
 
-	super replaceChildren: aDictionary.
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ].
+	aDictionary at: object ifPresent: [ :node | object := node copy ].
 	(guard isKindOf: RMDSyntaxNode)
 		ifTrue: [ guard := guard copyReplace: aDictionary ]
 		ifFalse: [ 
@@ -356,6 +388,6 @@ RMDActionDefinitionNode >> utilityDefinitions [
 ]
 
 { #category : #accessing }
-RMDActionDefinitionNode >> utilityDefinitions: anObject [
-	utilityDefinitions := anObject
+RMDActionDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinition [
+	utilityDefinitions := anArrayOfRMDUtilityDefinition
 ]

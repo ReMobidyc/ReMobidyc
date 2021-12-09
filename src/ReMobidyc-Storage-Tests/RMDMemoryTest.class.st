@@ -326,21 +326,19 @@ RMDMemoryTest >> testOldAtIfAbsent [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testRemoveAnimatIfAbsent [
+RMDMemoryTest >> testRemoveAnimat [
+
 	| animat goat1 goat2 |
-	animat := parser animatDefinition end
-		parse:
-			'Goat is Animat with
+	animat := parser animatDefinition end parse: 'Goat is Animat with
 	blood_sugar [kcal]
 	speed [km/h].'.
 	goat1 := memory allocateAnimat: animat.
 	goat2 := memory allocateAnimat: animat.
-	memory remove: goat1 animat: animat ifAbsent: [ self fail ].
+	memory removeAnimat: goat1.
+	memory commitAllocations.
 	self
-		assert:
-			(Array
-				streamContents:
-					[ :stream | memory animatsOf: 'Goat' do: [ :goat | stream nextPut: goat ] ])
+		assert: (Array streamContents: [ :stream | 
+				 memory animatsOf: 'Goat' do: [ :goat | stream nextPut: goat ] ])
 				asSet
 		equals: (Set with: goat2)
 ]

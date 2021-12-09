@@ -79,13 +79,6 @@ RMDInterpreter class >> sugarScape [
 	^ interpreter
 ]
 
-{ #category : #directives }
-RMDInterpreter >> actionDirective: aString object: anotherString [
-
-	aString = 'die' ifTrue: [ ^ self terminateAnimat ].
-	self unknownDirectiveError: aString
-]
-
 { #category : #'accessing - definitions' }
 RMDInterpreter >> actionIdentifiers [
 	^ self actionNames
@@ -287,6 +280,7 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 
 { #category : #initialization }
 RMDInterpreter >> initialize [
+
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
 	randomSeed := 1.
@@ -496,21 +490,11 @@ RMDInterpreter >> terminate: aString [
 
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
-	memory
-		remove: anInteger
-		animat: aRMDAnimatDefinitionNode
-		ifAbsent: [ ^ NotFound
-				signal:
-					{aRMDAnimatDefinitionNode.
-					anInteger} ].
-	anInteger to: anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1
-	do: [ :slot | memory nextAt: slot put: nil ]
-]
 
-{ #category : #directives }
-RMDInterpreter >> terminateAnimat [
-
-	^ self notYetImplemented
+	memory removeAnimat: anInteger.
+	anInteger to:
+	anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1 do: [ 
+	:slot | memory nextAt: slot put: nil ]
 ]
 
 { #category : #timing }

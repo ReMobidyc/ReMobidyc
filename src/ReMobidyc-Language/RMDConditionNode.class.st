@@ -12,6 +12,11 @@ RMDConditionNode >> & aRMDConditionNode [
 			  (Array with: self with: aRMDConditionNode) ]
 ]
 
+{ #category : #testing }
+RMDConditionNode >> isConditionNode [
+	^ true
+]
+
 { #category : #accessing }
 RMDConditionNode >> precedence [
 	^ self subclassResponsibility
