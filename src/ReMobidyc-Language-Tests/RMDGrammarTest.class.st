@@ -859,7 +859,7 @@ where
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
-	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
+	node := RMDGrammar new actionTaskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
 when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
 ]

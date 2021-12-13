@@ -79,6 +79,48 @@ RMDGrammar >> actionIdentifier [
 	^ self localActionIdentifier / self builtinActionIdentifier
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionTaskDefinition [
+
+	^ self actionTaskDefinitionHeader , self whenClause optional
+	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
+		   , #newline asPParser trimBlanks
+		   ,
+		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
+	  self bindNodeClass
+		  subjectIdentifier: quad first first
+		  verbIdentifier: quad first second
+		  objectIdentifier: quad first third
+		  actionIdentifier: quad first fourth
+		  within: quad first fifth
+		  guard: quad second
+		  propertyBinds: (quad third ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionTaskDefinitionHeader [
+
+	^ self agentIdentifier , (identifier , self agentIdentifier optional
+	   ,
+	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
+	   /
+		   (self actionIdentifier , self agentIdentifier optional
+		    ==> [ :pair | 
+			    { 
+				    pair first shortName.
+				    pair second.
+				    pair first } ]))
+	  , ('within' asPParser trimBlanks , literal ==> #second) optional
+	  ==> [ :triple | 
+		  { 
+			  triple first.
+			  triple second first.
+			  triple second second.
+			  triple second third.
+			  triple third } ]
+]
+
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -803,43 +845,7 @@ RMDGrammar >> subtractionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
 
-	^ self taskDefinitionHeader , self whenClause optional
-	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
-		   , #newline asPParser trimBlanks
-		   ,
-		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
-		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
-	  self bindNodeClass
-		  subjectIdentifier: quad first first
-		  verbIdentifier: quad first second
-		  objectIdentifier: quad first third
-		  actionIdentifier: quad first fourth
-		  within: quad first fifth
-		  guard: quad second
-		  propertyBinds: (quad third ifNil: [ Array new ]) ]
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> taskDefinitionHeader [
-
-	^ self agentIdentifier , (identifier , self agentIdentifier optional
-	   ,
-	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
-	   /
-		   (self actionIdentifier , self agentIdentifier optional
-		    ==> [ :pair | 
-			    { 
-				    pair first shortName.
-				    pair second.
-				    pair first } ]))
-	  , ('within' asPParser trimBlanks , literal ==> #second) optional
-	  ==> [ :triple | 
-		  { 
-			  triple first.
-			  triple second first.
-			  triple second second.
-			  triple second third.
-			  triple third } ]
+	^ self terminalTaskDefinition / self actionTaskDefinition
 ]
 
 { #category : #units }
