@@ -23,3 +23,14 @@ RMDTerminalTaskDefinitionNode >> evalIndividualIn: aRMDInterpreter [
 		aRMDInterpreter terminate: nil ].
 	^ nil
 ]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDTerminalTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
+
+	aRMDInterpreter
+		withContext: (aRMDInterpreter newTypecheckContextForTask: self)
+		do: [ 
+			utilityDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ].
+			guard ifNotNil: [ guard typecheckIn: aRMDInterpreter ].
+			propertyDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ] ]
+]

@@ -8,6 +8,16 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'typical instances' }
+RMDTerminalTaskDefinitionNode class >> goat_die: aString [
+
+	<script:
+	'(RMDTerminalTaskDefinitionNode goat_die: ''10000[kcal]'') asPresenter openWithSpec'>
+	^ ('Goat die
+when my blood_sugar < ', aString, '.')
+		  asRMDTaskDefinition
+]
+
 { #category : #'instance creation' }
 RMDTerminalTaskDefinitionNode class >> subjectIdentifier: agentString1 guard: aRMDConditionNode propertyDefinitions: anArrayOfRMDPropertyDefinitionNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
@@ -17,6 +27,12 @@ RMDTerminalTaskDefinitionNode class >> subjectIdentifier: agentString1 guard: aR
 		  propertyDefinitions: anArrayOfRMDPropertyDefinitionNode;
 		  utilityDefinitions: anArrayOfRMDUtilityDefinitionNode;
 		  yourself
+]
+
+{ #category : #accessing }
+RMDTerminalTaskDefinitionNode >> actionWith: aRMDInterpreter [
+
+	^ self
 ]
 
 { #category : #private }
@@ -34,6 +50,11 @@ RMDTerminalTaskDefinitionNode >> hasObject [
 { #category : #testing }
 RMDTerminalTaskDefinitionNode >> isTerminalTaskDefinitionNode [
 	^ true
+]
+
+{ #category : #accessing }
+RMDTerminalTaskDefinitionNode >> objectIdentifier [
+	^ nil
 ]
 
 { #category : #printing }
@@ -93,4 +114,9 @@ RMDTerminalTaskDefinitionNode >> utilityDefinitions [
 RMDTerminalTaskDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinition [
 
 	utilityDefinitions := anArrayOfRMDUtilityDefinition
+]
+
+{ #category : #accessing }
+RMDTerminalTaskDefinitionNode >> verbIdentifier [
+	^ 'die'
 ]

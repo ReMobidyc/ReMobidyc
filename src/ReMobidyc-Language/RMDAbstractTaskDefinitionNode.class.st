@@ -16,6 +16,12 @@ RMDAbstractTaskDefinitionNode >> = anObject [
 		  subjectIdentifier = anObject subjectIdentifier ]
 ]
 
+{ #category : #accessing }
+RMDAbstractTaskDefinitionNode >> actionWith: aRMDInterpreter [
+
+	^ self subclassResponsibility
+]
+
 { #category : #enumerating }
 RMDAbstractTaskDefinitionNode >> childrenDo: aBlock [
 
