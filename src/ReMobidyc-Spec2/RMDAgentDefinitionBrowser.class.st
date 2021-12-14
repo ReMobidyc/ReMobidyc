@@ -146,119 +146,125 @@ RMDAgentDefinitionBrowser >> editRenderer [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> editTask [
-	taskList selection selectedItem
-		ifNotNil: [ :oldTaskDefinition | 
+
+	taskList selection selectedItem ifNotNil: [ :oldTaskDefinition | 
+		oldTaskDefinition isTaskDefinitionNode ifTrue: [ 
 			| actionDefinitionBrowser |
-			actionDefinitionBrowser := (RMDTaskDefinitionEditor
-				on: simulationModel)
-				taskDefinition: oldTaskDefinition copy;
-				agentName: self agentName;
-				yourself.
-			actionDefinitionBrowser openDialogWithSpec
-				okAction: [ actionDefinitionBrowser taskDefinition
-						ifNotNil: [ :taskDefinition | 
-							simulationModel
-								removeTaskDefinition: oldTaskDefinition ifAbsent: [  ];
-								addTaskDefinition: taskDefinition.
-							self updateTaskList.
-							taskList selectItem: taskDefinition.
-							self updateSourceText ] ] ]
+			actionDefinitionBrowser := (RMDTaskDefinitionEditor on:
+					                            simulationModel)
+				                           taskDefinition: oldTaskDefinition copy;
+				                           agentName: self agentName;
+				                           yourself.
+			actionDefinitionBrowser openDialogWithSpec okAction: [ 
+				actionDefinitionBrowser taskDefinition ifNotNil: [ :taskDefinition | 
+					simulationModel
+						removeTaskDefinition: oldTaskDefinition ifAbsent: [  ];
+						addTaskDefinition: taskDefinition.
+					self updateTaskList.
+					taskList selectItem: taskDefinition.
+					self updateSourceText ] ] ] ]
 ]
 
 { #category : #initialization }
 RMDAgentDefinitionBrowser >> initializePresenters [
+
 	super initializePresenters.
 	propertyList := self newTable
-		beSingleSelection;
-		beResizable;
-		showColumnHeaders;
-		addColumn:
-			(SpStringTableColumn
-				title: 'name'
-				evaluated: [ :item | item identifier ]);
-		addColumn:
-			(SpStringTableColumn
-				title: 'unit'
-				evaluated: [ :item | 
-					| unit |
-					unit := item unit.
-					unit hasDimension
-						ifTrue: [ unit printString ]
-						ifFalse: [ '' ] ]);
-		whenModelChangedDo: [ propertyList selectItem: nil ];
-		whenSelectionChangedDo: [ | selected |
-			selected := propertyList selection selectedItem notNil.
-			removePropertyButton enabled: selected.
-			editPropertyButton enabled: selected ];
-		yourself.
+		                beSingleSelection;
+		                beResizable;
+		                showColumnHeaders;
+		                addColumn: (SpStringTableColumn
+				                 title: 'name'
+				                 evaluated: [ :item | item identifier ]);
+		                addColumn:
+			                (SpStringTableColumn
+				                 title: 'unit'
+				                 evaluated: [ :item | 
+					                 | unit |
+					                 unit := item unit.
+					                 unit hasDimension
+						                 ifTrue: [ unit printString ]
+						                 ifFalse: [ '' ] ]);
+		                whenModelChangedDo: [ propertyList selectItem: nil ];
+		                whenSelectionChangedDo: [ 
+			                | selected |
+			                selected := propertyList selection selectedItem
+				                            notNil.
+			                removePropertyButton enabled: selected.
+			                editPropertyButton enabled: selected ];
+		                yourself.
 	addPropertyButton := self newButton
-		icon: self addIcon;
-		action: [ self addProperty ];
-		yourself.
+		                     icon: self addIcon;
+		                     action: [ self addProperty ];
+		                     yourself.
 	removePropertyButton := self newButton
-		icon: self removeIcon;
-		action: [ self removeProperty ];
-		disable;
-		yourself.
+		                        icon: self removeIcon;
+		                        action: [ self removeProperty ];
+		                        disable;
+		                        yourself.
 	editPropertyButton := self newButton
-		icon: self editIcon;
-		action: [ self editProperty ];
-		disable;
-		yourself.
+		                      icon: self editIcon;
+		                      action: [ self editProperty ];
+		                      disable;
+		                      yourself.
 	rendererList := self newComponentList
-		beSingleSelection;
-		whenModelChangedDo: [ rendererList selectItem: nil ];
-		whenSelectionChangedDo: [ | selected |
-			selected := rendererList selection selectedItem notNil.
-			removeRendererButton enabled: selected.
-			editRendererButton enabled: selected ];
-		yourself.
+		                beSingleSelection;
+		                whenModelChangedDo: [ rendererList selectItem: nil ];
+		                whenSelectionChangedDo: [ 
+			                | selected |
+			                selected := rendererList selection selectedItem
+				                            notNil.
+			                removeRendererButton enabled: selected.
+			                editRendererButton enabled: selected ];
+		                yourself.
 	addRendererButton := self newButton
-		icon: self addIcon;
-		action: [ self addRenderer ];
-		yourself.
+		                     icon: self addIcon;
+		                     action: [ self addRenderer ];
+		                     yourself.
 	removeRendererButton := self newButton
-		icon: self removeIcon;
-		action: [ self removeRenderer ];
-		disable;
-		yourself.
+		                        icon: self removeIcon;
+		                        action: [ self removeRenderer ];
+		                        disable;
+		                        yourself.
 	editRendererButton := self newButton
-		icon: self editIcon;
-		action: [ self editRenderer ];
-		disable;
-		yourself.
+		                      icon: self editIcon;
+		                      action: [ self editRenderer ];
+		                      disable;
+		                      yourself.
 	taskList := self newTable
-		beSingleSelection;
-		beResizable;
-		addColumn: (SpStringTableColumn evaluated: [ :item | item verbIdentifier ]);
-		addColumn:
-			(SpStringTableColumn
-				evaluated: [ :item | item objectIdentifier ifNil: [ '' ] ]);
-		whenModelChangedDo: [ taskList selectItem: nil ];
-		whenSelectionChangedDo: [ | selected |
-			selected := taskList selection selectedItem notNil.
-			removeTaskButton enabled: selected.
-			editTaskButton enabled: selected.
-			self updateSourceText ];
-		yourself.
+		            beSingleSelection;
+		            beResizable;
+		            addColumn:
+			            (SpStringTableColumn evaluated: [ :item | 
+					             item verbIdentifier ]);
+		            addColumn: (SpStringTableColumn evaluated: [ :item | 
+					             item objectIdentifier ifNil: [ '' ] ]);
+		            whenModelChangedDo: [ taskList selectItem: nil ];
+		            whenSelectionChangedDo: [ 
+			            | selected |
+			            selected := taskList selection selectedItem notNil.
+			            removeTaskButton enabled: selected.
+			            editTaskButton enabled: selected.
+			            self updateSourceText ];
+		            yourself.
 	addTaskButton := self newButton
-		icon: self addIcon;
-		action: [ self addTask ];
-		yourself.
+		                 icon: self addIcon;
+		                 action: [ self addTask ];
+		                 yourself.
 	removeTaskButton := self newButton
-		icon: self removeIcon;
-		action: [ self removeTask ];
-		disable;
-		yourself.
+		                    icon: self removeIcon;
+		                    action: [ self removeTask ];
+		                    disable;
+		                    yourself.
 	editTaskButton := self newButton
-		icon: self editIcon;
-		action: [ self editTask ];
-		disable;
-		yourself.
+		                  icon: self editIcon;
+		                  action: [ self editTask ];
+		                  disable;
+		                  yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
-		enabled: false;
-		whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
-		yourself
+		              enabled: false;
+		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
+		              yourself
 ]
 
 { #category : #initialization }

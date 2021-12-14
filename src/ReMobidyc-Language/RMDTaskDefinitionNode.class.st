@@ -27,7 +27,7 @@ where
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
-		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
+		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
 	^ ('Goat eat namely transfer
 when here''s grass > the amount and my blood_sugar < the maximum
 where

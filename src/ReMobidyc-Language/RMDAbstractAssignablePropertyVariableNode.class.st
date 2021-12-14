@@ -60,12 +60,16 @@ RMDAbstractAssignablePropertyVariableNode >> postCopy [
 
 { #category : #printing }
 RMDAbstractAssignablePropertyVariableNode >> printOn: aStream [
-	self agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ :agent | 
-			aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
+
+	propertyVariable isPlaceholderNode
+		ifTrue: [ 'the ' ]
+		ifFalse: [ 
+			self agent
+				ifNil: [ aStream nextPutAll: 'my ' ]
+				ifNotNil: [ :agent | 
+					aStream
+						nextPutAll: agent;
+						nextPutAll: '''s ' ] ].
 	aStream nextPutAll: self operator.
 	aStream nextPutAll: self identifier
 ]
