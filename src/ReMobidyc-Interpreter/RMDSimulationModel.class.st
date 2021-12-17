@@ -21,7 +21,7 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDCellDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
 		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
-		load: (RMDTerminalTaskDefinitionNode goat_die: '1000 [kcal]');
+		load: (RMDTaskDefinitionNode goat_sturve: '1000 [kcal]');
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode

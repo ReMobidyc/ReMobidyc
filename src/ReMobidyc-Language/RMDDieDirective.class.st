@@ -1,16 +1,22 @@
 Class {
-	#name : #RMDTerminalDirective,
+	#name : #RMDDieDirective,
 	#superclass : #RMDLifeDirectiveNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #printing }
-RMDTerminalDirective >> printOn: aStream [
-	^ 'die'
+{ #category : #testing }
+RMDDieDirective >> isDieDirectiveNode [
+	^ true
 ]
 
 { #category : #printing }
-RMDTerminalDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDDieDirective >> printOn: aStream [
+
+	aStream nextPutAll: 'die'
+]
+
+{ #category : #printing }
+RMDDieDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.

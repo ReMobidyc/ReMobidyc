@@ -101,6 +101,14 @@ RMDBuiltinRepository >> repositoryName [
 ]
 
 { #category : #actions }
+RMDBuiltinRepository >> sturve [
+
+	^ 'to sturve is
+	when the energy < the minimum
+	with die.' asRMDActionDefinition
+]
+
+{ #category : #actions }
 RMDBuiltinRepository >> transfer [
 
 	^ 'to transfer is

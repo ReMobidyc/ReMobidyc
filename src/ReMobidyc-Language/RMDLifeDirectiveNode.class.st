@@ -19,6 +19,11 @@ RMDLifeDirectiveNode >> hash [
 	^ self class hash
 ]
 
+{ #category : #testing }
+RMDLifeDirectiveNode >> isLifeDirectiveNode [
+	^ true
+]
+
 { #category : #copying }
 RMDLifeDirectiveNode >> postCopy [
 	

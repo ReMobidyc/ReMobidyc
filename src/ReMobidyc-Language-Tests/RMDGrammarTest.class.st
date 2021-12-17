@@ -147,7 +147,21 @@ where
 	self assert: node isActionDefinitionNode.
 	self assert: node identifier equals: 'chase'.
 	self assert: node object equals: 'target'.
-	self assert: node guard equals: nil.
+	self assert: node guard isNil.
+	self assert: node propertyDefinitions size equals: 1.
+	self assert: node utilityDefinitions size equals: 0.
+	node := grammar actionDefinition
+		parse:
+			'to sturve is
+	when my energy < 1000 [kcal]
+	with die
+	world''s delta population'' = -1.'.
+	self assert: node isActionDefinitionNode.
+	self assert: node identifier equals: 'sturve'.
+	self assert: node object isNil.
+	self assert: node guard notNil.
+	self assert: node lifeDirectives size equals: 1.
+	self assert: node lifeDirectives first isDieDirectiveNode.
 	self assert: node propertyDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0
 ]
@@ -859,46 +873,9 @@ where
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
-	node := RMDGrammar new actionTaskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
+	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
 when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testTerminalTaskDefinition [
-
-	| node |
-	node := grammar terminalTaskDefinition end parse: '
-Goat die
-when my blood_sugar < my sturvation_limit.' trim.
-	self deny: node isPetit2Failure.
-	self assert: node isTerminalTaskDefinitionNode.
-	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node guard isConditionNode.
-	self assert: node propertyDefinitions isEmpty.
-	self assert: node utilityDefinitions isEmpty.
-	node := grammar terminalTaskDefinition end parse: '
-Goat die
-when my blood_sugar < my sturvation_limit
-	here''s delta soil'' = my blood_sugar.' trim.
-	self deny: node isPetit2Failure.
-	self assert: node isTerminalTaskDefinitionNode.
-	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node guard isConditionNode.
-	self assert: node propertyDefinitions size equals: 1.
-	self assert: node utilityDefinitions isEmpty.
-	node := grammar terminalTaskDefinition end parse: '
-Goat die
-when my blood_sugar < my sturvation_limit
-	here''s delta soil'' = my blood_sugar * rate
-where
-	rate = 0.9.' trim.
-	self deny: node isPetit2Failure.
-	self assert: node isTerminalTaskDefinitionNode.
-	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node guard isConditionNode.
-	self assert: node propertyDefinitions size equals: 1.
-	self assert: node utilityDefinitions size equals: 1
 ]
 
 { #category : #tests }

@@ -5,6 +5,7 @@ Class {
 		'identifier',
 		'object',
 		'guard',
+		'lifeDirectives',
 		'propertyDefinitions',
 		'utilityDefinitions'
 	],
@@ -101,14 +102,18 @@ where
 ]
 
 { #category : #'instance creation' }
-RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
+RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
+
 	^ self new
-		identifier: scriptName;
-		object: objectName;
-		guard: aRMDCondition;
-		propertyDefinitions: (anArrayOfRMDPropertyDefinition ifNil: [ Array new ]);
-		utilityDefinitions: (anArrayOfRMDUtilityDefinition ifNil: [ Array new ]);
-		yourself
+		  identifier: scriptName;
+		  object: objectName;
+		  guard: aRMDCondition;
+		  lifeDirectives: anArrayOfRMDLifeDirective;
+		  propertyDefinitions:
+			  (anArrayOfRMDPropertyDefinition ifNil: [ Array new ]);
+		  utilityDefinitions:
+			  (anArrayOfRMDUtilityDefinition ifNil: [ Array new ]);
+		  yourself
 ]
 
 { #category : #'typical instances' }
@@ -139,6 +144,7 @@ RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 				name: ''
 				object: nil
 				guard: nil
+				lifeDirectives: Array new
 				propertyDefinitions: Array new
 				utilityDefinitions: Array new)
 		into: [ :composite :action | 
@@ -183,6 +189,7 @@ RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 								conditions:
 									{guard.
 									aRMDActionDefinitionNode guard} ] ])
+		lifeDirectives: lifeDirectives , aRMDActionDefinitionNode lifeDirectives
 		propertyDefinitions: propertyDefinitions , aRMDActionDefinitionNode propertyDefinitions
 		utilityDefinitions: utilityDefinitions , aRMDActionDefinitionNode utilityDefinitions
 ]
@@ -194,13 +201,16 @@ RMDActionDefinitionNode >> = anObject [
 		  identifier = anObject identifier and: [ 
 			  object = anObject object and: [ 
 				  guard = anObject guard and: [ 
-					  propertyDefinitions = anObject propertyDefinitions and: [ 
-						  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ]
+					  lifeDirectives = anObject lifeDirectives and: [ 
+						  propertyDefinitions = anObject propertyDefinitions and: [ 
+							  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ] ]
 ]
 
 { #category : #enumerating }
 RMDActionDefinitionNode >> childrenDo: aBlock [
+
 	guard ifNotNil: aBlock.
+	lifeDirectives do: aBlock.
 	propertyDefinitions do: aBlock.
 	utilityDefinitions do: aBlock
 ]
@@ -223,8 +233,9 @@ RMDActionDefinitionNode >> hasObject [
 { #category : #comparing }
 RMDActionDefinitionNode >> hash [
 
-	^ (((identifier hash bitXor: object hash) bitXor: guard hash) 
-		   bitXor: propertyDefinitions hash) bitXor: utilityDefinitions hash
+	^ ((((identifier hash bitXor: object hash) bitXor: guard hash) 
+		    bitXor: lifeDirectives hash) bitXor: propertyDefinitions hash) 
+		  bitXor: utilityDefinitions hash
 ]
 
 { #category : #accessing }
@@ -243,6 +254,17 @@ RMDActionDefinitionNode >> isActionDefinitionNode [
 ]
 
 { #category : #accessing }
+RMDActionDefinitionNode >> lifeDirectives [
+	^ lifeDirectives
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> lifeDirectives: anArrayOfRMDLifeDirective [
+
+	lifeDirectives := anArrayOfRMDLifeDirective
+]
+
+{ #category : #accessing }
 RMDActionDefinitionNode >> object [
 	^ object
 ]
@@ -254,44 +276,54 @@ RMDActionDefinitionNode >> object: aString [
 
 { #category : #copying }
 RMDActionDefinitionNode >> postCopy [
+
 	guard := guard ifNotNil: [ guard copy ].
-	propertyDefinitions := propertyDefinitions
-		ifNotNil: [ propertyDefinitions collect: #copy ].
-	utilityDefinitions := utilityDefinitions
-		ifNotNil: [ utilityDefinitions collect: #copy ]
+	lifeDirectives := lifeDirectives ifNotNil: [ 
+		                  lifeDirectives collect: #copy ].
+	propertyDefinitions := propertyDefinitions ifNotNil: [ 
+		                       propertyDefinitions collect: #copy ].
+	utilityDefinitions := utilityDefinitions ifNotNil: [ 
+		                      utilityDefinitions collect: #copy ]
 ]
 
 { #category : #printing }
 RMDActionDefinitionNode >> printOn: aStream [
+
 	aStream
 		nextPutAll: 'to ';
 		nextPutAll: identifier.
-	object
-		ifNotNil: [ aStream
-				nextPut: Character space;
-				nextPutAll: object ].
+	object ifNotNil: [ 
+		aStream
+			nextPut: Character space;
+			nextPutAll: object ].
 	aStream nextPutAll: ' is'.
-	guard notNil
-		ifTrue: [ aStream
-				nextPut: Character cr;
-				nextPutAll: '    when '.
-			guard printOn: aStream ].
-	propertyDefinitions
-		do: [ :def | 
-			aStream
-				nextPut: Character cr;
-				nextPutAll: '    '.
-			def printOn: aStream ].
-	utilityDefinitions
-		ifNotEmpty: [ aStream
-				nextPut: Character cr;
-				nextPutAll: 'where';
-				nextPut: Character cr.
-			utilityDefinitions
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def printOn: aStream ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	guard notNil ifTrue: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    when '.
+		guard printOn: aStream ].
+	lifeDirectives ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    with '.
+		lifeDirectives
+			do: [ :directive | directive printOn: aStream ]
+			separatedBy: [ aStream nextPutAll: ', ' ] ].
+	propertyDefinitions do: [ :def | 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    '.
+		def printOn: aStream ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream
 		nextPut: $.;
 		nextPut: Character cr
@@ -299,51 +331,62 @@ RMDActionDefinitionNode >> printOn: aStream [
 
 { #category : #printing }
 RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream
 		nextPutAll: 'to ';
 		nextPutAll: identifier.
-	object
-		ifNotNil: [ aStream
-				nextPut: Character space;
-				nextPutAll: object ].
+	object ifNotNil: [ 
+		aStream
+			nextPut: Character space;
+			nextPutAll: object ].
 	aStream nextPutAll: ' is'.
-	guard notNil
-		ifTrue: [ aStream
-				nextPut: Character cr;
-				nextPutAll: '    when '.
-			guard
-				printOn: aStream
-				ifIncludedIn: aCollectionOfRMDSyntaxNode
-				addSectionTo: aCollection ].
-	propertyDefinitions
-		do: [ :def | 
-			aStream
-				nextPut: Character cr;
-				nextPutAll: '    '.
-			def
-				printOn: aStream
-				ifIncludedIn: aCollectionOfRMDSyntaxNode
-				addSectionTo: aCollection ].
-	utilityDefinitions
-		ifNotEmpty: [ aStream
-				nextPut: Character cr;
-				nextPutAll: 'where';
-				nextPut: Character cr.
-			utilityDefinitions
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	guard notNil ifTrue: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    when '.
+		guard
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
+	lifeDirectives ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    with '.
+		lifeDirectives
+			do: [ :directive | 
+				directive
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPutAll: ', ' ] ].
+	propertyDefinitions do: [ :def | 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: '    '.
+		def
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream
 		nextPut: $.;
 		nextPut: Character cr.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #accessing }
@@ -367,6 +410,8 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 		ifTrue: [ guard := guard copyReplace: aDictionary ]
 		ifFalse: [ 
 		aDictionary at: guard ifPresent: [ :node | guard := node copy ] ].
+	lifeDirectives := lifeDirectives collect: [ :node | 
+		                  node copyReplace: aDictionary ].
 	propertyDefinitions := propertyDefinitions collect: [ :node | 
 		                       node copyReplace: aDictionary ].
 	utilityDefinitions := utilityDefinitions collect: [ :node | 

@@ -132,6 +132,11 @@ RMDSyntaxNode >> isConjunctionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDieDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDifferential2VariableNode [
 	^ false
 ]
@@ -178,6 +183,11 @@ RMDSyntaxNode >> isLessOrEqualNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isLessThanNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isLifeDirectiveNode [
 	^ false
 ]
 

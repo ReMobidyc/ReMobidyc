@@ -26,18 +26,20 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
-	^ (self actionDefinitionHeaderLine
-		, self whenClause optional
-		, self actionDefinitionPropertyPart
-		, self actionDefinitionUtilityPart optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :quad | 
-			self actionDefinitionNodeClass
-				name: quad first first
-				object: quad first second
-				guard: quad second
-				propertyDefinitions: quad third
-				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
+
+	^ self actionDefinitionHeaderLine , self whenClause optional
+	  , self withClause optional
+	  , self actionDefinitionPropertyPart optional
+	  , self actionDefinitionUtilityPart optional
+	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
+	  ==> [ :array | 
+		  self actionDefinitionNodeClass
+			  name: array first first
+			  object: array first second
+			  guard: array second
+			  lifeDirectives: (array third ifNil: [ Array new ])
+			  propertyDefinitions: (array fourth ifNil: [ Array new ])
+			  utilityDefinitions: (array fifth ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -82,7 +84,7 @@ RMDGrammar >> actionIdentifier [
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionTaskDefinition [
 
-	^ self actionTaskDefinitionHeader , self whenClause optional
+	^ self taskDefinitionHeader , self whenClause optional
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
@@ -98,29 +100,6 @@ RMDGrammar >> actionTaskDefinition [
 		  propertyBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> actionTaskDefinitionHeader [
-
-	^ self agentIdentifier , (identifier , self agentIdentifier optional
-	   ,
-	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
-	   /
-		   (self actionIdentifier , self agentIdentifier optional
-		    ==> [ :pair | 
-			    { 
-				    pair first shortName.
-				    pair second.
-				    pair first } ]))
-	  , ('within' asPParser trimBlanks , literal ==> #second) optional
-	  ==> [ :triple | 
-		  { 
-			  triple first.
-			  triple second first.
-			  triple second second.
-			  triple second third.
-			  triple third } ]
-]
-
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -128,9 +107,9 @@ RMDGrammar >> additionNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
+
 	^ self directionOfGradientDirective / self distanceDirective
-		/ self directionDirective / self timeDirective
-		/ self terminateDirective
+	  / self directionDirective / self timeDirective
 ]
 
 { #category : #'class access' }
@@ -465,6 +444,19 @@ RMDGrammar >> delta [
 	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
 ]
 
+{ #category : #'parsers-directives' }
+RMDGrammar >> dieDirective [
+
+	^ 'die' asPParser trimBlanks
+	  ==> [ :die | self dieDirectiveNodeClass new ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> dieDirectiveNodeClass [
+
+	^ RMDDieDirective
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> differential [
 	^ 'd/dt ' asPParser trimBlanks
@@ -657,6 +649,12 @@ RMDGrammar >> lengthUnits [
 	('mm' -> #(0.001 nil 'm'))} asDictionary
 ]
 
+{ #category : #'parsers-directives' }
+RMDGrammar >> lifeDirective [
+
+	^ self dieDirective
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> literal [
 	^ (($- asPParser optional , #digit asPParser plus
@@ -845,7 +843,43 @@ RMDGrammar >> subtractionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
 
-	^ self terminalTaskDefinition / self actionTaskDefinition
+	^ self taskDefinitionHeader , self whenClause optional
+	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
+		   , #newline asPParser trimBlanks
+		   ,
+		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
+	  self bindNodeClass
+		  subjectIdentifier: quad first first
+		  verbIdentifier: quad first second
+		  objectIdentifier: quad first third
+		  actionIdentifier: quad first fourth
+		  within: quad first fifth
+		  guard: quad second
+		  propertyBinds: (quad third ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> taskDefinitionHeader [
+
+	^ self agentIdentifier , (identifier , self agentIdentifier optional
+	   ,
+	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
+	   /
+		   (self actionIdentifier , self agentIdentifier optional
+		    ==> [ :pair | 
+			    { 
+				    pair first shortName.
+				    pair second.
+				    pair first } ]))
+	  , ('within' asPParser trimBlanks , literal ==> #second) optional
+	  ==> [ :triple | 
+		  { 
+			  triple first.
+			  triple second first.
+			  triple second second.
+			  triple second third.
+			  triple third } ]
 ]
 
 { #category : #units }
@@ -856,37 +890,9 @@ RMDGrammar >> temperatureUnits [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> terminalTaskDefinition [
-
-	^ self terminalTaskDefinitionHeaderLine , self whenClause
-	  , self actionDefinitionPropertyPart optional
-	  , self actionDefinitionUtilityPart optional
-	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
-	  ==> [ :quad | 
-		  self terminalTaskDefinitionNodeClass
-			  subjectIdentifier: quad first
-			  guard: quad second
-			  propertyDefinitions: (quad third ifNil: [ Array new ])
-			  utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> terminalTaskDefinitionHeaderLine [
 
 	^ self agentIdentifier , 'die' asPParser trimBlanks ==> #first
-]
-
-{ #category : #'class access' }
-RMDGrammar >> terminalTaskDefinitionNodeClass [
-
-	^ RMDTerminalTaskDefinitionNode
-]
-
-{ #category : #'parsers-directives' }
-RMDGrammar >> terminateDirective [
-	^ ('terminate' asPParser trimBlanks , identifier optional)
-		==>
-			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
 ]
 
 { #category : #'parsers-atoms' }
@@ -1020,6 +1026,17 @@ RMDGrammar >> whenClause [
 
 	^ #newline asPParser trimBlanks , 'when' asPParser trimBlanks
 	  , condition ==> #third
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> withClause [
+
+	^ #newline asPParser trimBlanks , 'with' asPParser trimBlanks
+	  , (self lifeDirective separatedBy: ',' asPParser trimBlanks)
+	  ==> [ :triple | 
+		  | array |
+		  array := triple third.
+		  (1 to: array size by: 2) collect: [ :index | array at: index ] ]
 ]
 
 { #category : #'parsers-definitions' }

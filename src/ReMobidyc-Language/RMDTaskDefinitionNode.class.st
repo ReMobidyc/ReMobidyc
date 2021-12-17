@@ -1,13 +1,16 @@
 Class {
 	#name : #RMDTaskDefinitionNode,
-	#superclass : #RMDAbstractTaskDefinitionNode,
+	#superclass : #RMDSyntaxNode,
 	#instVars : [
+		'subjectIdentifier',
+		'verbIdentifier',
+		'objectIdentifier',
 		'actionIdentifier',
+		'guard',
 		'range',
 		'propertyBinds',
 		'action',
-		'objectIdentifier',
-		'verbIdentifier'
+		'name'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -50,6 +53,17 @@ where
 ]
 
 { #category : #'typical instances' }
+RMDTaskDefinitionNode class >> goat_sturve: thresholdString [
+
+	<script:
+	'(RMDTaskDefinitionNode goat_sturve: ''1000[kcal/day]'') inspect'>
+	^ ('Goat sturve
+where
+	the energy -> my blood_sugar
+	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_walk_for_grass [
 	<script:
 		'RMDTaskDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
@@ -76,12 +90,13 @@ RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: v
 { #category : #comparing }
 RMDTaskDefinitionNode >> = anObject [
 
-	^ super = anObject and: [ 
-		  verbIdentifier = anObject verbIdentifier and: [ 
-			  objectIdentifier = anObject objectIdentifier and: [ 
-				  range = anObject range and: [ 
-					  propertyBinds = anObject propertyBinds and: [ 
-						  actionIdentifier = anObject actionIdentifier ] ] ] ] ]
+	^ self class = anObject class and: [ 
+		  subjectIdentifier = anObject subjectIdentifier and: [ 
+			  verbIdentifier = anObject verbIdentifier and: [ 
+				  objectIdentifier = anObject objectIdentifier and: [ 
+					  range = anObject range and: [ 
+						  propertyBinds = anObject propertyBinds and: [ 
+							  actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -111,7 +126,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 { #category : #enumerating }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
 
-	super childrenDo: aBlock.
+	guard ifNotNil: [ aBlock value: guard ].
 	range ifNotNil: [ aBlock value: range ].
 	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
@@ -131,6 +146,18 @@ RMDTaskDefinitionNode >> createName [
 				  nextPutAll: objectIdentifier ] ]
 ]
 
+{ #category : #accessing }
+RMDTaskDefinitionNode >> guard [
+
+	^ guard
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> guard: aRMDConditionNode [
+
+	guard := aRMDConditionNode
+]
+
 { #category : #testing }
 RMDTaskDefinitionNode >> hasObject [
 	^ objectIdentifier notNil
@@ -139,14 +166,21 @@ RMDTaskDefinitionNode >> hasObject [
 { #category : #comparing }
 RMDTaskDefinitionNode >> hash [
 
-	^ ((((super hash bitXor: range hash) bitXor: verbIdentifier hash) 
-		    bitXor: objectIdentifier hash) bitXor: propertyBinds hash) 
-		  bitXor: actionIdentifier hash
+	^ (((((self class hash bitXor: subjectIdentifier hash) bitXor:
+		      range hash) bitXor: verbIdentifier hash) bitXor:
+		    objectIdentifier hash) bitXor: propertyBinds hash) bitXor:
+		  actionIdentifier hash
 ]
 
 { #category : #testing }
 RMDTaskDefinitionNode >> isTaskDefinitionNode [
 	^ true
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> name [
+
+	^ name ifNil: [ name := self createName ]
 ]
 
 { #category : #accessing }
@@ -163,9 +197,11 @@ RMDTaskDefinitionNode >> objectIdentifier: aString [
 
 { #category : #copying }
 RMDTaskDefinitionNode >> postCopy [
+
 	range := range ifNotNil: #copy.
-	propertyBinds := propertyBinds
-		ifNotNil: [ propertyBinds collect: #copy ].
+	guard := guard ifNotNil: #copy.
+	propertyBinds := propertyBinds ifNotNil: [ 
+		                 propertyBinds collect: #copy ].
 	action := action ifNotNil: #copy
 ]
 
@@ -274,7 +310,14 @@ RMDTaskDefinitionNode >> range: aRMDLiteral [
 { #category : #rewriting }
 RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 
-	super replaceChildren: aDictionary.
+	aDictionary
+		at: subjectIdentifier
+		ifPresent: [ :node | subjectIdentifier := node copy ].
+	guard ifNotNil: [ 
+		guard := aDictionary
+			         at: guard
+			         ifPresent: #copy
+			         ifAbsent: [ guard copyReplace: aDictionary ] ].
 	aDictionary
 		at: verbIdentifier
 		ifPresent: [ :node | verbIdentifier := node copy ].
@@ -301,9 +344,15 @@ RMDTaskDefinitionNode >> resetAction [
 ]
 
 { #category : #accessing }
+RMDTaskDefinitionNode >> subjectIdentifier [
+	^ subjectIdentifier
+]
+
+{ #category : #accessing }
 RMDTaskDefinitionNode >> subjectIdentifier: aString [
 
-	super subjectIdentifier: aString.
+	subjectIdentifier := aString.
+	name := nil.
 	self resetAction
 ]
 
