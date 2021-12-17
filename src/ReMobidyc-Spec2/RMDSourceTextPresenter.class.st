@@ -4,10 +4,10 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#syntaxNode => SpObservableSlot',
-		'#lastValidSyntaxNode => SpObservableSlot',
-		'#highlights => SpObservableSlot',
-		'#highlightColor => SpObservableSlot',
+		'#syntaxNode => ObservableSlot',
+		'#lastValidSyntaxNode => ObservableSlot',
+		'#highlights => ObservableSlot',
+		'#highlightColor => ObservableSlot',
 		'#parser'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
@@ -15,12 +15,14 @@ Class {
 
 { #category : #api }
 RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
+
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ self beOk.
+		ifTrue: [ 
+			self beOk.
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	self acceptText: aRMDSyntaxNode printString
+	self text: aRMDSyntaxNode printString
 ]
 
 { #category : #private }

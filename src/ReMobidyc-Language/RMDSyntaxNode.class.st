@@ -20,6 +20,13 @@ RMDSyntaxNode >> copyReplace: aDictionary [
 	^ self shallowCopy replaceChildren: aDictionary
 ]
 
+{ #category : #testing }
+RMDSyntaxNode >> hasPlaceholder [
+
+	self nodesDo: [ :node | node isPlaceholderNode ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #comparing }
 RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
@@ -115,7 +122,17 @@ RMDSyntaxNode >> isCellInitializerNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isConditionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
 
@@ -170,6 +187,11 @@ RMDSyntaxNode >> isLessThanNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isLifeDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isLiteralNode [
 	^ false
 ]
@@ -196,6 +218,12 @@ RMDSyntaxNode >> isNotEqualNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isOldNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPlaceholderNode [
+
 	^ false
 ]
 
@@ -275,6 +303,11 @@ RMDSyntaxNode >> isTaskDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isTerminalTaskDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isUnaryMinusNode [
 	^ false
 ]
@@ -315,6 +348,13 @@ RMDSyntaxNode >> nodesSuchThat: condition do: aBlock [
 	(condition value: self)
 		ifTrue: [ aBlock value: self ].
 	self childrenDo: [ :node | node nodesSuchThat: condition do: aBlock ]
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> placeholderNodesDo: aBlock [
+
+	self nodesDo: [ :node | 
+		node isPlaceholderNode ifTrue: [ aBlock cull: node ] ]
 ]
 
 { #category : #copying }

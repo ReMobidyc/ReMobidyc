@@ -3,7 +3,7 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'#image',
-		'#interpreter => SpObservableSlot'
+		'#interpreter => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }

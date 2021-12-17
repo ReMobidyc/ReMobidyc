@@ -10,7 +10,7 @@ RMDActionDefinitionNodeTest >> testCopyReplace [
 	node := parser actionDefinition end
 		parse:
 			'to chase target is
-	presume my energy >= my min_active_energy
+	when my energy >= my min_active_energy
 	my heading'' = target_direction
 	where
 		target_direction = direction target.'.
@@ -28,7 +28,7 @@ RMDActionDefinitionNodeTest >> testCopyReplace [
 			(parser actionDefinition end
 				parse:
 					'to chase target is
-	presume my energy >= 10 [kcal]
+	when my energy >= 10 [kcal]
 	my bearing'' = dir
 	where
 		dir = direction target.')
@@ -40,14 +40,14 @@ RMDActionDefinitionNodeTest >> testPlus [
 	node1 := parser actionDefinition end
 		parse:
 			'to chase target is
-	presume my energy >= my min_active_energy
+	when my energy >= my min_active_energy
 	my heading'' = target_direction
 	where
 		target_direction = direction target.'.
 	node2 := parser actionDefinition end
 		parse:
 			'to run is
-	presume my energy >= my min_active_energy
+	when my energy >= my min_active_energy
 	my x'' = cos(my heading) * d
 	my y'' = sin(my heading) * d
 	where

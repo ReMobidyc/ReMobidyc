@@ -33,17 +33,16 @@ RMDSpeciesInitializerPresenter >> nodeChanged [
 
 { #category : #updating }
 RMDSpeciesInitializerPresenter >> updatePropertyInitializersList [
-	layout
-		ifNotNil: [ (layout presenters
-				select: [ :presenter | presenter isKindOf: RMDPropertyInitializerPresenter ])
-				do: [ :presenter | layout remove: presenter ].
-			node
-				ifNotNil: [ node propertyInitializers
-						do: [ :initializer | 
-							layout
-								add:
-									(initializer asPresenter
-										disableIdentifier;
-										yourself)
-								expand: false ] ] ]
+
+	layout ifNotNil: [ 
+		(layout presenters select: [ :presenter | 
+			 presenter isKindOf: RMDPropertyInitializerPresenter ]) do: [ 
+			:presenter | layout remove: presenter ].
+		node ifNotNil: [ 
+			node propertyInitializers do: [ :initializer | 
+				layout
+					add: (initializer asPresenter
+							 disableIdentifier;
+							 yourself)
+					expand: false ] ] ]
 ]

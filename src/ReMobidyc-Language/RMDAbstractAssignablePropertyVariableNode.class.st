@@ -14,6 +14,14 @@ RMDAbstractAssignablePropertyVariableNode class >> identifier: aString agent: an
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDAbstractAssignablePropertyVariableNode class >> propertyVariable: aRMDPropertyVariableNode [
+
+	^ self new
+		  propertyVariable: aRMDPropertyVariableNode;
+		  yourself
+]
+
 { #category : #comparing }
 RMDAbstractAssignablePropertyVariableNode >> = anObject [
 	^ self class = anObject class
@@ -52,31 +60,39 @@ RMDAbstractAssignablePropertyVariableNode >> postCopy [
 
 { #category : #printing }
 RMDAbstractAssignablePropertyVariableNode >> printOn: aStream [
-	self agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ :agent | 
-			aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
+
+	propertyVariable isPlaceholderNode
+		ifTrue: [ 'the ' ]
+		ifFalse: [ 
+			self agent
+				ifNil: [ aStream nextPutAll: 'my ' ]
+				ifNotNil: [ :agent | 
+					aStream
+						nextPutAll: agent;
+						nextPutAll: '''s ' ] ].
 	aStream nextPutAll: self operator.
 	aStream nextPutAll: self identifier
 ]
 
 { #category : #printing }
 RMDAbstractAssignablePropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
-	self agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ :agent | 
-			aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
+	propertyVariable isPlaceholderNode
+		ifTrue: [ aStream nextPutAll: 'the ' ]
+		ifFalse: [ 
+			self agent
+				ifNil: [ aStream nextPutAll: 'my ' ]
+				ifNotNil: [ :agent | 
+					aStream
+						nextPutAll: agent;
+						nextPutAll: '''s ' ] ].
 	aStream nextPutAll: self operator.
 	aStream nextPutAll: self identifier.
-	((aCollectionOfRMDSyntaxNode includes: self)
-		or: [ aCollectionOfRMDSyntaxNode includes: propertyVariable ])
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	((aCollectionOfRMDSyntaxNode includes: self) or: [ 
+		 aCollectionOfRMDSyntaxNode includes: propertyVariable ]) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #accessing }

@@ -125,7 +125,7 @@ RMDGrammarTest >> testActionDefinition [
 	node := grammar actionDefinition
 		parse:
 			'to walk is
-	presume my energy > 0
+	when my energy > 0
 	my delta x'' = sin(my heading) * walking_distance
 	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
 where
@@ -147,7 +147,21 @@ where
 	self assert: node isActionDefinitionNode.
 	self assert: node identifier equals: 'chase'.
 	self assert: node object equals: 'target'.
-	self assert: node guard equals: nil.
+	self assert: node guard isNil.
+	self assert: node propertyDefinitions size equals: 1.
+	self assert: node utilityDefinitions size equals: 0.
+	node := grammar actionDefinition
+		parse:
+			'to sturve is
+	when my energy < 1000 [kcal]
+	with die
+	world''s delta population'' = -1.'.
+	self assert: node isActionDefinitionNode.
+	self assert: node identifier equals: 'sturve'.
+	self assert: node object isNil.
+	self assert: node guard notNil.
+	self assert: node lifeDirectives size equals: 1.
+	self assert: node lifeDirectives first isDieDirectiveNode.
 	self assert: node propertyDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0
 ]
@@ -272,46 +286,71 @@ RMDGrammarTest >> testApply [
 
 { #category : #tests }
 RMDGrammarTest >> testAssignableDeltaPropertyVariable [
+
 	| variable |
-	variable := grammar assignableDeltaPropertyVariable parse: 'my delta foo'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'my delta foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'my delta Foo'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'my delta Foo'.
 	self assert: variable isPetit2Failure.
 	variable := grammar assignableDeltaPropertyVariable parse: 'my Δfoo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s delta bar'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'foo''s delta bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'foo''s Δbar'.
+	variable := grammar assignableDeltaPropertyVariable parse:
+		            'foo''s Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
-	self assert: variable identifier equals: 'bar'
+	self assert: variable identifier equals: 'bar'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'the Δbar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'.
+	variable := grammar assignableDeltaPropertyVariable parse: 'the delta bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDeltaVariableNode.
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
+
 	| variable |
-	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt foo'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'my d/dt foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDifferentialPropertyVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDifferentialPropertyVariable parse: 'my d/dt X'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'my d/dt X'.
 	self assert: variable isPetit2Failure.
-	variable := grammar assignableDifferentialPropertyVariable parse: 'foo''s d/dt bar'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'foo''s d/dt bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDifferentialPropertyVariableNode.
 	self assert: variable agent equals: 'foo'.
-	self assert: variable identifier equals: 'bar'
+	self assert: variable identifier equals: 'bar'.
+	variable := grammar assignableDifferentialPropertyVariable parse:
+		            'the d/dt bar'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable propertyVariable isPlaceholderNode.
+	self assert: variable propertyVariable identifier equals: 'bar'
 ]
 
 { #category : #tests }
@@ -662,22 +701,41 @@ RMDGrammarTest >> testLiteral [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testPlaceholder [
+
+	| exp |
+	exp := grammar expression parse: 'the expression'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isPlaceholderNode.
+	exp := grammar expression parse: 'the expression + 1'.
+	self deny: exp isPetit2Failure.
+	self assert: exp isAdditionNode.
+	self
+		assert: exp expression1
+		equals: (grammar expression parse: 'the expression').
+	self assert: exp expression2 equals: (grammar expression parse: '1')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPropertyBind [
+
 	| node |
-	node := grammar propertyBind
-		parse: 'my energy -> my sugar'.
+	node := grammar propertyBind parse: 'the energy -> my sugar'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node actionAgent equals: nil.
-	self assert: node actionProperty equals: 'energy'.
-	self assert: node expression equals: (grammar expression parse: 'my sugar').
-	node := grammar propertyBind
-		parse: 'target''s energy -> 10 [m]'.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: 'my sugar').
+	node := grammar propertyBind parse: 'the energy -> 10 [m]'.
 	self deny: node isPetit2Failure.
 	self assert: node isPropertyBindNode.
-	self assert: node actionAgent equals: 'target'.
-	self assert: node actionProperty equals: 'energy'.
-	self assert: node expression equals: (grammar expression parse: '10 [m]')
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: '10 [m]')
 ]
 
 { #category : #tests }
@@ -783,9 +841,11 @@ RMDGrammarTest >> testTaskDefinition [
 	node := grammar taskDefinition end
 		parse:
 			'
-Goat move namely walk@model where
-	my energy -> sugar
-	my speed -> slow_speed.' trim.
+Goat move namely walk@model
+when my blood_sugar > my hunger
+where
+	the energy -> sugar
+	the speed -> slow_speed.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Goat'.
@@ -797,9 +857,9 @@ Goat move namely walk@model where
 	node := grammar taskDefinition
 		parse:
 			'
-Wolf eat Goat within 1[m] where
-	my energy -> sugar
-	food''s energy -> sugar.' trim.
+Wolf eat Goat within 1[m]
+where
+	the energy -> my sugar.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
@@ -807,13 +867,14 @@ Wolf eat Goat within 1[m] where
 	self assert: node actionIdentifier shortName equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node propertyBinds size = 2
+	self assert: node propertyBinds size = 1
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
-	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]'.
+	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
+when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
 ]
 

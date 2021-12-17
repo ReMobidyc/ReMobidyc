@@ -32,12 +32,10 @@ RMDCellExpressionRendererPresenter >> initializePresenters [
 		yourself.
 	borderWidthField := self newNumberInput
 		beInteger;
-		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :width | 
 			renderer borderWidth: width.
 			self valueChanged ].
 	expressionField := self newSyntaxNodeTextInput
-		autoAccept: true;
 		beExpression;
 		whenLastValidSyntaxNodeChangedDo: [ :expression | 
 			renderer expression: expression.

@@ -11,20 +11,16 @@ RMDFunction class >> abs [
 
 { #category : #'instance creation' }
 RMDFunction class >> at: aString [
-	aString = 'abs'
-		ifTrue: [ ^ self abs ].
-	aString = 'cos'
-		ifTrue: [ ^ self cos ].
-	aString = 'max'
-		ifTrue: [ ^ self max ].
-	aString = 'mean'
-		ifTrue: [ ^ self mean ].
-	aString = 'min'
-		ifTrue: [ ^ self min ].
-	aString = 'sin'
-		ifTrue: [ ^ self sin ].
-	aString = 'sum'
-		ifTrue: [ ^ self sum ]
+
+	aString = 'abs' ifTrue: [ ^ self abs ].
+	aString = 'cos' ifTrue: [ ^ self cos ].
+	aString = 'max' ifTrue: [ ^ self max ].
+	aString = 'mean' ifTrue: [ ^ self mean ].
+	aString = 'min' ifTrue: [ ^ self min ].
+	aString = 'sin' ifTrue: [ ^ self sin ].
+	aString = 'sum' ifTrue: [ ^ self sum ].
+	aString = 'positive' ifTrue: [ ^ self positive ].
+	^ KeyNotFound signal: aString
 ]
 
 { #category : #'typical instances' }
@@ -45,6 +41,11 @@ RMDFunction class >> mean [
 { #category : #'typical instances' }
 RMDFunction class >> min [
 	^ RMDMinFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> positive [
+	^ RMDPositiveFunction new
 ]
 
 { #category : #'typical instances' }

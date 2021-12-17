@@ -30,7 +30,7 @@ RMDPropertyDeclarationPresenter >> initializePresenters [
 		beText;
 		autoAccept: true;
 		placeholder: 'identifier';
-		whenTextIsAcceptedDo: [ node
+		whenTextChangedDo: [ node
 				ifNotNil: [ node identifier: identifierField text asString trim ] ];
 		yourself.
 	unitField := self newValidatedTextInput

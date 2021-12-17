@@ -4,8 +4,9 @@ Class {
 	#instVars : [
 		'subjectIdentifier',
 		'verbIdentifier',
-		'actionIdentifier',
 		'objectIdentifier',
+		'actionIdentifier',
+		'guard',
 		'range',
 		'propertyBinds',
 		'action',
@@ -16,65 +17,86 @@ Class {
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
+
 	<script:
-		'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Cell grow namely gain_if_below where
-	my thing -> here''s grass
-	my amount -> ' , amountString
-		,
-			' * delta time
-	my threshold -> ' , maxString , '.') asRMDTaskDefinition
+	'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Cell grow namely gain_upto
+where
+	the thing -> here''s grass
+	the maximum -> ' , maxString , '
+	the amount -> ' , amountString , ' * delta time .') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
-RMDTaskDefinitionNode class >> goat_graze: dietString upto: maxString [
+RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
-		'(RMDTaskDefinitionNode goat_graze: ''1000[kcal/day]'' upto: ''10000[kcal]'') asPresenter openWithSpec'>
-	^ ('Goat eat namely collect_if_below where
-	my thing -> my blood_sugar
-	here''s thing -> here''s grass
-	my threshold -> ', maxString, '
-	my greed -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
+		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Goat eat namely transfer
+when here''s grass > the amount and my blood_sugar < the maximum
+where
+	the destination -> my blood_sugar
+	the source -> here''s grass
+	the maximum -> ', maxString, '
+	the amount -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
-	<script: '(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
-	^ ('Goat respire namely lose where
-	my thing -> my blood_sugar
-	my amount -> min(my blood_sugar, ' , aString , ' * delta time).') asRMDTaskDefinition
+
+	<script:
+	'(RMDTaskDefinitionNode goat_respire: ''2000[kcal/day]'') asPresenter openWithSpec'>
+	^ ('Goat respire namely lose
+where
+	the thing -> my blood_sugar
+	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
+		  asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> goat_sturve: thresholdString [
+
+	<script:
+	'(RMDTaskDefinitionNode goat_sturve: ''1000[kcal/day]'') inspect'>
+	^ ('Goat sturve
+where
+	the energy -> my blood_sugar
+	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_walk_for_grass [
 	<script:
 		'RMDTaskDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
-	^ 'Goat move where
-	my heading -> direction neighbor''s grass
-	my speed -> 1[km/day].' asRMDTaskDefinition
+	^ 'Goat move
+where
+	the heading -> direction neighbor''s grass
+	the speed -> 1[km/day].' asRMDTaskDefinition
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode guard: aRMDConditionNode propertyBinds: anArrayOfRMDPropertyBindNode [
+
 	^ self new
-		subjectIdentifier: agentString1;
-		verbIdentifier: verbString;
-		actionIdentifier: aRMDActionIdentifierNode;
-		objectIdentifier: agentString2;
-		range: aRMDLiteralNode;
-		propertyBinds: anArrayOfRMDPropertyBindNode;
-		yourself
+		  subjectIdentifier: agentString1;
+		  verbIdentifier: verbString;
+		  actionIdentifier: aRMDActionIdentifierNode;
+		  objectIdentifier: agentString2;
+		  range: aRMDLiteralNode;
+		  guard: aRMDConditionNode;
+		  propertyBinds: anArrayOfRMDPropertyBindNode;
+		  yourself
 ]
 
 { #category : #comparing }
 RMDTaskDefinitionNode >> = anObject [
-	^ self class = anObject class
-		and: [ subjectIdentifier = anObject subjectIdentifier
-				and: [ verbIdentifier = anObject verbIdentifier
-						and: [ objectIdentifier = anObject objectIdentifier
-								and: [ range = anObject range
-										and: [ propertyBinds = anObject propertyBinds
-												and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
+
+	^ self class = anObject class and: [ 
+		  subjectIdentifier = anObject subjectIdentifier and: [ 
+			  verbIdentifier = anObject verbIdentifier and: [ 
+				  objectIdentifier = anObject objectIdentifier and: [ 
+					  range = anObject range and: [ 
+						  propertyBinds = anObject propertyBinds and: [ 
+							  actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -85,29 +107,55 @@ RMDTaskDefinitionNode >> actionIdentifier [
 { #category : #accessing }
 RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 	actionIdentifier := aRMDActionIdentifierNode.
-	name := nil.
 	self resetAction
 ]
 
 { #category : #accessing }
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
-	^ action
-		ifNil: [ action := ((actionIdentifier resolveWith: aRMDSimulationModel)
-				copyReplace:
-				(propertyBinds
-				collect: [ :bind | 
-					(RMDPropertyVariableNode
-						identifier: bind actionProperty
-						agent: bind actionAgent) -> bind expression ]) asDictionary)
-				identifier: verbIdentifier;
-				yourself ]
+
+	^ action ifNil: [ 
+		  action := ((actionIdentifier resolveWith: aRMDSimulationModel)
+			             taskGuard: guard;
+			             copyReplace: (propertyBinds collect: [ :bind | 
+						              bind placeholder -> bind replacement ])
+					             asDictionary)
+			            identifier: verbIdentifier;
+			            yourself ]
 ]
 
 { #category : #enumerating }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
+
+	guard ifNotNil: [ aBlock value: guard ].
 	range ifNotNil: [ aBlock value: range ].
 	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
+]
+
+{ #category : #private }
+RMDTaskDefinitionNode >> createName [
+
+	^ String streamContents: [ :stream | 
+		  stream
+			  nextPutAll: subjectIdentifier;
+			  space;
+			  nextPutAll: verbIdentifier.
+		  objectIdentifier ifNotNil: [ 
+			  stream
+				  space;
+				  nextPutAll: objectIdentifier ] ]
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> guard [
+
+	^ guard
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> guard: aRMDConditionNode [
+
+	guard := aRMDConditionNode
 ]
 
 { #category : #testing }
@@ -117,9 +165,11 @@ RMDTaskDefinitionNode >> hasObject [
 
 { #category : #comparing }
 RMDTaskDefinitionNode >> hash [
-	^ ((((subjectIdentifier hash bitXor: verbIdentifier hash)
-		bitXor: objectIdentifier hash) bitXor: range hash)
-		bitXor: propertyBinds hash) bitXor: actionIdentifier hash
+
+	^ (((((self class hash bitXor: subjectIdentifier hash) bitXor:
+		      range hash) bitXor: verbIdentifier hash) bitXor:
+		    objectIdentifier hash) bitXor: propertyBinds hash) bitXor:
+		  actionIdentifier hash
 ]
 
 { #category : #testing }
@@ -129,17 +179,8 @@ RMDTaskDefinitionNode >> isTaskDefinitionNode [
 
 { #category : #accessing }
 RMDTaskDefinitionNode >> name [
-	^ name
-		ifNil: [ name := String
-				streamContents: [ :stream | 
-					stream
-						nextPutAll: subjectIdentifier;
-						space;
-						nextPutAll: verbIdentifier.
-					objectIdentifier
-						ifNotNil: [ stream
-								space;
-								nextPutAll: objectIdentifier ] ] ]
+
+	^ name ifNil: [ name := self createName ]
 ]
 
 { #category : #accessing }
@@ -156,51 +197,61 @@ RMDTaskDefinitionNode >> objectIdentifier: aString [
 
 { #category : #copying }
 RMDTaskDefinitionNode >> postCopy [
+
 	range := range ifNotNil: #copy.
-	propertyBinds := propertyBinds
-		ifNotNil: [ propertyBinds collect: #copy ]
+	guard := guard ifNotNil: #copy.
+	propertyBinds := propertyBinds ifNotNil: [ 
+		                 propertyBinds collect: #copy ].
+	action := action ifNotNil: #copy
 ]
 
 { #category : #printing }
 RMDTaskDefinitionNode >> printOn: aStream [
+
 	aStream
 		nextPutAll: subjectIdentifier;
 		space;
 		nextPutAll: verbIdentifier.
-	objectIdentifier
-		ifNotNil: [ aStream
-				space;
-				nextPutAll: objectIdentifier ].
+	objectIdentifier ifNotNil: [ 
+		aStream
+			space;
+			nextPutAll: objectIdentifier ].
 	aStream
 		space;
 		nextPutAll: 'namely';
 		space.
 	actionIdentifier printOn: aStream.
-	(propertyBinds notNil and: [ propertyBinds notEmpty ])
-		ifTrue: [ aStream
-				space;
-				nextPutAll: 'where';
-				nextPut: Character cr.
-			propertyBinds
-				do: [ :bind | 
-					aStream nextPutAll: '    '.
-					bind printOn: aStream ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	guard ifNotNil: [ 
+		aStream
+			cr;
+			nextPutAll: 'when '.
+		guard printOn: aStream ].
+	(propertyBinds notNil and: [ propertyBinds notEmpty ]) ifTrue: [ 
+		aStream
+			cr;
+			nextPutAll: 'where';
+			cr.
+		propertyBinds
+			do: [ :bind | 
+				aStream nextPutAll: '    '.
+				bind printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
 
 { #category : #printing }
 RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream
 		nextPutAll: subjectIdentifier;
 		space;
 		nextPutAll: verbIdentifier.
-	objectIdentifier
-		ifNotNil: [ aStream
-				space;
-				nextPutAll: objectIdentifier ].
+	objectIdentifier ifNotNil: [ 
+		aStream
+			space;
+			nextPutAll: objectIdentifier ].
 	aStream
 		space;
 		nextPutAll: 'namely';
@@ -209,22 +260,30 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	(propertyBinds notNil and: [ propertyBinds notEmpty ])
-		ifTrue: [ aStream
-				space;
-				nextPutAll: 'where';
-				nextPut: Character cr.
-			propertyBinds
-				do: [ :bind | 
-					aStream nextPutAll: '    '.
-					bind
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	guard ifNotNil: [ 
+		aStream
+			cr;
+			nextPutAll: 'when '.
+		guard
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
+	(propertyBinds notNil and: [ propertyBinds notEmpty ]) ifTrue: [ 
+		aStream
+			cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		propertyBinds
+			do: [ :bind | 
+				aStream nextPutAll: '    '.
+				bind
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $..
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #accessing }
@@ -250,26 +309,33 @@ RMDTaskDefinitionNode >> range: aRMDLiteral [
 
 { #category : #rewriting }
 RMDTaskDefinitionNode >> replaceChildren: aDictionary [
+
 	aDictionary
 		at: subjectIdentifier
 		ifPresent: [ :node | subjectIdentifier := node copy ].
+	guard ifNotNil: [ 
+		guard := aDictionary
+			         at: guard
+			         ifPresent: #copy
+			         ifAbsent: [ guard copyReplace: aDictionary ] ].
 	aDictionary
 		at: verbIdentifier
 		ifPresent: [ :node | verbIdentifier := node copy ].
 	aDictionary
 		at: objectIdentifier
 		ifPresent: [ :node | objectIdentifier := node copy ].
-	range
-		ifNotNil: [ range := aDictionary
-				at: range
-				ifPresent: #copy
-				ifAbsent: [ range copyReplace: aDictionary ] ].
-	propertyBinds := propertyBinds
-		collect: [ :node | node copyReplace: aDictionary ].
+	range ifNotNil: [ 
+		range := aDictionary
+			         at: range
+			         ifPresent: #copy
+			         ifAbsent: [ range copyReplace: aDictionary ] ].
+	propertyBinds := propertyBinds collect: [ :node | 
+		                 node copyReplace: aDictionary ].
 	actionIdentifier := aDictionary
-		at: actionIdentifier
-		ifPresent: #copy
-		ifAbsent: [ actionIdentifier copyReplace: aDictionary ]
+		                    at: actionIdentifier
+		                    ifPresent: #copy
+		                    ifAbsent: [ 
+		                    actionIdentifier copyReplace: aDictionary ]
 ]
 
 { #category : #accessing }
@@ -284,6 +350,7 @@ RMDTaskDefinitionNode >> subjectIdentifier [
 
 { #category : #accessing }
 RMDTaskDefinitionNode >> subjectIdentifier: aString [
+
 	subjectIdentifier := aString.
 	name := nil.
 	self resetAction

@@ -21,19 +21,18 @@ RMDPropertyBindEditor class >> actionDefinition: aRMDActionDefinitionNode except
 
 { #category : #specs }
 RMDPropertyBindEditor class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add:
-			(SpPanedLayout newHorizontal
-				position: 0.4;
-				add:
-					(SpBoxLayout newHorizontal
-						add: #propertyVariableList;
-						add: #replacementIcon width: 48;
-						yourself);
-				add: #expressionField;
-				yourself)
-			height: self inputTextHeight;
-		yourself
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.4;
+				   add: (SpBoxLayout newHorizontal
+						    add: #propertyVariableList;
+						    add: #replacementIcon width: 48;
+						    yourself);
+				   add: #expressionField;
+				   yourself)
+		  height: self inputTextHeight;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -69,7 +68,6 @@ RMDPropertyBindEditor >> initializePresenters [
 		yourself.
 	expressionField := self newSyntaxNodeTextInput
 		beExpression;
-		autoAccept: true;
 		whenSyntaxNodeChangedDo:
 			[ self owner
 				ifNotNil:
@@ -87,38 +85,32 @@ RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
 
 { #category : #accessing }
 RMDPropertyBindEditor >> propertyBindNode [
-	^ propertyVariableList selectedItem
-		ifNotNil: [ :propertyVariable | 
-			expressionField syntaxNode
-				ifNotNil: [ :expression | 
-					RMDPropertyBindNode
-						actionAgent: propertyVariable agent
-						property: propertyVariable identifier
-						expression: expression ] ]
+
+	^ propertyVariableList selectedItem ifNotNil: [ :placeholder | 
+		  expressionField syntaxNode ifNotNil: [ :replacement | 
+			  RMDPropertyBindNode
+				  placeholder: placeholder
+				  replacement: replacement ] ]
 ]
 
 { #category : #accessing }
 RMDPropertyBindEditor >> propertyBindNode: aRMDPropertyBindNode [
+
 	aRMDPropertyBindNode
-		ifNotNil: [ propertyVariableList
-				selectItem:
-					(RMDPropertyVariableNode
-						identifier: aRMDPropertyBindNode actionProperty
-						agent: aRMDPropertyBindNode actionAgent).
-			expressionField syntaxNode: aRMDPropertyBindNode expression ]
-		ifNil: [ propertyVariableList selectItem: nil.
+		ifNotNil: [ 
+			propertyVariableList selectItem: aRMDPropertyBindNode placeholder.
+			expressionField syntaxNode: aRMDPropertyBindNode replacement ]
+		ifNil: [ 
+			propertyVariableList selectItem: nil.
 			expressionField text: '' ]
 ]
 
 { #category : #accessing }
 RMDPropertyBindEditor >> updatePropertyVariableDropList [
+
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].
-	propertyVariableList
-		items:
-			(Array
-				streamContents: [ :stream | 
-					actionDefinitionNode
-						propertyVariableNodesDo: [ :node | 
-							(exceptVariableNodes includes: node)
-								ifFalse: [ stream nextPut: node ] ] ])
+	propertyVariableList items: (Array streamContents: [ :stream | 
+			 actionDefinitionNode placeholderNodesDo: [ :node | 
+				 (exceptVariableNodes includes: node) ifFalse: [ 
+					 stream nextPut: node ] ] ])
 ]

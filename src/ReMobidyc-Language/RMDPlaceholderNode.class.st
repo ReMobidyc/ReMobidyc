@@ -1,0 +1,91 @@
+Class {
+	#name : #RMDPlaceholderNode,
+	#superclass : #RMDSyntaxNode,
+	#instVars : [
+		'identifier'
+	],
+	#category : #'ReMobidyc-Language-AST'
+}
+
+{ #category : #'instance creation' }
+RMDPlaceholderNode class >> identifier: aString [
+
+	^ self new
+		  identifier: aString;
+		  yourself
+]
+
+{ #category : #comparing }
+RMDPlaceholderNode >> = anObject [
+
+	^ self class = anObject class and: [ 
+		  identifier = anObject identifier ]
+]
+
+{ #category : #enumerating }
+RMDPlaceholderNode >> childrenDo: aBlock [
+
+	
+]
+
+{ #category : #comparing }
+RMDPlaceholderNode >> hash [
+
+	^ self class hash bitXor: identifier hash
+]
+
+{ #category : #accessing }
+RMDPlaceholderNode >> identifier [
+
+	^ identifier
+]
+
+{ #category : #accessing }
+RMDPlaceholderNode >> identifier: aString [
+
+	identifier := aString
+]
+
+{ #category : #testing }
+RMDPlaceholderNode >> isPlaceholderNode [
+
+	^ true
+]
+
+{ #category : #copying }
+RMDPlaceholderNode >> postCopy [
+
+	
+]
+
+{ #category : #accessing }
+RMDPlaceholderNode >> precedence [
+	^ 1
+]
+
+{ #category : #printing }
+RMDPlaceholderNode >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'the ';
+		nextPutAll: identifier
+]
+
+{ #category : #printing }
+RMDPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
+	| start |
+	start := aStream position + 1.
+	aStream nextPutAll: 'the '.
+	aStream nextPutAll: identifier.
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
+]
+
+{ #category : #rewriting }
+RMDPlaceholderNode >> replaceChildren: aDictionary [
+
+	aDictionary
+		at: identifier
+		ifPresent: [ :node | identifier := node copy ]
+]

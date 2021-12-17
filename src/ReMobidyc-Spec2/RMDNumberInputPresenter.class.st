@@ -4,8 +4,8 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#number => SpObservableSlot',
-		'#lastValidNumber => SpObservableSlot'
+		'#number => ObservableSlot',
+		'#lastValidNumber => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -17,7 +17,7 @@ RMDNumberInputPresenter >> acceptNumebr: aNumber [
 		ifFalse: [ aNumber asFloat ].
 	lastValidNumber := number.
 	self beOk.
-	self accept: number printString
+	self text: number printString
 ]
 
 { #category : #initialization }

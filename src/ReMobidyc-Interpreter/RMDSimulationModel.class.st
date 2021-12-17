@@ -21,19 +21,20 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDCellDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
 		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
+		load: (RMDTaskDefinitionNode goat_sturve: '1000 [kcal]');
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
 		load:
 			(RMDTaskDefinitionNode
-				goat_graze: '3000 [kcal/day]'
+				goat_eat: '3000 [kcal/day]'
 				upto: '10000[kcal]');
 		load: RMDActionDefinitionNode grow_grass;
 		load:
 			(RMDTaskDefinitionNode
-				cell_grow_grass: '2000[kcal/day]'
+				cell_grow_grass: '1000[kcal/day]'
 				upto: '1000000[kcal]');
 		load:
 			(RMDSimulationDefinitionNode
-				timeDefinition: (RMDSimulationTimeDefinitionNode during: '360[day]' by: '0.5[day]')
+				timeDefinition: (RMDSimulationTimeDefinitionNode during: '2[year]' by: '0.5[day]')
 				worldInitializer: RMDWorldInitializerNode empty
 				cellInitializer:
 					(RMDCellInitializerNode
@@ -45,8 +46,8 @@ RMDSimulationModel class >> sugarScape [
 				animatInitializers:
 					{(RMDAnimatInitializerNode
 						goatInitializer: 100
-						bloodSugar: '500[kcal]'
-						to: '1000[kcal]')});
+						bloodSugar: '5000[kcal]'
+						to: '9000[kcal]')});
 		addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		addRenderer:
 			(RMDCellColorAlphaRenderer
@@ -75,15 +76,16 @@ RMDSimulationModel >> actionNames [
 
 { #category : #adding }
 RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
+
 	actionDefinitions
 		at: aRMDActionDefinitionNode identifier
 		put: aRMDActionDefinitionNode.
-	taskDefinitions
-		do: [ :task | 
-			(task actionIdentifier isLocalActionIdentifierNode
-				and: [ task actionIdentifier shortName
-						= aRMDActionDefinitionNode identifier ])
-				ifTrue: [ task resetAction ] ].
+	taskDefinitions do: [ :task | 
+		task isTaskDefinitionNode ifTrue: [ 
+			(task actionIdentifier isLocalActionIdentifierNode and: [ 
+				 task actionIdentifier shortName
+				 = aRMDActionDefinitionNode identifier ]) ifTrue: [ 
+				task resetAction ] ] ].
 	^ aRMDActionDefinitionNode
 ]
 
@@ -202,6 +204,8 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isActionDefinitionNode
 		ifTrue: [ ^ self addActionDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isTaskDefinitionNode
+		ifTrue: [ ^ self addTaskDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isTerminalTaskDefinitionNode
 		ifTrue: [ ^ self addTaskDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isSimulationDefinitionNode
 		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].

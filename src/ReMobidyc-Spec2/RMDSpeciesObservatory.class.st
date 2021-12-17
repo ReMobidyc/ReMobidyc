@@ -2,7 +2,7 @@ Class {
 	#name : #RMDSpeciesObservatory,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'#interpreter => SpObservableSlot'
+		'#interpreter => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }

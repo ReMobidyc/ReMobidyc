@@ -16,6 +16,13 @@ RMDCellDefinitionNode class >> grassField [
 	grass [kcal].'
 ]
 
+{ #category : #'typical instances' }
+RMDCellDefinitionNode class >> sugarField [
+	<script: 'RMDCellDefinitionNode sugarField inspect'>
+	^ RMDGrammar new cellDefinition end parse: 'Cell with
+	sugar [kcal].'
+]
+
 { #category : #testing }
 RMDCellDefinitionNode >> isCellDefinitionNode [
 	^ true

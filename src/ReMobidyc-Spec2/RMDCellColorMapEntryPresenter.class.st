@@ -51,7 +51,6 @@ RMDCellColorMapEntryPresenter >> initializePresenters [
 					self valueChanged ] ];
 		yourself.
 	minValueField := self newSyntaxNodeTextInput
-		autoAccept: true;
 		beLiteral;
 		whenLastValidSyntaxNodeChangedDo: [ :expression | 
 			association key: expression.

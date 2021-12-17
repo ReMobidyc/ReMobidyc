@@ -44,6 +44,15 @@ RMDFunctionTest >> testMin [
 ]
 
 { #category : #tests }
+RMDFunctionTest >> testPositive [
+	| f |
+	f := RMDFunction positive.
+	self assert: (f value: -10) equals: 0.
+	self assert: (f value: -20.0) equals: 0.0.
+	self assert: (f value: 10) equals: 10
+]
+
+{ #category : #tests }
 RMDFunctionTest >> testSin [
 	| f |
 	f := RMDFunction sin.

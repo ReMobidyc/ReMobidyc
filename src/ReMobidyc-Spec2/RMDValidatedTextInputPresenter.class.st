@@ -4,22 +4,12 @@ Class {
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
-		'#validation => SpObservableSlot',
-		'#lastValidText => SpObservableSlot',
-		'#invalidIsWarning => SpObservableSlot'
+		'#validation => ObservableSlot',
+		'#lastValidText => ObservableSlot',
+		'#invalidIsWarning => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
-
-{ #category : #api }
-RMDValidatedTextInputPresenter >> accept: aStringOrText [
-	(validation notNil and: [ (validation cull: aStringOrText) ~= true ])
-		ifTrue: [ self beInvalid.
-			^ nil ].
-	self beOk.
-	lastValidText := aStringOrText.
-	^ super accept: aStringOrText
-]
 
 { #category : #api }
 RMDValidatedTextInputPresenter >> beInvalid [

@@ -26,28 +26,30 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinition [
-	^ (self actionDefinitionHeaderLine
-		, self actionDefinitionPresumeLine optional
-		, self actionDefinitionPropertyPart
-		, self actionDefinitionUtilityPart optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :quad | 
-			self actionDefinitionNodeClass
-				name: quad first first
-				object: quad first second
-				guard: quad second
-				propertyDefinitions: quad third
-				utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
+
+	^ self actionDefinitionHeaderLine , self whenClause optional
+	  , self withClause optional
+	  , self actionDefinitionPropertyPart optional
+	  , self actionDefinitionUtilityPart optional
+	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
+	  ==> [ :array | 
+		  self actionDefinitionNodeClass
+			  name: array first first
+			  object: array first second
+			  guard: array second
+			  lifeDirectives: (array third ifNil: [ Array new ])
+			  propertyDefinitions: (array fourth ifNil: [ Array new ])
+			  utilityDefinitions: (array fifth ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionHeaderLine [
-	^ ('to' asPParser trimBlanks , identifier trimBlanks
-		, identifier optional , 'is' asPParser trimBlanks
-		, #newline asPParser trimBlanks)
-		==> [ :array | 
-			{array second.
-			array third} ]
+
+	^ 'to' asPParser trimBlanks , identifier trimBlanks
+	  , identifier optional , 'is' asPParser trimBlanks ==> [ :array | 
+	  { 
+		  array second.
+		  array third } ]
 ]
 
 { #category : #'class access' }
@@ -56,29 +58,46 @@ RMDGrammar >> actionDefinitionNodeClass [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> actionDefinitionPresumeLine [
-	^ ('presume' asPParser trimBlanks , condition
-		, #newline asPParser trimBlanks) ==> #second
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionPropertyPart [
-	^ ((self propertyDefinition
-		onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #first
+
+	^ #newline asPParser trimBlanks optional
+	  , (self propertyDefinition onlySeparatedBy:
+			   #newline asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionDefinitionUtilityPart [
-	^ ('where' asPParser trimBlanks , #newline asPParser trimBlanks
-		,
-			(self utilityDefinition onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #third
+
+	^ #newline asPParser trimBlanks , 'where' asPParser trimBlanks
+	  , #newline asPParser trimBlanks
+	  ,
+	  (self utilityDefinition onlySeparatedBy:
+		   #newline asPParser trimBlanks)
+	  , #newline asPParser trimBlanks optional ==> #fourth
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionIdentifier [
 	^ self localActionIdentifier / self builtinActionIdentifier
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionTaskDefinition [
+
+	^ self taskDefinitionHeader , self whenClause optional
+	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
+		   , #newline asPParser trimBlanks
+		   ,
+		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
+	  self bindNodeClass
+		  subjectIdentifier: quad first first
+		  verbIdentifier: quad first second
+		  objectIdentifier: quad first third
+		  actionIdentifier: quad first fourth
+		  within: quad first fifth
+		  guard: quad second
+		  propertyBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -88,9 +107,9 @@ RMDGrammar >> additionNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
+
 	^ self directionOfGradientDirective / self distanceDirective
-		/ self directionDirective / self timeDirective
-		/ self terminateDirective
+	  / self directionDirective / self timeDirective
 ]
 
 { #category : #'class access' }
@@ -114,8 +133,9 @@ RMDGrammar >> agentIdentifier [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentReference [
-	^ (('my' asPParser, #space asPParser) trimBlanks ==> [ :str | nil ])
-		/ ((identifier , '''s ' asPParser trimBlanks) ==> #first)
+
+	^ ('my' asPParser , #space asPParser) trimBlanks ==> [ :str | nil ]
+	  / (identifier , '''s ' asPParser trimBlanks ==> #first)
 ]
 
 { #category : #units }
@@ -196,11 +216,14 @@ RMDGrammar >> applyNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignableDeltaPropertyVariable [
-	^ (agentReference , self delta , identifier)
-		==> [ :triple | 
-			self assignableDeltaPropertyVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
+
+	^ agentReference , self delta , identifier ==> [ :triple | 
+	  self assignableDeltaPropertyVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self delta , identifier ==> [ :triple | 
+		   self assignableDeltaPropertyVariableNodeClass propertyVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
 { #category : #'class access' }
@@ -210,11 +233,15 @@ RMDGrammar >> assignableDeltaPropertyVariableNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignableDifferentialPropertyVariable [
-	^ (agentReference , self differential , identifier)
-		==> [ :triple | 
-			self assignableDifferentialPropertyVariableNodeClass
-				identifier: triple third
-				agent: triple first ]
+
+	^ agentReference , self differential , identifier ==> [ :triple | 
+	  self assignableDifferentialPropertyVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self differential , identifier ==> [ :triple | 
+		   self assignableDifferentialPropertyVariableNodeClass 
+			   propertyVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
 { #category : #'class access' }
@@ -224,9 +251,13 @@ RMDGrammar >> assignableDifferentialPropertyVariableNodeClass [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> assignablePropertyVariable [
-	^ (agentReference , identifier)
-		==>
-			[ :pair | self assignablePropertyVariableNodeClass identifier: pair second agent: pair first ]
+
+	^ agentReference , identifier ==> [ :pair | 
+	  self assignablePropertyVariableNodeClass
+		  identifier: pair second
+		  agent: pair first ] / (self the , identifier ==> [ :pair | 
+	   self assignablePropertyVariableNodeClass propertyVariable:
+		   (self placeholderNodeClass identifier: pair third) ])
 ]
 
 { #category : #'class access' }
@@ -254,12 +285,12 @@ RMDGrammar >> binaryCombinatorFrom: anArray [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> binaryRelation [
-	^ (expression
-		separatedBy:
-			('=' asPParser / '/=' asPParser
-				/ ($< asPParser , $= asPParser optional) flatten
-				/ ($> asPParser , $= asPParser optional) flatten) trimBlanks)
-		==> [ :array | self binaryRelationFrom: array ]
+
+	^ expression , self binaryRelationOperator
+	  , (expression separatedBy: self binaryRelationOperator)
+	  ==> [ :triple | 
+		  self binaryRelationFrom:
+			  (Array with: triple first with: triple second) , triple third ]
 ]
 
 { #category : #'parsers-conditions' }
@@ -295,6 +326,14 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 	^ RMDNotEqualNode
 ]
 
+{ #category : #'parsers-conditions' }
+RMDGrammar >> binaryRelationOperator [
+
+	^ ('=' asPParser / '/=' asPParser
+	   / ($< asPParser , $= asPParser optional) flatten
+	   / ($> asPParser , $= asPParser optional) flatten) trimBlanks
+]
+
 { #category : #'class access' }
 RMDGrammar >> bindNodeClass [
 	^ RMDTaskDefinitionNode
@@ -309,14 +348,6 @@ RMDGrammar >> builtinActionIdentifier [
 { #category : #'class access' }
 RMDGrammar >> builtinActionIdentifierNodeClass [
 	^ RMDBuiltinActionIdentifierNode 
-]
-
-{ #category : #accessing }
-RMDGrammar >> builtins [
-	^ Builtins
-		ifNil:
-			[ Builtins := 'World Cell Animat x y heading North South West East world cell north south east west'
-				substrings asSet ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -371,7 +402,9 @@ RMDGrammar >> cellInitializerNodeClass [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> cond1 [
-	^ ($( asPParser trimBlanks, condition, $) asPParser trimBlanks ==> #second) / self binaryRelation
+
+	^ $( asPParser trimBlanks , condition , $) asPParser trimBlanks
+	  ==> #second / self binaryRelation / self placeholder
 ]
 
 { #category : #'parsers-conditions' }
@@ -392,6 +425,7 @@ RMDGrammar >> cond3 [
 
 { #category : #'parsers-conditions' }
 RMDGrammar >> condition [
+
 	^ self cond3
 ]
 
@@ -408,6 +442,19 @@ RMDGrammar >> definition [
 { #category : #'parsers-atoms' }
 RMDGrammar >> delta [
 	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> dieDirective [
+
+	^ 'die' asPParser trimBlanks
+	  ==> [ :die | self dieDirectiveNodeClass new ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> dieDirectiveNodeClass [
+
+	^ RMDDieDirective
 ]
 
 { #category : #'parsers-atoms' }
@@ -460,16 +507,15 @@ RMDGrammar >> energyUnits [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
-	^ literal
-		/
-			(('-' asPParser trimBlanks optional
-				,
-					(self parenExpression / self agentDirective / self uniformDistribution
-						/ self apply / self propertyVariable / self utilityVariable))
-				==> [ :pair | 
-					pair first
-						ifNil: [ pair second ]
-						ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
+
+	^ literal / ('-' asPParser trimBlanks optional
+	   ,
+		   (self parenExpression / self agentDirective
+		    / self uniformDistribution / self apply / self propertyVariable
+		    / self placeholder / self utilityVariable) ==> [ :pair | 
+	   pair first
+		   ifNil: [ pair second ]
+		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
 ]
 
 { #category : #'parsers-expressions' }
@@ -591,7 +637,7 @@ RMDGrammar >> int [
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
-			[ Keywords := 'nearest distance direction delta is with if where become otherwise time'
+			[ Keywords := 'nearest distance direction delta is with if where become otherwise time my the'
 				substrings asSet ]
 ]
 
@@ -601,6 +647,12 @@ RMDGrammar >> lengthUnits [
 	('m' -> #(1.0 nil 'm')).
 	('cm' -> #(0.01 nil 'm')).
 	('mm' -> #(0.001 nil 'm'))} asDictionary
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> lifeDirective [
+
+	^ self dieDirective
 ]
 
 { #category : #'parsers-atoms' }
@@ -640,6 +692,19 @@ RMDGrammar >> parenExpression [
 	^ ($( asPParser , guardedChoice , $) asPParser) ==> #second
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> placeholder [
+
+	^ 'the' asPParser , #blank asPParser plus , identifier
+	  ==> [ :triple | 
+	  self placeholderNodeClass identifier: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> placeholderNodeClass [
+	^ RMDPlaceholderNode
+]
+
 { #category : #'class access' }
 RMDGrammar >> powerNodeClass [
 	^ RMDPowerNode
@@ -652,13 +717,12 @@ RMDGrammar >> productNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyBind [
-	^ (self agentReference , identifier , '->' asPParser trimBlanks
-		, expression)
-		==> [ :quad | 
-			self propertyBindNodeClass
-				actionAgent: quad first
-				property: quad second
-				expression: quad fourth ]
+
+	^ self placeholder , '->' asPParser trimBlanks , expression
+	  ==> [ :triple | 
+		  self propertyBindNodeClass
+			  placeholder: triple first
+			  replacement: triple third ]
 ]
 
 { #category : #'class access' }
@@ -778,40 +842,44 @@ RMDGrammar >> subtractionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
-	^ (self taskDefinitionHeader
-		,
-			(('where' asPParser trimBlanks , #newline asPParser trimBlanks
-				, (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks))
-				==> #third) optional , $. asPParser trimBlanks)
-		==> [ :triple | 
-			self bindNodeClass
-				subjectIdentifier: triple first first
-				verbIdentifier: triple first second
-				objectIdentifier: triple first third
-				actionIdentifier: triple first fourth
-				within: triple first fifth
-				propertyBinds: (triple second ifNil: [ Array new ]) ]
+
+	^ self taskDefinitionHeader , self whenClause optional
+	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
+		   , #newline asPParser trimBlanks
+		   ,
+		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
+	  self bindNodeClass
+		  subjectIdentifier: quad first first
+		  verbIdentifier: quad first second
+		  objectIdentifier: quad first third
+		  actionIdentifier: quad first fourth
+		  within: quad first fifth
+		  guard: quad second
+		  propertyBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeader [
-	^ (self agentIdentifier
-		,
-			((identifier , self agentIdentifier optional
-				, (('namely' asPParser trimBlanks , self actionIdentifier) ==> #second))
-				/
-					((self actionIdentifier , self agentIdentifier optional)
-						==> [ :pair | 
-							{pair first shortName.
-							pair second.
-							pair first} ]))
-		, (('within' asPParser trimBlanks , literal) ==> #second) optional)
-		==> [ :triple | 
-			{triple first.
-			triple second first.
-			triple second second.
-			triple second third.
-			triple third} ]
+
+	^ self agentIdentifier , (identifier , self agentIdentifier optional
+	   ,
+	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
+	   /
+		   (self actionIdentifier , self agentIdentifier optional
+		    ==> [ :pair | 
+			    { 
+				    pair first shortName.
+				    pair second.
+				    pair first } ]))
+	  , ('within' asPParser trimBlanks , literal ==> #second) optional
+	  ==> [ :triple | 
+		  { 
+			  triple first.
+			  triple second first.
+			  triple second second.
+			  triple second third.
+			  triple third } ]
 ]
 
 { #category : #units }
@@ -821,11 +889,16 @@ RMDGrammar >> temperatureUnits [
 	('F' -> #(0.5555555555555556 255.3722222222222 'J'))} asDictionary
 ]
 
-{ #category : #'parsers-directives' }
-RMDGrammar >> terminateDirective [
-	^ ('terminate' asPParser trimBlanks , identifier optional)
-		==>
-			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+{ #category : #'parsers-definitions' }
+RMDGrammar >> terminalTaskDefinitionHeaderLine [
+
+	^ self agentIdentifier , 'die' asPParser trimBlanks ==> #first
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> the [
+
+	^ 'the' asPParser , #blank asPParser plus ==> #first
 ]
 
 { #category : #'parsers-directives' }
@@ -946,6 +1019,24 @@ RMDGrammar >> weightUnits [
 	('kg' -> #(1 nil 'kg')).
 	('g' -> #(0.001 nil 'kg')).
 	('mg' -> #(0.000001 nil 'kg'))} asDictionary
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> whenClause [
+
+	^ #newline asPParser trimBlanks , 'when' asPParser trimBlanks
+	  , condition ==> #third
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> withClause [
+
+	^ #newline asPParser trimBlanks , 'with' asPParser trimBlanks
+	  , (self lifeDirective separatedBy: ',' asPParser trimBlanks)
+	  ==> [ :triple | 
+		  | array |
+		  array := triple third.
+		  (1 to: array size by: 2) collect: [ :index | array at: index ] ]
 ]
 
 { #category : #'parsers-definitions' }

@@ -31,7 +31,7 @@ Goat is Animat with
 	interpreter load: goat.
 	metabolism := '
 to metabolize is
-presume my sugar >= 0
+when my sugar >= 0
 	my delta sugar'' = - my basal_metabolism.
 ' trim asRMDActionDefinition.
 	interpreter load: metabolism.
@@ -152,9 +152,10 @@ RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
 
 { #category : #directives }
 RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
-	aString = 'direction'
-		ifTrue: [ ^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
-	^ self error: 'Unknown directive: ' , aString
+
+	aString = 'direction' ifTrue: [ 
+		^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
+	^ self unknownDirectiveError: aString
 ]
 
 { #category : #directives }
@@ -201,19 +202,15 @@ RMDInterpreter >> directionOfGradient: aString [
 
 { #category : #directives }
 RMDInterpreter >> directive: aString object: anotherString [
-	aString = 'directionOfGradient'
-		ifTrue: [ ^ self directionOfGradient: anotherString ].
-	aString = 'direction'
-		ifTrue: [ ^ self direction: anotherString ].
-	aString = 'distance'
-		ifTrue: [ ^ self distance: anotherString ].
-	aString = 'time'
-		ifTrue: [ ^ self time ].
-	aString = 'delta time'
-		ifTrue: [ ^ self deltaTime ].
-	aString = 'terminate'
-		ifTrue: [ ^ self terminate: anotherString ].
-	^ self error: 'Unknown directive: ' , aString
+
+	aString = 'directionOfGradient' ifTrue: [ 
+		^ self directionOfGradient: anotherString ].
+	aString = 'direction' ifTrue: [ ^ self direction: anotherString ].
+	aString = 'distance' ifTrue: [ ^ self distance: anotherString ].
+	aString = 'time' ifTrue: [ ^ self time ].
+	aString = 'delta time' ifTrue: [ ^ self deltaTime ].
+	aString = 'terminate' ifTrue: [ ^ self terminate: anotherString ].
+	^ self unknownDirectiveError: aString
 ]
 
 { #category : #directives }
@@ -283,6 +280,7 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 
 { #category : #initialization }
 RMDInterpreter >> initialize [
+
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
 	randomSeed := 1.
@@ -492,15 +490,11 @@ RMDInterpreter >> terminate: aString [
 
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
-	memory
-		remove: anInteger
-		animat: aRMDAnimatDefinitionNode
-		ifAbsent: [ ^ NotFound
-				signal:
-					{aRMDAnimatDefinitionNode.
-					anInteger} ].
-	anInteger to: anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1
-	do: [ :slot | memory nextAt: slot put: nil ]
+
+	memory removeAnimat: anInteger.
+	anInteger to:
+	anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1 do: [ 
+	:slot | memory nextAt: slot put: nil ]
 ]
 
 { #category : #timing }
@@ -532,6 +526,12 @@ RMDInterpreter >> time: aNumber [
 { #category : #simulating }
 RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
+]
+
+{ #category : #directives }
+RMDInterpreter >> unknownDirectiveError: aString [
+
+	^ self error: 'Unknown directive: ' , aString
 ]
 
 { #category : #'context controls' }

@@ -2,8 +2,8 @@ Class {
 	#name : #RMDHighlightingSyntaxNodeTextInputPresenter,
 	#superclass : #RMDSyntaxNodeTextInputPresenter,
 	#instVars : [
-		'#highlights => SpObservableSlot',
-		'#highlightColor => SpObservableSlot'
+		'#highlights => ObservableSlot',
+		'#highlightColor => ObservableSlot'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -39,9 +39,13 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> initialize [
 
 { #category : #api }
 RMDHighlightingSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
+
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ self beOk.
+		ifTrue: [ 
+			aRMDSyntaxNode hasPlaceholder
+				ifTrue: [ self beWarning ]
+				ifFalse: [ self beOk ].
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
 	text := self highlightedTextFrom: aRMDSyntaxNode

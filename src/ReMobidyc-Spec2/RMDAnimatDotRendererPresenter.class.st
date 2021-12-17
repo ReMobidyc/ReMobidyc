@@ -30,7 +30,6 @@ RMDAnimatDotRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	diameterField := self newNumberInput
 		beInteger;
-		autoAccept: true;
 		whenLastValidNumberChangedDo: [ :diameter | 
 			renderer diameter: diameter.
 			self valueChanged ]
