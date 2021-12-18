@@ -335,7 +335,7 @@ RMDMemoryTest >> testRemoveAnimat [
 	goat1 := memory allocateAnimat: animat.
 	goat2 := memory allocateAnimat: animat.
 	memory removeAnimat: goat1.
-	memory commitAllocations.
+	memory commitOuts.
 	self
 		assert: (Array streamContents: [ :stream | 
 				 memory animatsOf: 'Goat' do: [ :goat | stream nextPut: goat ] ])

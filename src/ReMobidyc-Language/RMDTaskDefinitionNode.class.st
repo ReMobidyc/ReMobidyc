@@ -41,6 +41,14 @@ where
 ]
 
 { #category : #'typical instances' }
+RMDTaskDefinitionNode class >> goat_reproduce [
+
+	<script:
+	'(RMDTaskDefinitionNode goat_reproduce) inspect'>
+	^ ('Goat reproduce namely reproduce@model.') asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
 
 	<script:
@@ -59,7 +67,7 @@ RMDTaskDefinitionNode class >> goat_sturve: thresholdString [
 	'(RMDTaskDefinitionNode goat_sturve: ''1000[kcal/day]'') inspect'>
 	^ ('Goat sturve
 where
-	the energy -> my blood_sugar
+	the vitality -> my blood_sugar
 	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
 ]
 
@@ -216,11 +224,13 @@ RMDTaskDefinitionNode >> printOn: aStream [
 		aStream
 			space;
 			nextPutAll: objectIdentifier ].
-	aStream
-		space;
-		nextPutAll: 'namely';
-		space.
-	actionIdentifier printOn: aStream.
+	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
+		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+		aStream
+			space;
+			nextPutAll: 'namely';
+			space.
+		actionIdentifier printOn: aStream ].
 	guard ifNotNil: [ 
 		aStream
 			cr;
@@ -252,14 +262,16 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		aStream
 			space;
 			nextPutAll: objectIdentifier ].
-	aStream
-		space;
-		nextPutAll: 'namely';
-		space.
-	actionIdentifier
-		printOn: aStream
-		ifIncludedIn: aCollectionOfRMDSyntaxNode
-		addSectionTo: aCollection.
+	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
+		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+		aStream
+			space;
+			nextPutAll: 'namely';
+			space.
+		actionIdentifier
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
 	guard ifNotNil: [ 
 		aStream
 			cr;

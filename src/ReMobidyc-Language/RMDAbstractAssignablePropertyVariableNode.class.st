@@ -61,17 +61,11 @@ RMDAbstractAssignablePropertyVariableNode >> postCopy [
 { #category : #printing }
 RMDAbstractAssignablePropertyVariableNode >> printOn: aStream [
 
-	propertyVariable isPlaceholderNode
-		ifTrue: [ 'the ' ]
-		ifFalse: [ 
-			self agent
-				ifNil: [ aStream nextPutAll: 'my ' ]
-				ifNotNil: [ :agent | 
-					aStream
-						nextPutAll: agent;
-						nextPutAll: '''s ' ] ].
-	aStream nextPutAll: self operator.
-	aStream nextPutAll: self identifier
+	aStream
+		nextPutAll: propertyVariable prefix;
+		space;
+		nextPutAll: self operator;
+		nextPutAll: self identifier
 ]
 
 { #category : #printing }
@@ -79,17 +73,11 @@ RMDAbstractAssignablePropertyVariableNode >> printOn: aStream ifIncludedIn: aCol
 
 	| start |
 	start := aStream position + 1.
-	propertyVariable isPlaceholderNode
-		ifTrue: [ aStream nextPutAll: 'the ' ]
-		ifFalse: [ 
-			self agent
-				ifNil: [ aStream nextPutAll: 'my ' ]
-				ifNotNil: [ :agent | 
-					aStream
-						nextPutAll: agent;
-						nextPutAll: '''s ' ] ].
-	aStream nextPutAll: self operator.
-	aStream nextPutAll: self identifier.
+	aStream
+		nextPutAll: propertyVariable prefix;
+		space;
+		nextPutAll: self operator;
+		nextPutAll: self identifier.
 	((aCollectionOfRMDSyntaxNode includes: self) or: [ 
 		 aCollectionOfRMDSyntaxNode includes: propertyVariable ]) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]

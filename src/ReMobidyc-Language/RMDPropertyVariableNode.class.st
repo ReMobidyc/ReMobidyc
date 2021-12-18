@@ -57,28 +57,32 @@ RMDPropertyVariableNode >> precedence [
 	^ 1
 ]
 
+{ #category : #accessing }
+RMDPropertyVariableNode >> prefix [
+
+	^ agent ifNil: [ 'my' ] ifNotNil: [ agent , '''s ' ]
+]
+
 { #category : #printing }
 RMDPropertyVariableNode >> printOn: aStream [
-	agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
-	aStream nextPutAll: identifier
+
+	aStream
+		nextPutAll: self prefix;
+		space;
+		nextPutAll: identifier
 ]
 
 { #category : #printing }
 RMDPropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
-	agent
-		ifNil: [ aStream nextPutAll: 'my ' ]
-		ifNotNil: [ aStream
-				nextPutAll: agent;
-				nextPutAll: '''s ' ].
-	aStream nextPutAll: identifier.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	aStream
+		nextPutAll: self prefix;
+		space;
+		nextPutAll: identifier.
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }

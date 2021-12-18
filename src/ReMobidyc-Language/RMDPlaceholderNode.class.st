@@ -63,11 +63,17 @@ RMDPlaceholderNode >> precedence [
 	^ 1
 ]
 
+{ #category : #accessing }
+RMDPlaceholderNode >> prefix [
+	^ 'the'
+]
+
 { #category : #printing }
 RMDPlaceholderNode >> printOn: aStream [
 
 	aStream
-		nextPutAll: 'the ';
+		nextPutAll: self prefix;
+		space;
 		nextPutAll: identifier
 ]
 
@@ -76,8 +82,10 @@ RMDPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode 
 
 	| start |
 	start := aStream position + 1.
-	aStream nextPutAll: 'the '.
-	aStream nextPutAll: identifier.
+	aStream
+		nextPutAll: self prefix;
+		space;
+		nextPutAll: identifier.
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]

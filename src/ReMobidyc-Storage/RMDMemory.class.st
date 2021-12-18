@@ -83,7 +83,7 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 RMDMemory >> animatsOf: aString do: aBlock [
 
 	(animats at: aString ifAbsent: [ ^ self ]) asArray do: [ :ids | 
-		aBlock value: ids last ]
+		aBlock cull: ids last cull: ids]
 ]
 
 { #category : #accessing }
@@ -137,24 +137,30 @@ RMDMemory >> cellSize: anInteger [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> cellsDo: aBlock [
-	self cellSize > 0
-		ifTrue:
-			[ self cell to: self cellSize * self xCells * self yCells + self cell - 1
-			by: self cellSize do: aBlock ]
+
+	self cellSize > 0 ifTrue: [ 
+		self cell to:
+		self cellSize * self xCells * self yCells + self cell - 1 by:
+		self cellSize do: [ :c | aBlock cull: c cull: (Array with: c) ] ]
 ]
 
 { #category : #allocating }
-RMDMemory >> commitAllocations [
+RMDMemory >> commitIns [
+
+	ins keysAndValuesDo: [ :animatName :individuals | 
+		(animats at: animatName ifAbsentPut: [ Set new: 1024 ]) addAll:
+			individuals ].
+	ins removeAll
+]
+
+{ #category : #allocating }
+RMDMemory >> commitOuts [
 
 	animats keysAndValuesDo: [ :animatName :individuals | 
 		individuals asArray do: [ :individual | 
 			(outs includes: individual last) ifTrue: [ 
 				individuals remove: individual ifAbsent: [  ] ] ] ].
-	outs removeAll.
-	ins keysAndValuesDo: [ :animatName :individuals | 
-		(animats at: animatName ifAbsentPut: [ Set new: 1024 ]) addAll:
-			individuals ].
-	ins removeAll
+	outs removeAll
 ]
 
 { #category : #'accessing-individuals' }
@@ -310,7 +316,7 @@ RMDMemory >> sunrise [
 { #category : #timing }
 RMDMemory >> sunset [
 
-	self commitAllocations.
+	self commitOuts.
 	values keysAndValuesDo: [ :id :value | 
 		nextValues at: id ifAbsentPut: [ value ] ].
 	nextDeltas ifNotEmpty: [ 
@@ -327,7 +333,8 @@ RMDMemory >> sunset [
 	valuesDirty ifTrue: [ self writeValues: values forTime: time ].
 	nextValuesDirty ifTrue: [ 
 		self writeValues: nextValues forTime: time + 1 ].
-	self writeAnimats: animats forTime: time
+	self writeAnimats: animats forTime: time.
+	self commitIns
 ]
 
 { #category : #timing }
@@ -369,7 +376,8 @@ RMDMemory >> world [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> worldDo: aBlock [
-	aBlock value: world
+
+	aBlock cull: world cull: { world }
 ]
 
 { #category : #'accessing-storage' }

@@ -36,31 +36,23 @@ RMDTabularInspector >> updateObservation [
 
 { #category : #private }
 RMDTabularInspector >> updateTable [
+
 	table ifNil: [ ^ self ].
-	self
-		propertyValuesDo: [ :propertyValues | 
-			table
-				columns:
-					(Array
-						streamContents: [ :stream | 
-							stream
-								nextPut:
-									(SpStringTableColumn
-										title: 'ID'
-										evaluated: [ :index | 
-											index isInteger
-												ifTrue: [ (propertyValues ids at: index) printString ]
-												ifFalse: [ index ] ]).
-							propertyValues
-								propertiesDo: [ :propertyDef :values :stats | 
-									stream
-										nextPut:
-											(SpStringTableColumn
-												title: propertyDef printString
-												evaluated: [ :index | 
-													(index isInteger
-														ifTrue: [ values at: index ]
-														ifFalse: [ stats at: index ])
-														printShowingDecimalPlaces: 2 ]) ] ]);
-				items: #(min max mean sd) , (1 to: propertyValues numberOfValues) ]
+	self propertyValuesDo: [ :propertyValues | 
+		table
+			columns: (Array streamContents: [ :stream | 
+						 stream nextPut:
+								 (SpStringTableColumn title: 'ID' evaluated: [ :index | 
+										  index isInteger
+											  ifTrue: [ (propertyValues ids at: index) printString ]
+											  ifFalse: [ index ] ]).
+						 propertyValues propertiesDo: [ :propertyDef :values :stats | 
+								 stream nextPut: (SpStringTableColumn
+											  title: propertyDef printString
+											  evaluated: [ :index | 
+												  (index isInteger
+													   ifTrue: [ values at: index ifAbsent: [ nil ] ]
+													   ifFalse: [ stats at: index ifAbsent: [ nil ] ]) 
+													  ifNotNil: [ :v | v printShowingDecimalPlaces: 2 ] ]) ] ]);
+			items: #( min max mean sd ) , (1 to: propertyValues numberOfValues) ]
 ]

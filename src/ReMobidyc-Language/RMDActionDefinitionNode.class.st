@@ -12,95 +12,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> collect [
-	<script: 'RMDActionDefinitionNode collect inspect'>
-	^ 'to collect is
-	here''s delta thing'' = - amount
-	my delta thing'' = amount
-where
-	amount = min(my greed, here''s thing).
-' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> collect_if_below [
-	<script: 'RMDActionDefinitionNode collect_if_below inspect'>
-	^ 'to collect_if_below is
-	when my thing < my threshold
-	here''s delta thing'' = - amount
-	my delta thing'' = amount
-where
-	amount = min(my greed, here''s thing).
-' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> convert [
-	<script: 'RMDActionDefinitionNode convert inspect'>
-	^ 'to convert is
-	my delta new_form'' = amount
-	my delta old_form'' = -amount
-where
-	amout = my amount.
-' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> diffuse [
-	<script: 'RMDActionDefinitionNode diffuse inspect'>
-	^ 'to diffuse is
-	here''s delta thing'' = amount
-	my delta thing'' = -amount
-where
-	amount = my amount.
-' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> gain [
-	<script: 'RMDActionDefinitionNode lose gain'>
-	^ RMDBuiltinRepository current gain
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> graze [
-	<script: 'RMDActionDefinitionNode graze inspect'>
-	^ 'to graze is
-when here''s grass > 0[kcal] and my energy < my max_energy
-	here''s delta grass'' = -amount
-	my delta energy'' = amount
-where
-	amount = min(my max_energy - my energy, my diet * delta time, here''s grass).
-' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> grow_grass [
-	<script: 'RMDActionDefinitionNode grow_grass inspect'>
-	^ 'to grow_grass is
-when here''s grass < here''s max_grass
-	here''s delta grass'' = min(here''s growth_rate * delta time, here''s max_grass - here''s grass).' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> lose [
-	<script: 'RMDActionDefinitionNode lose inspect'>
-	^ 'to lose is
-	my delta thing'' = - my amount.' asRMDActionDefinition
-]
-
-{ #category : #'typical instances' }
-RMDActionDefinitionNode class >> move [
-	<script: 'RMDActionDefinitionNode move inspect'>
-	^ 'to move is
-	my d/dt x'' = cos(theta) * r
-	my d/dt y'' = sin(theta) * r
-where
-	theta = my heading
-	r = my speed.' asRMDActionDefinition
-]
-
 { #category : #'instance creation' }
 RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 
@@ -117,10 +28,15 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 ]
 
 { #category : #'typical instances' }
-RMDActionDefinitionNode class >> respire [
-	<script: 'RMDActionDefinitionNode respire inspect'>
-	^ 'to respire is
-	my delta energy'' = - my respiration_rate * delta time.' asRMDActionDefinition
+RMDActionDefinitionNode class >> reproduce [
+	<script: 'RMDActionDefinitionNode reproduce inspect'>
+	^ 'to reproduce is
+when my blood_sugar > 9000 [kcal] and uniform 0 to 1 < 0.1 
+with new Goat
+	new x'' = my x + (uniform -1[m] to 1[m])
+	new y'' = my y + (uniform -1[m] to 1[m])
+	new blood_sugar'' = 2000 [kcal]
+	my delta blood_sugar'' = -4000 [kcal].' asRMDActionDefinition
 ]
 
 { #category : #'instance creation' }

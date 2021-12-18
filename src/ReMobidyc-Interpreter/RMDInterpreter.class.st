@@ -314,6 +314,20 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
+{ #category : #directives }
+RMDInterpreter >> newIndividual: animatString [
+
+	| animatDefinition newIndividual |
+	animatDefinition := simulationModel
+		                    animatDefinitionAt: animatString
+		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+	newIndividual := memory
+		                 addAnimat: animatDefinition
+		                 anscestry: context subjectAnscestry.
+	context newIndividual: newIndividual definition: animatDefinition.
+	^ newIndividual
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> numberOfIndivisualsOf: aRMDSpeciesDefinitionNode [
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
@@ -535,66 +549,51 @@ RMDInterpreter >> unknownDirectiveError: aString [
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode do: aBlock [
+RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRMDAnimatDefinitionNode do: aBlock [
+
 	^ self
-		withContext:
-			(RMDActionContext
-				subject: anInteger
-				definition: aRMDAnimatDefinitionNode)
-		do: [ aRMDAnimatDefinitionNode isAnimatDefinitionNode
-				ifTrue: [ | here |
-					here := memory
-						cellAtXIndex:
-							((self
-								cellX:
-									(self
-										readVariable: 'x'
-										agent: nil
-										ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor + 1
-								min: simulationModel cellXDivisions
-								max: 1)
-						yIndex:
-							((self
-								cellY:
-									(self
-										readVariable: 'y'
-										agent: nil
-										ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor + 1
-								min: simulationModel cellYDivisions
-								max: 1).
-					context
-						location: here
-						definition: simulationModel cellDefinition
-						agent: 'here'.
-					memory
-						eastOf: here
-						do: [ :east | 
-							context
-								location: east
-								definition: simulationModel cellDefinition
-								agent: 'east' ].
-					memory
-						westOf: here
-						do: [ :west | 
-							context
-								location: west
-								definition: simulationModel cellDefinition
-								agent: 'west' ].
-					memory
-						southOf: here
-						do: [ :south | 
-							context
-								location: south
-								definition: simulationModel cellDefinition
-								agent: 'south' ].
-					memory
-						northOf: here
-						do: [ :north | 
-							context
-								location: north
-								definition: simulationModel cellDefinition
-								agent: 'north' ] ].
-			aBlock cull: self cull: context ]
+		  withContext: (RMDActionContext
+				   subjectAnscestry: anArrayOfInteger
+				   definition: aRMDAnimatDefinitionNode)
+		  do: [ 
+			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
+				  | here |
+				  here := memory
+					          cellAtXIndex: ((self cellX: (self
+								             readVariable: 'x'
+								             agent: nil
+								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
+						           + 1 min: simulationModel cellXDivisions max: 1)
+					          yIndex: ((self cellY: (self
+								             readVariable: 'y'
+								             agent: nil
+								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
+						           + 1 min: simulationModel cellYDivisions max: 1).
+				  context
+					  location: here
+					  definition: simulationModel cellDefinition
+					  agent: 'here'.
+				  memory eastOf: here do: [ :east | 
+					  context
+						  location: east
+						  definition: simulationModel cellDefinition
+						  agent: 'east' ].
+				  memory westOf: here do: [ :west | 
+					  context
+						  location: west
+						  definition: simulationModel cellDefinition
+						  agent: 'west' ].
+				  memory southOf: here do: [ :south | 
+					  context
+						  location: south
+						  definition: simulationModel cellDefinition
+						  agent: 'south' ].
+				  memory northOf: here do: [ :north | 
+					  context
+						  location: north
+						  definition: simulationModel cellDefinition
+						  agent: 'north' ] ].
+			  aBlock cull: self cull: context ]
 ]
 
 { #category : #'context controls' }

@@ -5,11 +5,24 @@ Class {
 		'action',
 		'utilities',
 		'location',
+		'subjectAnscestry',
 		'object',
-		'objectDefinition'
+		'objectDefinition',
+		'newDefinition',
+		'newIndividual'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
+
+{ #category : #'instance creation' }
+RMDActionContext class >> subjectAnscestry: anArrayOfInteger definition: aRMDSpeciesDefinitionNode [
+
+	^ self new
+		  subject: anArrayOfInteger last
+		  definition: aRMDSpeciesDefinitionNode;
+		  subjectAnscestry: anArrayOfInteger;
+		  yourself
+]
 
 { #category : #accessing }
 RMDActionContext >> action [
@@ -61,6 +74,18 @@ RMDActionContext >> location: anInteger definition: aRMDCellDefinition agent: aS
 ]
 
 { #category : #accessing }
+RMDActionContext >> newIndividual: anInteger definition: aRMDAnimatDefinition [
+
+	| dict |
+	dict := Dictionary new.
+	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+		dict at: identifier put: anInteger + offset ].
+	propertyDict at: 'new' put: dict.
+	newIndividual := anInteger.
+	newDefinition := aRMDAnimatDefinition
+]
+
+{ #category : #accessing }
 RMDActionContext >> object [
 	^ object
 ]
@@ -81,6 +106,18 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 { #category : #accessing }
 RMDActionContext >> objectDefinition [
 	^ objectDefinition
+]
+
+{ #category : #accessing }
+RMDActionContext >> subjectAnscestry [
+
+	^ subjectAnscestry
+]
+
+{ #category : #accessing }
+RMDActionContext >> subjectAnscestry: anArrayOfInteger [
+
+	subjectAnscestry := anArrayOfInteger
 ]
 
 { #category : #'utility access' }

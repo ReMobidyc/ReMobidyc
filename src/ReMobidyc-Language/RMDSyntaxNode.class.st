@@ -207,6 +207,16 @@ RMDSyntaxNode >> isNegationNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isNewDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isNewPropertyVariableNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isNextVariableNode [
 	^ false
 ]

@@ -14,6 +14,17 @@ RMDTypechecker class >> sugarScape [
 	^ typechecker
 ]
 
+{ #category : #directives }
+RMDTypechecker >> newIndividual: animatString [
+
+	| animatDefinition |
+	animatDefinition := simulationModel
+		                    animatDefinitionAt: animatString
+		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+	context newDefinition: animatDefinition.
+	^ animatString
+]
+
 { #category : #'type checking' }
 RMDTypechecker >> newTypecheckContext [
 	^ RMDTypecheckContext new

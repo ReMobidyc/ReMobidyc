@@ -8,7 +8,8 @@ Class {
 		'worldDefinition',
 		'properties',
 		'utilities',
-		'action'
+		'action',
+		'newDefinition'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -55,6 +56,17 @@ RMDTypecheckContext >> loadUtilityDefinitions [
 	utilities := Dictionary new: action utilityDefinitions size.
 	action utilityDefinitions
 		do: [ :def | utilities at: def variable identifier put: def ]
+]
+
+{ #category : #accessing }
+RMDTypecheckContext >> newDefinition: aRMDAnimatDefinitionNode [
+
+	| dict |
+	newDefinition := aRMDAnimatDefinitionNode.
+	dict := Dictionary new.
+	newDefinition propertyUnitsDo: [ :identifier :unit | 
+		dict at: identifier put: (RMDType unit: unit) ].
+	properties at: 'new' put: dict
 ]
 
 { #category : #accessing }

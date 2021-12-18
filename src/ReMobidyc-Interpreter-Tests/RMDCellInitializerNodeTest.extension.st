@@ -27,9 +27,9 @@ RMDCellInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter
 		individualsOf: cellDef
-		do: [ :cell | 
+		do: [ :cell :anscestry | 
 			interpreter
-				withActionContextWithIndividual: cell
+				withActionContextWithIndividual: anscestry
 				species: cellDef
 				do: [ self
 						assert: (interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])

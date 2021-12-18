@@ -42,6 +42,13 @@ RMDBuiltinRepository >> actionNames [
 ]
 
 { #category : #actions }
+RMDBuiltinRepository >> die [
+
+	^ 'to die is
+	with die.' asRMDActionDefinition
+]
+
+{ #category : #actions }
 RMDBuiltinRepository >> gain [
 	^ 'to gain is
 	the delta thing'' = the amount.' asRMDActionDefinition
@@ -104,7 +111,7 @@ RMDBuiltinRepository >> repositoryName [
 RMDBuiltinRepository >> sturve [
 
 	^ 'to sturve is
-	when the energy < the minimum
+	when the vitality < the minimum
 	with die.' asRMDActionDefinition
 ]
 

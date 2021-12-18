@@ -787,7 +787,15 @@ RMDGrammarTest >> testPropertyDefinition [
 	self assert: definition definitionBody isGuardedChoiceNode.
 	self
 		assert: definition definitionBody
-		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3')
+		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3').
+	definition := grammar propertyDefinition
+		parse:
+			'new x'' =	my x'.
+	self deny: definition isPetit2Failure.
+	self assert: definition isPropertyDefinitionNode.
+	self assert: definition variable propertyVariable isNewPropertyVariableNode.
+	self assert: definition definitionBody isPropertyVariableNode .
+
 ]
 
 { #category : #tests }

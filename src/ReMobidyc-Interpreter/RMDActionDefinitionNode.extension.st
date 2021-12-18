@@ -11,6 +11,8 @@ RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDActionDefinitionNode >> typecheckIn: aRMDInterpreter [
+
+	lifeDirectives do: [ :def | def typecheckIn: aRMDInterpreter ].
 	utilityDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ].
 	guard ifNotNil: [ guard typecheckIn: aRMDInterpreter ].
 	propertyDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ]

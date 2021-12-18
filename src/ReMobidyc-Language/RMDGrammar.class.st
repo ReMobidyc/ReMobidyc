@@ -250,6 +250,15 @@ RMDGrammar >> assignableDifferentialPropertyVariableNodeClass [
 ]
 
 { #category : #'parsers-atoms' }
+RMDGrammar >> assignableNewPropertyVariable [
+
+	^ 'new' asPParser , #blank asPParser plus , identifier
+	  ==> [ :triple | 
+		  self assignablePropertyVariableNodeClass propertyVariable:
+			  (self newPropertyVariableNodeClass identifier: triple third) ]
+]
+
+{ #category : #'parsers-atoms' }
 RMDGrammar >> assignablePropertyVariable [
 
 	^ agentReference , identifier ==> [ :pair | 
@@ -652,7 +661,7 @@ RMDGrammar >> lengthUnits [
 { #category : #'parsers-directives' }
 RMDGrammar >> lifeDirective [
 
-	^ self dieDirective
+	^ self dieDirective / self newDirective
 ]
 
 { #category : #'parsers-atoms' }
@@ -685,6 +694,26 @@ RMDGrammar >> localActionIdentifierNodeClass [
 { #category : #'class access' }
 RMDGrammar >> negationNodeClass [
 	^ RMDNegationNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> newDirective [
+
+	^ 'new' asPParser , #blank asPParser plus , self agentIdentifier
+	  ==> [ :triple | 
+	  self newDirectiveNodeClass animatIdentifier: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> newDirectiveNodeClass [
+
+	^ RMDNewDirective
+]
+
+{ #category : #'class access' }
+RMDGrammar >> newPropertyVariableNodeClass [
+
+	^ RMDNewPropertyVariableNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -746,12 +775,15 @@ RMDGrammar >> propertyDeclarationNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
-	^ (self assignableDifferentialPropertyVariable / self assignableDeltaPropertyVariable / self assignablePropertyVariable , $' asPParser trimBlanks
-		, '=' asPParser trimBlanks , guardedChoice)
-		==> [ :quad | 
-			self propertyDefinitionNodeClass
-				variable: quad first
-				expression: quad fourth ]
+
+	^ self assignableDifferentialPropertyVariable
+	  / self assignableDeltaPropertyVariable
+	  / self assignablePropertyVariable
+	  / self assignableNewPropertyVariable , $' asPParser trimBlanks
+	  , '=' asPParser trimBlanks , guardedChoice ==> [ :quad | 
+	  self propertyDefinitionNodeClass
+		  variable: quad first
+		  expression: quad fourth ]
 ]
 
 { #category : #'class access' }

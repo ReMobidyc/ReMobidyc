@@ -27,7 +27,8 @@ RMDSimulationModel class >> sugarScape [
 			(RMDTaskDefinitionNode
 				goat_eat: '3000 [kcal/day]'
 				upto: '10000[kcal]');
-		load: RMDActionDefinitionNode grow_grass;
+		load: RMDActionDefinitionNode reproduce;
+		load: (RMDTaskDefinitionNode goat_reproduce);
 		load:
 			(RMDTaskDefinitionNode
 				cell_grow_grass: '1000[kcal/day]'
