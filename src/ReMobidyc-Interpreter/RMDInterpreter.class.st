@@ -314,7 +314,7 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
-{ #category : #directives }
+{ #category : #'animat operations' }
 RMDInterpreter >> newIndividual: animatString [
 
 	| animatDefinition newIndividual |
@@ -325,6 +325,9 @@ RMDInterpreter >> newIndividual: animatString [
 		                 addAnimat: animatDefinition
 		                 anscestry: context subjectAnscestry.
 	context newIndividual: newIndividual definition: animatDefinition.
+	newIndividual to:
+	newIndividual + animatDefinition totalNumberOfProperties - 1 do: [ 
+	:slot | memory nextAt: slot put: 0.0 ].
 	^ newIndividual
 ]
 
