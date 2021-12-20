@@ -18,13 +18,6 @@ RMDSimulationDefinitionPresenter class >> defaultSpec [
 ]
 
 { #category : #private }
-RMDSimulationDefinitionPresenter >> add: aRMDSyntaxNodeEditor [
-	self theLayout
-		add: aRMDSyntaxNodeEditor
-		height: aRMDSyntaxNodeEditor preferredHeight
-]
-
-{ #category : #private }
 RMDSimulationDefinitionPresenter >> addAnimatInitializer [
 	addAnimatInitializerAction ifNotNil: #value.
 	self nodeChanged
@@ -101,9 +94,4 @@ RMDSimulationDefinitionPresenter >> removeAnimatInitializer: aRMDAnimatInitializ
 	node animatInitializers:
 		(node animatInitializers copyWithout: aRMDAnimatInitializerNode).
 	self nodeChanged
-]
-
-{ #category : #private }
-RMDSimulationDefinitionPresenter >> theLayout [
-	^ layout
 ]
