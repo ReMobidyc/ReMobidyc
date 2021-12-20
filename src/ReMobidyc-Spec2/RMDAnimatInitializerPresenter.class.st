@@ -3,24 +3,26 @@ Class {
 	#superclass : #RMDSpeciesInitializerPresenter,
 	#instVars : [
 		'populationField',
-		'animatField'
+		'animatField',
+		'removeButton',
+		'removeButtonAction'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
 RMDAnimatInitializerPresenter class >> defaultSpec [
+
 	<spec>
 	^ super defaultSpec
-		add:
-			(SpBoxLayout newHorizontal
-				add: #populationField expand: false;
-				add: ' ' expand: false;
-				add: #animatField expand: false;
-				add: ' with' expand: false;
-				yourself)
-			height: self inputTextHeight;
-		yourself
+		  add: (SpBoxLayout newHorizontal
+				   add: #populationField expand: false;
+				   add: ' ' expand: false;
+				   add: #animatField expand: false;
+				   add: ' with' expand: false;
+				   yourself)
+		  height: self inputTextHeight;
+		  yourself
 ]
 
 { #category : #api }
@@ -45,18 +47,56 @@ RMDAnimatInitializerPresenter >> enableAnimat [
 
 { #category : #initialization }
 RMDAnimatInitializerPresenter >> initializePresenters [
+
 	super initializePresenters.
 	populationField := self newNumberInput
-		beInteger;
-		whenLastValidNumberChangedDo: [ :int | 
-			| nat |
-			nat := int max: 1.
-			node ifNotNil: [ node population: nat ].
-			populationField text: nat printString ];
-		yourself.
+		                   beInteger;
+		                   whenLastValidNumberChangedDo: [ :int | 
+			                   | nat |
+			                   nat := int max: 1.
+			                   node ifNotNil: [ node population: nat ].
+			                   populationField text: nat printString ];
+		                   yourself.
 	animatField := self newAnimatInput
-		whenLastValidTextChangedDo: [ :text | node animat: text asString ];
-		yourself
+		               whenLastValidTextChangedDo: [ :text | 
+			               node animat: text asString ];
+		               yourself.
+	removeButton := self newButton
+		                label: '';
+		                icon: Smalltalk ui icons remove;
+		                color: Color white;
+		                borderWidth: 0;
+		                action: [ removeButtonAction cull: node ];
+		                yourself.
+	removeButtonAction := [ :n |  ]
+]
+
+{ #category : #layouting }
+RMDAnimatInitializerPresenter >> newLayout [
+
+	| newLayout |
+	newLayout := SpBoxLayout newVertical
+		             borderWidth: 0;
+		             spacing: 0;
+		             add: (SpBoxLayout newHorizontal
+				              add: populationField expand: false;
+				              add: ' ' asPresenter expand: false;
+				              add: animatField expand: false;
+				              add: ' with' asPresenter expand: false;
+				              yourself)
+		             height: self class inputTextHeight;
+		             yourself.
+
+	node ifNotNil: [ 
+		node propertyInitializers do: [ :initializer | 
+			newLayout
+				add: (initializer asPresenter
+						 disableIdentifier;
+						 yourself)
+				expand: false ].
+		newLayout add:
+			(SpBoxLayout newHorizontal add: removeButton width: 30) ].
+	^ newLayout
 ]
 
 { #category : #accessing }
@@ -74,7 +114,20 @@ RMDAnimatInitializerPresenter >> populationField [
 
 { #category : #accessing }
 RMDAnimatInitializerPresenter >> preferredHeight [
-	^ (node propertyInitializers size + 1) * self class inputTextHeight
+
+	^ node propertyInitializers size + 1 * self class inputTextHeight
+	  + self class buttonHeight
+]
+
+{ #category : #api }
+RMDAnimatInitializerPresenter >> removeButtonAction [
+	^ removeButtonAction
+]
+
+{ #category : #api }
+RMDAnimatInitializerPresenter >> removeButtonAction: aBlock [
+
+	removeButtonAction := aBlock
 ]
 
 { #category : #updating }

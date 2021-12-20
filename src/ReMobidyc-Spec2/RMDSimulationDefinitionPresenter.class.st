@@ -1,6 +1,10 @@
 Class {
 	#name : #RMDSimulationDefinitionPresenter,
 	#superclass : #RMDSyntaxNodePresenter,
+	#instVars : [
+		'addInitializerButton',
+		'addAnimatInitializerAction'
+	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
@@ -20,9 +24,34 @@ RMDSimulationDefinitionPresenter >> add: aRMDSyntaxNodeEditor [
 		height: aRMDSyntaxNodeEditor preferredHeight
 ]
 
+{ #category : #private }
+RMDSimulationDefinitionPresenter >> addAnimatInitializer [
+	addAnimatInitializerAction ifNotNil: #value.
+	self nodeChanged
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionPresenter >> addAnimatInitializerAction [
+
+	^ addAnimatInitializerAction
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionPresenter >> addAnimatInitializerAction: aBlock [
+
+	addAnimatInitializerAction := aBlock
+]
+
 { #category : #initialization }
 RMDSimulationDefinitionPresenter >> initializePresenters [
+
 	super initializePresenters.
+	addInitializerButton := self newButton
+		                        label: '';
+		                        icon: Smalltalk ui icons add;
+		                        action: [ self addAnimatInitializer ];
+		                        color: Color white;
+		                        yourself.
 	self whenBuiltDo: [ self nodeChanged ]
 ]
 
@@ -35,20 +64,43 @@ RMDSimulationDefinitionPresenter >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #accessing }
+RMDSimulationDefinitionPresenter >> newLayout [
+
+	| newLayout |
+	newLayout := SpBoxLayout newVertical
+		             spacing: 10;
+		             yourself.
+	newLayout
+		add: node timeDefinition asPresenter expand: false;
+		add: node worldInitializer asPresenter expand: false;
+		add: node cellInitializer asPresenter expand: false.
+	node animatInitializers do: [ :initializer | 
+		newLayout
+			add: (initializer asPresenter
+					 removeButtonAction: [ self removeAnimatInitializer: initializer ];
+					 yourself)
+			expand: false ].
+	newLayout add: addInitializerButton expand: false.
+	^ newLayout
+]
+
+{ #category : #accessing }
 RMDSimulationDefinitionPresenter >> nodeChanged [
-	layout
-		ifNotNil: [ layout removeAll.
-			self
-				add: node timeDefinition asPresenter;
-				add: node worldInitializer asPresenter;
-				add: node cellInitializer asPresenter.
-			node animatInitializers
-				do: [ :initializer | self add: initializer asPresenter ] ]
+
+	self layout: self newLayout
 ]
 
 { #category : #accessing }
 RMDSimulationDefinitionPresenter >> preferredHeight [
 	^ (layout presenters collect: #preferredHeight) sum
+]
+
+{ #category : #private }
+RMDSimulationDefinitionPresenter >> removeAnimatInitializer: aRMDAnimatInitializerNode [
+
+	node animatInitializers:
+		(node animatInitializers copyWithout: aRMDAnimatInitializerNode).
+	self nodeChanged
 ]
 
 { #category : #private }

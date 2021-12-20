@@ -28,7 +28,7 @@ RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
 { #category : #'instance creation' }
 RMDSimulationTimeDefinitionNode class >> empty [
 	^ self
-		duration: '0 [s]' asRMDExpression
+		duration: '0 [day]' asRMDExpression
 		step: '1 [day]' asRMDExpression
 ]
 

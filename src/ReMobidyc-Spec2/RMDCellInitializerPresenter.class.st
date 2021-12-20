@@ -79,6 +79,35 @@ RMDCellInitializerPresenter >> initializePresenters [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDCellInitializerPresenter >> newLayout [
+
+	| newLayout |
+	newLayout := SpBoxLayout newVertical
+		             borderWidth: 0;
+		             spacing: 0;
+		             add: (SpBoxLayout newHorizontal
+				              add: xDivisionsField expand: false;
+				              add: ' x ' asPresenter expand: false;
+				              add: yDivisionsField expand: false;
+				              add: ' of ' asPresenter expand: false;
+				              add: sizeField width: 80;
+				              add: sizeUnitDropList width: 80;
+				              add: ' Cell with' asPresenter expand: false;
+				              yourself)
+		             height: self class inputTextHeight;
+		             yourself.
+
+	node ifNotNil: [ 
+		node propertyInitializers do: [ :initializer | 
+			newLayout
+				add: (initializer asPresenter
+						 disableIdentifier;
+						 yourself)
+				expand: false ] ].
+	^ newLayout
+]
+
 { #category : #accessing }
 RMDCellInitializerPresenter >> nodeChanged [
 	super nodeChanged.

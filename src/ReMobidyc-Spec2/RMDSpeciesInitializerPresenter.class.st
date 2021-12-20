@@ -26,6 +26,12 @@ RMDSpeciesInitializerPresenter >> initializePresenters [
 			self updatePropertyInitializersList ]
 ]
 
+{ #category : #layouting }
+RMDSpeciesInitializerPresenter >> newLayout [
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDSpeciesInitializerPresenter >> nodeChanged [
 	self updatePropertyInitializersList
@@ -34,15 +40,17 @@ RMDSpeciesInitializerPresenter >> nodeChanged [
 { #category : #updating }
 RMDSpeciesInitializerPresenter >> updatePropertyInitializersList [
 
-	layout ifNotNil: [ 
+	"layout ifNotNil: [ 
 		(layout presenters select: [ :presenter | 
 			 presenter isKindOf: RMDPropertyInitializerPresenter ]) do: [ 
 			:presenter | layout remove: presenter ].
 		node ifNotNil: [ 
 			node propertyInitializers do: [ :initializer | 
 				layout
-					add: (initializer asPresenter
+					addLast: (initializer asPresenter
 							 disableIdentifier;
 							 yourself)
-					expand: false ] ] ]
+					expand: false ].
+			layout addLast: removeButton expand: false ] ]"
+	self layout: self newLayout
 ]
