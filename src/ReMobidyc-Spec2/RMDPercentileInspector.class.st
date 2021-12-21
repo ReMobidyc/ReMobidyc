@@ -109,7 +109,7 @@ RMDPercentileInspector >> updateImage [
 		fontHeight := font height.
 		chartHeight := 200.
 		chartWidth := 300.
-		self withWidgetDo: [ :w | chartWidth := w extent x - 50 ].
+		self withWidgetDo: [ :w | chartWidth := w extent x ].
 		self propertyValuesDo: [ :propertyValues | 
 			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
 				(visibleProperties includes: propertyDef identifier)
@@ -127,8 +127,7 @@ RMDPercentileInspector >> updateImage [
 							expand: false.
 
 						form := Form
-							        extent:
-							        chartWidth @ (chartHeight + fontHeight + fontHeight)
+							        extent: chartWidth @ (chartHeight + fontHeight)
 							        depth: 32.
 						canvas := form getCanvas.
 						canvas fillColor: Color white.
@@ -147,21 +146,15 @@ RMDPercentileInspector >> updateImage [
 								to: form width * 3 // 4 @ (form height - fontHeight)
 								width: 1
 								color: Color lightGray ].
-						canvas
-							fillRectangle: (0 @ 0 extent: chartWidth @ fontHeight)
-							color: (Color gray: 0.9);
-							drawString: propertyDef printString
-							at: 0 @ 0
-							font: font
-							color: Color black.
+
 						resolution := values size min: chartWidth.
 						min := stats at: #min.
 						max := stats at: #max.
 						min = max
 							ifTrue: [ 
 								canvas
-									line: 0 @ (chartHeight // 2 + fontHeight)
-									to: chartWidth @ (chartHeight // 2 + fontHeight)
+									line: 0 @ (chartHeight // 2)
+									to: chartWidth @ (chartHeight // 2)
 									width: 1
 									color: Color black.
 								(showsMin state or: [ showsMax state or: [ showsMean state ] ]) 
@@ -169,7 +162,7 @@ RMDPercentileInspector >> updateImage [
 										canvas
 											drawString:
 											((stats at: #mean) printShowingDecimalPlaces: 2)
-											at: 10 @ (chartHeight // 2 + fontHeight + 2)
+											at: 10 @ (chartHeight // 2 + 2)
 											font: font
 											color: Color black ] ]
 							ifFalse: [ 
@@ -178,19 +171,19 @@ RMDPercentileInspector >> updateImage [
 									canvas
 										drawString:
 										'min=' , ((stats at: #min) printShowingDecimalPlaces: 2)
-										at: 10 @ chartHeight
+										at: 10 @ (chartHeight - fontHeight)
 										font: font
 										color: Color black ].
 								showsMax state ifTrue: [ 
 									canvas
 										drawString:
 										'max=' , ((stats at: #max) printShowingDecimalPlaces: 2)
-										at: 10 @ fontHeight
+										at: 10 @ 0
 										font: font
 										color: Color black ].
 								vmean := stats at: #mean.
 								ymean := vmean - min * chartHeight / (min - max) asFloat
-								         + fontHeight + chartHeight.
+								         + chartHeight.
 								(showsMean state or: [ showsSd state ]) ifTrue: [ 
 									canvas
 										line: 0 @ ymean
@@ -207,7 +200,7 @@ RMDPercentileInspector >> updateImage [
 								showsSd state ifTrue: [ 
 									vsd := vmean + (stats at: #sd).
 									ysd := vsd - min * chartHeight / (min - max) asFloat
-									       + fontHeight + chartHeight.
+									       + chartHeight.
 									canvas
 										drawString:
 										'sigma=' , ((stats at: #sd) printShowingDecimalPlaces: 2)
@@ -241,7 +234,7 @@ RMDPercentileInspector >> updateImage [
 										color: Color lightGray.
 									vsd := vmean - (stats at: #sd).
 									ysd := vsd - min * chartHeight / (min - max) asFloat
-									       + fontHeight + chartHeight.
+									       + chartHeight.
 									canvas
 										line: 0 @ ysd
 										to: chartWidth @ ysd
@@ -258,17 +251,17 @@ RMDPercentileInspector >> updateImage [
 									canvas
 										line: i * chartWidth / resolution asFloat
 											@
-												(value0 - min * chartHeight / (min - max) asFloat
-												 + fontHeight + chartHeight)
+											(value0 - min * chartHeight / (min - max) asFloat
+											 + chartHeight)
 										to: i + 1 * chartWidth / resolution asFloat
 											@
-												(value1 - min * chartHeight / (min - max) asFloat
-												 + fontHeight + chartHeight)
+											(value1 - min * chartHeight / (min - max) asFloat
+											 + chartHeight)
 										width: 1
 										color: Color blue darker ] ].
 						canvas
 							fillRectangle:
-							(0 @ (chartHeight + fontHeight) extent: chartWidth @ fontHeight)
+							(0 @ chartHeight extent: chartWidth @ fontHeight)
 							color: (Color gray: 0.9).
 						box add: form asPresenter height: form height ]
 					ifFalse: [ 

@@ -51,6 +51,21 @@ RMDAnimatPercentileInspector >> initializePresenters [
 ]
 
 { #category : #private }
+RMDAnimatPercentileInspector >> newLayout [
+
+	^ SpBoxLayout newVertical
+		  add: populationLabel height: self class buttonHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: showsPercentiles;
+				   add: showsMin;
+				   add: showsMax;
+				   add: showsMean;
+				   add: showsSd)
+		  height: self class buttonHeight;
+		  yourself
+]
+
+{ #category : #private }
 RMDAnimatPercentileInspector >> updateObservation [
 
 	self updatePopulationLabel.

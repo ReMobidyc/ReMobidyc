@@ -86,23 +86,25 @@ RMDObservatory >> basicInformServer [
 
 { #category : #private }
 RMDObservatory >> cellInspector [
+
 	^ self newNotebook
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDCellTabularInspector new interpreter: interpreter ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Table';
-				yourself);
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDCellPercentileInspector new
-						interpreter: interpreter;
-						updateObservation;
-						yourself ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Percentile';
-				yourself);
-		yourself
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDCellTabularInspector new interpreter: interpreter ];
+				   whenRetrievedDo: [ :content | content updateObservation ];
+				   title: 'Table';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDCellPercentileInspector new
+								    interpreter: interpreter;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Percentile';
+				   yourself);
+		  yourself
 ]
 
 { #category : #api }
@@ -302,20 +304,22 @@ RMDObservatory >> updateTimeLabel [
 
 { #category : #private }
 RMDObservatory >> worldInspector [
+
 	^ self newNotebook
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDWorldTabularInspector new interpreter: interpreter ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Table';
-				yourself);
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDWorldPercentileInspector new
-						interpreter: interpreter updateObservation;
-						yourself ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Percentile';
-				yourself);
-		yourself
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDWorldTabularInspector new interpreter: interpreter ];
+				   whenRetrievedDo: [ :content | content updateObservation ];
+				   title: 'Table';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDWorldPercentileInspector new
+								    interpreter: interpreter updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Percentile';
+				   yourself);
+		  yourself
 ]
