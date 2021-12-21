@@ -10,6 +10,9 @@ Class {
 		'addRepositoryButton',
 		'removeRepositoryButton',
 		'editRepositoryButton',
+		'addActionButton',
+		'removeActionButton',
+		'editActionButton',
 		'verbIdentifierField',
 		'objectIdentifierField',
 		'replacementList',
@@ -44,6 +47,12 @@ RMDTaskDefinitionEditor class >> defaultSpec [
 						    add: (SpBoxLayout newVertical
 								     add: 'Actions' expand: false;
 								     add: #actionList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addActionButton width: self buttonHeight;
+										      add: #removeActionButton width: self buttonHeight;
+										      add: #editActionButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
 								     yourself);
 						    yourself);
 				   add: (SpBoxLayout newVertical
@@ -122,6 +131,11 @@ RMDTaskDefinitionEditor >> actionIdentifier [
 ]
 
 { #category : #operations }
+RMDTaskDefinitionEditor >> addAction [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
 RMDTaskDefinitionEditor >> addReplacement [
 
 	self taskDefinition ifNotNil: [ :taskDefinition | 
@@ -154,6 +168,15 @@ RMDTaskDefinitionEditor >> agentName [
 { #category : #accessing }
 RMDTaskDefinitionEditor >> agentName: aString [
 	agentName := aString
+]
+
+{ #category : #operations }
+RMDTaskDefinitionEditor >> editAction [
+
+	self actionDefinition ifNotNil: [ :oldActionDef | 
+		| newActionDef |
+		newActionDef := oldActionDef copy.
+		newActionDef asPresenter openWithSpec ]
 ]
 
 { #category : #operations }
@@ -199,7 +222,9 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                  beSingleSelection;
 		                  whenModelChangedDo: [ 
 			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ self updateActionList ];
+		                  whenSelectionChangedDo: [ 
+			                  self
+				                  updateActionList ];
 		                  display: [ :item | item repositoryName ];
 		                  yourself.
 	addRepositoryButton := self newButton
@@ -231,6 +256,7 @@ RMDTaskDefinitionEditor >> initializePresenters [
 							               '' ] ]);
 		              whenModelChangedDo: [ actionList selectItem: nil ];
 		              whenSelectionChangedDo: [ 
+								self updateActionButtons.
 			              self updateTaskDefinition.
 			              self taskDefinition ifNotNil: [ :taskDefinition | 
 					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
@@ -241,6 +267,20 @@ RMDTaskDefinitionEditor >> initializePresenters [
 						              updateReplacementList;
 						              updateSourceText ] ];
 		              yourself.
+	addActionButton := self newButton
+		                   icon: self addIcon;
+		                   action: [ self addAction ];
+		                   yourself.
+	removeActionButton := self newButton
+		                      icon: self removeIcon;
+		                      action: [ self removeAction ];
+		                      disable;
+		                      yourself.
+	editActionButton := self newButton
+		                    icon: self editIcon;
+		                    action: [ self editAction ];
+		                    disable;
+		                    yourself.
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
 		                enabled: false;
 		                whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
@@ -325,6 +365,11 @@ RMDTaskDefinitionEditor >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #operations }
+RMDTaskDefinitionEditor >> removeAction [
+	^ self notYetImplemented
+]
+
+{ #category : #operations }
 RMDTaskDefinitionEditor >> removeReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :bind | 
@@ -392,6 +437,15 @@ RMDTaskDefinitionEditor >> taskDefinitionChanged [
 		ifNil: [ repositoryList selectItem: nil ].
 	self updateReplacementList.
 
+]
+
+{ #category : #updating }
+RMDTaskDefinitionEditor >> updateActionButtons [
+
+	| selected |
+	selected := actionList selection selectedItem notNil.
+	removeActionButton enabled: selected.
+	editActionButton enabled: selected
 ]
 
 { #category : #updating }

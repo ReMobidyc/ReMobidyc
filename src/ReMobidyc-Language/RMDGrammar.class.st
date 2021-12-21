@@ -135,6 +135,9 @@ RMDGrammar >> agentIdentifier [
 RMDGrammar >> agentReference [
 
 	^ ('my' asPParser , #space asPParser) trimBlanks ==> [ :str | nil ]
+	  /
+	  (('new' asPParser , #space asPParser) trimBlanks
+	   ==> [ :str | #new ])
 	  / (identifier , '''s ' asPParser trimBlanks ==> #first)
 ]
 
@@ -272,6 +275,14 @@ RMDGrammar >> assignablePropertyVariable [
 { #category : #'class access' }
 RMDGrammar >> assignablePropertyVariableNodeClass [
 	^ RMDAssignablePropertyVariableNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> assignableVariable [
+
+	^ self assignableDifferentialPropertyVariable
+	  / self assignableDeltaPropertyVariable
+	  / self assignablePropertyVariable
 ]
 
 { #category : #'parsers-conditions' }
@@ -776,10 +787,7 @@ RMDGrammar >> propertyDeclarationNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> propertyDefinition [
 
-	^ self assignableDifferentialPropertyVariable
-	  / self assignableDeltaPropertyVariable
-	  / self assignablePropertyVariable
-	  / self assignableNewPropertyVariable , $' asPParser trimBlanks
+	^ self assignableVariable , $' asPParser trimBlanks
 	  , '=' asPParser trimBlanks , guardedChoice ==> [ :quad | 
 	  self propertyDefinitionNodeClass
 		  variable: quad first

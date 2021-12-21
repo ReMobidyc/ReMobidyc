@@ -317,7 +317,7 @@ RMDInterpreter >> memory [
 { #category : #'animat operations' }
 RMDInterpreter >> newIndividual: animatString [
 
-	| animatDefinition newIndividual |
+	| animatDefinition newIndividual offset |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
 		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
@@ -325,9 +325,14 @@ RMDInterpreter >> newIndividual: animatString [
 		                 addAnimat: animatDefinition
 		                 anscestry: context subjectAnscestry.
 	context newIndividual: newIndividual definition: animatDefinition.
-	newIndividual to:
-	newIndividual + animatDefinition totalNumberOfProperties - 1 do: [ 
-	:slot | memory nextAt: slot put: 0.0 ].
+	offset := 0.
+	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
+		memory nextAt: newIndividual + offset put: (self
+				 readVariable: propertyDecl identifier
+				 agent: nil
+				 ifAbsent: [ 0.0 ]).
+		offset := offset + 1 ].
+
 	^ newIndividual
 ]
 

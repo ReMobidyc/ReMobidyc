@@ -8,12 +8,12 @@ Class {
 
 { #category : #icons }
 RMDPresenter >> addIcon [
-	^ Smalltalk ui icons iconNamed: #smallAdd
+	^ Smalltalk ui icons add
 ]
 
 { #category : #icons }
 RMDPresenter >> editIcon [
-	^ Smalltalk ui icons iconNamed: #smallConfiguration
+	^ Smalltalk ui icons edit
 ]
 
 { #category : #initialization }
@@ -86,7 +86,7 @@ RMDPresenter >> newValidatedTextInput [
 
 { #category : #icons }
 RMDPresenter >> removeIcon [
-	^ Smalltalk ui icons iconNamed: #smallDelete
+	^ Smalltalk ui icons remove
 ]
 
 { #category : #icons }

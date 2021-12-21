@@ -33,8 +33,8 @@ RMDActionDefinitionNode class >> reproduce [
 	^ 'to reproduce is
 when my blood_sugar > 9000 [kcal] and uniform 0 to 1 < 0.1 
 with new Goat
-	new x'' = my x + (uniform -1[m] to 1[m])
-	new y'' = my y + (uniform -1[m] to 1[m])
+	new delta x'' = uniform -1[m] to 1[m]
+	new delta y'' = uniform -1[m] to 1[m]
 	new blood_sugar'' = 2000 [kcal]
 	my delta blood_sugar'' = -4000 [kcal].' asRMDActionDefinition
 ]
@@ -120,6 +120,12 @@ RMDActionDefinitionNode >> = anObject [
 					  lifeDirectives = anObject lifeDirectives and: [ 
 						  propertyDefinitions = anObject propertyDefinitions and: [ 
 							  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ] ]
+]
+
+{ #category : #converting }
+RMDActionDefinitionNode >> asPresenter [
+
+	^ RMDActionDefinitionPresenter on: self
 ]
 
 { #category : #enumerating }
