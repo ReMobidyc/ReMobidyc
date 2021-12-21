@@ -50,26 +50,27 @@ RMDObservatory class >> sugarScape [
 
 { #category : #private }
 RMDObservatory >> animatInspector: aString [
+
 	^ self newNotebook
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDAnimatTabularInspector new
-						interpreter: interpreter;
-						animat: aString ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Table';
-				yourself);
-		addPage:
-			(self newNotebookPage
-				presenterProvider: [ RMDAnimatDistributionInspector new
-						interpreter: interpreter;
-						animat: aString;
-						updateObservation;
-						yourself ];
-				whenRetrievedDo: [ :content | content updateObservation ];
-				title: 'Percentile';
-				yourself);
-		yourself
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDAnimatTabularInspector new
+						   interpreter: interpreter;
+						   animat: aString ];
+				   whenRetrievedDo: [ :content | content updateObservation ];
+				   title: 'Table';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDAnimatPercentileInspector new
+								    interpreter: interpreter;
+								    animat: aString;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | content presenter updateObservation ];
+				   title: 'Percentile';
+				   yourself);
+		  yourself
 ]
 
 { #category : #updating }
@@ -94,7 +95,7 @@ RMDObservatory >> cellInspector [
 				yourself);
 		addPage:
 			(self newNotebookPage
-				presenterProvider: [ RMDCellDistributionInspector new
+				presenterProvider: [ RMDCellPercentileInspector new
 						interpreter: interpreter;
 						updateObservation;
 						yourself ];
@@ -310,7 +311,7 @@ RMDObservatory >> worldInspector [
 				yourself);
 		addPage:
 			(self newNotebookPage
-				presenterProvider: [ RMDWorldDistributionInspector new
+				presenterProvider: [ RMDWorldPercentileInspector new
 						interpreter: interpreter updateObservation;
 						yourself ];
 				whenRetrievedDo: [ :content | content updateObservation ];

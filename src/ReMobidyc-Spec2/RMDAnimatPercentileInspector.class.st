@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatDistributionInspector,
-	#superclass : #RMDDistributionInspector,
+	#name : #RMDAnimatPercentileInspector,
+	#superclass : #RMDPercentileInspector,
 	#traits : 'TRMDAnimatObservatory',
 	#classTraits : 'TRMDAnimatObservatory classTrait',
 	#instVars : [
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RMDAnimatDistributionInspector class >> defaultSpec [
+RMDAnimatPercentileInspector class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: #populationLabel height: self buttonHeight;
@@ -22,30 +22,27 @@ RMDAnimatDistributionInspector class >> defaultSpec [
 				   add: #showsMean;
 				   add: #showsSd)
 		  height: self buttonHeight;
-		  add: (SpScrollableLayout with: #image)
-	"	expand: true
-			fill: false
-			padding: 0"
+		  add: SpBoxLayout newVertical
 ]
 
 { #category : #accessing }
-RMDAnimatDistributionInspector >> animat [
+RMDAnimatPercentileInspector >> animat [
 	^ animat
 ]
 
 { #category : #accessing }
-RMDAnimatDistributionInspector >> animat: aString [
+RMDAnimatPercentileInspector >> animat: aString [
 	animat := aString
 ]
 
 { #category : #initialization }
-RMDAnimatDistributionInspector >> initialize [
+RMDAnimatPercentileInspector >> initialize [
 	super initialize.
 	self property: #animat whenChangedDo: [ self updateImage ]
 ]
 
 { #category : #initialization }
-RMDAnimatDistributionInspector >> initializePresenters [
+RMDAnimatPercentileInspector >> initializePresenters [
 
 	super initializePresenters.
 	populationLabel := self newLabel
@@ -54,13 +51,14 @@ RMDAnimatDistributionInspector >> initializePresenters [
 ]
 
 { #category : #private }
-RMDAnimatDistributionInspector >> updateObservation [
+RMDAnimatPercentileInspector >> updateObservation [
+
 	self updatePopulationLabel.
-	super updateObservation .
+	super updateObservation
 ]
 
 { #category : #private }
-RMDAnimatDistributionInspector >> updatePopulationLabel [
+RMDAnimatPercentileInspector >> updatePopulationLabel [
 
 	populationLabel ifNotNil: [ 
 		populationLabel label: 'Population: '
