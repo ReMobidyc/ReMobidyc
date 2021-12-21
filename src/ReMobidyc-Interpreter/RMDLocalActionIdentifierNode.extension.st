@@ -22,6 +22,7 @@ RMDLocalActionIdentifierNode >> typecheckIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDLocalActionIdentifierNode >> writeActionDefinition: aRMDActionDefinitionNode in: aRMDInterpreter [
-	aRMDInterpreter addActionDefinition: aRMDActionDefinitionNode
+RMDLocalActionIdentifierNode >> writeActionDefinition: aRMDActionDefinitionNode in: aRMDSimulationModel [
+
+	aRMDSimulationModel addActionDefinition: aRMDActionDefinitionNode
 ]

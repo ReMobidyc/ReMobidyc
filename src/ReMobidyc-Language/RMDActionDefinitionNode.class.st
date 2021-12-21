@@ -125,7 +125,7 @@ RMDActionDefinitionNode >> = anObject [
 { #category : #converting }
 RMDActionDefinitionNode >> asPresenter [
 
-	^ RMDActionDefinitionPresenter on: self
+	^ RMDActionDefinitionBrowser on: self
 ]
 
 { #category : #enumerating }

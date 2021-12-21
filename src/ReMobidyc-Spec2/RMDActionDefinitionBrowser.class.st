@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDActionDefinitionPresenter,
+	#name : #RMDActionDefinitionBrowser,
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'identifierField',
@@ -15,11 +15,11 @@ Class {
 		'removeUtilityButton',
 		'editUtilityButton'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
-RMDActionDefinitionPresenter class >> defaultSpec [
+RMDActionDefinitionBrowser class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -66,8 +66,43 @@ RMDActionDefinitionPresenter class >> defaultSpec [
 		  yourself
 ]
 
+{ #category : #operations }
+RMDActionDefinitionBrowser >> editDirectives [
+
+	| directives chooser |
+	directives := Array
+		              with: { 
+				              'die'.
+				              (node lifeDirectives contains: [ :directive | 
+					               directive isDieDirectiveNode ]).
+				              [ RMDDieDirective new ] }
+		              with: { 
+				              'new'.
+				              (node lifeDirectives contains: [ :directive | 
+					               directive isNewDirectiveNode ]).
+				              [ RMDNewDirective new ] }.
+	chooser := self newTable
+		           items: directives;
+		           addColumn:
+			           ((SpCheckBoxTableColumn evaluated: [ :pair | 
+					             pair second ])
+				            onActivation: [ :pair | pair at: 2 put: true ];
+				            onDeactivation: [ :pair | pair at: 2 put: false ];
+				            beNotExpandable;
+				            yourself);
+		           addColumn:
+			           ((SpStringTableColumn evaluated: [ :pair | pair first ])
+				            beNotEditable;
+				            yourself).
+	chooser openDialogWithSpec okAction: [ 
+		node lifeDirectives: (directives
+				 select: #second
+				 thenCollect: [ :triple | triple third value ]).
+		self nodeChanged ]
+]
+
 { #category : #initialization }
-RMDActionDefinitionPresenter >> initializePresenters [
+RMDActionDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	identifierField := self newValidatedTextInput
@@ -95,7 +130,9 @@ RMDActionDefinitionPresenter >> initializePresenters [
 					               text asString trim) isPetit2Failure not ];
 		              autoAccept: true;
 		              whenLastValidTextChangedDo: [ :text | 
-			              node guard: (text asString trim ifEmpty: [ nil ]) ];
+			              node guard:
+					              (RMDGrammar new condition end parse:
+							               text asString trim) ];
 		              yourself.
 	directivesButton := self newButton
 		                    label: 'no directive';
@@ -150,7 +187,7 @@ RMDActionDefinitionPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDActionDefinitionPresenter >> initializeWindow: aWindowPresenter [
+RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Action definition'.
@@ -158,7 +195,7 @@ RMDActionDefinitionPresenter >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #accessing }
-RMDActionDefinitionPresenter >> nodeChanged [
+RMDActionDefinitionBrowser >> nodeChanged [
 
 	node ifNil: [ ^ self ].
 	identifierField text: node identifier.
@@ -176,12 +213,12 @@ RMDActionDefinitionPresenter >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDActionDefinitionPresenter >> preferredHeight [
+RMDActionDefinitionBrowser >> preferredHeight [
 	^ 700
 ]
 
 { #category : #updating }
-RMDActionDefinitionPresenter >> updatePropertyButtons [
+RMDActionDefinitionBrowser >> updatePropertyButtons [
 
 	| hasSelection |
 	hasSelection := propertyDefinitionList selectedItem notNil.
@@ -190,7 +227,7 @@ RMDActionDefinitionPresenter >> updatePropertyButtons [
 ]
 
 { #category : #updating }
-RMDActionDefinitionPresenter >> updateUtilityButtons [
+RMDActionDefinitionBrowser >> updateUtilityButtons [
 
 	| hasSelection |
 	hasSelection := utilityDefinitionList selectedItem notNil.

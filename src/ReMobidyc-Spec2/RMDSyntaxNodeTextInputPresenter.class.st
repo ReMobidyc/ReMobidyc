@@ -74,6 +74,12 @@ RMDSyntaxNodeTextInputPresenter >> beLiteral [
 ]
 
 { #category : #api }
+RMDSyntaxNodeTextInputPresenter >> beNewDirective [
+
+	self parser: RMDGrammar new newDirective end
+]
+
+{ #category : #api }
 RMDSyntaxNodeTextInputPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
 ]

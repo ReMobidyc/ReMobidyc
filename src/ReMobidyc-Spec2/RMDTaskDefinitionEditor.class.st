@@ -176,7 +176,14 @@ RMDTaskDefinitionEditor >> editAction [
 	self actionDefinition ifNotNil: [ :oldActionDef | 
 		| newActionDef |
 		newActionDef := oldActionDef copy.
-		newActionDef asPresenter openWithSpec ]
+		newActionDef asPresenter openDialogWithSpec okAction: [ 
+			self actionIdentifier ifNotNil: [ :actionIdentifier | 
+				self simulationModel ifNotNil: [ :model | 
+					actionIdentifier writeActionDefinition: newActionDef in: model.
+					self taskDefinition ifNotNil: #resetAction.
+					self
+						updateTemplateText;
+						updateSourceText ] ] ] ]
 ]
 
 { #category : #operations }
@@ -222,9 +229,7 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                  beSingleSelection;
 		                  whenModelChangedDo: [ 
 			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ 
-			                  self
-				                  updateActionList ];
+		                  whenSelectionChangedDo: [ self updateActionList ];
 		                  display: [ :item | item repositoryName ];
 		                  yourself.
 	addRepositoryButton := self newButton
@@ -256,7 +261,7 @@ RMDTaskDefinitionEditor >> initializePresenters [
 							               '' ] ]);
 		              whenModelChangedDo: [ actionList selectItem: nil ];
 		              whenSelectionChangedDo: [ 
-								self updateActionButtons.
+			              self updateActionButtons.
 			              self updateTaskDefinition.
 			              self taskDefinition ifNotNil: [ :taskDefinition | 
 					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
@@ -300,35 +305,33 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                   beSingleSelection;
 		                   beResizable;
 		                   addColumn:
-			                   (SpStringTableColumn evaluated: [ :item | 
-					                    | agent actionDefinition |
-					                    agent := 'the' asText.
-					                    actionDefinition := self actionDefinition.
-					                    (actionDefinition isNil or: [ 
-							                     (actionDefinition includesNode:
-									                      item placeholder) not ]) ifTrue: [ 
-							                    agent makeAllColor: Color red ].
-					                    agent ]) beNotExpandable;
-		                   addColumn:
-			                   (SpStringTableColumn evaluated: [ :item | 
-					                    | actionProperty actionDefinition |
-					                    actionProperty := item placeholder identifier
-						                                      asText.
-					                    actionDefinition := self actionDefinition.
-					                    (actionDefinition isNil or: [ 
-							                     (actionDefinition includesNode:
-									                      item placeholder) not ]) ifTrue: [ 
-							                    actionProperty makeAllColor: Color red ].
-					                    actionProperty ]) beNotExpandable;
+			                   ((SpStringTableColumn
+				                     title: 'placeholder'
+				                     evaluated: [ :item | 
+					                     | actionProperty actionDefinition |
+					                     actionProperty := item placeholder
+						                                       printString asText.
+					                     actionDefinition := self actionDefinition.
+					                     (actionDefinition isNil or: [ 
+							                      (actionDefinition includesNode:
+									                       item placeholder) not ]) ifTrue: [ 
+							                     actionProperty makeAllColor: Color red ].
+					                     actionProperty ])
+				                    beExpandable;
+				                    yourself);
 		                   addColumn:
 			                   ((SpImageTableColumn evaluated: [ :item | 
-					                     self replacementIcon ]) width: 20);
-		                   addColumn:
-			                   ((SpStringTableColumn evaluated: [ :item | 
-					                     item replacement printString ]) width: 200)
-				                   beExpandable;
+					                     self replacementIcon ])
+				                    width: 20;
+				                    beNotExpandable);
+		                   addColumn: ((SpStringTableColumn
+				                     title: 'specialized'
+				                     evaluated: [ :item | 
+					                     item replacement printString ])
+				                    beExpandable;
+				                    yourself);
 		                   whenModelChangedDo: [ 
-			                   replacementList selectItem: nil ];
+		                   replacementList selectItem: nil ];
 		                   whenSelectionChangedDo: [ 
 			                   | selected |
 			                   selected := replacementList selection
@@ -472,18 +475,9 @@ RMDTaskDefinitionEditor >> updateObjectIdentifierField [
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateReplacementList [
 
-	| font width1 width2 |
-	self taskDefinition ifNotNil: [ :taskDefinition | 
-		font := TextStyle defaultFont.
-		width1 := width2 := 0.
-		taskDefinition propertyBinds do: [ :bind | 
-			width1 := width1 max: (font widthOfString: 'the').
-			width2 := width2 max:
-				          (font widthOfString: bind placeholder identifier) ].
-		replacementList columns first width: width1 + 40.
-		replacementList columns second width: width2 + 20.
-		replacementList columns: replacementList columns.
-		replacementList items: taskDefinition propertyBinds ]
+	replacementList items: (self taskDefinition
+			 ifNotNil: [ :taskDefinition | taskDefinition propertyBinds ]
+			 ifNil: [ Array new ])
 ]
 
 { #category : #updating }

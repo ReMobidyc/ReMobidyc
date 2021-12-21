@@ -9,5 +9,7 @@ RMDNewDirective >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDNewDirective >> typecheckIn: aRMDInterpreter [
 
-	^ aRMDInterpreter newIndividual: animatIdentifier
+	animatIdentifier ifNil: [ 
+		^ (RMDUnresolvedReferenceError on: self) signal ].
+	aRMDInterpreter newIndividual: animatIdentifier
 ]

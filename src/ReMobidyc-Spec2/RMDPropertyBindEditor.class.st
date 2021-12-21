@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'exceptVariableNodes',
 		'actionDefinitionNode',
-		'propertyVariableList',
 		'replacementIcon',
-		'expressionField'
+		'expressionField',
+		'placeholderList'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -26,7 +26,7 @@ RMDPropertyBindEditor class >> defaultSpec [
 		  add: (SpPanedLayout newHorizontal
 				   positionOfSlider: 0.4;
 				   add: (SpBoxLayout newHorizontal
-						    add: #propertyVariableList;
+						    add: #placeholderList;
 						    add: #replacementIcon width: 48;
 						    yourself);
 				   add: #expressionField;
@@ -43,7 +43,7 @@ RMDPropertyBindEditor >> actionDefinitionNode [
 { #category : #accessing }
 RMDPropertyBindEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	actionDefinitionNode := aRMDActionDefinitionNode.
-	self updatePropertyVariableDropList
+	self updatePlaceholderDropList
 ]
 
 { #category : #accessing }
@@ -54,14 +54,15 @@ RMDPropertyBindEditor >> exceptVariableNodes [
 { #category : #accessing }
 RMDPropertyBindEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	exceptVariableNodes := aCollectionOfRMDSyntaxNode.
-	self updatePropertyVariableDropList
+	self updatePlaceholderDropList
 ]
 
 { #category : #initialization }
 RMDPropertyBindEditor >> initializePresenters [
 	super initializePresenters.
-	propertyVariableList := self newDropList
+	placeholderList := self newDropList
 		display: [ :item | item printString ];
+		whenSelectionChangedDo: [ self updateExpressionFieldType ]
 		yourself.
 	replacementIcon := self newImage
 		image: self replacementIcon;
@@ -86,7 +87,7 @@ RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDPropertyBindEditor >> propertyBindNode [
 
-	^ propertyVariableList selectedItem ifNotNil: [ :placeholder | 
+	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
 		  expressionField syntaxNode ifNotNil: [ :replacement | 
 			  RMDPropertyBindNode
 				  placeholder: placeholder
@@ -98,18 +99,30 @@ RMDPropertyBindEditor >> propertyBindNode: aRMDPropertyBindNode [
 
 	aRMDPropertyBindNode
 		ifNotNil: [ 
-			propertyVariableList selectItem: aRMDPropertyBindNode placeholder.
+			placeholderList selectItem: aRMDPropertyBindNode placeholder.
 			expressionField syntaxNode: aRMDPropertyBindNode replacement ]
 		ifNil: [ 
-			propertyVariableList selectItem: nil.
+			placeholderList selectItem: nil.
 			expressionField text: '' ]
 ]
 
+{ #category : #updating }
+RMDPropertyBindEditor >> updateExpressionFieldType [
+
+	placeholderList selectedItem
+		ifNotNil: [ :placeholder | 
+			expressionField enable.
+			placeholder isNewDirectiveNode
+				ifTrue: [ expressionField beNewDirective ]
+				ifFalse: [ expressionField beExpression ] ]
+		ifNil: [ expressionField disable ]
+]
+
 { #category : #accessing }
-RMDPropertyBindEditor >> updatePropertyVariableDropList [
+RMDPropertyBindEditor >> updatePlaceholderDropList [
 
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].
-	propertyVariableList items: (Array streamContents: [ :stream | 
+	placeholderList items: (Array streamContents: [ :stream | 
 			 actionDefinitionNode placeholderNodesDo: [ :node | 
 				 (exceptVariableNodes includes: node) ifFalse: [ 
 					 stream nextPut: node ] ] ])

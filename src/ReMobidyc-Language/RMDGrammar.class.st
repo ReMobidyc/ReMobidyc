@@ -710,7 +710,8 @@ RMDGrammar >> negationNodeClass [
 { #category : #'parsers-directives' }
 RMDGrammar >> newDirective [
 
-	^ 'new' asPParser , #blank asPParser plus , self agentIdentifier
+	^ 'new' asPParser , #blank asPParser plus
+	  , ('-' asPParser / self agentIdentifier)
 	  ==> [ :triple | 
 	  self newDirectiveNodeClass animatIdentifier: triple third ]
 ]
