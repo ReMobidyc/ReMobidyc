@@ -79,6 +79,13 @@ RMDSyntaxNodeTextInputPresenter >> beNewDirective [
 	self parser: RMDGrammar new newDirective end
 ]
 
+{ #category : #accessing }
+RMDSyntaxNodeTextInputPresenter >> color: aColor [
+
+	super color: aColor.
+	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
+]
+
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
@@ -101,16 +108,26 @@ RMDSyntaxNodeTextInputPresenter >> syntaxNode [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
+
 	syntaxNode := aRMDSyntaxNode.
-	syntaxNode isString
-		ifTrue: [ self beOk.
+	syntaxNode
+		ifNil: [ 
+			self beOk.
 			lastValidSyntaxNode := aRMDSyntaxNode.
-			text := aRMDSyntaxNode ]
-		ifFalse: [ (aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-				ifTrue: [ self beOk.
-					lastValidSyntaxNode := aRMDSyntaxNode ]
-				ifFalse: [ self beError ].
-			text := aRMDSyntaxNode printString ]
+			text := '' ]
+		ifNotNil: [ 
+			syntaxNode isString
+				ifTrue: [ 
+					self beOk.
+					lastValidSyntaxNode := aRMDSyntaxNode.
+					text := aRMDSyntaxNode ]
+				ifFalse: [ 
+					(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
+						ifTrue: [ 
+							self beOk.
+							lastValidSyntaxNode := aRMDSyntaxNode ]
+						ifFalse: [ self beError ].
+					text := aRMDSyntaxNode printString ] ]
 ]
 
 { #category : #api }

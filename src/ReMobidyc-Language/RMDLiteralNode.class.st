@@ -17,6 +17,12 @@ RMDLiteralNode class >> literal: aString unit: aRMDUnit [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDLiteralNode class >> zero [
+
+	^ self literal: '0.0' unit: RMDUnit noDimension
+]
+
 { #category : #comparing }
 RMDLiteralNode >> = anObject [
 	^ self class = anObject class and: [ literal = anObject literal ]

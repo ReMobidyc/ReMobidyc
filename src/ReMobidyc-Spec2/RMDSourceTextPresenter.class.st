@@ -81,14 +81,17 @@ RMDSourceTextPresenter >> syntaxNode [
 
 { #category : #api }
 RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
-	syntaxNode == aRMDSyntaxNode
-		ifTrue: [ ^ self ].
+
+	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
 	syntaxNode := aRMDSyntaxNode.
 	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ self beOk.
+		ifTrue: [ 
+			self beOk.
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	super text: (self highlightedTextFrom: aRMDSyntaxNode)
+	super text: (aRMDSyntaxNode isString
+			 ifTrue: [ aRMDSyntaxNode ]
+			 ifFalse: [ self highlightedTextFrom: aRMDSyntaxNode ])
 ]
 
 { #category : #api }

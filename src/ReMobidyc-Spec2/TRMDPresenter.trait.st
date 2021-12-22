@@ -5,6 +5,7 @@ Trait {
 
 { #category : #api }
 TRMDPresenter >> beError [
+
 	self color: self errorColor
 ]
 

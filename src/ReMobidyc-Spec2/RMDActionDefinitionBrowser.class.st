@@ -23,25 +23,31 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: 'to    ' expand: false;
+				   add: ' To    ' expand: false;
 				   add: #identifierField width: 150;
 				   add: '    ' expand: false;
 				   add: #objectField width: 150;
 				   add: '    is' expand: false;
 				   yourself)
-		  expand: false;
+		  expand: false
+		  fill: true
+		  padding: 10;
 		  add: (SpBoxLayout newHorizontal
 				   add: '    when ' expand: false;
 				   add: #guardField;
 				   yourself)
-		  expand: false;
+		  expand: false
+		  fill: true
+		  padding: 10;
 		  add: (SpBoxLayout newHorizontal
 				   add: '    with ' expand: false;
 				   add: (SpBoxLayout newVertical
 						    add: #directivesButton height: self inputTextHeight;
 						    yourself);
 				   yourself)
-		  expand: false;
+		  expand: false
+		  fill: true
+		  padding: 10;
 		  add: (SpBoxLayout newHorizontal
 				   add: '    ' expand: false;
 				   add: (SpBoxLayout newVertical
@@ -51,7 +57,10 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 								     add: #removePropertyButton expand: false;
 								     add: #editPropertyButton expand: false;
 								     yourself)
-						    height: self buttonHeight));
+						    height: self buttonHeight))
+		  expand: true
+		  fill: true
+		  padding: 10;
 		  add: 'where' expand: false;
 		  add: (SpBoxLayout newHorizontal
 				   add: '    ' expand: false;
@@ -62,8 +71,22 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 								     add: #removeUtilityButton expand: false;
 								     add: #editUtilityButton expand: false;
 								     yourself)
-						    height: self buttonHeight));
+						    height: self buttonHeight))
+		  expand: true
+		  fill: true
+		  padding: 10;
 		  yourself
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> addPropertyDefinition [
+
+	| newDefinition |
+	newDefinition := RMDPropertyDefinitionNode template.
+	newDefinition asPresenter openDialogWithSpec okAction: [ 
+		node propertyDefinitions:
+			(node propertyDefinitions copyWith: newDefinition).
+		self nodeChanged ]
 ]
 
 { #category : #operations }
@@ -101,40 +124,48 @@ RMDActionDefinitionBrowser >> editDirectives [
 		self nodeChanged ]
 ]
 
+{ #category : #operations }
+RMDActionDefinitionBrowser >> editPropertyDefinition [
+
+	propertyDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+		| newDefinition index |
+		newDefinition := oldDefinition copy.
+		newDefinition asPresenter openDialogWithSpec okAction: [ 
+			node propertyDefinitions
+				at: (index := node propertyDefinitions indexOf: oldDefinition)
+				put: newDefinition.
+			self nodeChanged.
+			propertyDefinitionList selectIndex: index ] ]
+]
+
 { #category : #initialization }
 RMDActionDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
-	identifierField := self newValidatedTextInput
+	identifierField := self newSyntaxNodeTextInput
+		                   parser: RMDGrammar new identifier end;
 		                   placeholder: 'verb';
-		                   validation: [ :text | 
-			                   (RMDGrammar new identifier end parse:
-					                    text asString trim) isPetit2Failure not ];
 		                   autoAccept: true;
-		                   whenLastValidTextChangedDo: [ :text | 
-			                   node identifier: text asString trim ];
+		                   whenLastValidSyntaxNodeChangedDo: [ :identifier | 
+			                   node identifier: identifier ];
 		                   yourself.
-	objectField := self newValidatedTextInput
-		               placeholder: 'object';
-		               validation: [ :text | 
-			               (RMDGrammar new agentIdentifier end parse:
-					                text asString trim) isPetit2Failure not ];
+	objectField := self newSyntaxNodeTextInput
+		               parser: RMDGrammar new agentIdentifier optional end;
+		               placeholder: '(object)';
 		               autoAccept: true;
-		               whenLastValidTextChangedDo: [ :text | 
-			               node identifier: text asString trim ];
+		               whenLastValidSyntaxNodeChangedDo: [ :animat | 
+			               node object: animat ];
+		               disable;
 		               yourself.
-	guardField := self newValidatedTextInput
-		              placeholder: 'verb';
-		              validation: [ :text | 
-			              (RMDGrammar new condition end parse:
-					               text asString trim) isPetit2Failure not ];
+	guardField := self newSyntaxNodeTextInput
+		              parser: RMDGrammar new condition end;
+		              placeholder: 'guard condition';
 		              autoAccept: true;
-		              whenLastValidTextChangedDo: [ :text | 
-			              node guard:
-					              (RMDGrammar new condition end parse:
-							               text asString trim) ];
+		              whenLastValidSyntaxNodeChangedDo: [ :guard | 
+			              node guard: guard ];
 		              yourself.
 	directivesButton := self newButton
+		                    color: Color white;
 		                    label: 'no directive';
 		                    action: [ self editDirectives ];
 		                    yourself.
@@ -183,7 +214,13 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                     icon: Smalltalk ui icons edit;
 		                     action: [ self editUtilityDefinition ];
 		                     disable;
-		                     yourself
+		                     yourself.
+	self whenBuiltDo: [ 
+		self withWidgetDo: [ :w | 
+			w
+				update: #color: with: { Color white };
+				update: #borderColor: with: { Color darkGray };
+				update: #borderWidth: with: { 1 } ] ]
 ]
 
 { #category : #initialization }
@@ -191,7 +228,7 @@ RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Action definition'.
-	aWindowPresenter initialExtent: 400 @ 500
+	aWindowPresenter initialExtent: 400 @ self preferredHeight
 ]
 
 { #category : #accessing }
@@ -214,7 +251,18 @@ RMDActionDefinitionBrowser >> nodeChanged [
 
 { #category : #accessing }
 RMDActionDefinitionBrowser >> preferredHeight [
-	^ 700
+	^ 600
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> removePropertyDefinition [
+
+	propertyDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+		(UIManager default confirm:
+			 'Sure to remove `' , oldDefinition printString , '''?') ifTrue: [ 
+			node propertyDefinitions:
+				(node propertyDefinitions copyWithout: oldDefinition).
+			self nodeChanged ] ]
 ]
 
 { #category : #updating }

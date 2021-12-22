@@ -14,6 +14,18 @@ RMDSyntaxNodePresenter class >> on: aRMDSyntaxNode [
 		yourself
 ]
 
+{ #category : #testing }
+RMDSyntaxNodePresenter >> isAfterNodeChanged [
+
+	| context |
+	context := thisContext sender.
+	[ context notNil ] whileTrue: [ 
+		(context receiver == self and: [ context selector = #nodeChanged ]) 
+			ifTrue: [ ^ true ].
+		context := context sender ].
+	^ false
+]
+
 { #category : #accessing }
 RMDSyntaxNodePresenter >> node [
 	^ node

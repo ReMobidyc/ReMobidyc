@@ -10,10 +10,11 @@ Class {
 { #category : #'instance creation' }
 RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
 
+	anotherString = #my ifTrue: [ ^ self identifier: aString agent: nil ].
 	anotherString = #new ifTrue: [ 
 		^ RMDNewPropertyVariableNode identifier: aString ].
 
-	anotherString = 'the' ifTrue: [ 
+	anotherString = #the ifTrue: [ 
 		^ RMDPlaceholderNode new
 			  identifier: aString;
 			  yourself ].

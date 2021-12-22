@@ -22,6 +22,11 @@ RMDPlaceholderNode >> = anObject [
 		  identifier = anObject identifier ]
 ]
 
+{ #category : #accessing }
+RMDPlaceholderNode >> agent [
+	^ #the
+]
+
 { #category : #enumerating }
 RMDPlaceholderNode >> childrenDo: aBlock [
 

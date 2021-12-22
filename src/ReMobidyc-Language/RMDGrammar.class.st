@@ -939,7 +939,8 @@ RMDGrammar >> terminalTaskDefinitionHeaderLine [
 { #category : #'parsers-atoms' }
 RMDGrammar >> the [
 
-	^ 'the' asPParser , #blank asPParser plus ==> #first
+	^ 'the' asPParser ==> [ :the | #the ] , #blank asPParser plus
+	  ==> #first
 ]
 
 { #category : #'parsers-directives' }

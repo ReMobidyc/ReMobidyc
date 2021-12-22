@@ -4,6 +4,22 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #'typical instances' }
+RMDPropertyDefinitionNode class >> template [
+
+	<script: 'RMDPropertyDefinitionNode template inspect'>
+	^ RMDPropertyDefinitionNode
+		  variable:
+		  (RMDAssignablePropertyVariableNode identifier: 'var' agent: nil)
+		  expression: RMDLiteralNode zero
+]
+
+{ #category : #converting }
+RMDPropertyDefinitionNode >> asPresenter [
+
+	^ RMDPropertyDefinitionBrowser on: self
+]
+
 { #category : #testing }
 RMDPropertyDefinitionNode >> isPropertyDefinitionNode [
 	^ true
