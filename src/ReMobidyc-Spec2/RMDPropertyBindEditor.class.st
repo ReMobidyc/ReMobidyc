@@ -23,12 +23,10 @@ RMDPropertyBindEditor class >> actionDefinition: aRMDActionDefinitionNode except
 RMDPropertyBindEditor class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.4;
-				   add: (SpBoxLayout newHorizontal
-						    add: #placeholderList;
-						    add: #replacementIcon width: 48;
-						    yourself);
+		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
+				   add: #placeholderList width: 200;
+				   add: #replacementIcon width: 48;
 				   add: #expressionField;
 				   yourself)
 		  height: self inputTextHeight;

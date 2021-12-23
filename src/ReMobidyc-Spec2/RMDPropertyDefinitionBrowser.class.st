@@ -16,6 +16,7 @@ RMDPropertyDefinitionBrowser class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
 				   add: #agentList width: 100;
 				   add: #modifierList width: 50;
 				   add: #identifierField width: 150;
@@ -109,7 +110,8 @@ RMDPropertyDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Property definition'.
-	aWindowPresenter initialExtent: 600 @ self preferredHeight
+	aWindowPresenter initialExtent:
+		600 @ (self preferredHeight + self class buttonHeight * 3)
 ]
 
 { #category : #private }
@@ -135,7 +137,8 @@ RMDPropertyDefinitionBrowser >> nodeChanged [
 	node variable isAssignableDifferentialPropertyVariableNode ifTrue: [ 
 		modifierList selectIndex: 3 ].
 	identifierField text: node variable identifier.
-	definitionBodyField syntaxNode: node definitionBody
+	node definitionBody ifNotNil: [ :expression | 
+		definitionBodyField syntaxNode: expression ]
 ]
 
 { #category : #accessing }
@@ -165,7 +168,7 @@ RMDPropertyDefinitionBrowser >> possibleAgents [
 { #category : #accessing }
 RMDPropertyDefinitionBrowser >> preferredHeight [
 
-	^ self class buttonHeight * 4
+	^ self class buttonHeight
 ]
 
 { #category : #accessing }

@@ -40,10 +40,12 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 		  fill: true
 		  padding: 10;
 		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
 				   add: '    with ' expand: false;
 				   add: (SpBoxLayout newVertical
 						    add: #directivesButton height: self inputTextHeight;
-						    yourself);
+						    yourself)
+				   width: 150;
 				   yourself)
 		  expand: false
 		  fill: true
@@ -57,7 +59,7 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 								     add: #removePropertyButton expand: false;
 								     add: #editPropertyButton expand: false;
 								     yourself)
-						    height: self buttonHeight))
+						    height: self inputTextHeight))
 		  expand: true
 		  fill: true
 		  padding: 10;
@@ -71,7 +73,7 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 								     add: #removeUtilityButton expand: false;
 								     add: #editUtilityButton expand: false;
 								     yourself)
-						    height: self buttonHeight))
+						    height: self inputTextHeight))
 		  expand: true
 		  fill: true
 		  padding: 10;
@@ -86,6 +88,17 @@ RMDActionDefinitionBrowser >> addPropertyDefinition [
 	newDefinition asPresenter openDialogWithSpec okAction: [ 
 		node propertyDefinitions:
 			(node propertyDefinitions copyWith: newDefinition).
+		self nodeChanged ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> addUtilityDefinition [
+
+	| newDefinition |
+	newDefinition := RMDUtilityDefinitionNode template.
+	newDefinition asPresenter openDialogWithSpec okAction: [ 
+		node utilityDefinitions:
+			(node utilityDefinitions copyWith: newDefinition).
 		self nodeChanged ]
 ]
 
@@ -136,6 +149,20 @@ RMDActionDefinitionBrowser >> editPropertyDefinition [
 				put: newDefinition.
 			self nodeChanged.
 			propertyDefinitionList selectIndex: index ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> editUtilityDefinition [
+
+	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+		| newDefinition index |
+		newDefinition := oldDefinition copy.
+		newDefinition asPresenter openDialogWithSpec okAction: [ 
+			node utilityDefinitions
+				at: (index := node utilityDefinitions indexOf: oldDefinition)
+				put: newDefinition.
+			self nodeChanged.
+			utilityDefinitionList selectIndex: index ] ]
 ]
 
 { #category : #initialization }
@@ -262,6 +289,17 @@ RMDActionDefinitionBrowser >> removePropertyDefinition [
 			 'Sure to remove `' , oldDefinition printString , '''?') ifTrue: [ 
 			node propertyDefinitions:
 				(node propertyDefinitions copyWithout: oldDefinition).
+			self nodeChanged ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> removeUtilityDefinition [
+
+	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+		(UIManager default confirm:
+			 'Sure to remove `' , oldDefinition printString , '''?') ifTrue: [ 
+			node utilityDefinitions:
+				(node utilityDefinitions copyWithout: oldDefinition).
 			self nodeChanged ] ]
 ]
 

@@ -12,20 +12,21 @@ Class {
 
 { #category : #specs }
 RMDSimulationTimeDefinitionPresenter class >> defaultSpec [
+
 	<spec>
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				borderWidth: 5;
-				spacing: 5;
-				add: 'during ' expand: false;
-				add: #durationField width: 80;
-				add: #durationUnitDropList width: 80;
-				add: ' step by ' expand: false;
-				add: #stepField width: 60;
-				add: #stepUnitDropList width: 80;
-				yourself)
-		height: self inputTextHeight
+		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
+				   borderWidth: 5;
+				   spacing: 5;
+				   add: 'during ' expand: false;
+				   add: #durationField width: 80;
+				   add: #durationUnitDropList width: 80;
+				   add: ' step by ' expand: false;
+				   add: #stepField width: 60;
+				   add: #stepUnitDropList width: 80;
+				   yourself)
+		  height: self buttonHeight
 ]
 
 { #category : #accessing }
@@ -109,7 +110,8 @@ RMDSimulationTimeDefinitionPresenter >> nodeChanged [
 
 { #category : #accessing }
 RMDSimulationTimeDefinitionPresenter >> preferredHeight [
-	^ self class inputTextHeight
+
+	^ self class buttonHeight
 ]
 
 { #category : #accessing }

@@ -10,16 +10,17 @@ Class {
 
 { #category : #specs }
 RMDPropertyInitializerPresenter class >> defaultSpec [
+
 	<spec>
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				add: '     ' expand: false;
-				add: #identifierField width: 100;
-				add: ' = ' expand: false;
-				add: #expressionField;
-				yourself)
-		height: self inputTextHeight
+		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
+				   add: '     ' expand: false;
+				   add: #identifierField width: 100;
+				   add: ' = ' expand: false;
+				   add: #expressionField;
+				   yourself)
+		  height: self inputTextHeight
 ]
 
 { #category : #api }

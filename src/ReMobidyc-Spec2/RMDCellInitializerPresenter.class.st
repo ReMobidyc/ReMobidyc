@@ -12,20 +12,21 @@ Class {
 
 { #category : #specs }
 RMDCellInitializerPresenter class >> defaultSpec [
+
 	<spec>
 	^ super defaultSpec
-		add:
-			(SpBoxLayout newHorizontal
-				add: #xDivisionsField expand: false;
-				add: ' x ' expand: false;
-				add: #yDivisionsField expand: false;
-				add: ' of ' expand: false;
-				add: #sizeField width: 80;
-				add: #sizeUnitDropList width: 80;
-				add: ' Cell with' expand: false;
-				yourself)
-			height: self inputTextHeight;
-		yourself
+		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
+				   add: #xDivisionsField expand: false;
+				   add: ' x ' expand: false;
+				   add: #yDivisionsField expand: false;
+				   add: ' of ' expand: false;
+				   add: #sizeField width: 80;
+				   add: #sizeUnitDropList width: 80;
+				   add: ' Cell with' expand: false;
+				   yourself)
+		  height: self inputTextHeight;
+		  yourself
 ]
 
 { #category : #initialization }
@@ -87,6 +88,7 @@ RMDCellInitializerPresenter >> newLayout [
 		             borderWidth: 0;
 		             spacing: 0;
 		             add: (SpBoxLayout newHorizontal
+				              vAlignCenter;
 				              add: xDivisionsField expand: false;
 				              add: ' x ' asPresenter expand: false;
 				              add: yDivisionsField expand: false;

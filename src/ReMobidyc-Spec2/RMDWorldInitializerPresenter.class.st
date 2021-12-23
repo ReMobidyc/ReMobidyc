@@ -20,6 +20,7 @@ RMDWorldInitializerPresenter >> newLayout [
 		             borderWidth: 0;
 		             spacing: 0;
 		             add: (SpBoxLayout newHorizontal
+				              vAlignCenter;
 				              add: 'World with' expand: false;
 				              yourself)
 		             height: self class inputTextHeight;
