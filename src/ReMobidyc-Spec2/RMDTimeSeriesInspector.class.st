@@ -3,33 +3,46 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
-		'metrics'
+		'image',
+		'timeSeries',
+		'titleLabel'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
+
+{ #category : #accessing }
+RMDTimeSeriesInspector class >> chartHeight [
+	^ 200
+]
+
+{ #category : #accessing }
+RMDTimeSeriesInspector class >> chartWidth [
+	^ 760
+]
 
 { #category : #specs }
 RMDTimeSeriesInspector class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		  add: '';
+		  add: #titleLabel expand: false;
+		  add: #image height: 200;
 		  yourself
 ]
 
 { #category : #accessing }
 RMDTimeSeriesInspector >> chartHeight [
 
-	^ 200
+	^ self class chartHeight
 ]
 
 { #category : #accessing }
 RMDTimeSeriesInspector >> chartWidth [
 
-	^ 760
+	^ self class chartWidth
 ]
 
-{ #category : #private }
-RMDTimeSeriesInspector >> chartWith: aDictionary agent: aString property: anotherString aggregation: aSymbol [
+{ #category : #accessing }
+RMDTimeSeriesInspector >> createChart [
 
 	| chartWidth chartHeight font fontHeight form canvas times min max |
 	chartWidth := self chartWidth.
@@ -41,13 +54,13 @@ RMDTimeSeriesInspector >> chartWith: aDictionary agent: aString property: anothe
 		        depth: 32.
 	canvas := form getCanvas.
 	canvas fillColor: Color white.
-	times := aDictionary keys sorted.
-	min := aDictionary min.
-	max := aDictionary max.
+	times := timeSeries keys sorted.
+	min := timeSeries min.
+	max := timeSeries max.
 	min < max ifTrue: [ 
 		| xScale yScale minString maxString |
 		xScale := chartWidth / times last asFloat.
-		yScale := chartHeight / (aDictionary max - aDictionary min).
+		yScale := chartHeight / (timeSeries max - timeSeries min).
 		minString := min printShowingDecimalPlaces: 1.
 		maxString := max printShowingDecimalPlaces: 1.
 		canvas
@@ -64,8 +77,8 @@ RMDTimeSeriesInspector >> chartWith: aDictionary agent: aString property: anothe
 			| time1 time2 value1 value2 |
 			time1 := times at: index.
 			time2 := times at: index + 1.
-			value1 := aDictionary at: time1.
-			value2 := aDictionary at: time2.
+			value1 := timeSeries at: time1.
+			value2 := timeSeries at: time2.
 			canvas
 				line: (time1 * xScale) rounded
 					@ (chartHeight - (value1 - min * yScale) rounded)
@@ -79,28 +92,27 @@ RMDTimeSeriesInspector >> chartWith: aDictionary agent: aString property: anothe
 		font: font
 		color: Color gray.
 	times size > 1 ifTrue: [ 
-		| time timeString |
-		time := times last * interpreter deltaTime.
-		timeString := (interpreter simulationDefinition timeDefinition
-			               duration unit fromSI: time) 
-			              printShowingDecimalPlaces: 1.
+		| time timeUnit timeString |
+		time := times last.
+		timeUnit := interpreter simulationDefinition timeDefinition duration
+			            unit.
+		timeString := ((timeUnit fromSI: time) printShowingDecimalPlaces: 1)
+		              , ' [' , timeUnit printString , ']'.
 		canvas
 			drawString: timeString
-			at: chartWidth - (font widthOfString: timeString)
+			at: chartWidth - (font widthOfString: timeString) @ chartHeight
 			font: font
 			color: Color gray ].
-	canvas
-		drawString: (anotherString
-				 ifNil: [ 'population of ' , aString ]
-				 ifNotNil: [ 
-				 aString , '''s ' , (aSymbol ifNil: [ '' ]) , ' ' , anotherString ])
-		at: 100 @ (chartHeight + fontHeight)
-		font: font
-		color: Color black.
 	^ form
 ]
 
 { #category : #evaluating }
+RMDTimeSeriesInspector >> eval [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #obsolete }
 RMDTimeSeriesInspector >> evalAgent: agent property: property aggregation: aggregation [
 
 	agent = 'World' ifTrue: [ ^ self evalWorldProperty: property ].
@@ -109,7 +121,7 @@ RMDTimeSeriesInspector >> evalAgent: agent property: property aggregation: aggre
 	^ self evalAnimat: agent property: property aggregation: aggregation
 ]
 
-{ #category : #evaluating }
+{ #category : #obsolete }
 RMDTimeSeriesInspector >> evalAnimat: aString property: anotherString aggregation: aSymbol [
 
 	| animatDefinition |
@@ -137,7 +149,7 @@ RMDTimeSeriesInspector >> evalAnimat: aString property: anotherString aggregatio
 			  ifNotNil: [ :unit | unit fromSI: value ] ]
 ]
 
-{ #category : #evaluating }
+{ #category : #obsolete }
 RMDTimeSeriesInspector >> evalCellProperty: aString aggregation: aSymbol [
 
 	^ ((Array streamContents: [ :stream | 
@@ -158,7 +170,7 @@ RMDTimeSeriesInspector >> evalCellProperty: aString aggregation: aSymbol [
 			   ifAbsent: [ nil ]) ifNotNil: [ :unit | unit fromSI: value ] ]
 ]
 
-{ #category : #evaluating }
+{ #category : #obsolete }
 RMDTimeSeriesInspector >> evalWorldProperty: aString [
 
 	^ (interpreter
@@ -176,10 +188,19 @@ RMDTimeSeriesInspector >> evalWorldProperty: aString [
 RMDTimeSeriesInspector >> initialize [
 
 	super initialize.
-	metrics := OrderedDictionary new.
-	metrics
-		at: { 'Goat'. nil. nil } put: Dictionary new;
-		at: { 'Cell'. 'grass'. #average } put: Dictionary new
+	timeSeries := Dictionary new
+]
+
+{ #category : #initialization }
+RMDTimeSeriesInspector >> initializePresenters [
+
+	super initializePresenters.
+	titleLabel := self newLabel
+		              label: '';
+		              yourself.
+	image := self newImage
+		         autoScale: false;
+		         yourself
 ]
 
 { #category : #accessing }
@@ -199,42 +220,27 @@ RMDTimeSeriesInspector >> interpreter: aRMDInterpreter [
 ]
 
 { #category : #updating }
-RMDTimeSeriesInspector >> newLayout [
+RMDTimeSeriesInspector >> updateImage [
 
-	| newLayout |
-	newLayout := SpBoxLayout newVertical.
-	metrics keysAndValuesDo: [ :triple :timeseries | 
-		| agent property aggregation form |
-		agent := triple first.
-		property := triple second.
-		aggregation := triple third.
-		form := self
-			        chartWith: timeseries
-			        agent: agent
-			        property: property
-			        aggregation: aggregation.
-		newLayout add: form asPresenter height: form height ].
-	^ newLayout
-]
-
-{ #category : #updating }
-RMDTimeSeriesInspector >> updateMetrics [
-
-	metrics keysAndValuesDo: [ :triple :timeseries | 
-		| agent property aggregation |
-		agent := triple first.
-		property := triple second.
-		aggregation := triple third.
-		timeseries
-			at: interpreter time
-			put:
-			(self evalAgent: agent property: property aggregation: aggregation) ]
+	image image: self createChart
 ]
 
 { #category : #updating }
 RMDTimeSeriesInspector >> updateObservation [
 
-	self updateMetrics.
-	self layout ifNotNil: [ self layout: self newLayout ].
+	self updateTimeSeries.
+	self updateImage.
 	self changed
+]
+
+{ #category : #updating }
+RMDTimeSeriesInspector >> updateTimeSeries [
+
+	timeSeries at: interpreter time put: self eval
+]
+
+{ #category : #accessing }
+RMDTimeSeriesInspector >> updateTitleLabel [
+
+	^ self subclassResponsibility
 ]

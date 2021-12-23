@@ -200,6 +200,27 @@ RMDObservatory >> modelName: aString [
 	modelName := aString
 ]
 
+{ #category : #private }
+RMDObservatory >> populationInspector [
+
+	| notebook |
+	notebook := self newNotebook.
+	interpreter animatNames do: [ :animat | 
+		(interpreter animatDefinitionAt: animat ifAbsent: [ nil ]) 
+			ifNotNil: [ :animatDef | 
+				notebook addPage: (self newNotebookPage
+						 presenterProvider: [ 
+							 RMDPopulationTimeSeriesInspector new
+								 interpreter: interpreter;
+								 animatDefinition: animatDef;
+								 updateObservation;
+								 yourself ];
+						 whenRetrievedDo: [ :content | content updateObservation ];
+						 title: animat;
+						 yourself) ] ].
+	^ notebook
+]
+
 { #category : #api }
 RMDObservatory >> progress [
 	^ time / duration
@@ -253,11 +274,8 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 						  whenRetrievedDo: [ :content | content updateImage ];
 						  title: 'Map');
 				 nextPut: (self newNotebookPage
-						  presenterProvider: [ 
-							  RMDScrollPresenter with: self timeSeriesInspector ];
-						  whenRetrievedDo: [ :content | 
-							  content presenter updateObservation ];
-						  title: 'Time series').
+						  presenterProvider: [ self populationInspector ];
+						  title: 'Population').
 			 interpreter worldDefinition allPropertyDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self worldInspector ];
