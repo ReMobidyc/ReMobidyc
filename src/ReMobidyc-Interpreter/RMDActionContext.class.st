@@ -9,7 +9,7 @@ Class {
 		'object',
 		'objectDefinition',
 		'newDefinition',
-		'newIndividual'
+		'newIndividuals'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -74,15 +74,22 @@ RMDActionContext >> location: anInteger definition: aRMDCellDefinition agent: aS
 ]
 
 { #category : #accessing }
-RMDActionContext >> newIndividual: anInteger definition: aRMDAnimatDefinition [
+RMDActionContext >> newIndividuals: anArrayOfInteger definition: aRMDAnimatDefinition [
 
-	| dict |
-	dict := Dictionary new.
-	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
-		dict at: identifier put: anInteger + offset ].
-	propertyDict at: 'new' put: dict.
-	newIndividual := anInteger.
+	anArrayOfInteger do: [ :individual | 
+		| dict |
+		dict := Dictionary new.
+		aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+			dict at: identifier put: individual + offset ].
+		propertyDict at: individual put: dict ].
+	newIndividuals := anArrayOfInteger.
 	newDefinition := aRMDAnimatDefinition
+]
+
+{ #category : #enumerating }
+RMDActionContext >> newIndividualsDo: aBlock [
+
+	newIndividuals ifNotNil: [ newIndividuals do: aBlock ]
 ]
 
 { #category : #accessing }

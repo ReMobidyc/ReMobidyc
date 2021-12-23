@@ -14,7 +14,7 @@ RMDNewPropertyVariableNode class >> identifier: aString [
 { #category : #accessing }
 RMDNewPropertyVariableNode >> agent [
 
-	^ 'new'
+	^ #new
 ]
 
 { #category : #enumerating }

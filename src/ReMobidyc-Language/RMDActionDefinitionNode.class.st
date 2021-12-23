@@ -32,7 +32,7 @@ RMDActionDefinitionNode class >> reproduce [
 	<script: 'RMDActionDefinitionNode reproduce inspect'>
 	^ 'to reproduce is
 when my blood_sugar > 9000 [kcal] and uniform 0 to 1 < 0.1 
-with new Goat
+with new 1 Goat
 	new delta x'' = uniform -1[m] to 1[m]
 	new delta y'' = uniform -1[m] to 1[m]
 	new blood_sugar'' = 2000 [kcal]

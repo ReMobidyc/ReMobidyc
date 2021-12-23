@@ -10,6 +10,16 @@ RMDAssignableDifferentialPropertyVariableNode >> assign: aNumber in: aRMDInterpr
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
+RMDAssignableDifferentialPropertyVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
+
+	^ aRMDInterpreter
+		  write: aNumber
+		  toDifferential: self identifier
+		  agent: anInteger
+		  ifAbsent: [ KeyNotFound signal ]
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialPropertyVariableNode >> typecheckIn: aRMDInterpreter [
 	^ RMDType
 		unit: (propertyVariable typecheckIn: aRMDInterpreter) unit / RMDUnit s

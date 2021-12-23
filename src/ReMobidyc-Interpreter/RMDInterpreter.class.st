@@ -315,25 +315,29 @@ RMDInterpreter >> memory [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> newIndividual: animatString [
+RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 
-	| animatDefinition newIndividual offset |
+	| animatDefinition newIndividuals offset |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
 		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
-	newIndividual := memory
-		                 addAnimat: animatDefinition
-		                 anscestry: context subjectAnscestry.
-	context newIndividual: newIndividual definition: animatDefinition.
+	newIndividuals := (1 to: anInteger) collect: [ :i | 
+		                  memory
+			                  addAnimat: animatDefinition
+			                  anscestry: context subjectAnscestry ].
+	context newIndividuals: newIndividuals definition: animatDefinition.
 	offset := 0.
 	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
-		memory nextAt: newIndividual + offset put: (self
-				 readVariable: propertyDecl identifier
-				 agent: nil
-				 ifAbsent: [ 0.0 ]).
+		| value |
+		value := self
+			         readVariable: propertyDecl identifier
+			         agent: nil
+			         ifAbsent: [ 0.0 ].
+		newIndividuals do: [ :individual | 
+			memory nextAt: individual + offset put: value ].
 		offset := offset + 1 ].
 
-	^ newIndividual
+	^ newIndividuals
 ]
 
 { #category : #'animat operations' }
@@ -372,13 +376,13 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 
 { #category : #'variable access' }
 RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBlock [
+
 	^ memory
-		at:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsent: errorBlock
+		  at: (context
+				   getMemoryAddressFor: aString
+				   agent: anotherString
+				   ifAbsent: [ ^ errorBlock value ])
+		  ifAbsent: errorBlock
 ]
 
 { #category : #simulating }
@@ -626,40 +630,41 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpecies
 
 { #category : #'variable access' }
 RMDInterpreter >> write: aNumber toDelta: aString agent: anotherString ifAbsent: errorBlock [
+
 	memory
-		nextDeltaAt:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
+		nextDeltaAt: (context
+				 getMemoryAddressFor: aString
+				 agent: anotherString
+				 ifAbsent: [ ^ errorBlock value ])
 		add: aNumber.
 	^ aNumber
 ]
 
 { #category : #'variable access' }
 RMDInterpreter >> write: aNumber toDifferential: aString agent: anotherString ifAbsent: errorBlock [
+
 	memory
-		nextDeltaAt:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
+		nextDeltaAt: (context
+				 getMemoryAddressFor: aString
+				 agent: anotherString
+				 ifAbsent: [ ^ errorBlock value ])
 		add: aNumber * self deltaTime.
 	^ aNumber
 ]
 
 { #category : #'variable access' }
 RMDInterpreter >> write: aNumber toUtility: aString [
+
 	^ context utilityAt: aString put: aNumber
 ]
 
 { #category : #'variable access' }
 RMDInterpreter >> write: aNumber toVariable: aString agent: anotherString ifAbsent: errorBlock [
+
 	^ memory
-		nextAt:
-			(context
-				getMemoryAddressFor: aString
-				agent: anotherString
-				ifAbsent: [ ^ errorBlock value ])
-		put: aNumber
+		  nextAt: (context
+				   getMemoryAddressFor: aString
+				   agent: anotherString
+				   ifAbsent: [ ^ errorBlock value ])
+		  put: aNumber
 ]

@@ -2,9 +2,20 @@ Extension { #name : #RMDPropertyDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPropertyDefinitionNode >> evalIn: aRMDInterpreter [
-	^ variable
-		assign: (definitionBody evalIn: aRMDInterpreter)
-		in: aRMDInterpreter
+
+	variable propertyVariable isNewPropertyVariableNode
+		ifTrue: [ 
+			| value |
+			aRMDInterpreter context newIndividualsDo: [ :individual | 
+				variable
+					assign: (value := definitionBody evalIn: aRMDInterpreter)
+					toNewIndividual: individual
+					in: aRMDInterpreter ].
+			^ value ]
+		ifFalse: [ 
+			^ variable
+				  assign: (definitionBody evalIn: aRMDInterpreter)
+				  in: aRMDInterpreter ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

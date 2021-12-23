@@ -647,10 +647,10 @@ RMDGrammar >> identifier [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> int [
-	^ ($- asPParser optional , #digit asPParser plus)
-		==> [ :pair | 
-			(pair first ifNil: [ 1 ] ifNotNil: [ -1 ])
-				* (pair second inject: 0 into: [ :i :c | i * 10 + c digitValue ]) ]
+
+	^ $- asPParser optional , self nat
+	  ==> [ :pair | 
+	  (pair first ifNil: [ 1 ] ifNotNil: [ -1 ]) * pair second ]
 ]
 
 { #category : #accessing }
@@ -702,6 +702,14 @@ RMDGrammar >> localActionIdentifierNodeClass [
 	^ RMDLocalActionIdentifierNode 
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> nat [
+
+	^ #digit asPParser plus
+	  ==> [ :digits | 
+	  digits inject: 0 into: [ :i :c | i * 10 + c digitValue ] ]
+]
+
 { #category : #'class access' }
 RMDGrammar >> negationNodeClass [
 	^ RMDNegationNode
@@ -711,9 +719,15 @@ RMDGrammar >> negationNodeClass [
 RMDGrammar >> newDirective [
 
 	^ 'new' asPParser , #blank asPParser plus
-	  , ('-' asPParser / self agentIdentifier)
+	  , (expression , self agentIdentifier
+		   / ('-' asPParser trimBlanks ==> [ :minus | nil ]))
 	  ==> [ :triple | 
-	  self newDirectiveNodeClass animatIdentifier: triple third ]
+		  triple third
+			  ifNil: [ self newDirectiveNodeClass new ]
+			  ifNotNil: [ :pair | 
+				  self newDirectiveNodeClass
+					  animatIdentifier: pair second
+					  quantity: pair first ] ]
 ]
 
 { #category : #'class access' }
