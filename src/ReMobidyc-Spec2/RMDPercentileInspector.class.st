@@ -2,7 +2,6 @@ Class {
 	#name : #RMDPercentileInspector,
 	#superclass : #RMDSpeciesObservatory,
 	#instVars : [
-		'image',
 		'visibleProperties',
 		'showsPercentiles',
 		'showsMin',
@@ -27,12 +26,12 @@ RMDPercentileInspector class >> defaultSpec [
 		  add: SpBoxLayout newVertical
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 RMDPercentileInspector >> chartHeight [
 	^ 200
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 RMDPercentileInspector >> chartWidth [
 	^ 760
 ]
@@ -54,17 +53,42 @@ RMDPercentileInspector >> chartWith: propertyDef values: vals stats: stats [
 	showsPercentiles state ifTrue: [ 
 		canvas
 			line: form width // 4 @ 0
-			to: form width // 4 @ (form height - fontHeight)
+			to: form width // 4 @ chartHeight
 			width: 1
 			color: Color lightGray;
 			line: form width // 2 @ 0
-			to: form width // 2 @ (form height - fontHeight)
+			to: form width // 2 @ chartHeight
 			width: 1
 			color: Color lightGray;
 			line: form width * 3 // 4 @ 0
-			to: form width * 3 // 4 @ (form height - fontHeight)
+			to: form width * 3 // 4 @ chartHeight
 			width: 1
-			color: Color lightGray ].
+			color: Color lightGray.
+
+		canvas
+			drawString: '0'
+			at: 0 @ chartHeight
+			font: font
+			color: Color darkGray;
+			drawString: '25'
+			at:
+				form width // 4 - ((font widthOfString: '25') // 2) @ chartHeight
+			font: font
+			color: Color darkGray;
+			drawString: '50'
+			at: form width - (font widthOfString: '50') // 2 @ chartHeight
+			font: font
+			color: Color darkGray;
+			drawString: '75'
+			at:
+				form width * 3 // 4 - ((font widthOfString: '75') // 2)
+				@ chartHeight
+			font: font
+			color: Color darkGray;
+			drawString: '100'
+			at: form width - (font widthOfString: '100') @ chartHeight
+			font: font
+			color: Color darkGray ].
 
 	resolution := values size min: chartWidth.
 	min := stats at: #min ifAbsent: [ nil ].
@@ -175,9 +199,6 @@ RMDPercentileInspector >> chartWith: propertyDef values: vals stats: stats [
 						(value1 - min * chartHeight / (min - max) asFloat + chartHeight)
 					width: 1
 					color: Color blue darker ] ].
-	canvas
-		fillRectangle: (0 @ chartHeight extent: chartWidth @ fontHeight)
-		color: (Color gray: 0.9).
 	^ form
 ]
 
@@ -273,44 +294,6 @@ RMDPercentileInspector >> newLayout [
 ]
 
 { #category : #private }
-RMDPercentileInspector >> percentileGauge [
-
-	| font fontHeight form canvas |
-	font := TextStyle defaultFont.
-	fontHeight := font height.
-	form := Form extent: self chartWidth @ fontHeight depth: 32.
-	canvas := form getCanvas.
-	canvas fillColor: Color white.
-	canvas
-		drawString: '0'
-		at: 0 @ (form height - fontHeight)
-		font: font
-		color: Color darkGray;
-		drawString: '25'
-		at: form width // 4 - ((font widthOfString: '25') // 2)
-			@ (form height - fontHeight)
-		font: font
-		color: Color darkGray;
-		drawString: '50'
-		at: form width - (font widthOfString: '50') // 2
-			@ (form height - fontHeight)
-		font: font
-		color: Color darkGray;
-		drawString: '75'
-		at: form width * 3 // 4 - ((font widthOfString: '75') // 2)
-			@ (form height - fontHeight)
-		font: font
-		color: Color darkGray;
-		drawString: '100'
-		at:
-			form width - (font widthOfString: '100')
-			@ (form height - fontHeight)
-		font: font
-		color: Color darkGray.
-	^ form
-]
-
-{ #category : #private }
 RMDPercentileInspector >> updateImage [
 
 	self layout ifNotNil: [ :theLayout | 
@@ -326,10 +309,6 @@ RMDPercentileInspector >> updateImage [
 						box add: form asPresenter height: form height ]
 					ifFalse: [ 
 					box add: (self expandButtonFor: propertyDef) expand: false ] ] ].
-		showsPercentiles state ifTrue: [ 
-			| form |
-			form := self percentileGauge.
-			box add: form asPresenter height: form height ].
 		self layout: box ]
 ]
 

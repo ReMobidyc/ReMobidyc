@@ -158,6 +158,12 @@ RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
 	^ self unknownDirectiveError: aString
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> cellsDo: aBlock [
+
+	memory cellsDo: aBlock
+]
+
 { #category : #directives }
 RMDInterpreter >> direction: aString [
 	| x1 y1 x2 y2 |
@@ -626,6 +632,12 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpecies
 				subject: anInteger
 				definition: aRMDSpeciesDefinitionNode)
 		do: aBlock
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> world [
+
+	^ memory world
 ]
 
 { #category : #'variable access' }

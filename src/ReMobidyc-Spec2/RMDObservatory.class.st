@@ -70,6 +70,16 @@ RMDObservatory >> animatInspector: aString [
 				   whenRetrievedDo: [ :content | content presenter updateObservation ];
 				   title: 'Percentile';
 				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDAnimatHistogramInspector new
+								    interpreter: interpreter;
+								    animat: aString;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | content presenter updateObservation ];
+				   title: 'Histogram';
+				   yourself);
 		  yourself
 ]
 
@@ -103,6 +113,16 @@ RMDObservatory >> cellInspector [
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];
 				   title: 'Percentile';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDCellHistogramInspector new
+								    interpreter: interpreter;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Histogram';
 				   yourself);
 		  yourself
 ]
@@ -212,49 +232,46 @@ RMDObservatory >> serverUpdateInterval [
 
 { #category : #initialization }
 RMDObservatory >> setInterpreter: aRMDInterpreter [
+
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	visualizer := RMDVisualizer new.
-	interpreter simulationModel
-		renderersDo: [ :renderer | visualizer addRenderer: renderer ].
+	interpreter simulationModel renderersDo: [ :renderer | 
+		visualizer addRenderer: renderer ].
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #timeChanged
 		to: self.
-	views
-		pages:
-			(Array
-				streamContents: [ :stream | 
-					stream
-						nextPut:
-							(self newNotebookPage
-								presenterProvider: [ visualizer asPresenter
-										interpreter: interpreter;
-										updateImage;
-										yourself ];
-								whenRetrievedDo: [ :content | content updateImage ];
-								title: 'Map').
-					interpreter worldDefinition allPropertyDeclarations
-						ifNotEmpty: [ stream
-								nextPut:
-									(self newNotebookPage
-										presenterProvider: [ self worldInspector ];
-										title: 'World') ].
-					interpreter cellDefinition allPropertyDeclarations
-						ifNotEmpty: [ stream
-								nextPut:
-									(self newNotebookPage
-										presenterProvider: [ self cellInspector ];
-										title: 'Cell') ].
-					interpreter animatNames
-						do: [ :animat | 
-							stream
-								nextPut:
-									(self newNotebookPage
-										presenterProvider: [ self animatInspector: animat ];
-										title: animat) ] ]).
+	views pages: (Array streamContents: [ :stream | 
+			 stream
+				 nextPut: (self newNotebookPage
+						  presenterProvider: [ 
+							  visualizer asPresenter
+								  interpreter: interpreter;
+								  updateImage;
+								  yourself ];
+						  whenRetrievedDo: [ :content | content updateImage ];
+						  title: 'Map');
+				 nextPut: (self newNotebookPage
+						  presenterProvider: [ 
+							  RMDScrollPresenter with: self timeSeriesInspector ];
+						  whenRetrievedDo: [ :content | 
+							  content presenter updateObservation ];
+						  title: 'Time series').
+			 interpreter worldDefinition allPropertyDeclarations ifNotEmpty: [ 
+				 stream nextPut: (self newNotebookPage
+						  presenterProvider: [ self worldInspector ];
+						  title: 'World') ].
+			 interpreter cellDefinition allPropertyDeclarations ifNotEmpty: [ 
+				 stream nextPut: (self newNotebookPage
+						  presenterProvider: [ self cellInspector ];
+						  title: 'Cell') ].
+			 interpreter animatNames do: [ :animat | 
+				 stream nextPut: (self newNotebookPage
+						  presenterProvider: [ self animatInspector: animat ];
+						  title: animat) ] ]).
 	duration := interpreter simulationModel simulationDefinition
-		timeDefinition duration evalIn: interpreter.
+		            timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.
 	self
 		updateTimeLabel;
@@ -274,6 +291,12 @@ RMDObservatory >> timeChanged [
 	self
 		informServer;
 		updateTimeLabel
+]
+
+{ #category : #private }
+RMDObservatory >> timeSeriesInspector [
+
+	^ RMDTimeSeriesInspector new interpreter: interpreter
 ]
 
 { #category : #api }
@@ -320,6 +343,15 @@ RMDObservatory >> worldInspector [
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];
 				   title: 'Percentile';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDWorldHistogramInspector new
+								    interpreter: interpreter updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Histogram';
 				   yourself);
 		  yourself
 ]

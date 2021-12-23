@@ -157,3 +157,11 @@ RMDSpeciesDefinitionNode >> replaceChildren: aDictionary [
 RMDSpeciesDefinitionNode >> totalNumberOfProperties [
 	^ self builtinProperties size + propertyDeclarations size
 ]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> unitOfProperty: aString ifAbsent: errorBlock [
+
+	self propertyUnitsDo: [ :identifier :unit | 
+		aString = identifier ifTrue: [ ^ unit ] ].
+	^ errorBlock value
+]
