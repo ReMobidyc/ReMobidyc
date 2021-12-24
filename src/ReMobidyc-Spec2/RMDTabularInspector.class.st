@@ -1,10 +1,10 @@
 Class {
 	#name : #RMDTabularInspector,
-	#superclass : #RMDSpeciesObservatory,
+	#superclass : #RMDSpeciesInspector,
 	#instVars : [
 		'table'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #specs }

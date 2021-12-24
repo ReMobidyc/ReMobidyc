@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDPercentileInspector,
-	#superclass : #RMDSpeciesObservatory,
+	#superclass : #RMDSpeciesInspector,
 	#instVars : [
 		'visibleProperties',
 		'showsPercentiles',
@@ -9,7 +9,7 @@ Class {
 		'showsMean',
 		'showsSd'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #specs }

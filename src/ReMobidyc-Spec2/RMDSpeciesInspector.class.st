@@ -1,25 +1,25 @@
 Class {
-	#name : #RMDSpeciesObservatory,
+	#name : #RMDSpeciesInspector,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'#interpreter => ObservableSlot'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #initialization }
-RMDSpeciesObservatory >> initialize [
+RMDSpeciesInspector >> initialize [
 	super initialize.
 	self property: #interpreter whenChangedDo: [ self updateObservation ]
 ]
 
 { #category : #accessing }
-RMDSpeciesObservatory >> interpreter [
+RMDSpeciesInspector >> interpreter [
 	^ interpreter
 ]
 
 { #category : #accessing }
-RMDSpeciesObservatory >> interpreter: aRMDInterpreter [
+RMDSpeciesInspector >> interpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	interpreter announcer weak
@@ -29,12 +29,12 @@ RMDSpeciesObservatory >> interpreter: aRMDInterpreter [
 ]
 
 { #category : #accessing }
-RMDSpeciesObservatory >> interpreterDo: aBlock [
+RMDSpeciesInspector >> interpreterDo: aBlock [
 	interpreter ifNotNil: aBlock
 ]
 
 { #category : #private }
-RMDSpeciesObservatory >> propertyValuesDo: aBlock [
+RMDSpeciesInspector >> propertyValuesDo: aBlock [
 	interpreter
 		ifNotNil: [ self
 				speciesDefinitionDo: [ :speciesDefinition | 
@@ -46,11 +46,11 @@ RMDSpeciesObservatory >> propertyValuesDo: aBlock [
 ]
 
 { #category : #private }
-RMDSpeciesObservatory >> speciesDefinitionDo: aBlock [
+RMDSpeciesInspector >> speciesDefinitionDo: aBlock [
 	^ self subclassResponsibility
 ]
 
 { #category : #private }
-RMDSpeciesObservatory >> updateObservation [
+RMDSpeciesInspector >> updateObservation [
 	^ self subclassResponsibility 
 ]

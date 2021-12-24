@@ -7,7 +7,7 @@ Class {
 		'#animat => ObservableSlot',
 		'#populationLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #specs }

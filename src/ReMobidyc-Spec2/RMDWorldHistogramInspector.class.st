@@ -3,5 +3,5 @@ Class {
 	#superclass : #RMDHistogramInspector,
 	#traits : 'TRMDWorldObservatory',
 	#classTraits : 'TRMDWorldObservatory classTrait',
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }

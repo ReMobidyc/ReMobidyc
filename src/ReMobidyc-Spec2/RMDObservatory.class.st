@@ -67,7 +67,8 @@ RMDObservatory >> animatInspector: aString [
 								    animat: aString;
 								    updateObservation;
 								    yourself) ];
-				   whenRetrievedDo: [ :content | content presenter updateObservation ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
 				   title: 'Percentile';
 				   yourself);
 		  addPage: (self newNotebookPage
@@ -75,9 +76,11 @@ RMDObservatory >> animatInspector: aString [
 					   RMDScrollPresenter with: (RMDAnimatHistogramInspector new
 								    interpreter: interpreter;
 								    animat: aString;
+								    updateLayout;
 								    updateObservation;
 								    yourself) ];
-				   whenRetrievedDo: [ :content | content presenter updateObservation ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
 				   title: 'Histogram';
 				   yourself);
 		  yourself

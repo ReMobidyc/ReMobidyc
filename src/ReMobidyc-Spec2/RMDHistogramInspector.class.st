@@ -1,10 +1,11 @@
 Class {
 	#name : #RMDHistogramInspector,
-	#superclass : #RMDSpeciesObservatory,
+	#superclass : #RMDSpeciesInspector,
 	#instVars : [
-		'visibleProperties'
+		'visibleProperties',
+		'chartPresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #specs }
@@ -25,7 +26,7 @@ RMDHistogramInspector >> chartWidth [
 	^ 760
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDHistogramInspector >> chartWith: propertyDef values: values min: min max: max divisions: divisions [
 
 	| counts maxCount font fontHeight chartWidth chartHeight form canvas xScale yScale minString maxString |
@@ -99,10 +100,12 @@ RMDHistogramInspector >> collapseButtonFor: propertyDef [
 			  visibleProperties
 				  removeKey: propertyDef identifier
 				  ifAbsent: [  ].
-			  self updateObservation ]
+			  self
+				  updateLayout;
+				  updateObservation ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDHistogramInspector >> collapsedIcon [
 	^ Smalltalk ui theme 	treeUnexpandedForm
 ]
@@ -119,10 +122,12 @@ RMDHistogramInspector >> expandButtonFor: propertyDef values: values [
 			  (self requestMinMaxDivisionsFor: propertyDef values: values) 
 				  ifNotNil: [ :triple | 
 					  visibleProperties at: propertyDef identifier put: triple.
-					  self updateObservation ] ]
+					  self
+						  updateLayout;
+						  updateObservation ] ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDHistogramInspector >> expandedIcon [
 	^ Smalltalk ui theme 	treeExpandedForm
 ]
@@ -173,32 +178,61 @@ RMDHistogramInspector >> requestMinMaxDivisionsFor: propertyDef values: values [
 		  divisions }
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDHistogramInspector >> updateImage [
 
-	self layout ifNotNil: [ :theLayout | 
-		| box |
-		box := self newLayout.
+	self layout ifNotNil: [ 
+		chartPresenters ifNil: [ self updateLayout ].
 		self propertyValuesDo: [ :propertyValues | 
 			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
 				visibleProperties
 					at: propertyDef identifier
 					ifPresent: [ :triple | 
-						| form |
-						box add: (self collapseButtonFor: propertyDef) expand: false.
+						chartPresenters
+							at: propertyDef identifier
+							ifPresent: [ :presenter | 
+								| form |
+								form := self
+									        chartWith: propertyDef
+									        values: vals
+									        min: triple first
+									        max: triple second
+									        divisions: triple third.
+								presenter image: form ] ] ] ] ]
+]
+
+{ #category : #updating }
+RMDHistogramInspector >> updateLayout [
+
+	self layout ifNotNil: [ 
+		| newLayout |
+		chartPresenters := Dictionary new.
+		newLayout := self newLayout.
+		self propertyValuesDo: [ :propertyValues | 
+			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
+				visibleProperties
+					at: propertyDef identifier
+					ifPresent: [ :triple | 
+						| form presenter |
+						newLayout add: (self collapseButtonFor: propertyDef) expand: false.
 						form := self
 							        chartWith: propertyDef
 							        values: vals
 							        min: triple first
 							        max: triple second
 							        divisions: triple third.
-						box add: form asPresenter height: form height ]
+						presenter := self newImage.
+						presenter image: form.
+						chartPresenters at: propertyDef identifier put: presenter.
+						newLayout add: presenter height: form height ]
 					ifAbsent: [ 
-					box add: (self expandButtonFor: propertyDef values: vals) expand: false ] ] ].
-		self layout: box ]
+						newLayout
+							add: (self expandButtonFor: propertyDef values: vals)
+							expand: false ] ] ].
+		self layout: newLayout ]
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDHistogramInspector >> updateObservation [
 	self updateImage.
 	self changed

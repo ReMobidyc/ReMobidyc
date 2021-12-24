@@ -7,7 +7,7 @@ Class {
 		'timeSeries',
 		'titleLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #accessing }

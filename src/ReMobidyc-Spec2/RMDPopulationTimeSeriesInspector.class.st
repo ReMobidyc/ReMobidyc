@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'animatDefinition'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
 { #category : #accessing }
