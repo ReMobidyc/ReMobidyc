@@ -1,11 +1,15 @@
 Class {
 	#name : #RMDTimeSeriesInspector,
-	#superclass : #RMDPresenter,
+	#superclass : #RMDSpeciesInspector,
 	#instVars : [
-		'interpreter',
-		'image',
-		'timeSeries',
-		'titleLabel'
+		'chartPresenters',
+		'propertyTimeSeries',
+		'visibleProperties',
+		'showsMin',
+		'showsMax',
+		'showsMean',
+		'showsSd',
+		'showsTotal'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -24,9 +28,14 @@ RMDTimeSeriesInspector class >> chartWidth [
 RMDTimeSeriesInspector class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		  add: #titleLabel expand: false;
-		  add: #image height: 200;
-		  yourself
+		  add: (SpBoxLayout newHorizontal
+				   add: #showsMin;
+				   add: #showsMax;
+				   add: #showsMean;
+				   add: #showsSd;
+				   add: #showsTotal)
+		  height: self buttonHeight;
+		  add: SpBoxLayout newVertical
 ]
 
 { #category : #accessing }
@@ -42,7 +51,7 @@ RMDTimeSeriesInspector >> chartWidth [
 ]
 
 { #category : #accessing }
-RMDTimeSeriesInspector >> createChart [
+RMDTimeSeriesInspector >> chartWith: propertyDefinition timeSeries: aDictionaryOfStats [
 
 	| chartWidth chartHeight font fontHeight form canvas times min max |
 	chartWidth := self chartWidth.
@@ -54,13 +63,26 @@ RMDTimeSeriesInspector >> createChart [
 		        depth: 32.
 	canvas := form getCanvas.
 	canvas fillColor: Color white.
-	times := timeSeries keys sorted.
-	min := timeSeries min.
-	max := timeSeries max.
+
+	times := aDictionaryOfStats keys sorted.
+	min := (aDictionaryOfStats collect: [ :dict | dict at: #min ])
+		       ifNotEmpty: #min
+		       ifEmpty: [ 0.0 ].
+	max := (aDictionaryOfStats collect: [ :dict | dict at: #max ])
+		       ifNotEmpty: #max
+		       ifEmpty: [ 0.0 ].
+	showsTotal state ifTrue: [ 
+		max := max max:
+			       ((aDictionaryOfStats collect: [ :dict | dict at: #total ])
+				        ifNotEmpty: #max
+				        ifEmpty: [ 0.0 ]) ].
 	min < max ifTrue: [ 
 		| xScale yScale minString maxString |
-		xScale := chartWidth / times last asFloat.
-		yScale := chartHeight / (timeSeries max - timeSeries min).
+		xScale := chartWidth
+		          /
+		          interpreter simulationDefinition timeDefinition duration
+			          numeric.
+		yScale := chartHeight / (max - min).
 		minString := min printShowingDecimalPlaces: 1.
 		maxString := max printShowingDecimalPlaces: 1.
 		canvas
@@ -73,19 +95,74 @@ RMDTimeSeriesInspector >> createChart [
 			at: 0 @ 0
 			font: font
 			color: Color gray.
+		canvas
+			line: interpreter time * xScale @ 0
+			to: interpreter time * xScale @ chartHeight
+			width: 1
+			color: Color red.
 		1 to: times size - 1 do: [ :index | 
-			| time1 time2 value1 value2 |
+			| time1 time2 stats1 stats2 min1 max1 sd1 total1 mean1 min2 max2 sd2 mean2 total2 curves |
 			time1 := times at: index.
 			time2 := times at: index + 1.
-			value1 := timeSeries at: time1.
-			value2 := timeSeries at: time2.
-			canvas
-				line: (time1 * xScale) rounded
-					@ (chartHeight - (value1 - min * yScale) rounded)
-				to: (time2 * xScale) rounded
-					@ (chartHeight - (value2 - min * yScale) rounded)
-				width: 1
-				color: Color gray ] ].
+			stats1 := aDictionaryOfStats at: time1.
+			stats2 := aDictionaryOfStats at: time2.
+			min1 := stats1 at: #min.
+			max1 := stats1 at: #max.
+			sd1 := stats1 at: #sd.
+			mean1 := stats1 at: #mean.
+			total1 := stats1 at: #total.
+			min2 := stats2 at: #min.
+			max2 := stats2 at: #max.
+			sd2 := stats2 at: #sd.
+			mean2 := stats2 at: #mean.
+			total2 := stats2 at: #total.
+			curves := OrderedCollection new: 4.
+			showsMean state ifTrue: [ 
+				curves add: { 
+						mean1.
+						mean2.
+						1.
+						Color black } ].
+			showsMin state ifTrue: [ 
+				curves add: { 
+						min1.
+						min2.
+						1.
+						Color black } ].
+			showsMax state ifTrue: [ 
+				curves add: { 
+						max1.
+						max2.
+						1.
+						Color black } ].
+			showsSd state ifTrue: [ 
+				curves
+					add: { 
+							(mean1 - sd1).
+							(mean2 - sd2).
+							1.
+							Color black };
+					add: { 
+							(mean1 + sd1).
+							(mean2 + sd2).
+							1.
+							Color black } ].
+			showsTotal state ifTrue: [ 
+				curves add: { 
+						total1.
+						total2.
+						1.
+						Color black } ].
+
+			curves do: [ :args | 
+				[ :value1 :value2 :width :color | 
+				canvas
+					line: (time1 * xScale) rounded
+						@ (chartHeight - (value1 - min * yScale) rounded)
+					to: (time2 * xScale) rounded
+						@ (chartHeight - (value2 - min * yScale) rounded)
+					width: width
+					color: color ] valueWithArguments: args ] ] ].
 	canvas
 		drawString: '0'
 		at: 0 @ chartHeight
@@ -106,123 +183,140 @@ RMDTimeSeriesInspector >> createChart [
 	^ form
 ]
 
-{ #category : #evaluating }
-RMDTimeSeriesInspector >> eval [
+{ #category : #private }
+RMDTimeSeriesInspector >> collapseButtonFor: propertyDef [
 
-	^ self subclassResponsibility
+	^ self newButton
+		  label: propertyDef printString;
+		  icon: self expandedIcon;
+		  action: [ 
+			  visibleProperties remove: propertyDef identifier ifAbsent: [  ].
+			  self
+				  updateLayout;
+				  updateObservation ]
 ]
 
-{ #category : #obsolete }
-RMDTimeSeriesInspector >> evalAgent: agent property: property aggregation: aggregation [
+{ #category : #private }
+RMDTimeSeriesInspector >> expandButtonFor: propertyDef [
 
-	agent = 'World' ifTrue: [ ^ self evalWorldProperty: property ].
-	agent = 'Cell' ifTrue: [ 
-		^ self evalCellProperty: property aggregation: aggregation ].
-	^ self evalAnimat: agent property: property aggregation: aggregation
-]
-
-{ #category : #obsolete }
-RMDTimeSeriesInspector >> evalAnimat: aString property: anotherString aggregation: aSymbol [
-
-	| animatDefinition |
-	animatDefinition := interpreter
-		                    animatDefinitionAt: aString
-		                    ifAbsent: [ ^ nil ].
-	anotherString ifNil: [ 
-		^ interpreter numberOfIndivisualsOf: animatDefinition ].
-	^ ((Array streamContents: [ :stream | 
-		    interpreter
-			    individualsOf: animatDefinition
-			    do: [ :individual | 
-				    interpreter
-					    withObserverContextWithSubject: individual
-					    species: animatDefinition
-					    do: [ 
-						    (interpreter
-							     readVariable: anotherString
-							     agent: nil
-							     ifAbsent: [ nil ]) ifNotNil: [ :value | 
-							    stream nextPut: value ] ] ] ])
-		   ifEmpty: [ nil ]
-		   ifNotEmpty: aSymbol) ifNotNil: [ :value | 
-		  (animatDefinition unitOfProperty: anotherString ifAbsent: [ nil ]) 
-			  ifNotNil: [ :unit | unit fromSI: value ] ]
-]
-
-{ #category : #obsolete }
-RMDTimeSeriesInspector >> evalCellProperty: aString aggregation: aSymbol [
-
-	^ ((Array streamContents: [ :stream | 
-		    interpreter cellsDo: [ :cell | 
-			    interpreter
-				    withObserverContextWithSubject: cell
-				    species: interpreter cellDefinition
-				    do: [ 
-					    (interpreter
-						     readVariable: aString
-						     agent: nil
-						     ifAbsent: [ nil ]) ifNotNil: [ :value | 
-						    stream nextPut: value ] ] ] ])
-		   ifEmpty: [ nil ]
-		   ifNotEmpty: aSymbol) ifNotNil: [ :value | 
-		  (interpreter cellDefinition
-			   unitOfProperty: aString
-			   ifAbsent: [ nil ]) ifNotNil: [ :unit | unit fromSI: value ] ]
-]
-
-{ #category : #obsolete }
-RMDTimeSeriesInspector >> evalWorldProperty: aString [
-
-	^ (interpreter
-		   withObserverContextWithSubject: interpreter world
-		   species: interpreter worldDefinition
-		   do: [ 
-		   interpreter readVariable: aString agent: nil ifAbsent: [ nil ] ]) 
-		  ifNotNil: [ :value | 
-			  (interpreter worldDefinition
-				   unitOfProperty: aString
-				   ifAbsent: [ nil ]) ifNotNil: [ :unit | unit fromSI: value ] ]
-]
-
-{ #category : #initialization }
-RMDTimeSeriesInspector >> initialize [
-
-	super initialize.
-	timeSeries := Dictionary new
+	^ self newButton
+		  label: propertyDef printString;
+		  icon: self collapsedIcon;
+		  borderWidth: 0;
+		  borderColor: Color transparent;
+		  action: [ 
+			  visibleProperties add: propertyDef identifier.
+			  self
+				  updateLayout;
+				  updateObservation ]
 ]
 
 { #category : #initialization }
 RMDTimeSeriesInspector >> initializePresenters [
 
 	super initializePresenters.
-	titleLabel := self newLabel
-		              label: '';
-		              yourself.
-	image := self newImage
-		         autoScale: false;
-		         yourself
+	visibleProperties := Set new.
+	propertyTimeSeries := Dictionary new.
+	showsMin := self newCheckBox
+		            labelOnRight;
+		            label: 'min';
+		            state: false;
+		            labelClickable: true;
+		            whenChangedDo: [ self updateObservation ];
+		            yourself.
+	showsMax := self newCheckBox
+		            labelOnRight;
+		            label: 'max';
+		            state: false;
+		            labelClickable: true;
+		            whenChangedDo: [ self updateObservation ];
+		            yourself.
+	showsMean := self newCheckBox
+		             labelOnRight;
+		             label: 'mean';
+		             state: true;
+		             labelClickable: true;
+		             whenChangedDo: [ self updateObservation ];
+		             yourself.
+	showsSd := self newCheckBox
+		           labelOnRight;
+		           label: 'mean ± σ';
+		           state: false;
+		           labelClickable: true;
+		           whenChangedDo: [ self updateObservation ];
+		           yourself.
+	showsTotal := self newCheckBox
+		           labelOnRight;
+		           label: 'total';
+		           state: false;
+		           labelClickable: true;
+		           whenChangedDo: [ self updateObservation ];
+		           yourself.
+		
+	self whenBuiltDo: [ self updateImage ]
 ]
 
-{ #category : #accessing }
-RMDTimeSeriesInspector >> interpreter [
-	^ interpreter 
-]
+{ #category : #updating }
+RMDTimeSeriesInspector >> newLayout [
 
-{ #category : #accessing }
-RMDTimeSeriesInspector >> interpreter: aRMDInterpreter [
-
-	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
-	interpreter := aRMDInterpreter.
-	interpreter announcer weak
-		when: RMDTimeChanged
-		send: #updateObservation
-		to: self
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: showsMin;
+				   add: showsMax;
+				   add: showsMean;
+				   add: showsSd;
+				   add: showsTotal)
+		  height: self class buttonHeight;
+		  yourself
 ]
 
 { #category : #updating }
 RMDTimeSeriesInspector >> updateImage [
 
-	image image: self createChart
+	self layout ifNotNil: [ 
+		chartPresenters ifNil: [ self updateLayout ].
+		self propertyValuesDo: [ :propertyValues | 
+			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
+				(visibleProperties includes: propertyDef identifier) ifTrue: [ 
+					chartPresenters
+						at: propertyDef identifier
+						ifPresent: [ :presenter | 
+							propertyTimeSeries
+								at: propertyDef identifier
+								ifPresent: [ :timeSeries | 
+									| form |
+									form := self chartWith: propertyDef timeSeries: timeSeries.
+									presenter image: form ] ] ] ] ] ]
+]
+
+{ #category : #updating }
+RMDTimeSeriesInspector >> updateLayout [
+
+	self layout ifNotNil: [ 
+		| newLayout |
+		chartPresenters := Dictionary new.
+		newLayout := self newLayout.
+		self propertyValuesDo: [ :propertyValues | 
+			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
+				(visibleProperties includes: propertyDef identifier)
+					ifTrue: [ 
+						| form presenter |
+						newLayout
+							add: (self collapseButtonFor: propertyDef)
+							expand: false.
+						form := self
+							        chartWith: propertyDef
+							        timeSeries: (propertyTimeSeries
+									         at: propertyDef identifier
+									         ifAbsent: [ Dictionary new ]).
+						presenter := self newImage.
+						presenter image: form.
+						chartPresenters at: propertyDef identifier put: presenter.
+						newLayout add: presenter height: form height ]
+					ifFalse: [ 
+					newLayout add: (self expandButtonFor: propertyDef) expand: false ] ] ].
+		newLayout presenters ifEmpty: [ newLayout add: '' asPresenter ].
+		self layout: newLayout ]
 ]
 
 { #category : #updating }
@@ -236,11 +330,11 @@ RMDTimeSeriesInspector >> updateObservation [
 { #category : #updating }
 RMDTimeSeriesInspector >> updateTimeSeries [
 
-	timeSeries at: interpreter time put: self eval
-]
-
-{ #category : #accessing }
-RMDTimeSeriesInspector >> updateTitleLabel [
-
-	^ self subclassResponsibility
+	chartPresenters ifNil: [ self updateLayout ].
+	self propertyValuesDo: [ :propertyValues | 
+		propertyValues propertiesDo: [ :propertyDef :vals :stats | 
+			(visibleProperties includes: propertyDef identifier) ifTrue: [ 
+				(propertyTimeSeries
+					 at: propertyDef identifier
+					 ifAbsentPut: [ Dictionary new ]) at: interpreter time put: stats ] ] ]
 ]

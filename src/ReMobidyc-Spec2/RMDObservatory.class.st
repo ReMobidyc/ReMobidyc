@@ -65,6 +65,7 @@ RMDObservatory >> animatInspector: aString [
 					   RMDScrollPresenter with: (RMDAnimatPercentileInspector new
 								    interpreter: interpreter;
 								    animat: aString;
+								    updateLayout;
 								    updateObservation;
 								    yourself) ];
 				   whenRetrievedDo: [ :content | 
@@ -82,6 +83,18 @@ RMDObservatory >> animatInspector: aString [
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];
 				   title: 'Histogram';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDAnimatTimeSeriesInspector new
+								    interpreter: interpreter;
+								    animat: aString;
+								    updateLayout;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Time series';
 				   yourself);
 		  yourself
 ]
@@ -126,6 +139,17 @@ RMDObservatory >> cellInspector [
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];
 				   title: 'Histogram';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDCellTimeSeriesInspector new
+								    interpreter: interpreter;
+								    updateLayout;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Time series';
 				   yourself);
 		  yourself
 ]
@@ -203,27 +227,6 @@ RMDObservatory >> modelName: aString [
 	modelName := aString
 ]
 
-{ #category : #private }
-RMDObservatory >> populationInspector [
-
-	| notebook |
-	notebook := self newNotebook.
-	interpreter animatNames do: [ :animat | 
-		(interpreter animatDefinitionAt: animat ifAbsent: [ nil ]) 
-			ifNotNil: [ :animatDef | 
-				notebook addPage: (self newNotebookPage
-						 presenterProvider: [ 
-							 RMDPopulationTimeSeriesInspector new
-								 interpreter: interpreter;
-								 animatDefinition: animatDef;
-								 updateObservation;
-								 yourself ];
-						 whenRetrievedDo: [ :content | content updateObservation ];
-						 title: animat;
-						 yourself) ] ].
-	^ notebook
-]
-
 { #category : #api }
 RMDObservatory >> progress [
 	^ time / duration
@@ -267,18 +270,14 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 		send: #timeChanged
 		to: self.
 	views pages: (Array streamContents: [ :stream | 
-			 stream
-				 nextPut: (self newNotebookPage
-						  presenterProvider: [ 
-							  visualizer asPresenter
-								  interpreter: interpreter;
-								  updateImage;
-								  yourself ];
-						  whenRetrievedDo: [ :content | content updateImage ];
-						  title: 'Map');
-				 nextPut: (self newNotebookPage
-						  presenterProvider: [ self populationInspector ];
-						  title: 'Population').
+			 stream nextPut: (self newNotebookPage
+					  presenterProvider: [ 
+						  visualizer asPresenter
+							  interpreter: interpreter;
+							  updateImage;
+							  yourself ];
+					  whenRetrievedDo: [ :content | content updateImage ];
+					  title: 'Map').
 			 interpreter worldDefinition allPropertyDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self worldInspector ];
@@ -373,6 +372,17 @@ RMDObservatory >> worldInspector [
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];
 				   title: 'Histogram';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDWorldTimeSeriesInspector new
+								    interpreter: interpreter;
+								    updateLayout;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Time series';
 				   yourself);
 		  yourself
 ]

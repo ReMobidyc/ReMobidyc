@@ -43,7 +43,7 @@ RMDAnimatHistogramInspector >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : #accessing }
 RMDAnimatHistogramInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
@@ -51,14 +51,14 @@ RMDAnimatHistogramInspector >> newLayout [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDAnimatHistogramInspector >> updateObservation [
 
 	self updatePopulationLabel.
 	super updateObservation
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDAnimatHistogramInspector >> updatePopulationLabel [
 
 	populationLabel ifNotNil: [ 

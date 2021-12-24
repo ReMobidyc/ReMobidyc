@@ -12,13 +12,15 @@ Class {
 
 { #category : #'instance creation' }
 RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesDefinitionNode [
+
 	| propertyDeclarations propertyValues ids individualIndex propertyStats |
 	propertyDeclarations := aRMDSpeciesDefinitionNode
-		allPropertyDeclarations.
-	ids := Array
-		new: (aRMDInterpreter numberOfIndivisualsOf: aRMDSpeciesDefinitionNode).
-	propertyValues := (1 to: propertyDeclarations size)
-		collect: [ :i | Array new: ids size ].
+		                        allPropertyDeclarations.
+	ids := Array new:
+		       (aRMDInterpreter numberOfIndivisualsOf:
+			        aRMDSpeciesDefinitionNode).
+	propertyValues := (1 to: propertyDeclarations size) collect: [ :i | 
+		                  Array new: ids size ].
 	individualIndex := 1.
 	aRMDInterpreter
 		individualsOf: aRMDSpeciesDefinitionNode
@@ -27,42 +29,41 @@ RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesD
 			aRMDInterpreter
 				withObserverContextWithSubject: id
 				species: aRMDSpeciesDefinitionNode
-				do: [ aRMDSpeciesDefinitionNode allPropertyDeclarations
-						doWithIndex: [ :propertyDef :propertyIndex | 
-							(propertyValues at: propertyIndex)
-								at: individualIndex
-								put:
-									(propertyDef unit
-										fromSI:
-											(aRMDInterpreter
-												readVariable: propertyDef identifier
-												agent: nil
-												ifAbsent: [ nil ])) ] ].
+				do: [ 
+					aRMDSpeciesDefinitionNode allPropertyDeclarations doWithIndex: [ 
+						:propertyDef 
+						:propertyIndex | 
+						(propertyValues at: propertyIndex)
+							at: individualIndex
+							put: (propertyDef unit fromSI: (aRMDInterpreter
+										  readVariable: propertyDef identifier
+										  agent: nil
+										  ifAbsent: [ nil ])) ] ].
 			individualIndex := individualIndex + 1 ].
-	propertyStats := propertyValues
-		collect: [ :values | 
-			| stats |
-			stats := Dictionary new.
-			values
-				ifNotEmpty: [ | size mean |
-					stats at: #min put: values min.
-					stats at: #max put: values max.
-					stats at: #mean put: (mean := values average).
-					size := values size.
-					stats
-						at: #sd
-						put:
-							(values
-								inject: 0.0
-								into: [ :sd :value | (value - mean) squared / size + sd ])
-								sqrt ].
-			stats ].
+	propertyStats := propertyValues collect: [ :values | 
+		                 | stats |
+		                 stats := Dictionary new.
+		                 values ifNotEmpty: [ 
+			                 | total size mean |
+			                 total := values sum.
+			                 size := values size.
+			                 stats at: #total put: total.
+			                 stats at: #min put: values min.
+			                 stats at: #max put: values max.
+			                 stats
+				                 at: #mean
+				                 put: (mean := total asFloat / size asFloat).
+			                 stats at: #sd put: (values
+					                  inject: 0.0
+					                  into: [ :sd :value | 
+					                  (value - mean) squared / size + sd ]) sqrt ].
+		                 stats ].
 	^ self new
-		setPropertyDeclarations: propertyDeclarations
-			ids: ids
-			values: propertyValues
-			stats: propertyStats;
-		yourself
+		  setPropertyDeclarations: propertyDeclarations
+		  ids: ids
+		  values: propertyValues
+		  stats: propertyStats;
+		  yourself
 ]
 
 { #category : #accessing }

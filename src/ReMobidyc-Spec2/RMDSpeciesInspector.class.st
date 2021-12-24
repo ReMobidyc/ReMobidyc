@@ -7,6 +7,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
+{ #category : #accessing }
+RMDSpeciesInspector >> collapsedIcon [
+	^ Smalltalk ui theme 	treeUnexpandedForm
+]
+
+{ #category : #accessing }
+RMDSpeciesInspector >> expandedIcon [
+	^ Smalltalk ui theme 	treeExpandedForm
+]
+
 { #category : #initialization }
 RMDSpeciesInspector >> initialize [
 	super initialize.

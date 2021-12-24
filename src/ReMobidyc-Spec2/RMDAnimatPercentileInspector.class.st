@@ -50,7 +50,7 @@ RMDAnimatPercentileInspector >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDAnimatPercentileInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
@@ -65,14 +65,14 @@ RMDAnimatPercentileInspector >> newLayout [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDAnimatPercentileInspector >> updateObservation [
 
 	self updatePopulationLabel.
 	super updateObservation
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDAnimatPercentileInspector >> updatePopulationLabel [
 
 	populationLabel ifNotNil: [ 

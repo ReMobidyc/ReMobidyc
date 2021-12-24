@@ -105,11 +105,6 @@ RMDHistogramInspector >> collapseButtonFor: propertyDef [
 				  updateObservation ]
 ]
 
-{ #category : #accessing }
-RMDHistogramInspector >> collapsedIcon [
-	^ Smalltalk ui theme 	treeUnexpandedForm
-]
-
 { #category : #private }
 RMDHistogramInspector >> expandButtonFor: propertyDef values: values [
 
@@ -127,20 +122,14 @@ RMDHistogramInspector >> expandButtonFor: propertyDef values: values [
 						  updateObservation ] ]
 ]
 
-{ #category : #accessing }
-RMDHistogramInspector >> expandedIcon [
-	^ Smalltalk ui theme 	treeExpandedForm
-]
-
 { #category : #initialization }
 RMDHistogramInspector >> initializePresenters [
 
 	super initializePresenters.
-	visibleProperties := Dictionary new.
-	self whenBuiltDo: [self updateImage]
+	visibleProperties := Dictionary new
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDHistogramInspector >> newLayout [
 
 	^ SpBoxLayout newVertical

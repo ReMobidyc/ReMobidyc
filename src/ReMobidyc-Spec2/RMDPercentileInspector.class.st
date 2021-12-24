@@ -7,7 +7,8 @@ Class {
 		'showsMin',
 		'showsMax',
 		'showsMean',
-		'showsSd'
+		'showsSd',
+		'chartPresenters'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -26,17 +27,17 @@ RMDPercentileInspector class >> defaultSpec [
 		  add: SpBoxLayout newVertical
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDPercentileInspector >> chartHeight [
 	^ 200
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDPercentileInspector >> chartWidth [
 	^ 760
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDPercentileInspector >> chartWith: propertyDef values: vals stats: stats [
 
 	| chartWidth chartHeight font fontHeight form canvas values resolution min max |
@@ -210,12 +211,9 @@ RMDPercentileInspector >> collapseButtonFor: propertyDef [
 		  icon: self expandedIcon;
 		  action: [ 
 			  visibleProperties remove: propertyDef identifier ifAbsent: [  ].
-			  self updateObservation ]
-]
-
-{ #category : #private }
-RMDPercentileInspector >> collapsedIcon [
-	^ Smalltalk ui theme 	treeUnexpandedForm
+			  self
+				  updateLayout;
+				  updateObservation ]
 ]
 
 { #category : #private }
@@ -228,12 +226,9 @@ RMDPercentileInspector >> expandButtonFor: propertyDef [
 		  borderColor: Color transparent;
 		  action: [ 
 			  visibleProperties add: propertyDef identifier.
-			  self updateObservation ]
-]
-
-{ #category : #private }
-RMDPercentileInspector >> expandedIcon [
-	^ Smalltalk ui theme 	treeExpandedForm
+			  self
+				  updateLayout;
+				  updateObservation ]
 ]
 
 { #category : #initialization }
@@ -279,7 +274,7 @@ RMDPercentileInspector >> initializePresenters [
 	self whenBuiltDo: [self updateImage]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDPercentileInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
@@ -293,26 +288,48 @@ RMDPercentileInspector >> newLayout [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDPercentileInspector >> updateImage [
 
-	self layout ifNotNil: [ :theLayout | 
-		| box |
-		box := self newLayout.
+	self layout ifNotNil: [ 
+		chartPresenters ifNil: [ self updateLayout ].
+		self propertyValuesDo: [ :propertyValues | 
+			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
+				(visibleProperties includes: propertyDef identifier) ifTrue: [ 
+					chartPresenters
+						at: propertyDef identifier
+						ifPresent: [ :presenter | 
+							| form |
+							form := self chartWith: propertyDef values: vals stats: stats.
+							presenter image: form ] ] ] ] ]
+]
+
+{ #category : #updating }
+RMDPercentileInspector >> updateLayout [
+
+	self layout ifNotNil: [ 
+		| newLayout |
+		chartPresenters := Dictionary new.
+		newLayout := self newLayout.
 		self propertyValuesDo: [ :propertyValues | 
 			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
 				(visibleProperties includes: propertyDef identifier)
 					ifTrue: [ 
-						| form |
-						box add: (self collapseButtonFor: propertyDef) expand: false.
+						| form presenter |
+						newLayout
+							add: (self collapseButtonFor: propertyDef)
+							expand: false.
 						form := self chartWith: propertyDef values: vals stats: stats.
-						box add: form asPresenter height: form height ]
+						presenter := self newImage.
+						presenter image: form.
+						chartPresenters at: propertyDef identifier put: presenter.
+						newLayout add: presenter height: form height ]
 					ifFalse: [ 
-					box add: (self expandButtonFor: propertyDef) expand: false ] ] ].
-		self layout: box ]
+					newLayout add: (self expandButtonFor: propertyDef) expand: false ] ] ].
+		self layout: newLayout ]
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDPercentileInspector >> updateObservation [
 	self updateImage.
 	self changed
