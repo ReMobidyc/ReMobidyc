@@ -13,7 +13,10 @@ Class {
 RMDAnimatTimeSeriesInspector class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		  add: 'Population' expand: false;
+		  add: (SpBoxLayout newHorizontal
+				   hAlignCenter;
+				   add: 'Population')
+		  expand: false;
 		  add: #populationPresenter height: self chartHeight;
 		  add: (SpBoxLayout newHorizontal
 				   add: #showsMin;
@@ -124,7 +127,10 @@ RMDAnimatTimeSeriesInspector >> initializePresenters [
 RMDAnimatTimeSeriesInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
-		  add: 'Population' expand: false;
+		  add: (SpBoxLayout newHorizontal
+				   hAlignCenter;
+				   add: 'Population')
+		  expand: false;
 		  add: populationPresenter height: self chartHeight;
 		  add: (SpBoxLayout newHorizontal
 				   add: showsMin;
