@@ -4,8 +4,35 @@
 
 ![logo-light1](images/logo-light1.png)
 
-# ReMobidyc
-ReːMobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+# re:mobidyc
+reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+
+## Install
+
+Re:mobidyc is implemented on the [Pharo](https://pharo.org/) system.
+There are two ways to install re:mobidyc.
+
+1. from command shell
+
+The following one-liner will download Pharo and install re:mobidyc.
+
+```
+curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-remobidyc.sh | bash
+```
+
+2. from Pharo
+
+If you have the [Pharo](https://pharo.org/) installation, you can install re:mobidyc by evaluating the following expression.
+
+```
+EpMonitor disableDuring: [
+	Metacello new
+		onConflictUseLoaded;
+		onWarningLog;
+		repository: 'github://ReMobidyc/ReMobidyc:main/';
+		baseline: 'ReMobidyc';
+		load ] 
+```
 
 ## Background
 Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
