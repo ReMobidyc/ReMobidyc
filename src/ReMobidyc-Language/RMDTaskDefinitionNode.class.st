@@ -61,11 +61,11 @@ where
 ]
 
 { #category : #'typical instances' }
-RMDTaskDefinitionNode class >> goat_sturve: thresholdString [
+RMDTaskDefinitionNode class >> goat_starve: thresholdString [
 
 	<script:
-	'(RMDTaskDefinitionNode goat_sturve: ''1000[kcal/day]'') inspect'>
-	^ ('Goat sturve
+	'(RMDTaskDefinitionNode goat_starve: ''1000[kcal/day]'') inspect'>
+	^ ('Goat starve
 where
 	the vitality -> my blood_sugar
 	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition

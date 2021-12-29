@@ -108,9 +108,9 @@ RMDBuiltinRepository >> repositoryName [
 ]
 
 { #category : #actions }
-RMDBuiltinRepository >> sturve [
+RMDBuiltinRepository >> starve [
 
-	^ 'to sturve is
+	^ 'to starve is
 	when the vitality < the minimum
 	with die.' asRMDActionDefinition
 ]
