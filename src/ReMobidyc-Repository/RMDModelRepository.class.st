@@ -38,6 +38,12 @@ RMDModelRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
 		and: [ super includesActionIdentifier: aRMDActionIdentifierNode ]
 ]
 
+{ #category : #testing }
+RMDModelRepository >> isModifiable [
+
+	^ true
+]
+
 { #category : #accessing }
 RMDModelRepository >> repositoryName [
 	^ 'Model' copy

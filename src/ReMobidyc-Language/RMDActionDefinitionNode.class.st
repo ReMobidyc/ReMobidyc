@@ -39,6 +39,12 @@ with new 1 Goat
 	my delta blood_sugar'' = -4000 [kcal].' asRMDActionDefinition
 ]
 
+{ #category : #'typical instances' }
+RMDActionDefinitionNode class >> template [
+	<script: 'RMDActionDefinitionNode template inspect'>
+	^ 'to verb is.' asRMDActionDefinition
+]
+
 { #category : #'instance creation' }
 RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 	| variables actionDefinition |

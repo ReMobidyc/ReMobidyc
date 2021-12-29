@@ -42,12 +42,12 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 				   add: (SpBoxLayout newVertical
 						    add: 'Visualization' expand: false;
 						    add: #rendererList;
-						    add: (SpBoxLayout newHorizontal
+						    "add: (SpBoxLayout newHorizontal
 								     add: #addRendererButton width: self buttonHeight;
 								     add: #removeRendererButton width: self buttonHeight;
 								     add: #editRendererButton width: self buttonHeight;
 								     yourself)
-						    height: self buttonHeight;
+						    height: self buttonHeight;"
 						    yourself);
 				   yourself);
 		  add: (SpBoxLayout newVertical

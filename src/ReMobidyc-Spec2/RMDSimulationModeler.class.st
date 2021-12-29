@@ -91,6 +91,8 @@ RMDSimulationModeler >> addAnimatNamed: aString [
 		                        identifier: name
 		                        propertyDeclarations: Array new.
 	simulationModel load: animatDefinitionNode.
+	simulationModel addRenderer:
+		(RMDAnimatDotRenderer on: name diameter: 7 color: Color yellow).
 	self updatePages
 ]
 

@@ -24,6 +24,12 @@ RMDRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
 	^ self actionIdentifiers includes: aRMDActionIdentifierNode
 ]
 
+{ #category : #testing }
+RMDRepository >> isModifiable [
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDRepository >> repositoryName [
 	^ self subclassResponsibility

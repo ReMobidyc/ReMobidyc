@@ -219,6 +219,21 @@ RMDSimulationModel >> north [
 ]
 
 { #category : #adding }
+RMDSimulationModel >> removeActionDefinition: aRMDActionDefinitionNode ifAbsent: errorBlock [
+
+	actionDefinitions
+		removeKey: aRMDActionDefinitionNode identifier
+		ifAbsent: [ ^ errorBlock value ].
+	taskDefinitions do: [ :task | 
+		task isTaskDefinitionNode ifTrue: [ 
+			(task actionIdentifier isLocalActionIdentifierNode and: [ 
+				 task actionIdentifier shortName
+				 = aRMDActionDefinitionNode identifier ]) ifTrue: [ 
+				task resetAction ] ] ].
+	^ aRMDActionDefinitionNode
+]
+
+{ #category : #adding }
 RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 
 	| animatDefinition |
@@ -230,12 +245,20 @@ RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 	simulationDefinition animatInitializers:
 		(simulationDefinition animatInitializers reject: [ :initializer | 
 			 initializer animat = aString ]).
+	simulationDefinition removeRenderersForAnimat: aString. 
 	^ animatDefinition
 ]
 
 { #category : #adding }
 RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
+]
+
+{ #category : #adding }
+RMDSimulationModel >> removeRenderersForAnimat: aString [
+
+	renderers removeAllSuchThat: [ :renderer | 
+		renderer isAnimatRendererFor: aString ]
 ]
 
 { #category : #adding }

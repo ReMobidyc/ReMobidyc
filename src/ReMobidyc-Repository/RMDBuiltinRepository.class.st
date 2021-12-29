@@ -69,6 +69,12 @@ RMDBuiltinRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
 		and: [ super includesActionIdentifier: aRMDActionIdentifierNode ]
 ]
 
+{ #category : #testing }
+RMDBuiltinRepository >> isModifiable [
+
+	^ false
+]
+
 { #category : #actions }
 RMDBuiltinRepository >> lose [
 	^ 'to lose is

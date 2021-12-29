@@ -132,7 +132,19 @@ RMDTaskDefinitionEditor >> actionIdentifier [
 
 { #category : #operations }
 RMDTaskDefinitionEditor >> addAction [
-	^ self notYetImplemented
+
+	| newActionDef |
+	newActionDef := RMDActionDefinitionNode template.
+	newActionDef asPresenter openDialogWithSpec okAction: [ 
+		self actionIdentifier ifNotNil: [ :actionIdentifier | 
+			self simulationModel ifNotNil: [ :model | 
+				actionIdentifier writeActionDefinition: newActionDef in: model.
+				self taskDefinition ifNotNil: #resetAction.
+				self
+					updateActionList;
+					updateActionButtons;
+					updateTemplateText;
+					updateSourceText ] ] ]
 ]
 
 { #category : #operations }
@@ -179,9 +191,14 @@ RMDTaskDefinitionEditor >> editAction [
 		newActionDef asPresenter openDialogWithSpec okAction: [ 
 			self actionIdentifier ifNotNil: [ :actionIdentifier | 
 				self simulationModel ifNotNil: [ :model | 
-					actionIdentifier writeActionDefinition: newActionDef in: model.
+					actionIdentifier
+						updateActionDefinition: oldActionDef
+						to: newActionDef
+						in: model.
 					self taskDefinition ifNotNil: #resetAction.
 					self
+						updateActionList;
+						updateActionButtons;
 						updateTemplateText;
 						updateSourceText ] ] ] ]
 ]
@@ -229,7 +246,10 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                  beSingleSelection;
 		                  whenModelChangedDo: [ 
 			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ self updateActionList ];
+		                  whenSelectionChangedDo: [ 
+			                  self
+				                  updateActionList;
+				                  updateActionButtons ];
 		                  display: [ :item | item repositoryName ];
 		                  yourself.
 	addRepositoryButton := self newButton
@@ -369,7 +389,20 @@ RMDTaskDefinitionEditor >> initializeWindow: aWindowPresenter [
 
 { #category : #operations }
 RMDTaskDefinitionEditor >> removeAction [
-	^ self notYetImplemented
+
+	self actionDefinition ifNotNil: [ :oldActionDef | 
+		(UIManager default confirm:
+			 'Sure to remove ' , oldActionDef identifier , ' from the model?') 
+			ifTrue: [ 
+				self actionIdentifier ifNotNil: [ :actionIdentifier | 
+					self simulationModel ifNotNil: [ :model | 
+						actionIdentifier removeActionDefinition: oldActionDef in: model.
+						self taskDefinition ifNotNil: #resetAction.
+						self
+							updateActionList;
+							updateActionButtons;
+							updateTemplateText;
+							updateSourceText ] ] ] ]
 ]
 
 { #category : #operations }
@@ -445,10 +478,17 @@ RMDTaskDefinitionEditor >> taskDefinitionChanged [
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateActionButtons [
 
-	| selected |
-	selected := actionList selection selectedItem notNil.
-	removeActionButton enabled: selected.
-	editActionButton enabled: selected
+	(self repository notNil and: [ self repository isModifiable ])
+		ifTrue: [ 
+			| selected |
+			selected := actionList selection selectedItem notNil.
+			addActionButton enable.
+			removeActionButton enabled: selected.
+			editActionButton enabled: selected ]
+		ifFalse: [ 
+			addActionButton disable.
+			removeActionButton disable.
+			editActionButton disable ]
 ]
 
 { #category : #updating }
@@ -487,21 +527,25 @@ RMDTaskDefinitionEditor >> updateRepositoryList [
 
 { #category : #updating }
 RMDTaskDefinitionEditor >> updateSourceText [
-	simulationModel
-		ifNotNil: [ self taskDefinition
-				ifNotNil: [ :taskDefinition | 
-					| highlights |
-					highlights := Set new: 10.
-					[ [ simulationModel typecheck: taskDefinitionNode ]
-						on: RMDTypeError
-						do: [ :ex | 
-							highlights add: ex ast.
-							ex resume: ex unit ] ]
-						on: RMDUnresolvedReferenceError
-						do: [ :ex | highlights add: ex ast ].
-					sourceText highlights: highlights.
-					sourceText
-						text: (taskDefinitionNode actionWith: simulationModel) printString asText ] ]
+
+	simulationModel ifNotNil: [ 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			| highlights |
+			highlights := Set new: 10.
+			[ 
+			[ simulationModel typecheck: taskDefinitionNode ]
+				on: RMDTypeError
+				do: [ :ex | 
+					highlights add: ex ast.
+					ex resume: ex unit ] ]
+				on: RMDUnresolvedReferenceError
+				do: [ :ex | highlights add: ex ast ].
+			sourceText highlights: highlights.
+			sourceText text: ([ 
+				 (taskDefinitionNode actionWith: simulationModel) printString
+					 asText ]
+					 on: RMDUnresolvedReferenceError
+					 do: [ :ex | String new ]) ] ]
 ]
 
 { #category : #updating }
