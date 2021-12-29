@@ -7,7 +7,7 @@
 # re:mobidyc
 reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
 
-## Install
+## Installation
 
 Re:mobidyc is implemented on the [Pharo](https://pharo.org/) system.
 There are two ways to install re:mobidyc.
