@@ -460,49 +460,41 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
+
 	memory time: 0.
 	memory
 		initialize;
 		allocateWorld: simulationModel worldDefinition;
 		allocateCells: simulationModel cellDefinition
-			x: simulationModel cellXDivisions
-			y: simulationModel cellYDivisions.
-	simulationModel
-		animatInitializersDo: [ :initializer | 
-			initializer population
-				timesRepeat: [ memory
-						allocateAnimat:
-							(simulationModel
-								animatDefinitionAt: initializer animat
-								ifAbsent: [ ^ KeyNotFound signal: initializer animat ]) ] ].
-	memory
-		worldDo: [ :world | 
+		x: simulationModel cellXDivisions
+		y: simulationModel cellYDivisions.
+	memory worldDo: [ :world | 
+		self
+			setupRandomForIndividual: world;
+			withInitializerContextWithSubject: world
+			species: simulationModel worldDefinition
+			do: [ simulationModel worldInitializer evalIn: self ] ].
+	memory cellsDo: [ :cell | 
+		self
+			setupRandomForIndividual: cell;
+			withInitializerContextWithSubject: cell
+			species: simulationModel cellDefinition
+			do: [ simulationModel cellInitializer evalIn: self ] ].
+	simulationModel animatInitializersDo: [ :initializer | 
+		| animatDefinition |
+		animatDefinition := simulationModel
+			                    animatDefinitionAt: initializer animat
+			                    ifAbsent: [ 
+			                    ^ KeyNotFound signal: initializer animat ].
+		initializer population timesRepeat: [ 
+			| animat |
+			animat := memory allocateAnimat: animatDefinition.
+
 			self
-				setupRandomForIndividual: world;
-				withInitializerContextWithSubject: world
-					species: simulationModel worldDefinition
-					do: [ simulationModel worldInitializer evalIn: self ] ].
-	memory
-		cellsDo: [ :cell | 
-			self
-				setupRandomForIndividual: cell;
-				withInitializerContextWithSubject: cell
-					species: simulationModel cellDefinition
-					do: [ simulationModel cellInitializer evalIn: self ] ].
-	simulationModel
-		animatInitializersDo: [ :initializer | 
-			memory
-				animatsOf: initializer animat
-				do: [ :animat | 
-					| species |
-					species := simulationModel
-						animatDefinitionAt: initializer animat
-						ifAbsent: [ ^ KeyNotFound signal: initializer animat ].
-					self
-						setupRandomForIndividual: animat;
-						withInitializerContextWithSubject: animat
-							species: species
-							do: [ initializer evalIn: self ] ] ].
+				setupRandomForIndividual: animat;
+				withInitializerContextWithSubject: animat
+				species: animatDefinition
+				do: [ initializer evalIn: self ] ] ].
 	self timeChanged
 ]
 

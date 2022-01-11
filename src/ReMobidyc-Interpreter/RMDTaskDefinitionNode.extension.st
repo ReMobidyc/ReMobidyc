@@ -22,11 +22,10 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 				                 ^ KeyNotFound signal: objectIdentifier ].
 			interactionSpace := RMDInteractionSpace
 				                    xdivisions:
-				                    (aRMDInterpreter north
-				                     / aRMDInterpreter cellLength) ceiling
+				                    (aRMDInterpreter north / range numeric)
+					                    ceiling
 				                    yDividions:
-				                    (aRMDInterpreter east
-				                     / aRMDInterpreter cellLength) ceiling
+				                    (aRMDInterpreter east / range numeric) ceiling
 				                    range: range numeric.
 			aRMDInterpreter
 				individualsOf: objectSpecies
@@ -46,40 +45,39 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 								     agent: nil
 								     ifAbsent: [ 
 								     ^ (RMDUnresolvedReferenceError on: self) signal ].
-							interactionSpace add: objectLifehistory x: x y: y ].
-
+							interactionSpace add: objectLifehistory x: x y: y ] ].
+			aRMDInterpreter
+				individualsOf: species
+				do: [ :subjectAnimat :subjectLifehistory | 
+					| subjectX subjectY |
 					aRMDInterpreter
-						individualsOf: species
-						do: [ :subjectAnimat :subjectLifehistory | 
-							| subjectX subjectY |
+						withObserverContextWithSubject: subjectAnimat
+						species: species
+						do: [ 
+							subjectX := aRMDInterpreter
+								            readVariable: 'x'
+								            agent: nil
+								            ifAbsent: [ 
+								            ^ (RMDUnresolvedReferenceError on: self) signal ].
+							subjectY := aRMDInterpreter
+								            readVariable: 'y'
+								            agent: nil
+								            ifAbsent: [ 
+								            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
+					interactionSpace
+						animatsAroundX: subjectX
+						y: subjectY
+						do: [ :objectLifehistory | 
 							aRMDInterpreter
-								withObserverContextWithSubject: subjectAnimat
+								setupRandomForIndividual: subjectAnimat
+								and: objectLifehistory last
+								task: self;
+								withActionContextWithIndividual: subjectLifehistory
 								species: species
+								object: objectLifehistory
+								species: objectSpecies
 								do: [ 
-									subjectX := aRMDInterpreter
-										            readVariable: 'x'
-										            agent: nil
-										            ifAbsent: [ 
-										            ^ (RMDUnresolvedReferenceError on: self) signal ].
-									subjectY := aRMDInterpreter
-										            readVariable: 'y'
-										            agent: nil
-										            ifAbsent: [ 
-										            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
-							interactionSpace
-								animatsAroundX: subjectX
-								y: subjectY
-								do: [ :objectLifeHistory | 
-									aRMDInterpreter
-										setupRandomForIndividual: subjectAnimat
-										and: objectAnimat
-										task: self;
-										withActionContextWithIndividual: subjectLifehistory
-										species: species
-										object: objectLifehistory
-										species: objectSpecies
-										do: [ 
-											(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ] ] ]
+									(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ] ]
 		ifFalse: [ 
 			aRMDInterpreter
 				individualsOf: species

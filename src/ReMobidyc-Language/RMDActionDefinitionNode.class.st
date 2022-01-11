@@ -347,6 +347,18 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 ]
 
 { #category : #accessing }
+RMDActionDefinitionNode >> replaceObjectWith: aString [
+
+	| agentName |
+	object ifNil: [ ^ self ].
+	agentName := aString uncapitalized.
+	self propertyVariableNodesDo: [ :propertyVariableNode | 
+		propertyVariableNode agent = object ifTrue: [ 
+			propertyVariableNode agent: agentName ] ].
+	object := aString capitalized
+]
+
+{ #category : #accessing }
 RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
 
 	aRMDConditionNode ifNil: [ ^ self ].

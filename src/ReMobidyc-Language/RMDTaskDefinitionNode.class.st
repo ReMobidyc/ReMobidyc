@@ -128,6 +128,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 						              bind placeholder -> bind replacement ])
 					             asDictionary)
 			            identifier: verbIdentifier;
+			            replaceObjectWith: objectIdentifier;
 			            yourself ]
 ]
 
