@@ -438,6 +438,17 @@ RMDInterpreter >> setupRandomForIndividual: anInteger [
 ]
 
 { #category : #'random numbers' }
+RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
+
+	randomGenerator initializeWithAll: { 
+			randomSeed.
+			memory time.
+			anInteger1.
+			anInteger2.
+			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
+]
+
+{ #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 	randomGenerator
 		initializeWithAll:
@@ -575,6 +586,57 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRM
 				   definition: aRMDAnimatDefinitionNode)
 		  do: [ 
 			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
+				  | here |
+				  here := memory
+					          cellAtXIndex: ((self cellX: (self
+								             readVariable: 'x'
+								             agent: nil
+								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
+						           + 1 min: simulationModel cellXDivisions max: 1)
+					          yIndex: ((self cellY: (self
+								             readVariable: 'y'
+								             agent: nil
+								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
+						           + 1 min: simulationModel cellYDivisions max: 1).
+				  context
+					  location: here
+					  definition: simulationModel cellDefinition
+					  agent: 'here'.
+				  memory eastOf: here do: [ :east | 
+					  context
+						  location: east
+						  definition: simulationModel cellDefinition
+						  agent: 'east' ].
+				  memory westOf: here do: [ :west | 
+					  context
+						  location: west
+						  definition: simulationModel cellDefinition
+						  agent: 'west' ].
+				  memory southOf: here do: [ :south | 
+					  context
+						  location: south
+						  definition: simulationModel cellDefinition
+						  agent: 'south' ].
+				  memory northOf: here do: [ :north | 
+					  context
+						  location: north
+						  definition: simulationModel cellDefinition
+						  agent: 'north' ] ].
+			  aBlock cull: self cull: context ]
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger1 species: aRMDAnimatDefinitionNode1 object: anArrayOfInteger2 species: aRMDAnimatDefinitionNode2 do: aBlock [
+
+	^ self
+		  withContext: (RMDActionContext
+				   subjectLifehistory: anArrayOfInteger1
+				   definition: aRMDAnimatDefinitionNode1)
+		  do: [ 
+			  context
+				  object: anArrayOfInteger2 last
+				  definition: aRMDAnimatDefinitionNode2.
+			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
 					          cellAtXIndex: ((self cellX: (self

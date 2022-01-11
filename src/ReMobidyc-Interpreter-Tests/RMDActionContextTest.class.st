@@ -110,7 +110,7 @@ Bar is Animat with
 	context
 		subject: 10 definition: foo;
 		action: eat;
-		object: 20 definition: bar agent: 'food'.
+		object: 20 definition: bar.
 	self assert: context object equals: 20
 ]
 
@@ -131,16 +131,16 @@ Bar is Animat with
 	eat := parser actionDefinition end
 		parse:
 			'to eat food is
-	my delta sugar'' = food''s salt.'.
+	my delta sugar'' = bar''s salt.'.
 	context
 		subject: 10 definition: foo;
 		action: eat;
-		object: 20 definition: bar agent: 'food'.
+		object: 20 definition: bar.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
 		equals: (foo propertyOffsets at: 'sugar') + 10.
 	self
-		assert: (context getMemoryAddressFor: 'salt' agent: 'food' ifAbsent: [ nil ])
+		assert: (context getMemoryAddressFor: 'salt' agent: 'bar' ifAbsent: [ nil ])
 		equals: (bar propertyOffsets at: 'salt') + 20.
 	self assert: context objectDefinition equals: bar
 ]

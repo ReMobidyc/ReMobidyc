@@ -88,6 +88,20 @@ RMDActionContext >> object [
 ]
 
 { #category : #accessing }
+RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
+
+	| dict |
+	dict := Dictionary new.
+	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+		dict at: identifier put: anInteger + offset ].
+	propertyDict
+		at: aRMDAnimatDefinition identifier uncapitalized
+		put: dict.
+	object := anInteger.
+	objectDefinition := aRMDAnimatDefinition
+]
+
+{ #category : #accessing }
 RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aString [
 
 	| dict |

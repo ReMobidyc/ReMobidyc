@@ -14,14 +14,82 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 						           animatDefinitionAt: subjectIdentifier
 						           ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
 	self hasObject
-		ifTrue: [ self shouldBeImplemented ]
+		ifTrue: [ 
+			| objectSpecies interactionSpace |
+			objectSpecies := aRMDInterpreter
+				                 animatDefinitionAt: objectIdentifier
+				                 ifAbsent: [ 
+				                 ^ KeyNotFound signal: objectIdentifier ].
+			interactionSpace := RMDInteractionSpace
+				                    xdivisions:
+				                    (aRMDInterpreter north
+				                     / aRMDInterpreter cellLength) ceiling
+				                    yDividions:
+				                    (aRMDInterpreter east
+				                     / aRMDInterpreter cellLength) ceiling
+				                    range: range numeric.
+			aRMDInterpreter
+				individualsOf: objectSpecies
+				do: [ :objectAnimat :objectLifehistory | 
+					aRMDInterpreter
+						withObserverContextWithSubject: objectAnimat
+						species: objectSpecies
+						do: [ 
+							| x y |
+							x := aRMDInterpreter
+								     readVariable: 'x'
+								     agent: nil
+								     ifAbsent: [ 
+								     ^ (RMDUnresolvedReferenceError on: self) signal ].
+							y := aRMDInterpreter
+								     readVariable: 'y'
+								     agent: nil
+								     ifAbsent: [ 
+								     ^ (RMDUnresolvedReferenceError on: self) signal ].
+							interactionSpace add: objectLifehistory x: x y: y ].
+
+					aRMDInterpreter
+						individualsOf: species
+						do: [ :subjectAnimat :subjectLifehistory | 
+							| subjectX subjectY |
+							aRMDInterpreter
+								withObserverContextWithSubject: subjectAnimat
+								species: species
+								do: [ 
+									subjectX := aRMDInterpreter
+										            readVariable: 'x'
+										            agent: nil
+										            ifAbsent: [ 
+										            ^ (RMDUnresolvedReferenceError on: self) signal ].
+									subjectY := aRMDInterpreter
+										            readVariable: 'y'
+										            agent: nil
+										            ifAbsent: [ 
+										            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
+							interactionSpace
+								animatsAroundX: subjectX
+								y: subjectY
+								do: [ :objectLifeHistory | 
+									aRMDInterpreter
+										setupRandomForIndividual: subjectAnimat
+										and: objectAnimat
+										task: self;
+										withActionContextWithIndividual: subjectLifehistory
+										species: species
+										object: objectLifehistory
+										species: objectSpecies
+										do: [ 
+											(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ] ] ]
 		ifFalse: [ 
-			aRMDInterpreter individualsOf: species do: [ :animat :lifehistory | 
-				aRMDInterpreter
-					setupRandomForIndividual: animat task: self;
-					withActionContextWithIndividual: lifehistory
-					species: species
-					do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
+			aRMDInterpreter
+				individualsOf: species
+				do: [ :animat :lifehistory | 
+					aRMDInterpreter
+						setupRandomForIndividual: animat task: self;
+						withActionContextWithIndividual: lifehistory
+						species: species
+						do: [ 
+							(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
