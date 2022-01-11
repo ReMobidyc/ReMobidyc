@@ -183,8 +183,8 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
 				vals
 					at: row first
-					put: (row copyWithoutFirst collect: [ :anscestry | 
-							 (anscestry substrings: '-') collect: #asInteger ]) ] ].
+					put: (row copyWithoutFirst collect: [ :lifehistory | 
+							 (lifehistory substrings: '-') collect: #asInteger ]) ] ].
 		^ vals ]
 ]
 
@@ -284,8 +284,8 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 					animat printOn: csvStream.
 					csvStream nextPut: $,.
 					individuals
-						do: [ :anscestry | 
-							anscestry
+						do: [ :lifehistory | 
+							lifehistory
 								do: [ :id | id printOn: csvStream ]
 								separatedBy: [ csvStream nextPut: $- ] ]
 						separatedBy: [ csvStream nextPut: $, ].

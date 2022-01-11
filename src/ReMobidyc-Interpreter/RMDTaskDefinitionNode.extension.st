@@ -16,10 +16,10 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 	self hasObject
 		ifTrue: [ self shouldBeImplemented ]
 		ifFalse: [ 
-			aRMDInterpreter individualsOf: species do: [ :animat :anscestry | 
+			aRMDInterpreter individualsOf: species do: [ :animat :lifehistory | 
 				aRMDInterpreter
 					setupRandomForIndividual: animat task: self;
-					withActionContextWithIndividual: anscestry
+					withActionContextWithIndividual: lifehistory
 					species: species
 					do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]

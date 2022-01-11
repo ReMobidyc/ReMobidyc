@@ -25,7 +25,7 @@ Class {
 }
 
 { #category : #allocating }
-RMDMemory >> addAnimat: aRMDAnimatDefinitionNode anscestry: anArrayOfInteger [
+RMDMemory >> addAnimat: aRMDAnimatDefinitionNode lifehistory: anArrayOfInteger [
 
 	| individual animat |
 	self nextAvailableSlot: (individual := self nextAvailableSlot)

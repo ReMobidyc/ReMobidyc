@@ -5,22 +5,22 @@ Class {
 		'action',
 		'utilities',
 		'location',
-		'subjectAnscestry',
 		'object',
 		'objectDefinition',
 		'newDefinition',
-		'newIndividuals'
+		'newIndividuals',
+		'subjectLifehistory'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
 
 { #category : #'instance creation' }
-RMDActionContext class >> subjectAnscestry: anArrayOfInteger definition: aRMDSpeciesDefinitionNode [
+RMDActionContext class >> subjectLifehistory: anArrayOfInteger definition: aRMDSpeciesDefinitionNode [
 
 	^ self new
 		  subject: anArrayOfInteger last
 		  definition: aRMDSpeciesDefinitionNode;
-		  subjectAnscestry: anArrayOfInteger;
+		  subjectLifehistory: anArrayOfInteger;
 		  yourself
 ]
 
@@ -51,16 +51,6 @@ RMDActionContext >> loadUtilityDefinitions [
 { #category : #accessing }
 RMDActionContext >> location [
 	^ location
-]
-
-{ #category : #accessing }
-RMDActionContext >> location: anInteger definition: aRMDCellDefinition [
-	| dict |
-	dict := Dictionary new.
-	aRMDCellDefinition
-		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict at: 'here' put: dict.
-	location := anInteger
 ]
 
 { #category : #accessing }
@@ -98,14 +88,13 @@ RMDActionContext >> object [
 ]
 
 { #category : #accessing }
-RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
+RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aString [
+
 	| dict |
 	dict := Dictionary new.
-	aRMDAnimatDefinition
-		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict
-		at: (action ifNotNil: #object ifNil: [ #object ])
-		put: dict.
+	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+		dict at: identifier put: anInteger + offset ].
+	propertyDict at: aString put: dict.
 	object := anInteger.
 	objectDefinition := aRMDAnimatDefinition
 ]
@@ -116,15 +105,15 @@ RMDActionContext >> objectDefinition [
 ]
 
 { #category : #accessing }
-RMDActionContext >> subjectAnscestry [
+RMDActionContext >> subjectLifehistory [
 
-	^ subjectAnscestry
+	^ subjectLifehistory
 ]
 
 { #category : #accessing }
-RMDActionContext >> subjectAnscestry: anArrayOfInteger [
+RMDActionContext >> subjectLifehistory: anArrayOfInteger [
 
-	subjectAnscestry := anArrayOfInteger
+	subjectLifehistory := anArrayOfInteger
 ]
 
 { #category : #'utility access' }

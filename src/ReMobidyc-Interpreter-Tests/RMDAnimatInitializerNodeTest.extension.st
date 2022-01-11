@@ -38,9 +38,9 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter
 		individualsOf: goatDef
-		do: [ :goat :anscestry | 
+		do: [ :goat :lifehistory | 
 			interpreter
-				withActionContextWithIndividual: anscestry
+				withActionContextWithIndividual: lifehistory
 				species: goatDef
 				do: [ self
 						assert:

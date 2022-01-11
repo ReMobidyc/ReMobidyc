@@ -24,9 +24,9 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter
 		individualsOf: worldDef
-		do: [ :world :anscestry | 
+		do: [ :world :lifehistory | 
 			interpreter
-				withActionContextWithIndividual: anscestry
+				withActionContextWithIndividual: lifehistory
 				species: worldDef
 				do: [ self
 						assert: (interpreter readVariable: 'temperature' agent: nil ifAbsent: [ nil ])

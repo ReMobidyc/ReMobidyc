@@ -110,12 +110,12 @@ Bar is Animat with
 	context
 		subject: 10 definition: foo;
 		action: eat;
-		object: 20 definition: bar.
+		object: 20 definition: bar agent: 'food'.
 	self assert: context object equals: 20
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testObjectDefinition [
+RMDActionContextTest >> testObjectDefinitionAgent [
 	| parser foo bar eat |
 	parser := RMDGrammar new.
 	foo := parser animatDefinition
@@ -135,7 +135,7 @@ Bar is Animat with
 	context
 		subject: 10 definition: foo;
 		action: eat;
-		object: 20 definition: bar.
+		object: 20 definition: bar agent: 'food'.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
 		equals: (foo propertyOffsets at: 'sugar') + 10.
