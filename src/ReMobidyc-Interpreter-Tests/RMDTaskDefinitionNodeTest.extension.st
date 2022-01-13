@@ -14,7 +14,7 @@ RMDTaskDefinitionNodeTest >> testEvalIn [
 		load: (tankDefinition := parser animatDefinition end parse:
 					                   'Tank is Animat with
 		water [kg].');
-		load: (parser actionDefinition end parse: 'to drink something is
+		load: (parser actionDefinition end parse: 'to drink Something is
 		my delta water'' = amount
 		something''s delta water'' = -amount
 		where

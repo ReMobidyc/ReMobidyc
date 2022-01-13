@@ -10,6 +10,13 @@ RMDSyntaxNode >> = anObject [
 ]
 
 { #category : #enumerating }
+RMDSyntaxNode >> agentDirectiveNodesDo: aBlock [
+
+	self nodesDo: [ :node | 
+		node isAgentDirectiveNode ifTrue: [ aBlock cull: node ] ]
+]
+
+{ #category : #enumerating }
 RMDSyntaxNode >> childrenDo: aBlock [
 	^ self subclassResponsibility
 ]
@@ -173,6 +180,11 @@ RMDSyntaxNode >> isGreaterThanNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isGuardedChoiceNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isKillDirectiveNode [
 	^ false
 ]
 

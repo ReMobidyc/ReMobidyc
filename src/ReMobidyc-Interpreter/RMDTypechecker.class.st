@@ -52,23 +52,24 @@ RMDTypechecker >> newTypecheckContextForCell [
 
 { #category : #'type checking' }
 RMDTypechecker >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
+
 	| subject newContext |
 	subject := aRMDTaskDefinitionNode subjectIdentifier.
 	newContext := subject = 'World'
-		ifTrue: [ self newTypecheckContextForWorld ]
-		ifFalse: [ subject = 'Cell'
-				ifTrue: [ self newTypecheckContextForCell ]
-				ifFalse: [ self newTypecheckContextForAnimat: subject ] ].
+		              ifTrue: [ self newTypecheckContextForWorld ]
+		              ifFalse: [ 
+			              subject = 'Cell'
+				              ifTrue: [ self newTypecheckContextForCell ]
+				              ifFalse: [ 
+				              self newTypecheckContextForAnimat: subject ] ].
+	aRMDTaskDefinitionNode hasObject ifTrue: [ 
+		| object |
+		object := aRMDTaskDefinitionNode objectIdentifier.
+		newContext object: object definition: (self
+				 animatDefinitionAt: object
+				 ifAbsent: [ 
+				 ^ (RMDUnresolvedReferenceError on: aRMDTaskDefinitionNode) signal ]) ].
 	newContext action: (aRMDTaskDefinitionNode actionWith: self).
-	aRMDTaskDefinitionNode hasObject
-		ifTrue: [ | object |
-			object := aRMDTaskDefinitionNode objectIdentifier.
-			newContext
-				object: object
-				definition:
-					(self
-						animatDefinitionAt: object
-						ifAbsent: [ ^ KeyNotFound signal: object ]) ].
 	^ newContext
 ]
 

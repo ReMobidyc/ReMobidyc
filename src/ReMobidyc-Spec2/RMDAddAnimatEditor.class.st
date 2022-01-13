@@ -39,6 +39,12 @@ RMDAddAnimatEditor >> action: anObject [
 	action := anObject
 ]
 
+{ #category : #'api - focus' }
+RMDAddAnimatEditor >> defaultKeyboardFocus [
+
+	^ animatField
+]
+
 { #category : #initialization }
 RMDAddAnimatEditor >> initializePresenters [
 
@@ -49,7 +55,10 @@ RMDAddAnimatEditor >> initializePresenters [
 		                action: [ 
 			                action value: animatField text asString trim ];
 		                yourself.
-	action := [ :text |  ]
+	action := [ :text |  ].
+	self focusOrder: { 
+			animatField.
+			createButton } asOrderedCollection
 ]
 
 { #category : #enumerating }

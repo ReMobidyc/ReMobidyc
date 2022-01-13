@@ -113,6 +113,11 @@ RMDActionDefinitionBrowser >> editDirectives [
 					               directive isDieDirectiveNode ]).
 				              [ RMDDieDirective new ] }
 		              with: { 
+				              'kill'.
+				              (node lifeDirectives contains: [ :directive | 
+					               directive isKillDirectiveNode ]).
+				              [ RMDKillDirective new ] }
+		              with: { 
 				              'new'.
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isNewDirectiveNode ]).
@@ -177,15 +182,14 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                   node identifier: identifier ];
 		                   yourself.
 	objectField := self newSyntaxNodeTextInput
-		               parser: RMDGrammar new agentIdentifier optional end;
+		               parser: RMDGrammar new agentIdentifier optional trimBlanks end;
 		               placeholder: '(object)';
 		               autoAccept: true;
 		               whenLastValidSyntaxNodeChangedDo: [ :animat | 
 			               node object: animat ];
-		               disable;
 		               yourself.
 	guardField := self newSyntaxNodeTextInput
-		              parser: RMDGrammar new condition end;
+		              parser: RMDGrammar new condition optional trimBlanks end;
 		              placeholder: 'guard condition';
 		              autoAccept: true;
 		              whenLastValidSyntaxNodeChangedDo: [ :guard | 

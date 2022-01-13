@@ -415,6 +415,12 @@ RMDUnit >> isCompound [
 ]
 
 { #category : #testing }
+RMDUnit >> isLength [
+
+	^ self siUnit = RMDUnit m
+]
+
+{ #category : #testing }
 RMDUnit >> isProportional [
 	^ self subclassResponsibility
 ]

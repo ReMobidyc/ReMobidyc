@@ -15,7 +15,7 @@ RMDUtilityDefinitionBrowser class >> defaultSpec [
 		  add: (SpBoxLayout newHorizontal
 				   vAlignCenter;
 				   add: #identifierField width: 150;
-				   add: ''' = ' expand: false;
+				   add: ' = ' expand: false;
 				   add: #definitionBodyField expand: true;
 				   yourself)
 		  height: self buttonHeight

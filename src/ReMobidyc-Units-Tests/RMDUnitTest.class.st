@@ -9,14 +9,19 @@ Class {
 		'celsius',
 		'second',
 		'meter',
-		'ton'
+		'ton',
+		'km',
+		'mile'
 	],
 	#category : #'ReMobidyc-Units-Tests'
 }
 
 { #category : #running }
 RMDUnitTest >> setUp [
+
 	meter := RMDUnitSymbol at: 'm'.
+	km := RMDUnit at: 'km'.
+	mile := RMDUnit at: 'mi'.
 	ton := RMDUnitSymbol at: 't'.
 	kg := RMDUnitSymbol at: 'kg'.
 	hour := RMDUnitSymbol at: 'h'.
@@ -40,6 +45,15 @@ RMDUnitTest >> testFromSI [
 	self
 		should: [ acre * celsius fromSI: 40.0 ]
 		raise: RMDUnitConversionError
+]
+
+{ #category : #tests }
+RMDUnitTest >> testIsLength [
+
+	self assert: meter isLength.
+	self assert: km isLength.
+	self deny: kg isLength.
+	self deny: (meter / hour) isLength
 ]
 
 { #category : #tests }

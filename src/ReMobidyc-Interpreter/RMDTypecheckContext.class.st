@@ -76,7 +76,7 @@ RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
 	dict := Dictionary new.
 	objectDefinition
 		propertyUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	properties at: aString put: dict
+	properties at: aString uncapitalized put: dict
 ]
 
 { #category : #accessing }

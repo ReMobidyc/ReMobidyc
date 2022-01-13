@@ -349,12 +349,16 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 { #category : #accessing }
 RMDActionDefinitionNode >> replaceObjectWith: aString [
 
-	| agentName |
+	| objectName agentName |
 	object ifNil: [ ^ self ].
+	aString ifNil: [ ^ self ].
+	objectName := object uncapitalized.
 	agentName := aString uncapitalized.
 	self propertyVariableNodesDo: [ :propertyVariableNode | 
-		propertyVariableNode agent = object ifTrue: [ 
+		propertyVariableNode agent = objectName ifTrue: [ 
 			propertyVariableNode agent: agentName ] ].
+	self agentDirectiveNodesDo: [ :directive | 
+		directive agentIdentifier: agentName ].
 	object := aString capitalized
 ]
 

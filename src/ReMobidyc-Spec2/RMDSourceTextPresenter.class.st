@@ -56,7 +56,7 @@ RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
 RMDSourceTextPresenter >> initialize [
 	super initialize.
 	highlightColor := Color red darker.
-	highlights := Array with: '10000 [kcal]' asRMDExpression
+	highlights := Array new
 ]
 
 { #category : #api }

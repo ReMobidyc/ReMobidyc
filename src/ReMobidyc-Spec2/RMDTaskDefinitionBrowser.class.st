@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDTaskDefinitionEditor,
+	#name : #RMDTaskDefinitionBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'simulationModel',
@@ -20,13 +20,14 @@ Class {
 		'removeReplacementButton',
 		'editReplacementButton',
 		'sourceText',
-		'taskDefinitionNode'
+		'taskDefinitionNode',
+		'rangeField'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
-RMDTaskDefinitionEditor class >> defaultSpec [
+RMDTaskDefinitionBrowser class >> defaultSpec [
 
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.5;
@@ -65,8 +66,14 @@ RMDTaskDefinitionEditor class >> defaultSpec [
 						    positionOfSlider: 0.4;
 						    add: (SpBoxLayout newVertical
 								     add: (SpBoxLayout newHorizontal
+										      vAlignCenter;
 										      add: #verbIdentifierField;
-										      add: #objectIdentifierField)
+										      add: ' ' expand: false;
+										      add: #objectIdentifierField;
+										      add: (SpBoxLayout newHorizontal
+												       vAlignCenter;
+												       add: 'within ' expand: false;
+												       add: #rangeField))
 								     height: self inputTextHeight;
 								     add: #replacementList;
 								     add: (SpBoxLayout newHorizontal
@@ -83,19 +90,19 @@ RMDTaskDefinitionEditor class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionEditor class >> on: aRMDSimulationModel [
+RMDTaskDefinitionBrowser class >> on: aRMDSimulationModel [
 	^ self new
 		simulationModel: aRMDSimulationModel;
 		yourself
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionEditor class >> withoutInterpreter [
+RMDTaskDefinitionBrowser class >> withoutInterpreter [
 	^ self new
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> acceptObjectIdentifierField [
+RMDTaskDefinitionBrowser >> acceptObjectIdentifierField [
 	self taskDefinition
 		ifNotNil: [ :task | 
 			| newObjectIdentifier |
@@ -106,7 +113,21 @@ RMDTaskDefinitionEditor >> acceptObjectIdentifierField [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> acceptVerbIdentifierField [
+RMDTaskDefinitionBrowser >> acceptRangeField [
+
+	self taskDefinition ifNotNil: [ :task | 
+		task objectIdentifier ifNotNil: [ 
+			| newRange |
+			newRange := rangeField lastValidSyntaxNode ifNotNil: [ :r | 
+				            r unit isLength
+					            ifTrue: [ r ]
+					            ifFalse: [ nil ] ].
+			task range: newRange.
+			self updateSourceText ] ]
+]
+
+{ #category : #operations }
+RMDTaskDefinitionBrowser >> acceptVerbIdentifierField [
 	self taskDefinition
 		ifNotNil: [ :task | 
 			| newVerb |
@@ -118,7 +139,7 @@ RMDTaskDefinitionEditor >> acceptVerbIdentifierField [
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> actionDefinition [
+RMDTaskDefinitionBrowser >> actionDefinition [
 	^ self actionIdentifier
 		ifNotNil: [ :actionIdentifier | 
 			self simulationModel
@@ -126,29 +147,35 @@ RMDTaskDefinitionEditor >> actionDefinition [
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> actionIdentifier [ 
+RMDTaskDefinitionBrowser >> actionIdentifier [ 
 	^ actionList selection selectedItem
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> addAction [
+RMDTaskDefinitionBrowser >> addAction [
 
 	| newActionDef |
 	newActionDef := RMDActionDefinitionNode template.
 	newActionDef asPresenter openDialogWithSpec okAction: [ 
-		self actionIdentifier ifNotNil: [ :actionIdentifier | 
-			self simulationModel ifNotNil: [ :model | 
-				actionIdentifier writeActionDefinition: newActionDef in: model.
-				self taskDefinition ifNotNil: #resetAction.
-				self
-					updateActionList;
-					updateActionButtons;
-					updateTemplateText;
-					updateSourceText ] ] ]
+		self simulationModel ifNotNil: [ :model | 
+			self actionIdentifier
+				ifNil: [ 
+					| actionIdentifier |
+					actionIdentifier := RMDLocalActionIdentifierNode identifier:
+						                    newActionDef identifier.
+					actionIdentifier writeActionDefinition: newActionDef in: model ]
+				ifNotNil: [ :actionIdentifier | 
+					actionIdentifier writeActionDefinition: newActionDef in: model ].
+			self taskDefinition ifNotNil: #resetAction.
+			self
+				updateActionList;
+				updateActionButtons;
+				updateTemplateText;
+				updateSourceText ] ]
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> addReplacement [
+RMDTaskDefinitionBrowser >> addReplacement [
 
 	self taskDefinition ifNotNil: [ :taskDefinition | 
 		| bindEditor |
@@ -168,22 +195,22 @@ RMDTaskDefinitionEditor >> addReplacement [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> addRepository [
+RMDTaskDefinitionBrowser >> addRepository [
 	^ self notYetImplemented
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> agentName [
+RMDTaskDefinitionBrowser >> agentName [
 	^ agentName
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> agentName: aString [
+RMDTaskDefinitionBrowser >> agentName: aString [
 	agentName := aString
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> editAction [
+RMDTaskDefinitionBrowser >> editAction [
 
 	self actionDefinition ifNotNil: [ :oldActionDef | 
 		| newActionDef |
@@ -204,7 +231,7 @@ RMDTaskDefinitionEditor >> editAction [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> editReplacement [
+RMDTaskDefinitionBrowser >> editReplacement [
 
 	replacementList selection selectedItem ifNotNil: [ :oldBind | 
 		self taskDefinition ifNotNil: [ :taskModel | 
@@ -234,12 +261,12 @@ RMDTaskDefinitionEditor >> editReplacement [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> editRepository [
+RMDTaskDefinitionBrowser >> editRepository [
 	^ self notYetImplemented
 ]
 
 { #category : #initialization }
-RMDTaskDefinitionEditor >> initializePresenters [
+RMDTaskDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	repositoryList := self newList
@@ -286,7 +313,8 @@ RMDTaskDefinitionEditor >> initializePresenters [
 			              self taskDefinition ifNotNil: [ :taskDefinition | 
 					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
 							              self updateVerbIdentifierField.
-							              self updateObjectIdentifierField ].
+							              self updateObjectIdentifierField.
+							              self updateRangeField ].
 					              self
 						              updateTemplateText;
 						              updateReplacementList;
@@ -308,6 +336,8 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                    yourself.
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
 		                enabled: false;
+		                editable: false;
+		                highlights: Array new;
 		                whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
@@ -321,6 +351,12 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                         whenLastValidSyntaxNodeChangedDo: [ 
 			                         self acceptObjectIdentifierField ];
 		                         yourself.
+	rangeField := self newSyntaxNodeTextInput
+		              beLiteral;
+		              allowEmpty;
+		              whenLastValidSyntaxNodeChangedDo: [ 
+			              self acceptRangeField ];
+		              yourself.
 	replacementList := self newTable
 		                   beSingleSelection;
 		                   beResizable;
@@ -375,20 +411,21 @@ RMDTaskDefinitionEditor >> initializePresenters [
 		                         yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
 		              enabled: false;
+		              editable: false;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself.
 	self updateRepositoryList
 ]
 
 { #category : #initialization }
-RMDTaskDefinitionEditor >> initializeWindow: aWindowPresenter [
+RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Task definition'.
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> removeAction [
+RMDTaskDefinitionBrowser >> removeAction [
 
 	self actionDefinition ifNotNil: [ :oldActionDef | 
 		(UIManager default confirm:
@@ -406,7 +443,7 @@ RMDTaskDefinitionEditor >> removeAction [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> removeReplacement [
+RMDTaskDefinitionBrowser >> removeReplacement [
 	replacementList selection selectedItem
 		ifNotNil: [ :bind | 
 			self taskDefinition
@@ -418,12 +455,12 @@ RMDTaskDefinitionEditor >> removeReplacement [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionEditor >> removeRepository [
+RMDTaskDefinitionBrowser >> removeRepository [
 	^ self notYetImplemented
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> repositories [
+RMDTaskDefinitionBrowser >> repositories [
 	^ Array
 		streamContents: [ :stream | 
 			stream nextPut: RMDBuiltinRepository current.
@@ -432,34 +469,34 @@ RMDTaskDefinitionEditor >> repositories [
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> repository [
+RMDTaskDefinitionBrowser >> repository [
 	^ repositoryList selection selectedItem
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> simulationModel [
+RMDTaskDefinitionBrowser >> simulationModel [
 	^ simulationModel
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> simulationModel: aRMDSimulationModel [
+RMDTaskDefinitionBrowser >> simulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
 	self updateRepositoryList
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> taskDefinition [
+RMDTaskDefinitionBrowser >> taskDefinition [
 	^ taskDefinitionNode
 ]
 
 { #category : #accessing }
-RMDTaskDefinitionEditor >> taskDefinition: aRMDTaskDefinitionNode [
+RMDTaskDefinitionBrowser >> taskDefinition: aRMDTaskDefinitionNode [
 	taskDefinitionNode := aRMDTaskDefinitionNode.
 	self taskDefinitionChanged
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> taskDefinitionChanged [
+RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 	taskDefinitionNode
 		ifNotNil: [ taskDefinitionNode actionIdentifier
 				ifNotNil: [ :actionIdentifier | 
@@ -476,7 +513,7 @@ RMDTaskDefinitionEditor >> taskDefinitionChanged [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateActionButtons [
+RMDTaskDefinitionBrowser >> updateActionButtons [
 
 	(self repository notNil and: [ self repository isModifiable ])
 		ifTrue: [ 
@@ -492,7 +529,7 @@ RMDTaskDefinitionEditor >> updateActionButtons [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateActionList [
+RMDTaskDefinitionBrowser >> updateActionList [
 	actionList
 		items:
 			(self repository
@@ -501,19 +538,28 @@ RMDTaskDefinitionEditor >> updateActionList [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateObjectIdentifierField [
-	objectIdentifierField text asString trim
-		ifEmpty: [ self taskDefinition
-				ifNotNil: [ :taskDefinition | 
-					taskDefinition objectIdentifier
-						ifNotNil: [ :objectIdentifier | objectIdentifierField text: objectIdentifier ]
-						ifNil: [ objectIdentifierField
-								enabled: false;
-								text: '' ] ] ]
+RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
+
+	objectIdentifierField text asString trim ifEmpty: [ 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			taskDefinition objectIdentifier
+				ifNotNil: [ :objectIdentifier | 
+				objectIdentifierField text: objectIdentifier ]
+				ifNil: [ objectIdentifierField text: '' ] ] ]
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateReplacementList [
+RMDTaskDefinitionBrowser >> updateRangeField [
+
+	rangeField text asString trim ifEmpty: [ 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			taskDefinition range
+				ifNotNil: [ :range | rangeField syntaxNode: range ]
+				ifNil: [ rangeField text: '' ] ] ]
+]
+
+{ #category : #updating }
+RMDTaskDefinitionBrowser >> updateReplacementList [
 
 	replacementList items: (self taskDefinition
 			 ifNotNil: [ :taskDefinition | taskDefinition propertyBinds ]
@@ -521,12 +567,12 @@ RMDTaskDefinitionEditor >> updateReplacementList [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateRepositoryList [
+RMDTaskDefinitionBrowser >> updateRepositoryList [
 	repositoryList items: self repositories
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateSourceText [
+RMDTaskDefinitionBrowser >> updateSourceText [
 
 	simulationModel ifNotNil: [ 
 		self taskDefinition ifNotNil: [ :taskDefinition | 
@@ -549,7 +595,7 @@ RMDTaskDefinitionEditor >> updateSourceText [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateTaskDefinition [
+RMDTaskDefinitionBrowser >> updateTaskDefinition [
 
 	self actionIdentifier ifNotNil: [ :actionIdentifier | 
 		self taskDefinition
@@ -562,30 +608,43 @@ RMDTaskDefinitionEditor >> updateTaskDefinition [
 						 objectIdentifier:
 						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
 						 actionIdentifier: actionIdentifier
-						 within: nil
+						 within: rangeField lastValidSyntaxNode
 						 guard: nil
 						 propertyBinds: Array new) ]
 			ifNotNil: [ :taskDefinition | 
-			taskDefinition actionIdentifier: actionIdentifier ] ]
+				taskDefinition actionIdentifier: actionIdentifier.
+				(taskDefinition actionWith: simulationModel) object
+					ifNil: [ 
+						objectIdentifierField syntaxNode
+							ifNil: [ objectIdentifierField beOk ]
+							ifNotNil: [ objectIdentifierField beError ].
+						rangeField syntaxNode
+							ifNil: [ rangeField beOk ]
+							ifNotNil: [ rangeField beError ] ]
+					ifNotNil: [ 
+						objectIdentifierField syntaxNode
+							ifNil: [ objectIdentifierField beError ]
+							ifNotNil: [ objectIdentifierField beOk ].
+						rangeField syntaxNode
+							ifNil: [ rangeField beError ]
+							ifNotNil: [ rangeField beOk ] ] ] ]
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateTemplateText [
+RMDTaskDefinitionBrowser >> updateTemplateText [
+
 	self actionIdentifier
 		ifNotNil: [ :actionIdentifier | 
-			templateText
-				syntaxNode: (actionIdentifier resolveWith: simulationModel);
-				enabled: actionIdentifier isReadOnly not ]
-		ifNil: [ templateText
-				text: '';
-				enabled: false ]
+			templateText syntaxNode:
+				(actionIdentifier resolveWith: simulationModel) ]
+		ifNil: [ templateText text: '' ]
 ]
 
 { #category : #updating }
-RMDTaskDefinitionEditor >> updateVerbIdentifierField [
-	objectIdentifierField text asString trim
-		ifEmpty: [ self taskDefinition
-				ifNotNil: [ :taskDefinition | 
-					verbIdentifierField
-						text: (taskDefinition verbIdentifier ifNil: [ String new ]) ] ]
+RMDTaskDefinitionBrowser >> updateVerbIdentifierField [
+
+	verbIdentifierField text asString trim ifEmpty: [ 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			verbIdentifierField text:
+				(taskDefinition verbIdentifier ifNil: [ String new ]) ] ]
 ]

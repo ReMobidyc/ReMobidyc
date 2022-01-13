@@ -96,7 +96,7 @@ RMDAgentDefinitionBrowser >> addRenderer [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addTask [
 	| actionDefinitionBrowser |
-	actionDefinitionBrowser := (RMDTaskDefinitionEditor
+	actionDefinitionBrowser := (RMDTaskDefinitionBrowser
 		on: simulationModel)
 		taskDefinition: nil;
 		agentName: self agentName;
@@ -150,7 +150,7 @@ RMDAgentDefinitionBrowser >> editTask [
 	taskList selection selectedItem ifNotNil: [ :oldTaskDefinition | 
 		oldTaskDefinition isTaskDefinitionNode ifTrue: [ 
 			| actionDefinitionBrowser |
-			actionDefinitionBrowser := (RMDTaskDefinitionEditor on:
+			actionDefinitionBrowser := (RMDTaskDefinitionBrowser on:
 					                            simulationModel)
 				                           taskDefinition: oldTaskDefinition copy;
 				                           agentName: self agentName;
@@ -238,7 +238,10 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			            (SpStringTableColumn evaluated: [ :item | 
 					             item verbIdentifier ]);
 		            addColumn: (SpStringTableColumn evaluated: [ :item | 
-					             item objectIdentifier ifNil: [ '' ] ]);
+					             item objectIdentifier
+						             ifNotNil: [ :o | 
+							             o , ' within ' , item range printString ]
+						             ifNil: [ '' ] ]);
 		            whenModelChangedDo: [ taskList selectItem: nil ];
 		            whenSelectionChangedDo: [ 
 			            | selected |
