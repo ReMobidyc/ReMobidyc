@@ -121,7 +121,11 @@ RMDActionDefinitionBrowser >> editDirectives [
 				              'new'.
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isNewDirectiveNode ]).
-				              [ RMDNewDirective new ] }.
+				              [ 
+				              RMDNewDirective new
+					              animatIdentifier:
+						              self requestAnimatIdentifierForNewDirective;
+					              yourself ] }.
 	chooser := self newTable
 		           items: directives;
 		           addColumn:
@@ -305,6 +309,18 @@ RMDActionDefinitionBrowser >> removeUtilityDefinition [
 			node utilityDefinitions:
 				(node utilityDefinitions copyWithout: oldDefinition).
 			self nodeChanged ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> requestAnimatIdentifierForNewDirective [
+
+	^ ((UIManager default
+		    request: 'Animat (blank if not yet decided)'
+		    initialAnswer: ((node lifeDirectives
+				      detect: [ :directive | directive isNewDirectiveNode ]
+				      ifNone: [ nil ])
+				     ifNotNil: [ :directive | directive animatIdentifier ]
+				     ifNil: [ '-' ])) ifNil: [ '-' ]) trim ifEmpty: [ '-' ]
 ]
 
 { #category : #updating }

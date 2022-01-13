@@ -240,7 +240,10 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		            addColumn: (SpStringTableColumn evaluated: [ :item | 
 					             item objectIdentifier
 						             ifNotNil: [ :o | 
-							             o , ' within ' , item range printString ]
+							             (item nearest
+								              ifTrue: [ 'nearest ' ]
+								              ifFalse: [ '' ]) , o , ' within '
+							             , item range printString ]
 						             ifNil: [ '' ] ]);
 		            whenModelChangedDo: [ taskList selectItem: nil ];
 		            whenSelectionChangedDo: [ 

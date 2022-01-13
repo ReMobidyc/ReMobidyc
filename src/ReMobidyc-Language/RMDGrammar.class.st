@@ -83,25 +83,6 @@ RMDGrammar >> actionIdentifier [
 	^ self localActionIdentifier / self builtinActionIdentifier
 ]
 
-{ #category : #'parsers-definitions' }
-RMDGrammar >> actionTaskDefinition [
-
-	^ self taskDefinitionHeader , self whenClause optional
-	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
-		   , #newline asPParser trimBlanks
-		   ,
-		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
-		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
-	  self bindNodeClass
-		  subjectIdentifier: quad first first
-		  verbIdentifier: quad first second
-		  objectIdentifier: quad first third
-		  actionIdentifier: quad first fourth
-		  within: quad first fifth
-		  guard: quad second
-		  propertyBinds: (quad third ifNil: [ Array new ]) ]
-]
-
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -716,12 +697,24 @@ RMDGrammar >> localActionIdentifierNodeClass [
 	^ RMDLocalActionIdentifierNode 
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> namely [
+
+	^ #blank asPParser , 'namely' asPParser , #blank asPParser
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> nat [
 
 	^ #digit asPParser plus
 	  ==> [ :digits | 
 	  digits inject: 0 into: [ :i :c | i * 10 + c digitValue ] ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> nearest [
+
+	^ #blank asPParser , 'nearest' asPParser , #blank asPParser
 ]
 
 { #category : #'class access' }
@@ -921,8 +914,9 @@ RMDGrammar >> taskDefinition [
 	  self bindNodeClass
 		  subjectIdentifier: quad first first
 		  verbIdentifier: quad first second
-		  objectIdentifier: quad first third
-		  actionIdentifier: quad first fourth
+		  objectIdentifier: quad first fourth
+		  actionIdentifier: quad first sixth
+		  nearest: quad first third
 		  within: quad first fifth
 		  guard: quad second
 		  propertyBinds: (quad third ifNil: [ Array new ]) ]
@@ -931,23 +925,54 @@ RMDGrammar >> taskDefinition [
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeader [
 
-	^ agentIdentifier , (identifier , agentIdentifier optional
-	   ,
-	   ('namely' asPParser trimBlanks , self actionIdentifier ==> #second)
-	   /
-		   (self actionIdentifier , agentIdentifier optional ==> [ :pair | 
-		    { 
-			    pair first shortName.
-			    pair second.
-			    pair first } ]))
-	  , ('within' asPParser trimBlanks , literal ==> #second) optional
-	  ==> [ :triple | 
-		  { 
-			  triple first.
-			  triple second first.
-			  triple second second.
-			  triple second third.
-			  triple third } ]
+	^ self taskDefinitionHeaderWithNamely
+	  / self taskDefinitionHeaderWithoutNamely
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> taskDefinitionHeaderWithNamely [
+
+	^ agentIdentifier , identifier
+	  ,
+	  (self nearest optional , agentIdentifier , self withinClause)
+		  optional , self namely , self actionIdentifier ==> [ :array | 
+	  | subject verb nearest object range action |
+	  subject := array first.
+	  verb := array second.
+	  nearest := (array third ifNotNil: #first) notNil.
+	  object := array third ifNotNil: #second.
+	  range := array third ifNotNil: #third.
+	  action := array fifth.
+	  { 
+		  subject.
+		  verb.
+		  nearest.
+		  object.
+		  range.
+		  action } ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> taskDefinitionHeaderWithoutNamely [
+
+	^ agentIdentifier , self actionIdentifier
+	  ,
+	  (self nearest optional , agentIdentifier , self withinClause)
+		  optional ==> [ :triple | 
+	  | subject verb nearest object range action |
+	  subject := triple first.
+	  verb := triple second shortName.
+	  nearest := (triple third ifNotNil: #first) notNil.
+	  object := triple third ifNotNil: #second.
+	  range := triple third ifNotNil: #third.
+	  action := triple second.
+	  { 
+		  subject.
+		  verb.
+		  nearest.
+		  object.
+		  range.
+		  action } ]
 ]
 
 { #category : #units }
@@ -1106,6 +1131,12 @@ RMDGrammar >> withClause [
 		  | array |
 		  array := triple third.
 		  (1 to: array size by: 2) collect: [ :index | array at: index ] ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> withinClause [
+
+	^ 'within' asPParser trimBlanks , literal ==> #second
 ]
 
 { #category : #'parsers-definitions' }

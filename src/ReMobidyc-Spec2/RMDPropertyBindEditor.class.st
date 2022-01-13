@@ -44,6 +44,32 @@ RMDPropertyBindEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	self updatePlaceholderDropList
 ]
 
+{ #category : #menu }
+RMDPropertyBindEditor >> agentDirectiveMenu [
+
+	| menu |
+	menu := SpMenuPresenter new.
+	actionDefinitionNode object.
+
+	actionDefinitionNode object
+		ifNotNil: [ :object | 
+			menu
+				addItem: [ :item | 
+					| expr |
+					expr := 'direction ' , object uncapitalized.
+					item
+						name: expr;
+						action: [ self paste: expr ] ];
+				addItem: [ :item | 
+					| expr |
+					expr := 'distance ' , object uncapitalized.
+					item
+						name: expr;
+						action: [ self paste: expr ] ] ]
+		ifNil: [ menu disable ].
+	^ menu
+]
+
 { #category : #accessing }
 RMDPropertyBindEditor >> exceptVariableNodes [
 	^ exceptVariableNodes 
@@ -55,23 +81,38 @@ RMDPropertyBindEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	self updatePlaceholderDropList
 ]
 
+{ #category : #menu }
+RMDPropertyBindEditor >> expressionFieldMenu [
+
+	| menu |
+	menu := SpMenuPresenter new.
+	menu addItem: [ :item | 
+		item
+			name: 'directive';
+			subMenu: self agentDirectiveMenu.
+		item enabled: item subMenu isEnabled ].
+	^ menu
+]
+
 { #category : #initialization }
 RMDPropertyBindEditor >> initializePresenters [
+
 	super initializePresenters.
 	placeholderList := self newDropList
-		display: [ :item | item printString ];
-		whenSelectionChangedDo: [ self updateExpressionFieldType ]
-		yourself.
+		                   display: [ :item | item printString ];
+		                   whenSelectionChangedDo:
+			                   [ self updateExpressionFieldType ] yourself.
 	replacementIcon := self newImage
-		image: self replacementIcon;
-		yourself.
+		                   image: self replacementIcon;
+		                   yourself.
 	expressionField := self newSyntaxNodeTextInput
-		beExpression;
-		whenSyntaxNodeChangedDo:
-			[ self owner
-				ifNotNil:
-					[ :dialog | dialog buttons first enabled: expressionField syntaxNode notNil ] ]
-				yourself
+		                   beExpression;
+		                   contextMenu: [ self expressionFieldMenu ];
+		                   whenSyntaxNodeChangedDo: [ 
+			                   self owner ifNotNil: [ :dialog | 
+					                   dialog buttons first enabled:
+							                   expressionField syntaxNode notNil ] ]
+				                   yourself
 ]
 
 { #category : #initialization }
@@ -80,6 +121,13 @@ RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
 	aWindowPresenter title: 'Bindings for Adaptation'.
 	aWindowPresenter
 		initialExtent: 600 @ 150
+]
+
+{ #category : #menu }
+RMDPropertyBindEditor >> paste: aString [
+
+	Clipboard clipboardText: aString.
+	expressionField withAdapterDo: [ :a | a widget textArea editor paste ]
 ]
 
 { #category : #accessing }

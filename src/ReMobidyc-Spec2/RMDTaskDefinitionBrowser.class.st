@@ -21,7 +21,8 @@ Class {
 		'editReplacementButton',
 		'sourceText',
 		'taskDefinitionNode',
-		'rangeField'
+		'rangeField',
+		'nearestCheckBox'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -68,7 +69,7 @@ RMDTaskDefinitionBrowser class >> defaultSpec [
 								     add: (SpBoxLayout newHorizontal
 										      vAlignCenter;
 										      add: #verbIdentifierField;
-										      add: ' ' expand: false;
+										      add: #nearestCheckBox width: 100;
 										      add: #objectIdentifierField;
 										      add: (SpBoxLayout newHorizontal
 												       vAlignCenter;
@@ -102,6 +103,15 @@ RMDTaskDefinitionBrowser class >> withoutInterpreter [
 ]
 
 { #category : #operations }
+RMDTaskDefinitionBrowser >> acceptNearestCheckBox [
+
+	self taskDefinition ifNotNil: [ :task | 
+		task objectIdentifier ifNotNil: [ 
+			task nearest: nearestCheckBox state.
+			self updateSourceText ] ]
+]
+
+{ #category : #operations }
 RMDTaskDefinitionBrowser >> acceptObjectIdentifierField [
 	self taskDefinition
 		ifNotNil: [ :task | 
@@ -119,9 +129,12 @@ RMDTaskDefinitionBrowser >> acceptRangeField [
 		task objectIdentifier ifNotNil: [ 
 			| newRange |
 			newRange := rangeField lastValidSyntaxNode ifNotNil: [ :r | 
-				            r unit isLength
-					            ifTrue: [ r ]
-					            ifFalse: [ nil ] ].
+				            r isString
+					            ifTrue: [ nil ]
+					            ifFalse: [ 
+						            r unit isLength
+							            ifTrue: [ r ]
+							            ifFalse: [ nil ] ] ].
 			task range: newRange.
 			self updateSourceText ] ]
 ]
@@ -314,6 +327,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
 							              self updateVerbIdentifierField.
 							              self updateObjectIdentifierField.
+							              self updateNearestCheckBox.
 							              self updateRangeField ].
 					              self
 						              updateTemplateText;
@@ -345,6 +359,11 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                       whenLastValidSyntaxNodeChangedDo: [ 
 			                       self acceptVerbIdentifierField ];
 		                       yourself.
+	nearestCheckBox := self newCheckBox
+		                   label: 'nearest';
+		                   labelOnRight;
+		                   whenChangedDo: [ self acceptNearestCheckBox ];
+		                   yourself.
 	objectIdentifierField := self newSyntaxNodeTextInput
 		                         beAgentIdentifier;
 		                         allowEmpty;
@@ -538,6 +557,13 @@ RMDTaskDefinitionBrowser >> updateActionList [
 ]
 
 { #category : #updating }
+RMDTaskDefinitionBrowser >> updateNearestCheckBox [
+
+	self taskDefinition ifNotNil: [ :taskDefinition | 
+		nearestCheckBox state: taskDefinition nearest ]
+]
+
+{ #category : #updating }
 RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
 
 	objectIdentifierField text asString trim ifEmpty: [ 
@@ -608,6 +634,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						 objectIdentifier:
 						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
 						 actionIdentifier: actionIdentifier
+						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
 						 guard: nil
 						 propertyBinds: Array new) ]
@@ -618,6 +645,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						objectIdentifierField syntaxNode
 							ifNil: [ objectIdentifierField beOk ]
 							ifNotNil: [ objectIdentifierField beError ].
+						nearestCheckBox disable.
 						rangeField syntaxNode
 							ifNil: [ rangeField beOk ]
 							ifNotNil: [ rangeField beError ] ]
@@ -625,6 +653,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						objectIdentifierField syntaxNode
 							ifNil: [ objectIdentifierField beError ]
 							ifNotNil: [ objectIdentifierField beOk ].
+						nearestCheckBox enable.
 						rangeField syntaxNode
 							ifNil: [ rangeField beError ]
 							ifNotNil: [ rangeField beOk ] ] ] ]

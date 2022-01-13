@@ -8,6 +8,7 @@ Class {
 		'actionIdentifier',
 		'guard',
 		'range',
+		'nearest',
 		'propertyBinds',
 		'action',
 		'name'
@@ -82,13 +83,14 @@ where
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode within: aRMDLiteralNode guard: aRMDConditionNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean within: aRMDLiteralNode guard: aRMDConditionNode propertyBinds: anArrayOfRMDPropertyBindNode [
 
 	^ self new
 		  subjectIdentifier: agentString1;
 		  verbIdentifier: verbString;
 		  actionIdentifier: aRMDActionIdentifierNode;
 		  objectIdentifier: agentString2;
+		  nearest: aBoolean;
 		  range: aRMDLiteralNode;
 		  guard: aRMDConditionNode;
 		  propertyBinds: anArrayOfRMDPropertyBindNode;
@@ -193,6 +195,18 @@ RMDTaskDefinitionNode >> name [
 ]
 
 { #category : #accessing }
+RMDTaskDefinitionNode >> nearest [
+
+	^ nearest
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> nearest: aBoolean [
+
+	nearest := aBoolean
+]
+
+{ #category : #accessing }
 RMDTaskDefinitionNode >> objectIdentifier [
 	^ objectIdentifier
 ]
@@ -222,9 +236,13 @@ RMDTaskDefinitionNode >> printOn: aStream [
 		space;
 		nextPutAll: verbIdentifier.
 	objectIdentifier ifNotNil: [ 
+		aStream space.
+		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
-			space;
-			nextPutAll: objectIdentifier ].
+			nextPutAll: objectIdentifier;
+			space.
+		range printOn: aStream.
+		aStream space ].
 	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
 		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
 		aStream
@@ -260,9 +278,16 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		space;
 		nextPutAll: verbIdentifier.
 	objectIdentifier ifNotNil: [ 
+		aStream space.
+		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
-			space;
-			nextPutAll: objectIdentifier ].
+			nextPutAll: objectIdentifier;
+			space.
+		range
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection.
+		aStream space ].
 	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
 		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
 		aStream
