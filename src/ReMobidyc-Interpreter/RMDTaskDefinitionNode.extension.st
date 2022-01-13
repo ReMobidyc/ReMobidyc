@@ -90,7 +90,7 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 
-	| subjectSpecies objectSpecies |
+	| subjectSpecies objectSpecies interactionSpace |
 	subjectSpecies := subjectIdentifier = 'Cell'
 		                  ifTrue: [ aRMDInterpreter cellDefinition ]
 		                  ifFalse: [ 
@@ -104,10 +104,35 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 	objectSpecies := aRMDInterpreter
 		                 animatDefinitionAt: objectIdentifier
 		                 ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
+	interactionSpace := RMDInteractionSpace
+		                    xdivisions:
+		                    (aRMDInterpreter north / range numeric) ceiling
+		                    yDividions:
+		                    (aRMDInterpreter east / range numeric) ceiling
+		                    range: range numeric.
+	aRMDInterpreter
+		individualsOf: objectSpecies
+		do: [ :objectAnimat :objectLifehistory | 
+			aRMDInterpreter
+				withObserverContextWithSubject: objectAnimat
+				species: objectSpecies
+				do: [ 
+					| x y |
+					x := aRMDInterpreter
+						     readVariable: 'x'
+						     agent: nil
+						     ifAbsent: [ 
+						     ^ (RMDUnresolvedReferenceError on: self) signal ].
+					y := aRMDInterpreter
+						     readVariable: 'y'
+						     agent: nil
+						     ifAbsent: [ 
+						     ^ (RMDUnresolvedReferenceError on: self) signal ].
+					interactionSpace add: objectLifehistory x: x y: y ] ].
 	aRMDInterpreter
 		individualsOf: subjectSpecies
 		do: [ :subjectAnimat :subjectLifehistory | 
-			| subjectX subjectY minSquareD nearestObjectLifehistory |
+			| subjectX subjectY |
 			aRMDInterpreter
 				withObserverContextWithSubject: subjectAnimat
 				species: subjectSpecies
@@ -122,40 +147,20 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 						            agent: nil
 						            ifAbsent: [ 
 						            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
-			nearestObjectLifehistory := nil.
-			minSquareD := Float infinity.
-			aRMDInterpreter
-				individualsOf: objectSpecies
-				do: [ :objectAnimat :objectLifehistory | 
+			interactionSpace
+				nearestAnimatAroundX: subjectX
+				y: subjectY
+				do: [ :objectLifehistory | 
 					aRMDInterpreter
-						withObserverContextWithSubject: objectAnimat
+						setupRandomForIndividual: subjectAnimat
+						and: objectLifehistory last
+						task: self;
+						withActionContextWithIndividual: subjectLifehistory
+						species: subjectSpecies
+						object: objectLifehistory
 						species: objectSpecies
 						do: [ 
-							| x y squareD |
-							x := aRMDInterpreter
-								     readVariable: 'x'
-								     agent: nil
-								     ifAbsent: [ 
-								     ^ (RMDUnresolvedReferenceError on: self) signal ].
-							y := aRMDInterpreter
-								     readVariable: 'y'
-								     agent: nil
-								     ifAbsent: [ 
-								     ^ (RMDUnresolvedReferenceError on: self) signal ].
-							squareD := (x - subjectX) squared + (y - subjectY) squared.
-							squareD < minSquareD ifTrue: [ 
-								minSquareD := squareD.
-								nearestObjectLifehistory := objectLifehistory ] ] ].
-
-			aRMDInterpreter
-				setupRandomForIndividual: subjectAnimat
-				and: nearestObjectLifehistory last
-				task: self;
-				withActionContextWithIndividual: subjectLifehistory
-				species: subjectSpecies
-				object: nearestObjectLifehistory
-				species: objectSpecies
-				do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]
+							(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

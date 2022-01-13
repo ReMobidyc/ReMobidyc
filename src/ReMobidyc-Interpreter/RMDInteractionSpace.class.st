@@ -45,6 +45,25 @@ RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 				<= r2 ifTrue: [ aBlock value: animat ] ] ] ]
 ]
 
+{ #category : #enumerating }
+RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
+
+	| xIndex0 yIndex0 minR2 nearest |
+	xIndex0 := self xIndexOf: x.
+	yIndex0 := self yIndexOf: y.
+	minR2 := range squared.
+	nearest := nil.
+	(yIndex0 - 1 max: 1) to: (yIndex0 + 1 min: yDivisions) do: [ :yIndex | 
+		(xIndex0 - 1 max: 1) to: (xIndex0 + 1 min: xDivisions) do: [ :xIndex | 
+			((animats at: yIndex) at: xIndex) do: [ :animat | 
+				| r2 |
+				(r2 := ((xs at: animat) - x) squared
+				       + ((ys at: animat) - y) squared) <= minR2 ifTrue: [ 
+					minR2 := r2.
+					nearest := animat ] ] ] ].
+	nearest ifNotNil: aBlock
+]
+
 { #category : #private }
 RMDInteractionSpace >> xDivisions: anInteger1 yDividions: anInteger2 range: aFloat [
 
