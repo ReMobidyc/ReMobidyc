@@ -270,7 +270,7 @@ RMDGrammar >> assignablePropertyVariable [
 		  identifier: pair second
 		  agent: pair first ] / (self the , identifier ==> [ :pair | 
 	   self assignablePropertyVariableNodeClass propertyVariable:
-		   (self placeholderNodeClass identifier: pair third) ])
+		   (self placeholderNodeClass identifier: pair second) ])
 ]
 
 { #category : #'class access' }

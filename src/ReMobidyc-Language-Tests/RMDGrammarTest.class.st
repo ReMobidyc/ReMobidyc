@@ -142,11 +142,11 @@ where
 	self assert: node utilityDefinitions size equals: 2.
 	node := grammar actionDefinition
 		parse:
-			'to chase target is
+			'to chase Target is
 	my delta heading'' = direction target - my heading.'.
 	self assert: node isActionDefinitionNode.
 	self assert: node identifier equals: 'chase'.
-	self assert: node object equals: 'target'.
+	self assert: node object equals: 'Target'.
 	self assert: node guard isNil.
 	self assert: node propertyDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0.

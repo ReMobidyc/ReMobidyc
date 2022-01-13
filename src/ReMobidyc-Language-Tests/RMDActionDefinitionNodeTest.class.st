@@ -9,7 +9,7 @@ RMDActionDefinitionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser actionDefinition end
 		parse:
-			'to chase target is
+			'to chase Target is
 	when my energy >= my min_active_energy
 	my heading'' = target_direction
 	where
@@ -27,7 +27,7 @@ RMDActionDefinitionNodeTest >> testCopyReplace [
 		equals:
 			(parser actionDefinition end
 				parse:
-					'to chase target is
+					'to chase Target is
 	when my energy >= 10 [kcal]
 	my bearing'' = dir
 	where
@@ -39,7 +39,7 @@ RMDActionDefinitionNodeTest >> testPlus [
 	| node1 node2 sum |
 	node1 := parser actionDefinition end
 		parse:
-			'to chase target is
+			'to chase Target is
 	when my energy >= my min_active_energy
 	my heading'' = target_direction
 	where
@@ -54,7 +54,7 @@ RMDActionDefinitionNodeTest >> testPlus [
 		d = my speed * delta time.'.
 	sum := node1 + node2.
 	self assert: sum identifier equals: 'chase_run'.
-	self assert: sum object equals: 'target'.
+	self assert: sum object equals: 'Target'.
 	self
 		assert: sum guard
 		equals:

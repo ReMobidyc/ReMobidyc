@@ -105,7 +105,7 @@ Bar is Animat with
 	salt [g].' trim.
 	eat := parser actionDefinition end
 		parse:
-			'to eat food is
+			'to eat Food is
 	my delta sugar'' = food''s salt.'.
 	context
 		subject: 10 definition: foo;
@@ -130,7 +130,7 @@ Bar is Animat with
 	salt [g].' trim.
 	eat := parser actionDefinition end
 		parse:
-			'to eat food is
+			'to eat Food is
 	my delta sugar'' = bar''s salt.'.
 	context
 		subject: 10 definition: foo;
