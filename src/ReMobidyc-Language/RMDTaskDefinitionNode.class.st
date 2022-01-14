@@ -33,11 +33,10 @@ RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
 	^ ('Goat eat namely transfer
-when here''s grass > the amount and my blood_sugar < the maximum
+when here''s grass > the amount and my blood_sugar < ', maxString, '
 where
 	the destination -> my blood_sugar
 	the source -> here''s grass
-	the maximum -> ', maxString, '
 	the amount -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
 ]
 
