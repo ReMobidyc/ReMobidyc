@@ -7,13 +7,6 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #'typical instances' }
-RMDAnimatDefinitionNode class >> ant [
-	<script: 'RMDAnimatDefinitionNode ant inspect'>
-	^ RMDGrammar new animatDefinition end parse: 'Ant is Animat with
-	sugar [kcal].'
-]
-
 { #category : #accessing }
 RMDAnimatDefinitionNode class >> createBuiltinProperties [
 	^ {('x' -> RMDUnit m).
@@ -32,6 +25,13 @@ RMDAnimatDefinitionNode class >> identifier: aString propertyDeclarations: anArr
 	^ (self propertyDeclarations: anArrayOfRMDPropertyDeclarationNode)
 		identifier: aString;
 		yourself
+]
+
+{ #category : #'typical instances' }
+RMDAnimatDefinitionNode class >> wolf [
+	<script: 'RMDAnimatDefinitionNode wolf inspect'>
+	^ RMDGrammar new animatDefinition end parse: 'Wolf is Animat with
+	blood_sugar [kcal].'
 ]
 
 { #category : #comparing }

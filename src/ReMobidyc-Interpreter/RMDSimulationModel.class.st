@@ -15,6 +15,67 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDSimulationModel class >> goatAndWolf [
+
+	^ self new
+		  load: RMDWorldDefinitionNode empty;
+		  load: RMDCellDefinitionNode grassField;
+		  load: RMDAnimatDefinitionNode goat;
+		  load: RMDAnimatDefinitionNode wolf;
+		  load: RMDActionDefinitionNode reproduce;
+		  load: RMDActionDefinitionNode prey_on;
+		  load: (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
+		  load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
+		  load: RMDTaskDefinitionNode goat_walk_for_grass;
+		  load:
+			  (RMDTaskDefinitionNode
+				   goat_eat: '3000 [kcal/day]'
+				   upto: '10000[kcal]');
+		  load: RMDTaskDefinitionNode goat_reproduce;
+		  load: (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
+		  load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
+		  load: RMDTaskDefinitionNode wolf_chase_goat;
+		  load:
+			  (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
+		  load: RMDTaskDefinitionNode wolf_reproduce;
+		  load: (RMDTaskDefinitionNode
+				   cell_grow_grass: '1500[kcal/day]'
+				   upto: '1000000[kcal]');
+		  load: (RMDSimulationDefinitionNode
+				   timeDefinition:
+					   (RMDSimulationTimeDefinitionNode
+						    during: '2[year]'
+						    by: '0.5[day]')
+				   worldInitializer: RMDWorldInitializerNode empty
+				   cellInitializer: (RMDCellInitializerNode
+						    grassInitializer: 10
+						    by: 10
+						    of: '5[km]'
+						    grass: '0[kcal]'
+						    to: '700000[kcal]')
+				   animatInitializers: { 
+						   (RMDAnimatInitializerNode
+							    goatInitializer: 100
+							    bloodSugar: '5000[kcal]'
+							    to: '9000[kcal]').
+						   (RMDAnimatInitializerNode
+							    wolfInitializer: 5
+							    bloodSugar: '2000[kcal]'
+							    to: '6000[kcal]') });
+		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
+		  addRenderer: (RMDCellColorAlphaRenderer
+				   color: Color green
+				   alpha: 'here''s grass' asRMDExpression
+				   between: '0[kcal]' asRMDExpression
+				   and: '1000000[kcal]' asRMDExpression);
+		  addRenderer:
+			  (RMDAnimatDotRenderer on: 'Goat' diameter: 7 color: Color yellow);
+		  addRenderer:
+			  (RMDAnimatDotRenderer on: 'Wolf' diameter: 10 color: Color red);
+		  yourself
+]
+
+{ #category : #'instance creation' }
 RMDSimulationModel class >> sugarScape [
 	^ self new
 		load: RMDWorldDefinitionNode empty;

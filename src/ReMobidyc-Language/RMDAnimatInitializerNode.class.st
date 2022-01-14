@@ -9,26 +9,6 @@ Class {
 }
 
 { #category : #'typical instances' }
-RMDAnimatInitializerNode class >> goatInitializer [
-	<script: 'RMDAnimatInitializerNode goatInitializer inspect'>
-	^ RMDGrammar new animatInitializer end
-		parse:
-			'100 Goat with
-	blood_sugar = uniform 10000 [kcal] to 100000 [kcal]'
-]
-
-{ #category : #'typical instances' }
-RMDAnimatInitializerNode class >> goatInitializer: anInteger [
-	<script: 'RMDAnimatInitializerNode goatInitializer inspect'>
-	^ RMDGrammar new animatInitializer end
-		parse:
-			anInteger printString
-				,
-					' Goat with
-	blood_sugar = uniform 10000 [kcal] to 100000 [kcal]'
-]
-
-{ #category : #'typical instances' }
 RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString1 to: aString2 [
 	<script:
 		'(RMDAnimatInitializerNode goatInitializer: 100 bloodSugar: ''10000[kcal]'' to: ''100000[kcal]'') inspect'>
@@ -53,6 +33,24 @@ RMDAnimatInitializerNode class >> population: anInteger animat: aString property
 		animat: aString;
 		propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode;
 		yourself
+]
+
+{ #category : #'typical instances' }
+RMDAnimatInitializerNode class >> wolfInitializer: anInteger bloodSugar: aString1 to: aString2 [
+	<script:
+		'(RMDAnimatInitializerNode wolfInitializer: 20 bloodSugar: ''10000[kcal]'' to: ''50000[kcal]'') inspect'>
+	^ RMDGrammar new animatInitializer end
+		parse:
+			(String
+				streamContents: [ :stream | 
+					anInteger printOn: stream.
+					stream
+						nextPutAll: ' Wolf with';
+						cr;
+						nextPutAll: '	blood_sugar = uniform ';
+						nextPutAll: aString1;
+						nextPutAll: ' to ';
+						nextPutAll: aString2 ])
 ]
 
 { #category : #comparing }

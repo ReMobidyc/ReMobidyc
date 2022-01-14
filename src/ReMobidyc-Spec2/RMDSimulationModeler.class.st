@@ -17,25 +17,41 @@ RMDSimulationModeler class >> defaultSpec [
 		add: #views yourself
 ]
 
+{ #category : #examples }
+RMDSimulationModeler class >> goatAndWolf [
+
+	<script: 'RMDSimulationModeler goatAndWolf openWithSpec'>
+	^ RMDSimulationModeler on: RMDSimulationModel goatAndWolf
+]
+
 { #category : #menus }
 RMDSimulationModeler class >> golapMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #ReMobidyc)
 		label: 're:Mobidyc';
 		order: 1;
-		with: [ (aBuilder item: #OpenNew)
+		with: [ 
+			(aBuilder item: #OpenNew)
 				parent: 'ReMobidyc';
 				label: 'Modeler';
-				action: [ (RMDSimulationModeler on: RMDSimulationModel new) openWithSpec ];
+				action: [ 
+					(RMDSimulationModeler on: RMDSimulationModel new) openWithSpec ];
 				help: 'Open a modeler window with a new simulation model'.
 			(aBuilder item: #Examples)
 				parent: 'ReMobidyc';
 				label: 'Examples';
-				with: [ (aBuilder item: #SugarScape)
+				with: [ 
+					(aBuilder item: #SugarScape)
 						parent: #Examples;
 						label: 'sugar scape';
 						action: [ RMDSimulationModeler sugarScape openWithSpec ];
-						help: 'A simple simulation of an energy cycle.' ] ]
+						help: 'A simple simulation of an energy cycle.'.
+					(aBuilder item: #GoatAndWolf)
+						parent: #Examples;
+						label: 'goat and wolf';
+						action: [ RMDSimulationModeler goatAndWolf openWithSpec ];
+						help: 'A simple simulation of plants, herbivore, and carnivore.' ] ]
 ]
 
 { #category : #'instance creation' }
@@ -113,7 +129,7 @@ RMDSimulationModeler >> initializePresenters [
 		         yourself.
 	runButton := self newButton
 		             label: 'run';
-		             action: [ self openSimulationRunner ];
+		             action: [ self openObservatory ];
 		             state: false;
 		             yourself
 ]
@@ -127,17 +143,18 @@ RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #api }
-RMDSimulationModeler >> openSimulationRunner [
+RMDSimulationModeler >> openObservatory [
+
 	| interpreter |
 	interpreter := RMDInterpreter new
-		setMemory: RMDOnMemory new;
-		setContext: RMDActionContext new;
-		simulationModel: simulationModel;
-		yourself.
+		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel: simulationModel;
+		               yourself.
 	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
-		openWithSpec;
-		yourself
+		  openWithSpec;
+		  yourself
 ]
 
 { #category : #private }

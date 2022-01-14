@@ -28,15 +28,24 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 ]
 
 { #category : #'typical instances' }
+RMDActionDefinitionNode class >> prey_on [
+	<script: 'RMDActionDefinitionNode prey_on inspect'>
+	^ 'to prey_on Prey is
+when my blood_sugar < the threshold
+with kill
+	my delta blood_sugar'' = prey''s blood_sugar.' asRMDActionDefinition
+]
+
+{ #category : #'typical instances' }
 RMDActionDefinitionNode class >> reproduce [
 	<script: 'RMDActionDefinitionNode reproduce inspect'>
 	^ 'to reproduce is
-when my blood_sugar > 9000 [kcal] and uniform 0 to 1 < 0.1 
-with new 1 Goat
+when my blood_sugar > the min_blood_sugar and uniform 0 to 1 < the chance 
+with new -
 	new delta x'' = uniform -1[m] to 1[m]
 	new delta y'' = uniform -1[m] to 1[m]
-	new blood_sugar'' = 2000 [kcal]
-	my delta blood_sugar'' = -4000 [kcal].' asRMDActionDefinition
+	new blood_sugar'' = the initial_blood_sugar
+	my delta blood_sugar'' = -the reproduction_cost.' asRMDActionDefinition
 ]
 
 { #category : #'typical instances' }
@@ -350,15 +359,16 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 RMDActionDefinitionNode >> replaceObjectWith: aString [
 
 	| objectName agentName |
-	object ifNil: [ ^ self ].
 	aString ifNil: [ ^ self ].
-	objectName := object uncapitalized.
+	objectName := object ifNotNil: #uncapitalized.
 	agentName := aString uncapitalized.
-	self propertyVariableNodesDo: [ :propertyVariableNode | 
-		propertyVariableNode agent = objectName ifTrue: [ 
-			propertyVariableNode agent: agentName ] ].
-	self agentDirectiveNodesDo: [ :directive | 
-		directive agentIdentifier: agentName ].
+	objectName ifNotNil: [ 
+		self propertyVariableNodesDo: [ :propertyVariableNode | 
+			propertyVariableNode agent = objectName ifTrue: [ 
+				propertyVariableNode agent: agentName ] ].
+		self agentDirectiveNodesDo: [ :directive | 
+			directive agentIdentifier = objectName ifTrue: [ 
+				directive agentIdentifier: agentName ] ] ].
 	object := aString capitalized
 ]
 

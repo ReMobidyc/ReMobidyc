@@ -43,9 +43,14 @@ where
 { #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_reproduce [
 
-	<script:
-	'(RMDTaskDefinitionNode goat_reproduce) inspect'>
-	^ ('Goat reproduce namely reproduce@model.') asRMDTaskDefinition
+	<script: '(RMDTaskDefinitionNode goat_reproduce) inspect'>
+	^ 'Goat reproduce namely reproduce@model
+	where
+	the chance -> 0.01
+	new - -> new 1 Goat
+	the min_blood_sugar -> 9000 [kcal]
+	the initial_blood_sugar -> 2000 [kcal]
+	the reproduction_cost -> 4000 [kcal].' asRMDTaskDefinition
 ]
 
 { #category : #'typical instances' }
@@ -94,6 +99,61 @@ RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: v
 		  guard: aRMDConditionNode;
 		  propertyBinds: anArrayOfRMDPropertyBindNode;
 		  yourself
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> wolf_chase_goat [
+	<script:
+		'RMDTaskDefinitionNode wolf_chase_goat asPresenter openWithSpec'>
+	^ 'Wolf chase nearest Goat within 10[km] namely move
+where
+	the heading -> direction goat
+	the speed -> 1.0[km/day].' asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
+	<script:
+		'(RMDTaskDefinitionNode wolf_prey_on_goat: ''15000[kcal]'') inspect'>
+	^ ('Wolf prey_on@model nearest Goat within 1 [km]
+	where
+	the threshold -> ', maxString, '.') asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> wolf_reproduce [
+
+	<script: '(RMDTaskDefinitionNode wolf_reproduce) inspect'>
+	^ 'Wolf reproduce namely reproduce@model
+	where
+	the chance -> 0.01
+	new - -> new 1 Wolf
+	the min_blood_sugar -> 4000 [kcal]
+	the initial_blood_sugar -> 2000 [kcal]
+	the reproduction_cost -> 2000 [kcal].' asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> wolf_respire: aString [
+
+	<script:
+	'(RMDTaskDefinitionNode wolf_respire: ''1000[kcal/day]'') asPresenter openWithSpec'>
+	^ ('Wolf respire namely lose
+where
+	the thing -> my blood_sugar
+	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
+		  asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> wolf_starve: thresholdString [
+
+	<script:
+	'(RMDTaskDefinitionNode wolf_starve: ''100[kcal/day]'') inspect'>
+	^ ('Wolf starve
+where
+	the vitality -> my blood_sugar
+	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
 ]
 
 { #category : #comparing }
@@ -239,7 +299,7 @@ RMDTaskDefinitionNode >> printOn: aStream [
 		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
 			nextPutAll: objectIdentifier;
-			space.
+			nextPutAll: ' within '.
 		range printOn: aStream.
 		aStream space ].
 	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
@@ -281,7 +341,7 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
 			nextPutAll: objectIdentifier;
-			space.
+			nextPutAll: ' within '.
 		range
 			printOn: aStream
 			ifIncludedIn: aCollectionOfRMDSyntaxNode

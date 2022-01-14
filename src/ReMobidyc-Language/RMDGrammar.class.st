@@ -700,7 +700,7 @@ RMDGrammar >> localActionIdentifierNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> namely [
 
-	^ #blank asPParser , 'namely' asPParser , #blank asPParser
+	^ 'namely' asPParser trimBlanks
 ]
 
 { #category : #'parsers-atoms' }
@@ -781,6 +781,8 @@ RMDGrammar >> productNodeClass [
 RMDGrammar >> propertyBind [
 
 	^ self placeholder , '->' asPParser trimBlanks , expression
+	  /
+	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
 	  ==> [ :triple | 
 		  self propertyBindNodeClass
 			  placeholder: triple first
@@ -980,12 +982,6 @@ RMDGrammar >> temperatureUnits [
 	^ {('K' -> #(1.0 nil 'K')).
 	('C' -> #(1.0 273.15 'K')).
 	('F' -> #(0.5555555555555556 255.3722222222222 'J'))} asDictionary
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> terminalTaskDefinitionHeaderLine [
-
-	^ agentIdentifier , 'die' asPParser trimBlanks ==> #first
 ]
 
 { #category : #'parsers-atoms' }
