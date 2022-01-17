@@ -34,6 +34,14 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
+## Example
+
+### 1. Simplified SugarScape
+![animation of sugascape example](images/SugarScape.png)
+
+### 2. Goat and Wolf
+![animation of goat and wolf example](images/GoatAndWolf.png)
+
 ## Background
 Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
 of Mobidyc.
