@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 RMDInteractionSpaceTest >> setUp [
 
-	space := RMDInteractionSpace xdivisions: 5 yDividions: 5 range: 1.5.
+	space := RMDInteractionSpace width: 7.5 height: 7.5 range: 1.5.
 	0 to: 5 do: [ :y | 
 		0 to: 5 do: [ :x | space add: x @ y x: x asFloat y: y asFloat ] ]
 ]

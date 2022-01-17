@@ -6,6 +6,8 @@ Class {
 		'range',
 		'xDivisions',
 		'yDivisions',
+		'divisionWidth',
+		'divisionHeight',
 		'xs',
 		'ys'
 	],
@@ -13,10 +15,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDInteractionSpace class >> xdivisions: anInteger1 yDividions: anInteger2 range: aFloat [
+RMDInteractionSpace class >> width: aFloat1 height: aFloat2 range: aFloat3 [
 
 	^ self new
-		  xDivisions: anInteger1 yDividions: anInteger2 range: aFloat;
+		  width: aFloat1 height: aFloat2 range: aFloat3;
 		  yourself
 ]
 
@@ -45,6 +47,11 @@ RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 				<= r2 ifTrue: [ aBlock value: animat ] ] ] ]
 ]
 
+{ #category : #accessing }
+RMDInteractionSpace >> maxDivisions [
+	^ 1000
+]
+
 { #category : #enumerating }
 RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
 
@@ -65,11 +72,13 @@ RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
 ]
 
 { #category : #private }
-RMDInteractionSpace >> xDivisions: anInteger1 yDividions: anInteger2 range: aFloat [
+RMDInteractionSpace >> width: aFloat1 height: aFloat2 range: aFloat3 [
 
-	xDivisions := anInteger1.
-	yDivisions := anInteger2.
-	range := aFloat.
+	range := aFloat3.
+	xDivisions := (aFloat1 / range) ceiling min: self maxDivisions.
+	yDivisions := (aFloat2 / range) ceiling min: self maxDivisions.
+	divisionWidth := aFloat1 / xDivisions asFloat.
+	divisionHeight := aFloat2 / yDivisions asFloat.
 	animats := (1 to: yDivisions) collect: [ :y | 
 		           (1 to: xDivisions) collect: [ :x | Set new: 256 ] ].
 	xs := Dictionary new.
@@ -79,11 +88,11 @@ RMDInteractionSpace >> xDivisions: anInteger1 yDividions: anInteger2 range: aFlo
 { #category : #accessing }
 RMDInteractionSpace >> xIndexOf: aFloat [
 
-	^ aFloat // range + 1 min: xDivisions max: 0
+	^ aFloat // divisionWidth + 1 min: xDivisions max: 1
 ]
 
 { #category : #accessing }
 RMDInteractionSpace >> yIndexOf: aFloat [
 
-	^ aFloat // range + 1 min: yDivisions max: 1
+	^ aFloat // divisionHeight + 1 min: yDivisions max: 1
 ]

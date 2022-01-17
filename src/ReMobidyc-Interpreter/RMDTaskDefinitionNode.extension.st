@@ -29,10 +29,8 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 		                 animatDefinitionAt: objectIdentifier
 		                 ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
-		                    xdivisions:
-		                    (aRMDInterpreter north / range numeric) ceiling
-		                    yDividions:
-		                    (aRMDInterpreter east / range numeric) ceiling
+		                    width: aRMDInterpreter north
+		                    height: aRMDInterpreter east
 		                    range: range numeric.
 	aRMDInterpreter
 		individualsOf: objectSpecies
@@ -105,11 +103,10 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 		                 animatDefinitionAt: objectIdentifier
 		                 ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
-		                    xdivisions:
-		                    (aRMDInterpreter north / range numeric) ceiling
-		                    yDividions:
-		                    (aRMDInterpreter east / range numeric) ceiling
+		                    width: aRMDInterpreter north
+		                    height: aRMDInterpreter east
 		                    range: range numeric.
+	range numeric.
 	aRMDInterpreter
 		individualsOf: objectSpecies
 		do: [ :objectAnimat :objectLifehistory | 
