@@ -80,7 +80,7 @@ RMDInteractionSpace >> width: aFloat1 height: aFloat2 range: aFloat3 [
 	divisionWidth := aFloat1 / xDivisions asFloat.
 	divisionHeight := aFloat2 / yDivisions asFloat.
 	animats := (1 to: yDivisions) collect: [ :y | 
-		           (1 to: xDivisions) collect: [ :x | Set new: 256 ] ].
+		           (1 to: xDivisions) collect: [ :x | Set new ] ].
 	xs := Dictionary new.
 	ys := Dictionary new
 ]
