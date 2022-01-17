@@ -13,26 +13,31 @@ Class {
 		'timeSlider',
 		'time',
 		'duration',
-		'lastServerUpdate'
+		'lastServerUpdate',
+		'recordAnimatedGifButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
 RMDObservatory class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				add: #stepButton expand: false;
-				add: #runButton expand: false;
-				add:
-					(SpBoxLayout newVertical
-						add: #timeLabel;
-						add: (SpBoxLayout newHorizontal add: #timeSlider width: 500);
-						yourself);
-				yourself)
-			height: self buttonHeight;
-		add: #views yourself
+		  add: (SpBoxLayout newHorizontal
+				   vAlignCenter;
+				   add: #stepButton expand: false;
+				   add: #runButton expand: false;
+				   add: (SpBoxLayout newVertical
+						    add: #timeLabel;
+						    add:
+							    (SpBoxLayout newHorizontal add: #timeSlider expand: true)
+						    expand: false;
+						    yourself)
+				   expand: true;
+				   add: #recordAnimatedGifButton width: 32;
+				   yourself)
+		  height: self buttonHeight;
+		  add: #views yourself
 ]
 
 { #category : #'instance creation' }
@@ -169,43 +174,52 @@ RMDObservatory >> informServer [
 
 { #category : #initialization }
 RMDObservatory >> initializePresenters [
+
 	super initializePresenters.
 	views := self newNotebook.
 	timeLabel := self newLabel
-		label: '0';
-		yourself.
+		             label: '0';
+		             yourself.
 	timeSlider := self newSlider
-		min: 0;
-		max: 1;
-		value: 0;
-		whenValueChangedDo: [ interpreter
-				ifNotNil: [ runButton state
-						ifFalse: [ (time / duration - timeSlider value) abs > 1.0e-8
-								ifTrue: [ interpreter time: timeSlider value * duration ] ] ] ];
-		yourself.
+		              min: 0;
+		              max: 1;
+		              value: 0;
+		              whenValueChangedDo: [ 
+			              interpreter ifNotNil: [ 
+					              runButton state ifFalse: [ 
+							              (time / duration - timeSlider value) abs > 1.0e-8 
+								              ifTrue: [ 
+									              interpreter time: timeSlider value * duration ] ] ] ];
+		              yourself.
 	runButton := self newButton
-		label: 'run';
-		action: [ self runState: self runState not ];
-		state: false;
-		whenStateChangedDo: [ :state | 
-			state == true
-				ifTrue: [ process := [ stepButton enabled: false.
-					timeSlider enabled: false.
-					[ self runState == true ]
-						whileTrue: [ interpreter
-								ifNotNil: [ interpreter stepSimulation
-										ifFalse: [ self runState: false ].
-									0 milliSecond wait ] ].
-					process := nil.
-					stepButton enabled: true.
-					timeSlider enabled: true ]
-						forkAt: Processor userBackgroundPriority ] ];
-		yourself.
+		             label: 'run';
+		             action: [ self runState: self runState not ];
+		             state: false;
+		             whenStateChangedDo: [ :state | 
+			             state == true ifTrue: [ 
+					             process := [ 
+					                        stepButton enabled: false.
+					                        timeSlider enabled: false.
+					                        [ self runState == true ] whileTrue: [ 
+							                        interpreter ifNotNil: [ 
+									                        interpreter stepSimulation ifFalse: [ 
+											                        self runState: false ].
+									                        0 milliSecond wait ] ].
+					                        process := nil.
+					                        stepButton enabled: true.
+					                        timeSlider enabled: true ] forkAt:
+							                        Processor userBackgroundPriority ] ];
+		             yourself.
 	stepButton := self newButton
-		label: 'step';
-		action: [ self stepSimulation ];
-		enabled: true;
-		yourself.
+		              label: 'step';
+		              action: [ self stepSimulation ];
+		              enabled: true;
+		              yourself.
+	recordAnimatedGifButton := self newButton
+		                           icon: Smalltalk ui icons smallScreenshot;
+		                           action: [ self recordAPNG ];
+		                           enabled: true;
+		                           yourself.
 	self whenDisplayDo: [ (views pageAt: 1) activePresenter updateImage ]
 ]
 
@@ -214,7 +228,7 @@ RMDObservatory >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Re:Mobidyc - Observatory';
-		initialExtent: 800 @ 600
+		initialExtent: 900 @ 600
 ]
 
 { #category : #accessing }
@@ -230,6 +244,16 @@ RMDObservatory >> modelName: aString [
 { #category : #api }
 RMDObservatory >> progress [
 	^ time / duration
+]
+
+{ #category : #api }
+RMDObservatory >> recordAPNG [
+
+	(UIManager default
+		 chooseForSaveFileReference: 'export animation PNG'
+		 extensions: #( 'png' )
+		 path: FileLocator desktop absolutePath) ifNotNil: [ :ref | 
+		interpreter ifNotNil: [ interpreter exportAPNG: ref ] ]
 ]
 
 { #category : #accessing }

@@ -246,6 +246,42 @@ RMDInterpreter >> duration [
 	^ simulationModel duration
 ]
 
+{ #category : #exporting }
+RMDInterpreter >> exportAPNG: aFileReference [
+
+	^ self exportAPNG: aFileReference extent: 500 @ 500
+]
+
+{ #category : #exporting }
+RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
+
+	| oldTime |
+	oldTime := self time.
+	[ 
+	self time: 0.
+	aFileReference binaryWriteStreamDo: [ :stream | 
+		| writer visualizer |
+		writer := RMDAPNGWriter on: stream.
+		writer numPlays: 1.
+		visualizer := RMDVisualizer extent: aPoint.
+		self simulationModel renderersDo: [ :renderer | 
+			visualizer addRenderer: renderer ].
+		[ 
+		UIManager default
+			displayProgress: 'exporting animated gif'
+			from: 0.0
+			to: self duration
+			during: [ :progress | 
+				[ self time < self duration ] whileTrue: [ 
+					writer nextPutImage: (visualizer visualize: self).
+					self performTasks.
+					self tick.
+					self bounceOutOfBoundsAnimats.
+					progress value: self time ] ].
+		writer nextPutImage: (visualizer visualize: self) ] ensure: [ 
+			writer close ] ] ] ensure: [ self time: oldTime ]
+]
+
 { #category : #'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
