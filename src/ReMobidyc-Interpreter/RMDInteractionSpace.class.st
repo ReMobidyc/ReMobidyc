@@ -25,8 +25,10 @@ RMDInteractionSpace class >> width: aFloat1 height: aFloat2 range: aFloat3 [
 { #category : #adding }
 RMDInteractionSpace >> add: anArray x: x y: y [
 
-	| cell |
-	cell := (animats at: (self yIndexOf: y)) at: (self xIndexOf: x).
+	| row columnIndex cell |
+	cell := (row := animats at: (self yIndexOf: y)) at:
+		        (columnIndex := self xIndexOf: x).
+	cell ifNil: [ cell := row at: columnIndex put: Set new ].
 	cell add: anArray.
 	xs at: anArray put: x.
 	ys at: anArray put: y.
@@ -42,9 +44,10 @@ RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 	r2 := range squared.
 	(yIndex0 - 1 max: 1) to: (yIndex0 + 1 min: yDivisions) do: [ :yIndex | 
 		(xIndex0 - 1 max: 1) to: (xIndex0 + 1 min: xDivisions) do: [ :xIndex | 
-			((animats at: yIndex) at: xIndex) do: [ :animat | 
-				((xs at: animat) - x) squared + ((ys at: animat) - y) squared
-				<= r2 ifTrue: [ aBlock value: animat ] ] ] ]
+			((animats at: yIndex) at: xIndex) ifNotNil: [ :cell | 
+				cell do: [ :animat | 
+					((xs at: animat) - x) squared + ((ys at: animat) - y) squared
+					<= r2 ifTrue: [ aBlock value: animat ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -62,12 +65,13 @@ RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
 	nearest := nil.
 	(yIndex0 - 1 max: 1) to: (yIndex0 + 1 min: yDivisions) do: [ :yIndex | 
 		(xIndex0 - 1 max: 1) to: (xIndex0 + 1 min: xDivisions) do: [ :xIndex | 
-			((animats at: yIndex) at: xIndex) do: [ :animat | 
-				| r2 |
-				(r2 := ((xs at: animat) - x) squared
-				       + ((ys at: animat) - y) squared) <= minR2 ifTrue: [ 
-					minR2 := r2.
-					nearest := animat ] ] ] ].
+			((animats at: yIndex) at: xIndex) ifNotNil: [ :cell | 
+				cell do: [ :animat | 
+					| r2 |
+					(r2 := ((xs at: animat) - x) squared
+					       + ((ys at: animat) - y) squared) <= minR2 ifTrue: [ 
+						minR2 := r2.
+						nearest := animat ] ] ] ] ].
 	nearest ifNotNil: aBlock
 ]
 
@@ -79,8 +83,7 @@ RMDInteractionSpace >> width: aFloat1 height: aFloat2 range: aFloat3 [
 	yDivisions := (aFloat2 / range) ceiling min: self maxDivisions.
 	divisionWidth := aFloat1 / xDivisions asFloat.
 	divisionHeight := aFloat2 / yDivisions asFloat.
-	animats := (1 to: yDivisions) collect: [ :y | 
-		           (1 to: xDivisions) collect: [ :x | Set new ] ].
+	animats := (1 to: yDivisions) collect: [ :y | Array new: xDivisions ].
 	xs := Dictionary new.
 	ys := Dictionary new
 ]
