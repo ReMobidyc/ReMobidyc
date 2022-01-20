@@ -164,6 +164,37 @@ RMDInterpreter >> cellsDo: aBlock [
 	memory cellsDo: aBlock
 ]
 
+{ #category : #'animat operations' }
+RMDInterpreter >> changeStage: animatString [
+
+	| animatDefinition newIndividual offset |
+	animatDefinition := simulationModel
+		                    animatDefinitionAt: animatString
+		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+	newIndividual := memory
+		                 addAnimat: animatDefinition
+		                 lifehistory: context subjectLifehistory.
+	context
+		newIndividuals: { newIndividual }
+		definition: animatDefinition.
+	offset := 0.
+	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
+		| value |
+		value := self
+			         readVariable: propertyDecl identifier
+			         agent: nil
+			         ifAbsent: [ 0.0 ].
+		memory nextAt: newIndividual + offset put: value.
+		offset := offset + 1 ].
+	memory removeAnimat: context subject.
+	context subject
+		to:
+			context subject + context subjectDefinition totalNumberOfProperties
+			- 1
+		do: [ :slot | memory nextAt: slot put: nil ].
+	^ newIndividual
+]
+
 { #category : #directives }
 RMDInterpreter >> direction: aString [
 	| x1 y1 x2 y2 |

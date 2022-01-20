@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDNewDirective,
+	#name : #RMDNewDirectiveNode,
 	#superclass : #RMDLifeDirectiveNode,
 	#instVars : [
 		'animatIdentifier',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDNewDirective class >> animatIdentifier: aString [
+RMDNewDirectiveNode class >> animatIdentifier: aString [
 
 	^ self
 		  animatIdentifier: aString
@@ -17,7 +17,7 @@ RMDNewDirective class >> animatIdentifier: aString [
 ]
 
 { #category : #'instance creation' }
-RMDNewDirective class >> animatIdentifier: aString quantity: aRMDExpression [
+RMDNewDirectiveNode class >> animatIdentifier: aString quantity: aRMDExpression [
 
 	^ self new
 		  animatIdentifier: aString;
@@ -26,7 +26,7 @@ RMDNewDirective class >> animatIdentifier: aString quantity: aRMDExpression [
 ]
 
 { #category : #comparing }
-RMDNewDirective >> = anObject [
+RMDNewDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  animatIdentifier = anObject animatIdentifier and: [ 
@@ -34,13 +34,13 @@ RMDNewDirective >> = anObject [
 ]
 
 { #category : #accessing }
-RMDNewDirective >> animatIdentifier [
+RMDNewDirectiveNode >> animatIdentifier [
 
 	^ animatIdentifier
 ]
 
 { #category : #accessing }
-RMDNewDirective >> animatIdentifier: aString [
+RMDNewDirectiveNode >> animatIdentifier: aString [
 
 	animatIdentifier := aString = '-'
 		                    ifTrue: [ nil ]
@@ -48,37 +48,37 @@ RMDNewDirective >> animatIdentifier: aString [
 ]
 
 { #category : #enumerating }
-RMDNewDirective >> childrenDo: aBlock [
+RMDNewDirectiveNode >> childrenDo: aBlock [
 
 	aBlock value: quantity
 ]
 
 { #category : #comparing }
-RMDNewDirective >> hash [
+RMDNewDirectiveNode >> hash [
 
 	^ (super hash bitXor: animatIdentifier hash) bitXor: quantity hash
 ]
 
 { #category : #testing }
-RMDNewDirective >> isNewDirectiveNode [
+RMDNewDirectiveNode >> isNewDirectiveNode [
 	^ true
 ]
 
 { #category : #testing }
-RMDNewDirective >> isPlaceholderNode [
+RMDNewDirectiveNode >> isPlaceholderNode [
 
 	^ animatIdentifier isNil
 ]
 
 { #category : #copying }
-RMDNewDirective >> postCopy [
+RMDNewDirectiveNode >> postCopy [
 
 	super postCopy.
 	quantity := quantity copy
 ]
 
 { #category : #printing }
-RMDNewDirective >> printOn: aStream [
+RMDNewDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'new '.
 	animatIdentifier ifNil: [ aStream nextPut: $- ] ifNotNil: [ 
@@ -91,7 +91,7 @@ RMDNewDirective >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDNewDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDNewDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -110,18 +110,18 @@ RMDNewDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode add
 ]
 
 { #category : #accessing }
-RMDNewDirective >> quantity [
+RMDNewDirectiveNode >> quantity [
 	^ quantity
 ]
 
 { #category : #accessing }
-RMDNewDirective >> quantity: anInteger [
+RMDNewDirectiveNode >> quantity: anInteger [
 
 	quantity := anInteger
 ]
 
 { #category : #rewriting }
-RMDNewDirective >> replaceChildren: aDictionary [
+RMDNewDirectiveNode >> replaceChildren: aDictionary [
 
 	aDictionary
 		at: animatIdentifier

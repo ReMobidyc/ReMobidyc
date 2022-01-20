@@ -111,20 +111,29 @@ RMDActionDefinitionBrowser >> editDirectives [
 				              'die'.
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isDieDirectiveNode ]).
-				              [ RMDDieDirective new ] }
+				              [ RMDDieDirectiveNode new ] }
 		              with: { 
 				              'kill'.
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isKillDirectiveNode ]).
-				              [ RMDKillDirective new ] }
+				              [ RMDKillDirectiveNode new ] }
 		              with: { 
 				              'new'.
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isNewDirectiveNode ]).
 				              [ 
-				              RMDNewDirective new
+				              RMDNewDirectiveNode new
 					              animatIdentifier:
 						              self requestAnimatIdentifierForNewDirective;
+					              yourself ] }
+		              with: { 
+				              'stage'.
+				              (node lifeDirectives contains: [ :directive | 
+					               directive isStageDirectiveNode ]).
+				              [ 
+				              RMDNewDirectiveNode new
+					              animatIdentifier:
+						              self requestAnimatIdentifierForStageDirective;
 					              yourself ] }.
 	chooser := self newTable
 		           items: directives;
@@ -321,6 +330,19 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForNewDirective [
 				      ifNone: [ nil ])
 				     ifNotNil: [ :directive | directive animatIdentifier ]
 				     ifNil: [ '-' ])) ifNil: [ '-' ]) trim ifEmpty: [ '-' ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
+
+	^ (UIManager default
+		   request: 'Animat'
+		   initialAnswer: ((node lifeDirectives
+				     detect: [ :directive | directive isStageDirectiveNode ]
+				     ifNone: [ nil ])
+				    ifNotNil: [ :directive | directive animatIdentifier ]
+				    ifNil: [ '-' ])) ifNotNil: [ :name | 
+		  name trim ifEmpty: [ nil ] ]
 ]
 
 { #category : #updating }

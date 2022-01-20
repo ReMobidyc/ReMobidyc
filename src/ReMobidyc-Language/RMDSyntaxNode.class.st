@@ -315,6 +315,11 @@ RMDSyntaxNode >> isSpeciesInitializerNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isStageDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSubtractionNode [
 	^ false
 ]

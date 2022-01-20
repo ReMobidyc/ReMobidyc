@@ -1,7 +1,7 @@
-Extension { #name : #RMDNewDirective }
+Extension { #name : #RMDNewDirectiveNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewDirective >> evalIn: aRMDInterpreter [
+RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 
 	animatIdentifier ifNil: [ 
 		^ (RMDUnresolvedReferenceError on: self) signal ].
@@ -12,7 +12,7 @@ RMDNewDirective >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewDirective >> typecheckIn: aRMDInterpreter [
+RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	animatIdentifier ifNil: [ 
 		^ (RMDUnresolvedReferenceError on: self) signal ].

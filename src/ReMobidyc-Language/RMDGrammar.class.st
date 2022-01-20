@@ -456,7 +456,7 @@ RMDGrammar >> dieDirective [
 { #category : #'class access' }
 RMDGrammar >> dieDirectiveNodeClass [
 
-	^ RMDDieDirective
+	^ RMDDieDirectiveNode
 ]
 
 { #category : #'parsers-atoms' }
@@ -653,7 +653,7 @@ RMDGrammar >> killDirective [
 { #category : #'class access' }
 RMDGrammar >> killDirectiveNodeClass [
 
-	^ RMDKillDirective
+	^ RMDKillDirectiveNode
 ]
 
 { #category : #units }
@@ -667,7 +667,7 @@ RMDGrammar >> lengthUnits [
 { #category : #'parsers-directives' }
 RMDGrammar >> lifeDirective [
 
-	^ self dieDirective / self killDirective / self newDirective
+	^ self dieDirective / self killDirective / self newDirective / self stageDirective
 ]
 
 { #category : #'parsers-atoms' }
@@ -740,7 +740,7 @@ RMDGrammar >> newDirective [
 { #category : #'class access' }
 RMDGrammar >> newDirectiveNodeClass [
 
-	^ RMDNewDirective
+	^ RMDNewDirectiveNode
 ]
 
 { #category : #'class access' }
@@ -890,6 +890,20 @@ RMDGrammar >> simulationTimeDefinition [
 { #category : #'class access' }
 RMDGrammar >> simulationTimeDefinitionNodeClass [
 	^ RMDSimulationTimeDefinitionNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> stageDirective [
+
+	^ 'stage' asPParser , #blank asPParser plus , agentIdentifier
+	  ==> [ :triple | 
+		  self stageDirectiveNodeClass animatIdentifier: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> stageDirectiveNodeClass [
+
+	^ RMDStageDirectiveNode
 ]
 
 { #category : #accessing }

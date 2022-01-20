@@ -1,22 +1,22 @@
 Class {
-	#name : #RMDKillDirective,
+	#name : #RMDKillDirectiveNode,
 	#superclass : #RMDLifeDirectiveNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #testing }
-RMDKillDirective >> isKillDirectiveNode [
+RMDKillDirectiveNode >> isKillDirectiveNode [
 	^ true
 ]
 
 { #category : #printing }
-RMDKillDirective >> printOn: aStream [
+RMDKillDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'kill'
 ]
 
 { #category : #printing }
-RMDKillDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDKillDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -26,7 +26,7 @@ RMDKillDirective >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode ad
 ]
 
 { #category : #'as yet unclassified' }
-RMDKillDirective >> typecheckIn: aRMDInterpreter [
+RMDKillDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context objectDefinition notNil
 ]
