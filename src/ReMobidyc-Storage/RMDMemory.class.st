@@ -31,7 +31,7 @@ RMDMemory >> addAnimat: aRMDAnimatDefinitionNode lifehistory: anArrayOfInteger [
 	self nextAvailableSlot: (individual := self nextAvailableSlot)
 		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
 	animat := aRMDAnimatDefinitionNode identifier.
-	(ins at: animat ifAbsentPut: [ Set new: 1024 ]) add:
+	(ins at: animat ifAbsentPut: [ Set new ]) add:
 		(anArrayOfInteger copyWith: individual).
 	^ individual
 ]
