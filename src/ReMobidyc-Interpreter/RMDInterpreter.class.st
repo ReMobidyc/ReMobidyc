@@ -366,7 +366,7 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 	newIndividuals := (1 to: anInteger) collect: [ :i | 
 		                  memory
 			                  addAnimat: animatDefinition
-			                  lifehistory: context subjectLifehistory ].
+			                  lifehistory: #(  ) ].
 	context newIndividuals: newIndividuals definition: animatDefinition.
 	offset := 0.
 	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
