@@ -91,22 +91,25 @@ RMDAnimatInitializerNode >> population: anInteger [
 
 { #category : #printing }
 RMDAnimatInitializerNode >> printOn: aStream [
+
 	population printOn: aStream.
 	aStream
 		nextPut: Character space;
 		nextPutAll: animat.
-	propertyInitializers
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			propertyInitializers
-				do: [ :def | 
-					def printOn: aStream.
-					aStream nextPut: Character cr ] ]
+	propertyInitializers ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		propertyInitializers
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
 { #category : #printing }
 RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	population
@@ -116,19 +119,19 @@ RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 	aStream
 		nextPut: Character space;
 		nextPutAll: animat.
-	propertyInitializers
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			propertyInitializers
-				do: [ :def | 
-					def
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection.
-					aStream nextPut: Character cr ] ].
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	propertyInitializers ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		propertyInitializers do: [ :def | 
+			aStream nextPutAll: '    '.
+			def
+				printOn: aStream
+				ifIncludedIn: aCollectionOfRMDSyntaxNode
+				addSectionTo: aCollection.
+			aStream nextPut: Character cr ] ].
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }

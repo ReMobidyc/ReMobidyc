@@ -19,3 +19,12 @@ RMDUniformDistributionTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: 'uniform 110 [kcal] to 220 [kcal]')
 ]
+
+{ #category : #tests }
+RMDUniformDistributionTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'uniform 0 to 1'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

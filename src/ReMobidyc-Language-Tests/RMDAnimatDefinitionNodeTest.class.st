@@ -23,3 +23,16 @@ blood_sugar [kcal].'.
 					'Goat is Animat with
 energy [J].')
 ]
+
+{ #category : #tests }
+RMDAnimatDefinitionNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser animatDefinition end parse: 'A is Animat with
+	x [m].'.
+	copy := parser animatDefinition end parse: node printString.
+	self assert: copy equals: node.
+	node := parser animatDefinition end parse: 'A is Animat.'.
+	copy := parser animatDefinition end parse: node printString.
+	self assert: copy equals: node
+]

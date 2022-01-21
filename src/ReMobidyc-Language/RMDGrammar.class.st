@@ -1172,15 +1172,15 @@ RMDGrammar >> worldDefinitionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> worldInitializer [
-	^ (('World' asPParser trimBlanks , 'with' asPParser trimBlanks
-		, #newline asPParser trimBlanks
-		,
-			(self propertyInitializer
-				onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #fourth) optional
-		==> [ :initializers | 
-			self worldInitializerNodeClass
-				propertyInitializers: (initializers ifNil: [ Array new ]) ]
+
+	^ ('World' asPParser trimBlanks
+	   , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
+		    , (self propertyInitializer onlySeparatedBy:
+				     #newline asPParser trimBlanks) ==> #third) optional
+	   ==> #second , #newline asPParser trimBlanks optional ==> #first)
+		  optional ==> [ :initializers | 
+	  self worldInitializerNodeClass propertyInitializers:
+		  (initializers ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }

@@ -94,18 +94,19 @@ RMDSimulationDefinitionNode >> postCopy [
 
 { #category : #printing }
 RMDSimulationDefinitionNode >> printOn: aStream [
+
 	aStream
 		nextPutAll: 'Simulation with';
 		nextPut: Character cr.
-	cellInitializer printOn: aStream.
-	aStream nextPut: Character cr.
 	timeDefinition printOn: aStream.
+	aStream nextPut: Character cr.
+	worldInitializer printOn: aStream.
+	aStream nextPut: Character cr.
+	cellInitializer printOn: aStream.
 	aStream nextPut: Character cr.
 	animatInitializers
 		do: [ :def | def printOn: aStream ]
-		separatedBy: [ aStream
-				nextPut: $,;
-				nextPut: Character cr ].
+		separatedBy: [ aStream nextPut: Character cr ].
 	aStream nextPut: $.
 ]
 

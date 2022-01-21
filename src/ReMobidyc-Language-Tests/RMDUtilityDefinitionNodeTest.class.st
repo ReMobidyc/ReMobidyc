@@ -17,3 +17,12 @@ RMDUtilityDefinitionNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser utilityDefinition end parse: 'y = my foo + 10 [kcal]')
 ]
+
+{ #category : #tests }
+RMDUtilityDefinitionNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser utilityDefinition end parse: 'x = y'.
+	copy := parser utilityDefinition end parse: node printString.
+	self assert: copy equals: node
+]

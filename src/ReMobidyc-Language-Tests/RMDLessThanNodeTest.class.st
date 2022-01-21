@@ -16,3 +16,12 @@ RMDLessThanNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser condition end parse: 'a + x < y * d')
 ]
+
+{ #category : #tests }
+RMDLessThanNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser condition end parse: 'x < y'.
+	copy := parser condition end parse: node printString.
+	self assert: copy equals: node
+]

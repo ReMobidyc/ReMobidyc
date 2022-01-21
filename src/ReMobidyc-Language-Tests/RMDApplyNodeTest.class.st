@@ -16,3 +16,15 @@ RMDApplyNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: 'my a + my z')
 ]
+
+{ #category : #tests }
+RMDApplyNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'sin(theta)'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node.
+	node := parser expression end parse: 'min(x, y)'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

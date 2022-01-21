@@ -17,3 +17,12 @@ RMDConjunctionNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser condition end parse: 'a1 = a2 and d1 = d2')
 ]
+
+{ #category : #tests }
+RMDConjunctionNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser condition end parse: 'x > y and x > z'.
+	copy := parser condition end parse: node printString.
+	self assert: copy equals: node
+]

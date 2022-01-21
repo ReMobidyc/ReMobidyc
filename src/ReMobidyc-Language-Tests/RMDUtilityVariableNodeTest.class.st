@@ -15,3 +15,12 @@ RMDUtilityVariableNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser utilityVariable end parse: 'y')
 ]
+
+{ #category : #tests }
+RMDUtilityVariableNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'x'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

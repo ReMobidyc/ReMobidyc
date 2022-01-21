@@ -16,3 +16,15 @@ RMDPowerNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '(a + x) ^ 2')
 ]
+
+{ #category : #tests }
+RMDPowerNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'x ^ 2'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node.
+	node := parser expression end parse: '(x + y) ^ 2'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

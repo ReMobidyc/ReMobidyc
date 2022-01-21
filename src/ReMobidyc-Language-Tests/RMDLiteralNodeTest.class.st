@@ -16,3 +16,15 @@ RMDLiteralNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '10 [J]')
 ]
+
+{ #category : #tests }
+RMDLiteralNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: '1 [m]'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node.
+	node := parser expression end parse: '3.14'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

@@ -17,3 +17,12 @@ RMDPlaceholderNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser condition end parse: 'b1 = b2 and a1 = a2')
 ]
+
+{ #category : #tests }
+RMDPlaceholderNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser placeholder end parse: 'the x'.
+	copy := parser placeholder end parse: node printString.
+	self assert: copy equals: node
+]

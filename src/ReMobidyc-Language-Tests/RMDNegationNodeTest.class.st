@@ -17,3 +17,12 @@ RMDNegationNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser condition end parse: 'not (a1 = a2 or d1 = d2)')
 ]
+
+{ #category : #tests }
+RMDNegationNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser condition end parse: 'not (x /= y)'.
+	copy := parser condition end parse: node printString.
+	self assert: copy equals: node
+]

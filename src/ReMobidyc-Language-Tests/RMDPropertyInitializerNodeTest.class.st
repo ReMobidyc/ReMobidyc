@@ -22,3 +22,12 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 				parse:
 					'temp = 100 [F]')
 ]
+
+{ #category : #tests }
+RMDPropertyInitializerNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser propertyInitializer end parse: 'x = y'.
+	copy := parser propertyInitializer end parse: node printString.
+	self assert: copy equals: node
+]

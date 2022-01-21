@@ -74,6 +74,24 @@ RMDActionDefinitionNodeTest >> testPlus [
 ]
 
 { #category : #tests }
+RMDActionDefinitionNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser actionDefinition end parse: 'to chase Target is
+	when my energy >= my min_active_energy
+	my heading'' = target_direction
+	where
+		target_direction = direction target.'.
+	copy := parser actionDefinition end parse: node printString.
+	self assert: copy equals: node.
+	node := parser actionDefinition end parse: 'to starve is
+	when my energy < my min_energy
+	with die.'.
+	copy := parser actionDefinition end parse: node printString.
+	self assert: copy equals: node
+]
+
+{ #category : #tests }
 RMDActionDefinitionNodeTest >> testWithAll [
 	| node1 node2 sum |
 	node1 := parser actionDefinition end

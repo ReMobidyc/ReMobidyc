@@ -17,3 +17,12 @@ RMDAdditionNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '10 [kcal] + 20 [kcal]')
 ]
+
+{ #category : #tests }
+RMDAdditionNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'x + y'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

@@ -94,22 +94,27 @@ RMDCellInitializerNode >> postCopy [
 
 { #category : #printing }
 RMDCellInitializerNode >> printOn: aStream [
+
 	xDivisions printOn: aStream.
 	aStream nextPutAll: ' x '.
 	yDivisions printOn: aStream.
-	aStream nextPutAll: ' cells, '.
+	aStream nextPutAll: ' of '.
 	size printOn: aStream.
-	aStream nextPutAll: ' each side'.
-	propertyInitializers
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			propertyInitializers do: [ :init | init printOn: aStream ] ].
-	aStream nextPut: $,
+	aStream nextPutAll: ' Cell'.
+	propertyInitializers ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		propertyInitializers
+			do: [ :init | 
+				aStream nextPutAll: '    '.
+				init printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
 { #category : #printing }
 RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	xDivisions
@@ -121,25 +126,26 @@ RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxN
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	aStream nextPutAll: ' cells, '.
+	aStream nextPutAll: ' of '.
 	size
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	aStream nextPutAll: ' each side'.
-	propertyInitializers
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			propertyInitializers
-				do: [ :init | 
-					init
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection ] ].
-	aStream nextPut: $,.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	aStream nextPutAll: ' Cell'.
+	propertyInitializers ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		propertyInitializers
+			do: [ :init | 
+				aStream nextPutAll: '    '.
+				init
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }

@@ -16,3 +16,12 @@ RMDUnaryMinusNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '-(x + y)')
 ]
+
+{ #category : #tests }
+RMDUnaryMinusNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: '-(x + y)'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

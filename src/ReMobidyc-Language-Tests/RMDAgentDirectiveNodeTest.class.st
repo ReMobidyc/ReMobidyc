@@ -16,3 +16,15 @@ RMDAgentDirectiveNodeTest >> testCopyReplace [
 		assert: (node copyReplace: replacement)
 		equals: (parser expression end parse: '10 [degree]')
 ]
+
+{ #category : #tests }
+RMDAgentDirectiveNodeTest >> testPrintOn [
+
+	| node copy |
+	node := parser expression end parse: 'direction target'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node.
+	node := parser expression end parse: '(direction target) + (direction another)'.
+	copy := parser expression end parse: node printString.
+	self assert: copy equals: node
+]

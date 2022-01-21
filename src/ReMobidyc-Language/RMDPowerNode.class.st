@@ -75,23 +75,33 @@ RMDPowerNode >> precedence [
 
 { #category : #printing }
 RMDPowerNode >> printOn: aStream [
+
+	self precedence < expression precedence ifTrue: [ 
+		aStream nextPut: $( ].
 	expression printOn: aStream.
+	self precedence < expression precedence ifTrue: [ 
+		aStream nextPut: $) ].
 	aStream nextPutAll: self operator.
 	order printOn: aStream
 ]
 
 { #category : #printing }
 RMDPowerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
+	self precedence < expression precedence ifTrue: [ 
+		aStream nextPut: $( ].
 	expression
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
+	self precedence < expression precedence ifTrue: [ 
+		aStream nextPut: $) ].
 	aStream nextPutAll: self operator.
 	order printOn: aStream.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }
