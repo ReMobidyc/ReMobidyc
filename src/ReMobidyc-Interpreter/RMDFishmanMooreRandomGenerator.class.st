@@ -28,12 +28,19 @@ RMDFishmanMooreRandomGenerator >> initializeWithAll: anArrayOfInteger [
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> next [
-	^ (seed := 742938285 * seed \\ 2147483647) / 2147483647.0
+
+	^ self nextSeed / 2147483647.0
 ]
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> nextInt: anInteger [
 	^ (self next * anInteger) truncated + 1
+]
+
+{ #category : #accessing }
+RMDFishmanMooreRandomGenerator >> nextSeed [
+
+	^ seed := 742938285 * seed \\ 2147483647
 ]
 
 { #category : #accessing }
@@ -48,5 +55,6 @@ RMDFishmanMooreRandomGenerator >> seed [
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> seed: anInteger [
-	seed := anInteger asInteger
+
+	seed := anInteger asInteger abs + 1 \\ 2147483647
 ]

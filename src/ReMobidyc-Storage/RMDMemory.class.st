@@ -18,6 +18,7 @@ Class {
 		'yCells',
 		'cellSize',
 		'animats',
+		'seeds',
 		'ins',
 		'outs'
 	],
@@ -205,6 +206,7 @@ RMDMemory >> initialize [
 	world := 1.
 	cell := nil.
 	animats := Dictionary new.
+	seeds := Dictionary new.
 	ins := Dictionary new.
 	outs := Set new: 1024
 ]
@@ -286,6 +288,11 @@ RMDMemory >> readAnimatsForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDMemory >> readSeedsForTime: anInteger [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
 RMDMemory >> readValuesForTime: anInteger [
 	^ self subclassResponsibility
 ]
@@ -294,6 +301,26 @@ RMDMemory >> readValuesForTime: anInteger [
 RMDMemory >> removeAnimat: anInteger [
 
 	^ outs add: anInteger
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> removeSeedAt: anInteger [
+
+	^ seeds
+		  removeKey: anInteger
+		  ifAbsent: [ KeyNotFound signal: anInteger ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> seedAt: anInteger [
+
+	^ seeds at: anInteger ifAbsent: [ KeyNotFound signal: anInteger ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> seedAt: anInteger put: anotherInteger [
+
+	^ seeds at: anInteger put: anotherInteger
 ]
 
 { #category : #'accessing-individuals' }
@@ -310,7 +337,8 @@ RMDMemory >> sunrise [
 	values := self readValuesForTime: time.
 	nextValues := values copy.
 	nextDeltas := Dictionary new.
-	animats := self readAnimatsForTime: time
+	animats := self readAnimatsForTime: time.
+	seeds := self readSeedsForTime: time
 ]
 
 { #category : #timing }
@@ -334,6 +362,7 @@ RMDMemory >> sunset [
 	nextValuesDirty ifTrue: [ 
 		self writeValues: nextValues forTime: time + 1 ].
 	self writeAnimats: animats forTime: time.
+	self writeSeeds: seeds forTime: time.
 	self commitIns
 ]
 
@@ -382,6 +411,11 @@ RMDMemory >> worldDo: aBlock [
 
 { #category : #'accessing-storage' }
 RMDMemory >> writeAnimats: aDictionary forTime: anInteger [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> writeSeeds: aDictionary forTime: anInteger [
 	^ self subclassResponsibility
 ]
 

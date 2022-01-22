@@ -9,8 +9,10 @@ Class {
 
 { #category : #accessing }
 RMDAnimatDefinitionNode class >> createBuiltinProperties [
-	^ {('x' -> RMDUnit m).
-	('y' -> RMDUnit m)}
+
+	^ { 
+		  ('x' -> RMDUnit m).
+		  ('y' -> RMDUnit m) }
 ]
 
 { #category : #'typical instances' }

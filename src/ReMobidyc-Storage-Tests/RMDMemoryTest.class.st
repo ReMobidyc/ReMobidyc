@@ -344,6 +344,48 @@ RMDMemoryTest >> testRemoveAnimat [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testRemoveSeedAt [
+
+	| t |
+	t := memory time.
+	memory seedAt: 1 put: 10.
+	memory seedAt: 2 put: 20.
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 20.
+	memory tick.
+	memory removeSeedAt: 1.
+	self should: [ memory seedAt: 1 ] raise: KeyNotFound.
+	self assert: (memory seedAt: 2) equals: 20.
+	memory time: t.
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 20
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testSeedAt [
+	memory seedAt: 1 put: 10.
+	self assert: (memory seedAt: 1) equals: 10
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testSeedAtPut [
+
+	| t |
+	t := memory time.
+	memory seedAt: 1 put: 10.
+	memory seedAt: 2 put: 20.
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 20.
+	memory tick.
+	memory seedAt: 1 put: 30.
+	self assert: (memory seedAt: 1) equals: 30.
+	self assert: (memory seedAt: 2) equals: 20.
+	memory time: t.
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 20
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testSouthOfDo [
 	memory
 		allocateCells:

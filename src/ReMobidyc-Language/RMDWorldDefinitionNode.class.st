@@ -6,7 +6,8 @@ Class {
 
 { #category : #accessing }
 RMDWorldDefinitionNode class >> createBuiltinProperties [
-	^ {}
+
+	^ {  }
 ]
 
 { #category : #'typical instances' }

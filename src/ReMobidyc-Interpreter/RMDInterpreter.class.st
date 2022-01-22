@@ -5,7 +5,8 @@ Class {
 		'memory',
 		'libraries',
 		'randomSeed',
-		'randomGenerator'
+		'randomGenerator',
+		'seedGenerator'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -357,6 +358,7 @@ RMDInterpreter >> initialize [
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
 	randomSeed := 1.
+	seedGenerator := RMDFishmanMooreRandomGenerator new seed: randomSeed.
 	randomGenerator := RMDFishmanMooreRandomGenerator new
 ]
 
@@ -439,7 +441,9 @@ RMDInterpreter >> randomSeed [
 
 { #category : #'random numbers' }
 RMDInterpreter >> randomSeed: anInteger [
-	randomSeed := anInteger asInteger
+
+	randomSeed := anInteger asInteger.
+	seedGenerator seed: randomSeed
 ]
 
 { #category : #'variable access' }

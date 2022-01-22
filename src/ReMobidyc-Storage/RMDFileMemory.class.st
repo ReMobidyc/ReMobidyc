@@ -178,13 +178,32 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 		vals := Dictionary new.
 		[ 
 		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
-			whileTrue: [ csvStream skip ].
+			whileTrue: [ csvStream next ].
 		csvStream atEnd ] whileFalse: [ 
 			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
 				vals
 					at: row first
 					put: (row copyWithoutFirst collect: [ :lifehistory | 
 							 (lifehistory substrings: '-') collect: #asInteger ]) ] ].
+		^ vals ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> readSeedsForTime: anInteger [
+
+	| ref |
+	ref := (self directoryForId: anInteger) / self seedsFileBasename.
+	ref exists ifFalse: [ ^ Dictionary new ].
+	ref readStreamDo: [ :csvStream | 
+		| vals |
+		vals := Dictionary new.
+		[ 
+		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
+			whileTrue: [ csvStream next ].
+		csvStream atEnd ] whileFalse: [ 
+			vals
+				at: (csvStream upTo: $,) asInteger
+				put: (csvStream upTo: Character lf) asInteger ].
 		^ vals ]
 ]
 
@@ -214,14 +233,19 @@ RMDFileMemory >> readValuesForTime: anInteger [
 			| vals |
 			vals := Dictionary new.
 			[ [ csvStream atEnd not and: [ csvStream peek isSeparator ] ]
-				whileTrue: [ csvStream skip ].
+				whileTrue: [ csvStream next ].
 			csvStream atEnd ]
 				whileFalse: [ | id value |
 					id := (csvStream upTo: $,) asInteger.
-					[ csvStream peek isSeparator ] whileTrue: [ csvStream skip ].
+					[ csvStream peek isSeparator ] whileTrue: [ csvStream next ].
 					value := (csvStream upTo: Character lf) asNumber.
 					vals at: id put: value ].
 			^ vals ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> seedsFileBasename [
+	^ 'seeds.csv'
 ]
 
 { #category : #'accessing-storage' }
@@ -289,6 +313,20 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 								do: [ :id | id printOn: csvStream ]
 								separatedBy: [ csvStream nextPut: $- ] ]
 						separatedBy: [ csvStream nextPut: $, ].
+					csvStream lf ] ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
+
+	((self directoryForId: anInteger) ensureCreateDirectory
+	 / self seedsFileBasename)
+		ensureDelete;
+		writeStreamDo: [ :csvStream | 
+			aDictionary keysAndValuesDo: [ :animat :seed | 
+					animat printOn: csvStream.
+					csvStream nextPut: $,.
+					seed printOn: csvStream.
 					csvStream lf ] ]
 ]
 

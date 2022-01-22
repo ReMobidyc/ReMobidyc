@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'valuesStorage',
 		'animatsStorage',
-		'stagesStorage'
+		'stagesStorage',
+		'seedsStorage'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -18,21 +19,27 @@ RMDOnMemory class >> new: anInteger [
 
 { #category : #private }
 RMDOnMemory >> changeStorageCapacityTo: anInteger [
+
 	valuesStorage := (Array new: anInteger)
-		replaceFrom: 1
-		to: (anInteger min: valuesStorage size)
-		with: valuesStorage
-		startingAt: 1.
+		                 replaceFrom: 1
+		                 to: (anInteger min: valuesStorage size)
+		                 with: valuesStorage
+		                 startingAt: 1.
 	animatsStorage := (Array new: anInteger)
-		replaceFrom: 1
-		to: (anInteger min: animatsStorage size)
-		with: animatsStorage
-		startingAt: 1.
+		                  replaceFrom: 1
+		                  to: (anInteger min: animatsStorage size)
+		                  with: animatsStorage
+		                  startingAt: 1.
 	stagesStorage := (Array new: anInteger)
-		replaceFrom: 1
-		to: (anInteger min: stagesStorage size)
-		with: stagesStorage
-		startingAt: 1
+		                 replaceFrom: 1
+		                 to: (anInteger min: stagesStorage size)
+		                 with: stagesStorage
+		                 startingAt: 1.
+	seedsStorage := (Array new: anInteger)
+		                replaceFrom: 1
+		                to: (anInteger min: seedsStorage size)
+		                with: seedsStorage
+		                startingAt: 1
 ]
 
 { #category : #private }
@@ -51,6 +58,7 @@ RMDOnMemory >> initialize [
 	valuesStorage := Array new: 1024.
 	animatsStorage := Array new: 1024.
 	stagesStorage := Array new: 1024.
+	seedsStorage := Array new: 1024
 
 ]
 
@@ -61,6 +69,16 @@ RMDOnMemory >> readAnimatsForTime: anInteger [
 		self changeStorageCapacityTo: anInteger + 1024 ].
 	^ (animatsStorage at: anInteger + 1 ifAbsent: [ nil ])
 		  ifNotNil: [ :dict | self deepCopyAnimats: dict ]
+		  ifNil: [ Dictionary new ]
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> readSeedsForTime: anInteger [
+
+	anInteger >= seedsStorage size ifTrue: [ 
+		self changeStorageCapacityTo: anInteger + 1024 ].
+	^ (seedsStorage at: anInteger + 1 ifAbsent: [ nil ])
+		  ifNotNil: #copy
 		  ifNil: [ Dictionary new ]
 ]
 
@@ -81,6 +99,14 @@ RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
 	^ animatsStorage
 		  at: anInteger + 1
 		  put: (self deepCopyAnimats: aDictionary)
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> writeSeeds: aDictionary forTime: anInteger [
+
+	anInteger >= seedsStorage size ifTrue: [ 
+		self changeStorageCapacityTo: anInteger + 1024 ].
+	^ seedsStorage at: anInteger + 1 put: aDictionary copy
 ]
 
 { #category : #'accessing-storage' }

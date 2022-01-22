@@ -6,7 +6,8 @@ Class {
 
 { #category : #accessing }
 RMDCellDefinitionNode class >> createBuiltinProperties [
-	^ {}
+
+	^ {  }
 ]
 
 { #category : #'typical instances' }
