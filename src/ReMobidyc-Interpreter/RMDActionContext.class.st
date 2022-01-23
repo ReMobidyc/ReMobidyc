@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDActionContext,
-	#superclass : #RMDExecutionContext,
+	#superclass : #RMDExecutionContextWithRandomGenerator,
 	#instVars : [
 		'action',
 		'utilities',

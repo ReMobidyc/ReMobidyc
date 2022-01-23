@@ -4,9 +4,7 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'randomSeed',
-		'randomGenerator',
-		'seedGenerator'
+		'randomSeed'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -357,9 +355,7 @@ RMDInterpreter >> initialize [
 
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
-	randomSeed := 1.
-	seedGenerator := RMDFishmanMooreRandomGenerator new seed: randomSeed.
-	randomGenerator := RMDFishmanMooreRandomGenerator new
+	randomSeed := 1
 ]
 
 { #category : #'variable access' }
@@ -431,7 +427,8 @@ RMDInterpreter >> performTasks [
 
 { #category : #'random numbers' }
 RMDInterpreter >> random [
-	^ randomGenerator next
+
+	^ context random
 ]
 
 { #category : #'random numbers' }
@@ -442,8 +439,7 @@ RMDInterpreter >> randomSeed [
 { #category : #'random numbers' }
 RMDInterpreter >> randomSeed: anInteger [
 
-	randomSeed := anInteger asInteger.
-	seedGenerator seed: randomSeed
+	randomSeed := anInteger asInteger
 ]
 
 { #category : #'variable access' }
@@ -500,18 +496,9 @@ RMDInterpreter >> setMemory: aRMDMemory [
 ]
 
 { #category : #'random numbers' }
-RMDInterpreter >> setupRandomForIndividual: anInteger [
-	randomGenerator
-		initializeWithAll:
-			{randomSeed.
-			memory time.
-			anInteger}
-]
-
-{ #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
-	randomGenerator initializeWithAll: { 
+	context randomSeedWithAll: { 
 			randomSeed.
 			memory time.
 			anInteger1.
@@ -521,12 +508,12 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 
 { #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
-	randomGenerator
-		initializeWithAll:
-			{randomSeed.
+
+	context randomSeedWithAll: { 
+			randomSeed.
 			memory time.
 			anInteger.
-			(self taskDefinitions indexOf: aRMDTaskDefinitionNode)}
+			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
 ]
 
 { #category : #simulating }
@@ -541,16 +528,24 @@ RMDInterpreter >> setupSimulation [
 		y: simulationModel cellYDivisions.
 	memory worldDo: [ :world | 
 		self
-			setupRandomForIndividual: world;
 			withInitializerContextWithSubject: world
 			species: simulationModel worldDefinition
-			do: [ simulationModel worldInitializer evalIn: self ] ].
+			do: [ 
+				context randomSeedWithAll: { 
+						randomSeed.
+						memory time.
+						world }.
+				simulationModel worldInitializer evalIn: self ] ].
 	memory cellsDo: [ :cell | 
 		self
-			setupRandomForIndividual: cell;
 			withInitializerContextWithSubject: cell
 			species: simulationModel cellDefinition
-			do: [ simulationModel cellInitializer evalIn: self ] ].
+			do: [ 
+				context randomSeedWithAll: { 
+						randomSeed.
+						memory time.
+						cell }.
+				simulationModel cellInitializer evalIn: self ] ].
 	simulationModel animatInitializersDo: [ :initializer | 
 		| animatDefinition |
 		animatDefinition := simulationModel
@@ -562,10 +557,14 @@ RMDInterpreter >> setupSimulation [
 			animat := memory allocateAnimat: animatDefinition.
 
 			self
-				setupRandomForIndividual: animat;
 				withInitializerContextWithSubject: animat
 				species: animatDefinition
-				do: [ initializer evalIn: self ] ] ].
+				do: [ 
+					context randomSeedWithAll: { 
+							randomSeed.
+							memory time.
+							animat }.
+					initializer evalIn: self ] ] ].
 	self timeChanged
 ]
 
@@ -741,12 +740,12 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger1 species: aR
 
 { #category : #'context controls' }
 RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
+
 	^ self
-		withContext:
-			(RMDInitializerContext
-				subject: anInteger
-				definition: aRMDSpeciesDefinitionNode)
-		do: aBlock
+		  withContext: (RMDInitializerContext
+				   subject: anInteger
+				   definition: aRMDSpeciesDefinitionNode)
+		  do: aBlock
 ]
 
 { #category : #'context controls' }

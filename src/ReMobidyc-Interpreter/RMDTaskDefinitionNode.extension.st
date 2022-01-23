@@ -74,14 +74,15 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 				y: subjectY
 				do: [ :objectLifehistory | 
 					aRMDInterpreter
-						setupRandomForIndividual: subjectAnimat
-						and: objectLifehistory last
-						task: self;
 						withActionContextWithIndividual: subjectLifehistory
 						species: subjectSpecies
 						object: objectLifehistory
 						species: objectSpecies
 						do: [ 
+							aRMDInterpreter
+								setupRandomForIndividual: subjectAnimat
+								and: objectLifehistory last
+								task: self.
 							(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
 
@@ -149,14 +150,15 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 				y: subjectY
 				do: [ :objectLifehistory | 
 					aRMDInterpreter
-						setupRandomForIndividual: subjectAnimat
-						and: objectLifehistory last
-						task: self;
 						withActionContextWithIndividual: subjectLifehistory
 						species: subjectSpecies
 						object: objectLifehistory
 						species: objectSpecies
 						do: [ 
+							aRMDInterpreter
+								setupRandomForIndividual: subjectAnimat
+								and: objectLifehistory last
+								task: self.
 							(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
 ]
 
@@ -175,10 +177,11 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 						           ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
 	aRMDInterpreter individualsOf: species do: [ :animat :lifehistory | 
 		aRMDInterpreter
-			setupRandomForIndividual: animat task: self;
 			withActionContextWithIndividual: lifehistory
 			species: species
-			do: [ (self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]
+			do: [ 
+				aRMDInterpreter setupRandomForIndividual: animat task: self.
+				(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
