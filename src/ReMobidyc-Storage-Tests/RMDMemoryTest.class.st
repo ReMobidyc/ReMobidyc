@@ -354,7 +354,7 @@ RMDMemoryTest >> testRemoveSeedAt [
 	self assert: (memory seedAt: 2) equals: 20.
 	memory tick.
 	memory removeSeedAt: 1.
-	self should: [ memory seedAt: 1 ] raise: KeyNotFound.
+	self assert: (memory seedAt: 1) equals: 1.
 	self assert: (memory seedAt: 2) equals: 20.
 	memory time: t.
 	self assert: (memory seedAt: 1) equals: 10.
@@ -363,8 +363,17 @@ RMDMemoryTest >> testRemoveSeedAt [
 
 { #category : #tests }
 RMDMemoryTest >> testSeedAt [
+
+	memory tick.
 	memory seedAt: 1 put: 10.
-	self assert: (memory seedAt: 1) equals: 10
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 2.
+	memory time: 0.
+	self assert: (memory seedAt: 1) equals: 1.
+	self assert: (memory seedAt: 2) equals: 2.
+	memory time: 1.
+	self assert: (memory seedAt: 1) equals: 10.
+	self assert: (memory seedAt: 2) equals: 2
 ]
 
 { #category : #tests }

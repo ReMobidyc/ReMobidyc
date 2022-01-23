@@ -308,13 +308,13 @@ RMDMemory >> removeSeedAt: anInteger [
 
 	^ seeds
 		  removeKey: anInteger
-		  ifAbsent: [ KeyNotFound signal: anInteger ]
+		  ifAbsent: []
 ]
 
 { #category : #'accessing-individuals' }
 RMDMemory >> seedAt: anInteger [
 
-	^ seeds at: anInteger ifAbsent: [ KeyNotFound signal: anInteger ]
+	^ seeds at: anInteger ifAbsent: [ anInteger ]
 ]
 
 { #category : #'accessing-individuals' }

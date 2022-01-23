@@ -15,6 +15,12 @@ RMDExecutionContextWithRandomGenerator >> initialize [
 ]
 
 { #category : #accessing }
+RMDExecutionContextWithRandomGenerator >> nextSeed [
+
+	^ randomGenerator nextSeed
+]
+
+{ #category : #accessing }
 RMDExecutionContextWithRandomGenerator >> random [
 	^ randomGenerator next
 ]

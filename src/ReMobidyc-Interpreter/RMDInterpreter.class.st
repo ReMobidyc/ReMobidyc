@@ -155,6 +155,7 @@ RMDInterpreter >> changeStage: animatString [
 	newIndividual := memory
 		                 addAnimat: animatDefinition
 		                 lifehistory: context subjectLifehistory.
+	memory seedAt: newIndividual put: self nextSeed.
 	context
 		newIndividuals: { newIndividual }
 		definition: animatDefinition.
@@ -375,9 +376,12 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 		                    animatDefinitionAt: animatString
 		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
 	newIndividuals := (1 to: anInteger) collect: [ :i | 
-		                  memory
-			                  addAnimat: animatDefinition
-			                  lifehistory: #(  ) ].
+		                  | id |
+		                  id := memory
+			                        addAnimat: animatDefinition
+			                        lifehistory: #(  ).
+		                  memory seedAt: id put: self nextSeed.
+		                  id ].
 	context newIndividuals: newIndividuals definition: animatDefinition.
 	offset := 0.
 	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
@@ -391,6 +395,12 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 		offset := offset + 1 ].
 
 	^ newIndividuals
+]
+
+{ #category : #'random numbers' }
+RMDInterpreter >> nextSeed [
+
+	^ context nextSeed
 ]
 
 { #category : #'animat operations' }
@@ -483,8 +493,8 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 	context randomSeedWithAll: { 
 			randomSeed.
 			memory time.
-			anInteger1.
-			anInteger2.
+			(memory seedAt: anInteger1).
+			(memory seedAt: anInteger2).
 			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
 ]
 
@@ -494,7 +504,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 	context randomSeedWithAll: { 
 			randomSeed.
 			memory time.
-			anInteger.
+			(memory seedAt: anInteger).
 			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
 ]
 
@@ -578,7 +588,9 @@ RMDInterpreter >> terminate: aString [
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 
-	memory removeAnimat: anInteger.
+	memory
+		removeAnimat: anInteger;
+		removeSeedAt: anInteger.
 	anInteger to:
 	anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1 do: [ 
 	:slot | memory nextAt: slot put: nil ]
