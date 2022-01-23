@@ -13,7 +13,7 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 			'World with
 			temperature = -10 [C]
 			humidity = 0.4 []'.
-	interpreter allocateWorld: worldDef.
+	interpreter memory allocateWorld: worldDef.
 	interpreter
 		individualsOf: worldDef
 		do: [ :world | 

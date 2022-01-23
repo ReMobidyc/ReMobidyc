@@ -94,24 +94,6 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
-{ #category : #'animat operations' }
-RMDInterpreter >> allocateAnimat: aRMDAnimatDefinitionNode [
-	^ memory allocateAnimat: aRMDAnimatDefinitionNode
-]
-
-{ #category : #'animat operations' }
-RMDInterpreter >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
-	^ memory
-		allocateCells: aRMDCellDefinitionNode
-		x: anInteger1
-		y: anInteger2
-]
-
-{ #category : #'animat operations' }
-RMDInterpreter >> allocateWorld: aRMDWorldDefinitionNode [
-	^ memory allocateWorld: aRMDWorldDefinitionNode
-]
-
 { #category : #simulating }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
 	simulationModel
