@@ -20,16 +20,17 @@ RMDFishmanMooreRandomGenerator >> initialize [
 
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> initializeWithAll: anArrayOfInteger [
+
 	seed := 1.
-	anArrayOfInteger
-		do:
-			[ :int | seed := (seed bitXor: int * 29) * 742938285 \\ 2147483647 ]
+	anArrayOfInteger do: [ :int | 
+		seed := (seed bitXor: int * 29) \\ 2147483647 * 742938285
+		        \\ 2147483647 ]
 ]
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> next [
 
-	^ self nextSeed / 2147483647.0
+	^ self nextSeed - 1 / 2147483646.0
 ]
 
 { #category : #accessing }
