@@ -15,7 +15,7 @@ Class {
 RMDSimulationModeler class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		  "add: #menuBar height: self toolbarHeight;"
+		  add: #menuBar height: self toolbarHeight;
 		  add: #runButton height: self buttonHeight;
 		  add: #views yourself;
 		  yourself
@@ -123,15 +123,17 @@ RMDSimulationModeler >> fileMenu [
 		  addGroup: [ :group | 
 			  group addItem: [ :item | 
 					  item
-						  name: 'Save...';
-						  action: [ simulationModel exportModel ] ] ];
+						  name: 'Import...';
+						  action: [ 
+							  ([ RMDSimulationModel importModel ]
+								   on: Error
+								   do: [ :ex | ex return: nil ]) ifNotNil: [ :model | 
+									  self setSimulationModel: model ] ] ].
+			  group addItem: [ :item | 
+				  item
+					  name: 'Export As...';
+					  action: [ simulationModel exportModel ] ] ];
 		  yourself
-]
-
-{ #category : #initialization }
-RMDSimulationModeler >> initialize [
-	super initialize.
-
 ]
 
 { #category : #initialization }

@@ -88,6 +88,12 @@ RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> agentDefinition [
+
+	^ self worldDefinition / self cellDefinition / self animatDefinition
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
 
@@ -385,13 +391,19 @@ RMDGrammar >> cellColorAlphaRenderer [
 	  , 'alpha' asPParser trimBlanks
 	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
 	  , expression , 'between' asPParser trimBlanks , literal
-	  , 'and' asPParser trimBlanks , literal , '.' asPParser
+	  , 'and' asPParser trimBlanks , literal
+	  , 'with' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'grids' asPParser trimBlanks , '.' asPParser
 	  , #newline asPParser trimBlanks optional ==> [ :array | 
-	  RMDCellColorAlphaRenderer
-		  color: (array at: 3)
-		  alpha: (array at: 8)
-		  between: (array at: 10)
-		  and: (array at: 12) ]
+	  (RMDCellColorAlphaRenderer
+		   color: (array at: 3)
+		   alpha: (array at: 8)
+		   between: (array at: 10)
+		   and: (array at: 12))
+		  borderWidth: (array at: 14);
+		  borderColor: (array at: 16);
+		  yourself ]
 ]
 
 { #category : #'parsers-visualizations' }
@@ -402,34 +414,48 @@ RMDGrammar >> cellColorBrightnessRenderer [
 	  , 'brightness' asPParser trimBlanks
 	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
 	  , expression , 'between' asPParser trimBlanks , literal
-	  , 'and' asPParser trimBlanks , literal , '.' asPParser
+	  , 'and' asPParser trimBlanks , literal
+	  , 'with' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'grids' asPParser trimBlanks , '.' asPParser
 	  , #newline asPParser trimBlanks optional ==> [ :array | 
-	  RMDCellColorBrightnessRenderer
-		  color: (array at: 3)
-		  brightness: (array at: 8)
-		  between: (array at: 10)
-		  and: (array at: 12) ]
+	  (RMDCellColorBrightnessRenderer
+		   color: (array at: 3)
+		   brightness: (array at: 8)
+		   between: (array at: 10)
+		   and: (array at: 12))
+		  borderWidth: (array at: 14);
+		  borderColor: (array at: 16);
+		  yourself ]
 ]
 
 { #category : #'parsers-visualizations' }
 RMDGrammar >> cellColorMapRenderer [
 
 	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
-	  , 'map' asPParser trimBlanks , expression , 'with' asPParser trimBlanks, #newline asPParser trimBlanks
+	  , 'map' asPParser trimBlanks , expression
+	  , 'with' asPParser trimBlanks , #newline asPParser trimBlanks
 	  ==> #fourth
 	  ,
 		  (self color , 'if' asPParser trimBlanks
 		   , '>=' asPParser trimBlanks , self literal
 		   , ',' asPParser trimBlanks , #newline asPParser
 		   ==> [ :array | (array at: 4) -> (array at: 1) ]) star
-	  , (self color , '.' asPParser trimBlanks ==> #first)
-	  , #newline asPParser optional ==> [ :array | 
+	  , self color
+	  , (#newline asPParser , 'with' asPParser trimBlanks , self nat
+		   , 'pixels' asPParser trimBlanks ==> #third)
+	  ,
+	  (self color , 'grids' asPParser trimBlanks , '.' asPParser
+	   ==> #first) , #newline asPParser optional ==> [ :array | 
 	  | renderer |
 	  renderer := RMDCellColorMapRenderer
 		              expression: (array at: 1)
 		              color: (array at: 3).
 	  (array at: 2) do: [ :assoc | 
 		  renderer add: assoc value at: assoc key ].
+	  renderer
+		  borderWidth: (array at: 4);
+		  borderColor: (array at: 5).
 	  renderer ]
 ]
 

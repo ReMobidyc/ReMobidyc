@@ -405,7 +405,7 @@ RMDGrammarTest >> testCellColorAlphaRenderer [
 
 	| renderer |
 	renderer := grammar cellColorAlphaRenderer end parse:
-		            '	Cell -> yellow with alpha proportional to here''s grass between 100 [kcal] and 0[kcal].'.
+		            '	Cell -> yellow with alpha proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color yellow.
 	self
@@ -422,7 +422,7 @@ RMDGrammarTest >> testCellColorBrightnessRenderer [
 
 	| renderer |
 	renderer := grammar cellColorBrightnessRenderer end parse:
-		            '	Cell -> yellow with brightness proportional to here''s grass between 100 [kcal] and 0[kcal].'.
+		            '	Cell -> yellow with brightness proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color yellow.
 	self
@@ -442,7 +442,8 @@ RMDGrammarTest >> testCellColorMapRenderer [
 		            '	Cell -> map here''s grass with
 			green if >= 100 [kcal],
 			yellow if >= 50 [kcal],
-			red.'.
+			red
+		with 2 pixels black grids.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color red
 ]

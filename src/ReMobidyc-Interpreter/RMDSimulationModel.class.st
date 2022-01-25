@@ -13,28 +13,16 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
-{ #category : #'instance creation' }
-RMDSimulationModel class >> fromFile [
+{ #category : #accessing }
+RMDSimulationModel class >> actionsFileName [
 
-	<script: 'RMDSimulationModel fromFile open'>
-	(UIManager default
-		 chooseExistingFileReference: 'import simulation model'
-		 extensions: #( 'rsm' )
-		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
-				  ensureCreateDirectory / '*.rsm') absolutePath) ifNotNil: [ :ref | 
-		^ self fromFileReference: ref ].
-	^ nil
+	^ 'actions.rmd'
 ]
 
-{ #category : #'instance creation' }
-RMDSimulationModel class >> fromFileReference: aFileReference [
+{ #category : #accessing }
+RMDSimulationModel class >> agentsFileName [
 
-	| model |
-	aFileReference readStreamDo: [ :stream | 
-		model := RMDGrammar new simulationModel end parse: stream ].
-	^ model isPetit2Failure
-		  ifTrue: [ nil ]
-		  ifFalse: [ model ]
+	^ 'agents.rmd'
 ]
 
 { #category : #'instance creation' }
@@ -98,6 +86,150 @@ RMDSimulationModel class >> goatAndWolf [
 		  yourself
 ]
 
+{ #category : #importing }
+RMDSimulationModel class >> importActions: aFileReference into: aRMDSimulationModel [
+
+	| parser |
+	parser := RMDGrammar new actionDefinition end.
+	aFileReference readStreamDo: [ :stream | 
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ 
+				self error: 'action definition: ' , def printString ].
+			aRMDSimulationModel load: def ] ]
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importAgents: aFileReference into: aRMDSimulationModel [
+
+	| parser |
+	parser := RMDGrammar new agentDefinition end.
+	aFileReference readStreamDo: [ :stream | 
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ 
+				self error: 'agent definition: ' , def printString ].
+			aRMDSimulationModel load: def ] ]
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importModel [
+
+	<script: 'RMDSimulationModel importModel open'>
+	(UIManager default
+		 chooseExistingFileReference: 'import simulation model'
+		 extensions: #(  )
+		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
+				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
+		^ self importModel: ref ].
+	^ nil
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importModel: aFileReference [
+
+	| model |
+	model := self new.
+	self
+		importSimulationDefinition:
+			aFileReference / self simulationDefinitionFileName
+		into: model;
+		importAgents: aFileReference / self agentsFileName into: model;
+		importActions: aFileReference / self actionsFileName into: model;
+		importTasks: aFileReference / self tasksFileName into: model;
+		importVisualization: aFileReference / self visualizationFileName
+		into: model.
+	^ model
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importSimulationDefinition: aFileReference into: aRMDSimulationModel [
+
+	aFileReference readStreamDo: [ :stream | 
+		| def |
+		def := RMDGrammar new simulationDefinition end parse:
+			       stream contents.
+		def isPetit2Failure ifTrue: [ 
+			^ self error: 'simulation definition: ' , def printString ].
+		aRMDSimulationModel load: def ]
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importTasks: aFileReference into: aRMDSimulationModel [
+
+	| parser |
+	parser := RMDGrammar new taskDefinition end.
+	aFileReference readStreamDo: [ :stream | 
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ 
+				self error: 'task definition: ' , def printString ].
+			aRMDSimulationModel load: def ] ]
+]
+
+{ #category : #importing }
+RMDSimulationModel class >> importVisualization: aFileReference into: aRMDSimulationModel [
+
+	| parser |
+	parser := RMDGrammar new renderer end.
+	aFileReference readStreamDo: [ :stream | 
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ 
+				self error: 'renderer: ' , def printString ].
+			aRMDSimulationModel addRenderer: def ] ]
+]
+
+{ #category : #accessing }
+RMDSimulationModel class >> simulationDefinitionFileName [
+
+	^ 'simulation.rmd'
+]
+
 { #category : #'instance creation' }
 RMDSimulationModel class >> sugarScape [
 	^ self new
@@ -144,6 +276,18 @@ RMDSimulationModel class >> sugarScape [
 		yourself
 ]
 
+{ #category : #accessing }
+RMDSimulationModel class >> tasksFileName [
+
+	^ 'tasks.rmd'
+]
+
+{ #category : #accessing }
+RMDSimulationModel class >> visualizationFileName [
+
+	^ 'visualization.rmd'
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ actionDefinitions at: aString ifAbsent: errorBlock
@@ -152,6 +296,12 @@ RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifPresent: aBlock [
 	^ actionDefinitions at: aString ifPresent: aBlock
+]
+
+{ #category : #private }
+RMDSimulationModel >> actionDefinitions [
+
+	^ actionDefinitions
 ]
 
 { #category : #'accessing - definitions' }
@@ -199,6 +349,11 @@ RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifPresent: aBlock [
 	^ animatDefinitions at: aString ifPresent: aBlock
+]
+
+{ #category : #private }
+RMDSimulationModel >> animatDefinitions [
+	^ animatDefinitions
 ]
 
 { #category : #enumerating }
@@ -266,7 +421,7 @@ RMDSimulationModel >> east [
 	^ self cellLength * self cellXDivisions
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportActions: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -274,7 +429,7 @@ RMDSimulationModel >> exportActions: aFileReference [
 			actionDefinition printOn: stream ] ]
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportAgents: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -287,18 +442,18 @@ RMDSimulationModel >> exportAgents: aFileReference [
 			stream nextPut: Character cr ] ]
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportModel [
 
 	(UIManager default
-		 chooseForSaveFileReference: 'export simulation model'
-		 extensions: #( )
-		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
-				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
+		 chooseDirectory: 'export simulation model'
+		 path:
+			 (FileLocator documents / 'ReMobidyc' / 'models')
+				 ensureCreateDirectory absolutePath) ifNotNil: [ :ref | 
 		self exportModel: ref ]
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportModel: aFileReference [
 
 	" #simulationDefinition . #animatDefinitions . #cellDefinition . #worldDefinition . #actionDefinitions . #renderers . #taskDefinitions "
@@ -307,22 +462,24 @@ RMDSimulationModel >> exportModel: aFileReference [
 		ensureCreateDirectory;
 		ensureDeleteAllChildren.
 	self
-		exportSimulationDefinition: aFileReference / 'simulation.rmd';
-		exportAgents: aFileReference / 'agents.rmd';
-		exportActions: aFileReference / 'actions.rmd';
-		exportTaskDefinitions: aFileReference / 'tasks.rmd';
-		exportVisualization: aFileReference / 'visualization.rmd'
+		exportSimulationDefinition:
+			aFileReference / self class simulationDefinitionFileName;
+		exportAgents: aFileReference / self class agentsFileName;
+		exportActions: aFileReference / self class actionsFileName;
+		exportTasks: aFileReference / self class tasksFileName;
+		exportVisualization:
+			aFileReference / self class visualizationFileName
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportSimulationDefinition: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		simulationDefinition printOn: stream ]
 ]
 
-{ #category : #exporting }
-RMDSimulationModel >> exportTaskDefinitions: aFileReference [
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> exportTasks: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		taskDefinitions do: [ :taskDefinition | 
@@ -330,13 +487,30 @@ RMDSimulationModel >> exportTaskDefinitions: aFileReference [
 			stream nextPut: Character cr ] ]
 ]
 
-{ #category : #exporting }
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportVisualization: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		renderers do: [ :renderer | 
 			renderer printOn: stream.
 			stream nextPut: Character cr ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importModel [
+
+	| newModel |
+	newModel := [ self class importModel ]
+		            on: Error
+		            do: [ :ex | ^ self ].
+	newModel ifNil: [ ^ self ].
+	simulationDefinition := newModel simulationDefinition.
+	animatDefinitions := newModel animatDefinitions.
+	cellDefinition := newModel cellDefinition.
+	worldDefinition := newModel worldDefinition.
+	actionDefinitions := newModel actionDefinitions.
+	taskDefinitions := newModel taskDefinitions.
+	renderers := newModel renderers
 ]
 
 { #category : #initialization }

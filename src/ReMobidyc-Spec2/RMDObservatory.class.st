@@ -34,7 +34,7 @@ RMDObservatory class >> defaultSpec [
 						    expand: false;
 						    yourself)
 				   expand: true;
-				   add: #recordAnimatedGifButton width: 32;
+				   add: #recordAnimatedPngButton width: 32;
 				   yourself)
 		  height: self buttonHeight;
 		  add: #views yourself

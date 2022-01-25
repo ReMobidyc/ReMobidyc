@@ -109,7 +109,13 @@ RMDCellColorMapRenderer >> printOn: aStream [
 			nextPut: Character cr ].
 	aStream nextPutAll: '    '.
 	self printColorOn: aStream.
-	aStream nextPut: $.
+	aStream
+		nextPut: Character cr;
+		nextPutAll: 'with '.
+	borderWidth asInteger printOn: aStream.
+	aStream nextPutAll: ' pixels '.
+	self printColor: borderColor on: aStream.
+	aStream nextPutAll: ' grids.'
 ]
 
 { #category : #'adding-removing' }

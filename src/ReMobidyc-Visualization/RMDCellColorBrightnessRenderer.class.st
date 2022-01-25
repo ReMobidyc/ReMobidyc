@@ -41,5 +41,9 @@ RMDCellColorBrightnessRenderer >> printOn: aStream [
 	min printOn: aStream.
 	aStream nextPutAll: ' and '.
 	max printOn: aStream.
-	aStream nextPut: $.
+	aStream nextPutAll: 'with '.
+	borderWidth asInteger printOn: aStream.
+	aStream nextPutAll: ' pixels '.
+	self printColor: borderColor on: aStream.
+	aStream nextPutAll: ' grids.'
 ]
