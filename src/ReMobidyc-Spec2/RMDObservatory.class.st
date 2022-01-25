@@ -14,7 +14,7 @@ Class {
 		'time',
 		'duration',
 		'lastServerUpdate',
-		'recordAnimatedGifButton'
+		'recordAnimatedPngButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -215,7 +215,7 @@ RMDObservatory >> initializePresenters [
 		              action: [ self stepSimulation ];
 		              enabled: true;
 		              yourself.
-	recordAnimatedGifButton := self newButton
+	recordAnimatedPngButton := self newButton
 		                           icon: Smalltalk ui icons smallScreenshot;
 		                           action: [ self recordAPNG ];
 		                           enabled: true;
