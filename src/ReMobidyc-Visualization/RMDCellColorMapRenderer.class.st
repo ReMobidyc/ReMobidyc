@@ -35,6 +35,13 @@ RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value
 		yourself
 ]
 
+{ #category : #comparing }
+RMDCellColorMapRenderer >> = anObject [
+
+	^ super = anObject and: [ 
+		  minAndColors hasEqualElements: anObject minAndColors ]
+]
+
 { #category : #'adding-removing' }
 RMDCellColorMapRenderer >> add: aColor at: aRMDLiteralNode [
 	minAndColors add: aRMDLiteralNode -> aColor
@@ -49,11 +56,23 @@ RMDCellColorMapRenderer >> colorFrom: aNumber [
 	^ color
 ]
 
+{ #category : #comparing }
+RMDCellColorMapRenderer >> hash [
+
+	^ super hash bitXor: minAndColors hash
+]
+
 { #category : #initialization }
 RMDCellColorMapRenderer >> initialize [
 	super initialize.
 	minAndColors := SortedCollection
 		sortBlock: [ :more :less | less key numeric <= more key numeric ]
+]
+
+{ #category : #private }
+RMDCellColorMapRenderer >> minAndColors [
+
+	^ minAndColors
 ]
 
 { #category : #enumerating }

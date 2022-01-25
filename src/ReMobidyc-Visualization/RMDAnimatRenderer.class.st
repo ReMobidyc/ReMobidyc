@@ -14,6 +14,12 @@ RMDAnimatRenderer class >> on: aString [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDAnimatRenderer >> = anObject [
+
+	^ super = anObject and: [ animat = anObject animat ]
+]
+
 { #category : #accessing }
 RMDAnimatRenderer >> animat [
 	^ animat
@@ -62,6 +68,12 @@ RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 { #category : #drawing }
 RMDAnimatRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoint on: aCanvas [
 	^ self subclassResponsibility
+]
+
+{ #category : #comparing }
+RMDAnimatRenderer >> hash [
+
+	^ super hash bitXor: animat hash
 ]
 
 { #category : #testing }

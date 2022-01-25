@@ -17,6 +17,12 @@ RMDAnimatDotRenderer class >> on: aString diameter: aNumber color: aColor [
 		yourself
 ]
 
+{ #category : #comparing }
+RMDAnimatDotRenderer >> = anObject [
+
+	^ super = anObject and: [ diameter = anObject diameter ]
+]
+
 { #category : #defaults }
 RMDAnimatDotRenderer >> defaultDiameter [
 	^ 3 @ 3
@@ -46,6 +52,12 @@ RMDAnimatDotRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoi
 		borderColor: Color black
 ]
 
+{ #category : #comparing }
+RMDAnimatDotRenderer >> hash [
+
+	^ super hash bitXor: diameter hash
+]
+
 { #category : #accessing }
 RMDAnimatDotRenderer >> name [
 	^ 'dot renderer'
@@ -57,8 +69,10 @@ RMDAnimatDotRenderer >> printOn: aStream [
 	aStream
 		nextPutAll: animat;
 		nextPutAll: ' -> '.
-	diameter printOn: aStream.
+	diameter x printOn: aStream.
+	aStream nextPut: $@.
+	diameter y printOn: aStream.
 	aStream nextPutAll: ' pixels '.
 	self printColorOn: aStream.
-	aStream nextPutAll: ' dot'
+	aStream nextPutAll: ' dot.'
 ]

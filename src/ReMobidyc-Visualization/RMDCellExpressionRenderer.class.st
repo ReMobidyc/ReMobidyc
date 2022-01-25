@@ -16,6 +16,12 @@ RMDCellExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber m
 		yourself
 ]
 
+{ #category : #comparing }
+RMDCellExpressionRenderer >> = anObject [
+
+	^ super = anObject and: [ expression = anObject expression ]
+]
+
 { #category : #drawing }
 RMDCellExpressionRenderer >> drawCell: anInteger interpreter: aRMDInterpreter bounds: aRectangle on: aCanvas [
 	self
@@ -38,6 +44,12 @@ RMDCellExpressionRenderer >> expression [
 { #category : #accessing }
 RMDCellExpressionRenderer >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
+]
+
+{ #category : #comparing }
+RMDCellExpressionRenderer >> hash [
+
+	^ super hash bitXor: expression hash
 ]
 
 { #category : #initialization }

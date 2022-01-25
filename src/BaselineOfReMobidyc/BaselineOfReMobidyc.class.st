@@ -34,6 +34,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 					with: [ spec requires: #('ReMobidyc-Language') ];
 				package: 'ReMobidyc-Units-Tests'
 					with: [ spec requires: #('ReMobidyc-Units') ];
+				package: 'ReMobidyc-Visualization-Tests'
+					with: [ spec requires: #('ReMobidyc-Visualization' 'ReMobidyc-Language') ];
 				package: 'ReMobidyc-Interpreter-Tests'
 					with:
 						[ spec requires: #('ReMobidyc-Language-Tests' 'ReMobidyc-Interpreter') ].

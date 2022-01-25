@@ -8,6 +8,14 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #comparing }
+RMDCellRenderer >> = anObject [
+
+	^ super = anObject and: [ 
+		  borderWidth = anObject borderWidth and: [ 
+			  borderColor = anObject borderColor ] ]
+]
+
 { #category : #accessing }
 RMDCellRenderer >> borderColor [
 	^ borderColor
@@ -84,6 +92,19 @@ RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 { #category : #drawing }
 RMDCellRenderer >> drawCell: aNumber interpreter: aRMDInterpreter bounds: aRectangle on: aFormCanvas [
 	^ self subclassResponsibility
+]
+
+{ #category : #comparing }
+RMDCellRenderer >> hash [
+
+	^ (super hash bitXor: borderWidth hash) bitXor: borderColor hash
+]
+
+{ #category : #initialization }
+RMDCellRenderer >> initialize [
+	super initialize.
+	borderColor := self defaultBorderColor.
+	borderWidth := self defaultBorderWidth
 ]
 
 { #category : #testing }

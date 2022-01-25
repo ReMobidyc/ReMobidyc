@@ -29,3 +29,17 @@ RMDCellColorBrightnessRenderer >> colorFrom: aNumber [
 RMDCellColorBrightnessRenderer >> name [
 	^ 'color brightness'
 ]
+
+{ #category : #printing }
+RMDCellColorBrightnessRenderer >> printOn: aStream [
+
+	aStream nextPutAll: 'Cell -> '.
+	self printColor: color on: aStream.
+	aStream nextPutAll: ' with brightness proportional to '.
+	expression printOn: aStream.
+	aStream nextPutAll: ' between '.
+	min printOn: aStream.
+	aStream nextPutAll: ' and '.
+	max printOn: aStream.
+	aStream nextPut: $.
+]

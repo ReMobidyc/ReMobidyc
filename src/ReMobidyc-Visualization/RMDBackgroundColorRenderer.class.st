@@ -58,5 +58,5 @@ RMDBackgroundColorRenderer >> printOn: aStream [
 
 	aStream nextPutAll: 'World -> '.
 	self printColorOn: aStream.
-
+	aStream nextPut: $.
 ]

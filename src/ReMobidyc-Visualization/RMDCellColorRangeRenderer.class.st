@@ -8,6 +8,19 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #comparing }
+RMDCellColorRangeRenderer >> = anObject [
+
+	^ super = anObject and: [ 
+		  min = anObject min and: [ max = anObject max ] ]
+]
+
+{ #category : #comparing }
+RMDCellColorRangeRenderer >> hash [
+
+	^ (super hash bitXor: min hash) bitXor: max hash
+]
+
 { #category : #initialization }
 RMDCellColorRangeRenderer >> initialize [
 	super initialize.

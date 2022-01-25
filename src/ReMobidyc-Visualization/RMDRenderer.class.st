@@ -7,6 +7,11 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #comparing }
+RMDRenderer >> = anObject [
+	^ self class = anObject class and: [ color = anObject color ]
+]
+
 { #category : #accessing }
 RMDRenderer >> color [
 	^ color ifNil: [ color := self defaultColor ]
@@ -25,6 +30,12 @@ RMDRenderer >> defaultColor [
 { #category : #drawing }
 RMDRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	^ self subclassResponsibility
+]
+
+{ #category : #comparing }
+RMDRenderer >> hash [
+
+	^ self class hash bitXor: color hash
 ]
 
 { #category : #initialization }

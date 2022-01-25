@@ -29,11 +29,13 @@ RMDCellColorAlphaRenderer >> name [
 { #category : #printing }
 RMDCellColorAlphaRenderer >> printOn: aStream [
 
-	aStream nextPutAll: 'Cell -> alpha proportional to '.
+	aStream nextPutAll: 'Cell -> '.
+	self printColor: color on: aStream.
+	aStream nextPutAll: ' with alpha proportional to '.
 	expression printOn: aStream.
 	aStream nextPutAll: ' between '.
 	min printOn: aStream.
 	aStream nextPutAll: ' and '.
 	max printOn: aStream.
-	aStream nextPut: Character cr
+	aStream nextPut: $.
 ]

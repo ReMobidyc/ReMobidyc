@@ -942,6 +942,14 @@ RMDGrammar >> propertyVariableNodeClass [
 	^ RMDPropertyVariableNode
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> renderer [
+
+	^ self animatDotRenderer / self backgroundColorRenderer
+	  / self cellColorAlphaRenderer / self cellColorBrightnessRenderer
+	  / self cellColorMapRenderer
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> simulationDefinition [
 	^ (('Simulation' asPParser trimBlanks , 'with' asPParser
