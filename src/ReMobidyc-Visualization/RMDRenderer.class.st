@@ -61,3 +61,22 @@ RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: 
 	^ (cellX * scale)
 		@ ((aRMDInterpreter cellYDivisions asFloat - cellY) * scale)
 ]
+
+{ #category : #printing }
+RMDRenderer >> printColor: c on: aStream [
+
+	| colorName |
+	colorName := c name.
+	(Color registeredColorNames includes: colorName)
+		ifTrue: [ aStream nextPutAll: colorName ]
+		ifFalse: [ 
+			aStream
+				nextPut: $#;
+				nextPutAll: c asHexString ]
+]
+
+{ #category : #printing }
+RMDRenderer >> printColorOn: aStream [
+
+	self printColor: color on: aStream
+]

@@ -52,3 +52,11 @@ RMDBackgroundColorRenderer >> isCellRenderer [
 RMDBackgroundColorRenderer >> name [
 	^ 'background color'
 ]
+
+{ #category : #printing }
+RMDBackgroundColorRenderer >> printOn: aStream [
+
+	aStream nextPutAll: 'World -> '.
+	self printColorOn: aStream.
+
+]

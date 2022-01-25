@@ -25,3 +25,15 @@ RMDCellColorAlphaRenderer >> colorFrom: aNumber [
 RMDCellColorAlphaRenderer >> name [
 	^ 'color transparency'
 ]
+
+{ #category : #printing }
+RMDCellColorAlphaRenderer >> printOn: aStream [
+
+	aStream nextPutAll: 'Cell -> alpha proportional to '.
+	expression printOn: aStream.
+	aStream nextPutAll: ' between '.
+	min printOn: aStream.
+	aStream nextPutAll: ' and '.
+	max printOn: aStream.
+	aStream nextPut: Character cr
+]

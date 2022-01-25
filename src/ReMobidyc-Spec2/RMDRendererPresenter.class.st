@@ -27,20 +27,14 @@ RMDRendererPresenter >> enableAgentFields [
 
 { #category : #initialization }
 RMDRendererPresenter >> initializePresenters [
+
 	super initializePresenters.
 	colorDropList := self newColorDropList
-		whenSelectedItemChangedDo: [ :color | 
-			color
-				ifNotNil: [ renderer color: color.
-					self valueChanged ] ];
-		yourself.
-	"self
-		whenBuiltDo: [ self
-				withWidgetDo: [ :w | 
-					w
-						update: #color: with: {Color white};
-						update: #borderColor: with: {Color darkGray};
-						update: #borderWidth: with: {1} ] ]"
+		                 whenSelectedItemChangedDo: [ :color | 
+			                 color ifNotNil: [ 
+					                 renderer color: color.
+					                 self valueChanged ] ];
+		                 yourself
 ]
 
 { #category : #accessing }

@@ -5,16 +5,20 @@ Class {
 		'simulationModel',
 		'views',
 		'runButton',
-		'simulationDefinitionPresenter'
+		'simulationDefinitionPresenter',
+		'menuBar'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #specs }
 RMDSimulationModeler class >> defaultSpec [
+
 	^ SpBoxLayout newVertical
-		add: #runButton height: self buttonHeight;
-		add: #views yourself
+		  "add: #menuBar height: self toolbarHeight;"
+		  add: #runButton height: self buttonHeight;
+		  add: #views yourself;
+		  yourself
 ]
 
 { #category : #examples }
@@ -112,6 +116,18 @@ RMDSimulationModeler >> addAnimatNamed: aString [
 	self updatePages
 ]
 
+{ #category : #menu }
+RMDSimulationModeler >> fileMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Save...';
+						  action: [ simulationModel exportModel ] ] ];
+		  yourself
+]
+
 { #category : #initialization }
 RMDSimulationModeler >> initialize [
 	super initialize.
@@ -122,10 +138,18 @@ RMDSimulationModeler >> initialize [
 RMDSimulationModeler >> initializePresenters [
 
 	super initializePresenters.
+	menuBar := self newMenuBar
+		           addGroup: [ :group | 
+			           group addItem: [ :item | 
+					           item
+						           name: 'File';
+						           subMenu: self fileMenu ] ];
+		           yourself.
 	views := self newNotebook
 		         whenSelectedPageChangedDo: [ 
 			         simulationDefinitionPresenter ifNotNil: #nodeChanged ];
-		         whenPageRemovedDo: [ :page | self removeAnimatNamed: page title ];
+		         whenPageRemovedDo: [ :page | 
+			         self removeAnimatNamed: page title ];
 		         yourself.
 	runButton := self newButton
 		             label: 'run';

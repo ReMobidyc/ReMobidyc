@@ -50,3 +50,15 @@ RMDAnimatDotRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoi
 RMDAnimatDotRenderer >> name [
 	^ 'dot renderer'
 ]
+
+{ #category : #printing }
+RMDAnimatDotRenderer >> printOn: aStream [
+
+	aStream
+		nextPutAll: animat;
+		nextPutAll: ' -> '.
+	diameter printOn: aStream.
+	aStream nextPutAll: ' pixels '.
+	self printColorOn: aStream.
+	aStream nextPutAll: ' dot'
+]

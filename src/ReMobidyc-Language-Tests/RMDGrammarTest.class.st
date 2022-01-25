@@ -231,6 +231,24 @@ Goat is Animat with
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAnimatDotRenderer [
+
+	| renderer |
+	renderer := grammar animatDotRenderer end parse:
+		            '    Goat -> 10 pixels yellow dot'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self assert: renderer diameter equals: 10 @ 10.
+	self assert: renderer animat equals: 'Goat'.
+	renderer := grammar animatDotRenderer end parse:
+		            '    Wolf -> 12@13 pixels #FF0000 dot'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color red.
+	self assert: renderer diameter equals: 12 @ 13.
+	self assert: renderer animat equals: 'Wolf'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testAnimatInitializer [
 	| node |
 	node := grammar animatInitializer parse: '100 Goat'.
@@ -354,6 +372,19 @@ RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testBackgroundColorRenderer [
+
+	| renderer |
+	renderer := grammar backgroundColorRenderer end parse:
+		            '	World -> yellow'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	renderer := grammar backgroundColorRenderer end parse: '    World -> #000000'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color black
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testBinaryRelation [
 	self
 		equalityTest;
@@ -367,6 +398,53 @@ RMDGrammarTest >> testBinaryRelation [
 		assert: (grammar binaryRelation parse: '1 = 2 < 3') isPetit2Failure;
 		assert: (grammar binaryRelation parse: '1 < 2 > 3') isPetit2Failure;
 		assert: (grammar binaryRelation parse: '1 /= 2 < 3') isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCellColorAlphaRenderer [
+
+	| renderer |
+	renderer := grammar cellColorAlphaRenderer end parse:
+		            '	Cell -> yellow with alpha proportional to here''s grass between 100 [kcal] and 0[kcal].'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self
+		assert: renderer expression
+		equals: (grammar expression parse: 'here''s grass').
+	self
+		assert: renderer min
+		equals: (grammar literal parse: '100 [kcal]').
+	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCellColorBrightnessRenderer [
+
+	| renderer |
+	renderer := grammar cellColorBrightnessRenderer end parse:
+		            '	Cell -> yellow with brightness proportional to here''s grass between 100 [kcal] and 0[kcal].'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self
+		assert: renderer expression
+		equals: (grammar expression parse: 'here''s grass').
+	self
+		assert: renderer min
+		equals: (grammar literal parse: '100 [kcal]').
+	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testCellColorMapRenderer [
+
+	| renderer |
+	renderer := grammar cellColorMapRenderer end parse:
+		            '	Cell -> map here''s grass with
+			green if >= 100 [kcal],
+			yellow if >= 50 [kcal],
+			red.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color red
 ]
 
 { #category : #tests }
@@ -420,6 +498,18 @@ RMDGrammarTest >> testCellInitializer [
 	self
 		assert: node propertyInitializers second identifier
 		equals: 'fertility'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testColor [
+
+	| color |
+	color := grammar color end parse: 'yellow'.
+	self deny: color isPetit2Failure.
+	self assert: color equals: Color yellow.
+	color := grammar color end parse: '#FFFFFF'.
+	self deny: color isPetit2Failure.
+	self assert: color equals: Color white
 ]
 
 { #category : #tests }

@@ -7,12 +7,35 @@ Class {
 		'cellDefinition',
 		'worldDefinition',
 		'actionDefinitions',
-		'visualizer',
 		'renderers',
 		'taskDefinitions'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
+
+{ #category : #'instance creation' }
+RMDSimulationModel class >> fromFile [
+
+	<script: 'RMDSimulationModel fromFile open'>
+	(UIManager default
+		 chooseExistingFileReference: 'import simulation model'
+		 extensions: #( 'rsm' )
+		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
+				  ensureCreateDirectory / '*.rsm') absolutePath) ifNotNil: [ :ref | 
+		^ self fromFileReference: ref ].
+	^ nil
+]
+
+{ #category : #'instance creation' }
+RMDSimulationModel class >> fromFileReference: aFileReference [
+
+	| model |
+	aFileReference readStreamDo: [ :stream | 
+		model := RMDGrammar new simulationModel end parse: stream ].
+	^ model isPetit2Failure
+		  ifTrue: [ nil ]
+		  ifFalse: [ model ]
+]
 
 { #category : #'instance creation' }
 RMDSimulationModel class >> goatAndWolf [
@@ -243,6 +266,23 @@ RMDSimulationModel >> east [
 	^ self cellLength * self cellXDivisions
 ]
 
+{ #category : #exporting }
+RMDSimulationModel >> exportModel [
+
+	(UIManager default
+		 chooseForSaveFileReference: 'export simulation model'
+		 extensions: #( 'rsm' )
+		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
+				  ensureCreateDirectory / '*.rsm') absolutePath) ifNotNil: [ :ref | 
+		self exportModel: ref ]
+]
+
+{ #category : #exporting }
+RMDSimulationModel >> exportModel: aFileReference [
+
+	aFileReference writeStreamDo: [ :stream | self printOn: stream ]
+]
+
 { #category : #initialization }
 RMDSimulationModel >> initialize [
 	super initialize.
@@ -277,6 +317,14 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 { #category : #'accessing - cells' }
 RMDSimulationModel >> north [
 	^ self cellLength * self cellYDivisions
+]
+
+{ #category : #'user interface' }
+RMDSimulationModel >> open [
+
+	^ (RMDSimulationModeler on: self)
+		  openWithSpec;
+		  yourself
 ]
 
 { #category : #adding }

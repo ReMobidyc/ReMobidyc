@@ -150,6 +150,22 @@ RMDGrammar >> animatDefinitionNodeClass [
 	^ RMDAnimatDefinitionNode
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> animatDotRenderer [
+
+	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
+	  , ('@' asPParser trimBlanks , self nat ==> #second) optional
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'dot' asPParser trimBlanks , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  RMDAnimatDotRenderer
+		  on: (array at: 1)
+		  diameter: ((array at: 4)
+				   ifNotNil: [ :y | (array at: 3) @ y ]
+				   ifNil: [ array at: 3 ])
+		  color: (array at: 6) ]
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> animatHeader [
 
@@ -267,6 +283,15 @@ RMDGrammar >> assignableVariable [
 	  / self assignablePropertyVariable
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> backgroundColorRenderer [
+
+	^ 'World' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , self color , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional
+	  ==> [ :triple | RMDBackgroundColorRenderer color: triple third ]
+]
+
 { #category : #'parsers-conditions' }
 RMDGrammar >> binaryCombinatorFrom: anArray [
 	| operator conds |
@@ -352,6 +377,62 @@ RMDGrammar >> builtinActionIdentifierNodeClass [
 	^ RMDBuiltinActionIdentifierNode 
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> cellColorAlphaRenderer [
+
+	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , self color , 'with' asPParser trimBlanks
+	  , 'alpha' asPParser trimBlanks
+	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
+	  , expression , 'between' asPParser trimBlanks , literal
+	  , 'and' asPParser trimBlanks , literal , '.' asPParser
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  RMDCellColorAlphaRenderer
+		  color: (array at: 3)
+		  alpha: (array at: 8)
+		  between: (array at: 10)
+		  and: (array at: 12) ]
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> cellColorBrightnessRenderer [
+
+	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , self color , 'with' asPParser trimBlanks
+	  , 'brightness' asPParser trimBlanks
+	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
+	  , expression , 'between' asPParser trimBlanks , literal
+	  , 'and' asPParser trimBlanks , literal , '.' asPParser
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  RMDCellColorBrightnessRenderer
+		  color: (array at: 3)
+		  brightness: (array at: 8)
+		  between: (array at: 10)
+		  and: (array at: 12) ]
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> cellColorMapRenderer [
+
+	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , 'map' asPParser trimBlanks , expression , 'with' asPParser trimBlanks, #newline asPParser trimBlanks
+	  ==> #fourth
+	  ,
+		  (self color , 'if' asPParser trimBlanks
+		   , '>=' asPParser trimBlanks , self literal
+		   , ',' asPParser trimBlanks , #newline asPParser
+		   ==> [ :array | (array at: 4) -> (array at: 1) ]) star
+	  , (self color , '.' asPParser trimBlanks ==> #first)
+	  , #newline asPParser optional ==> [ :array | 
+	  | renderer |
+	  renderer := RMDCellColorMapRenderer
+		              expression: (array at: 1)
+		              color: (array at: 3).
+	  (array at: 2) do: [ :assoc | 
+		  renderer add: assoc value at: assoc key ].
+	  renderer ]
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> cellDefinition [
 	^ ('Cell' asPParser
@@ -400,6 +481,16 @@ RMDGrammar >> cellInitializer [
 { #category : #'class access' }
 RMDGrammar >> cellInitializerNodeClass [
 	^ RMDCellInitializerNode
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> color [
+
+	^ #blank asPParser star , ((PP2ChoiceNode withAll:
+		    (Color registeredColorNames collect: [ :n | 
+			     n asString asPParser ])) ==> [ :name | Color named: name ]
+	   / ($# asPParser , (#hex asPParser times: 6) flatten
+		    ==> [ :pair | Color fromHexString: pair second ])) ==> #second
 ]
 
 { #category : #'parsers-conditions' }

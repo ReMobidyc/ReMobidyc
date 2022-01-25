@@ -8,6 +8,15 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor [
+
+	^ self new
+		  expression: aRMDExpression;
+		  color: aColor;
+		  yourself
+]
+
+{ #category : #'instance creation' }
 RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value: aRMDLiteral1 color: aColor2 [
 	^ self new
 		expression: aRMDExpression;
@@ -61,6 +70,27 @@ RMDCellColorMapRenderer >> name [
 { #category : #enumerating }
 RMDCellColorMapRenderer >> numberOfMinAndColors [
 	^ minAndColors size
+]
+
+{ #category : #printing }
+RMDCellColorMapRenderer >> printOn: aStream [
+
+	aStream nextPutAll: 'Cell -> map '.
+	expression printOn: aStream.
+	aStream
+		nextPutAll: ' with ';
+		nextPut: Character cr.
+	self minAndColorsDo: [ :min :c | 
+		aStream nextPutAll: '    '.
+		self printColor: c on: aStream.
+		aStream nextPutAll: ' if >= '.
+		min printOn: aStream.
+		aStream
+			nextPutAll: ',';
+			nextPut: Character cr ].
+	aStream nextPutAll: '    '.
+	self printColorOn: aStream.
+	aStream nextPut: $.
 ]
 
 { #category : #'adding-removing' }

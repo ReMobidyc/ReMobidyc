@@ -38,10 +38,16 @@ RMDPresenter >> newAnimatInput [
 
 { #category : #widgets }
 RMDPresenter >> newColorDropList [
-	^ self
-		newColorDropList:
-			{Color black.
-			Color gray} , (Color wheel: 5)
+
+	^ self newColorDropList: { 
+			  Color black.
+			  Color gray.
+			  Color blue.
+			  Color red.
+			  Color green.
+			  Color magenta.
+			  Color cyan.
+			  Color yellow }
 ]
 
 { #category : #widgets }
