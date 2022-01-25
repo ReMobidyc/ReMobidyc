@@ -267,20 +267,76 @@ RMDSimulationModel >> east [
 ]
 
 { #category : #exporting }
+RMDSimulationModel >> exportActions: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		actionDefinitions valuesDo: [ :actionDefinition | 
+			actionDefinition printOn: stream ] ]
+]
+
+{ #category : #exporting }
+RMDSimulationModel >> exportAgents: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		worldDefinition printOn: stream.
+		stream nextPut: Character cr.
+		cellDefinition printOn: stream.
+		stream nextPut: Character cr.
+		animatDefinitions valuesDo: [ :animatDefinition | 
+			animatDefinition printOn: stream.
+			stream nextPut: Character cr ] ]
+]
+
+{ #category : #exporting }
 RMDSimulationModel >> exportModel [
 
 	(UIManager default
 		 chooseForSaveFileReference: 'export simulation model'
-		 extensions: #( 'rsm' )
+		 extensions: #( )
 		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
-				  ensureCreateDirectory / '*.rsm') absolutePath) ifNotNil: [ :ref | 
+				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
 		self exportModel: ref ]
 ]
 
 { #category : #exporting }
 RMDSimulationModel >> exportModel: aFileReference [
 
-	aFileReference writeStreamDo: [ :stream | self printOn: stream ]
+	" #simulationDefinition . #animatDefinitions . #cellDefinition . #worldDefinition . #actionDefinitions . #renderers . #taskDefinitions "
+
+	aFileReference
+		ensureCreateDirectory;
+		ensureDeleteAllChildren.
+	self
+		exportSimulationDefinition: aFileReference / 'simulation.rmd';
+		exportAgents: aFileReference / 'agents.rmd';
+		exportActions: aFileReference / 'actions.rmd';
+		exportTaskDefinitions: aFileReference / 'tasks.rmd';
+		exportVisualization: aFileReference / 'visualization.rmd'
+]
+
+{ #category : #exporting }
+RMDSimulationModel >> exportSimulationDefinition: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		simulationDefinition printOn: stream ]
+]
+
+{ #category : #exporting }
+RMDSimulationModel >> exportTaskDefinitions: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		taskDefinitions do: [ :taskDefinition | 
+			taskDefinition printOn: stream.
+			stream nextPut: Character cr ] ]
+]
+
+{ #category : #exporting }
+RMDSimulationModel >> exportVisualization: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		renderers do: [ :renderer | 
+			renderer printOn: stream.
+			stream nextPut: Character cr ] ]
 ]
 
 { #category : #initialization }

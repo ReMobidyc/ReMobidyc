@@ -281,7 +281,7 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 			visualizer addRenderer: renderer ].
 		[ 
 		UIManager default
-			displayProgress: 'exporting animated gif'
+			displayProgress: 'exporting animated png'
 			from: 0.0
 			to: self duration
 			during: [ :progress | 
