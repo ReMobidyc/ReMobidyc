@@ -235,13 +235,13 @@ RMDGrammarTest >> testAnimatDotRenderer [
 
 	| renderer |
 	renderer := grammar animatDotRenderer end parse:
-		            '    Goat -> 10 pixels yellow dot'.
+		            '    Goat -> 10 pixels yellow dot.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color yellow.
 	self assert: renderer diameter equals: 10 @ 10.
 	self assert: renderer animat equals: 'Goat'.
 	renderer := grammar animatDotRenderer end parse:
-		            '    Wolf -> 12@13 pixels #FF0000 dot'.
+		            '    Wolf -> 12@13 pixels #FF0000 dot.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color red.
 	self assert: renderer diameter equals: 12 @ 13.
@@ -376,10 +376,10 @@ RMDGrammarTest >> testBackgroundColorRenderer [
 
 	| renderer |
 	renderer := grammar backgroundColorRenderer end parse:
-		            '	World -> yellow'.
+		            '	World -> yellow.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color yellow.
-	renderer := grammar backgroundColorRenderer end parse: '    World -> #000000'.
+	renderer := grammar backgroundColorRenderer end parse: '    World -> #000000.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color black
 ]
