@@ -184,6 +184,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 
 	^ action ifNil: [ 
 		  action := ((actionIdentifier resolveWith: aRMDSimulationModel)
+			             copy
 			             taskGuard: guard;
 			             copyReplace: (propertyBinds collect: [ :bind | 
 						              bind placeholder -> bind replacement ])
