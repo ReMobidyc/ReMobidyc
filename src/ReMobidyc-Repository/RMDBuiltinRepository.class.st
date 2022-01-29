@@ -41,6 +41,13 @@ RMDBuiltinRepository >> actionNames [
 	^ (self class selectorsInProtocol: 'actions') collect: #asString
 ]
 
+{ #category : #accessing }
+RMDBuiltinRepository >> actions [
+
+	^ (self class selectorsInProtocol: 'actions') collect: [ :name | 
+		  self perform: name ]
+]
+
 { #category : #actions }
 RMDBuiltinRepository >> die [
 
@@ -50,17 +57,11 @@ RMDBuiltinRepository >> die [
 
 { #category : #actions }
 RMDBuiltinRepository >> gain [
-	^ 'to gain is
-	the delta thing'' = the amount.' asRMDActionDefinition
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> gain_upto [
 	^ 'to gain_upto is
 	when the thing < the maximum
 	the delta thing'' = amount
 	where
-	amount = positive(min(the amount, the maximum - the thing)).' asRMDActionDefinition
+	amount = min(the amount, the maximum - the thing).' asRMDActionDefinition
 ]
 
 { #category : #testing }
@@ -77,19 +78,12 @@ RMDBuiltinRepository >> isModifiable [
 
 { #category : #actions }
 RMDBuiltinRepository >> lose [
-	^ 'to lose is
+
+	^ 'to lose_downto is
+	when the thing >= the minimum
 	the delta thing'' = - amount
 	where
-	amount = positive(min(the amount, the thing)).' asRMDActionDefinition
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> lose_downto [
-
-	^ 'to lose is
-	the delta thing'' = - amount
-	where
-	amount = positive(min(the amount, the minimum)).' asRMDActionDefinition
+	amount = min(the amount, the thing - the minimum).' asRMDActionDefinition
 ]
 
 { #category : #actions }
@@ -129,16 +123,5 @@ RMDBuiltinRepository >> transfer [
 	the delta destination'' = amount
 where
 	amount = the amount.
-' asRMDActionDefinition
-]
-
-{ #category : #actions }
-RMDBuiltinRepository >> transfer_upto [
-
-	^ 'to transfer_upto is
-	the delta source'' = - amount
-	the delta destination'' = amount
-where
-	amount = positive(min(the amount, the source, the maximum - the destination)).
 ' asRMDActionDefinition
 ]

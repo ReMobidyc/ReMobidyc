@@ -19,6 +19,11 @@ RMDRepository >> actionNames [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+RMDRepository >> actions [
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 RMDRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
 	^ self actionIdentifiers includes: aRMDActionIdentifierNode

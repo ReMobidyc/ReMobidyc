@@ -8,7 +8,7 @@ Class {
 RMDLocalActionIdentifierNodeTest >> testPrintOn [
 
 	| node copy |
-	node := parser localActionIdentifier end parse: 'move@model'.
-	copy := parser localActionIdentifier end parse: node printString.
+	node := parser actionIdentifier end parse: 'move'.
+	copy := parser actionIdentifier end parse: node printString.
 	self assert: copy equals: node
 ]

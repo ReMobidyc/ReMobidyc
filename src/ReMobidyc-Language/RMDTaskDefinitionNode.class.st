@@ -44,7 +44,7 @@ where
 RMDTaskDefinitionNode class >> goat_reproduce [
 
 	<script: '(RMDTaskDefinitionNode goat_reproduce) inspect'>
-	^ 'Goat reproduce namely reproduce@model
+	^ 'Goat reproduce namely reproduce
 	where
 	the chance -> 0.01
 	new - -> new 1 Goat
@@ -115,7 +115,7 @@ where
 RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 	<script:
 		'(RMDTaskDefinitionNode wolf_prey_on_goat: ''15000[kcal]'') inspect'>
-	^ ('Wolf prey_on@model nearest Goat within 1 [km]
+	^ ('Wolf prey_on nearest Goat within 1 [km]
 	where
 	the threshold -> ', maxString, '.') asRMDTaskDefinition
 ]
@@ -124,7 +124,7 @@ RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 RMDTaskDefinitionNode class >> wolf_reproduce [
 
 	<script: '(RMDTaskDefinitionNode wolf_reproduce) inspect'>
-	^ 'Wolf reproduce namely reproduce@model
+	^ 'Wolf reproduce namely reproduce
 	where
 	the chance -> 0.01
 	new - -> new 1 Wolf

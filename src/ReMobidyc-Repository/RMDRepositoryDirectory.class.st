@@ -4,8 +4,17 @@ Class {
 	#instVars : [
 		'repositories'
 	],
+	#classInstVars : [
+		'current'
+	],
 	#category : #'ReMobidyc-Repository'
 }
+
+{ #category : #'sole instance' }
+RMDRepositoryDirectory class >> current [
+	<script: 'RMDRepositoryDirectory current inspect'>
+	^ current ifNil: [ current := self new ]
+]
 
 { #category : #'adding-removing' }
 RMDRepositoryDirectory >> add: aRMDRepository [
@@ -18,6 +27,12 @@ RMDRepositoryDirectory >> add: aRMDRepository [
 RMDRepositoryDirectory >> initialize [
 	super initialize.
 	repositories := OrderedCollection with: RMDBuiltinRepository new
+]
+
+{ #category : #'adding-removing' }
+RMDRepositoryDirectory >> remove: aRMDRepository [
+	repositories remove: aRMDRepository ifAbsent: [].
+	^ aRMDRepository
 ]
 
 { #category : #accessing }

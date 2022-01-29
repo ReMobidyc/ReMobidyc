@@ -33,6 +33,11 @@ RMDSimulationModel class >> goatAndWolf [
 		  load: RMDCellDefinitionNode grassField;
 		  load: RMDAnimatDefinitionNode goat;
 		  load: RMDAnimatDefinitionNode wolf;
+		  load: RMDBuiltinRepository current gain;
+		  load: RMDBuiltinRepository current lose;
+		  load: RMDBuiltinRepository current transfer;
+		  load: RMDBuiltinRepository current move;
+		  load: RMDBuiltinRepository current starve;
 		  load: RMDActionDefinitionNode reproduce;
 		  load: RMDActionDefinitionNode prey_on;
 		  load: (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
@@ -46,8 +51,7 @@ RMDSimulationModel class >> goatAndWolf [
 		  load: (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
 		  load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
 		  load: RMDTaskDefinitionNode wolf_chase_goat;
-		  load:
-			  (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
+		  load: (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
 		  load: RMDTaskDefinitionNode wolf_reproduce;
 		  load: (RMDTaskDefinitionNode
 				   cell_grow_grass: '1500[kcal/day]'
@@ -236,6 +240,12 @@ RMDSimulationModel class >> sugarScape [
 		load: RMDWorldDefinitionNode empty;
 		load: RMDCellDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
+		load: RMDBuiltinRepository current gain;
+		load: RMDBuiltinRepository current lose;
+		load: RMDBuiltinRepository current transfer;
+		load: RMDBuiltinRepository current move;
+		load: RMDBuiltinRepository current starve;
+		load: RMDActionDefinitionNode reproduce;
 		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
 		load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
 		load: RMDTaskDefinitionNode goat_walk_for_grass;
@@ -243,7 +253,6 @@ RMDSimulationModel class >> sugarScape [
 			(RMDTaskDefinitionNode
 				goat_eat: '3000 [kcal/day]'
 				upto: '10000[kcal]');
-		load: RMDActionDefinitionNode reproduce;
 		load: (RMDTaskDefinitionNode goat_reproduce);
 		load:
 			(RMDTaskDefinitionNode
