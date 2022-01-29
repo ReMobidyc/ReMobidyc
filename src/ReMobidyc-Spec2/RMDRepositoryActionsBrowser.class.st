@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDRepositoryBrowser,
+	#name : #RMDRepositoryActionsBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'repositoryList',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #specs }
-RMDRepositoryBrowser class >> defaultSpec [
+RMDRepositoryActionsBrowser class >> defaultSpec [
 
 	^ SpPanedLayout newVertical
 		  add: (SpPanedLayout newHorizontal
@@ -26,23 +26,23 @@ RMDRepositoryBrowser class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDRepositoryBrowser >> action [
+RMDRepositoryActionsBrowser >> action [
 
 	^ actionList selection selectedItem
 ]
 
 { #category : #operations }
-RMDRepositoryBrowser >> addRepository [
+RMDRepositoryActionsBrowser >> addRepository [
 	^ self notYetImplemented
 ]
 
 { #category : #operations }
-RMDRepositoryBrowser >> editRepository [
+RMDRepositoryActionsBrowser >> editRepository [
 	^ self notYetImplemented
 ]
 
 { #category : #initialization }
-RMDRepositoryBrowser >> initializePresenters [
+RMDRepositoryActionsBrowser >> initializePresenters [
 
 	super initializePresenters.
 	repositoryList := self newList
@@ -89,14 +89,14 @@ RMDRepositoryBrowser >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDRepositoryBrowser >> initializeWindow: aWindowPresenter [
+RMDRepositoryActionsBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Repository Browser'.
 	aWindowPresenter initialExtent: 800 @ 400
 ]
 
 { #category : #operations }
-RMDRepositoryBrowser >> removeRepository [
+RMDRepositoryActionsBrowser >> removeRepository [
 
 	self repository ifNotNil: [ :repository | 
 		RMDRepositoryDirectory current remove: repository.
@@ -104,12 +104,12 @@ RMDRepositoryBrowser >> removeRepository [
 ]
 
 { #category : #accessing }
-RMDRepositoryBrowser >> repository [
+RMDRepositoryActionsBrowser >> repository [
 	^ repositoryList selection selectedItem
 ]
 
 { #category : #updating }
-RMDRepositoryBrowser >> updateActionList [
+RMDRepositoryActionsBrowser >> updateActionList [
 
 	actionList items: (self repository
 			 ifNotNil: [ :repository | repository actions ]
@@ -117,7 +117,7 @@ RMDRepositoryBrowser >> updateActionList [
 ]
 
 { #category : #updating }
-RMDRepositoryBrowser >> updateRepositoryList [
+RMDRepositoryActionsBrowser >> updateRepositoryList [
 
 	| repository |
 	repository := self repository.
@@ -129,7 +129,7 @@ RMDRepositoryBrowser >> updateRepositoryList [
 ]
 
 { #category : #updating }
-RMDRepositoryBrowser >> updateSourceText [
+RMDRepositoryActionsBrowser >> updateSourceText [
 
 	self action
 		ifNotNil: [ :action | sourceText syntaxNode: action ]

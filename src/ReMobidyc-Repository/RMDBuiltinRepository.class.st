@@ -57,7 +57,7 @@ RMDBuiltinRepository >> die [
 
 { #category : #actions }
 RMDBuiltinRepository >> gain [
-	^ 'to gain_upto is
+	^ 'to gain is
 	when the thing < the maximum
 	the delta thing'' = amount
 	where
@@ -79,7 +79,7 @@ RMDBuiltinRepository >> isModifiable [
 { #category : #actions }
 RMDBuiltinRepository >> lose [
 
-	^ 'to lose_downto is
+	^ 'to lose is
 	when the thing >= the minimum
 	the delta thing'' = - amount
 	where

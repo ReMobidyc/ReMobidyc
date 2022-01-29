@@ -21,7 +21,7 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 
 	<script:
 	'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
-	^ ('Cell grow namely gain_upto
+	^ ('Cell grow namely gain
 where
 	the thing -> here''s grass
 	the maximum -> ' , maxString , '
@@ -61,6 +61,7 @@ RMDTaskDefinitionNode class >> goat_respire: aString [
 	^ ('Goat respire namely lose
 where
 	the thing -> my blood_sugar
+	the minimum -> 0 [kcal]
 	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
 		  asRMDTaskDefinition
 ]
@@ -141,6 +142,7 @@ RMDTaskDefinitionNode class >> wolf_respire: aString [
 	^ ('Wolf respire namely lose
 where
 	the thing -> my blood_sugar
+	the minimum -> 0 [kcal]
 	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
 		  asRMDTaskDefinition
 ]
