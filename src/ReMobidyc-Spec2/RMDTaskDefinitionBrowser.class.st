@@ -216,7 +216,7 @@ RMDTaskDefinitionBrowser >> editReplacement [
 		replacementList selection selectedItem ifNotNil: [ :oldBind | 
 			self taskDefinition ifNotNil: [ :taskDefinition | 
 				(model
-					 actionDefinitionAt: taskDefinition actionDefinition
+					 actionDefinitionAt: taskDefinition actionIdentifier
 					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 					| bindEditor |
 					bindEditor := RMDPropertyBindEditor
