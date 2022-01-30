@@ -99,6 +99,7 @@ RMDRepositoryActionsBrowser >> initializePresenters [
 				                  updateButtons;
 				                  updateActionList ];
 		                  display: [ :item | item repositoryName ];
+		                  displayIcon: [ :item | item icon ];
 		                  yourself.
 	addRepositoryButton := self newButton
 		                       icon: self addIcon;

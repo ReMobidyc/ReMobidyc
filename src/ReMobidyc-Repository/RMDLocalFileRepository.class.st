@@ -9,6 +9,14 @@ Class {
 	#category : #'ReMobidyc-Repository'
 }
 
+{ #category : #'class access' }
+RMDLocalFileRepository class >> classFor: aFileReference [
+
+	^ (aFileReference / '.git') isDirectory
+		  ifTrue: [ RMDLocalGitRepository ]
+		  ifFalse: [ RMDLocalFileRepository ]
+]
+
 { #category : #'instance creation' }
 RMDLocalFileRepository class >> default [
 
@@ -19,7 +27,7 @@ RMDLocalFileRepository class >> default [
 { #category : #'instance creation' }
 RMDLocalFileRepository class >> on: aFileReference name: aString [
 
-	^ self new
+	^ (self classFor: aFileReference) new
 		  directory: aFileReference;
 		  name: aString;
 		  yourself
@@ -70,6 +78,12 @@ RMDLocalFileRepository >> directory [
 RMDLocalFileRepository >> directory: aFileReference [
 
 	directory := aFileReference asFileReference
+]
+
+{ #category : #accessing }
+RMDLocalFileRepository >> icon [
+
+	^ Smalltalk ui icons open
 ]
 
 { #category : #initialization }

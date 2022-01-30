@@ -22,6 +22,12 @@ RMDRepository >> actions [
 		  thenSelect: #notNil
 ]
 
+{ #category : #accessing }
+RMDRepository >> icon [
+
+	^ self subclassResponsibility
+]
+
 { #category : #testing }
 RMDRepository >> isModifiable [
 

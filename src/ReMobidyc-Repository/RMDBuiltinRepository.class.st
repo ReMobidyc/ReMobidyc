@@ -57,6 +57,12 @@ RMDBuiltinRepository >> gain [
 	amount = min(the amount, the maximum - the thing).' asRMDActionDefinition
 ]
 
+{ #category : #accessing }
+RMDBuiltinRepository >> icon [
+
+	^ Smalltalk ui icons objects
+]
+
 { #category : #testing }
 RMDBuiltinRepository >> isModifiable [
 
