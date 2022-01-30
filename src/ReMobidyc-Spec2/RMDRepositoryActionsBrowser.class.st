@@ -15,13 +15,20 @@ Class {
 { #category : #specs }
 RMDRepositoryActionsBrowser class >> defaultSpec [
 
-	^ SpPanedLayout newVertical
-		  add: (SpPanedLayout newHorizontal
-				   add: #repositoryList;
-				   add: #actionList;
+	^ SpPanedLayout newHorizontal
+		  positionOfSlider: 0.3;
+		  add: (SpBoxLayout newVertical
+				   add: #repositoryList expand: true;
+				   add: (SpBoxLayout newHorizontal
+						    add: #addRepositoryButton width: self buttonHeight;
+						    add: #removeRepositoryButton width: self buttonHeight;
+						    yourself)
+				   expand: false;
 				   yourself);
-		  add: #sourceText;
-		  positionOfSlider: 0.4;
+		  add: (SpPanedLayout newVertical
+				   add: #actionList;
+				   add: #sourceText;
+				   yourself);
 		  yourself
 ]
 
@@ -32,13 +39,51 @@ RMDRepositoryActionsBrowser >> action [
 ]
 
 { #category : #operations }
-RMDRepositoryActionsBrowser >> addRepository [
+RMDRepositoryActionsBrowser >> addGit [
+
 	^ self notYetImplemented
 ]
 
 { #category : #operations }
-RMDRepositoryActionsBrowser >> editRepository [
-	^ self notYetImplemented
+RMDRepositoryActionsBrowser >> addLocalDirectory [
+
+	(UIManager default
+		 chooseExistingFileReference: 'Repository Directory'
+		 extensions: #(  )
+		 path:
+			 ((FileLocator documents / 'ReMobidyc') ensureCreateDirectory / '*')
+				 absolutePath) ifNotNil: [ :ref | 
+		(UIManager default
+			 request: 'Repository Name'
+			 initialAnswer: ref basename) ifNotNil: [ :name | 
+			self repositoryDirectory add:
+				(RMDLocalFileRepository on: ref name: name).
+			self updateRepositoryList ] ]
+]
+
+{ #category : #operations }
+RMDRepositoryActionsBrowser >> addRepository [
+
+	self addRepositoryMenu openWithSpecAtPointer
+]
+
+{ #category : #operations }
+RMDRepositoryActionsBrowser >> addRepositoryMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Local directory';
+						  icon: Smalltalk ui icons open;
+						  action: [ self addLocalDirectory ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'Git';
+						  icon: Smalltalk ui icons git;
+						  action: [ self addGit ] ] ];
+		  yourself
 ]
 
 { #category : #initialization }
@@ -49,7 +94,10 @@ RMDRepositoryActionsBrowser >> initializePresenters [
 		                  beSingleSelection;
 		                  whenModelChangedDo: [ 
 			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ self updateActionList ];
+		                  whenSelectionChangedDo: [ 
+			                  self
+				                  updateButtons;
+				                  updateActionList ];
 		                  display: [ :item | item repositoryName ];
 		                  yourself.
 	addRepositoryButton := self newButton
@@ -99,13 +147,22 @@ RMDRepositoryActionsBrowser >> initializeWindow: aWindowPresenter [
 RMDRepositoryActionsBrowser >> removeRepository [
 
 	self repository ifNotNil: [ :repository | 
-		RMDRepositoryDirectory current remove: repository.
+		self repositoryDirectory remove: repository.
 		self updateRepositoryList ]
 ]
 
 { #category : #accessing }
 RMDRepositoryActionsBrowser >> repository [
-	^ repositoryList selection selectedItem
+
+	^ [ repositoryList selection selectedItem ]
+		  on: Error
+		  do: [ :ex | ex return: nil ]
+]
+
+{ #category : #accessing }
+RMDRepositoryActionsBrowser >> repositoryDirectory [
+
+	^ RMDRepositoryDirectory current
 ]
 
 { #category : #updating }
@@ -117,13 +174,21 @@ RMDRepositoryActionsBrowser >> updateActionList [
 ]
 
 { #category : #updating }
+RMDRepositoryActionsBrowser >> updateButtons [
+
+	self repository
+		ifNil: [ removeRepositoryButton disable ]
+		ifNotNil: [ removeRepositoryButton enable ]
+]
+
+{ #category : #updating }
 RMDRepositoryActionsBrowser >> updateRepositoryList [
 
 	| repository |
 	repository := self repository.
 	repositoryList
 		unselectAll;
-		items: RMDRepositoryDirectory current repositories.
+		items: self repositoryDirectory repositories.
 	(repositoryList items includes: repository) ifTrue: [ 
 		repositoryList selectItem: repository ]
 ]

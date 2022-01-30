@@ -184,11 +184,6 @@ RMDTaskDefinitionBrowser >> addReplacement [
 					updateSourceText ] ] ]
 ]
 
-{ #category : #operations }
-RMDTaskDefinitionBrowser >> addRepository [
-	^ self notYetImplemented
-]
-
 { #category : #accessing }
 RMDTaskDefinitionBrowser >> agentName [
 	^ agentName
@@ -251,23 +246,19 @@ RMDTaskDefinitionBrowser >> editReplacement [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionBrowser >> editRepository [
-	^ self notYetImplemented
-]
-
-{ #category : #operations }
 RMDTaskDefinitionBrowser >> importAction [
 
-	RMDRepositoryActionsBrowser new openDialogWithSpec okAction: [ 
-		:browser | 
-		browser presenter action ifNotNil: [ :newAction | 
-			self simulationModel ifNotNil: [ :model | 
-				model load: newAction copy.
-				self
-					updateActionList;
-					updateActionButtons;
-					updateTemplateText;
-					updateSourceText ] ] ]
+	RMDRepositoryActionsBrowser new openDialogWithSpec
+		title: 'Import Action';
+		okAction: [ :browser | 
+			browser presenter action ifNotNil: [ :newAction | 
+					self simulationModel ifNotNil: [ :model | 
+							model load: newAction copy.
+							self
+								updateActionList;
+								updateActionButtons;
+								updateTemplateText;
+								updateSourceText ] ] ]
 ]
 
 { #category : #initialization }
@@ -300,7 +291,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 						              updateSourceText ] ];
 		              yourself.
 	importActionButton := self newButton
-		                      icon: Smalltalk ui icons database;
+		                      icon: self repositoryIcon;
 		                      action: [ self importAction ];
 		                      yourself.
 	addActionButton := self newButton
@@ -419,9 +410,9 @@ RMDTaskDefinitionBrowser >> removeAction [
 		(UIManager default confirm:
 			 'Sure to remove ' , oldActionDef identifier , ' from the model?') 
 			ifTrue: [ 
-				self actionIdentifier ifNotNil: [ :actionIdentifier | 
+				self actionDefinition ifNotNil: [ :actionDefinition | 
 					self simulationModel ifNotNil: [ :model | 
-						actionIdentifier removeActionDefinition: oldActionDef in: model.
+						model removeActionDefinition: actionDefinition ifAbsent: [].
 						self taskDefinition ifNotNil: #resetAction.
 						self
 							updateActionList;
@@ -440,20 +431,6 @@ RMDTaskDefinitionBrowser >> removeReplacement [
 					self
 						updateReplacementList;
 						updateSourceText ] ]
-]
-
-{ #category : #operations }
-RMDTaskDefinitionBrowser >> removeRepository [
-	^ self notYetImplemented
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionBrowser >> repositories [
-	^ Array
-		streamContents: [ :stream | 
-			stream nextPut: RMDBuiltinRepository current.
-			simulationModel
-				ifNotNil: [ stream nextPut: (RMDModelRepository on: simulationModel) ] ]
 ]
 
 { #category : #accessing }

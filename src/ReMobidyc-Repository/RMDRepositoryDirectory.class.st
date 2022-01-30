@@ -25,8 +25,11 @@ RMDRepositoryDirectory >> add: aRMDRepository [
 
 { #category : #initialization }
 RMDRepositoryDirectory >> initialize [
+
 	super initialize.
-	repositories := OrderedCollection with: RMDBuiltinRepository new
+	repositories := OrderedCollection
+		                with: RMDBuiltinRepository new
+		                with: RMDLocalFileRepository default
 ]
 
 { #category : #'adding-removing' }

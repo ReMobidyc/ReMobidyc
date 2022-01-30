@@ -23,13 +23,6 @@ RMDBuiltinRepository class >> current [
 ]
 
 { #category : #accessing }
-RMDBuiltinRepository >> actionIdentifiers [
-	^ self actionNames
-		collect:
-			[ :actionName | RMDBuiltinActionIdentifierNode identifier: actionName ]
-]
-
-{ #category : #accessing }
 RMDBuiltinRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ (self actionNames includes: aString)
 		ifTrue: [ self perform: aString asSymbol ]
@@ -62,12 +55,6 @@ RMDBuiltinRepository >> gain [
 	the delta thing'' = amount
 	where
 	amount = min(the amount, the maximum - the thing).' asRMDActionDefinition
-]
-
-{ #category : #testing }
-RMDBuiltinRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
-	^ aRMDActionIdentifierNode isBuiltinActionIdentifierNode
-		and: [ super includesActionIdentifier: aRMDActionIdentifierNode ]
 ]
 
 { #category : #testing }

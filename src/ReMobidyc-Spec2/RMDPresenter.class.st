@@ -100,6 +100,12 @@ RMDPresenter >> replacementIcon [
 	^ Smalltalk ui icons iconNamed: #smallForward
 ]
 
+{ #category : #icons }
+RMDPresenter >> repositoryIcon [
+
+	^ Smalltalk ui icons database
+]
+
 { #category : #private }
 RMDPresenter >> speciesValidation [
 	^ [ :name | name asString allSatisfy: [ :c | c isLetter or: [ c isDigit ] ] ]

@@ -5,11 +5,6 @@ Class {
 }
 
 { #category : #accessing }
-RMDRepository >> actionIdentifiers [
-	^ self subclassResponsibility
-]
-
-{ #category : #accessing }
 RMDRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]
@@ -21,12 +16,10 @@ RMDRepository >> actionNames [
 
 { #category : #accessing }
 RMDRepository >> actions [
-	^ self subclassResponsibility
-]
 
-{ #category : #testing }
-RMDRepository >> includesActionIdentifier: aRMDActionIdentifierNode [
-	^ self actionIdentifiers includes: aRMDActionIdentifierNode
+	^ self actionNames
+		  collect: [ :name | self actionNamed: name ifAbsent: [ nil ] ]
+		  thenSelect: #notNil
 ]
 
 { #category : #testing }
