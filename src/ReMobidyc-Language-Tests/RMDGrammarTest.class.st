@@ -940,7 +940,7 @@ RMDGrammarTest >> testTaskDefinition [
 	node := grammar taskDefinition end
 		parse:
 			'
-Goat move namely walk@model
+Goat move namely walk
 when my blood_sugar > my hunger
 where
 	the energy -> sugar
@@ -962,7 +962,6 @@ where
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
-	self assert: node actionIdentifier isBuiltinActionIdentifierNode.
 	self assert: node actionIdentifier shortName equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').

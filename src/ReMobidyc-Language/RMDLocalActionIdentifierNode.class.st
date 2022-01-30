@@ -23,9 +23,8 @@ RMDLocalActionIdentifierNode >> isReadOnly [
 
 { #category : #printing }
 RMDLocalActionIdentifierNode >> printOn: aStream [
-	aStream
-		nextPutAll: shortName;
-		nextPutAll: '@model'
+
+	aStream nextPutAll: shortName
 ]
 
 { #category : #printing }
