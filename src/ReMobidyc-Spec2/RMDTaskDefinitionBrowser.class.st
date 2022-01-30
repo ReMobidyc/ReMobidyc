@@ -4,12 +4,9 @@ Class {
 	#instVars : [
 		'simulationModel',
 		'agentName',
-		'repositoryList',
 		'actionList',
 		'templateText',
-		'addRepositoryButton',
-		'removeRepositoryButton',
-		'editRepositoryButton',
+		'importActionButton',
 		'addActionButton',
 		'removeActionButton',
 		'editActionButton',
@@ -31,31 +28,19 @@ Class {
 RMDTaskDefinitionBrowser class >> defaultSpec [
 
 	^ SpPanedLayout newVertical
-		  positionOfSlider: 0.5;
+		  positionOfSlider: 0.4;
 		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.6;
-				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.4;
-						    add: (SpBoxLayout newVertical
-								     add: 'Repositories' expand: false;
-								     add: #repositoryList;
-								     add: (SpBoxLayout newHorizontal
-										      add: #addRepositoryButton width: self buttonHeight;
-										      add: #removeRepositoryButton width: self buttonHeight;
-										      add: #editRepositoryButton width: self buttonHeight;
-										      yourself)
-								     height: self buttonHeight;
-								     yourself);
-						    add: (SpBoxLayout newVertical
-								     add: 'Actions' expand: false;
-								     add: #actionList;
-								     add: (SpBoxLayout newHorizontal
-										      add: #addActionButton width: self buttonHeight;
-										      add: #removeActionButton width: self buttonHeight;
-										      add: #editActionButton width: self buttonHeight;
-										      yourself)
-								     height: self buttonHeight;
-								     yourself);
+				   positionOfSlider: 0.5;
+				   add: (SpBoxLayout newVertical
+						    add: 'Actions' expand: false;
+						    add: #actionList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #importActionButton width: self buttonHeight;
+								     add: #addActionButton width: self buttonHeight;
+								     add: #removeActionButton width: self buttonHeight;
+								     add: #editActionButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
 						    add: 'Template' expand: false;
@@ -64,7 +49,7 @@ RMDTaskDefinitionBrowser class >> defaultSpec [
 		  add: (SpBoxLayout newVertical
 				   add: 'Task Specialization' expand: false;
 				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.4;
+						    positionOfSlider: 0.5;
 						    add: (SpBoxLayout newVertical
 								     add: (SpBoxLayout newHorizontal
 										      vAlignCenter;
@@ -153,14 +138,6 @@ RMDTaskDefinitionBrowser >> acceptVerbIdentifierField [
 
 { #category : #accessing }
 RMDTaskDefinitionBrowser >> actionDefinition [
-	^ self actionIdentifier
-		ifNotNil: [ :actionIdentifier | 
-			self simulationModel
-				ifNotNil: [ :model | actionIdentifier resolveWith: simulationModel ] ]
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionBrowser >> actionIdentifier [ 
 	^ actionList selection selectedItem
 ]
 
@@ -171,14 +148,7 @@ RMDTaskDefinitionBrowser >> addAction [
 	newActionDef := RMDActionDefinitionNode template.
 	newActionDef asPresenter openDialogWithSpec okAction: [ 
 		self simulationModel ifNotNil: [ :model | 
-			self actionIdentifier
-				ifNil: [ 
-					| actionIdentifier |
-					actionIdentifier := RMDLocalActionIdentifierNode identifier:
-						                    newActionDef identifier.
-					actionIdentifier writeActionDefinition: newActionDef in: model ]
-				ifNotNil: [ :actionIdentifier | 
-					actionIdentifier writeActionDefinition: newActionDef in: model ].
+			model addActionDefinition: newActionDef.
 			self taskDefinition ifNotNil: #resetAction.
 			self
 				updateActionList;
@@ -190,26 +160,23 @@ RMDTaskDefinitionBrowser >> addAction [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> addReplacement [
 
-	self taskDefinition ifNotNil: [ :taskDefinition | 
-		| bindEditor |
-		(bindEditor := RMDPropertyBindEditor
-			               actionDefinition:
-			               (taskDefinition actionIdentifier resolveWith:
-				                simulationModel)
-			               except:
-			               (taskDefinition propertyBinds collect: #placeholder))
-			openDialogWithSpec okAction: [ 
-			bindEditor propertyBindNode ifNotNil: [ :bindNode | 
-				taskDefinition propertyBinds:
-					(taskDefinition propertyBinds copyWith: bindNode).
-				self
-					updateReplacementList;
-					updateSourceText ] ] ]
-]
-
-{ #category : #operations }
-RMDTaskDefinitionBrowser >> addRepository [
-	^ self notYetImplemented
+	self simulationModel ifNotNil: [ :model | 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			(model
+				 actionDefinitionAt: taskDefinition actionIdentifier
+				 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
+				| bindEditor |
+				(bindEditor := RMDPropertyBindEditor
+					               actionDefinition: actionDefinition
+					               except:
+					               (taskDefinition propertyBinds collect:
+						                #placeholder)) openDialogWithSpec okAction: [ 
+					bindEditor propertyBindNode ifNotNil: [ :bindNode | 
+						taskDefinition propertyBinds:
+							(taskDefinition propertyBinds copyWith: bindNode).
+						self
+							updateReplacementList;
+							updateSourceText ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -229,12 +196,11 @@ RMDTaskDefinitionBrowser >> editAction [
 		| newActionDef |
 		newActionDef := oldActionDef copy.
 		newActionDef asPresenter openDialogWithSpec okAction: [ 
-			self actionIdentifier ifNotNil: [ :actionIdentifier | 
+			self actionDefinition ifNotNil: [ :actionDefinition | 
 				self simulationModel ifNotNil: [ :model | 
-					actionIdentifier
-						updateActionDefinition: oldActionDef
-						to: newActionDef
-						in: model.
+					model
+						removeActionDefinition: oldActionDef ifAbsent: [  ];
+						addActionDefinition: newActionDef.
 					self taskDefinition ifNotNil: #resetAction.
 					self
 						updateActionList;
@@ -246,85 +212,71 @@ RMDTaskDefinitionBrowser >> editAction [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> editReplacement [
 
-	replacementList selection selectedItem ifNotNil: [ :oldBind | 
-		self taskDefinition ifNotNil: [ :taskModel | 
-			| bindEditor |
-			bindEditor := RMDPropertyBindEditor
-				              actionDefinition:
-				              (taskModel actionIdentifier resolveWith:
-					               simulationModel)
-				              except: (taskModel propertyBinds
-						               select: [ :bind | bind ~= oldBind ]
-						               thenCollect: #placeholder).
-			bindEditor propertyBindNode: oldBind.
-			bindEditor openDialogWithSpec okAction: [ 
-				bindEditor propertyBindNode ifNotNil: [ :newBind | 
-					| index |
-					index := taskModel propertyBinds indexOf: oldBind.
-					index > 0
-						ifTrue: [ 
-							taskModel propertyBinds at: index put: newBind.
-							taskModel resetAction ]
-						ifFalse: [ 
-							taskModel propertyBinds:
-								(taskModel propertyBinds copyWith: newBind) ].
-					self
-						updateReplacementList;
-						updateSourceText ] ] ] ]
+	self simulationModel ifNotNil: [ :model | 
+		replacementList selection selectedItem ifNotNil: [ :oldBind | 
+			self taskDefinition ifNotNil: [ :taskDefinition | 
+				(model
+					 actionDefinitionAt: taskDefinition actionDefinition
+					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
+					| bindEditor |
+					bindEditor := RMDPropertyBindEditor
+						              actionDefinition: actionDefinition
+						              except: (taskDefinition propertyBinds
+								               select: [ :bind | bind ~= oldBind ]
+								               thenCollect: #placeholder).
+					bindEditor propertyBindNode: oldBind.
+					bindEditor openDialogWithSpec okAction: [ 
+						bindEditor propertyBindNode ifNotNil: [ :newBind | 
+							| index |
+							index := taskDefinition propertyBinds indexOf: oldBind.
+							index > 0
+								ifTrue: [ 
+									taskDefinition propertyBinds at: index put: newBind.
+									taskDefinition resetAction ]
+								ifFalse: [ 
+									taskDefinition propertyBinds:
+										(taskDefinition propertyBinds copyWith: newBind) ].
+							self
+								updateReplacementList;
+								updateSourceText ] ] ] ] ] ]
 ]
 
 { #category : #operations }
-RMDTaskDefinitionBrowser >> editRepository [
-	^ self notYetImplemented
+RMDTaskDefinitionBrowser >> importAction [
+
+	RMDRepositoryActionsBrowser new openDialogWithSpec
+		title: 'Import Action';
+		okAction: [ :browser | 
+			browser presenter action ifNotNil: [ :newAction | 
+					self simulationModel ifNotNil: [ :model | 
+							model load: newAction copy.
+							self
+								updateActionList;
+								updateActionButtons;
+								updateTemplateText;
+								updateSourceText ] ] ]
 ]
 
 { #category : #initialization }
 RMDTaskDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
-	repositoryList := self newList
-		                  beSingleSelection;
-		                  whenModelChangedDo: [ 
-			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ 
-			                  self
-				                  updateActionList;
-				                  updateActionButtons ];
-		                  display: [ :item | item repositoryName ];
-		                  yourself.
-	addRepositoryButton := self newButton
-		                       icon: self addIcon;
-		                       action: [ self addRepository ];
-		                       yourself.
-	removeRepositoryButton := self newButton
-		                          icon: self removeIcon;
-		                          action: [ self removeRepository ];
-		                          disable;
-		                          yourself.
-	editRepositoryButton := self newButton
-		                        icon: self editIcon;
-		                        action: [ self editRepository ];
-		                        disable;
-		                        yourself.
 	actionList := self newTable
 		              beSingleSelection;
 		              beResizable;
 		              showColumnHeaders;
 		              addColumn: (SpStringTableColumn
 				               title: 'verb'
-				               evaluated: [ :item | 
-					               (item resolveWith: simulationModel) identifier ]);
+				               evaluated: [ :item | item identifier ]);
 		              addColumn: (SpStringTableColumn
 				               title: 'object'
-				               evaluated: [ :item | 
-					               (item resolveWith: simulationModel) object ifNil: [ 
-							               '' ] ]);
+				               evaluated: [ :item | item object ifNil: [ '' ] ]);
 		              whenModelChangedDo: [ actionList selectItem: nil ];
 		              whenSelectionChangedDo: [ 
 			              self updateActionButtons.
 			              self updateTaskDefinition.
 			              self taskDefinition ifNotNil: [ :taskDefinition | 
-					              self actionIdentifier ifNotNil: [ :actionIdentifier | 
+					              self actionDefinition ifNotNil: [ :actionIdentifier | 
 							              self updateVerbIdentifierField.
 							              self updateObjectIdentifierField.
 							              self updateNearestCheckBox.
@@ -334,6 +286,10 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 						              updateReplacementList;
 						              updateSourceText ] ];
 		              yourself.
+	importActionButton := self newButton
+		                      icon: self repositoryIcon;
+		                      action: [ self importAction ];
+		                      yourself.
 	addActionButton := self newButton
 		                   icon: self addIcon;
 		                   action: [ self addAction ];
@@ -433,7 +389,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		              editable: false;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself.
-	self updateRepositoryList
+	self updateActionList
 ]
 
 { #category : #initialization }
@@ -450,9 +406,9 @@ RMDTaskDefinitionBrowser >> removeAction [
 		(UIManager default confirm:
 			 'Sure to remove ' , oldActionDef identifier , ' from the model?') 
 			ifTrue: [ 
-				self actionIdentifier ifNotNil: [ :actionIdentifier | 
+				self actionDefinition ifNotNil: [ :actionDefinition | 
 					self simulationModel ifNotNil: [ :model | 
-						actionIdentifier removeActionDefinition: oldActionDef in: model.
+						model removeActionDefinition: actionDefinition ifAbsent: [].
 						self taskDefinition ifNotNil: #resetAction.
 						self
 							updateActionList;
@@ -473,25 +429,6 @@ RMDTaskDefinitionBrowser >> removeReplacement [
 						updateSourceText ] ]
 ]
 
-{ #category : #operations }
-RMDTaskDefinitionBrowser >> removeRepository [
-	^ self notYetImplemented
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionBrowser >> repositories [
-	^ Array
-		streamContents: [ :stream | 
-			stream nextPut: RMDBuiltinRepository current.
-			simulationModel
-				ifNotNil: [ stream nextPut: (RMDModelRepository on: simulationModel) ] ]
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionBrowser >> repository [
-	^ repositoryList selection selectedItem
-]
-
 { #category : #accessing }
 RMDTaskDefinitionBrowser >> simulationModel [
 	^ simulationModel
@@ -500,7 +437,7 @@ RMDTaskDefinitionBrowser >> simulationModel [
 { #category : #accessing }
 RMDTaskDefinitionBrowser >> simulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
-	self updateRepositoryList
+	self updateActionList
 ]
 
 { #category : #accessing }
@@ -516,44 +453,36 @@ RMDTaskDefinitionBrowser >> taskDefinition: aRMDTaskDefinitionNode [
 
 { #category : #updating }
 RMDTaskDefinitionBrowser >> taskDefinitionChanged [
-	taskDefinitionNode
-		ifNotNil: [ taskDefinitionNode actionIdentifier
-				ifNotNil: [ :actionIdentifier | 
-					actionIdentifier selectRepositoryList: repositoryList.
-					actionList
-						selectItem:
-							(actionList items
-								detect: [ :action | actionIdentifier = action ]
-								ifNone: [ nil ]) ]
-				ifNil: [ repositoryList selectItem: nil ] ]
-		ifNil: [ repositoryList selectItem: nil ].
-	self updateReplacementList.
 
+	taskDefinitionNode ifNotNil: [ 
+		taskDefinitionNode actionIdentifier ifNotNil: [ :actionIdentifier | 
+			actionList selectItem: (actionList items
+					 detect: [ :action | actionIdentifier = action identifier ]
+					 ifNone: [ nil ]) ] ].
+	self updateReplacementList
 ]
 
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateActionButtons [
 
-	(self repository notNil and: [ self repository isModifiable ])
-		ifTrue: [ 
-			| selected |
-			selected := actionList selection selectedItem notNil.
-			addActionButton enable.
-			removeActionButton enabled: selected.
-			editActionButton enabled: selected ]
-		ifFalse: [ 
-			addActionButton disable.
-			removeActionButton disable.
-			editActionButton disable ]
+	| selected |
+	selected := actionList selection selectedItem notNil.
+	importActionButton enable.
+	addActionButton enable.
+	removeActionButton enabled: selected.
+	editActionButton enabled: selected
 ]
 
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateActionList [
-	actionList
-		items:
-			(self repository
-				ifNotNil: [ :repository | repository actionIdentifiers ]
-				ifNil: [ #() ])
+
+	actionList items: (simulationModel
+			 ifNotNil: [ 
+				 simulationModel actionNames
+					 collect: [ :name | 
+					 simulationModel actionDefinitionAt: name ifAbsent: [  ] ]
+					 thenSelect: #notNil ]
+			 ifNil: [ Array new ])
 ]
 
 { #category : #updating }
@@ -593,11 +522,6 @@ RMDTaskDefinitionBrowser >> updateReplacementList [
 ]
 
 { #category : #updating }
-RMDTaskDefinitionBrowser >> updateRepositoryList [
-	repositoryList items: self repositories
-]
-
-{ #category : #updating }
 RMDTaskDefinitionBrowser >> updateSourceText [
 
 	simulationModel ifNotNil: [ 
@@ -623,23 +547,23 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateTaskDefinition [
 
-	self actionIdentifier ifNotNil: [ :actionIdentifier | 
+	self actionDefinition ifNotNil: [ :actionDefinition | 
 		self taskDefinition
 			ifNil: [ 
 				self taskDefinition: (RMDTaskDefinitionNode
 						 subjectIdentifier: self agentName
 						 verbIdentifier:
 							 (verbIdentifierField text asString trim ifEmpty: [ 
-								  actionIdentifier shortName ])
+								  actionDefinition identifier ])
 						 objectIdentifier:
 						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
-						 actionIdentifier: actionIdentifier
+						 actionIdentifier: actionDefinition identifier
 						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
 						 guard: nil
 						 propertyBinds: Array new) ]
 			ifNotNil: [ :taskDefinition | 
-				taskDefinition actionIdentifier: actionIdentifier.
+				taskDefinition actionIdentifier: actionDefinition identifier.
 				(taskDefinition actionWith: simulationModel) object
 					ifNil: [ 
 						objectIdentifierField syntaxNode
@@ -662,10 +586,9 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateTemplateText [
 
-	self actionIdentifier
-		ifNotNil: [ :actionIdentifier | 
-			templateText syntaxNode:
-				(actionIdentifier resolveWith: simulationModel) ]
+	self actionDefinition
+		ifNotNil: [ :actionDefinition | 
+		templateText syntaxNode: actionDefinition ]
 		ifNil: [ templateText text: '' ]
 ]
 

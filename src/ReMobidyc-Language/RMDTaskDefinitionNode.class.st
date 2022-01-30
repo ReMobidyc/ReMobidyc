@@ -21,7 +21,7 @@ RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
 
 	<script:
 	'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
-	^ ('Cell grow namely gain_upto
+	^ ('Cell grow namely gain
 where
 	the thing -> here''s grass
 	the maximum -> ' , maxString , '
@@ -44,7 +44,7 @@ where
 RMDTaskDefinitionNode class >> goat_reproduce [
 
 	<script: '(RMDTaskDefinitionNode goat_reproduce) inspect'>
-	^ 'Goat reproduce namely reproduce@model
+	^ 'Goat reproduce namely reproduce
 	where
 	the chance -> 0.01
 	new - -> new 1 Goat
@@ -61,6 +61,7 @@ RMDTaskDefinitionNode class >> goat_respire: aString [
 	^ ('Goat respire namely lose
 where
 	the thing -> my blood_sugar
+	the minimum -> 0 [kcal]
 	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
 		  asRMDTaskDefinition
 ]
@@ -115,7 +116,7 @@ where
 RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 	<script:
 		'(RMDTaskDefinitionNode wolf_prey_on_goat: ''15000[kcal]'') inspect'>
-	^ ('Wolf prey_on@model nearest Goat within 1 [km]
+	^ ('Wolf prey_on nearest Goat within 1 [km]
 	where
 	the threshold -> ', maxString, '.') asRMDTaskDefinition
 ]
@@ -124,7 +125,7 @@ RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 RMDTaskDefinitionNode class >> wolf_reproduce [
 
 	<script: '(RMDTaskDefinitionNode wolf_reproduce) inspect'>
-	^ 'Wolf reproduce namely reproduce@model
+	^ 'Wolf reproduce namely reproduce
 	where
 	the chance -> 0.01
 	new - -> new 1 Wolf
@@ -141,6 +142,7 @@ RMDTaskDefinitionNode class >> wolf_respire: aString [
 	^ ('Wolf respire namely lose
 where
 	the thing -> my blood_sugar
+	the minimum -> 0 [kcal]
 	the amount -> min(my blood_sugar, ' , aString , ' * delta time).')
 		  asRMDTaskDefinition
 ]
@@ -183,7 +185,11 @@ RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 
 	^ action ifNil: [ 
-		  action := ((actionIdentifier resolveWith: aRMDSimulationModel)
+		  action := ((aRMDSimulationModel
+			              actionDefinitionAt: actionIdentifier
+			              ifAbsent: [ 
+				              ^ (RMDUnresolvedReferenceError on: self) signal ])
+			             copy
 			             taskGuard: guard;
 			             copyReplace: (propertyBinds collect: [ :bind | 
 						              bind placeholder -> bind replacement ])
@@ -198,7 +204,6 @@ RMDTaskDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: [ aBlock value: guard ].
 	range ifNotNil: [ aBlock value: range ].
-	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
 ]
 
@@ -302,13 +307,11 @@ RMDTaskDefinitionNode >> printOn: aStream [
 			nextPutAll: ' within '.
 		range printOn: aStream.
 		aStream space ].
-	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
-		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [ 
 		aStream
 			space;
-			nextPutAll: 'namely';
-			space.
-		actionIdentifier printOn: aStream ].
+			nextPutAll: 'namely ';
+			nextPutAll: actionIdentifier ].
 	guard ifNotNil: [ 
 		aStream
 			cr;
@@ -347,16 +350,11 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 			ifIncludedIn: aCollectionOfRMDSyntaxNode
 			addSectionTo: aCollection.
 		aStream space ].
-	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
-		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [ 
 		aStream
 			space;
-			nextPutAll: 'namely';
-			space.
-		actionIdentifier
-			printOn: aStream
-			ifIncludedIn: aCollectionOfRMDSyntaxNode
-			addSectionTo: aCollection ].
+			nextPutAll: 'namely ';
+			nextPutAll: actionIdentifier ].
 	guard ifNotNil: [ 
 		aStream
 			cr;
@@ -428,11 +426,9 @@ RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 			         ifAbsent: [ range copyReplace: aDictionary ] ].
 	propertyBinds := propertyBinds collect: [ :node | 
 		                 node copyReplace: aDictionary ].
-	actionIdentifier := aDictionary
-		                    at: actionIdentifier
-		                    ifPresent: #copy
-		                    ifAbsent: [ 
-		                    actionIdentifier copyReplace: aDictionary ]
+	aDictionary
+		at: actionIdentifier
+		ifPresent: [ :node | actionIdentifier := node copy ]
 ]
 
 { #category : #accessing }

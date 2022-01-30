@@ -936,11 +936,10 @@ RMDGrammarTest >> testSimulationTimeDefinition [
 
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinition [
+
 	| node |
-	node := grammar taskDefinition end
-		parse:
-			'
-Goat move namely walk@model
+	node := grammar taskDefinition end parse: '
+Goat move namely walk
 when my blood_sugar > my hunger
 where
 	the energy -> sugar
@@ -948,22 +947,18 @@ where
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Goat'.
-	self assert: node actionIdentifier isLocalActionIdentifierNode.
-	self assert: node actionIdentifier shortName equals: 'walk'.
+	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
 	self assert: node propertyBinds size = 2.
-	node := grammar taskDefinition
-		parse:
-			'
+	node := grammar taskDefinition parse: '
 Wolf eat Goat within 1[m]
 where
 	the energy -> my sugar.' trim.
 	self deny: node isPetit2Failure.
 	self assert: node isTaskDefinitionNode.
 	self assert: node subjectIdentifier equals: 'Wolf'.
-	self assert: node actionIdentifier isBuiltinActionIdentifierNode.
-	self assert: node actionIdentifier shortName equals: 'eat'.
+	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
 	self assert: node propertyBinds size = 1

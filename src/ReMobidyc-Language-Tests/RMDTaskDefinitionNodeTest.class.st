@@ -17,7 +17,7 @@ where
 	copy := parser taskDefinition end parse: node printString.
 	self assert: copy equals: node.
 	node := parser taskDefinition end parse:
-		        'A chase@model B within 1 [km]
+		        'A chase B within 1 [km]
 when distance b > 500[m]
 where
 	the heading -> direction b
@@ -29,7 +29,7 @@ where
 	copy := parser taskDefinition end parse: node printString.
 	self assert: copy equals: node.
 	node := parser taskDefinition end parse:
-		        'A starve@model.'.
+		        'A starve.'.
 	copy := parser taskDefinition end parse: node printString.
 	self assert: copy equals: node
 ]

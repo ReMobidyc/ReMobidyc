@@ -20,7 +20,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 		where
 		amount = 1 [kg].');
 		load: (drinkTaskDefinition := parser taskDefinition end parse:
-					                        'Horse drink@model Tank within 1[m].');
+					                        'Horse drink Tank within 1[m].');
 		load: (RMDSimulationDefinitionNode
 				 timeDefinition:
 					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')
@@ -116,7 +116,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 		where
 		amount = 1 [kg].');
 		load: (drinkTaskDefinition := parser taskDefinition end parse:
-					                        'Horse drink@model nearest Tank within 1[m].');
+					                        'Horse drink nearest Tank within 1[m].');
 		load: (RMDSimulationDefinitionNode
 				 timeDefinition:
 					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')

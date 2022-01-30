@@ -54,22 +54,12 @@ RMDSyntaxNode >> isActionDefinitionNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isActionIdentifierNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isAdditionNode [
 	^ false
 ]
 
 { #category : #testing }
 RMDSyntaxNode >> isAgentDirectiveNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isAgentReferenceNode [
 	^ false
 ]
 
@@ -109,11 +99,6 @@ RMDSyntaxNode >> isBinaryRelationNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isBuiltinActionIdentifierNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isCellDefinitionNode [
 	^ false
 ]
@@ -140,11 +125,6 @@ RMDSyntaxNode >> isConjunctionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isDifferential2VariableNode [
 	^ false
 ]
 
@@ -209,11 +189,6 @@ RMDSyntaxNode >> isLiteralNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isLocalActionIdentifierNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isNegationNode [
 	^ false
 ]
@@ -229,17 +204,7 @@ RMDSyntaxNode >> isNewPropertyVariableNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isNextVariableNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isOldNode [
 	^ false
 ]
 
@@ -260,11 +225,6 @@ RMDSyntaxNode >> isProductNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isPropertyAdditiveDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isPropertyBindNode [
 	^ false
 ]
@@ -281,11 +241,6 @@ RMDSyntaxNode >> isPropertyDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isPropertyInitializerNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyProductiveDefinitionNode [
 	^ false
 ]
 
@@ -326,11 +281,6 @@ RMDSyntaxNode >> isSubtractionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isTaskDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isTerminalTaskDefinitionNode [
 	^ false
 ]
 

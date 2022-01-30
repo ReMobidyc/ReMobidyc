@@ -80,7 +80,8 @@ RMDGrammar >> actionDefinitionUtilityPart [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> actionIdentifier [
-	^ self localActionIdentifier / self builtinActionIdentifier
+
+	^ identifier
 ]
 
 { #category : #'class access' }
@@ -370,17 +371,6 @@ RMDGrammar >> binaryRelationOperator [
 { #category : #'class access' }
 RMDGrammar >> bindNodeClass [
 	^ RMDTaskDefinitionNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> builtinActionIdentifier [
-	^ identifier
-		==> [ :string | self builtinActionIdentifierNodeClass identifier: string ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> builtinActionIdentifierNodeClass [
-	^ RMDBuiltinActionIdentifierNode 
 ]
 
 { #category : #'parsers-visualizations' }
@@ -804,17 +794,6 @@ RMDGrammar >> literalNodeClass [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> localActionIdentifier [
-	^ (identifier , '@model' asPParser)
-		==> [ :pair | self localActionIdentifierNodeClass identifier: pair first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> localActionIdentifierNodeClass [
-	^ RMDLocalActionIdentifierNode 
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> namely [
 
 	^ 'namely' asPParser trimBlanks
@@ -1102,7 +1081,7 @@ RMDGrammar >> taskDefinitionHeaderWithoutNamely [
 		  optional ==> [ :triple | 
 	  | subject verb nearest object range action |
 	  subject := triple first.
-	  verb := triple second shortName.
+	  verb := triple second.
 	  nearest := (triple third ifNotNil: #first) notNil.
 	  object := triple third ifNotNil: #second.
 	  range := triple third ifNotNil: #third.
