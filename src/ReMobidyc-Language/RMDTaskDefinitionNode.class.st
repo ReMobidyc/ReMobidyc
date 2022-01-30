@@ -185,7 +185,10 @@ RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 
 	^ action ifNil: [ 
-		  action := ((actionIdentifier resolveWith: aRMDSimulationModel)
+		  action := ((aRMDSimulationModel
+			              actionDefinitionAt: actionIdentifier
+			              ifAbsent: [ 
+				              ^ (RMDUnresolvedReferenceError on: self) signal ])
 			             copy
 			             taskGuard: guard;
 			             copyReplace: (propertyBinds collect: [ :bind | 
@@ -201,7 +204,6 @@ RMDTaskDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: [ aBlock value: guard ].
 	range ifNotNil: [ aBlock value: range ].
-	aBlock value: actionIdentifier.
 	propertyBinds do: aBlock
 ]
 
@@ -305,13 +307,11 @@ RMDTaskDefinitionNode >> printOn: aStream [
 			nextPutAll: ' within '.
 		range printOn: aStream.
 		aStream space ].
-	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
-		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [ 
 		aStream
 			space;
-			nextPutAll: 'namely';
-			space.
-		actionIdentifier printOn: aStream ].
+			nextPutAll: 'namely ';
+			nextPutAll: actionIdentifier ].
 	guard ifNotNil: [ 
 		aStream
 			cr;
@@ -350,16 +350,11 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 			ifIncludedIn: aCollectionOfRMDSyntaxNode
 			addSectionTo: aCollection.
 		aStream space ].
-	(actionIdentifier isBuiltinActionIdentifierNode and: [ 
-		 actionIdentifier shortName = verbIdentifier ]) ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [ 
 		aStream
 			space;
-			nextPutAll: 'namely';
-			space.
-		actionIdentifier
-			printOn: aStream
-			ifIncludedIn: aCollectionOfRMDSyntaxNode
-			addSectionTo: aCollection ].
+			nextPutAll: 'namely ';
+			nextPutAll: actionIdentifier ].
 	guard ifNotNil: [ 
 		aStream
 			cr;
@@ -431,11 +426,9 @@ RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 			         ifAbsent: [ range copyReplace: aDictionary ] ].
 	propertyBinds := propertyBinds collect: [ :node | 
 		                 node copyReplace: aDictionary ].
-	actionIdentifier := aDictionary
-		                    at: actionIdentifier
-		                    ifPresent: #copy
-		                    ifAbsent: [ 
-		                    actionIdentifier copyReplace: aDictionary ]
+	aDictionary
+		at: actionIdentifier
+		ifPresent: [ :node | actionIdentifier := node copy ]
 ]
 
 { #category : #accessing }

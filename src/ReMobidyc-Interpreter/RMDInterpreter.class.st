@@ -78,12 +78,6 @@ RMDInterpreter class >> sugarScape [
 	^ interpreter
 ]
 
-{ #category : #'accessing - definitions' }
-RMDInterpreter >> actionIdentifiers [
-	^ self actionNames
-		collect: [ :actionName | RMDLocalActionIdentifierNode identifier: actionName ]
-]
-
 { #category : #'accessing - libraries' }
 RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary

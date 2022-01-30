@@ -82,8 +82,6 @@ RMDGrammar >> actionDefinitionUtilityPart [
 RMDGrammar >> actionIdentifier [
 
 	^ identifier
-	  ==> [ :string | 
-	  self localActionIdentifierNodeClass identifier: string ]
 ]
 
 { #category : #'class access' }
@@ -795,11 +793,6 @@ RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
 ]
 
-{ #category : #'class access' }
-RMDGrammar >> localActionIdentifierNodeClass [
-	^ RMDLocalActionIdentifierNode 
-]
-
 { #category : #'parsers-definitions' }
 RMDGrammar >> namely [
 
@@ -1088,7 +1081,7 @@ RMDGrammar >> taskDefinitionHeaderWithoutNamely [
 		  optional ==> [ :triple | 
 	  | subject verb nearest object range action |
 	  subject := triple first.
-	  verb := triple second shortName.
+	  verb := triple second.
 	  nearest := (triple third ifNotNil: #first) notNil.
 	  object := triple third ifNotNil: #second.
 	  range := triple third ifNotNil: #third.

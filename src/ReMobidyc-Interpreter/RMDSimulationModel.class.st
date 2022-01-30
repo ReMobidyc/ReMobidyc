@@ -326,10 +326,8 @@ RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
 		put: aRMDActionDefinitionNode.
 	taskDefinitions do: [ :task | 
 		task isTaskDefinitionNode ifTrue: [ 
-			(task actionIdentifier isLocalActionIdentifierNode and: [ 
-				 task actionIdentifier shortName
-				 = aRMDActionDefinitionNode identifier ]) ifTrue: [ 
-				task resetAction ] ] ].
+			task actionIdentifier = aRMDActionDefinitionNode identifier 
+				ifTrue: [ task resetAction ] ] ].
 	^ aRMDActionDefinitionNode
 ]
 
@@ -546,8 +544,6 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 		ifTrue: [ ^ self addActionDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isTaskDefinitionNode
 		ifTrue: [ ^ self addTaskDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isTerminalTaskDefinitionNode
-		ifTrue: [ ^ self addTaskDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isSimulationDefinitionNode
 		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
@@ -574,10 +570,8 @@ RMDSimulationModel >> removeActionDefinition: aRMDActionDefinitionNode ifAbsent:
 		ifAbsent: [ ^ errorBlock value ].
 	taskDefinitions do: [ :task | 
 		task isTaskDefinitionNode ifTrue: [ 
-			(task actionIdentifier isLocalActionIdentifierNode and: [ 
-				 task actionIdentifier shortName
-				 = aRMDActionDefinitionNode identifier ]) ifTrue: [ 
-				task resetAction ] ] ].
+			task actionIdentifier = aRMDActionDefinitionNode identifier 
+				ifTrue: [ task resetAction ] ] ].
 	^ aRMDActionDefinitionNode
 ]
 

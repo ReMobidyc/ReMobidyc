@@ -148,14 +148,7 @@ RMDTaskDefinitionBrowser >> addAction [
 	newActionDef := RMDActionDefinitionNode template.
 	newActionDef asPresenter openDialogWithSpec okAction: [ 
 		self simulationModel ifNotNil: [ :model | 
-			self actionIdentifier
-				ifNil: [ 
-					| actionIdentifier |
-					actionIdentifier := RMDLocalActionIdentifierNode identifier:
-						                    newActionDef identifier.
-					actionIdentifier writeActionDefinition: newActionDef in: model ]
-				ifNotNil: [ :actionIdentifier | 
-					actionIdentifier writeActionDefinition: newActionDef in: model ].
+			model addActionDefinition: newActionDef.
 			self taskDefinition ifNotNil: #resetAction.
 			self
 				updateActionList;
@@ -167,21 +160,23 @@ RMDTaskDefinitionBrowser >> addAction [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> addReplacement [
 
-	self taskDefinition ifNotNil: [ :taskDefinition | 
-		| bindEditor |
-		(bindEditor := RMDPropertyBindEditor
-			               actionDefinition:
-			               (taskDefinition actionIdentifier resolveWith:
-				                simulationModel)
-			               except:
-			               (taskDefinition propertyBinds collect: #placeholder))
-			openDialogWithSpec okAction: [ 
-			bindEditor propertyBindNode ifNotNil: [ :bindNode | 
-				taskDefinition propertyBinds:
-					(taskDefinition propertyBinds copyWith: bindNode).
-				self
-					updateReplacementList;
-					updateSourceText ] ] ]
+	self simulationModel ifNotNil: [ :model | 
+		self taskDefinition ifNotNil: [ :taskDefinition | 
+			(model
+				 actionDefinitionAt: taskDefinition actionIdentifier
+				 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
+				| bindEditor |
+				(bindEditor := RMDPropertyBindEditor
+					               actionDefinition: actionDefinition
+					               except:
+					               (taskDefinition propertyBinds collect:
+						                #placeholder)) openDialogWithSpec okAction: [ 
+					bindEditor propertyBindNode ifNotNil: [ :bindNode | 
+						taskDefinition propertyBinds:
+							(taskDefinition propertyBinds copyWith: bindNode).
+						self
+							updateReplacementList;
+							updateSourceText ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -201,12 +196,11 @@ RMDTaskDefinitionBrowser >> editAction [
 		| newActionDef |
 		newActionDef := oldActionDef copy.
 		newActionDef asPresenter openDialogWithSpec okAction: [ 
-			self actionIdentifier ifNotNil: [ :actionIdentifier | 
+			self actionDefinition ifNotNil: [ :actionDefinition | 
 				self simulationModel ifNotNil: [ :model | 
-					actionIdentifier
-						updateActionDefinition: oldActionDef
-						to: newActionDef
-						in: model.
+					model
+						removeActionDefinition: oldActionDef ifAbsent: [  ];
+						addActionDefinition: newActionDef.
 					self taskDefinition ifNotNil: #resetAction.
 					self
 						updateActionList;
@@ -218,31 +212,33 @@ RMDTaskDefinitionBrowser >> editAction [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> editReplacement [
 
-	replacementList selection selectedItem ifNotNil: [ :oldBind | 
-		self taskDefinition ifNotNil: [ :taskModel | 
-			| bindEditor |
-			bindEditor := RMDPropertyBindEditor
-				              actionDefinition:
-				              (taskModel actionIdentifier resolveWith:
-					               simulationModel)
-				              except: (taskModel propertyBinds
-						               select: [ :bind | bind ~= oldBind ]
-						               thenCollect: #placeholder).
-			bindEditor propertyBindNode: oldBind.
-			bindEditor openDialogWithSpec okAction: [ 
-				bindEditor propertyBindNode ifNotNil: [ :newBind | 
-					| index |
-					index := taskModel propertyBinds indexOf: oldBind.
-					index > 0
-						ifTrue: [ 
-							taskModel propertyBinds at: index put: newBind.
-							taskModel resetAction ]
-						ifFalse: [ 
-							taskModel propertyBinds:
-								(taskModel propertyBinds copyWith: newBind) ].
-					self
-						updateReplacementList;
-						updateSourceText ] ] ] ]
+	self simulationModel ifNotNil: [ :model | 
+		replacementList selection selectedItem ifNotNil: [ :oldBind | 
+			self taskDefinition ifNotNil: [ :taskDefinition | 
+				(model
+					 actionDefinitionAt: taskDefinition actionDefinition
+					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
+					| bindEditor |
+					bindEditor := RMDPropertyBindEditor
+						              actionDefinition: actionDefinition
+						              except: (taskDefinition propertyBinds
+								               select: [ :bind | bind ~= oldBind ]
+								               thenCollect: #placeholder).
+					bindEditor propertyBindNode: oldBind.
+					bindEditor openDialogWithSpec okAction: [ 
+						bindEditor propertyBindNode ifNotNil: [ :newBind | 
+							| index |
+							index := taskDefinition propertyBinds indexOf: oldBind.
+							index > 0
+								ifTrue: [ 
+									taskDefinition propertyBinds at: index put: newBind.
+									taskDefinition resetAction ]
+								ifFalse: [ 
+									taskDefinition propertyBinds:
+										(taskDefinition propertyBinds copyWith: newBind) ].
+							self
+								updateReplacementList;
+								updateSourceText ] ] ] ] ] ]
 ]
 
 { #category : #operations }
@@ -461,8 +457,7 @@ RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 	taskDefinitionNode ifNotNil: [ 
 		taskDefinitionNode actionIdentifier ifNotNil: [ :actionIdentifier | 
 			actionList selectItem: (actionList items
-					 detect: [ :action | 
-					 actionIdentifier shortName = action identifier ]
+					 detect: [ :action | actionIdentifier = action identifier ]
 					 ifNone: [ nil ]) ] ].
 	self updateReplacementList
 ]
@@ -562,17 +557,13 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 								  actionDefinition identifier ])
 						 objectIdentifier:
 						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
-						 actionIdentifier:
-						 (RMDLocalActionIdentifierNode identifier:
-							  actionDefinition identifier)
+						 actionIdentifier: actionDefinition identifier
 						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
 						 guard: nil
 						 propertyBinds: Array new) ]
 			ifNotNil: [ :taskDefinition | 
-				taskDefinition actionIdentifier:
-					(RMDLocalActionIdentifierNode identifier:
-						 actionDefinition identifier).
+				taskDefinition actionIdentifier: actionDefinition identifier.
 				(taskDefinition actionWith: simulationModel) object
 					ifNil: [ 
 						objectIdentifierField syntaxNode
