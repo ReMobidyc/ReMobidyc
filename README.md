@@ -39,8 +39,21 @@ EpMonitor disableDuring: [
 ### 1. Simplified SugarScape
 ![animation of sugascape example](images/SugarScape.png)
 
+Each cell grows grass (indicated by green rect) and each goat (yellow dot) eats grass.
+This example exhibits the interaction between an animat and the cell where the animat is located.
+
 ### 2. Goat and Wolf
 ![animation of goat and wolf example](images/GoatAndWolf.png)
+
+Each cell grows grass (indicated by green rect), each goat (yellow dot) eats grass and each wolf (red dot) preys on its nearest goat.
+This example exhibits the interaction between two animats.
+
+### 3. Grasshopper
+![animation of grasshoppers example](images/Grasshoppers.png)
+
+Each cell grows grass(indicated by green rect), a grasshopper (yellow dot) eats grass.
+When a grasshopper is matured by age, it lays 5 eggs (cyan dots), and each egg hatches in 20 days.
+This example exhibits life stages of individuals.
 
 ## Background
 Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
