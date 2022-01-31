@@ -131,7 +131,7 @@ RMDActionDefinitionBrowser >> editDirectives [
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isStageDirectiveNode ]).
 				              [ 
-				              RMDNewDirectiveNode new
+				              RMDStageDirectiveNode new
 					              animatIdentifier:
 						              self requestAnimatIdentifierForStageDirective;
 					              yourself ] }.

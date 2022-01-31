@@ -15,7 +15,7 @@ RMDCellInitializerNode class >> empty [
 	^ self
 		xDivisions: 1
 		yDivisions: 1
-		length: '0 [m]' asRMDExpression
+		length: '1 [m]' asRMDExpression
 		cellPropertyInitializers: Array new
 ]
 

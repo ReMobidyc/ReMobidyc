@@ -522,6 +522,7 @@ RMDSimulationModel >> importModel [
 
 { #category : #initialization }
 RMDSimulationModel >> initialize [
+
 	super initialize.
 	simulationDefinition := RMDSimulationDefinitionNode empty.
 	cellDefinition := RMDCellDefinitionNode empty.
@@ -529,7 +530,7 @@ RMDSimulationModel >> initialize [
 	animatDefinitions := Dictionary new.
 	actionDefinitions := Dictionary new.
 	taskDefinitions := OrderedCollection new.
-	renderers := OrderedCollection new.
+	renderers := OrderedCollection new
 ]
 
 { #category : #accessing }

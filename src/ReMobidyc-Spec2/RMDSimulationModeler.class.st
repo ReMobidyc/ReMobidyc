@@ -40,7 +40,14 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 				parent: 'ReMobidyc';
 				label: 'Modeler';
 				action: [ 
-					(RMDSimulationModeler on: RMDSimulationModel new) openWithSpec ];
+					(RMDSimulationModeler on: (RMDSimulationModel new
+								  addRenderer: (RMDBackgroundColorRenderer color: Color black);
+								  addRenderer: (RMDCellColorAlphaRenderer
+										   color: Color green
+										   alpha: '0.5' asRMDExpression
+										   between: '0.0' asRMDExpression
+										   and: '1.0' asRMDExpression);
+								  yourself)) openWithSpec ];
 				help: 'Open a modeler window with a new simulation model'.
 			(aBuilder item: #Examples)
 				parent: 'ReMobidyc';
