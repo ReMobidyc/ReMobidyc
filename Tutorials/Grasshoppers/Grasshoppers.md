@@ -12,21 +12,21 @@ In the menu bar, find "re:Mobidyc" submenu to select "Modeller".
 
 ## 2. Define Cell
 
-We want grasshoppers fly to rich grass, so in this model each cell has the amount of grass as a property.
+We want grasshoppers fly to rich grass, so in this model each cell has the amount of grass as an attribute.
 The unit of amount could be expressed in weight (such as `kg`), height (such as `cm`), or some other units.
 In this model, we consider it's nutrition and use `kcal` to measure the amount of grass.
 
-### the grass property
+### the grass attribute
 
-Cell initially does not have any property.
+Cell initially does not have any attribute.
 We first select Cell definition page by clicking at Cell tab.
-Then we add the `grass` property to Cell by pressing the green '+' button and fill `grass` and `kcal` into Add property to Cell dialog.
+Then we add the `grass` attribute to Cell by pressing the green '+' button and fill `grass` and `kcal` into Add attribute to Cell dialog.
 
-<img alt="add the grass property" src="add-grass-property-in-Cell.png" width=600>
+<img alt="add the grass attribute" src="add-grass-attribute-in-Cell.png" width=600>
 
 The Cell definition page will look as below.
 
-<img alt="Cell definition with the grass property" src="grass-added.png" width=600>
+<img alt="Cell definition with the grass attribute" src="grass-added.png" width=600>
 
 ### visualization
 
@@ -36,7 +36,7 @@ The visualization can be set at the Visualization section of the Cell definition
 <img alt="Cell visualization" src="cell-visualization.png" width=600>
 
 Fill in `my grass` after the "with alpha =" label, and `0 [kcal]` and `100 [kcal]` into the following fields.
-This visualization renders each cell with green blended with black background proportional to the cell's `grass` property.
+This visualization renders each cell with green blended with black background proportional to the cell's `grass` attribute.
 When the grass is `0 [kcal]` the cell will look black, and `100 [kcal]` will color the cell in fully green.
 
 ## 3. Define Grasshopper and Egg as Animats
@@ -52,25 +52,25 @@ Selecting the green '+' tab will bring you the new animat page.
 
 Type "Grasshopper" and then press the green "+" button on the right to create a new animat named `Grasshopper`.
 
-### age property of Grasshopper
+### age attribute of Grasshopper
 
 The `Grasshopper` tab brings you the definition page of the Grasshopper animat.
-To judge maturity of grasshopper to lay eggs, we define the `age` property of the Grasshopper animat.
+To judge maturity of grasshopper to lay eggs, we define the `age` attribute of the Grasshopper animat.
 
 <img alt="Grasshopper definition" src="Grasshopper-initial.png" width=600>
 
-Pressing the green "+" button below the Property list and type `age` and `[day]` to define the age property.
+Pressing the green "+" button below the Attribute list and type `age` and `[day]` to define the age attribute.
 
-<img alt="the age property of Grasshopper" src="Grasshopper-age-added.png" width=600>
+<img alt="the age attribute of Grasshopper" src="Grasshopper-age-added.png" width=600>
 
 ### Egg animat
 
 We also have `Egg` as an animat.
 Create it on the new animat page.
 
-### age property of Egg
+### age attribute of Egg
 
-Again, define the `age` property in the same way as the one in `Grasshopper` animat.
+Again, define the `age` attribute in the same way as the one in `Grasshopper` animat.
 
 <img alt="Egg" src="Egg-age-added.png" width=600>
 
@@ -140,7 +140,7 @@ We will define five tasks of the `Grasshopper` animat, namely `age`, `move`, `ea
 
 ### the "age" task of Grasshopper
 
-We want to manage the maturity of a grasshopper in the `age` property.
+We want to manage the maturity of a grasshopper in the `age` attribute.
 Although it can be seen as a special case of `gain`, we define it as a user-defined action.
 
 Select the `Grasshopper` tab and click at the green "+" button at the tasks section to open the task definition browser.
@@ -149,10 +149,10 @@ Clicking at the green "+" button below the Actions list will open an Action defi
 <img alt="action editor" src="action-definition-initial.png" width=400>
 
 In the position of `verb`, enter `age` which is the name of the action.
-We then define the change definition on the `age` property.
-Click at the green "+" button ABOVE the `where` label, and then the Property definition dialog will open.
+We then define the change definition on the `age` attribute.
+Click at the green "+" button ABOVE the `where` label, and then the Attribute definition dialog will open.
 
-<img alt="add property definition" src="action-property-definition.png" width=400>
+<img alt="add attribute definition" src="action-attribute-definition.png" width=400>
 
 Select `my` and Δ in the droplists, and enter `age` and `delta time`.
 The `age` action will be defined as follows.
@@ -166,7 +166,7 @@ We simply select the `age` action and press the `OK` button in the task definiti
 
 ### the "move" task
 
-The `move` task takes a grasshopper to richer field, i.e. the cell with more `grass` property.
+The `move` task takes a grasshopper to richer field, i.e. the cell with more `grass` attribute.
 The re:mobidyc's built-in action repository provides the `move` action that allows you to specify the direction and the speed.
 Click at the green "+" button at the task section to open the task definition browser.
 
@@ -240,7 +240,7 @@ Then you'll be asked to enter the Animat name, but leave it as it is and press O
 
 First, enter `lay_egg` at the first field to name the action.
 Then, enter `my agen > 50 [day]` to specify the condition that this action should be taken.
-We also need to define a property definition to reset the `age` property of the new eggs.
+We also need to define a attribute definition to reset the `age` attribute of the new eggs.
 Click the green "+" button above the "where" label and select `new` and enter `age` and `0 [day]` to make `new age' = 0 [day]`.
 Press OK to accept the new definition of the `lay_egg` task.
 
@@ -252,32 +252,63 @@ Press OK to finish the definition.
 
 ## 6. Define tasks of Egg
 
-![initial definition of Egg](Egg-definition-initial.png)
+Now we define two tasks of Egg, namely `age` and `hatch`.
+We start with the Egg definition page as below.
+
+<img alt="initial definition of Egg" src="Egg-definition-initial.png" width=600>
 
 ### the "age" task
 
-![definition of age task of Egg](task-definition-age-Egg.png)
+The `age` task of the `Egg` animat is same as the `Grasshopper` animat's.
+Open the task definition browser by clicking at the green "+" button below the task list.
+Then, select the `age` action that we defined before and press the OK button to accept the definition.
+
+<img alt="definition of age task of Egg" src="task-definition-age-Egg.png" width=600>
 
 ### the "hatch" task
 
-![directives for hatch action](directive-for-hatch.png)
+The `hatch` task transitions the lifehistory stage from `Egg` to `Grasshopper`.
+The transition is performed by the `stage` lifehistory directive.
 
-![stage directive](stage-directive.png)
+Open the action definition editor by clicking at the green "+" button at the Actions list of the task definition browser.
+Press the directive button labelled "no directive" and check the `stage` directive.
 
-![definition of hatch action](action-definition-hatch.png)
+<img alt="directives for hatch action" src="directive-for-hatch.png" width=400>
 
-![definition of hatch task](task-definition-hatch.png)
+You'll be asked for the animat when you press OK button.
+Type `Grasshopper` and press OK to tell that an egg will become a grasshopper by the `hatch` task.
+
+<img alt="stage directive" src="stage-directive.png" width=400>
+
+We want the egg to hatch after 20 days.
+This can be specified in the "when" clause as `my age > 20 [day]`.
+Then the action definition will look as below.
+
+<img alt="definition of hatch action" src="action-definition-hatch.png" width=400>
+
+Press OK button, and the task definition of the `hatch` task will look as below.
+
+<img alt="definition of hatch task" src="task-definition-hatch.png" width=600>
 
 
 ## 7. Set up simulation
 
-![initial time&space](time-space-definition.png)
+So far we have defined the model. Now we can define the simulation settings including the initial conditions of agents.
+Select the `Time & Space` page to set up the simulation settings.
+
+<img alt="initial time&space" src="time-space-definition.png" width=600>
 
 ### time
+
+The first line defines the length and time step of the simulation.
+Please set as the following.
 
 ```during 1.0 year step by 1.0 day```
 
 ### Cell
+
+The second and the third lines specify the structure of the space and initial values of the `grass` attribute.
+Please set as the following.
 
 ```
 10 x 10 of 1.0 km Cell with
@@ -286,7 +317,15 @@ Press OK to finish the definition.
 
 ### Grasshopper
 
-![choose animat](choose-animat-to-initialize.png)
+We need to place several grasshoppers and/or eggs.
+This time, we place 10 grasshoppers at the random positions with random ages (0-30 days old)
+
+To place Animat, press the green "+" button to append an animat initialization.
+You'll be asked which animat you want to initialize, and you will answer `Grasshopper`.
+
+<img alt="choose animat" src="choose-animat-to-initialize.png" width=400>
+
+Then you can define the initializer as follows.
 
 ```
 10 Grasshopper with
@@ -295,7 +334,17 @@ Press OK to finish the definition.
   age = uniform 0 [day] to 30 [day]
 ```
 
-![final simulation definition](simulation-definition.png)
+Now the `Time & Space` page will look as below.
+
+<img alt="final simulation definition" src="simulation-definition.png" width=600>
 
 ## 8. Run the simulation
 
+Pressing "Run" button will open the Observatory.
+
+<img alt="Observatory" src="Observatory-initial.png" width=600>
+
+Enjoy animation by clicking the Run button at the top.
+You can see the resulting data in forms of tables and charts.
+You can also save the animation as APNG by clicking the camera icon on the right.
+(Recording APNG takes for a while.)
