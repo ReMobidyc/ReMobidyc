@@ -136,13 +136,14 @@ Press the "OK" button and then the Cell definition page will look as follows.
 
 ## 5. Define tasks of Grasshopper
 
-We will define five tasks of the `Grasshopper` animat, namely `age`, `move`, `eat`, starve`, and `lay_egg`.
+We will define five tasks of the `Grasshopper` animat, namely `age`, `move`, `eat`, `starve`, and `lay_egg`.
 
 ### the "age" task of Grasshopper
 
 We want to manage the maturity of a grasshopper in the `age` property.
 Although it can be seen as a special case of `gain`, we define it as a user-defined action.
 
+Select the `Grasshopper` tab and click at the green "+" button at the tasks section to open the task definition browser.
 Clicking at the green "+" button below the Actions list will open an Action definition dialog.
 
 <img alt="action editor" src="action-definition-initial.png" width=400>
@@ -180,13 +181,41 @@ For `the speed`, we use `uniform 0 [m/day] to 500 [m/day]` that gives a random n
 
 ### the "eat" task
 
-![lose action](import-lose-action.png)
+In this mode, the `eat` task consumes the grass in the field.
+So, we can define the `eat` task using the `lose` action provided in the built-in repository.
 
-![eat task](task-definition-eat.png)
+First, select the `Grasshopper` tab and click at the green "+" button at the tasks section to open the task definition browser.
+Import the `lose` action using the repository button in the action section.
+
+<img alt="import lose action" src="import-lose-action.png" width=600>
+
+Then we specialize the `lose` action into the `eat` task.
+First, enter `eat` under the Task Specialization label instead of lose.
+Then provide the following replacements.
+
+```
+the thing -> here's grass
+the minimum -> 0 [kcal]
+the amount -> 1 [kcal/day] * delta time
+```
+
+This will have a grasshopper eat the grass at the rate of 1 [kcal/day] unless the grass is below `0 [kcal]`.
+The resulting task definition will look as below.
+
+<img alt="eat task" src="task-definition-eat.png" width=600>
 
 ### the "starve" task
 
-![eat task](task-definition-starve.png)
+In this model, a grasshopper dies when the field has no food to eat (namely grass).                
+The `starve` action is provided in the built-in repository and we can give the following replacements.
+
+```
+the vitality -> here's grass
+the minimum -> 1 [kcal]
+```
+The resulting `starve` task will look as follows.
+
+<img alt="eat task" src="task-definition-starve.png" width=600>
 
 ### the "lay_egg" task
 
