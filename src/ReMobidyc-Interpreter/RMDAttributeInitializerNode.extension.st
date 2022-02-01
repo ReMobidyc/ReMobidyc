@@ -1,7 +1,7 @@
-Extension { #name : #RMDPropertyInitializerNode }
+Extension { #name : #RMDAttributeInitializerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyInitializerNode >> evalIn: aRMDInterpreter [
+RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 	aRMDInterpreter
 		initializeVariable: identifier
 		with: (expression evalIn: aRMDInterpreter)
@@ -9,7 +9,7 @@ RMDPropertyInitializerNode >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyInitializerNode >> typecheckIn: aRMDInterpreter [
+RMDAttributeInitializerNode >> typecheckIn: aRMDInterpreter [
 	^ [ (aRMDInterpreter
 		typeOfVariable: identifier
 		agent: nil

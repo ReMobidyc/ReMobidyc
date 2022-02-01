@@ -27,7 +27,7 @@ RMDWorldInitializerPresenter >> newLayout [
 		             yourself.
 
 	node ifNotNil: [ 
-		node propertyInitializers do: [ :initializer | 
+		node attributeInitializers do: [ :initializer | 
 			newLayout
 				add: (initializer asPresenter
 						 disableIdentifier;
@@ -38,5 +38,5 @@ RMDWorldInitializerPresenter >> newLayout [
 
 { #category : #accessing }
 RMDWorldInitializerPresenter >> preferredHeight [
-	^ (node propertyInitializers size + 1) * self class inputTextHeight
+	^ (node attributeInitializers size + 1) * self class inputTextHeight
 ]

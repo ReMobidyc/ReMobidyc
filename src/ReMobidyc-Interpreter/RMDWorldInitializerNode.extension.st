@@ -4,6 +4,6 @@ Extension { #name : #RMDWorldInitializerNode }
 RMDWorldInitializerNode >> typecheckIn: aRMDInterpreter [
 	aRMDInterpreter
 		withContext: aRMDInterpreter newTypecheckContextForWorld
-		do: [ propertyInitializers
+		do: [ attributeInitializers
 				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
 ]

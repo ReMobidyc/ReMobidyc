@@ -7,7 +7,7 @@ Class {
 { #category : #tests }
 RMDPropertyDeclarationNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser propertyDeclaration end parse: 'blood_sugar [kcal]'.
+	node := parser attributeDeclaration end parse: 'blood_sugar [kcal]'.
 	replacement := Dictionary new
 		at: 'blood_sugar' put: 'energy';
 		at: (parser type end parse: '[kcal]')
@@ -15,5 +15,5 @@ RMDPropertyDeclarationNodeTest >> testCopyReplace [
 		yourself.
 	self
 		assert: (node copyReplace: replacement)
-		equals: (parser propertyDeclaration end parse: 'energy [J]')
+		equals: (parser attributeDeclaration end parse: 'energy [J]')
 ]

@@ -2,7 +2,7 @@ Extension { #name : #RMDSpeciesInitializerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDSpeciesInitializerNode >> evalIn: aRMDInterpreter [
-	propertyInitializers
+	attributeInitializers
 		do: [ :initializer | initializer evalIn: aRMDInterpreter ]
 ]
 

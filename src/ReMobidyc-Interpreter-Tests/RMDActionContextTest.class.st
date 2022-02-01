@@ -86,7 +86,7 @@ Cell with
 	context location: 10 definition: cell agent: 'here'.
 	self
 		assert: (context getMemoryAddressFor: 'grass' agent: 'here' ifAbsent: [ nil ])
-		equals: (cell propertyOffsets at: 'grass') + 10
+		equals: (cell attributeOffsets at: 'grass') + 10
 ]
 
 { #category : #tests }
@@ -138,10 +138,10 @@ Bar is Animat with
 		object: 20 definition: bar.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (foo propertyOffsets at: 'sugar') + 10.
+		equals: (foo attributeOffsets at: 'sugar') + 10.
 	self
 		assert: (context getMemoryAddressFor: 'salt' agent: 'bar' ifAbsent: [ nil ])
-		equals: (bar propertyOffsets at: 'salt') + 20.
+		equals: (bar attributeOffsets at: 'salt') + 20.
 	self assert: context objectDefinition equals: bar
 ]
 
@@ -169,10 +169,10 @@ Foo is Animat with
 	context subject: 1 definition: animat.
 	self
 		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'x') + 1.
+		equals: (animat attributeOffsets at: 'x') + 1.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animat propertyOffsets at: 'sugar') + 1
+		equals: (animat attributeOffsets at: 'sugar') + 1
 ]
 
 { #category : #tests }
@@ -208,5 +208,5 @@ World with
 				getMemoryAddressFor: 'temperature'
 				agent: 'world'
 				ifAbsent: [ nil ])
-		equals: (world propertyOffsets at: 'temperature') + 1
+		equals: (world attributeOffsets at: 'temperature') + 1
 ]

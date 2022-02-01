@@ -5,10 +5,6 @@ Class {
 		'simulationModel',
 		'visualizer',
 		'animat',
-		'propertyList',
-		'addPropertyButton',
-		'removePropertyButton',
-		'editPropertyButton',
 		'rendererList',
 		'addRendererButton',
 		'removeRendererButton',
@@ -17,7 +13,11 @@ Class {
 		'addTaskButton',
 		'taskList',
 		'editTaskButton',
-		'removeTaskButton'
+		'removeTaskButton',
+		'addAttributeButton',
+		'editAttributeButton',
+		'attributeList',
+		'removeAttributeButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -30,24 +30,18 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 		  add: (SpPanedLayout newHorizontal
 				   positionOfSlider: 0.5;
 				   add: (SpBoxLayout newVertical
-						    add: 'Properties' expand: false;
-						    add: #propertyList;
+						    add: 'Attributes' expand: false;
+						    add: #attributeList;
 						    add: (SpBoxLayout newHorizontal
-								     add: #addPropertyButton width: self buttonHeight;
-								     add: #removePropertyButton width: self buttonHeight;
-								     add: #editPropertyButton width: self buttonHeight;
+								     add: #addAttributeButton width: self buttonHeight;
+								     add: #removeAttributeButton width: self buttonHeight;
+								     add: #editAttributeButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
 						    add: 'Visualization' expand: false;
 						    add: #rendererList;
-						    "add: (SpBoxLayout newHorizontal
-								     add: #addRendererButton width: self buttonHeight;
-								     add: #removeRendererButton width: self buttonHeight;
-								     add: #editRendererButton width: self buttonHeight;
-								     yourself)
-						    height: self buttonHeight;"
 						    yourself);
 				   yourself);
 		  add: (SpBoxLayout newVertical
@@ -68,24 +62,24 @@ RMDAgentDefinitionBrowser class >> defaultSpec [
 		  yourself
 ]
 
-{ #category : #private }
-RMDAgentDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: anotherString [
-	^ self subclassResponsibility 
-]
-
 { #category : #operations }
-RMDAgentDefinitionBrowser >> addProperty [
-	| propertyNode |
-	(propertyNode := RMDPropertyDeclarationNode
+RMDAgentDefinitionBrowser >> addAttribute [
+	| attributeNode |
+	(attributeNode := RMDAttributeDeclarationNode
 		identifier: ''
 		unit: RMDUnit noDimension) asPresenter openDialogWithSpec
-		title: 'Add property to ' , self agentName;
+		title: 'Add attribute to ' , self agentName;
 		okAction: [ self
 				definitionDo: [ :definition | 
 					definition
-						propertyDeclarations: (definition propertyDeclarations copyWith: propertyNode).
-					self addInitializerWithProperty: propertyNode animat: animat.
-					self updatePropertyList ] ]
+						attributeDeclarations: (definition attributeDeclarations copyWith: attributeNode).
+					self addInitializerWithAttribute: attributeNode animat: animat.
+					self updateAttributeList ] ]
+]
+
+{ #category : #private }
+RMDAgentDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
+	^ self subclassResponsibility 
 ]
 
 { #category : #operations }
@@ -119,24 +113,24 @@ RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #operations }
-RMDAgentDefinitionBrowser >> editProperty [
-	propertyList selection selectedItem
-		ifNotNil: [ :originalPropertyNode | 
-			| newPropertyNode |
-			newPropertyNode := originalPropertyNode copy.
-			newPropertyNode asPresenter openDialogWithSpec
-				title: 'Edit property of ' , self agentName;
+RMDAgentDefinitionBrowser >> editAttribute [
+	attributeList selection selectedItem
+		ifNotNil: [ :originalAttributeNode | 
+			| newAttributeNode |
+			newAttributeNode := originalAttributeNode copy.
+			newAttributeNode asPresenter openDialogWithSpec
+				title: 'Edit attribute of ' , self agentName;
 				okAction: [ self
 						definitionDo: [ :definition | 
 							definition
-								propertyDeclarations:
-									((definition propertyDeclarations copyWithout: originalPropertyNode)
-										copyWith: newPropertyNode).
+								attributeDeclarations:
+									((definition attributeDeclarations copyWithout: originalAttributeNode)
+										copyWith: newAttributeNode).
 							self
-								removeInitializerWithProperty: originalPropertyNode
+								removeInitializerWithAttribute: originalAttributeNode
 									animat: animat;
-								addInitializerWithProperty: newPropertyNode animat: animat.
-							self updatePropertyList ] ] ]
+								addInitializerWithAttribute: newAttributeNode animat: animat.
+							self updateAttributeList ] ] ]
 ]
 
 { #category : #operations }
@@ -169,7 +163,7 @@ RMDAgentDefinitionBrowser >> editTask [
 RMDAgentDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
-	propertyList := self newTable
+	attributeList := self newTable
 		                beSingleSelection;
 		                beResizable;
 		                showColumnHeaders;
@@ -185,26 +179,26 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 					                 unit hasDimension
 						                 ifTrue: [ unit printString ]
 						                 ifFalse: [ '' ] ]);
-		                whenModelChangedDo: [ propertyList selectItem: nil ];
+		                whenModelChangedDo: [ attributeList selectItem: nil ];
 		                whenSelectionChangedDo: [ 
 			                | selected |
-			                selected := propertyList selection selectedItem
+			                selected := attributeList selection selectedItem
 				                            notNil.
-			                removePropertyButton enabled: selected.
-			                editPropertyButton enabled: selected ];
+			                removeAttributeButton enabled: selected.
+			                editAttributeButton enabled: selected ];
 		                yourself.
-	addPropertyButton := self newButton
+	addAttributeButton := self newButton
 		                     icon: self addIcon;
-		                     action: [ self addProperty ];
+		                     action: [ self addAttribute ];
 		                     yourself.
-	removePropertyButton := self newButton
+	removeAttributeButton := self newButton
 		                        icon: self removeIcon;
-		                        action: [ self removeProperty ];
+		                        action: [ self removeAttribute ];
 		                        disable;
 		                        yourself.
-	editPropertyButton := self newButton
+	editAttributeButton := self newButton
 		                      icon: self editIcon;
-		                      action: [ self editProperty ];
+		                      action: [ self editAttribute ];
 		                      disable;
 		                      yourself.
 	rendererList := self newComponentList
@@ -280,28 +274,28 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
-{ #category : #private }
-RMDAgentDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: anotherString [
-	^ self subclassResponsibility 
-]
-
 { #category : #operations }
-RMDAgentDefinitionBrowser >> removeProperty [
-	propertyList selection selectedItem
-		ifNotNil: [ :propertyNode | 
+RMDAgentDefinitionBrowser >> removeAttribute [
+	attributeList selection selectedItem
+		ifNotNil: [ :attributeNode | 
 			(self newLabel
-				label: 'OK to remove ' , propertyNode identifier , '?';
+				label: 'OK to remove ' , attributeNode identifier , '?';
 				yourself) openDialogWithSpec
-				title: 'Remove property from ' , self agentName;
+				title: 'Remove attribute from ' , self agentName;
 				extent: 400 @ (self class buttonHeight * 3.5);
 				okAction: [ self
 								definitionDo: [ :definitionNode | 
 									definitionNode
-										propertyDeclarations: (definitionNode propertyDeclarations copyWithout: propertyNode).
+										attributeDeclarations: (definitionNode attributeDeclarations copyWithout: attributeNode).
 									self
-										removeInitializerWithProperty: propertyNode
+										removeInitializerWithAttribute: attributeNode
 										animat: animat.
-									self updatePropertyList ] ] ]
+									self updateAttributeList ] ] ]
+]
+
+{ #category : #private }
+RMDAgentDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
+	^ self subclassResponsibility 
 ]
 
 { #category : #operations }
@@ -337,15 +331,15 @@ RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 { #category : #private }
 RMDAgentDefinitionBrowser >> setSimulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
-	self updatePropertyList.
+	self updateAttributeList.
 	self updateRendererList.
 	self updateTaskList
 ]
 
 { #category : #updating }
-RMDAgentDefinitionBrowser >> updatePropertyList [
+RMDAgentDefinitionBrowser >> updateAttributeList [
 	self
-		definitionDo: [ :definition | propertyList items: definition propertyDeclarations ]
+		definitionDo: [ :definition | attributeList items: definition attributeDeclarations ]
 ]
 
 { #category : #updating }

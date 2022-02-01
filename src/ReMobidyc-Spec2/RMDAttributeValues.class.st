@@ -1,25 +1,25 @@
 Class {
-	#name : #RMDPropertyValues,
+	#name : #RMDAttributeValues,
 	#superclass : #Object,
 	#instVars : [
-		'propertyDeclarations',
 		'ids',
 		'values',
-		'stats'
+		'stats',
+		'attributeDeclarations'
 	],
 	#category : #'ReMobidyc-Spec2-Utilities'
 }
 
 { #category : #'instance creation' }
-RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesDefinitionNode [
+RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesDefinitionNode [
 
-	| propertyDeclarations propertyValues ids individualIndex propertyStats |
-	propertyDeclarations := aRMDSpeciesDefinitionNode
-		                        allPropertyDeclarations.
+	| attributeDeclarations attributeValues ids individualIndex attributeStats |
+	attributeDeclarations := aRMDSpeciesDefinitionNode
+		                        allAttributeDeclarations.
 	ids := Array new:
 		       (aRMDInterpreter numberOfIndivisualsOf:
 			        aRMDSpeciesDefinitionNode).
-	propertyValues := (1 to: propertyDeclarations size) collect: [ :i | 
+	attributeValues := (1 to: attributeDeclarations size) collect: [ :i | 
 		                  Array new: ids size ].
 	individualIndex := 1.
 	aRMDInterpreter
@@ -30,17 +30,17 @@ RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesD
 				withObserverContextWithSubject: id
 				species: aRMDSpeciesDefinitionNode
 				do: [ 
-					aRMDSpeciesDefinitionNode allPropertyDeclarations doWithIndex: [ 
-						:propertyDef 
-						:propertyIndex | 
-						(propertyValues at: propertyIndex)
+					aRMDSpeciesDefinitionNode allAttributeDeclarations doWithIndex: [ 
+						:attributeDef 
+						:attributeIndex | 
+						(attributeValues at: attributeIndex)
 							at: individualIndex
-							put: (propertyDef unit fromSI: (aRMDInterpreter
-										  readVariable: propertyDef identifier
+							put: (attributeDef unit fromSI: (aRMDInterpreter
+										  readVariable: attributeDef identifier
 										  agent: nil
 										  ifAbsent: [ nil ])) ] ].
 			individualIndex := individualIndex + 1 ].
-	propertyStats := propertyValues collect: [ :values | 
+	attributeStats := attributeValues collect: [ :values | 
 		                 | stats |
 		                 stats := Dictionary new.
 		                 values ifNotEmpty: [ 
@@ -59,44 +59,15 @@ RMDPropertyValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesD
 					                  (value - mean) squared / size + sd ]) sqrt ].
 		                 stats ].
 	^ self new
-		  setPropertyDeclarations: propertyDeclarations
+		  setAttributeDeclarations: attributeDeclarations
 		  ids: ids
-		  values: propertyValues
-		  stats: propertyStats;
+		  values: attributeValues
+		  stats: attributeStats;
 		  yourself
 ]
 
 { #category : #accessing }
-RMDPropertyValues >> ids [
-	^ ids
-]
-
-{ #category : #enumerating }
-RMDPropertyValues >> idsWithIndexDo: aBlock [
-	ids withIndexDo: aBlock
-]
-
-{ #category : #accessing }
-RMDPropertyValues >> numberOfProperties [
-	^ propertyDeclarations size
-]
-
-{ #category : #accessing }
-RMDPropertyValues >> numberOfValues [
-	^ values first size
-]
-
-{ #category : #enumerating }
-RMDPropertyValues >> propertiesDo: aBlock [
-	1 to: propertyDeclarations size do: [ :index | 
-		aBlock
-			value: (propertyDeclarations at: index)
-			value: (values at: index)
-			value: (stats at: index) ]
-]
-
-{ #category : #accessing }
-RMDPropertyValues >> property: anIntegerOrRMDPropertyDeclaration at: anIntegerOrSymbol ifAbsent: errorBlock [
+RMDAttributeValues >> attribute: anIntegerOrRMDPropertyDeclaration at: anIntegerOrSymbol ifAbsent: errorBlock [
 	^ anIntegerOrRMDPropertyDeclaration = #id
 		ifTrue: [ ids at: anIntegerOrSymbol ]
 		ifFalse: [ ((anIntegerOrSymbol isInteger
@@ -105,7 +76,7 @@ RMDPropertyValues >> property: anIntegerOrRMDPropertyDeclaration at: anIntegerOr
 				at:
 					(anIntegerOrRMDPropertyDeclaration isInteger
 						ifTrue: [ anIntegerOrRMDPropertyDeclaration ]
-						ifFalse: [ propertyDeclarations
+						ifFalse: [ attributeDeclarations
 								indexOf: anIntegerOrRMDPropertyDeclaration
 								ifAbsent: [ ^ errorBlock value ] ])
 				ifAbsent: [ ^ errorBlock value ])
@@ -113,22 +84,51 @@ RMDPropertyValues >> property: anIntegerOrRMDPropertyDeclaration at: anIntegerOr
 				ifAbsent: errorBlock ]
 ]
 
+{ #category : #enumerating }
+RMDAttributeValues >> attributesDo: aBlock [
+	1 to: attributeDeclarations size do: [ :index | 
+		aBlock
+			value: (attributeDeclarations at: index)
+			value: (values at: index)
+			value: (stats at: index) ]
+]
+
+{ #category : #accessing }
+RMDAttributeValues >> ids [
+	^ ids
+]
+
+{ #category : #enumerating }
+RMDAttributeValues >> idsWithIndexDo: aBlock [
+	ids withIndexDo: aBlock
+]
+
+{ #category : #accessing }
+RMDAttributeValues >> numberOfAttributes [
+	^ attributeDeclarations size
+]
+
+{ #category : #accessing }
+RMDAttributeValues >> numberOfValues [
+	^ values first size
+]
+
 { #category : #private }
-RMDPropertyValues >> setPropertyDeclarations: anArrayOfRMDPropertyDefinition ids: anArrayOfInteger values: anArrayOfArrayOfFloat stats: anArrayOfDictionary [
-	propertyDeclarations := anArrayOfRMDPropertyDefinition.
+RMDAttributeValues >> setAttributeDeclarations: anArrayOfRMDAttributeDefinition ids: anArrayOfInteger values: anArrayOfArrayOfFloat stats: anArrayOfDictionary [
+	attributeDeclarations := anArrayOfRMDAttributeDefinition.
 	ids := anArrayOfInteger.
 	values := anArrayOfArrayOfFloat.
 	stats := anArrayOfDictionary
 ]
 
 { #category : #accessing }
-RMDPropertyValues >> valuesAt: anIntegerOrRMDPropertyDeclaration ifAbsent: errorBlock [
+RMDAttributeValues >> valuesAt: anIntegerOrRMDAttributeDeclaration ifAbsent: errorBlock [
 	^ values
 		at:
-			(anIntegerOrRMDPropertyDeclaration isInteger
-				ifTrue: [ anIntegerOrRMDPropertyDeclaration ]
-				ifFalse: [ propertyDeclarations
-						indexOf: anIntegerOrRMDPropertyDeclaration
+			(anIntegerOrRMDAttributeDeclaration isInteger
+				ifTrue: [ anIntegerOrRMDAttributeDeclaration ]
+				ifFalse: [ attributeDeclarations
+						indexOf: anIntegerOrRMDAttributeDeclaration
 						ifAbsent: [ ^ errorBlock value ] ])
 		ifAbsent: errorBlock
 ]

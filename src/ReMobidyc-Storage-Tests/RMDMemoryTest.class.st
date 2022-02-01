@@ -44,7 +44,7 @@ RMDMemoryTest >> testAllocateAnimat [
 	speed [km/h].'.
 	individual := memory allocateAnimat: animat.
 	self
-		assert: individual + animat totalNumberOfProperties
+		assert: individual + animat totalNumberOfAttributes
 		equals:
 			(memory
 				allocateAnimat:
@@ -63,7 +63,7 @@ RMDMemoryTest >> testAllocateCellsXY [
 	fertility [kcal].'.
 	individual := memory allocateCells: cell x: 2 y: 3.
 	self
-		assert: individual + (cell totalNumberOfProperties * 2 * 3)
+		assert: individual + (cell totalNumberOfAttributes * 2 * 3)
 		equals:
 			(memory
 				allocateAnimat: (parser animatDefinition end parse: 'Goat is Animat.'))
@@ -79,7 +79,7 @@ RMDMemoryTest >> testAllocateWorld [
 	humidity [].'.
 	individual := memory allocateWorld: world.
 	self
-		assert: individual + world totalNumberOfProperties
+		assert: individual + world totalNumberOfAttributes
 		equals:
 			(memory
 				allocateAnimat: (parser animatDefinition end parse: 'Goat is Animat.'))
@@ -100,8 +100,8 @@ RMDMemoryTest >> testAnimatsOfDo [
 	self
 		assert: individuals
 		equals:
-			(individuals first to: individuals first + (animat totalNumberOfProperties * 9)
-			by: animat totalNumberOfProperties) asArray
+			(individuals first to: individuals first + (animat totalNumberOfAttributes * 9)
+			by: animat totalNumberOfAttributes) asArray
 ]
 
 { #category : #tests }
@@ -170,8 +170,8 @@ RMDMemoryTest >> testCellAtXIndexYIndex [
 							[ :y | stream nextPut: (memory cellAtXIndex: x yIndex: y) ] ] ])
 				asSortedCollection asArray
 		equals:
-			(memory cell to: memory cell + (cell totalNumberOfProperties * 5)
-			by: cell totalNumberOfProperties) asArray
+			(memory cell to: memory cell + (cell totalNumberOfAttributes * 5)
+			by: cell totalNumberOfAttributes) asArray
 ]
 
 { #category : #tests }
@@ -185,7 +185,7 @@ RMDMemoryTest >> testCellSize [
 	memory allocateCells: cell x: 2 y: 3.
 	self
 		assert: memory cellSize
-		equals: cell totalNumberOfProperties
+		equals: cell totalNumberOfAttributes
 ]
 
 { #category : #tests }
@@ -203,7 +203,7 @@ RMDMemoryTest >> testCellsDo [
 				streamContents:
 					[ :stream | memory cellsDo: [ :individual | stream nextPut: individual ] ])
 		equals:
-			(memory cell to: memory cell + (cell totalNumberOfProperties * 5) by: cell totalNumberOfProperties)
+			(memory cell to: memory cell + (cell totalNumberOfAttributes * 5) by: cell totalNumberOfAttributes)
 				asArray
 ]
 

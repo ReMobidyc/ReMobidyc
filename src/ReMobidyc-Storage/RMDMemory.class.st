@@ -30,7 +30,7 @@ RMDMemory >> addAnimat: aRMDAnimatDefinitionNode lifehistory: anArrayOfInteger [
 
 	| individual animat |
 	self nextAvailableSlot: (individual := self nextAvailableSlot)
-		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
 	animat := aRMDAnimatDefinitionNode identifier.
 	(ins at: animat ifAbsentPut: [ Set new ]) add:
 		(anArrayOfInteger copyWith: individual).
@@ -42,7 +42,7 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 
 	| individual animat |
 	self nextAvailableSlot: (individual := self nextAvailableSlot)
-		+ aRMDAnimatDefinitionNode totalNumberOfProperties.
+		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
 	animat := aRMDAnimatDefinitionNode identifier.
 	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add:
 		(Array with: individual).
@@ -54,7 +54,7 @@ RMDMemory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
 	self
 		nextAvailableSlot:
 			(self
-				cellSize: (aRMDCellDefinitionNode totalNumberOfProperties max: 1);
+				cellSize: (aRMDCellDefinitionNode totalNumberOfAttributes max: 1);
 				cellSize)
 				*
 					(self
@@ -75,7 +75,7 @@ RMDMemory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
 RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 	self
 		nextAvailableSlot:
-			aRMDWorldDefinitionNode totalNumberOfProperties
+			aRMDWorldDefinitionNode totalNumberOfAttributes
 				+ (world := self nextAvailableSlot).
 	^ world
 ]

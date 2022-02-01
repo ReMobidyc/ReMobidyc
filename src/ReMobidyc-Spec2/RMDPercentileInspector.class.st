@@ -2,13 +2,13 @@ Class {
 	#name : #RMDPercentileInspector,
 	#superclass : #RMDSpeciesInspector,
 	#instVars : [
-		'visibleProperties',
 		'showsPercentiles',
 		'showsMin',
 		'showsMax',
 		'showsMean',
 		'showsSd',
-		'chartPresenters'
+		'chartPresenters',
+		'visibleAttributes'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -38,7 +38,7 @@ RMDPercentileInspector >> chartWidth [
 ]
 
 { #category : #accessing }
-RMDPercentileInspector >> chartWith: propertyDef values: vals stats: stats [
+RMDPercentileInspector >> chartWith: attributeDef values: vals stats: stats [
 
 	| chartWidth chartHeight font fontHeight form canvas values resolution min max |
 	chartWidth := self chartWidth.
@@ -204,28 +204,28 @@ RMDPercentileInspector >> chartWith: propertyDef values: vals stats: stats [
 ]
 
 { #category : #private }
-RMDPercentileInspector >> collapseButtonFor: propertyDef [
+RMDPercentileInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self expandedIcon;
 		  action: [ 
-			  visibleProperties remove: propertyDef identifier ifAbsent: [  ].
+			  visibleAttributes remove: attributeDef identifier ifAbsent: [  ].
 			  self
 				  updateLayout;
 				  updateObservation ]
 ]
 
 { #category : #private }
-RMDPercentileInspector >> expandButtonFor: propertyDef [
+RMDPercentileInspector >> expandButtonFor: attributeDef [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;
 		  action: [ 
-			  visibleProperties add: propertyDef identifier.
+			  visibleAttributes add: attributeDef identifier.
 			  self
 				  updateLayout;
 				  updateObservation ]
@@ -235,7 +235,7 @@ RMDPercentileInspector >> expandButtonFor: propertyDef [
 RMDPercentileInspector >> initializePresenters [
 
 	super initializePresenters.
-	visibleProperties := Set new.
+	visibleAttributes := Set new.
 	showsPercentiles := self newCheckBox
 		                    labelOnRight;
 		                    label: 'percentiles';
@@ -293,14 +293,14 @@ RMDPercentileInspector >> updateImage [
 
 	self layout ifNotNil: [ 
 		chartPresenters ifNil: [ self updateLayout ].
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				(visibleProperties includes: propertyDef identifier) ifTrue: [ 
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				(visibleAttributes includes: attributeDef identifier) ifTrue: [ 
 					chartPresenters
-						at: propertyDef identifier
+						at: attributeDef identifier
 						ifPresent: [ :presenter | 
 							| form |
-							form := self chartWith: propertyDef values: vals stats: stats.
+							form := self chartWith: attributeDef values: vals stats: stats.
 							presenter image: form ] ] ] ] ]
 ]
 
@@ -311,21 +311,21 @@ RMDPercentileInspector >> updateLayout [
 		| newLayout |
 		chartPresenters := Dictionary new.
 		newLayout := self newLayout.
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				(visibleProperties includes: propertyDef identifier)
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				(visibleAttributes includes: attributeDef identifier)
 					ifTrue: [ 
 						| form presenter |
 						newLayout
-							add: (self collapseButtonFor: propertyDef)
+							add: (self collapseButtonFor: attributeDef)
 							expand: false.
-						form := self chartWith: propertyDef values: vals stats: stats.
+						form := self chartWith: attributeDef values: vals stats: stats.
 						presenter := self newImage.
 						presenter image: form.
-						chartPresenters at: propertyDef identifier put: presenter.
+						chartPresenters at: attributeDef identifier put: presenter.
 						newLayout add: presenter height: form height ]
 					ifFalse: [ 
-					newLayout add: (self expandButtonFor: propertyDef) expand: false ] ] ].
+					newLayout add: (self expandButtonFor: attributeDef) expand: false ] ] ].
 		self layout: newLayout ]
 ]
 

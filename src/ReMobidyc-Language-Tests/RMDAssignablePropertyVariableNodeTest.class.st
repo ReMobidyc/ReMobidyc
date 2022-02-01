@@ -7,7 +7,7 @@ Class {
 { #category : #running }
 RMDAssignablePropertyVariableNodeTest >> setUpParser [ 
 	super setUpParser.
-	parser := parser assignablePropertyVariable end
+	parser := parser assignableAttributeVariable end
 ]
 
 { #category : #tests }

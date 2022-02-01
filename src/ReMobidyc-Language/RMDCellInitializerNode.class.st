@@ -16,7 +16,7 @@ RMDCellInitializerNode class >> empty [
 		xDivisions: 1
 		yDivisions: 1
 		length: '1 [m]' asRMDExpression
-		cellPropertyInitializers: Array new
+		cellAttributeInitializers: Array new
 ]
 
 { #category : #'typical instances' }
@@ -42,12 +42,12 @@ RMDCellInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: 
 ]
 
 { #category : #'instance creation' }
-RMDCellInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 cellPropertyInitializers: anArrayOfRMDSimulationCellPropertyDefinitions [
+RMDCellInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 cellAttributeInitializers: anArrayOfRMDSimulationCellAttributeDefinitions [
 	^ self new
 		xDivisions: aRMDExpression1;
 		yDivisions: aRMDExpression2;
 		size: aRMDExpression3;
-		propertyInitializers: anArrayOfRMDSimulationCellPropertyDefinitions;
+		attributeInitializers: anArrayOfRMDSimulationCellAttributeDefinitions;
 		yourself
 ]
 
@@ -62,7 +62,7 @@ RMDCellInitializerNode >> = anObject [
 { #category : #enumerating }
 RMDCellInitializerNode >> childrenDo: aBlock [
 	aBlock value: length.
-	propertyInitializers do: aBlock
+	attributeInitializers do: aBlock
 ]
 
 { #category : #comparing }
@@ -101,11 +101,11 @@ RMDCellInitializerNode >> printOn: aStream [
 	aStream nextPutAll: ' of '.
 	size printOn: aStream.
 	aStream nextPutAll: ' Cell'.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers
+		attributeInitializers
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init printOn: aStream ]
@@ -132,11 +132,11 @@ RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxN
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
 	aStream nextPutAll: ' Cell'.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers
+		attributeInitializers
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init

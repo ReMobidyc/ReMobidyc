@@ -7,6 +7,18 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
+{ #category : #private }
+RMDSpeciesInspector >> attributeValuesDo: aBlock [
+	interpreter
+		ifNotNil: [ self
+				speciesDefinitionDo: [ :speciesDefinition | 
+					^ aBlock
+						cull:
+							(RMDAttributeValues
+								fromInterpreter: interpreter
+								animat: speciesDefinition) ] ]
+]
+
 { #category : #accessing }
 RMDSpeciesInspector >> collapsedIcon [
 	^ Smalltalk ui theme 	treeUnexpandedForm
@@ -41,18 +53,6 @@ RMDSpeciesInspector >> interpreter: aRMDInterpreter [
 { #category : #accessing }
 RMDSpeciesInspector >> interpreterDo: aBlock [
 	interpreter ifNotNil: aBlock
-]
-
-{ #category : #private }
-RMDSpeciesInspector >> propertyValuesDo: aBlock [
-	interpreter
-		ifNotNil: [ self
-				speciesDefinitionDo: [ :speciesDefinition | 
-					^ aBlock
-						cull:
-							(RMDPropertyValues
-								fromInterpreter: interpreter
-								animat: speciesDefinition) ] ]
 ]
 
 { #category : #private }

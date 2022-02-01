@@ -1,46 +1,46 @@
 Class {
-	#name : #RMDNewPropertyVariableNode,
+	#name : #RMDNewAttributeVariableNode,
 	#superclass : #RMDAbstractVariableNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDNewPropertyVariableNode class >> identifier: aString [
+RMDNewAttributeVariableNode class >> identifier: aString [
 	^ self new
 		identifier: aString;
 		yourself
 ]
 
 { #category : #accessing }
-RMDNewPropertyVariableNode >> agent [
+RMDNewAttributeVariableNode >> agent [
 
 	^ #new
 ]
 
 { #category : #enumerating }
-RMDNewPropertyVariableNode >> childrenDo: aBlock [
+RMDNewAttributeVariableNode >> childrenDo: aBlock [
 
 	
 ]
 
 { #category : #testing }
-RMDNewPropertyVariableNode >> isNewPropertyVariableNode [
+RMDNewAttributeVariableNode >> isNewAttributeVariableNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDNewPropertyVariableNode >> precedence [
+RMDNewAttributeVariableNode >> precedence [
 	^ 1
 ]
 
 { #category : #accessing }
-RMDNewPropertyVariableNode >> prefix [
+RMDNewAttributeVariableNode >> prefix [
 
 	^ 'new'
 ]
 
 { #category : #printing }
-RMDNewPropertyVariableNode >> printOn: aStream [
+RMDNewAttributeVariableNode >> printOn: aStream [
 
 	aStream
 		nextPutAll: self prefix;
@@ -49,7 +49,7 @@ RMDNewPropertyVariableNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDNewPropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDNewAttributeVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.

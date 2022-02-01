@@ -30,7 +30,7 @@ RMDGrammar >> actionDefinition [
 
 	^ self actionDefinitionHeaderLine , self whenClause optional
 	  , self withClause optional
-	  , self actionDefinitionPropertyPart optional
+	  , self actionDefinitionAttributePart optional
 	  , self actionDefinitionUtilityPart optional
 	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
 	  ==> [ :array | 
@@ -39,8 +39,16 @@ RMDGrammar >> actionDefinition [
 			  object: array first second
 			  guard: array second
 			  lifeDirectives: (array third ifNil: [ Array new ])
-			  propertyDefinitions: (array fourth ifNil: [ Array new ])
+			  attributeDefinitions: (array fourth ifNil: [ Array new ])
 			  utilityDefinitions: (array fifth ifNil: [ Array new ]) ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> actionDefinitionAttributePart [
+
+	^ #newline asPParser trimBlanks optional
+	  , (self attributeDefinition onlySeparatedBy:
+			   #newline asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
@@ -57,14 +65,6 @@ RMDGrammar >> actionDefinitionHeaderLine [
 { #category : #'class access' }
 RMDGrammar >> actionDefinitionNodeClass [
 	^ RMDActionDefinitionNode 
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> actionDefinitionPropertyPart [
-
-	^ #newline asPParser trimBlanks optional
-	  , (self propertyDefinition onlySeparatedBy:
-			   #newline asPParser trimBlanks) ==> #second
 ]
 
 { #category : #'parsers-definitions' }
@@ -143,13 +143,22 @@ RMDGrammar >> allUnits [
 ]
 
 { #category : #'parsers-definitions' }
+RMDGrammar >> animatAttributePart [
+	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
+		,
+			(self attributeDeclaration
+				onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #third
+]
+
+{ #category : #'parsers-definitions' }
 RMDGrammar >> animatDefinition [
-	^ (self animatHeader , self animatPropertyPart optional
+	^ (self animatHeader , self animatAttributePart optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :quad | 
 			self animatDefinitionNodeClass
 				identifier: quad first
-				propertyDeclarations: (quad second ifNil: [ Array new ]) ]
+				attributeDeclarations: (quad second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -185,27 +194,18 @@ RMDGrammar >> animatInitializer [
 
 	^ #digit asPParser plus flatten trimBlanks , agentIdentifier
 	  , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
-		   , (self propertyInitializer onlySeparatedBy:
+		   , (self attributeInitializer onlySeparatedBy:
 				    #newline asPParser trimBlanks) ==> #third) optional
 	  ==> [ :triple | 
 		  self animatInitializerNodeClass
 			  population: triple first asInteger
 			  animat: triple second
-			  propertyInitializers: (triple third ifNil: [ Array new ]) ]
+			  attributeInitializers: (triple third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
 RMDGrammar >> animatInitializerNodeClass [
 	^ RMDAnimatInitializerNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> animatPropertyPart [
-	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
-		,
-			(self propertyDeclaration
-				onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
 { #category : #'parsers-expressions' }
@@ -223,71 +223,145 @@ RMDGrammar >> applyNodeClass [
 ]
 
 { #category : #'parsers-atoms' }
-RMDGrammar >> assignableDeltaPropertyVariable [
-
-	^ agentReference , self delta , identifier ==> [ :triple | 
-	  self assignableDeltaPropertyVariableNodeClass
-		  identifier: triple third
-		  agent: triple first ]
-	  / (self the , self delta , identifier ==> [ :triple | 
-		   self assignableDeltaPropertyVariableNodeClass propertyVariable:
-			   (self placeholderNodeClass identifier: triple third) ])
-]
-
-{ #category : #'class access' }
-RMDGrammar >> assignableDeltaPropertyVariableNodeClass [
-	^ RMDAssignableDeltaPropertyVariableNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> assignableDifferentialPropertyVariable [
-
-	^ agentReference , self differential , identifier ==> [ :triple | 
-	  self assignableDifferentialPropertyVariableNodeClass
-		  identifier: triple third
-		  agent: triple first ]
-	  / (self the , self differential , identifier ==> [ :triple | 
-		   self assignableDifferentialPropertyVariableNodeClass 
-			   propertyVariable:
-			   (self placeholderNodeClass identifier: triple third) ])
-]
-
-{ #category : #'class access' }
-RMDGrammar >> assignableDifferentialPropertyVariableNodeClass [
-	^ RMDAssignableDifferentialPropertyVariableNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> assignableNewPropertyVariable [
-
-	^ 'new' asPParser , #blank asPParser plus , identifier
-	  ==> [ :triple | 
-		  self assignablePropertyVariableNodeClass propertyVariable:
-			  (self newPropertyVariableNodeClass identifier: triple third) ]
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> assignablePropertyVariable [
+RMDGrammar >> assignableAttributeVariable [
 
 	^ agentReference , identifier ==> [ :pair | 
-	  self assignablePropertyVariableNodeClass
+	  self assignableAttributeVariableNodeClass
 		  identifier: pair second
 		  agent: pair first ] / (self the , identifier ==> [ :pair | 
-	   self assignablePropertyVariableNodeClass propertyVariable:
+	   self assignableAttributeVariableNodeClass attributeVariable:
 		   (self placeholderNodeClass identifier: pair second) ])
 ]
 
 { #category : #'class access' }
-RMDGrammar >> assignablePropertyVariableNodeClass [
-	^ RMDAssignablePropertyVariableNode
+RMDGrammar >> assignableAttributeVariableNodeClass [
+	^ RMDAssignableAttributeVariableNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignableDeltaAttributeVariable [
+
+	^ agentReference , self delta , identifier ==> [ :triple | 
+	  self assignableDeltaAttributeVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self delta , identifier ==> [ :triple | 
+		   self assignableDeltaAttributeVariableNodeClass attributeVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
+]
+
+{ #category : #'class access' }
+RMDGrammar >> assignableDeltaAttributeVariableNodeClass [
+	^ RMDAssignableDeltaAttributeVariableNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignableDifferentialAttributeVariable [
+
+	^ agentReference , self differential , identifier ==> [ :triple | 
+	  self assignableDifferentialAttributeVariableNodeClass
+		  identifier: triple third
+		  agent: triple first ]
+	  / (self the , self differential , identifier ==> [ :triple | 
+		   self assignableDifferentialAttributeVariableNodeClass 
+			   attributeVariable:
+			   (self placeholderNodeClass identifier: triple third) ])
+]
+
+{ #category : #'class access' }
+RMDGrammar >> assignableDifferentialAttributeVariableNodeClass [
+	^ RMDAssignableDifferentialAttributeVariableNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> assignableNewAttributeVariable [
+
+	^ 'new' asPParser , #blank asPParser plus , identifier
+	  ==> [ :triple | 
+		  self assignableAttributeVariableNodeClass attributeVariable:
+			  (self newAttributeVariableNodeClass identifier: triple third) ]
 ]
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> assignableVariable [
 
-	^ self assignableDifferentialPropertyVariable
-	  / self assignableDeltaPropertyVariable
-	  / self assignablePropertyVariable
+	^ self assignableDifferentialAttributeVariable
+	  / self assignableDeltaAttributeVariable
+	  / self assignableAttributeVariable
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> attributeBind [
+
+	^ self placeholder , '->' asPParser trimBlanks , expression
+	  /
+	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
+	  ==> [ :triple | 
+		  self attributeBindNodeClass
+			  placeholder: triple first
+			  replacement: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> attributeBindNodeClass [
+	^ RMDAttributeBindNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> attributeDeclaration [
+	^ (identifier , self type)
+		==> [ :pair | 
+			self attributeDeclarationNodeClass
+				identifier: pair first
+				unit: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> attributeDeclarationNodeClass [
+	^ RMDAttributeDeclarationNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> attributeDefinition [
+
+	^ self assignableVariable , $' asPParser trimBlanks
+	  , '=' asPParser trimBlanks , guardedChoice ==> [ :quad | 
+	  self attributeDefinitionNodeClass
+		  variable: quad first
+		  expression: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> attributeDefinitionNodeClass [
+	^ RMDAttributeDefinitionNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> attributeInitializer [
+	^ (identifier , '=' asPParser trimBlanks , expression)
+		==> [ :triple | 
+			self attributeInitializerNodeClass
+				identifier: triple first
+				expression: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> attributeInitializerNodeClass [
+	^ RMDAttributeInitializerNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> attributeVariable [
+	^ (agentReference , identifier)
+		==> [ :pair | 
+			self attributeVariableNodeClass
+				identifier: pair second
+				agent: pair first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> attributeVariableNodeClass [
+	^ RMDAttributeVariableNode
 ]
 
 { #category : #'parsers-visualizations' }
@@ -456,13 +530,13 @@ RMDGrammar >> cellDefinition [
 			((#blank asPParser , 'with' asPParser trimBlanks
 				, #newline asPParser trimBlanks
 				,
-					(self propertyDeclaration
+					(self attributeDeclaration
 						onlySeparatedBy: #newline asPParser trimBlanks)
 				, #newline asPParser trimBlanks optional) ==> #fourth) optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
 		==> [ :pair | 
 			self cellDefinitionNodeClass
-				propertyDeclarations: (pair second ifNil: [ Array new ]) ]
+				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -483,7 +557,7 @@ RMDGrammar >> cellInitializer [
 		,
 			(('with' asPParser , #newline asPParser trimBlanks
 				,
-					(self propertyInitializer
+					(self attributeInitializer
 						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
 				optional)
 		==> [ :array | 
@@ -491,7 +565,7 @@ RMDGrammar >> cellInitializer [
 				xDivisions: array first asInteger
 				yDivisions: array third asInteger
 				length: array fifth
-				cellPropertyInitializers: (array seventh ifNil: [ Array new ]) ]
+				cellAttributeInitializers: (array seventh ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -545,7 +619,7 @@ RMDGrammar >> conjunctionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> definition [
-	^ self propertyDefinition
+	^ self attributeDefinition
 ]
 
 { #category : #'parsers-atoms' }
@@ -620,7 +694,7 @@ RMDGrammar >> expr1 [
 	^ literal / ('-' asPParser trimBlanks optional
 	   ,
 		   (self parenExpression / self agentDirective
-		    / self uniformDistribution / self apply / self propertyVariable
+		    / self uniformDistribution / self apply / self attributeVariable
 		    / self placeholder / self utilityVariable) ==> [ :pair | 
 	   pair first
 		   ifNil: [ pair second ]
@@ -818,6 +892,12 @@ RMDGrammar >> negationNodeClass [
 	^ RMDNegationNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> newAttributeVariableNodeClass [
+
+	^ RMDNewAttributeVariableNode
+]
+
 { #category : #'parsers-directives' }
 RMDGrammar >> newDirective [
 
@@ -837,12 +917,6 @@ RMDGrammar >> newDirective [
 RMDGrammar >> newDirectiveNodeClass [
 
 	^ RMDNewDirectiveNode
-]
-
-{ #category : #'class access' }
-RMDGrammar >> newPropertyVariableNodeClass [
-
-	^ RMDNewPropertyVariableNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -871,80 +945,6 @@ RMDGrammar >> powerNodeClass [
 { #category : #'class access' }
 RMDGrammar >> productNodeClass [
 	^ RMDProductNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> propertyBind [
-
-	^ self placeholder , '->' asPParser trimBlanks , expression
-	  /
-	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
-	  ==> [ :triple | 
-		  self propertyBindNodeClass
-			  placeholder: triple first
-			  replacement: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyBindNodeClass [
-	^ RMDPropertyBindNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> propertyDeclaration [
-	^ (identifier , self type)
-		==> [ :pair | 
-			self propertyDeclarationNodeClass
-				identifier: pair first
-				unit: pair second ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyDeclarationNodeClass [
-	^ RMDPropertyDeclarationNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> propertyDefinition [
-
-	^ self assignableVariable , $' asPParser trimBlanks
-	  , '=' asPParser trimBlanks , guardedChoice ==> [ :quad | 
-	  self propertyDefinitionNodeClass
-		  variable: quad first
-		  expression: quad fourth ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyDefinitionNodeClass [
-	^ RMDPropertyDefinitionNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> propertyInitializer [
-	^ (identifier , '=' asPParser trimBlanks , expression)
-		==> [ :triple | 
-			self propertyInitializerNodeClass
-				identifier: triple first
-				expression: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyInitializerNodeClass [
-	^ RMDPropertyInitializerNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> propertyVariable [
-	^ (agentReference , identifier)
-		==> [ :pair | 
-			self propertyVariableNodeClass
-				identifier: pair second
-				agent: pair first ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> propertyVariableNodeClass [
-	^ RMDPropertyVariableNode
 ]
 
 { #category : #'parsers-visualizations' }
@@ -1029,7 +1029,7 @@ RMDGrammar >> taskDefinition [
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
-		   (self propertyBind onlySeparatedBy: #newline asPParser trimBlanks)
+		   (self attributeBind onlySeparatedBy: #newline asPParser trimBlanks)
 		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
 	  self bindNodeClass
 		  subjectIdentifier: quad first first
@@ -1039,7 +1039,7 @@ RMDGrammar >> taskDefinition [
 		  nearest: quad first third
 		  within: quad first fifth
 		  guard: quad second
-		  propertyBinds: (quad third ifNil: [ Array new ]) ]
+		  attributeBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1260,13 +1260,13 @@ RMDGrammar >> worldDefinition [
 			((#blank asPParser plus , 'with' asPParser trimBlanks
 				, #newline asPParser trimBlanks
 				,
-					(self propertyDeclaration
+					(self attributeDeclaration
 						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #fourth)
 				optional , '.' asPParser trimBlanks
 		, #newline asPParser trimBlanks optional)
 		==> [ :pair | 
 			self worldDefinitionNodeClass
-				propertyDeclarations: (pair second ifNil: [ Array new ]) ]
+				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -1279,11 +1279,11 @@ RMDGrammar >> worldInitializer [
 
 	^ ('World' asPParser trimBlanks
 	   , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
-		    , (self propertyInitializer onlySeparatedBy:
+		    , (self attributeInitializer onlySeparatedBy:
 				     #newline asPParser trimBlanks) ==> #third) optional
 	   ==> #second , #newline asPParser trimBlanks optional ==> #first)
 		  optional ==> [ :initializers | 
-	  self worldInitializerNodeClass propertyInitializers:
+	  self worldInitializerNodeClass attributeInitializers:
 		  (initializers ifNil: [ Array new ]) ]
 ]
 

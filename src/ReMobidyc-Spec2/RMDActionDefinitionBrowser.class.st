@@ -6,14 +6,14 @@ Class {
 		'objectField',
 		'guardField',
 		'directivesButton',
-		'propertyDefinitionList',
 		'utilityDefinitionList',
-		'addPropertyButton',
-		'removePropertyButton',
-		'editPropertyButton',
 		'addUtilityButton',
 		'removeUtilityButton',
-		'editUtilityButton'
+		'editUtilityButton',
+		'attributeDefinitionList',
+		'addAttributeButton',
+		'editAttributeButton',
+		'removeAttributeButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -53,11 +53,11 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 		  add: (SpBoxLayout newHorizontal
 				   add: '    ' expand: false;
 				   add: (SpBoxLayout newVertical
-						    add: #propertyDefinitionList;
+						    add: #attributeDefinitionList;
 						    add: (SpBoxLayout newHorizontal
-								     add: #addPropertyButton expand: false;
-								     add: #removePropertyButton expand: false;
-								     add: #editPropertyButton expand: false;
+								     add: #addAttributeButton expand: false;
+								     add: #removeAttributeButton expand: false;
+								     add: #editAttributeButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
 		  expand: true
@@ -81,13 +81,13 @@ RMDActionDefinitionBrowser class >> defaultSpec [
 ]
 
 { #category : #operations }
-RMDActionDefinitionBrowser >> addPropertyDefinition [
+RMDActionDefinitionBrowser >> addAttributeDefinition [
 
 	| newDefinition |
-	newDefinition := RMDPropertyDefinitionNode template.
+	newDefinition := RMDAttributeDefinitionNode template.
 	newDefinition asPresenter openDialogWithSpec okAction: [ 
-		node propertyDefinitions:
-			(node propertyDefinitions copyWith: newDefinition).
+		node attributeDefinitions:
+			(node attributeDefinitions copyWith: newDefinition).
 		self nodeChanged ]
 ]
 
@@ -100,6 +100,20 @@ RMDActionDefinitionBrowser >> addUtilityDefinition [
 		node utilityDefinitions:
 			(node utilityDefinitions copyWith: newDefinition).
 		self nodeChanged ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> editAttributeDefinition [
+
+	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+		| newDefinition index |
+		newDefinition := oldDefinition copy.
+		newDefinition asPresenter openDialogWithSpec okAction: [ 
+			node attributeDefinitions
+				at: (index := node attributeDefinitions indexOf: oldDefinition)
+				put: newDefinition.
+			self nodeChanged.
+			attributeDefinitionList selectIndex: index ] ]
 ]
 
 { #category : #operations }
@@ -156,20 +170,6 @@ RMDActionDefinitionBrowser >> editDirectives [
 ]
 
 { #category : #operations }
-RMDActionDefinitionBrowser >> editPropertyDefinition [
-
-	propertyDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
-		| newDefinition index |
-		newDefinition := oldDefinition copy.
-		newDefinition asPresenter openDialogWithSpec okAction: [ 
-			node propertyDefinitions
-				at: (index := node propertyDefinitions indexOf: oldDefinition)
-				put: newDefinition.
-			self nodeChanged.
-			propertyDefinitionList selectIndex: index ] ]
-]
-
-{ #category : #operations }
 RMDActionDefinitionBrowser >> editUtilityDefinition [
 
 	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
@@ -213,27 +213,27 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                    label: 'no directive';
 		                    action: [ self editDirectives ];
 		                    yourself.
-	propertyDefinitionList := self newList
-		                          display: [ :propertyDef | 
-			                          propertyDef printString ];
+	attributeDefinitionList := self newList
+		                          display: [ :attributeDef | 
+			                          attributeDef printString ];
 		                          whenSelectionChangedDo: [ 
-			                          self updatePropertyButtons ];
+			                          self updateAttributeButtons ];
 		                          yourself.
-	addPropertyButton := self newButton
+	addAttributeButton := self newButton
 		                     label: '';
 		                     icon: Smalltalk ui icons add;
-		                     action: [ self addPropertyDefinition ];
+		                     action: [ self addAttributeDefinition ];
 		                     yourself.
-	removePropertyButton := self newButton
+	removeAttributeButton := self newButton
 		                        label: '';
 		                        icon: Smalltalk ui icons remove;
-		                        action: [ self removePropertyDefinition ];
+		                        action: [ self removeAttributeDefinition ];
 		                        disable;
 		                        yourself.
-	editPropertyButton := self newButton
+	editAttributeButton := self newButton
 		                      label: '';
 		                      icon: Smalltalk ui icons edit;
-		                      action: [ self editPropertyDefinition ];
+		                      action: [ self editAttributeDefinition ];
 		                      disable;
 		                      yourself.
 	utilityDefinitionList := self newList
@@ -285,8 +285,8 @@ RMDActionDefinitionBrowser >> nodeChanged [
 	directivesButton label:
 		((', ' join: (node lifeDirectives collect: #printString)) ifEmpty: [ 
 			 'no directives' ]).
-	propertyDefinitionList
-		items: node propertyDefinitions;
+	attributeDefinitionList
+		items: node attributeDefinitions;
 		unselectAll.
 	utilityDefinitionList
 		items: node utilityDefinitions;
@@ -299,13 +299,13 @@ RMDActionDefinitionBrowser >> preferredHeight [
 ]
 
 { #category : #operations }
-RMDActionDefinitionBrowser >> removePropertyDefinition [
+RMDActionDefinitionBrowser >> removeAttributeDefinition [
 
-	propertyDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
+	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
 		(UIManager default confirm:
 			 'Sure to remove `' , oldDefinition printString , '''?') ifTrue: [ 
-			node propertyDefinitions:
-				(node propertyDefinitions copyWithout: oldDefinition).
+			node attributeDefinitions:
+				(node attributeDefinitions copyWithout: oldDefinition).
 			self nodeChanged ] ]
 ]
 
@@ -346,12 +346,12 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 ]
 
 { #category : #updating }
-RMDActionDefinitionBrowser >> updatePropertyButtons [
+RMDActionDefinitionBrowser >> updateAttributeButtons [
 
 	| hasSelection |
-	hasSelection := propertyDefinitionList selectedItem notNil.
-	removePropertyButton enabled: hasSelection.
-	editPropertyButton enabled: hasSelection
+	hasSelection := attributeDefinitionList selectedItem notNil.
+	removeAttributeButton enabled: hasSelection.
+	editAttributeButton enabled: hasSelection
 ]
 
 { #category : #updating }

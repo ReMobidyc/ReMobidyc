@@ -12,16 +12,16 @@ RMDCellDefinitionBrowser class >> on: aRMDSimulationModel [
 ]
 
 { #category : #private }
-RMDCellDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+RMDCellDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
 	simulationModel simulationDefinition cellInitializer
 		ifNotNil: [ :initializer | 
 			initializer
-				propertyInitializers:
-					(initializer propertyInitializers
+				attributeInitializers:
+					(initializer attributeInitializers
 						copyWith:
-							(RMDPropertyInitializerNode
-								identifier: aRMDPropertyNode identifier
-								expression: (RMDLiteralNode literal: '0' unit: aRMDPropertyNode unit))) ]
+							(RMDAttributeInitializerNode
+								identifier: aRMDAttributeNode identifier
+								expression: (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
 ]
 
 { #category : #accessing }
@@ -35,14 +35,14 @@ RMDCellDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #private }
-RMDCellDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+RMDCellDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
 	simulationModel simulationDefinition cellInitializer
 		ifNotNil: [ :initializer | 
 			initializer
-				propertyInitializers:
-					(initializer propertyInitializers
+				attributeInitializers:
+					(initializer attributeInitializers
 						reject:
-							[ :propertyInitializer | propertyInitializer identifier = aRMDPropertyNode identifier ]) ]
+							[ :attributeInitializer | attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
 ]
 
 { #category : #enumerating }

@@ -15,17 +15,17 @@ RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModel animat: aString [
 ]
 
 { #category : #private }
-RMDAnimatDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: aString [
+RMDAnimatDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: aString [
 	simulationModel simulationDefinition animatInitializers
 		do: [ :animatInitializer | 
 			animatInitializer animat = aString
 				ifTrue: [ animatInitializer
-						propertyInitializers:
-							(animatInitializer propertyInitializers
+						attributeInitializers:
+							(animatInitializer attributeInitializers
 								copyWith:
-									(RMDPropertyInitializerNode
-										identifier: aRMDPropertyNode identifier
-										expression: (RMDLiteralNode literal: '0' unit: aRMDPropertyNode unit))) ] ]
+									(RMDAttributeInitializerNode
+										identifier: aRMDAttributeNode identifier
+										expression: (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ] ]
 ]
 
 { #category : #accessing }
@@ -42,14 +42,14 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #private }
-RMDAnimatDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: aString [
+RMDAnimatDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: aString [
 	simulationModel simulationDefinition animatInitializers
 		do: [ :animatInitializer | 
 			animatInitializer animat = aString
 				ifTrue: [ animatInitializer
-						propertyInitializers:
-							(animatInitializer propertyInitializers
-								reject: [ :initializer | initializer identifier = aRMDPropertyNode identifier ]) ] ]
+						attributeInitializers:
+							(animatInitializer attributeInitializers
+								reject: [ :initializer | initializer identifier = aRMDAttributeNode identifier ]) ] ]
 ]
 
 { #category : #accessing }

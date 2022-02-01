@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDAnimatDefinitionNode class >> createBuiltinProperties [
+RMDAnimatDefinitionNode class >> createBuiltinAttributes [
 
 	^ { 
 		  ('x' -> RMDUnit m).
@@ -23,8 +23,8 @@ RMDAnimatDefinitionNode class >> goat [
 ]
 
 { #category : #'instance creation' }
-RMDAnimatDefinitionNode class >> identifier: aString propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
-	^ (self propertyDeclarations: anArrayOfRMDPropertyDeclarationNode)
+RMDAnimatDefinitionNode class >> identifier: aString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+	^ (self attributeDeclarations: anArrayOfRMDAttributeDeclarationNode)
 		identifier: aString;
 		yourself
 ]
@@ -66,11 +66,11 @@ RMDAnimatDefinitionNode >> printOn: aStream [
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' is Animat'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def printOn: aStream ]
@@ -85,11 +85,11 @@ RMDAnimatDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' is Animat'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def

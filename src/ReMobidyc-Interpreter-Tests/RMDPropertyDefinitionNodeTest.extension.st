@@ -11,7 +11,7 @@ RMDPropertyDefinitionNodeTest >> testEvalIn [
 		tick.
 	self
 		assert:
-			((parser propertyDefinition parse: 'foo''s x'' = 5')
+			((parser attributeDefinition parse: 'foo''s x'' = 5')
 				evalIn: interpreter)
 		closeTo: 5.
 	self assert: (interpreter memory nextAt: 1) closeTo: 5.
@@ -21,12 +21,12 @@ RMDPropertyDefinitionNodeTest >> testEvalIn [
 	self assert: (interpreter memory at: 1) equals: 3.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s delta x'' = 6')
+			((parser attributeDefinition parse: 'bar''s delta x'' = 6')
 				evalIn: interpreter)
 		closeTo: 6.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s delta x'' = 7')
+			((parser attributeDefinition parse: 'bar''s delta x'' = 7')
 				evalIn: interpreter)
 		closeTo: 7.
 	self

@@ -2,7 +2,7 @@ Class {
 	#name : #RMDSpeciesInitializerNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'propertyInitializers'
+		'attributeInitializers'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -10,17 +10,27 @@ Class {
 { #category : #comparing }
 RMDSpeciesInitializerNode >> = anObject [
 	^ self class = anObject class
-		and: [ propertyInitializers = anObject propertyInitializers ]
+		and: [ attributeInitializers = anObject attributeInitializers ]
+]
+
+{ #category : #accessing }
+RMDSpeciesInitializerNode >> attributeInitializers [
+	^ attributeInitializers
+]
+
+{ #category : #accessing }
+RMDSpeciesInitializerNode >> attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
+	attributeInitializers := anArrayOfRMDSimulationAttributeInitializerNode
 ]
 
 { #category : #enumerating }
 RMDSpeciesInitializerNode >> childrenDo: aBlock [
-	propertyInitializers do: aBlock
+	attributeInitializers do: aBlock
 ]
 
 { #category : #comparing }
 RMDSpeciesInitializerNode >> hash [
-	^ propertyInitializers hash
+	^ attributeInitializers hash
 ]
 
 { #category : #testing }
@@ -30,21 +40,11 @@ RMDSpeciesInitializerNode >> isSpeciesInitializerNode [
 
 { #category : #copying }
 RMDSpeciesInitializerNode >> postCopy [
-	propertyInitializers := propertyInitializers collect: #copy
-]
-
-{ #category : #accessing }
-RMDSpeciesInitializerNode >> propertyInitializers [
-	^ propertyInitializers
-]
-
-{ #category : #accessing }
-RMDSpeciesInitializerNode >> propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
-	propertyInitializers := anArrayOfRMDSimulationPropertyInitializerNode
+	attributeInitializers := attributeInitializers collect: #copy
 ]
 
 { #category : #rewriting }
 RMDSpeciesInitializerNode >> replaceChildren: aDictionary [
-	propertyInitializers := propertyInitializers
+	attributeInitializers := attributeInitializers
 		collect: [ :node | node copyReplace: aDictionary ]
 ]

@@ -138,7 +138,7 @@ where
 	self
 		assert: node guard
 		equals: (grammar condition parse: 'my energy > 0').
-	self assert: node propertyDefinitions size equals: 2.
+	self assert: node attributeDefinitions size equals: 2.
 	self assert: node utilityDefinitions size equals: 2.
 	node := grammar actionDefinition
 		parse:
@@ -148,7 +148,7 @@ where
 	self assert: node identifier equals: 'chase'.
 	self assert: node object equals: 'Target'.
 	self assert: node guard isNil.
-	self assert: node propertyDefinitions size equals: 1.
+	self assert: node attributeDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0.
 	node := grammar actionDefinition
 		parse:
@@ -162,7 +162,7 @@ where
 	self assert: node guard notNil.
 	self assert: node lifeDirectives size equals: 1.
 	self assert: node lifeDirectives first isDieDirectiveNode.
-	self assert: node propertyDefinitions size equals: 1.
+	self assert: node attributeDefinitions size equals: 1.
 	self assert: node utilityDefinitions size equals: 0
 ]
 
@@ -180,8 +180,8 @@ RMDGrammarTest >> testAgentDirective [
 	node := grammar agentDirective parse: 'direction neighbor''s foo'.
 	self assert: node isCellDirectiveNode.
 	self assert: node directive equals: 'direction'.
-	self assert: node cellPropertyVariable agent equals: 'here'.
-	self assert: node cellPropertyVariable identifier equals: 'foo'.
+	self assert: node cellAttributeVariable agent equals: 'here'.
+	self assert: node cellAttributeVariable identifier equals: 'foo'.
 	node := grammar agentDirective parse: 'foo bar'.
 	self assert: node isPetit2Failure
 ]
@@ -192,7 +192,7 @@ RMDGrammarTest >> testAnimatDefinition [
 	node := grammar animatDefinition parse: 'Foo is Animat.'.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'Foo'.
-	self assert: node propertyDeclarations isEmpty.
+	self assert: node attributeDeclarations isEmpty.
 	node := grammar animatDefinition
 		parse:
 			'
@@ -200,12 +200,12 @@ Goat is Animat with
 	sugar [kcal].' trim.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'Goat'.
-	self assert: node propertyDeclarations size equals: 1.
+	self assert: node attributeDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations first identifier
+		assert: node attributeDeclarations first identifier
 		equals: 'sugar'.
 	self
-		assert: node propertyDeclarations first unit
+		assert: node attributeDeclarations first unit
 		equals: (RMDUnit at: 'kcal').
 	node := grammar animatDefinition
 		parse:
@@ -215,18 +215,18 @@ Goat is Animat with
 	age [day].' trim.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'Goat'.
-	self assert: node propertyDeclarations size equals: 2.
+	self assert: node attributeDeclarations size equals: 2.
 	self
-		assert: node propertyDeclarations first identifier
+		assert: node attributeDeclarations first identifier
 		equals: 'sugar'.
 	self
-		assert: node propertyDeclarations first unit
+		assert: node attributeDeclarations first unit
 		equals: (RMDUnit at: 'kcal').
 	self
-		assert: node propertyDeclarations second identifier
+		assert: node attributeDeclarations second identifier
 		equals: 'age'.
 	self
-		assert: node propertyDeclarations second unit
+		assert: node attributeDeclarations second unit
 		equals: (RMDUnit at: 'day')
 ]
 
@@ -255,7 +255,7 @@ RMDGrammarTest >> testAnimatInitializer [
 	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 100.
 	self assert: node animat equals: 'Goat'.
-	self assert: node propertyInitializers size equals: 0.
+	self assert: node attributeInitializers size equals: 0.
 	node := grammar animatInitializer
 		parse:
 			'5 Wolf with
@@ -264,7 +264,7 @@ RMDGrammarTest >> testAnimatInitializer [
 	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 5.
 	self assert: node animat equals: 'Wolf'.
-	self assert: node propertyInitializers size equals: 2
+	self assert: node attributeInitializers size equals: 2
 ]
 
 { #category : #tests }
@@ -303,72 +303,166 @@ RMDGrammarTest >> testApply [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testAssignableDeltaPropertyVariable [
+RMDGrammarTest >> testAssignableDeltaAttributeVariable [
 
 	| variable |
-	variable := grammar assignableDeltaPropertyVariable parse:
+	variable := grammar assignableDeltaAttributeVariable parse:
 		            'my delta foo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse:
+	variable := grammar assignableDeltaAttributeVariable parse:
 		            'my delta Foo'.
 	self assert: variable isPetit2Failure.
-	variable := grammar assignableDeltaPropertyVariable parse: 'my Δfoo'.
+	variable := grammar assignableDeltaAttributeVariable parse: 'my Δfoo'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDeltaPropertyVariable parse:
+	variable := grammar assignableDeltaAttributeVariable parse:
 		            'foo''s delta bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar assignableDeltaPropertyVariable parse:
+	variable := grammar assignableDeltaAttributeVariable parse:
 		            'foo''s Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'the Δbar'.
+	variable := grammar assignableDeltaAttributeVariable parse: 'the Δbar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
-	self assert: variable propertyVariable isPlaceholderNode.
-	self assert: variable propertyVariable identifier equals: 'bar'.
-	variable := grammar assignableDeltaPropertyVariable parse: 'the delta bar'.
+	self assert: variable attributeVariable isPlaceholderNode.
+	self assert: variable attributeVariable identifier equals: 'bar'.
+	variable := grammar assignableDeltaAttributeVariable parse: 'the delta bar'.
 	self deny: variable isPetit2Failure.
 	self assert: variable isAssignableDeltaVariableNode.
-	self assert: variable propertyVariable isPlaceholderNode.
-	self assert: variable propertyVariable identifier equals: 'bar'
+	self assert: variable attributeVariable isPlaceholderNode.
+	self assert: variable attributeVariable identifier equals: 'bar'
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testAssignableDifferentialPropertyVariable [
+RMDGrammarTest >> testAssignableDifferentialAttributeVariable [
 
 	| variable |
-	variable := grammar assignableDifferentialPropertyVariable parse:
+	variable := grammar assignableDifferentialAttributeVariable parse:
 		            'my d/dt foo'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable isAssignableDifferentialAttributeVariableNode.
 	self assert: variable agent isNil.
 	self assert: variable identifier equals: 'foo'.
-	variable := grammar assignableDifferentialPropertyVariable parse:
+	variable := grammar assignableDifferentialAttributeVariable parse:
 		            'my d/dt X'.
 	self assert: variable isPetit2Failure.
-	variable := grammar assignableDifferentialPropertyVariable parse:
+	variable := grammar assignableDifferentialAttributeVariable parse:
 		            'foo''s d/dt bar'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isAssignableDifferentialPropertyVariableNode.
+	self assert: variable isAssignableDifferentialAttributeVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'.
-	variable := grammar assignableDifferentialPropertyVariable parse:
+	variable := grammar assignableDifferentialAttributeVariable parse:
 		            'the d/dt bar'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isAssignableDifferentialPropertyVariableNode.
-	self assert: variable propertyVariable isPlaceholderNode.
-	self assert: variable propertyVariable identifier equals: 'bar'
+	self assert: variable isAssignableDifferentialAttributeVariableNode.
+	self assert: variable attributeVariable isPlaceholderNode.
+	self assert: variable attributeVariable identifier equals: 'bar'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAttributeBind [
+
+	| node |
+	node := grammar attributeBind parse: 'the energy -> my sugar'.
+	self deny: node isPetit2Failure.
+	self assert: node isAttributeBindNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: 'my sugar').
+	node := grammar attributeBind parse: 'the energy -> 10 [m]'.
+	self deny: node isPetit2Failure.
+	self assert: node isAttributeBindNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: '10 [m]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAttributeDeclaration [
+	| declaration |
+	declaration := grammar attributeDeclaration parse: 'x [m]'.
+	self assert: declaration isAttributeDeclarationNode.
+	self assert: declaration identifier equals: 'x'.
+	self assert: declaration unit equals: RMDUnit m
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAttributeDefinition [
+	| definition |
+	definition := grammar attributeDefinition parse: 'my x'' = 1[m]'.
+	self assert: definition isAttributeDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar assignableAttributeVariable parse: 'my x').
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1[m]').
+	definition := grammar attributeDefinition
+		parse: 'foo''s delta x'' = 1[m]'.
+	self assert: definition isAttributeDefinitionNode.
+	self
+		assert: definition variable 
+		equals: (grammar assignableDeltaAttributeVariable parse: 'foo''s delta x').
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1[m]').
+	definition := grammar attributeDefinition
+		parse: 'foo''s d/dt x'' = 1[m/s]'.
+	self assert: definition isAttributeDefinitionNode.
+	self
+		assert: definition variable
+		equals: (grammar assignableDifferentialAttributeVariable parse: 'foo''s d/dt x').
+	self
+		assert: definition definitionBody
+		equals: (grammar literal parse: '1[m/s]').
+
+	definition := grammar attributeDefinition
+		parse:
+			'my x'' =		1 if x = 2,
+							2 if x = 3,
+							3'.
+	self deny: definition isPetit2Failure.
+	self assert: definition isAttributeDefinitionNode.
+	self assert: definition definitionBody isGuardedChoiceNode.
+	self
+		assert: definition definitionBody
+		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3').
+	definition := grammar attributeDefinition
+		parse:
+			'new x'' =	my x'.
+	self deny: definition isPetit2Failure.
+	self assert: definition isAttributeDefinitionNode.
+	self assert: definition variable attributeVariable isNewAttributeVariableNode.
+	self assert: definition definitionBody isAttributeVariableNode .
+
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAttributeInitializer [
+	| node |
+	node := grammar attributeInitializer
+		parse: 'green = uniform 100[kcal] to 1000[kcal]'.
+	self assert: node isAttributeInitializerNode.
+	self assert: node identifier equals: 'green'.
+	self
+		assert: node expression
+		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
 ]
 
 { #category : #tests }
@@ -453,7 +547,7 @@ RMDGrammarTest >> testCellDefinition [
 	| node |
 	node := grammar cellDefinition end parse: 'Cell.'.
 	self assert: node isCellDefinitionNode.
-	self assert: node propertyDeclarations isEmpty.
+	self assert: node attributeDeclarations isEmpty.
 	self assert: node equals: RMDCellDefinitionNode empty.
 	node := grammar cellDefinition end
 		parse:
@@ -461,12 +555,12 @@ RMDGrammarTest >> testCellDefinition [
 Cell with
 	sugar [kcal].' trim.
 	self assert: node isCellDefinitionNode.
-	self assert: node propertyDeclarations size equals: 1.
+	self assert: node attributeDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations first identifier
+		assert: node attributeDeclarations first identifier
 		equals: 'sugar'.
 	self
-		assert: node propertyDeclarations first unit
+		assert: node attributeDeclarations first unit
 		equals: RMDUnit kcal
 ]
 
@@ -480,7 +574,7 @@ RMDGrammarTest >> testCellInitializer [
 	self assert: node size literal equals: '5'.
 	self assert: node size unit equals: 'm' asRMDUnit.
 	self assert: node length closeTo: 5.0.
-	self assert: node propertyInitializers isEmpty.
+	self assert: node attributeInitializers isEmpty.
 	node := grammar cellInitializer
 		parse:
 			'15x30 of 4[m^2] Cell with
@@ -492,12 +586,12 @@ RMDGrammarTest >> testCellInitializer [
 	self assert: node size literal equals: '4'.
 	self assert: node size unit equals: 'm^2' asRMDUnit.
 	self assert: node length closeTo: 2.0.
-	self assert: node propertyInitializers size equals: 2.
+	self assert: node attributeInitializers size equals: 2.
 	self
-		assert: node propertyInitializers first identifier
+		assert: node attributeInitializers first identifier
 		equals: 'green'.
 	self
-		assert: node propertyInitializers second identifier
+		assert: node attributeInitializers second identifier
 		equals: 'fertility'
 ]
 
@@ -593,12 +687,12 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 isUtilityVariableNode.
 	self assert: expr1 identifier equals: 'x'.
 	expr1 := grammar expr1 parse: 'my x'.
-	self assert: expr1 isPropertyVariableNode.
+	self assert: expr1 isAttributeVariableNode.
 	self assert: expr1 identifier equals: 'x'.
 	self assert: expr1 agent equals: nil.
 	expr1 := grammar expr1 parse: '-foo''s x'.
 	self assert: expr1 isUnaryMinusNode.
-	self assert: expr1 expression isPropertyVariableNode.
+	self assert: expr1 expression isAttributeVariableNode.
 	self assert: expr1 expression identifier equals: 'x'.
 	self assert: expr1 expression agent equals: 'foo'.
 	expr1 := grammar agentDirective parse: 'distance foo'.
@@ -808,100 +902,6 @@ RMDGrammarTest >> testPlaceholder [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testPropertyBind [
-
-	| node |
-	node := grammar propertyBind parse: 'the energy -> my sugar'.
-	self deny: node isPetit2Failure.
-	self assert: node isPropertyBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: 'my sugar').
-	node := grammar propertyBind parse: 'the energy -> 10 [m]'.
-	self deny: node isPetit2Failure.
-	self assert: node isPropertyBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: '10 [m]')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testPropertyDeclaration [
-	| declaration |
-	declaration := grammar propertyDeclaration parse: 'x [m]'.
-	self assert: declaration isPropertyDeclarationNode.
-	self assert: declaration identifier equals: 'x'.
-	self assert: declaration unit equals: RMDUnit m
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testPropertyDefinition [
-	| definition |
-	definition := grammar propertyDefinition parse: 'my x'' = 1[m]'.
-	self assert: definition isPropertyDefinitionNode.
-	self
-		assert: definition variable
-		equals: (grammar assignablePropertyVariable parse: 'my x').
-	self
-		assert: definition definitionBody
-		equals: (grammar literal parse: '1[m]').
-	definition := grammar propertyDefinition
-		parse: 'foo''s delta x'' = 1[m]'.
-	self assert: definition isPropertyDefinitionNode.
-	self
-		assert: definition variable 
-		equals: (grammar assignableDeltaPropertyVariable parse: 'foo''s delta x').
-	self
-		assert: definition definitionBody
-		equals: (grammar literal parse: '1[m]').
-	definition := grammar propertyDefinition
-		parse: 'foo''s d/dt x'' = 1[m/s]'.
-	self assert: definition isPropertyDefinitionNode.
-	self
-		assert: definition variable
-		equals: (grammar assignableDifferentialPropertyVariable parse: 'foo''s d/dt x').
-	self
-		assert: definition definitionBody
-		equals: (grammar literal parse: '1[m/s]').
-
-	definition := grammar propertyDefinition
-		parse:
-			'my x'' =		1 if x = 2,
-							2 if x = 3,
-							3'.
-	self deny: definition isPetit2Failure.
-	self assert: definition isPropertyDefinitionNode.
-	self assert: definition definitionBody isGuardedChoiceNode.
-	self
-		assert: definition definitionBody
-		equals: (grammar guardedChoice end parse: '1 if x = 2, 2 if x = 3, 3').
-	definition := grammar propertyDefinition
-		parse:
-			'new x'' =	my x'.
-	self deny: definition isPetit2Failure.
-	self assert: definition isPropertyDefinitionNode.
-	self assert: definition variable propertyVariable isNewPropertyVariableNode.
-	self assert: definition definitionBody isPropertyVariableNode .
-
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testPropertyInitializer [
-	| node |
-	node := grammar propertyInitializer
-		parse: 'green = uniform 100[kcal] to 1000[kcal]'.
-	self assert: node isPropertyInitializerNode.
-	self assert: node identifier equals: 'green'.
-	self
-		assert: node expression
-		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
-]
-
-{ #category : #tests }
 RMDGrammarTest >> testSimulationDefinition [
 	| node |
 	node := grammar simulationDefinition end
@@ -950,7 +950,7 @@ where
 	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
-	self assert: node propertyBinds size = 2.
+	self assert: node attributeBinds size = 2.
 	node := grammar taskDefinition parse: '
 Wolf eat Goat within 1[m]
 where
@@ -961,7 +961,7 @@ where
 	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node propertyBinds size = 1
+	self assert: node attributeBinds size = 1
 ]
 
 { #category : #tests }
@@ -1088,16 +1088,16 @@ RMDGrammarTest >> testUtilityVariable [
 { #category : #tests }
 RMDGrammarTest >> testVariable [
 	| variable |
-	variable := grammar propertyVariable parse: 'my foo'.
+	variable := grammar attributeVariable parse: 'my foo'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isPropertyVariableNode.
+	self assert: variable isAttributeVariableNode.
 	self assert: variable identifier equals: 'foo'.
 	self assert: variable agent isNil.
-	variable := grammar propertyVariable parse: 'foo'.
+	variable := grammar attributeVariable parse: 'foo'.
 	self assert: variable isPetit2Failure.
-	variable := grammar propertyVariable parse: 'foo''s bar'.
+	variable := grammar attributeVariable parse: 'foo''s bar'.
 	self deny: variable isPetit2Failure.
-	self assert: variable isPropertyVariableNode.
+	self assert: variable isAttributeVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
 ]
@@ -1107,7 +1107,7 @@ RMDGrammarTest >> testWorldDefinition [
 	| node |
 	node := grammar worldDefinition end parse: 'World.'.
 	self assert: node isWorldDefinitionNode.
-	self assert: node propertyDeclarations isEmpty.
+	self assert: node attributeDeclarations isEmpty.
 	self assert: node equals: RMDWorldDefinitionNode empty.
 	node := grammar worldDefinition end
 		parse:
@@ -1115,11 +1115,11 @@ RMDGrammarTest >> testWorldDefinition [
 World with
 	temperature [C].' trim.
 	self assert: node isWorldDefinitionNode.
-	self assert: node propertyDeclarations size equals: 1.
+	self assert: node attributeDeclarations size equals: 1.
 	self
-		assert: node propertyDeclarations first identifier
+		assert: node attributeDeclarations first identifier
 		equals: 'temperature'.
-	self assert: node propertyDeclarations first unit equals: RMDUnit celsius
+	self assert: node attributeDeclarations first unit equals: RMDUnit celsius
 ]
 
 { #category : #tests }
@@ -1128,7 +1128,7 @@ RMDGrammarTest >> testWorldInitializer [
 	node := grammar worldInitializer parse: 'World with
 	temperature = 10 [C]'.
 	self assert: node isWorldInitializerNode.
-	self assert: node propertyInitializers size equals: 1.
-	self assert: node propertyInitializers first identifier equals: 'temperature'.
-	self assert: node propertyInitializers first expression equals: (grammar literal parse: '10 [C]')
+	self assert: node attributeInitializers size equals: 1.
+	self assert: node attributeInitializers first identifier equals: 'temperature'.
+	self assert: node attributeInitializers first expression equals: (grammar literal parse: '10 [C]')
 ]

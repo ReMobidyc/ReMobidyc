@@ -3,13 +3,13 @@ Class {
 	#superclass : #RMDSpeciesInspector,
 	#instVars : [
 		'chartPresenters',
-		'propertyTimeSeries',
-		'visibleProperties',
 		'showsMin',
 		'showsMax',
 		'showsMean',
 		'showsSd',
-		'showsTotal'
+		'showsTotal',
+		'visibleAttributes',
+		'attributeTimeSeries'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -51,7 +51,7 @@ RMDTimeSeriesInspector >> chartWidth [
 ]
 
 { #category : #accessing }
-RMDTimeSeriesInspector >> chartWith: propertyDefinition timeSeries: aDictionaryOfStats [
+RMDTimeSeriesInspector >> chartWith: attributeDefinition timeSeries: aDictionaryOfStats [
 
 	| chartWidth chartHeight font fontHeight form canvas times min max |
 	chartWidth := self chartWidth.
@@ -188,28 +188,28 @@ RMDTimeSeriesInspector >> chartWith: propertyDefinition timeSeries: aDictionaryO
 ]
 
 { #category : #private }
-RMDTimeSeriesInspector >> collapseButtonFor: propertyDef [
+RMDTimeSeriesInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self expandedIcon;
 		  action: [ 
-			  visibleProperties remove: propertyDef identifier ifAbsent: [  ].
+			  visibleAttributes remove: attributeDef identifier ifAbsent: [  ].
 			  self
 				  updateLayout;
 				  updateObservation ]
 ]
 
 { #category : #private }
-RMDTimeSeriesInspector >> expandButtonFor: propertyDef [
+RMDTimeSeriesInspector >> expandButtonFor: attributeDef [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;
 		  action: [ 
-			  visibleProperties add: propertyDef identifier.
+			  visibleAttributes add: attributeDef identifier.
 			  self
 				  updateLayout;
 				  updateObservation ]
@@ -219,8 +219,8 @@ RMDTimeSeriesInspector >> expandButtonFor: propertyDef [
 RMDTimeSeriesInspector >> initializePresenters [
 
 	super initializePresenters.
-	visibleProperties := Set new.
-	propertyTimeSeries := Dictionary new.
+	visibleAttributes := Set new.
+	attributeTimeSeries := Dictionary new.
 	showsMin := self newCheckBox
 		            labelOnRight;
 		            label: 'min';
@@ -279,17 +279,17 @@ RMDTimeSeriesInspector >> updateImage [
 
 	self layout ifNotNil: [ 
 		chartPresenters ifNil: [ self updateLayout ].
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				(visibleProperties includes: propertyDef identifier) ifTrue: [ 
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				(visibleAttributes includes: attributeDef identifier) ifTrue: [ 
 					chartPresenters
-						at: propertyDef identifier
+						at: attributeDef identifier
 						ifPresent: [ :presenter | 
-							propertyTimeSeries
-								at: propertyDef identifier
+							attributeTimeSeries
+								at: attributeDef identifier
 								ifPresent: [ :timeSeries | 
 									| form |
-									form := self chartWith: propertyDef timeSeries: timeSeries.
+									form := self chartWith: attributeDef timeSeries: timeSeries.
 									presenter image: form ] ] ] ] ] ]
 ]
 
@@ -300,25 +300,25 @@ RMDTimeSeriesInspector >> updateLayout [
 		| newLayout |
 		chartPresenters := Dictionary new.
 		newLayout := self newLayout.
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				(visibleProperties includes: propertyDef identifier)
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				(visibleAttributes includes: attributeDef identifier)
 					ifTrue: [ 
 						| form presenter |
 						newLayout
-							add: (self collapseButtonFor: propertyDef)
+							add: (self collapseButtonFor: attributeDef)
 							expand: false.
 						form := self
-							        chartWith: propertyDef
-							        timeSeries: (propertyTimeSeries
-									         at: propertyDef identifier
+							        chartWith: attributeDef
+							        timeSeries: (attributeTimeSeries
+									         at: attributeDef identifier
 									         ifAbsent: [ Dictionary new ]).
 						presenter := self newImage.
 						presenter image: form.
-						chartPresenters at: propertyDef identifier put: presenter.
+						chartPresenters at: attributeDef identifier put: presenter.
 						newLayout add: presenter height: form height ]
 					ifFalse: [ 
-					newLayout add: (self expandButtonFor: propertyDef) expand: false ] ] ].
+					newLayout add: (self expandButtonFor: attributeDef) expand: false ] ] ].
 		newLayout presenters ifEmpty: [ newLayout add: '' asPresenter ].
 		self layout: newLayout ]
 ]
@@ -335,10 +335,10 @@ RMDTimeSeriesInspector >> updateObservation [
 RMDTimeSeriesInspector >> updateTimeSeries [
 
 	chartPresenters ifNil: [ self updateLayout ].
-	self propertyValuesDo: [ :propertyValues | 
-		propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-			(visibleProperties includes: propertyDef identifier) ifTrue: [ 
-				(propertyTimeSeries
-					 at: propertyDef identifier
+	self attributeValuesDo: [ :attributeValues | 
+		attributeValues attributesDo: [ :attributeDef :vals :stats | 
+			(visibleAttributes includes: attributeDef identifier) ifTrue: [ 
+				(attributeTimeSeries
+					 at: attributeDef identifier
 					 ifAbsentPut: [ Dictionary new ]) at: interpreter time put: stats ] ] ]
 ]

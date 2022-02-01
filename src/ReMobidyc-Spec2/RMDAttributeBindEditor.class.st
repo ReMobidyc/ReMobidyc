@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyBindEditor,
+	#name : #RMDAttributeBindEditor,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'exceptVariableNodes',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyBindEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
+RMDAttributeBindEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
 	^ self new
 		actionDefinitionNode: aRMDActionDefinitionNode;
 		exceptVariableNodes: aCollectionOfRMDSyntaxNode;
@@ -20,7 +20,7 @@ RMDPropertyBindEditor class >> actionDefinition: aRMDActionDefinitionNode except
 ]
 
 { #category : #specs }
-RMDPropertyBindEditor class >> defaultSpec [
+RMDAttributeBindEditor class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -34,18 +34,18 @@ RMDPropertyBindEditor class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDPropertyBindEditor >> actionDefinitionNode [
+RMDAttributeBindEditor >> actionDefinitionNode [
 	^ actionDefinitionNode
 ]
 
 { #category : #accessing }
-RMDPropertyBindEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
+RMDAttributeBindEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	actionDefinitionNode := aRMDActionDefinitionNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDPropertyBindEditor >> agentDirectiveMenu [
+RMDAttributeBindEditor >> agentDirectiveMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -71,18 +71,40 @@ RMDPropertyBindEditor >> agentDirectiveMenu [
 ]
 
 { #category : #accessing }
-RMDPropertyBindEditor >> exceptVariableNodes [
+RMDAttributeBindEditor >> attributeBindNode [
+
+	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
+		  expressionField syntaxNode ifNotNil: [ :replacement | 
+			  RMDAttributeBindNode
+				  placeholder: placeholder
+				  replacement: replacement ] ]
+]
+
+{ #category : #accessing }
+RMDAttributeBindEditor >> attributeBindNode: aRMDAttributeBindNode [
+
+	aRMDAttributeBindNode
+		ifNotNil: [ 
+			placeholderList selectItem: aRMDAttributeBindNode placeholder.
+			expressionField syntaxNode: aRMDAttributeBindNode replacement ]
+		ifNil: [ 
+			placeholderList selectItem: nil.
+			expressionField text: '' ]
+]
+
+{ #category : #accessing }
+RMDAttributeBindEditor >> exceptVariableNodes [
 	^ exceptVariableNodes 
 ]
 
 { #category : #accessing }
-RMDPropertyBindEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
+RMDAttributeBindEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	exceptVariableNodes := aCollectionOfRMDSyntaxNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDPropertyBindEditor >> expressionFieldMenu [
+RMDAttributeBindEditor >> expressionFieldMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -95,7 +117,7 @@ RMDPropertyBindEditor >> expressionFieldMenu [
 ]
 
 { #category : #initialization }
-RMDPropertyBindEditor >> initializePresenters [
+RMDAttributeBindEditor >> initializePresenters [
 
 	super initializePresenters.
 	placeholderList := self newDropList
@@ -116,7 +138,7 @@ RMDPropertyBindEditor >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
+RMDAttributeBindEditor >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Bindings for Adaptation'.
 	aWindowPresenter
@@ -124,36 +146,14 @@ RMDPropertyBindEditor >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #menu }
-RMDPropertyBindEditor >> paste: aString [
+RMDAttributeBindEditor >> paste: aString [
 
 	Clipboard clipboardText: aString.
 	expressionField withAdapterDo: [ :a | a widget textArea editor paste ]
 ]
 
-{ #category : #accessing }
-RMDPropertyBindEditor >> propertyBindNode [
-
-	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
-		  expressionField syntaxNode ifNotNil: [ :replacement | 
-			  RMDPropertyBindNode
-				  placeholder: placeholder
-				  replacement: replacement ] ]
-]
-
-{ #category : #accessing }
-RMDPropertyBindEditor >> propertyBindNode: aRMDPropertyBindNode [
-
-	aRMDPropertyBindNode
-		ifNotNil: [ 
-			placeholderList selectItem: aRMDPropertyBindNode placeholder.
-			expressionField syntaxNode: aRMDPropertyBindNode replacement ]
-		ifNil: [ 
-			placeholderList selectItem: nil.
-			expressionField text: '' ]
-]
-
 { #category : #updating }
-RMDPropertyBindEditor >> updateExpressionFieldType [
+RMDAttributeBindEditor >> updateExpressionFieldType [
 
 	placeholderList selectedItem
 		ifNotNil: [ :placeholder | 
@@ -165,7 +165,7 @@ RMDPropertyBindEditor >> updateExpressionFieldType [
 ]
 
 { #category : #accessing }
-RMDPropertyBindEditor >> updatePlaceholderDropList [
+RMDAttributeBindEditor >> updatePlaceholderDropList [
 
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].
 	placeholderList items: (Array streamContents: [ :stream | 

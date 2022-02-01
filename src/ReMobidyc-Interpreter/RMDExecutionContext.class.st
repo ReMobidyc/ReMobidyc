@@ -2,9 +2,9 @@ Class {
 	#name : #RMDExecutionContext,
 	#superclass : #RMDContext,
 	#instVars : [
-		'propertyDict',
 		'subject',
-		'subjectDefinition'
+		'subjectDefinition',
+		'attributeDict'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -18,7 +18,7 @@ RMDExecutionContext class >> subject: anInteger definition: aRMDSpeciesDefinitio
 
 { #category : #'memory access' }
 RMDExecutionContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
-	^ (propertyDict
+	^ (attributeDict
 		at: agentReference
 		ifAbsentPut: [ ^ errorBlock value ])
 		at: aString
@@ -28,12 +28,12 @@ RMDExecutionContext >> getMemoryAddressFor: aString agent: agentReference ifAbse
 { #category : #initialization }
 RMDExecutionContext >> initialize [
 	super initialize.
-	propertyDict := Dictionary new
+	attributeDict := Dictionary new
 ]
 
 { #category : #'memory access' }
 RMDExecutionContext >> setMemoryAddressFor: aString agent: agentReference to: anotherInteger [
-	^ (propertyDict at: agentReference ifAbsentPut: [ Dictionary new ])
+	^ (attributeDict at: agentReference ifAbsentPut: [ Dictionary new ])
 		at: aString
 		put: anotherInteger
 ]
@@ -48,12 +48,12 @@ RMDExecutionContext >> subject: anInteger definition: aRMDSpeciesDefinitionNode 
 	| dict |
 	dict := Dictionary new.
 	aRMDSpeciesDefinitionNode
-		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict at: nil put: dict.
+		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	attributeDict at: nil put: dict.
 	aRMDSpeciesDefinitionNode isCellDefinitionNode
-		ifTrue: [ propertyDict at: 'here' put: dict ].
+		ifTrue: [ attributeDict at: 'here' put: dict ].
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
-		ifTrue: [ propertyDict at: 'world' put: dict ].
+		ifTrue: [ attributeDict at: 'world' put: dict ].
 	subject := anInteger.
 	subjectDefinition := aRMDSpeciesDefinitionNode 
 ]

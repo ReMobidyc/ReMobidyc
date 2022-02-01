@@ -16,6 +16,6 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
 	aRMDInterpreter
 		withContext: (aRMDInterpreter newTypecheckContextForAnimat: self animat)
-		do: [ propertyInitializers
+		do: [ attributeInitializers
 				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
 ]
