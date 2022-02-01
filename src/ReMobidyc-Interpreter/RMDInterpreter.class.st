@@ -94,10 +94,10 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 		animatDefinitionsDo: [ :animatDef | 
 			| xOffset yOffset |
 			xOffset := animatDef
-				propertyOffsetAt: 'x'
+				attributeOffsetAt: 'x'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
-				propertyOffsetAt: 'y'
+				attributeOffsetAt: 'y'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
 			memory
 				animatsOf: animatDef identifier
@@ -126,10 +126,10 @@ RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
 ]
 
 { #category : #directives }
-RMDInterpreter >> cellDirective: aString variable: aRMDPropertyVariableNode [
+RMDInterpreter >> cellDirective: aString variable: aRMDAttributeVariableNode [
 
 	aString = 'direction' ifTrue: [ 
-		^ self directionOfGradient: aRMDPropertyVariableNode identifier ].
+		^ self directionOfGradient: aRMDAttributeVariableNode identifier ].
 	^ self unknownDirectiveError: aString
 ]
 
@@ -154,10 +154,10 @@ RMDInterpreter >> changeStage: animatString [
 		newIndividuals: { newIndividual }
 		definition: animatDefinition.
 	offset := 0.
-	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
+	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
 		| value |
 		value := self
-			         readVariable: propertyDecl identifier
+			         readVariable: attributeDecl identifier
 			         agent: nil
 			         ifAbsent: [ 0.0 ].
 		memory nextAt: newIndividual + offset put: value.
@@ -165,7 +165,7 @@ RMDInterpreter >> changeStage: animatString [
 	memory removeAnimat: context subject.
 	context subject
 		to:
-			context subject + context subjectDefinition totalNumberOfProperties
+			context subject + context subjectDefinition totalNumberOfAttributes
 			- 1
 		do: [ :slot | memory nextAt: slot put: nil ].
 	^ newIndividual
@@ -378,10 +378,10 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 		                  id ].
 	context newIndividuals: newIndividuals definition: animatDefinition.
 	offset := 0.
-	animatDefinition allPropertyDeclarations do: [ :propertyDecl | 
+	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
 		| value |
 		value := self
-			         readVariable: propertyDecl identifier
+			         readVariable: attributeDecl identifier
 			         agent: nil
 			         ifAbsent: [ 0.0 ].
 		newIndividuals do: [ :individual | 
@@ -450,10 +450,10 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 		animatDefinitionsDo: [ :animatDef | 
 			| xOffset yOffset |
 			xOffset := animatDef
-				propertyOffsetAt: 'x'
+				attributeOffsetAt: 'x'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
 			yOffset := animatDef
-				propertyOffsetAt: 'y'
+				attributeOffsetAt: 'y'
 				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
 			memory
 				animatsOf: animatDef identifier
@@ -586,7 +586,7 @@ RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 		removeAnimat: anInteger;
 		removeSeedAt: anInteger.
 	anInteger to:
-	anInteger + aRMDAnimatDefinitionNode totalNumberOfProperties - 1 do: [ 
+	anInteger + aRMDAnimatDefinitionNode totalNumberOfAttributes - 1 do: [ 
 	:slot | memory nextAt: slot put: nil ]
 ]
 

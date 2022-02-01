@@ -14,12 +14,12 @@ RMDDifferentialVariableNodeTest >> testAssignIn [
 		tick.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s d/dt x'' = 6')
+			((parser attributeDefinition parse: 'bar''s d/dt x'' = 6')
 				evalIn: interpreter)
 		closeTo: 6.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s d/dt x'' = 7')
+			((parser attributeDefinition parse: 'bar''s d/dt x'' = 7')
 				evalIn: interpreter)
 		closeTo: 7.
 	self
@@ -36,12 +36,12 @@ RMDDifferentialVariableNodeTest >> testAssignIn [
 { #category : #tests }
 RMDDifferentialVariableNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser propertyDefinition end parse: 'my d/dt x'' = foo'.
+	node := parser attributeDefinition end parse: 'my d/dt x'' = foo'.
 	replacement := Dictionary new
-		at: (parser assignableDifferentialPropertyVariable end parse: 'my d/dt x')
-			put: (parser assignableDifferentialPropertyVariable end parse: 'my d/dt y');
+		at: (parser assignableDifferentialAttributeVariable end parse: 'my d/dt x')
+			put: (parser assignableDifferentialAttributeVariable end parse: 'my d/dt y');
 		yourself.
 	self
 		assert: (node copyReplace: replacement)
-		equals: (parser propertyDefinition end parse: 'my d/dt y'' = foo')
+		equals: (parser attributeDefinition end parse: 'my d/dt y'' = foo')
 ]

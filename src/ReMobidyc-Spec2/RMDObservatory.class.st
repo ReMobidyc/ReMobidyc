@@ -302,11 +302,11 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 							  yourself ];
 					  whenRetrievedDo: [ :content | content updateImage ];
 					  title: 'Map').
-			 interpreter worldDefinition allPropertyDeclarations ifNotEmpty: [ 
+			 interpreter worldDefinition allAttributeDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self worldInspector ];
 						  title: 'World') ].
-			 interpreter cellDefinition allPropertyDeclarations ifNotEmpty: [ 
+			 interpreter cellDefinition allAttributeDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self cellInspector ];
 						  title: 'Cell') ].

@@ -12,8 +12,8 @@ RMDAnimatDefinitionNodeTest >> testCopyReplace [
 			'Goat is Animat with
 blood_sugar [kcal].'.
 	replacement := Dictionary new
-		at: (parser propertyDeclaration end parse: 'blood_sugar [kcal]')
-			put: (parser propertyDeclaration end parse: 'energy [J]');
+		at: (parser attributeDeclaration end parse: 'blood_sugar [kcal]')
+			put: (parser attributeDeclaration end parse: 'energy [J]');
 		yourself.
 	self
 		assert: (node copyReplace: replacement)

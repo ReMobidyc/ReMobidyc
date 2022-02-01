@@ -58,8 +58,8 @@ RMDActionContext >> location: anInteger definition: aRMDCellDefinition agent: aS
 	| dict |
 	dict := Dictionary new.
 	aRMDCellDefinition
-		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict at: aString put: dict.
+		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	attributeDict at: aString put: dict.
 	location := anInteger
 ]
 
@@ -69,9 +69,9 @@ RMDActionContext >> newIndividuals: anArrayOfInteger definition: aRMDAnimatDefin
 	anArrayOfInteger do: [ :individual | 
 		| dict |
 		dict := Dictionary new.
-		aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+		aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
 			dict at: identifier put: individual + offset ].
-		propertyDict at: individual put: dict ].
+		attributeDict at: individual put: dict ].
 	newIndividuals := anArrayOfInteger.
 	newDefinition := aRMDAnimatDefinition
 ]
@@ -92,9 +92,9 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 
 	| dict |
 	dict := Dictionary new.
-	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+	aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
 		dict at: identifier put: anInteger + offset ].
-	propertyDict
+	attributeDict
 		at: aRMDAnimatDefinition identifier uncapitalized
 		put: dict.
 	object := anInteger.
@@ -106,9 +106,9 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aS
 
 	| dict |
 	dict := Dictionary new.
-	aRMDAnimatDefinition propertyOffsetsDo: [ :identifier :offset | 
+	aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
 		dict at: identifier put: anInteger + offset ].
-	propertyDict at: aString put: dict.
+	attributeDict at: aString put: dict.
 	object := anInteger.
 	objectDefinition := aRMDAnimatDefinition
 ]
@@ -145,6 +145,6 @@ RMDActionContext >> world: anInteger definition: aRMDWorldDefinition [
 	| dict |
 	dict := Dictionary new.
 	aRMDWorldDefinition
-		propertyOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	propertyDict at: 'world' put: dict
+		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	attributeDict at: 'world' put: dict
 ]

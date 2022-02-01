@@ -1,9 +1,9 @@
-Extension { #name : #RMDPropertyDefinitionNode }
+Extension { #name : #RMDAttributeDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyDefinitionNode >> evalIn: aRMDInterpreter [
+RMDAttributeDefinitionNode >> evalIn: aRMDInterpreter [
 
-	variable propertyVariable isNewPropertyVariableNode
+	variable attributeVariable isNewAttributeVariableNode
 		ifTrue: [ 
 			| value |
 			aRMDInterpreter context newIndividualsDo: [ :individual | 
@@ -19,7 +19,7 @@ RMDPropertyDefinitionNode >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyDefinitionNode >> typecheckIn: aRMDInterpreter [
+RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 	| variableType bodyType |
 	variableType := variable typecheckIn: aRMDInterpreter.
 	bodyType := definitionBody typecheckIn: aRMDInterpreter.

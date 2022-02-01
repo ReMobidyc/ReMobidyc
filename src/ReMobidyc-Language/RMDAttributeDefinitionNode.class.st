@@ -1,37 +1,37 @@
 Class {
-	#name : #RMDPropertyDefinitionNode,
+	#name : #RMDAttributeDefinitionNode,
 	#superclass : #RMDDefinitionNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'typical instances' }
-RMDPropertyDefinitionNode class >> template [
+RMDAttributeDefinitionNode class >> template [
 
-	<script: 'RMDPropertyDefinitionNode template inspect'>
-	^ RMDPropertyDefinitionNode
+	<script: 'RMDAttributeDefinitionNode template inspect'>
+	^ RMDAttributeDefinitionNode
 		  variable:
-		  (RMDAssignablePropertyVariableNode identifier: 'var' agent: nil)
+		  (RMDAssignableAttributeVariableNode identifier: 'var' agent: nil)
 		  expression: RMDLiteralNode zero
 ]
 
 { #category : #converting }
-RMDPropertyDefinitionNode >> asPresenter [
+RMDAttributeDefinitionNode >> asPresenter [
 
-	^ RMDPropertyDefinitionBrowser on: self
+	^ RMDAttributeDefinitionBrowser on: self
 ]
 
 { #category : #testing }
-RMDPropertyDefinitionNode >> isPropertyDefinitionNode [
+RMDAttributeDefinitionNode >> isAttributeDefinitionNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionNode >> operator [
+RMDAttributeDefinitionNode >> operator [
 	^ '='
 ]
 
 { #category : #printing }
-RMDPropertyDefinitionNode >> printOn: aStream [
+RMDAttributeDefinitionNode >> printOn: aStream [
 	variable printOn: aStream.
 	aStream
 		nextPut: $';
@@ -42,7 +42,7 @@ RMDPropertyDefinitionNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDPropertyDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDAttributeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
 	variable

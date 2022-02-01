@@ -8,7 +8,7 @@ RMDVariableNodeTest >> testAssignIn [
 	interpreter context
 		setMemoryAddressFor: 'x' agent: 'foo' to: 1.
 	self
-		assert: ((parser assignablePropertyVariable parse: 'foo''s x') assign: 5 in: interpreter)
+		assert: ((parser assignableAttributeVariable parse: 'foo''s x') assign: 5 in: interpreter)
 		equals: 5.
 	self assert: (interpreter memory nextAt: 1) closeTo: 5.
 	self

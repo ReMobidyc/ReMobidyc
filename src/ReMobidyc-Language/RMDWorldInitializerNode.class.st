@@ -5,23 +5,23 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDWorldInitializerNode class >> empty [
-	<script: 'RMDWorldInitializerNode empty inspect'>
-	^ self propertyInitializers: Array new
+RMDWorldInitializerNode class >> attributeInitializers: anArrayOfRMDAttributeInitializer [
+	^ self new
+		attributeInitializers: anArrayOfRMDAttributeInitializer;
+		yourself
 ]
 
 { #category : #'instance creation' }
-RMDWorldInitializerNode class >> propertyInitializers: anArrayOfRMDPropertyInitializer [
-	^ self new
-		propertyInitializers: anArrayOfRMDPropertyInitializer;
-		yourself
+RMDWorldInitializerNode class >> empty [
+	<script: 'RMDWorldInitializerNode empty inspect'>
+	^ self attributeInitializers: Array new
 ]
 
 { #category : #'instance creation' }
 RMDWorldInitializerNode class >> withTemperature [
 	<script:
-		'(RMDWorldInitializerNode propertyInitializers: {RMDPropertyInitializerNode identifier: ''temperature'' expression: ''27 [C]'' asRMDExpression}) inspect'>
-	^ self propertyInitializers: Array new
+		'(RMDWorldInitializerNode attributeInitializers: {RMDAttributeInitializerNode identifier: ''temperature'' expression: ''27 [C]'' asRMDExpression}) inspect'>
+	^ self attributeInitializers: Array new
 ]
 
 { #category : #testing }
@@ -33,11 +33,11 @@ RMDWorldInitializerNode >> isWorldInitializerNode [
 RMDWorldInitializerNode >> printOn: aStream [
 
 	aStream nextPutAll: 'World'.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers
+		attributeInitializers
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init printOn: aStream ]
@@ -50,11 +50,11 @@ RMDWorldInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'World'.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers do: [ :init | 
+		attributeInitializers do: [ :init | 
 			aStream nextPutAll: '    '.
 			init
 				printOn: aStream

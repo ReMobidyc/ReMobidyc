@@ -166,14 +166,14 @@ RMDTaskDefinitionBrowser >> addReplacement [
 				 actionDefinitionAt: taskDefinition actionIdentifier
 				 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 				| bindEditor |
-				(bindEditor := RMDPropertyBindEditor
+				(bindEditor := RMDAttributeBindEditor
 					               actionDefinition: actionDefinition
 					               except:
-					               (taskDefinition propertyBinds collect:
+					               (taskDefinition attributeBinds collect:
 						                #placeholder)) openDialogWithSpec okAction: [ 
-					bindEditor propertyBindNode ifNotNil: [ :bindNode | 
-						taskDefinition propertyBinds:
-							(taskDefinition propertyBinds copyWith: bindNode).
+					bindEditor attributeBindNode ifNotNil: [ :bindNode | 
+						taskDefinition attributeBinds:
+							(taskDefinition attributeBinds copyWith: bindNode).
 						self
 							updateReplacementList;
 							updateSourceText ] ] ] ] ]
@@ -219,23 +219,23 @@ RMDTaskDefinitionBrowser >> editReplacement [
 					 actionDefinitionAt: taskDefinition actionIdentifier
 					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 					| bindEditor |
-					bindEditor := RMDPropertyBindEditor
+					bindEditor := RMDAttributeBindEditor
 						              actionDefinition: actionDefinition
-						              except: (taskDefinition propertyBinds
+						              except: (taskDefinition attributeBinds
 								               select: [ :bind | bind ~= oldBind ]
 								               thenCollect: #placeholder).
-					bindEditor propertyBindNode: oldBind.
+					bindEditor attributeBindNode: oldBind.
 					bindEditor openDialogWithSpec okAction: [ 
-						bindEditor propertyBindNode ifNotNil: [ :newBind | 
+						bindEditor attributeBindNode ifNotNil: [ :newBind | 
 							| index |
-							index := taskDefinition propertyBinds indexOf: oldBind.
+							index := taskDefinition attributeBinds indexOf: oldBind.
 							index > 0
 								ifTrue: [ 
-									taskDefinition propertyBinds at: index put: newBind.
+									taskDefinition attributeBinds at: index put: newBind.
 									taskDefinition resetAction ]
 								ifFalse: [ 
-									taskDefinition propertyBinds:
-										(taskDefinition propertyBinds copyWith: newBind) ].
+									taskDefinition attributeBinds:
+										(taskDefinition attributeBinds copyWith: newBind) ].
 							self
 								updateReplacementList;
 								updateSourceText ] ] ] ] ] ]
@@ -339,15 +339,15 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 			                   ((SpStringTableColumn
 				                     title: 'placeholder'
 				                     evaluated: [ :item | 
-					                     | actionProperty actionDefinition |
-					                     actionProperty := item placeholder
+					                     | actionAttribute actionDefinition |
+					                     actionAttribute := item placeholder
 						                                       printString asText.
 					                     actionDefinition := self actionDefinition.
 					                     (actionDefinition isNil or: [ 
 							                      (actionDefinition includesNode:
 									                       item placeholder) not ]) ifTrue: [ 
-							                     actionProperty makeAllColor: Color red ].
-					                     actionProperty ])
+							                     actionAttribute makeAllColor: Color red ].
+					                     actionAttribute ])
 				                    beExpandable;
 				                    yourself);
 		                   addColumn:
@@ -423,7 +423,7 @@ RMDTaskDefinitionBrowser >> removeReplacement [
 		ifNotNil: [ :bind | 
 			self taskDefinition
 				ifNotNil: [ :task | 
-					task propertyBinds: (task propertyBinds copyWithout: bind).
+					task attributeBinds: (task attributeBinds copyWithout: bind).
 					self
 						updateReplacementList;
 						updateSourceText ] ]
@@ -517,7 +517,7 @@ RMDTaskDefinitionBrowser >> updateRangeField [
 RMDTaskDefinitionBrowser >> updateReplacementList [
 
 	replacementList items: (self taskDefinition
-			 ifNotNil: [ :taskDefinition | taskDefinition propertyBinds ]
+			 ifNotNil: [ :taskDefinition | taskDefinition attributeBinds ]
 			 ifNil: [ Array new ])
 ]
 
@@ -561,7 +561,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
 						 guard: nil
-						 propertyBinds: Array new) ]
+						 attributeBinds: Array new) ]
 			ifNotNil: [ :taskDefinition | 
 				taskDefinition actionIdentifier: actionDefinition identifier.
 				(taskDefinition actionWith: simulationModel) object

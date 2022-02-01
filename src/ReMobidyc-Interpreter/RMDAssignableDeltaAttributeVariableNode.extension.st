@@ -1,7 +1,7 @@
-Extension { #name : #RMDAssignableDeltaPropertyVariableNode }
+Extension { #name : #RMDAssignableDeltaAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignableDeltaPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
+RMDAssignableDeltaAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ aRMDInterpreter
 		write: aNumber
 		toDelta: self identifier
@@ -10,7 +10,7 @@ RMDAssignableDeltaPropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignableDeltaPropertyVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
+RMDAssignableDeltaAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
 
 	^ aRMDInterpreter
 		  write: aNumber
@@ -20,6 +20,6 @@ RMDAssignableDeltaPropertyVariableNode >> assign: aNumber toNewIndividual: anInt
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignableDeltaPropertyVariableNode >> typecheckIn: aRMDInterpreter [
-	^ propertyVariable typecheckIn: aRMDInterpreter
+RMDAssignableDeltaAttributeVariableNode >> typecheckIn: aRMDInterpreter [
+	^ attributeVariable typecheckIn: aRMDInterpreter
 ]

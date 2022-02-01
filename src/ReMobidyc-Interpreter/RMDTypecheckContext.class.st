@@ -6,10 +6,10 @@ Class {
 		'objectDefinition',
 		'cellDefinition',
 		'worldDefinition',
-		'properties',
 		'utilities',
 		'action',
-		'newDefinition'
+		'newDefinition',
+		'attributes'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -36,19 +36,19 @@ RMDTypecheckContext >> cellDefinition: aRMDCellDefinitionNode [
 	cellDefinition := aRMDCellDefinitionNode.
 	dict := Dictionary new.
 	cellDefinition
-		propertyUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	properties at: 'here' put: dict.
-	properties at: 'east' put: dict.
-	properties at: 'west' put: dict.
-	properties at: 'south' put: dict.
-	properties at: 'north' put: dict
+		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
+	attributes at: 'here' put: dict.
+	attributes at: 'east' put: dict.
+	attributes at: 'west' put: dict.
+	attributes at: 'south' put: dict.
+	attributes at: 'north' put: dict
 ]
 
 { #category : #initialization }
 RMDTypecheckContext >> initialize [
 	super initialize.
 	utilities := Dictionary new.
-	properties := Dictionary new
+	attributes := Dictionary new
 ]
 
 { #category : #accessing }
@@ -64,9 +64,9 @@ RMDTypecheckContext >> newDefinition: aRMDAnimatDefinitionNode [
 	| dict |
 	newDefinition := aRMDAnimatDefinitionNode.
 	dict := Dictionary new.
-	newDefinition propertyUnitsDo: [ :identifier :unit | 
+	newDefinition attributeUnitsDo: [ :identifier :unit | 
 		dict at: identifier put: (RMDType unit: unit) ].
-	properties at: 'new' put: dict
+	attributes at: 'new' put: dict
 ]
 
 { #category : #accessing }
@@ -75,8 +75,8 @@ RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
 	objectDefinition := aRMDAnimatDefinitionNode.
 	dict := Dictionary new.
 	objectDefinition
-		propertyUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	properties at: aString uncapitalized put: dict
+		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
+	attributes at: aString uncapitalized put: dict
 ]
 
 { #category : #accessing }
@@ -95,8 +95,8 @@ RMDTypecheckContext >> subjectDefinition: aRMDSpeciesDefinitionNode [
 	subjectDefinition := aRMDSpeciesDefinitionNode.
 	dict := Dictionary new.
 	subjectDefinition
-		propertyUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	properties at: nil put: dict
+		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
+	attributes at: nil put: dict
 ]
 
 { #category : #accessing }
@@ -111,7 +111,7 @@ RMDTypecheckContext >> typeAt: aString put: aRMDType [
 
 { #category : #accessing }
 RMDTypecheckContext >> typeOfVariable: aString agent: agentReference ifAbsent: errorBlock [
-	^ properties
+	^ attributes
 		at: agentReference
 		ifPresent: [ :dict | dict at: aString ifAbsent: errorBlock ]
 		ifAbsent: errorBlock
@@ -128,6 +128,6 @@ RMDTypecheckContext >> worldDefinition: aRMDWorldDefinitionNode [
 	worldDefinition := aRMDWorldDefinitionNode.
 	dict := Dictionary new.
 	worldDefinition
-		propertyUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	properties at: 'world' put: dict
+		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
+	attributes at: 'world' put: dict
 ]

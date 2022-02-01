@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyValueDistributionChart,
+	#name : #RMDAttributeValueDistributionChart,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'#image',
@@ -9,6 +9,6 @@ Class {
 }
 
 { #category : #initialization }
-RMDPropertyValueDistributionChart >> initialize [
+RMDAttributeValueDistributionChart >> initialize [
 	super initialize.
 ]

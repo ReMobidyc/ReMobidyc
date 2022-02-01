@@ -2,7 +2,7 @@ Class {
 	#name : #RMDCellDirectiveNode,
 	#superclass : #RMDDirectiveNode,
 	#instVars : [
-		'cellPropertyVariable'
+		'cellAttributeVariable'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -11,34 +11,34 @@ Class {
 RMDCellDirectiveNode class >> directive: aString identifier: anotherString [
 	^ self new
 		directive: aString;
-		cellPropertyVariable: (RMDPropertyVariableNode identifier: anotherString agent: 'here');
+		cellAttributeVariable: (RMDAttributeVariableNode identifier: anotherString agent: 'here');
 		yourself
 ]
 
 { #category : #comparing }
 RMDCellDirectiveNode >> = anObject [
 	^ super = anObject
-		and: [ cellPropertyVariable = anObject cellPropertyVariable ]
+		and: [ cellAttributeVariable = anObject cellAttributeVariable ]
 ]
 
 { #category : #accessing }
-RMDCellDirectiveNode >> cellPropertyVariable [
-	^ cellPropertyVariable
+RMDCellDirectiveNode >> cellAttributeVariable [
+	^ cellAttributeVariable
 ]
 
 { #category : #accessing }
-RMDCellDirectiveNode >> cellPropertyVariable: aRMDPropertyVariableNode [
-	cellPropertyVariable := aRMDPropertyVariableNode
+RMDCellDirectiveNode >> cellAttributeVariable: aRMDAttributeVariableNode [
+	cellAttributeVariable := aRMDAttributeVariableNode
 ]
 
 { #category : #enumerating }
 RMDCellDirectiveNode >> childrenDo: aBlock [
-	aBlock value: cellPropertyVariable
+	aBlock value: cellAttributeVariable
 ]
 
 { #category : #comparing }
 RMDCellDirectiveNode >> hash [
-	^ super hash bitXor: cellPropertyVariable hash
+	^ super hash bitXor: cellAttributeVariable hash
 ]
 
 { #category : #testing }
@@ -48,7 +48,7 @@ RMDCellDirectiveNode >> isCellDirectiveNode [
 
 { #category : #copying }
 RMDCellDirectiveNode >> postCopy [
-	cellPropertyVariable := cellPropertyVariable copy
+	cellAttributeVariable := cellAttributeVariable copy
 ]
 
 { #category : #printing }
@@ -56,7 +56,7 @@ RMDCellDirectiveNode >> printOn: aStream [
 	aStream
 		nextPutAll: directive;
 		nextPutAll: ' neighbor''s ';
-		nextPutAll: cellPropertyVariable identifier
+		nextPutAll: cellAttributeVariable identifier
 ]
 
 { #category : #printing }
@@ -66,7 +66,7 @@ RMDCellDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNod
 	aStream
 		nextPutAll: directive;
 		nextPutAll: ' neighbor''s ';
-		nextPutAll: cellPropertyVariable identifier.
+		nextPutAll: cellAttributeVariable identifier.
 	(aCollectionOfRMDSyntaxNode includes: self)
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]

@@ -4,6 +4,6 @@ Extension { #name : #RMDCellInitializerNode }
 RMDCellInitializerNode >> typecheckIn: aRMDInterpreter [
 	aRMDInterpreter
 		withContext: aRMDInterpreter newTypecheckContextForCell
-		do: [ propertyInitializers
+		do: [ attributeInitializers
 				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
 ]

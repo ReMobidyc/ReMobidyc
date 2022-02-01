@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyInitializerNode,
+	#name : #RMDAttributeInitializerNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyInitializerNode class >> identifier: aString expression: aRMDExpressionNode [
+RMDAttributeInitializerNode class >> identifier: aString expression: aRMDExpressionNode [
 	^ self new
 		identifier: aString;
 		expression: aRMDExpressionNode;
@@ -17,54 +17,54 @@ RMDPropertyInitializerNode class >> identifier: aString expression: aRMDExpressi
 ]
 
 { #category : #comparing }
-RMDPropertyInitializerNode >> = anObject [
+RMDAttributeInitializerNode >> = anObject [
 	^ self class = anObject class
 		and: [ identifier = anObject identifier
 				and: [ expression = anObject expression ] ]
 ]
 
 { #category : #enumerating }
-RMDPropertyInitializerNode >> childrenDo: aBlock [
+RMDAttributeInitializerNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerNode >> expression [
+RMDAttributeInitializerNode >> expression [
 	^ expression
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerNode >> expression: aRMDExpressionNode [
+RMDAttributeInitializerNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
 { #category : #comparing }
-RMDPropertyInitializerNode >> hash [
+RMDAttributeInitializerNode >> hash [
 	^ identifier hash bitXor: expression hash
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerNode >> identifier [
+RMDAttributeInitializerNode >> identifier [
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDPropertyInitializerNode >> identifier: aString [
+RMDAttributeInitializerNode >> identifier: aString [
 	identifier := aString
 ]
 
 { #category : #printing }
-RMDPropertyInitializerNode >> isPropertyInitializerNode [
+RMDAttributeInitializerNode >> isAttributeInitializerNode [
 	^ true
 ]
 
 { #category : #copying }
-RMDPropertyInitializerNode >> postCopy [
+RMDAttributeInitializerNode >> postCopy [
 	expression := expression copy
 ]
 
 { #category : #printing }
-RMDPropertyInitializerNode >> printOn: aStream [
+RMDAttributeInitializerNode >> printOn: aStream [
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' = '.
@@ -72,7 +72,7 @@ RMDPropertyInitializerNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDPropertyInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDAttributeInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
 	aStream
@@ -87,7 +87,7 @@ RMDPropertyInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyn
 ]
 
 { #category : #rewriting }
-RMDPropertyInitializerNode >> replaceChildren: aDictionary [
+RMDAttributeInitializerNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ].

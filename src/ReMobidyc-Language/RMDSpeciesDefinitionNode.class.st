@@ -2,62 +2,62 @@ Class {
 	#name : #RMDSpeciesDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'propertyDeclarations',
-		'propertyOffsets'
+		'attributeDeclarations',
+		'attributeOffsets'
 	],
 	#classInstVars : [
-		'builtinProperties'
+		'builtinAttributes'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
-{ #category : #accessing }
-RMDSpeciesDefinitionNode class >> builtinProperties [
-	^ builtinProperties
-		ifNil: [ builtinProperties := self createBuiltinProperties ]
+{ #category : #'instance creation' }
+RMDSpeciesDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+	^ self new
+		attributeDeclarations: anArrayOfRMDAttributeDeclarationNode;
+		yourself
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode class >> createBuiltinProperties [
+RMDSpeciesDefinitionNode class >> builtinAttributes [
+	^ builtinAttributes
+		ifNil: [ builtinAttributes := self createBuiltinAttributes ]
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionNode class >> createBuiltinAttributes [
 	^ self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
 RMDSpeciesDefinitionNode class >> empty [
-	^ self propertyDeclarations: #()
+	^ self attributeDeclarations: #()
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode class >> flushBuiltinProperties [
+RMDSpeciesDefinitionNode class >> flushBuiltinAttributes [
 	<script:
-		'RMDSpeciesDefinitionNode allSubclassesDo: [:c | c flushBuiltinProperties ]'>
-	builtinProperties := nil
-]
-
-{ #category : #'instance creation' }
-RMDSpeciesDefinitionNode class >> propertyDeclarations: anArrayOfRMDPropertyDeclarationNode [
-	^ self new
-		propertyDeclarations: anArrayOfRMDPropertyDeclarationNode;
-		yourself
+		'RMDSpeciesDefinitionNode allSubclassesDo: [:c | c flushBuiltinAttributes ]'>
+	builtinAttributes := nil
 ]
 
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> = anObject [
 	^ self class = anObject class
-		and: [ propertyDeclarations = anObject propertyDeclarations ]
+		and: [ attributeDeclarations = anObject attributeDeclarations ]
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> allPropertyDeclarations [
-	^ (self builtinProperties
+RMDSpeciesDefinitionNode >> allAttributeDeclarations [
+	^ (self builtinAttributes
 		collect:
-			[ :assoc | RMDPropertyDeclarationNode identifier: assoc key unit: assoc value ])
-		, self propertyDeclarations
+			[ :assoc | RMDAttributeDeclarationNode identifier: assoc key unit: assoc value ])
+		, self attributeDeclarations
 ]
 
 { #category : #utilities }
 RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
-	^ (self propertyOffsets associations
+	^ (self attributeOffsets associations
 		collect: [ :assoc | 
 			assoc key
 				-> (aRMDMemory at: anInteger + assoc value ifAbsent: [ nil ]) ])
@@ -65,18 +65,74 @@ RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> builtinProperties [
-	^ self class builtinProperties
+RMDSpeciesDefinitionNode >> attributeDeclarations [
+	^ attributeDeclarations
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> attributeDeclarations: anArrayOfAttributeDeclaration [
+	attributeDeclarations := anArrayOfAttributeDeclaration.
+	attributeOffsets := nil
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> attributeDeclarationsDo: aBlock [
+	attributeDeclarations do: aBlock
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> attributeIdentifiersDo: aBlock [
+	attributeDeclarations
+		do: [ :attribute | aBlock value: attribute identifier ]
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> attributeOffsetAt: aString ifAbsent: errorBlock [
+	^ self attributeOffsets at: aString ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> attributeOffsets [
+	^ attributeOffsets
+		ifNil: [ | offset |
+			attributeOffsets := Dictionary new.
+			offset := -1.
+			self builtinAttributes
+				do: [ :assoc | attributeOffsets at: assoc key put: (offset := offset + 1) ].
+			attributeDeclarations
+				do: [ :declaration | 
+					attributeOffsets
+						at: declaration identifier
+						ifAbsentPut: [ offset := offset + 1 ] ].
+			attributeOffsets ]
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> attributeOffsetsDo: aBlock [
+	self attributeOffsets keysAndValuesDo: aBlock
+]
+
+{ #category : #enumerating }
+RMDSpeciesDefinitionNode >> attributeUnitsDo: aBlock [
+	self builtinAttributes
+		do: [ :assoc | aBlock value: assoc key value: assoc value ].
+	self
+		attributeDeclarationsDo: [ :decl | aBlock value: decl identifier value: decl unit ]
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionNode >> builtinAttributes [
+	^ self class builtinAttributes
 ]
 
 { #category : #enumerating }
 RMDSpeciesDefinitionNode >> childrenDo: aBlock [
-	propertyDeclarations do: aBlock
+	attributeDeclarations do: aBlock
 ]
 
 { #category : #comparing }
 RMDSpeciesDefinitionNode >> hash [
-	^ self class hash bitXor: propertyDeclarations hash
+	^ self class hash bitXor: attributeDeclarations hash
 ]
 
 { #category : #testing }
@@ -86,82 +142,26 @@ RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
 
 { #category : #copying }
 RMDSpeciesDefinitionNode >> postCopy [
-	propertyDeclarations := propertyDeclarations collect: #copy.
-	propertyOffsets := nil
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> propertyDeclarations [
-	^ propertyDeclarations
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> propertyDeclarations: anArrayOfPropertyDeclaration [
-	propertyDeclarations := anArrayOfPropertyDeclaration.
-	propertyOffsets := nil
-]
-
-{ #category : #enumerating }
-RMDSpeciesDefinitionNode >> propertyDeclarationsDo: aBlock [
-	propertyDeclarations do: aBlock
-]
-
-{ #category : #enumerating }
-RMDSpeciesDefinitionNode >> propertyIdentifiersDo: aBlock [
-	propertyDeclarations
-		do: [ :property | aBlock value: property identifier ]
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> propertyOffsetAt: aString ifAbsent: errorBlock [
-	^ self propertyOffsets at: aString ifAbsent: errorBlock
-]
-
-{ #category : #accessing }
-RMDSpeciesDefinitionNode >> propertyOffsets [
-	^ propertyOffsets
-		ifNil: [ | offset |
-			propertyOffsets := Dictionary new.
-			offset := -1.
-			self builtinProperties
-				do: [ :assoc | propertyOffsets at: assoc key put: (offset := offset + 1) ].
-			propertyDeclarations
-				do: [ :declaration | 
-					propertyOffsets
-						at: declaration identifier
-						ifAbsentPut: [ offset := offset + 1 ] ].
-			propertyOffsets ]
-]
-
-{ #category : #enumerating }
-RMDSpeciesDefinitionNode >> propertyOffsetsDo: aBlock [
-	self propertyOffsets keysAndValuesDo: aBlock
-]
-
-{ #category : #enumerating }
-RMDSpeciesDefinitionNode >> propertyUnitsDo: aBlock [
-	self builtinProperties
-		do: [ :assoc | aBlock value: assoc key value: assoc value ].
-	self
-		propertyDeclarationsDo: [ :decl | aBlock value: decl identifier value: decl unit ]
+	attributeDeclarations := attributeDeclarations collect: #copy.
+	attributeOffsets := nil
 ]
 
 { #category : #rewriting }
 RMDSpeciesDefinitionNode >> replaceChildren: aDictionary [
-	propertyDeclarations := propertyDeclarations
+	attributeDeclarations := attributeDeclarations
 		collect: [ :node | node copyReplace: aDictionary ].
-	propertyOffsets := nil
+	attributeOffsets := nil
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> totalNumberOfProperties [
-	^ self builtinProperties size + propertyDeclarations size
+RMDSpeciesDefinitionNode >> totalNumberOfAttributes [
+	^ self builtinAttributes size + attributeDeclarations size
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> unitOfProperty: aString ifAbsent: errorBlock [
+RMDSpeciesDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
 
-	self propertyUnitsDo: [ :identifier :unit | 
+	self attributeUnitsDo: [ :identifier :unit | 
 		aString = identifier ifTrue: [ ^ unit ] ].
 	^ errorBlock value
 ]

@@ -6,22 +6,22 @@ Class {
 		'object',
 		'guard',
 		'lifeDirectives',
-		'propertyDefinitions',
-		'utilityDefinitions'
+		'utilityDefinitions',
+		'attributeDefinitions'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective propertyDefinitions: anArrayOfRMDPropertyDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
+RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective attributeDefinitions: anArrayOfRMDAttributeDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 
 	^ self new
 		  identifier: scriptName;
 		  object: objectName;
 		  guard: aRMDCondition;
 		  lifeDirectives: anArrayOfRMDLifeDirective;
-		  propertyDefinitions:
-			  (anArrayOfRMDPropertyDefinition ifNil: [ Array new ]);
+		  attributeDefinitions:
+			  (anArrayOfRMDAttributeDefinition ifNil: [ Array new ]);
 		  utilityDefinitions:
 			  (anArrayOfRMDUtilityDefinition ifNil: [ Array new ]);
 		  yourself
@@ -64,7 +64,7 @@ RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 			vars := Set new.
 			action
 				nodesDo: [ :node | 
-					(node isPropertyVariableNode or: [ node isUtilityVariableNode ])
+					(node isAttributeVariableNode or: [ node isUtilityVariableNode ])
 						ifTrue: [ vars add: node ] ].
 			vars
 				do:
@@ -76,7 +76,7 @@ RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 				object: nil
 				guard: nil
 				lifeDirectives: Array new
-				propertyDefinitions: Array new
+				attributeDefinitions: Array new
 				utilityDefinitions: Array new)
 		into: [ :composite :action | 
 			composite
@@ -121,7 +121,7 @@ RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 									{guard.
 									aRMDActionDefinitionNode guard} ] ])
 		lifeDirectives: lifeDirectives , aRMDActionDefinitionNode lifeDirectives
-		propertyDefinitions: propertyDefinitions , aRMDActionDefinitionNode propertyDefinitions
+		attributeDefinitions: attributeDefinitions , aRMDActionDefinitionNode attributeDefinitions
 		utilityDefinitions: utilityDefinitions , aRMDActionDefinitionNode utilityDefinitions
 ]
 
@@ -133,7 +133,7 @@ RMDActionDefinitionNode >> = anObject [
 			  object = anObject object and: [ 
 				  guard = anObject guard and: [ 
 					  lifeDirectives = anObject lifeDirectives and: [ 
-						  propertyDefinitions = anObject propertyDefinitions and: [ 
+						  attributeDefinitions = anObject attributeDefinitions and: [ 
 							  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ] ]
 ]
 
@@ -143,12 +143,22 @@ RMDActionDefinitionNode >> asPresenter [
 	^ RMDActionDefinitionBrowser on: self
 ]
 
+{ #category : #accessing }
+RMDActionDefinitionNode >> attributeDefinitions [
+	^ attributeDefinitions
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> attributeDefinitions: aRMDAttributeDefinitionNode [
+	attributeDefinitions := aRMDAttributeDefinitionNode
+]
+
 { #category : #enumerating }
 RMDActionDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: aBlock.
 	lifeDirectives do: aBlock.
-	propertyDefinitions do: aBlock.
+	attributeDefinitions do: aBlock.
 	utilityDefinitions do: aBlock
 ]
 
@@ -171,7 +181,7 @@ RMDActionDefinitionNode >> hasObject [
 RMDActionDefinitionNode >> hash [
 
 	^ ((((identifier hash bitXor: object hash) bitXor: guard hash) 
-		    bitXor: lifeDirectives hash) bitXor: propertyDefinitions hash) 
+		    bitXor: lifeDirectives hash) bitXor: attributeDefinitions hash) 
 		  bitXor: utilityDefinitions hash
 ]
 
@@ -217,8 +227,8 @@ RMDActionDefinitionNode >> postCopy [
 	guard := guard ifNotNil: [ guard copy ].
 	lifeDirectives := lifeDirectives ifNotNil: [ 
 		                  lifeDirectives collect: #copy ].
-	propertyDefinitions := propertyDefinitions ifNotNil: [ 
-		                       propertyDefinitions collect: #copy ].
+	attributeDefinitions := attributeDefinitions ifNotNil: [ 
+		                       attributeDefinitions collect: #copy ].
 	utilityDefinitions := utilityDefinitions ifNotNil: [ 
 		                      utilityDefinitions collect: #copy ]
 ]
@@ -246,7 +256,7 @@ RMDActionDefinitionNode >> printOn: aStream [
 		lifeDirectives
 			do: [ :directive | directive printOn: aStream ]
 			separatedBy: [ aStream nextPutAll: ', ' ] ].
-	propertyDefinitions do: [ :def | 
+	attributeDefinitions do: [ :def | 
 		aStream
 			nextPut: Character cr;
 			nextPutAll: '    '.
@@ -298,7 +308,7 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 					ifIncludedIn: aCollectionOfRMDSyntaxNode
 					addSectionTo: aCollection ]
 			separatedBy: [ aStream nextPutAll: ', ' ] ].
-	propertyDefinitions do: [ :def | 
+	attributeDefinitions do: [ :def | 
 		aStream
 			nextPut: Character cr;
 			nextPutAll: '    '.
@@ -326,16 +336,6 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #accessing }
-RMDActionDefinitionNode >> propertyDefinitions [
-	^ propertyDefinitions
-]
-
-{ #category : #accessing }
-RMDActionDefinitionNode >> propertyDefinitions: aRMDPropertyDefinitionNode [
-	propertyDefinitions := aRMDPropertyDefinitionNode
-]
-
 { #category : #rewriting }
 RMDActionDefinitionNode >> replaceChildren: aDictionary [
 
@@ -349,7 +349,7 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 		aDictionary at: guard ifPresent: [ :node | guard := node copy ] ].
 	lifeDirectives := lifeDirectives collect: [ :node | 
 		                  node copyReplace: aDictionary ].
-	propertyDefinitions := propertyDefinitions collect: [ :node | 
+	attributeDefinitions := attributeDefinitions collect: [ :node | 
 		                       node copyReplace: aDictionary ].
 	utilityDefinitions := utilityDefinitions collect: [ :node | 
 		                      node copyReplace: aDictionary ]
@@ -363,9 +363,9 @@ RMDActionDefinitionNode >> replaceObjectWith: aString [
 	objectName := object ifNotNil: #uncapitalized.
 	agentName := aString uncapitalized.
 	objectName ifNotNil: [ 
-		self propertyVariableNodesDo: [ :propertyVariableNode | 
-			propertyVariableNode agent = objectName ifTrue: [ 
-				propertyVariableNode agent: agentName ] ].
+		self attributeVariableNodesDo: [ :attributeVariableNode | 
+			attributeVariableNode agent = objectName ifTrue: [ 
+				attributeVariableNode agent: agentName ] ].
 		self agentDirectiveNodesDo: [ :directive | 
 			directive agentIdentifier = objectName ifTrue: [ 
 				directive agentIdentifier: agentName ] ] ].

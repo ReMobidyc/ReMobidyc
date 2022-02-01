@@ -4,5 +4,5 @@ Extension { #name : #RMDCellDirectiveNode }
 RMDCellDirectiveNode >> evalIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		cellDirective: directive
-		variable: cellPropertyVariable
+		variable: cellAttributeVariable
 ]

@@ -101,7 +101,7 @@ RMDCellInitializerPresenter >> newLayout [
 		             yourself.
 
 	node ifNotNil: [ 
-		node propertyInitializers do: [ :initializer | 
+		node attributeInitializers do: [ :initializer | 
 			newLayout
 				add: (initializer asPresenter
 						 disableIdentifier;
@@ -122,7 +122,7 @@ RMDCellInitializerPresenter >> nodeChanged [
 
 { #category : #accessing }
 RMDCellInitializerPresenter >> preferredHeight [
-	^ (node propertyInitializers size + 1) * self class inputTextHeight
+	^ (node attributeInitializers size + 1) * self class inputTextHeight
 ]
 
 { #category : #accessing }

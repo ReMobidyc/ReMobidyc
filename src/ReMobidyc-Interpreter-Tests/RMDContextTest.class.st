@@ -25,10 +25,10 @@ Foo is Animat with
 	context subject: 100 definition: animatDef.
 	self
 		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef propertyOffsets at: 'x') + 100.
+		equals: (animatDef attributeOffsets at: 'x') + 100.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef propertyOffsets at: 'sugar') + 100
+		equals: (animatDef attributeOffsets at: 'sugar') + 100
 ]
 
 { #category : #tests }
@@ -70,9 +70,9 @@ Foo is Animat with
 	context subject: 100 definition: animatDef.
 	self
 		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef propertyOffsets at: 'x') + 100.
+		equals: (animatDef attributeOffsets at: 'x') + 100.
 	self
 		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef propertyOffsets at: 'sugar') + 100.
+		equals: (animatDef attributeOffsets at: 'sugar') + 100.
 	self assert: context subjectDefinition equals: animatDef
 ]

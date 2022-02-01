@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyDeclarationPresenter,
+	#name : #RMDAttributeDeclarationPresenter,
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'identifierField',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #specs }
-RMDPropertyDeclarationPresenter class >> defaultSpec [
+RMDAttributeDeclarationPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -24,7 +24,7 @@ RMDPropertyDeclarationPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDPropertyDeclarationPresenter >> initializePresenters [
+RMDAttributeDeclarationPresenter >> initializePresenters [
 	super initializePresenters.
 	identifierField := self newTextInput
 		beText;
@@ -52,30 +52,30 @@ RMDPropertyDeclarationPresenter >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDPropertyDeclarationPresenter >> initializeWindow: aWindowPresenter [
+RMDAttributeDeclarationPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 400 @ (self class buttonHeight * 3.5)
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationPresenter >> nodeChanged [
+RMDAttributeDeclarationPresenter >> nodeChanged [
 	self
 		updateIdentifier;
 		updateUnit
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationPresenter >> preferredHeight [
+RMDAttributeDeclarationPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #updating }
-RMDPropertyDeclarationPresenter >> updateIdentifier [
+RMDAttributeDeclarationPresenter >> updateIdentifier [
 	node ifNotNil: [ identifierField text: node identifier ]
 ]
 
 { #category : #updating }
-RMDPropertyDeclarationPresenter >> updateUnit [
+RMDAttributeDeclarationPresenter >> updateUnit [
 	node
 		ifNotNil: [ | unit |
 			unit := node unit.

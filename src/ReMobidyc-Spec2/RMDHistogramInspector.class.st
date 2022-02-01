@@ -2,8 +2,8 @@ Class {
 	#name : #RMDHistogramInspector,
 	#superclass : #RMDSpeciesInspector,
 	#instVars : [
-		'visibleProperties',
-		'chartPresenters'
+		'chartPresenters',
+		'visibleAttributes'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -27,7 +27,7 @@ RMDHistogramInspector >> chartWidth [
 ]
 
 { #category : #accessing }
-RMDHistogramInspector >> chartWith: propertyDef values: values min: min max: max divisions: divisions [
+RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: max divisions: divisions [
 
 	| counts maxCount font fontHeight chartWidth chartHeight form canvas xScale yScale minString maxString |
 	counts := Array new: divisions + 2 withAll: 0.
@@ -50,9 +50,9 @@ RMDHistogramInspector >> chartWith: propertyDef values: values min: min max: max
 	xScale := chartWidth asFloat / counts size.
 	yScale := (chartHeight - fontHeight) asFloat / (maxCount * 1.1).
 	minString := (min printShowingDecimalPlaces: 2) , ' ['
-	             , propertyDef unit printString , ']'.
+	             , attributeDef unit printString , ']'.
 	maxString := (max printShowingDecimalPlaces: 2) , ' ['
-	             , propertyDef unit printString , ']'.
+	             , attributeDef unit printString , ']'.
 	1 to: counts size do: [ :index | 
 		| count left right top bottom countString |
 		count := counts at: index.
@@ -91,14 +91,14 @@ RMDHistogramInspector >> chartWith: propertyDef values: values min: min max: max
 ]
 
 { #category : #private }
-RMDHistogramInspector >> collapseButtonFor: propertyDef [
+RMDHistogramInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self expandedIcon;
 		  action: [ 
-			  visibleProperties
-				  removeKey: propertyDef identifier
+			  visibleAttributes
+				  removeKey: attributeDef identifier
 				  ifAbsent: [  ].
 			  self
 				  updateLayout;
@@ -106,17 +106,17 @@ RMDHistogramInspector >> collapseButtonFor: propertyDef [
 ]
 
 { #category : #private }
-RMDHistogramInspector >> expandButtonFor: propertyDef values: values [
+RMDHistogramInspector >> expandButtonFor: attributeDef values: values [
 
 	^ self newButton
-		  label: propertyDef printString;
+		  label: attributeDef printString;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;
 		  action: [ 
-			  (self requestMinMaxDivisionsFor: propertyDef values: values) 
+			  (self requestMinMaxDivisionsFor: attributeDef values: values) 
 				  ifNotNil: [ :triple | 
-					  visibleProperties at: propertyDef identifier put: triple.
+					  visibleAttributes at: attributeDef identifier put: triple.
 					  self
 						  updateLayout;
 						  updateObservation ] ]
@@ -126,7 +126,7 @@ RMDHistogramInspector >> expandButtonFor: propertyDef values: values [
 RMDHistogramInspector >> initializePresenters [
 
 	super initializePresenters.
-	visibleProperties := Dictionary new
+	visibleAttributes := Dictionary new
 ]
 
 { #category : #accessing }
@@ -136,18 +136,18 @@ RMDHistogramInspector >> newLayout [
 ]
 
 { #category : #private }
-RMDHistogramInspector >> requestMinMaxDivisionsFor: propertyDef values: values [
+RMDHistogramInspector >> requestMinMaxDivisionsFor: attributeDef values: values [
 
 	| min max divisions |
 	min := values ifNotEmpty: #min ifEmpty: [ 0.0 ].
 	max := values ifNotEmpty: #max ifEmpty: [ 0.0 ].
 	(UIManager default
-		 request: 'min [' , propertyDef unit printString , ']'
+		 request: 'min [' , attributeDef unit printString , ']'
 		 initialAnswer: min printString)
 		ifNotNil: [ :str | min := Number readFrom: str ifFail: [ ^ nil ] ]
 		ifNil: [ ^ nil ].
 	(UIManager default
-		 request: 'max [' , propertyDef unit printString , ']'
+		 request: 'max [' , attributeDef unit printString , ']'
 		 initialAnswer: max printString)
 		ifNotNil: [ :str | max := Number readFrom: str ifFail: [ ^ nil ] ]
 		ifNil: [ ^ nil ].
@@ -172,17 +172,17 @@ RMDHistogramInspector >> updateImage [
 
 	self layout ifNotNil: [ 
 		chartPresenters ifNil: [ self updateLayout ].
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				visibleProperties
-					at: propertyDef identifier
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				visibleAttributes
+					at: attributeDef identifier
 					ifPresent: [ :triple | 
 						chartPresenters
-							at: propertyDef identifier
+							at: attributeDef identifier
 							ifPresent: [ :presenter | 
 								| form |
 								form := self
-									        chartWith: propertyDef
+									        chartWith: attributeDef
 									        values: vals
 									        min: triple first
 									        max: triple second
@@ -197,26 +197,26 @@ RMDHistogramInspector >> updateLayout [
 		| newLayout |
 		chartPresenters := Dictionary new.
 		newLayout := self newLayout.
-		self propertyValuesDo: [ :propertyValues | 
-			propertyValues propertiesDo: [ :propertyDef :vals :stats | 
-				visibleProperties
-					at: propertyDef identifier
+		self attributeValuesDo: [ :attributeValues | 
+			attributeValues attributesDo: [ :attributeDef :vals :stats | 
+				visibleAttributes
+					at: attributeDef identifier
 					ifPresent: [ :triple | 
 						| form presenter |
-						newLayout add: (self collapseButtonFor: propertyDef) expand: false.
+						newLayout add: (self collapseButtonFor: attributeDef) expand: false.
 						form := self
-							        chartWith: propertyDef
+							        chartWith: attributeDef
 							        values: vals
 							        min: triple first
 							        max: triple second
 							        divisions: triple third.
 						presenter := self newImage.
 						presenter image: form.
-						chartPresenters at: propertyDef identifier put: presenter.
+						chartPresenters at: attributeDef identifier put: presenter.
 						newLayout add: presenter height: form height ]
 					ifAbsent: [ 
 						newLayout
-							add: (self expandButtonFor: propertyDef values: vals)
+							add: (self expandButtonFor: attributeDef values: vals)
 							expand: false ] ] ].
 		self layout: newLayout ]
 ]

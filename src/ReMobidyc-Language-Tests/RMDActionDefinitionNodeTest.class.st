@@ -61,15 +61,15 @@ RMDActionDefinitionNodeTest >> testPlus [
 			(parser condition
 				parse:
 					'my energy >= my min_active_energy and my energy >= my min_active_energy').
-	self assert: sum propertyDefinitions size equals: 3.
+	self assert: sum attributeDefinitions size equals: 3.
 	self
-		assert: sum propertyDefinitions first variable identifier
+		assert: sum attributeDefinitions first variable identifier
 		equals: 'heading'.
 	self
-		assert: sum propertyDefinitions second variable identifier
+		assert: sum attributeDefinitions second variable identifier
 		equals: 'x'.
 	self
-		assert: sum propertyDefinitions third variable identifier
+		assert: sum attributeDefinitions third variable identifier
 		equals: 'y'
 ]
 
@@ -115,15 +115,15 @@ RMDActionDefinitionNodeTest >> testWithAll [
 	self assert: sum identifier equals: 'turn_walk'.
 	self assert: sum object equals: nil.
 	self assert: sum guard equals: nil.
-	self assert: sum propertyDefinitions size equals: 3.
+	self assert: sum attributeDefinitions size equals: 3.
 	self
-		assert: sum propertyDefinitions first variable identifier
+		assert: sum attributeDefinitions first variable identifier
 		equals: 'heading_turn'.
 	self
-		assert: sum propertyDefinitions second variable identifier
+		assert: sum attributeDefinitions second variable identifier
 		equals: 'x'.
 	self
-		assert: sum propertyDefinitions third variable identifier
+		assert: sum attributeDefinitions third variable identifier
 		equals: 'y'.
 	self assert: sum utilityDefinitions size equals: 3.
 	self

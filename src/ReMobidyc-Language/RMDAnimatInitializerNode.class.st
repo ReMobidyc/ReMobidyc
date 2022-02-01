@@ -27,11 +27,11 @@ RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString
 ]
 
 { #category : #'instance creation' }
-RMDAnimatInitializerNode class >> population: anInteger animat: aString propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode [
+RMDAnimatInitializerNode class >> population: anInteger animat: aString attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
 	^ self new
 		population: anInteger;
 		animat: aString;
-		propertyInitializers: anArrayOfRMDSimulationPropertyInitializerNode;
+		attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode;
 		yourself
 ]
 
@@ -96,11 +96,11 @@ RMDAnimatInitializerNode >> printOn: aStream [
 	aStream
 		nextPut: Character space;
 		nextPutAll: animat.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers
+		attributeInitializers
 			do: [ :def | 
 				aStream nextPutAll: '    '.
 				def printOn: aStream ]
@@ -119,11 +119,11 @@ RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 	aStream
 		nextPut: Character space;
 		nextPutAll: animat.
-	propertyInitializers ifNotEmpty: [ 
+	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
 			nextPut: Character cr.
-		propertyInitializers do: [ :def | 
+		attributeInitializers do: [ :def | 
 			aStream nextPutAll: '    '.
 			def
 				printOn: aStream

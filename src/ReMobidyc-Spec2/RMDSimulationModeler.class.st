@@ -93,13 +93,13 @@ RMDSimulationModeler >> addAnimatInitializer [
 						(RMDAnimatInitializerNode
 							 population: 0
 							 animat: animatName
-							 propertyInitializers:
-								 (animatDefinition allPropertyDeclarations collect: [ 
-									  :property | 
-									  RMDPropertyInitializerNode
-										  identifier: property identifier
+							 attributeInitializers:
+								 (animatDefinition allAttributeDeclarations collect: [ 
+									  :attribute | 
+									  RMDAttributeInitializerNode
+										  identifier: attribute identifier
 										  expression:
-										  (RMDLiteralNode literal: '0' unit: property unit) ])) ] ] ]
+										  (RMDLiteralNode literal: '0' unit: attribute unit) ])) ] ] ]
 ]
 
 { #category : #private }
@@ -116,7 +116,7 @@ RMDSimulationModeler >> addAnimatNamed: aString [
 			^ nil ].
 	animatDefinitionNode := RMDAnimatDefinitionNode
 		                        identifier: name
-		                        propertyDeclarations: Array new.
+		                        attributeDeclarations: Array new.
 	simulationModel load: animatDefinitionNode.
 	simulationModel addRenderer:
 		(RMDAnimatDotRenderer on: name diameter: 7 color: Color yellow).

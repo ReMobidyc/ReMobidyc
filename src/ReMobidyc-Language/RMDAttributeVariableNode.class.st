@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyVariableNode,
+	#name : #RMDAttributeVariableNode,
 	#superclass : #RMDAbstractVariableNode,
 	#instVars : [
 		'agent'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
+RMDAttributeVariableNode class >> identifier: aString agent: anotherString [
 
 	anotherString = #my ifTrue: [ ^ self identifier: aString agent: nil ].
 	anotherString = #new ifTrue: [ 
-		^ RMDNewPropertyVariableNode identifier: aString ].
+		^ RMDNewAttributeVariableNode identifier: aString ].
 
 	anotherString = #the ifTrue: [ 
 		^ RMDPlaceholderNode new
@@ -25,48 +25,48 @@ RMDPropertyVariableNode class >> identifier: aString agent: anotherString [
 ]
 
 { #category : #comparing }
-RMDPropertyVariableNode >> = anObject [
+RMDAttributeVariableNode >> = anObject [
 	^ super = anObject and: [ agent = anObject agent ]
 ]
 
 { #category : #accessing }
-RMDPropertyVariableNode >> agent [
+RMDAttributeVariableNode >> agent [
 	^ agent
 ]
 
 { #category : #accessing }
-RMDPropertyVariableNode >> agent: aString [
+RMDAttributeVariableNode >> agent: aString [
 	agent := aString
 ]
 
 { #category : #enumerating }
-RMDPropertyVariableNode >> childrenDo: aBlock [
+RMDAttributeVariableNode >> childrenDo: aBlock [
 
 ]
 
 { #category : #comparing }
-RMDPropertyVariableNode >> hash [
+RMDAttributeVariableNode >> hash [
 	^ super hash bitXor: agent hash
 ]
 
 { #category : #testing }
-RMDPropertyVariableNode >> isPropertyVariableNode [
+RMDAttributeVariableNode >> isAttributeVariableNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDPropertyVariableNode >> precedence [
+RMDAttributeVariableNode >> precedence [
 	^ 1
 ]
 
 { #category : #accessing }
-RMDPropertyVariableNode >> prefix [
+RMDAttributeVariableNode >> prefix [
 
 	^ agent ifNil: [ 'my' ] ifNotNil: [ agent , '''s ' ]
 ]
 
 { #category : #printing }
-RMDPropertyVariableNode >> printOn: aStream [
+RMDAttributeVariableNode >> printOn: aStream [
 
 	aStream
 		nextPutAll: self prefix;
@@ -75,7 +75,7 @@ RMDPropertyVariableNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDPropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDAttributeVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -88,7 +88,7 @@ RMDPropertyVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 ]
 
 { #category : #rewriting }
-RMDPropertyVariableNode >> replaceChildren: aDictionary [
+RMDAttributeVariableNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: agent ifPresent: [ :node | agent := node copy ]
 ]

@@ -7,7 +7,7 @@ Class {
 { #category : #running }
 RMDAssignableDeltaPropertyVariableNodeTest >> setUpParser [ 
 	super setUpParser.
-	parser := parser assignableDeltaPropertyVariable end
+	parser := parser assignableDeltaAttributeVariable end
 ]
 
 { #category : #tests }

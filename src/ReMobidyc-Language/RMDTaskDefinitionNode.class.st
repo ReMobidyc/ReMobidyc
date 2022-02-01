@@ -9,9 +9,9 @@ Class {
 		'guard',
 		'range',
 		'nearest',
-		'propertyBinds',
 		'action',
-		'name'
+		'name',
+		'attributeBinds'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -88,7 +88,7 @@ where
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean within: aRMDLiteralNode guard: aRMDConditionNode propertyBinds: anArrayOfRMDPropertyBindNode [
+RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean within: aRMDLiteralNode guard: aRMDConditionNode attributeBinds: anArrayOfRMDAttributeBindNode [
 
 	^ self new
 		  subjectIdentifier: agentString1;
@@ -98,7 +98,7 @@ RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: v
 		  nearest: aBoolean;
 		  range: aRMDLiteralNode;
 		  guard: aRMDConditionNode;
-		  propertyBinds: anArrayOfRMDPropertyBindNode;
+		  attributeBinds: anArrayOfRMDAttributeBindNode;
 		  yourself
 ]
 
@@ -166,7 +166,7 @@ RMDTaskDefinitionNode >> = anObject [
 			  verbIdentifier = anObject verbIdentifier and: [ 
 				  objectIdentifier = anObject objectIdentifier and: [ 
 					  range = anObject range and: [ 
-						  propertyBinds = anObject propertyBinds and: [ 
+						  attributeBinds = anObject attributeBinds and: [ 
 							  actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
 ]
 
@@ -191,7 +191,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 				              ^ (RMDUnresolvedReferenceError on: self) signal ])
 			             copy
 			             taskGuard: guard;
-			             copyReplace: (propertyBinds collect: [ :bind | 
+			             copyReplace: (attributeBinds collect: [ :bind | 
 						              bind placeholder -> bind replacement ])
 					             asDictionary)
 			            identifier: verbIdentifier;
@@ -199,12 +199,23 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 			            yourself ]
 ]
 
+{ #category : #accessing }
+RMDTaskDefinitionNode >> attributeBinds [
+	^ attributeBinds
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> attributeBinds: anArrayOfRMDAttributeBindNode [
+	attributeBinds := anArrayOfRMDAttributeBindNode.
+	self resetAction
+]
+
 { #category : #enumerating }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: [ aBlock value: guard ].
 	range ifNotNil: [ aBlock value: range ].
-	propertyBinds do: aBlock
+	attributeBinds do: aBlock
 ]
 
 { #category : #private }
@@ -243,7 +254,7 @@ RMDTaskDefinitionNode >> hash [
 
 	^ (((((self class hash bitXor: subjectIdentifier hash) bitXor:
 		      range hash) bitXor: verbIdentifier hash) bitXor:
-		    objectIdentifier hash) bitXor: propertyBinds hash) bitXor:
+		    objectIdentifier hash) bitXor: attributeBinds hash) bitXor:
 		  actionIdentifier hash
 ]
 
@@ -287,8 +298,8 @@ RMDTaskDefinitionNode >> postCopy [
 
 	range := range ifNotNil: #copy.
 	guard := guard ifNotNil: #copy.
-	propertyBinds := propertyBinds ifNotNil: [ 
-		                 propertyBinds collect: #copy ].
+	attributeBinds := attributeBinds ifNotNil: [ 
+		                 attributeBinds collect: #copy ].
 	action := action ifNotNil: #copy
 ]
 
@@ -317,12 +328,12 @@ RMDTaskDefinitionNode >> printOn: aStream [
 			cr;
 			nextPutAll: 'when '.
 		guard printOn: aStream ].
-	(propertyBinds notNil and: [ propertyBinds notEmpty ]) ifTrue: [ 
+	(attributeBinds notNil and: [ attributeBinds notEmpty ]) ifTrue: [ 
 		aStream
 			cr;
 			nextPutAll: 'where';
 			cr.
-		propertyBinds
+		attributeBinds
 			do: [ :bind | 
 				aStream nextPutAll: '    '.
 				bind printOn: aStream ]
@@ -363,12 +374,12 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 			printOn: aStream
 			ifIncludedIn: aCollectionOfRMDSyntaxNode
 			addSectionTo: aCollection ].
-	(propertyBinds notNil and: [ propertyBinds notEmpty ]) ifTrue: [ 
+	(attributeBinds notNil and: [ attributeBinds notEmpty ]) ifTrue: [ 
 		aStream
 			cr;
 			nextPutAll: 'where';
 			nextPut: Character cr.
-		propertyBinds
+		attributeBinds
 			do: [ :bind | 
 				aStream nextPutAll: '    '.
 				bind
@@ -379,17 +390,6 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 	aStream nextPut: $..
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionNode >> propertyBinds [
-	^ propertyBinds
-]
-
-{ #category : #accessing }
-RMDTaskDefinitionNode >> propertyBinds: anArrayOfRMDPropertyBindNode [
-	propertyBinds := anArrayOfRMDPropertyBindNode.
-	self resetAction
 ]
 
 { #category : #accessing }
@@ -424,7 +424,7 @@ RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 			         at: range
 			         ifPresent: #copy
 			         ifAbsent: [ range copyReplace: aDictionary ] ].
-	propertyBinds := propertyBinds collect: [ :node | 
+	attributeBinds := attributeBinds collect: [ :node | 
 		                 node copyReplace: aDictionary ].
 	aDictionary
 		at: actionIdentifier

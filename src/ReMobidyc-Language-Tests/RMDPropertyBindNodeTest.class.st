@@ -8,7 +8,7 @@ Class {
 RMDPropertyBindNodeTest >> testPrintOn [
 
 	| node copy |
-	node := parser propertyBind end parse: 'the x -> my y'.
-	copy := parser propertyBind end parse: node printString.
+	node := parser attributeBind end parse: 'the x -> my y'.
+	copy := parser attributeBind end parse: node printString.
 	self assert: copy equals: node
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDCellDefinitionNode class >> createBuiltinProperties [
+RMDCellDefinitionNode class >> createBuiltinAttributes [
 
 	^ {  }
 ]
@@ -32,11 +32,11 @@ RMDCellDefinitionNode >> isCellDefinitionNode [
 { #category : #printing }
 RMDCellDefinitionNode >> printOn: aStream [
 	aStream nextPutAll: 'Cell'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def printOn: aStream ]
@@ -49,11 +49,11 @@ RMDCellDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'Cell'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def

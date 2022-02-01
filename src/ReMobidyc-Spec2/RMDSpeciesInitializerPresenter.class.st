@@ -23,7 +23,7 @@ RMDSpeciesInitializerPresenter >> initializePresenters [
 						update: #color: with: {Color white};
 						update: #borderColor: with: {Color darkGray};
 						update: #borderWidth: with: {1} ].
-			self updatePropertyInitializersList ]
+			self updateAttributeInitializersList ]
 ]
 
 { #category : #layouting }
@@ -34,23 +34,11 @@ RMDSpeciesInitializerPresenter >> newLayout [
 
 { #category : #accessing }
 RMDSpeciesInitializerPresenter >> nodeChanged [
-	self updatePropertyInitializersList
+	self updateAttributeInitializersList
 ]
 
 { #category : #updating }
-RMDSpeciesInitializerPresenter >> updatePropertyInitializersList [
+RMDSpeciesInitializerPresenter >> updateAttributeInitializersList [
 
-	"layout ifNotNil: [ 
-		(layout presenters select: [ :presenter | 
-			 presenter isKindOf: RMDPropertyInitializerPresenter ]) do: [ 
-			:presenter | layout remove: presenter ].
-		node ifNotNil: [ 
-			node propertyInitializers do: [ :initializer | 
-				layout
-					addLast: (initializer asPresenter
-							 disableIdentifier;
-							 yourself)
-					expand: false ].
-			layout addLast: removeButton expand: false ] ]"
 	self layout: self newLayout
 ]

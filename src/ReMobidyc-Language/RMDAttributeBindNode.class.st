@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyBindNode,
+	#name : #RMDAttributeBindNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'placeholder',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyBindNode class >> placeholder: aRMDPlaceholderNode replacement: aRMDSyntaxNode [
+RMDAttributeBindNode class >> placeholder: aRMDPlaceholderNode replacement: aRMDSyntaxNode [
 
 	^ self new
 		  placeholder: aRMDPlaceholderNode;
@@ -18,7 +18,7 @@ RMDPropertyBindNode class >> placeholder: aRMDPlaceholderNode replacement: aRMDS
 ]
 
 { #category : #comparing }
-RMDPropertyBindNode >> = anObject [
+RMDAttributeBindNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  placeholder = anObject placeholder and: [ 
@@ -26,40 +26,40 @@ RMDPropertyBindNode >> = anObject [
 ]
 
 { #category : #enumerating }
-RMDPropertyBindNode >> childrenDo: aBlock [
+RMDAttributeBindNode >> childrenDo: aBlock [
 	
 ]
 
 { #category : #comparing }
-RMDPropertyBindNode >> hash [
+RMDAttributeBindNode >> hash [
 
 	^ (self class hash bitXor: placeholder hash) bitXor: replacement hash
 ]
 
 { #category : #testing }
-RMDPropertyBindNode >> isPropertyBindNode [
+RMDAttributeBindNode >> isAttributeBindNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDPropertyBindNode >> placeholder [
+RMDAttributeBindNode >> placeholder [
 
 	^ placeholder
 ]
 
 { #category : #accessing }
-RMDPropertyBindNode >> placeholder: aRMDSyntaxNode [
+RMDAttributeBindNode >> placeholder: aRMDSyntaxNode [
 
 	placeholder := aRMDSyntaxNode
 ]
 
 { #category : #copying }
-RMDPropertyBindNode >> postCopy [
+RMDAttributeBindNode >> postCopy [
 	
 ]
 
 { #category : #printing }
-RMDPropertyBindNode >> printOn: aStream [
+RMDAttributeBindNode >> printOn: aStream [
 
 	placeholder printOn: aStream.
 	aStream nextPutAll: ' -> '.
@@ -67,7 +67,7 @@ RMDPropertyBindNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDPropertyBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDAttributeBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -85,19 +85,19 @@ RMDPropertyBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode
 ]
 
 { #category : #rewriting }
-RMDPropertyBindNode >> replaceChildren: aDictionary [
+RMDAttributeBindNode >> replaceChildren: aDictionary [
 
 	placeholder := placeholder copyReplace: aDictionary.
 	replacement := replacement copyReplace: aDictionary
 ]
 
 { #category : #accessing }
-RMDPropertyBindNode >> replacement [
+RMDAttributeBindNode >> replacement [
 	^ replacement
 ]
 
 { #category : #accessing }
-RMDPropertyBindNode >> replacement: aRMDSyntaxNode [
+RMDAttributeBindNode >> replacement: aRMDSyntaxNode [
 
 	replacement := aRMDSyntaxNode
 ]

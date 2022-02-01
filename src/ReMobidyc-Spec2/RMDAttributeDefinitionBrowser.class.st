@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyDefinitionBrowser,
+	#name : #RMDAttributeDefinitionBrowser,
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'objectAgent',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #specs }
-RMDPropertyDefinitionBrowser class >> defaultSpec [
+RMDAttributeDefinitionBrowser class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -27,17 +27,17 @@ RMDPropertyDefinitionBrowser class >> defaultSpec [
 ]
 
 { #category : #examples }
-RMDPropertyDefinitionBrowser class >> example1 [
+RMDAttributeDefinitionBrowser class >> example1 [
 
 	| browser |
 	(browser := self on:
-		            (RMDGrammar new propertyDefinition end parse:
+		            (RMDGrammar new attributeDefinition end parse:
 			             'my delta x'' = 10 [m]')) openDialogWithSpec 
 		okAction: [ browser node inspect ]
 ]
 
 { #category : #private }
-RMDPropertyDefinitionBrowser >> agentChanged [
+RMDAttributeDefinitionBrowser >> agentChanged [
 
 	node ifNil: [ ^ self ].
 	self isAfterNodeChanged ifTrue: [ ^ self ].
@@ -46,7 +46,7 @@ RMDPropertyDefinitionBrowser >> agentChanged [
 ]
 
 { #category : #private }
-RMDPropertyDefinitionBrowser >> definitionBodyChanged [
+RMDAttributeDefinitionBrowser >> definitionBodyChanged [
 
 	node ifNil: [ ^ self ].
 	self isAfterNodeChanged ifTrue: [ ^ self ].
@@ -56,7 +56,7 @@ RMDPropertyDefinitionBrowser >> definitionBodyChanged [
 ]
 
 { #category : #private }
-RMDPropertyDefinitionBrowser >> identifierChanged [
+RMDAttributeDefinitionBrowser >> identifierChanged [
 
 	node ifNil: [ ^ self ].
 	self isAfterNodeChanged ifTrue: [ ^ self ].
@@ -66,7 +66,7 @@ RMDPropertyDefinitionBrowser >> identifierChanged [
 ]
 
 { #category : #initialization }
-RMDPropertyDefinitionBrowser >> initializePresenters [
+RMDAttributeDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	agentList := self newDropList
@@ -77,17 +77,17 @@ RMDPropertyDefinitionBrowser >> initializePresenters [
 	modifierList := self newDropList
 		                items: { 
 				                ('' -> [ :agent :identifier | 
-					                 RMDAssignablePropertyVariableNode
+					                 RMDAssignableAttributeVariableNode
 						                 identifier: identifier
 						                 agent: agent ]).
 
 				                ('Δ' -> [ :agent :identifier | 
-					                 RMDAssignableDeltaPropertyVariableNode
+					                 RMDAssignableDeltaAttributeVariableNode
 						                 identifier: identifier
 						                 agent: agent ]).
 
 				                ('d/dt' -> [ :agent :identifier | 
-					                 RMDAssignableDifferentialPropertyVariableNode
+					                 RMDAssignableDifferentialAttributeVariableNode
 						                 identifier: identifier
 						                 agent: agent ]) };
 		                display: [ :assoc | assoc key ];
@@ -106,16 +106,16 @@ RMDPropertyDefinitionBrowser >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDPropertyDefinitionBrowser >> initializeWindow: aWindowPresenter [
+RMDAttributeDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Property definition'.
+	aWindowPresenter title: 'Attribute definition'.
 	aWindowPresenter initialExtent:
 		600 @ (self preferredHeight + self class buttonHeight * 3)
 ]
 
 { #category : #private }
-RMDPropertyDefinitionBrowser >> modifierChanged [
+RMDAttributeDefinitionBrowser >> modifierChanged [
 
 	node ifNil: [ ^ self ].
 	self isAfterNodeChanged ifTrue: [ ^ self ].
@@ -125,16 +125,16 @@ RMDPropertyDefinitionBrowser >> modifierChanged [
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> nodeChanged [
+RMDAttributeDefinitionBrowser >> nodeChanged [
 
 	node ifNil: [ ^ self ].
 	agentList selectIndex: (agentList listItems findFirst: [ :assoc | 
 			 assoc value = (node variable agent ifNil: [ #my ]) ]).
-	node variable isAssignablePropertyVariableNode ifTrue: [ 
+	node variable isAssignableAttributeVariableNode ifTrue: [ 
 		modifierList selectIndex: 1 ].
 	node variable isAssignableDeltaVariableNode ifTrue: [ 
 		modifierList selectIndex: 2 ].
-	node variable isAssignableDifferentialPropertyVariableNode ifTrue: [ 
+	node variable isAssignableDifferentialAttributeVariableNode ifTrue: [ 
 		modifierList selectIndex: 3 ].
 	identifierField text: node variable identifier.
 	node definitionBody ifNotNil: [ :expression | 
@@ -142,18 +142,18 @@ RMDPropertyDefinitionBrowser >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> objectAgent [
+RMDAttributeDefinitionBrowser >> objectAgent [
 	^ objectAgent
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> objectAgent: aString [
+RMDAttributeDefinitionBrowser >> objectAgent: aString [
 
 	objectAgent := aString
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> possibleAgents [
+RMDAttributeDefinitionBrowser >> possibleAgents [
 
 	^ Array streamContents: [ :stream | 
 		  stream nextPut: 'my' -> #my.
@@ -166,19 +166,19 @@ RMDPropertyDefinitionBrowser >> possibleAgents [
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> preferredHeight [
+RMDAttributeDefinitionBrowser >> preferredHeight [
 
 	^ self class buttonHeight
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> selectedAgent [
+RMDAttributeDefinitionBrowser >> selectedAgent [
 
 	^ agentList selectedItem ifNotNil: #value
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> selectedAssignableVariableNode [
+RMDAttributeDefinitionBrowser >> selectedAssignableVariableNode [
 
 	self selectedAgent ifNotNil: [ :agent | 
 		self selectedModifierBlock ifNotNil: [ :modifierBlock | 
@@ -188,13 +188,13 @@ RMDPropertyDefinitionBrowser >> selectedAssignableVariableNode [
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> selectedIdentifier [
+RMDAttributeDefinitionBrowser >> selectedIdentifier [
 
 	^ identifierField syntaxNode
 ]
 
 { #category : #accessing }
-RMDPropertyDefinitionBrowser >> selectedModifierBlock [
+RMDAttributeDefinitionBrowser >> selectedModifierBlock [
 
 	^ modifierList selectedItem ifNotNil: #value
 ]

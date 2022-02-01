@@ -7,7 +7,7 @@ Class {
 { #category : #tests }
 RMDPropertyInitializerNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser propertyInitializer end
+	node := parser attributeInitializer end
 		parse:
 			'temperature = 30 [C]'.
 	replacement := Dictionary new
@@ -18,7 +18,7 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 	self
 		assert: (node copyReplace: replacement)
 		equals:
-			(parser propertyInitializer end
+			(parser attributeInitializer end
 				parse:
 					'temp = 100 [F]')
 ]
@@ -27,7 +27,7 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 RMDPropertyInitializerNodeTest >> testPrintOn [
 
 	| node copy |
-	node := parser propertyInitializer end parse: 'x = y'.
-	copy := parser propertyInitializer end parse: node printString.
+	node := parser attributeInitializer end parse: 'x = y'.
+	copy := parser attributeInitializer end parse: node printString.
 	self assert: copy equals: node
 ]

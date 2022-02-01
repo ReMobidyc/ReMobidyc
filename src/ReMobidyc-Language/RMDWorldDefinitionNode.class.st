@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDWorldDefinitionNode class >> createBuiltinProperties [
+RMDWorldDefinitionNode class >> createBuiltinAttributes [
 
 	^ {  }
 ]
@@ -13,7 +13,7 @@ RMDWorldDefinitionNode class >> createBuiltinProperties [
 { #category : #'typical instances' }
 RMDWorldDefinitionNode class >> empty [
 	<script: 'RMDWorldDefinitionNode empty inspect'>
-	^ self propertyDeclarations: {}
+	^ self attributeDeclarations: {}
 ]
 
 { #category : #testing }
@@ -24,11 +24,11 @@ RMDWorldDefinitionNode >> isWorldDefinitionNode [
 { #category : #printing }
 RMDWorldDefinitionNode >> printOn: aStream [
 	aStream nextPutAll: 'World'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def printOn: aStream ]
@@ -41,11 +41,11 @@ RMDWorldDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxN
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'World'.
-	propertyDeclarations
+	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
 				nextPut: Character cr.
-			propertyDeclarations
+			attributeDeclarations
 				do: [ :def | 
 					aStream nextPutAll: '    '.
 					def

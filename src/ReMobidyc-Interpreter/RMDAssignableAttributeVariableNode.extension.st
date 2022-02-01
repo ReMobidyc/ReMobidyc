@@ -1,7 +1,7 @@
-Extension { #name : #RMDAssignablePropertyVariableNode }
+Extension { #name : #RMDAssignableAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignablePropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
+RMDAssignableAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 
 	^ aRMDInterpreter
 		  write: aNumber
@@ -11,7 +11,7 @@ RMDAssignablePropertyVariableNode >> assign: aNumber in: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignablePropertyVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
+RMDAssignableAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
 
 	^ aRMDInterpreter
 		  write: aNumber
@@ -21,6 +21,6 @@ RMDAssignablePropertyVariableNode >> assign: aNumber toNewIndividual: anInteger 
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDAssignablePropertyVariableNode >> typecheckIn: aRMDInterpreter [
-	^ propertyVariable typecheckIn: aRMDInterpreter
+RMDAssignableAttributeVariableNode >> typecheckIn: aRMDInterpreter [
+	^ attributeVariable typecheckIn: aRMDInterpreter
 ]

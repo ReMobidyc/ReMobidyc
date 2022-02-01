@@ -38,21 +38,21 @@ RMDTabularInspector >> updateObservation [
 RMDTabularInspector >> updateTable [
 
 	table ifNil: [ ^ self ].
-	self propertyValuesDo: [ :propertyValues | 
+	self attributeValuesDo: [ :attributeValues | 
 		table
 			columns: (Array streamContents: [ :stream | 
 						 stream nextPut:
 								 (SpStringTableColumn title: 'ID' evaluated: [ :index | 
 										  index isInteger
-											  ifTrue: [ (propertyValues ids at: index) printString ]
+											  ifTrue: [ (attributeValues ids at: index) printString ]
 											  ifFalse: [ index ] ]).
-						 propertyValues propertiesDo: [ :propertyDef :values :stats | 
+						 attributeValues attributesDo: [ :attributeDef :values :stats | 
 								 stream nextPut: (SpStringTableColumn
-											  title: propertyDef printString
+											  title: attributeDef printString
 											  evaluated: [ :index | 
 												  (index isInteger
 													   ifTrue: [ values at: index ifAbsent: [ nil ] ]
 													   ifFalse: [ stats at: index ifAbsent: [ nil ] ]) 
 													  ifNotNil: [ :v | v printShowingDecimalPlaces: 2 ] ]) ] ]);
-			items: #( min max mean sd ) , (1 to: propertyValues numberOfValues) ]
+			items: #( min max mean sd ) , (1 to: attributeValues numberOfValues) ]
 ]

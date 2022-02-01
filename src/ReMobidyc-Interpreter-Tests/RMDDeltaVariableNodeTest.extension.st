@@ -8,12 +8,12 @@ RMDDeltaVariableNodeTest >> testAssignIn [
 		tick.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s delta x'' = 6')
+			((parser attributeDefinition parse: 'bar''s delta x'' = 6')
 				evalIn: interpreter)
 		closeTo: 6.
 	self
 		assert:
-			((parser propertyDefinition parse: 'bar''s delta x'' = 7')
+			((parser attributeDefinition parse: 'bar''s delta x'' = 7')
 				evalIn: interpreter)
 		closeTo: 7.
 	self

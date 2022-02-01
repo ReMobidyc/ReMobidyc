@@ -14,16 +14,16 @@ RMDWorldDefinitionBrowser class >> on: aRMDSimulationModel [
 ]
 
 { #category : #private }
-RMDWorldDefinitionBrowser >> addInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+RMDWorldDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
 	simulationModel simulationDefinition worldInitializer
 		ifNotNil: [ :initializer | 
 			initializer
-				propertyInitializers:
-					(initializer propertyInitializers
+				attributeInitializers:
+					(initializer attributeInitializers
 						copyWith:
-							(RMDPropertyInitializerNode
-								identifier: aRMDPropertyNode identifier
-								expression: (RMDLiteralNode literal: '0' unit: aRMDPropertyNode unit))) ]
+							(RMDAttributeInitializerNode
+								identifier: aRMDAttributeNode identifier
+								expression: (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
 ]
 
 { #category : #accessing }
@@ -38,14 +38,14 @@ RMDWorldDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #private }
-RMDWorldDefinitionBrowser >> removeInitializerWithProperty: aRMDPropertyNode animat: anotherString [
+RMDWorldDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
 	simulationModel simulationDefinition worldInitializer
 		ifNotNil: [ :initializer | 
 			initializer
-				propertyInitializers:
-					(initializer propertyInitializers
+				attributeInitializers:
+					(initializer attributeInitializers
 						reject:
-							[ :propertyInitializer | propertyInitializer identifier = aRMDPropertyNode identifier ]) ]
+							[ :attributeInitializer | attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
 ]
 
 { #category : #enumerating }

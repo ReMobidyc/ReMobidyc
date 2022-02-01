@@ -7,7 +7,7 @@ Class {
 { #category : #running }
 RMDAssignableDifferentialPropertyVariableNodeTest >> setUpParser [ 
 	super setUpParser.
-	parser := parser assignableDifferentialPropertyVariable end
+	parser := parser assignableDifferentialAttributeVariable end
 ]
 
 { #category : #tests }

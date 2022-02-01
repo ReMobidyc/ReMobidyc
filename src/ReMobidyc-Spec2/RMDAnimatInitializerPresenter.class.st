@@ -89,7 +89,7 @@ RMDAnimatInitializerPresenter >> newLayout [
 		             yourself.
 
 	node ifNotNil: [ 
-		node propertyInitializers do: [ :initializer | 
+		node attributeInitializers do: [ :initializer | 
 			newLayout
 				add: (initializer asPresenter
 						 disableIdentifier;
@@ -116,7 +116,7 @@ RMDAnimatInitializerPresenter >> populationField [
 { #category : #accessing }
 RMDAnimatInitializerPresenter >> preferredHeight [
 
-	^ node propertyInitializers size + 1 * self class inputTextHeight
+	^ node attributeInitializers size + 1 * self class inputTextHeight
 	  + self class buttonHeight
 ]
 

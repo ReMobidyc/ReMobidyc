@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPropertyDeclarationNode,
+	#name : #RMDAttributeDeclarationNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDPropertyDeclarationNode class >> identifier: aString unit: aRMDUnit [
+RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit [
 	^ self new
 		identifier: aString;
 		unit: aRMDUnit;
@@ -17,49 +17,49 @@ RMDPropertyDeclarationNode class >> identifier: aString unit: aRMDUnit [
 ]
 
 { #category : #comparing }
-RMDPropertyDeclarationNode >> = anObject [
+RMDAttributeDeclarationNode >> = anObject [
 	^ self class = anObject class
 		and: [ identifier = anObject identifier
 				and: [ unit = anObject unit ] ]
 ]
 
 { #category : #converting }
-RMDPropertyDeclarationNode >> asPresenter [
-	^ RMDPropertyDeclarationPresenter on: self
+RMDAttributeDeclarationNode >> asPresenter [
+	^ RMDAttributeDeclarationPresenter on: self
 ]
 
 { #category : #enumerating }
-RMDPropertyDeclarationNode >> childrenDo: aBlock [
+RMDAttributeDeclarationNode >> childrenDo: aBlock [
 
 ]
 
 { #category : #comparing }
-RMDPropertyDeclarationNode >> hash [
+RMDAttributeDeclarationNode >> hash [
 	^ (self class hash bitXor: identifier hash) bitXor: unit hash
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationNode >> identifier [
+RMDAttributeDeclarationNode >> identifier [
 	^ identifier
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationNode >> identifier: aString [
+RMDAttributeDeclarationNode >> identifier: aString [
 	identifier := aString
 ]
 
 { #category : #testing }
-RMDPropertyDeclarationNode >> isPropertyDeclarationNode [
+RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 	^ true
 ]
 
 { #category : #copying }
-RMDPropertyDeclarationNode >> postCopy [
+RMDAttributeDeclarationNode >> postCopy [
 	
 ]
 
 { #category : #printing }
-RMDPropertyDeclarationNode >> printOn: aStream [
+RMDAttributeDeclarationNode >> printOn: aStream [
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' ['.
@@ -68,7 +68,7 @@ RMDPropertyDeclarationNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDPropertyDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
 	aStream
@@ -81,7 +81,7 @@ RMDPropertyDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyn
 ]
 
 { #category : #rewriting }
-RMDPropertyDeclarationNode >> replaceChildren: aDictionary [
+RMDAttributeDeclarationNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ].
@@ -89,11 +89,11 @@ RMDPropertyDeclarationNode >> replaceChildren: aDictionary [
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationNode >> unit [
+RMDAttributeDeclarationNode >> unit [
 	^ unit
 ]
 
 { #category : #accessing }
-RMDPropertyDeclarationNode >> unit: anRMDUnit [
+RMDAttributeDeclarationNode >> unit: anRMDUnit [
 	unit := anRMDUnit
 ]

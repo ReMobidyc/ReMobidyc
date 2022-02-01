@@ -1,13 +1,13 @@
-Extension { #name : #RMDNewPropertyVariableNode }
+Extension { #name : #RMDNewAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewPropertyVariableNode >> evalIn: aRMDInterpreter [
+RMDNewAttributeVariableNode >> evalIn: aRMDInterpreter [
 
 	^ (RMDUnresolvedReferenceError on: self) signal
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewPropertyVariableNode >> typecheckIn: aRMDInterpreter [
+RMDNewAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		typeOfVariable: identifier
 		agent: self agent

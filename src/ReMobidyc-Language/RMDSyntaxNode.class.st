@@ -17,6 +17,14 @@ RMDSyntaxNode >> agentDirectiveNodesDo: aBlock [
 ]
 
 { #category : #enumerating }
+RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
+	self
+		nodesDo: [ :node | 
+			node isAttributeVariableNode
+				ifTrue: [ aBlock cull: node ] ]
+]
+
+{ #category : #enumerating }
 RMDSyntaxNode >> childrenDo: aBlock [
 	^ self subclassResponsibility
 ]
@@ -79,17 +87,42 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAssignableAttributeVariableNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAssignableDeltaVariableNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isAssignableDifferentialPropertyVariableNode [
+RMDSyntaxNode >> isAssignableDifferentialAttributeVariableNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isAssignablePropertyVariableNode [
+RMDSyntaxNode >> isAttributeBindNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAttributeDeclarationNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAttributeDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAttributeInitializerNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAttributeVariableNode [
 	^ false
 ]
 
@@ -194,12 +227,12 @@ RMDSyntaxNode >> isNegationNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isNewDirectiveNode [
+RMDSyntaxNode >> isNewAttributeVariableNode [
 	^ false
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isNewPropertyVariableNode [
+RMDSyntaxNode >> isNewDirectiveNode [
 	^ false
 ]
 
@@ -221,31 +254,6 @@ RMDSyntaxNode >> isPowerNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isProductNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyBindNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyDeclarationNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyInitializerNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isPropertyVariableNode [
 	^ false
 ]
 
@@ -347,14 +355,6 @@ RMDSyntaxNode >> printOn: aStream [
 { #category : #printing }
 RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	^ self subclassResponsibility
-]
-
-{ #category : #enumerating }
-RMDSyntaxNode >> propertyVariableNodesDo: aBlock [
-	self
-		nodesDo: [ :node | 
-			node isPropertyVariableNode
-				ifTrue: [ aBlock cull: node ] ]
 ]
 
 { #category : #rewriting }

@@ -1,7 +1,7 @@
-Extension { #name : #RMDPropertyVariableNode }
+Extension { #name : #RMDAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyVariableNode >> evalIn: aRMDInterpreter [
+RMDAttributeVariableNode >> evalIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		readVariable: identifier
 		agent: agent
@@ -9,7 +9,7 @@ RMDPropertyVariableNode >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDPropertyVariableNode >> typecheckIn: aRMDInterpreter [
+RMDAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 	^ aRMDInterpreter
 		typeOfVariable: identifier
 		agent: agent
