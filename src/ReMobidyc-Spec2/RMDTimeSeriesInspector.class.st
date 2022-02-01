@@ -65,17 +65,16 @@ RMDTimeSeriesInspector >> chartWith: propertyDefinition timeSeries: aDictionaryO
 	canvas fillColor: Color white.
 
 	times := aDictionaryOfStats keys sorted.
-	min := (aDictionaryOfStats collect: [ :dict | dict at: #min ])
-		       ifNotEmpty: #min
-		       ifEmpty: [ 0.0 ].
-	max := (aDictionaryOfStats collect: [ :dict | dict at: #max ])
-		       ifNotEmpty: #max
-		       ifEmpty: [ 0.0 ].
+	min := (aDictionaryOfStats
+		        collect: [ :dict | dict at: #min ifAbsent: [ nil ] ]
+		        thenSelect: #notNil) ifNotEmpty: #min ifEmpty: [ 0.0 ].
+	max := (aDictionaryOfStats
+		        collect: [ :dict | dict at: #max ifAbsent: [ nil ] ]
+		        thenSelect: #notNil) ifNotEmpty: #max ifEmpty: [ 0.0 ].
 	showsTotal state ifTrue: [ 
-		max := max max:
-			       ((aDictionaryOfStats collect: [ :dict | dict at: #total ])
-				        ifNotEmpty: #max
-				        ifEmpty: [ 0.0 ]) ].
+		max := max max: ((aDictionaryOfStats
+				         collect: [ :dict | dict at: #total ifAbsent: [ nil ] ]
+				         thenSelect: #notNil) ifNotEmpty: #max ifEmpty: [ 0.0 ]) ].
 	min < max ifTrue: [ 
 		| xScale yScale minString maxString |
 		xScale := chartWidth
@@ -106,53 +105,58 @@ RMDTimeSeriesInspector >> chartWith: propertyDefinition timeSeries: aDictionaryO
 			time2 := times at: index + 1.
 			stats1 := aDictionaryOfStats at: time1.
 			stats2 := aDictionaryOfStats at: time2.
-			min1 := stats1 at: #min.
-			max1 := stats1 at: #max.
-			sd1 := stats1 at: #sd.
-			mean1 := stats1 at: #mean.
-			total1 := stats1 at: #total.
-			min2 := stats2 at: #min.
-			max2 := stats2 at: #max.
-			sd2 := stats2 at: #sd.
-			mean2 := stats2 at: #mean.
-			total2 := stats2 at: #total.
+			min1 := stats1 at: #min ifAbsent: [ nil ].
+			max1 := stats1 at: #max ifAbsent: [ nil ].
+			sd1 := stats1 at: #sd ifAbsent: [ nil ].
+			mean1 := stats1 at: #mean ifAbsent: [ nil ].
+			total1 := stats1 at: #total ifAbsent: [ nil ].
+			min2 := stats2 at: #min ifAbsent: [ nil ].
+			max2 := stats2 at: #max ifAbsent: [ nil ].
+			sd2 := stats2 at: #sd ifAbsent: [ nil ].
+			mean2 := stats2 at: #mean ifAbsent: [ nil ].
+			total2 := stats2 at: #total ifAbsent: [ nil ].
 			curves := OrderedCollection new: 4.
-			showsMean state ifTrue: [ 
-				curves add: { 
-						mean1.
-						mean2.
-						1.
-						Color black } ].
-			showsMin state ifTrue: [ 
+			(showsMean state and: [ mean1 notNil and: [ mean2 notNil ] ]) 
+				ifTrue: [ 
+					curves add: { 
+							mean1.
+							mean2.
+							1.
+							Color black } ].
+			(showsMin state and: [ min1 notNil and: [ min2 notNil ] ]) ifTrue: [ 
 				curves add: { 
 						min1.
 						min2.
 						1.
 						Color black } ].
-			showsMax state ifTrue: [ 
+			(showsMax state and: [ max1 notNil and: [ max2 notNil ] ]) ifTrue: [ 
 				curves add: { 
 						max1.
 						max2.
 						1.
 						Color black } ].
-			showsSd state ifTrue: [ 
-				curves
-					add: { 
-							(mean1 - sd1).
-							(mean2 - sd2).
-							1.
-							Color black };
-					add: { 
-							(mean1 + sd1).
-							(mean2 + sd2).
+			(showsSd state and: [ 
+				 mean1 notNil and: [ 
+					 sd1 notNil and: [ mean2 notNil and: [ sd2 notNil ] ] ] ]) 
+				ifTrue: [ 
+					curves
+						add: { 
+								(mean1 - sd1).
+								(mean2 - sd2).
+								1.
+								Color black };
+						add: { 
+								(mean1 + sd1).
+								(mean2 + sd2).
+								1.
+								Color black } ].
+			(showsTotal state and: [ total1 notNil and: [ total2 notNil ] ]) 
+				ifTrue: [ 
+					curves add: { 
+							total1.
+							total2.
 							1.
 							Color black } ].
-			showsTotal state ifTrue: [ 
-				curves add: { 
-						total1.
-						total2.
-						1.
-						Color black } ].
 
 			curves do: [ :args | 
 				[ :value1 :value2 :width :color | 
