@@ -219,11 +219,36 @@ The resulting `starve` task will look as follows.
 
 ### the "lay_egg" task
 
-![lay_egg directives](directives-for-lay_egg.png)
+Reproduction is not a mere change to properties but generate one or more new individuals into the simulation.
+Such actions can be defined using the `new` lifehistory directive.
+In this particular model, a grasshopper dies when it lay eggs.
+Death can be implemented by the `die` lifehistory directive.
 
-![lay_egg action](action-definition-lay_egg.png)
+Select the `Grasshopper` tab and click at the green "+" button at the tasks section to open the task definition browser.
+Clicking at the green "+" button below the Actions list will open an Action definition dialog.
 
-![lay_egg task](task-definition-lay_egg.png)
+<img alt="action editor" src="action-definition-initial.png" width=400>
+
+Then press the button labelled `no directive` to choose lifehistory directives.
+
+<img alt="lay_egg directives" src="directives-for-lay_egg.png" width=400>
+
+Check "die" and "new", and press OK.
+Then you'll be asked to enter the Animat name, but leave it as it is and press OK again.
+
+<img alt="lay_egg action definition" src="action-definition-lay_egg.png" width=400>
+
+First, enter `lay_egg` at the first field to name the action.
+Then, enter `my agen > 50 [day]` to specify the condition that this action should be taken.
+We also need to define a property definition to reset the `age` property of the new eggs.
+Click the green "+" button above the "where" label and select `new` and enter `age` and `0 [day]` to make `new age' = 0 [day]`.
+Press OK to accept the new definition of the `lay_egg` task.
+
+Then, we can specialize the `lay_egg` action so that it generates five new eggs.
+Click the green "+" button at the Task specialization section to give a replacement `new - -> new 5 Egg`.
+Press OK to finish the definition.
+
+<img alt="lay_egg task" src="task-definition-lay_egg.png" width=600>
 
 ## 6. Define tasks of Egg
 
