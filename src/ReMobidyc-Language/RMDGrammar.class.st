@@ -694,8 +694,9 @@ RMDGrammar >> expr1 [
 	^ literal / ('-' asPParser trimBlanks optional
 	   ,
 		   (self parenExpression / self agentDirective
-		    / self uniformDistribution / self apply / self attributeVariable
-		    / self placeholder / self utilityVariable) ==> [ :pair | 
+		    / self uniformDistribution / self normalDistribution
+		    / self apply / self attributeVariable / self placeholder
+		    / self utilityVariable) ==> [ :pair | 
 	   pair first
 		   ifNil: [ pair second ]
 		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
@@ -917,6 +918,20 @@ RMDGrammar >> newDirective [
 RMDGrammar >> newDirectiveNodeClass [
 
 	^ RMDNewDirectiveNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> normalDistribution [
+	^ ('normal' asPParser trimBlanks , literal
+		, 'sigma' asPParser trimBlanks , literal)
+		==>
+			[ :quad | self normalDistributionNodeClass mean: quad second sigma: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> normalDistributionNodeClass [
+
+	^ RMDNormalDistributionNode
 ]
 
 { #category : #'parsers-expressions' }

@@ -886,6 +886,20 @@ RMDGrammarTest >> testLiteral [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testNormalDistribution [
+
+	| node |
+	node := grammar normalDistribution parse: 'normal -10[m] sigma 2[cm]'.
+	self assert: node isNormalDistributionNode.
+	self
+		assert: node meanLiteral
+		equals: (grammar literal parse: '-10[m]').
+	self
+		assert: node sigmaLiteral
+		equals: (grammar literal parse: '2[cm]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPlaceholder [
 
 	| exp |

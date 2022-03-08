@@ -237,6 +237,11 @@ RMDSyntaxNode >> isNewDirectiveNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isNormalDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
 	^ false
 ]
