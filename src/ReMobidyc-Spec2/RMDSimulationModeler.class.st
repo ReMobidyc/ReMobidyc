@@ -222,7 +222,7 @@ RMDSimulationModeler >> updatePages [
 
 	views pages: (Array streamContents: [ :stream | 
 			 stream
-				 nextPut: (SpNotebookPage title: 'Time & Space' provider: [ 
+				 nextPut: (SpNotebookPage title: 'Simulation Conditions' provider: [ 
 							  RMDScrollPresenter with:
 									  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter 
 										                                     on:
