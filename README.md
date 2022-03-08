@@ -63,6 +63,8 @@ Each cell grows grass(indicated by green rect), a grasshopper (yellow dot) eats 
 When a grasshopper is matured by age, it lays 5 eggs (cyan dots), and each egg hatches in 20 days.
 This example exhibits life stages of individuals.
 
+There is a [tutorial](Tutorials/Grasshoppers/Grasshoppers.md) to build this model.
+
 ## Background
 Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
 of Mobidyc.
