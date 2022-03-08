@@ -75,7 +75,7 @@ RMDMemoryTest >> testAllocateWorld [
 	world := parser worldDefinition end
 		parse:
 			'World with
-	temperature [C]
+	temperature [DegreeC]
 	humidity [].'.
 	individual := memory allocateWorld: world.
 	self
@@ -496,7 +496,7 @@ RMDMemoryTest >> testWorld [
 	world := parser worldDefinition end
 		parse:
 			'World with
-	temperature [C]
+	temperature [DegreeC]
 	humidity [].'.
 	individual := memory allocateWorld: world.
 	self assert: memory world equals: individual
@@ -508,7 +508,7 @@ RMDMemoryTest >> testWorldDo [
 	world := parser worldDefinition end
 		parse:
 			'World with
-	temperature [C]
+	temperature [DegreeC]
 	humidity [].'.
 	individual := memory allocateWorld: world.
 	self

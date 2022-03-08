@@ -225,7 +225,7 @@ RMDSimulationModelTest >> testAnimatInitializersDo [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -268,7 +268,7 @@ RMDSimulationModelTest >> testCellInitializer [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -301,7 +301,7 @@ RMDSimulationModelTest >> testCellLength [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -323,7 +323,7 @@ World with
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 400 [m^2] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -351,7 +351,7 @@ RMDSimulationModelTest >> testCellXDivisions [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -378,7 +378,7 @@ RMDSimulationModelTest >> testCellYDivisions [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -405,7 +405,7 @@ RMDSimulationModelTest >> testDeltaTime [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -432,7 +432,7 @@ RMDSimulationModelTest >> testDuration [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -459,7 +459,7 @@ RMDSimulationModelTest >> testEast [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -511,7 +511,7 @@ RMDSimulationModelTest >> testNorth [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -561,7 +561,7 @@ RMDSimulationModelTest >> testSimulationDefinition [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -588,7 +588,7 @@ RMDSimulationModelTest >> testSouth [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -688,7 +688,7 @@ RMDSimulationModelTest >> testWest [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -712,7 +712,7 @@ RMDSimulationModelTest >> testWorldDefinition [
 	world := parser worldDefinition end
 		parse:
 			'World with
-	temperature [C].' trim.
+	temperature [DegreeC].' trim.
 	self assert: world isWorldDefinitionNode.
 	model worldDefinition: world.
 	self assert: model worldDefinition equals: world
@@ -727,7 +727,7 @@ RMDSimulationModelTest >> testWorldInitializer [
 Simulation with
 	during 300[day] by 0.5[day]
 World with
-	temperature = 30 [C]
+	temperature = 30 [DegreeC]
 5 x 6 of 10 [m] Cell with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
@@ -748,5 +748,5 @@ World with
 			(parser worldInitializer end
 				parse:
 					'World with
-	temperature = 30 [C]')
+	temperature = 30 [DegreeC]')
 ]

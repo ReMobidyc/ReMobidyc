@@ -886,6 +886,20 @@ RMDGrammarTest >> testLiteral [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testNormalDistribution [
+
+	| node |
+	node := grammar normalDistribution parse: 'normal -10[m] sigma 2[cm]'.
+	self assert: node isNormalDistributionNode.
+	self
+		assert: node meanLiteral
+		equals: (grammar literal parse: '-10[m]').
+	self
+		assert: node sigmaLiteral
+		equals: (grammar literal parse: '2[cm]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPlaceholder [
 
 	| exp |
@@ -1113,7 +1127,7 @@ RMDGrammarTest >> testWorldDefinition [
 		parse:
 			'
 World with
-	temperature [C].' trim.
+	temperature [DegreeC].' trim.
 	self assert: node isWorldDefinitionNode.
 	self assert: node attributeDeclarations size equals: 1.
 	self

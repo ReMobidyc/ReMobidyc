@@ -200,7 +200,7 @@ RMDActionContextTest >> testWorldDefinition [
 		parse:
 			'
 World with
-	temperature [C].' trim.
+	temperature [DegreeC].' trim.
 	context world: 1 definition: world.
 	self
 		assert:

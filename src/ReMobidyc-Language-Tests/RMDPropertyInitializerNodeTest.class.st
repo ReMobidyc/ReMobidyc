@@ -9,10 +9,10 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeInitializer end
 		parse:
-			'temperature = 30 [C]'.
+			'temperature = 30 [DegreeC]'.
 	replacement := Dictionary new
 		at: 'temperature' put: 'temp';
-		at: (parser expression end parse: '30 [C]')
+		at: (parser expression end parse: '30 [DegreeC]')
 			put: (parser expression end parse: '100 [F]');
 		yourself.
 	self
@@ -20,7 +20,7 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 		equals:
 			(parser attributeInitializer end
 				parse:
-					'temp = 100 [F]')
+					'temp = 100 [DegreeF]')
 ]
 
 { #category : #tests }

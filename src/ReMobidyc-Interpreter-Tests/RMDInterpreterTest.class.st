@@ -112,7 +112,7 @@ RMDInterpreterTest >> testSetUpSimulation [
 			(parser worldDefinition end
 				parse:
 					'World with
-	temperature [C].');
+	temperature [DegreeC].');
 		load:
 			(parser cellDefinition end
 				parse:
@@ -130,7 +130,7 @@ RMDInterpreterTest >> testSetUpSimulation [
 				parse: 'Simulation with
 	during 300 [day] by 0.5 [day]
 	World with
-		temperature = 30 [C]
+		temperature = 30 [DegreeC]
 	5 x 6 of 10 [m] Cell with
 		grass = uniform 1000 [kcal] to 5000 [kcal]
 		fertility = 2000 [kcal]

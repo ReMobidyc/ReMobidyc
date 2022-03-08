@@ -6,12 +6,12 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	worldDef := parser worldDefinition end
 		parse:
 			'World with
-	temperature [C]
+	temperature [DegreeC]
 	humidity [].'.
 	worldInitializer := parser worldInitializer
 		parse:
 			'World with
-			temperature = -10 [C]
+			temperature = -10 [DegreeC]
 			humidity = 0.4 []'.
 	interpreter memory allocateWorld: worldDef.
 	interpreter

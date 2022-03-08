@@ -10,10 +10,10 @@ RMDWorldInitializerNodeTest >> testCopyReplace [
 	node := parser worldInitializer end
 		parse:
 			'World with
-	temperature = 30 [C]'.
+	temperature = 30 [DegreeC]'.
 	replacement := Dictionary new
 		at: 'temperature' put: 'temp';
-		at: (parser expression end parse: '30 [C]')
+		at: (parser expression end parse: '30 [DegreeC]')
 			put: (parser expression end parse: '100 [F]');
 		yourself.
 	self
