@@ -2,7 +2,7 @@
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
-![logo-light1](images/logo-light1.png)
+<img alt="logo" src="images/logo-light1.png" width=600>
 
 # re:mobidyc
 reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
