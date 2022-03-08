@@ -10,7 +10,7 @@ reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based m
 ## Installation
 
 Re:mobidyc is implemented on the [Pharo](https://pharo.org/) system.
-There are two ways to install re:mobidyc.
+There are three ways to install re:mobidyc.
 
 ### 1. from command shell
 
