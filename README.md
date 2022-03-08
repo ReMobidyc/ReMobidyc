@@ -34,7 +34,15 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
-## Example
+### 3. from binary package
+
+The following pre-built packages are available.
+
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobodyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-mac-x64.dmg)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-win64.zip)
+
+## Examples
 
 ### 1. Simplified SugarScape
 ![animation of sugascape example](images/SugarScape.png)
