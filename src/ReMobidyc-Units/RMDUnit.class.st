@@ -68,7 +68,7 @@ RMDUnit class >> initialize [
 		value: #().
 	register
 		value: (self newSymbol: 'µm' scale: 1.0e-6 siUnit: m)
-		value: #().
+		value: #('microm' 'micrometer').
 	register
 		value: (self newSymbol: 'mi' scale: 1609.344 siUnit: m)
 		value: #(mile miles).
@@ -134,23 +134,23 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'year' scale: 31557600.0 siUnit: s)
 		value: #('y' 'yr' 'a' 'years').
 	"temperature"
-	register value: (kelvin := self newSISymbol: 'K') value: #(K).
+	register value: (kelvin := self newSISymbol: 'K') value: #(K 'Kelvin').
 	register
 		value:
 			(self
-				newSymbol: 'C'
+				newSymbol: '°C'
 				fromSI: [ :t | t - 273.152519 ]
 				toSI: [ :t | t + 273.152519 ]
 				siUnit: kelvin)
-		value: #('°C' '℃').
+		value: #('°C' '℃' 'DegreeC' 'Celsius').
 	register
 		value:
 			(self
-				newSymbol: 'F'
+				newSymbol: '°F'
 				fromSI: [ :t | t * 1.8 - 459.67 ]
 				toSI: [ :t | (t + 459.67) / 1.8 ]
 				siUnit: kelvin)
-		value: #('°F' '℉').
+		value: #('F' '℉' 'DegreeF' 'Fahrenheit').
 	"area"
 	m2 := m * m.
 	KnownUnits at: 'm2' put: m2.

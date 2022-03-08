@@ -1205,10 +1205,12 @@ RMDGrammar >> unitSymbol [
 
 { #category : #'parsers-units' }
 RMDGrammar >> unitTerm [
-	^ (self unitFactor
-		onlySeparatedBy: #blank asPParser plus / $• asPParser / $* asPParser)
-		==>
-			[ :array | array inject: RMDUnit noDimension into: [ :unit :f | unit * f ] ]
+
+	^ (self unitFactor onlySeparatedBy:
+		   #blank asPParser plus / $• asPParser / $* asPParser)
+	  ==> [ :array | 
+		  array inject: RMDUnit noDimension into: [ :unit :f | unit * f ] ]
+	  / ('1' asPParser trimBlanks ==> [ :one | RMDUnit noDimension ])
 ]
 
 { #category : #'parsers-definitions' }
