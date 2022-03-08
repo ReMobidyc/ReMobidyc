@@ -1127,7 +1127,7 @@ RMDGrammarTest >> testWorldDefinition [
 		parse:
 			'
 World with
-	temperature [C].' trim.
+	temperature [DegreeC].' trim.
 	self assert: node isWorldDefinitionNode.
 	self assert: node attributeDeclarations size equals: 1.
 	self

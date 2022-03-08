@@ -28,7 +28,7 @@ RMDUnitTest >> setUp [
 	second := RMDUnitSymbol at: 's'.
 	acre := RMDUnitSymbol at: 'ac'.
 	kelvin := RMDUnitSymbol at: 'K'.
-	celsius := RMDUnitSymbol at: 'C'
+	celsius := RMDUnitSymbol at: 'DegreeC'
 ]
 
 { #category : #tests }

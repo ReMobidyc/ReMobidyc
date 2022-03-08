@@ -29,7 +29,7 @@ RMDUnit class >> at: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 { #category : #constants }
 RMDUnit class >> celsius [
-	^ self at: 'C'
+	^ self at: 'DegreeC'
 ]
 
 { #category : #constants }
