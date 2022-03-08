@@ -2,7 +2,7 @@
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
-![logo-light1](images/logo-light1.png)
+<img alt="logo" src="images/logo-light1.png" width=600>
 
 # re:mobidyc
 reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
@@ -10,7 +10,7 @@ reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based m
 ## Installation
 
 Re:mobidyc is implemented on the [Pharo](https://pharo.org/) system.
-There are two ways to install re:mobidyc.
+There are three ways to install re:mobidyc.
 
 ### 1. from command shell
 
@@ -34,7 +34,15 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
-## Example
+### 3. from binary package
+
+The following pre-built packages are available.
+
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobodyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-mac-x64.dmg)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-win64.zip)
+
+## Examples
 
 ### 1. Simplified SugarScape
 ![animation of sugascape example](images/SugarScape.png)
@@ -54,6 +62,8 @@ This example exhibits the interaction between two animats.
 Each cell grows grass(indicated by green rect), a grasshopper (yellow dot) eats grass.
 When a grasshopper is matured by age, it lays 5 eggs (cyan dots), and each egg hatches in 20 days.
 This example exhibits life stages of individuals.
+
+There is a [tutorial](Tutorials/Grasshoppers/Grasshoppers.md) to build this model.
 
 ## Background
 Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
