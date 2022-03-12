@@ -33,7 +33,7 @@ RMDLocalFileRepository class >> on: aFileReference name: aString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	| ref action |
@@ -44,13 +44,13 @@ RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDLocalFileRepository >> actionNames [
 
 	^ (self actionsDirectory filesMatching: '*.rmd') collect: #basename
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDLocalFileRepository >> actionsDirectory [
 
 	^ (self directory / 'actions') ensureCreateDirectory
@@ -98,7 +98,23 @@ RMDLocalFileRepository >> isModifiable [
 	^ modifiable = true
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> modelNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self modelsDirectory / aString.
+	ref isDirectory ifFalse: [ ^ errorBlock value ].
+	^ RMDSimulationModel importModel: ref ifError: errorBlock
+]
+
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> modelNames [
+
+	^ self modelsDirectory directoryNames reject: [ :dirname | 
+		  dirname isEmpty or: [ dirname first = $. ] ]
+]
+
+{ #category : #'accessing-models' }
 RMDLocalFileRepository >> modelsDirectory [
 
 	^ (self directory / 'models') ensureCreateDirectory

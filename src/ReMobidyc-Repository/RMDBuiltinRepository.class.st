@@ -22,23 +22,29 @@ RMDBuiltinRepository class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDBuiltinRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ (self actionNames includes: aString)
 		ifTrue: [ self perform: aString asSymbol ]
 		ifFalse: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDBuiltinRepository >> actionNames [
 	^ (self class selectorsInProtocol: 'actions') collect: #asString
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing-actions' }
 RMDBuiltinRepository >> actions [
 
 	^ (self class selectorsInProtocol: 'actions') collect: [ :name | 
 		  self perform: name ]
+]
+
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString ifAlreadyPresent: errorBlock [
+
+	^ self shouldNotImplement
 ]
 
 { #category : #actions }
@@ -79,6 +85,16 @@ RMDBuiltinRepository >> lose [
 	amount = min(the amount, the thing - the minimum).' asRMDActionDefinition
 ]
 
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> modelNamed: aString ifAbsent: errorBlock [
+	^ errorBlock value
+]
+
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> modelNames [
+	^ Array new
+]
+
 { #category : #actions }
 RMDBuiltinRepository >> move [
 
@@ -93,6 +109,12 @@ where
 { #category : #accessing }
 RMDBuiltinRepository >> name [
 	'Built-in'
+]
+
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> removeModelNamed: aString ifAbsent: errorBlock [
+
+	^ self shouldNotImplement
 ]
 
 { #category : #accessing }

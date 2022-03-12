@@ -91,54 +91,6 @@ RMDSimulationModel class >> goatAndWolf [
 ]
 
 { #category : #importing }
-RMDSimulationModel class >> importActions: aFileReference into: aRMDSimulationModel [
-
-	| parser |
-	parser := RMDGrammar new actionDefinition end.
-	aFileReference readStreamDo: [ :stream | 
-		[ stream atEnd ] whileFalse: [ 
-			| source def |
-			source := (String streamContents: [ :wstream | 
-				           | line |
-				           [ 
-				           (line := stream nextLine) notNil and: [ 
-					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
-					           wstream
-						           nextPutAll: line;
-						           nextPut: Character cr ].
-				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
-			source ifEmpty: [ ^ self ].
-			def := parser parse: source.
-			def isPetit2Failure ifTrue: [ 
-				self error: 'action definition: ' , def printString ].
-			aRMDSimulationModel load: def ] ]
-]
-
-{ #category : #importing }
-RMDSimulationModel class >> importAgents: aFileReference into: aRMDSimulationModel [
-
-	| parser |
-	parser := RMDGrammar new agentDefinition end.
-	aFileReference readStreamDo: [ :stream | 
-		[ stream atEnd ] whileFalse: [ 
-			| source def |
-			source := (String streamContents: [ :wstream | 
-				           | line |
-				           [ 
-				           (line := stream nextLine) notNil and: [ 
-					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
-					           wstream
-						           nextPutAll: line;
-						           nextPut: Character cr ].
-				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
-			source ifEmpty: [ ^ self ].
-			def := parser parse: source.
-			def isPetit2Failure ifTrue: [ 
-				self error: 'agent definition: ' , def printString ].
-			aRMDSimulationModel load: def ] ]
-]
-
-{ #category : #importing }
 RMDSimulationModel class >> importModel [
 
 	<script: 'RMDSimulationModel importModel open'>
@@ -147,85 +99,19 @@ RMDSimulationModel class >> importModel [
 		 extensions: #(  )
 		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
 				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
-		^ self importModel: ref ].
+		^ self importModel: ref ifError: [ nil ] ].
 	^ nil
 ]
 
 { #category : #importing }
-RMDSimulationModel class >> importModel: aFileReference [
+RMDSimulationModel class >> importModel: aFileReference ifError: errorBlock [
 
-	| model |
-	model := self new.
-	self
-		importSimulationDefinition:
-			aFileReference / self simulationDefinitionFileName
-		into: model;
-		importAgents: aFileReference / self agentsFileName into: model;
-		importActions: aFileReference / self actionsFileName into: model;
-		importTasks: aFileReference / self tasksFileName into: model;
-		importVisualization: aFileReference / self visualizationFileName
-		into: model.
-	^ model
-]
-
-{ #category : #importing }
-RMDSimulationModel class >> importSimulationDefinition: aFileReference into: aRMDSimulationModel [
-
-	aFileReference readStreamDo: [ :stream | 
-		| def |
-		def := RMDGrammar new simulationDefinition end parse:
-			       stream contents.
-		def isPetit2Failure ifTrue: [ 
-			^ self error: 'simulation definition: ' , def printString ].
-		aRMDSimulationModel load: def ]
-]
-
-{ #category : #importing }
-RMDSimulationModel class >> importTasks: aFileReference into: aRMDSimulationModel [
-
-	| parser |
-	parser := RMDGrammar new taskDefinition end.
-	aFileReference readStreamDo: [ :stream | 
-		[ stream atEnd ] whileFalse: [ 
-			| source def |
-			source := (String streamContents: [ :wstream | 
-				           | line |
-				           [ 
-				           (line := stream nextLine) notNil and: [ 
-					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
-					           wstream
-						           nextPutAll: line;
-						           nextPut: Character cr ].
-				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
-			source ifEmpty: [ ^ self ].
-			def := parser parse: source.
-			def isPetit2Failure ifTrue: [ 
-				self error: 'task definition: ' , def printString ].
-			aRMDSimulationModel load: def ] ]
-]
-
-{ #category : #importing }
-RMDSimulationModel class >> importVisualization: aFileReference into: aRMDSimulationModel [
-
-	| parser |
-	parser := RMDGrammar new renderer end.
-	aFileReference readStreamDo: [ :stream | 
-		[ stream atEnd ] whileFalse: [ 
-			| source def |
-			source := (String streamContents: [ :wstream | 
-				           | line |
-				           [ 
-				           (line := stream nextLine) notNil and: [ 
-					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
-					           wstream
-						           nextPutAll: line;
-						           nextPut: Character cr ].
-				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
-			source ifEmpty: [ ^ self ].
-			def := parser parse: source.
-			def isPetit2Failure ifTrue: [ 
-				self error: 'renderer: ' , def printString ].
-			aRMDSimulationModel addRenderer: def ] ]
+	[ 
+	^ self new
+		  importModel: aFileReference;
+		  yourself ]
+		on: FileException , RMDSyntaxError
+		do: [ :ex | ^ errorBlock value ]
 ]
 
 { #category : #accessing }
@@ -504,33 +390,142 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> importActions: aFileReference [
+
+	aFileReference readStreamDo: [ :stream | 
+		| parser |
+		parser := RMDGrammar new actionDefinition end.
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
+			self load: def ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importAgents: aFileReference [
+
+	aFileReference readStreamDo: [ :stream | 
+		| parser |
+		parser := RMDGrammar new agentDefinition end.
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
+			self load: def ] ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> importModel [
 
-	| newModel |
-	newModel := [ self class importModel ]
-		            on: Error
-		            do: [ :ex | ^ self ].
-	newModel ifNil: [ ^ self ].
-	simulationDefinition := newModel simulationDefinition.
-	animatDefinitions := newModel animatDefinitions.
-	cellDefinition := newModel cellDefinition.
-	worldDefinition := newModel worldDefinition.
-	actionDefinitions := newModel actionDefinitions.
-	taskDefinitions := newModel taskDefinitions.
-	renderers := newModel renderers
+	(UIManager default
+		 chooseExistingFileReference: 'import simulation model'
+		 extensions: #(  )
+		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
+				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
+		[ self importModel: ref ]
+			on: FileException , RMDSyntaxError
+			do: [ :ex | ^ nil ].
+		^ self ].
+	^ nil
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importModel: aFileReference [
+
+	self resetDefinitions.
+	self
+		importSimulationDefinition:
+			aFileReference / self class simulationDefinitionFileName;
+		importAgents: aFileReference / self class agentsFileName;
+		importActions: aFileReference / self class actionsFileName;
+		importTasks: aFileReference / self class tasksFileName;
+		importVisualization:
+			aFileReference / self class visualizationFileName
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importSimulationDefinition: aFileReference [
+
+	aFileReference readStreamDo: [ :stream | 
+		| def |
+		def := RMDGrammar new simulationDefinition end parse:
+			       stream contents.
+		def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
+		self load: def ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importTasks: aFileReference [
+
+	aFileReference readStreamDo: [ :stream | 
+		| parser |
+		parser := RMDGrammar new taskDefinition end.
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
+			self load: def ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importVisualization: aFileReference [
+
+	aFileReference readStreamDo: [ :stream | 
+		| parser |
+		parser := RMDGrammar new renderer end.
+		[ stream atEnd ] whileFalse: [ 
+			| source def |
+			source := (String streamContents: [ :wstream | 
+				           | line |
+				           [ 
+				           (line := stream nextLine) notNil and: [ 
+					           line isEmpty or: [ line last ~= $. ] ] ] whileTrue: [ 
+					           wstream
+						           nextPutAll: line;
+						           nextPut: Character cr ].
+				           line ifNotNil: [ wstream nextPutAll: line ] ]) trim.
+			source ifEmpty: [ ^ self ].
+			def := parser parse: source.
+			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
+			self addRenderer: def ] ]
 ]
 
 { #category : #initialization }
 RMDSimulationModel >> initialize [
 
 	super initialize.
-	simulationDefinition := RMDSimulationDefinitionNode empty.
-	cellDefinition := RMDCellDefinitionNode empty.
-	worldDefinition := RMDWorldDefinitionNode empty.
-	animatDefinitions := Dictionary new.
-	actionDefinitions := Dictionary new.
-	taskDefinitions := OrderedCollection new.
-	renderers := OrderedCollection new
+	self resetDefinitions
 ]
 
 { #category : #accessing }
@@ -633,6 +628,18 @@ RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDe
 { #category : #accessing }
 RMDSimulationModel >> repositoryName [
 	^ 'model'
+]
+
+{ #category : #initialization }
+RMDSimulationModel >> resetDefinitions [
+
+	simulationDefinition := RMDSimulationDefinitionNode empty.
+	cellDefinition := RMDCellDefinitionNode empty.
+	worldDefinition := RMDWorldDefinitionNode empty.
+	animatDefinitions := Dictionary new.
+	actionDefinitions := Dictionary new.
+	taskDefinitions := OrderedCollection new.
+	renderers := OrderedCollection new
 ]
 
 { #category : #'accessing - definitions' }
