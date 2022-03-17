@@ -41,8 +41,14 @@ RMDBuiltinRepository >> actions [
 		  self perform: name ]
 ]
 
+{ #category : #'accessing-actions' }
+RMDBuiltinRepository >> addAction: aRMDActionDefinitionNode named: aString [
+
+	
+]
+
 { #category : #'accessing-models' }
-RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString ifAlreadyPresent: errorBlock [
+RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString [
 
 	^ self shouldNotImplement
 ]
@@ -109,6 +115,10 @@ where
 { #category : #accessing }
 RMDBuiltinRepository >> name [
 	'Built-in'
+]
+
+{ #category : #'accessing-actions' }
+RMDBuiltinRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing-models' }

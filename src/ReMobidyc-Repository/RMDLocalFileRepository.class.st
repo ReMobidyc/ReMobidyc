@@ -56,6 +56,24 @@ RMDLocalFileRepository >> actionsDirectory [
 	^ (self directory / 'actions') ensureCreateDirectory
 ]
 
+{ #category : #'accessing-actions' }
+RMDLocalFileRepository >> addAction: aRMDActionDefinitionNode named: aString [
+
+	| ref |
+	ref := self actionsDirectory / aString withExtension: 'rmd'.
+	ref ensureDelete writeStreamDo: [ :stream | 
+		aRMDActionDefinitionNode printOn: stream ]
+]
+
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> addModel: aRMDSimulationModel named: aString [
+
+	| ref |
+	ref := self modelsDirectory / aString.
+	ref isFile ifTrue: [ ref ensureDelete ].
+	^ aRMDSimulationModel exportModel: ref
+]
+
 { #category : #accessing }
 RMDLocalFileRepository >> beModifiable [
 
@@ -141,6 +159,24 @@ RMDLocalFileRepository >> name [
 RMDLocalFileRepository >> name: aString [
 
 	name := aString
+]
+
+{ #category : #'accessing-actions' }
+RMDLocalFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self actionsDirectory / aString withExtension: 'rmd'.
+	ref isFile ifFalse: [ ^ errorBlock value ].
+	ref ensureDelete
+]
+
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> removeModelNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self modelsDirectory / aString.
+	ref isDirectory ifFalse: [ ^ errorBlock value ].
+	ref ensureDeleteAll
 ]
 
 { #category : #accessing }

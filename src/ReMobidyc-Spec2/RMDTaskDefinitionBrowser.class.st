@@ -244,17 +244,14 @@ RMDTaskDefinitionBrowser >> editReplacement [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> importAction [
 
-	RMDRepositoryActionsBrowser new openDialogWithSpec
-		title: 'Import Action';
-		okAction: [ :browser | 
-			browser presenter action ifNotNil: [ :newAction | 
-					self simulationModel ifNotNil: [ :model | 
-							model load: newAction copy.
-							self
-								updateActionList;
-								updateActionButtons;
-								updateTemplateText;
-								updateSourceText ] ] ]
+	RMDRepositoryActionsBrowser openToLoadDo: [ :newAction | 
+		self simulationModel ifNotNil: [ :model | 
+			model load: newAction copy.
+			self
+				updateActionList;
+				updateActionButtons;
+				updateTemplateText;
+				updateSourceText ] ]
 ]
 
 { #category : #initialization }

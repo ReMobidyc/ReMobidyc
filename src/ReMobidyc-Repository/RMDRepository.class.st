@@ -22,8 +22,14 @@ RMDRepository >> actions [
 		  thenSelect: #notNil
 ]
 
+{ #category : #'accessing-actions' }
+RMDRepository >> addAction: aRMDActionDefinitionNode named: aString [
+
+	^ self subclassResponsibility
+]
+
 { #category : #'accessing-models' }
-RMDRepository >> addModel: aRMDSimulationModel named: aString ifAlreadyPresent: errorBlock [
+RMDRepository >> addModel: aRMDSimulationModel named: aString [
 
 	^ self subclassResponsibility
 ]
@@ -69,9 +75,15 @@ RMDRepository >> modelNames [
 { #category : #'accessing-models' }
 RMDRepository >> models [
 
-	^ self actionNames
-		  collect: [ :name | self actionNamed: name ifAbsent: [ nil ] ]
+	^ self modelNames
+		  collect: [ :name | self modelNamed: name ifAbsent: [ nil ] ]
 		  thenSelect: #notNil
+]
+
+{ #category : #'accessing-actions' }
+RMDRepository >> removeActionNamed: aString ifAbsent: errorBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-models' }

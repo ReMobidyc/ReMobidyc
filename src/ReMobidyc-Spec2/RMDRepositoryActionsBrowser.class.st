@@ -1,203 +1,112 @@
 Class {
 	#name : #RMDRepositoryActionsBrowser,
-	#superclass : #RMDPresenter,
-	#instVars : [
-		'repositoryList',
-		'actionList',
-		'addRepositoryButton',
-		'removeRepositoryButton',
-		'editRepositoryButton',
-		'sourceText'
-	],
+	#superclass : #RMDAbstractRepositoryBrowser,
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDRepositoryActionsBrowser class >> defaultSpec [
+{ #category : #utilities }
+RMDRepositoryActionsBrowser class >> openForSave: aRMDActionDefinitionNode [
 
-	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.3;
-		  add: (SpBoxLayout newVertical
-				   add: #repositoryList expand: true;
-				   add: (SpBoxLayout newHorizontal
-						    add: #addRepositoryButton width: self buttonHeight;
-						    add: #removeRepositoryButton width: self buttonHeight;
-						    yourself)
-				   expand: false;
-				   yourself);
-		  add: (SpPanedLayout newVertical
-				   add: #actionList;
-				   add: #sourceText;
-				   yourself);
-		  yourself
+	<script:
+	'RMDRepositoryActionsBrowser openForSave: RMDActionDefinitionNode template'>
+	super openForSave: aRMDActionDefinitionNode
 ]
 
-{ #category : #accessing }
-RMDRepositoryActionsBrowser >> action [
+{ #category : #utilities }
+RMDRepositoryActionsBrowser class >> openToLoadDo: aBlock [
 
-	^ actionList selection selectedItem
+	<script:
+	'RMDRepositoryActionsBrowser openToLoadDo: [ :action | action inspect ] '>
+	super openToLoadDo: aBlock
 ]
 
 { #category : #operations }
-RMDRepositoryActionsBrowser >> addGit [
+RMDRepositoryActionsBrowser >> addItem [
 
-	^ self notYetImplemented
+	(UIManager default request: 'Enter a new name of the action') 
+		ifNotNil: [ :name | 
+			| newItem |
+			newItem := name.
+			(newItem endsWith: '.rmd') ifFalse: [ newItem := newItem , '.rmd' ].
+			itemList items: (itemList items copyWith: newItem) ]
 ]
 
-{ #category : #operations }
-RMDRepositoryActionsBrowser >> addLocalDirectory [
+{ #category : #private }
+RMDRepositoryActionsBrowser >> getAction: aString [
 
-	(UIManager default
-		 chooseExistingFileReference: 'Repository Directory'
-		 extensions: #(  )
-		 path:
-			 ((FileLocator documents / 'ReMobidyc') ensureCreateDirectory / '*')
-				 absolutePath) ifNotNil: [ :ref | 
-		(UIManager default
-			 request: 'Repository Name'
-			 initialAnswer: ref basename) ifNotNil: [ :name | 
-			self repositoryDirectory add:
-				(RMDLocalFileRepository on: ref name: name).
-			self updateRepositoryList ] ]
-]
-
-{ #category : #operations }
-RMDRepositoryActionsBrowser >> addRepository [
-
-	self addRepositoryMenu openWithSpecAtPointer
-]
-
-{ #category : #operations }
-RMDRepositoryActionsBrowser >> addRepositoryMenu [
-
-	^ self newMenu
-		  addGroup: [ :group | 
-			  group
-				  addItem: [ :item | 
-					  item
-						  name: 'Local directory';
-						  icon: Smalltalk ui icons open;
-						  action: [ self addLocalDirectory ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'Git';
-						  icon: Smalltalk ui icons git;
-						  action: [ self addGit ] ] ];
-		  yourself
-]
-
-{ #category : #initialization }
-RMDRepositoryActionsBrowser >> initializePresenters [
-
-	super initializePresenters.
-	repositoryList := self newList
-		                  beSingleSelection;
-		                  whenModelChangedDo: [ 
-			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ 
-			                  self
-				                  updateButtons;
-				                  updateActionList ];
-		                  display: [ :item | item repositoryName ];
-		                  displayIcon: [ :item | item icon ];
-		                  yourself.
-	addRepositoryButton := self newButton
-		                       icon: self addIcon;
-		                       action: [ self addRepository ];
-		                       yourself.
-	removeRepositoryButton := self newButton
-		                          icon: self removeIcon;
-		                          action: [ self removeRepository ];
-		                          disable;
-		                          yourself.
-	editRepositoryButton := self newButton
-		                        icon: self editIcon;
-		                        action: [ self editRepository ];
-		                        disable;
-		                        yourself.
-	actionList := self newTable
-		              beSingleSelection;
-		              beResizable;
-		              showColumnHeaders;
-		              addColumn: (SpStringTableColumn
-				               title: 'verb'
-				               evaluated: [ :item | item identifier ]);
-		              addColumn: (SpStringTableColumn
-				               title: 'object'
-				               evaluated: [ :item | item object ifNil: [ '' ] ]);
-		              whenModelChangedDo: [ actionList selectItem: nil ];
-		              whenSelectionChangedDo: [ self updateSourceText ];
-		              yourself.
-	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
-		              enabled: false;
-		              editable: false;
-		              highlights: Array new;
-		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
-		              yourself.
-	self updateRepositoryList
+	^ self repository ifNotNil: [ :repo | 
+		  repo actionNamed: aString ifAbsent: [ nil ] ]
 ]
 
 { #category : #initialization }
 RMDRepositoryActionsBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Repository Browser'.
-	aWindowPresenter initialExtent: 800 @ 400
+	aWindowPresenter title: 'Actions'
+]
+
+{ #category : #accessing }
+RMDRepositoryActionsBrowser >> itemsInRepository [
+
+	^ self repository ifNotNil: #actionNames ifNil: [ #(  ) ]
+]
+
+{ #category : #private }
+RMDRepositoryActionsBrowser >> load [
+
+	^ self repository ifNotNil: [ :repo | 
+		  self item ifNotNil: [ :item | 
+			  repo actionNamed: item ifAbsent: [ nil ] ] ]
+]
+
+{ #category : #'instance creation' }
+RMDRepositoryActionsBrowser >> newItemList [
+
+	^ self newTable
+		  beSingleSelection;
+		  beResizable;
+		  showColumnHeaders;
+		  addColumn: (SpStringTableColumn title: '' evaluated: [ :item | 
+					   | t |
+					   t := item asText.
+					   (self getAction: item) ifNil: [ t makeAllColor: Color red ].
+					   t ]);
+		  addColumn: (SpStringTableColumn
+				   title: 'verb'
+				   evaluated: [ :item | 
+					   (self getAction: item) ifNotNil: #identifier ifNil: [ '' ] ]);
+		  addColumn: (SpStringTableColumn
+				   title: 'object'
+				   evaluated: [ :item | 
+					   ((self getAction: item) ifNotNil: #object) ifNil: [ '' ] ]);
+		  yourself
 ]
 
 { #category : #operations }
-RMDRepositoryActionsBrowser >> removeRepository [
+RMDRepositoryActionsBrowser >> removeItem [
 
-	self repository ifNotNil: [ :repository | 
-		self repositoryDirectory remove: repository.
-		self updateRepositoryList ]
+	self repository ifNotNil: [ :repo | 
+		self item ifNotNil: [ :item | 
+			(UIManager default confirm:
+				 'Remove ' , item , ' from ' , repo name , ' repository?') 
+				ifTrue: [ 
+					repo removeActionNamed: item ifAbsent: [  ].
+					self updateItemList ] ] ]
 ]
 
-{ #category : #accessing }
-RMDRepositoryActionsBrowser >> repository [
+{ #category : #operations }
+RMDRepositoryActionsBrowser >> save: aRMDActionDefinitionNode [
 
-	^ [ repositoryList selection selectedItem ]
-		  on: Error
-		  do: [ :ex | ex return: nil ]
-]
-
-{ #category : #accessing }
-RMDRepositoryActionsBrowser >> repositoryDirectory [
-
-	^ RMDRepositoryDirectory current
-]
-
-{ #category : #updating }
-RMDRepositoryActionsBrowser >> updateActionList [
-
-	actionList items: (self repository
-			 ifNotNil: [ :repository | repository actions ]
-			 ifNil: [ #(  ) ])
+	^ self repository ifNotNil: [ :repo | 
+		  self item ifNotNil: [ :item | 
+			  ((repo actionNamed: item ifAbsent: [ nil ]) isNil or: [ 
+				   UIManager default confirm:
+					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
+				  ifTrue: [ repo addAction: aRMDActionDefinitionNode named: item ] ] ]
 ]
 
 { #category : #updating }
-RMDRepositoryActionsBrowser >> updateButtons [
+RMDRepositoryActionsBrowser >> updateDescriptionText [
 
-	self repository
-		ifNil: [ removeRepositoryButton disable ]
-		ifNotNil: [ removeRepositoryButton enable ]
-]
-
-{ #category : #updating }
-RMDRepositoryActionsBrowser >> updateRepositoryList [
-
-	| repository |
-	repository := self repository.
-	repositoryList
-		unselectAll;
-		items: self repositoryDirectory repositories.
-	(repositoryList items includes: repository) ifTrue: [ 
-		repositoryList selectItem: repository ]
-]
-
-{ #category : #updating }
-RMDRepositoryActionsBrowser >> updateSourceText [
-
-	self action
-		ifNotNil: [ :action | sourceText syntaxNode: action ]
-		ifNil: [ sourceText text: '' ]
+	descriptionText text: ((self item ifNotNil: [ :item | 
+			  (self getAction: item) ifNotNil: #printString ]) ifNil: [ '' ])
 ]

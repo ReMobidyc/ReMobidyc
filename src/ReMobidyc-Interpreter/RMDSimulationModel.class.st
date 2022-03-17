@@ -452,7 +452,6 @@ RMDSimulationModel >> importModel [
 
 { #category : #'exporting/importing' }
 RMDSimulationModel >> importModel: aFileReference [
-
 	self resetDefinitions.
 	self
 		importSimulationDefinition:

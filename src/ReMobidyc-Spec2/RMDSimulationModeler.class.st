@@ -132,14 +132,13 @@ RMDSimulationModeler >> fileMenu [
 					  item
 						  name: 'Import...';
 						  action: [ 
-							  ([ RMDSimulationModel importModel ]
-								   on: Error
-								   do: [ :ex | ex return: nil ]) ifNotNil: [ :model | 
+							  RMDRepositoryModelsBrowser openToLoadDo: [ :model | 
 									  self setSimulationModel: model ] ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Export As...';
-					  action: [ simulationModel exportModel ] ] ];
+					  action: [ 
+						  RMDRepositoryModelsBrowser openForSave: simulationModel ] ] ];
 		  yourself
 ]
 
