@@ -12,17 +12,19 @@ Class {
 
 { #category : #api }
 RMDNumberInputPresenter >> acceptNumebr: aNumber [
+
 	number := self isInteger
-		ifTrue: [ aNumber asInteger ]
-		ifFalse: [ aNumber asFloat ].
+		          ifTrue: [ aNumber asInteger ]
+		          ifFalse: [ aNumber asFloat ].
 	lastValidNumber := number.
-	self beOk.
-	self text: number printString
+	self beOk
 ]
 
 { #category : #initialization }
 RMDNumberInputPresenter >> initialize [
+
 	super initialize.
+	self whenSubmitDo: [ self prettyPrint ]
 ]
 
 { #category : #api }
@@ -46,18 +48,25 @@ RMDNumberInputPresenter >> number: aNumber [
 ]
 
 { #category : #api }
+RMDNumberInputPresenter >> prettyPrint [
+
+	self number: self number
+]
+
+{ #category : #api }
 RMDNumberInputPresenter >> text: aString [
-	[ number := self isInteger
-		ifTrue: [ aString asNumber asInteger ]
-		ifFalse: [ aString asNumber asFloat ].
+
+	[ 
+	number := self isInteger
+		          ifTrue: [ aString asNumber asInteger ]
+		          ifFalse: [ aString asNumber asFloat ].
 	self beOk.
-	lastValidNumber := number.
-	^ super text: number printString ]
+	lastValidNumber := number ]
 		on: Error
 		do: [ :ex | 
 			self beError.
-			number := nil.
-			^ nil ]
+			number := nil ].
+	^ super text: aString
 ]
 
 { #category : #'api-events' }

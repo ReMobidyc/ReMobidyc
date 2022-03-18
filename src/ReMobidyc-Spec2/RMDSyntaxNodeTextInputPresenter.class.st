@@ -48,6 +48,27 @@ RMDSyntaxNodeTextInputPresenter >> allowEmpty [
 	parser := parser / '' asPParser end
 ]
 
+{ #category : #private }
+RMDSyntaxNodeTextInputPresenter >> basicSyntaxNode: aRMDSyntaxNode [
+
+	syntaxNode := aRMDSyntaxNode.
+	syntaxNode
+		ifNil: [ 
+			self beOk.
+			lastValidSyntaxNode := aRMDSyntaxNode ]
+		ifNotNil: [ 
+			syntaxNode isString
+				ifTrue: [ 
+					self beOk.
+					lastValidSyntaxNode := aRMDSyntaxNode ]
+				ifFalse: [ 
+					(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
+						ifTrue: [ 
+							self beOk.
+							lastValidSyntaxNode := aRMDSyntaxNode ]
+						ifFalse: [ self beError ] ] ]
+]
+
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beAgentIdentifier [
 	self parser: RMDGrammar new agentIdentifier end
@@ -86,6 +107,13 @@ RMDSyntaxNodeTextInputPresenter >> color: aColor [
 	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
 ]
 
+{ #category : #initialization }
+RMDSyntaxNodeTextInputPresenter >> initialize [
+
+	super initialize.
+	self whenSubmitDo: [ self prettyPrint ]
+]
+
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
@@ -102,6 +130,11 @@ RMDSyntaxNodeTextInputPresenter >> parser: aParser [
 ]
 
 { #category : #api }
+RMDSyntaxNodeTextInputPresenter >> prettyPrint [
+	self syntaxNode: self lastValidSyntaxNode
+]
+
+{ #category : #api }
 RMDSyntaxNodeTextInputPresenter >> syntaxNode [
 	^ syntaxNode
 ]
@@ -109,45 +142,31 @@ RMDSyntaxNodeTextInputPresenter >> syntaxNode [
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 
-	syntaxNode := aRMDSyntaxNode.
-	syntaxNode
-		ifNil: [ 
-			self beOk.
-			lastValidSyntaxNode := aRMDSyntaxNode.
-			text := '' ]
-		ifNotNil: [ 
-			syntaxNode isString
-				ifTrue: [ 
-					self beOk.
-					lastValidSyntaxNode := aRMDSyntaxNode.
-					text := aRMDSyntaxNode ]
-				ifFalse: [ 
-					(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-						ifTrue: [ 
-							self beOk.
-							lastValidSyntaxNode := aRMDSyntaxNode ]
-						ifFalse: [ self beError ].
-					text := aRMDSyntaxNode printString ] ]
+	self basicSyntaxNode: aRMDSyntaxNode.
+	text := aRMDSyntaxNode ifNil: [ '' ] ifNotNil: #asString
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> text: aString [
+
 	| newText node |
 	newText := aString asText.
 	node := parser end parse: aString asString.
 	^ node isPetit2Failure
-		ifTrue: [ | node2 |
-			node2 := parser parse: aString asString.
-			node2 isPetit2Failure
-				ifTrue: [ node := node2 ].
-			newText
-				makeColor: Color red
-				from: (node position + 1 min: aString size max: 1)
-				to: aString size.
-			self beError.
-			syntaxNode := nil.
-			super text: newText ]
-		ifFalse: [ self syntaxNode: node ]
+		  ifTrue: [ 
+			  | node2 |
+			  node2 := parser parse: aString asString.
+			  node2 isPetit2Failure ifTrue: [ node := node2 ].
+			  newText
+				  makeColor: Color red
+				  from: (node position + 1 min: aString size max: 1)
+				  to: aString size.
+			  self beError.
+			  syntaxNode := nil.
+			  super text: newText ]
+		  ifFalse: [ 
+			  self basicSyntaxNode: node.
+			  super text: aString ]
 ]
 
 { #category : #'api-events' }

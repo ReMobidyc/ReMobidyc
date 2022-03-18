@@ -20,6 +20,12 @@ TRMDPresenter >> beWarning [
 ]
 
 { #category : #accessing }
+TRMDPresenter >> color: aColor [
+	super color: aColor.
+	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
+]
+
+{ #category : #accessing }
 TRMDPresenter >> errorColor [
 	^ self theme backgroundColor mixed: 0.9 with: Color red
 ]

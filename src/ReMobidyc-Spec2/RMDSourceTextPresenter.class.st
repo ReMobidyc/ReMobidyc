@@ -26,6 +26,18 @@ RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
 ]
 
 { #category : #private }
+RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
+	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
+	syntaxNode := aRMDSyntaxNode.
+	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
+		ifTrue: [ 
+			self beOk.
+			lastValidSyntaxNode := aRMDSyntaxNode ]
+		ifFalse: [ self beError ].
+
+]
+
+{ #category : #private }
 RMDSourceTextPresenter >> highlightedTextFrom: aRMDSyntaxNode [
 	| sections newText |
 	sections := OrderedCollection new: 10.
@@ -56,7 +68,8 @@ RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
 RMDSourceTextPresenter >> initialize [
 	super initialize.
 	highlightColor := Color red darker.
-	highlights := Array new
+	highlights := Array new.
+	self whenSubmitDo: [ self prettyPrint ]
 ]
 
 { #category : #api }
@@ -75,6 +88,12 @@ RMDSourceTextPresenter >> parser: aPP2Node [
 ]
 
 { #category : #api }
+RMDSourceTextPresenter >> prettyPrint [
+
+	self syntaxNode: self lastValidSyntaxNode
+]
+
+{ #category : #api }
 RMDSourceTextPresenter >> syntaxNode [
 	^ syntaxNode
 ]
@@ -83,12 +102,7 @@ RMDSourceTextPresenter >> syntaxNode [
 RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
-	syntaxNode := aRMDSyntaxNode.
-	(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-		ifTrue: [ 
-			self beOk.
-			lastValidSyntaxNode := aRMDSyntaxNode ]
-		ifFalse: [ self beError ].
+	self basicSyntaxNode: aRMDSyntaxNode.
 	super text: (aRMDSyntaxNode isString
 			 ifTrue: [ aRMDSyntaxNode ]
 			 ifFalse: [ self highlightedTextFrom: aRMDSyntaxNode ])
@@ -96,24 +110,24 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 { #category : #api }
 RMDSourceTextPresenter >> text: aString [
+
 	| aText |
 	aText := aString asText.
-	parser
-		ifNil: [ syntaxNode := nil ]
-		ifNotNil: [ | node |
-			node := parser end parse: aText asString.
-			node isPetit2Failure
-				ifTrue: [ | node2 |
-					node2 := parser parse: aString asString.
-					node2 isPetit2Failure
-						ifTrue: [ node := node2 ].
-					aText
-						makeColor: Color red
-						from: (node position max: 1)
-						to: aString size.
-					self beError.
-					syntaxNode := nil ]
-				ifFalse: [ ^ self syntaxNode: node ] ].
+	parser ifNil: [ syntaxNode := nil ] ifNotNil: [ 
+		| node |
+		node := parser end parse: aText asString.
+		node isPetit2Failure
+			ifTrue: [ 
+				| node2 |
+				node2 := parser parse: aString asString.
+				node2 isPetit2Failure ifTrue: [ node := node2 ].
+				aText
+					makeColor: Color red
+					from: (node position max: 1)
+					to: aString size.
+				self beError.
+				syntaxNode := nil ]
+			ifFalse: [ self basicSyntaxNode: node ] ].
 	^ super text: aText
 ]
 

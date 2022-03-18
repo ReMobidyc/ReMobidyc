@@ -16,6 +16,12 @@ RMDSyntaxNode >> agentDirectiveNodesDo: aBlock [
 		node isAgentDirectiveNode ifTrue: [ aBlock cull: node ] ]
 ]
 
+{ #category : #converting }
+RMDSyntaxNode >> asString [
+
+	^ self printString
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
 	self
