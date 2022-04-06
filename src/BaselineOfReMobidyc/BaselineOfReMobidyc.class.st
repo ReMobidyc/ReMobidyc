@@ -11,9 +11,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	spec for: #common do: [ 
 		spec
 			baseline: 'PetitParser2Core'
-			with: [ spec repository: 'github://kursjan/petitparser2/' ];
-			baseline: 'Pharo9UTF8Path'
-			with: [ spec repository: 'github://tomooda/Pharo9UTF8Path:main/' ].
+			with: [ spec repository: 'github://kursjan/petitparser2/' ].
 		spec
 			package: 'ReMobidyc-Storage';
 			package: 'ReMobidyc-Units' with: [ spec requires: #(  ) ];
@@ -47,7 +45,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 		spec
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
-			with: #( 'Pharo9UTF8Path' 'ReMobidyc-Storage' 'ReMobidyc-Language'
+			with: #( 'ReMobidyc-Storage' 'ReMobidyc-Language'
 				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
 				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
 				   'ReMobidyc-Spec2' );
