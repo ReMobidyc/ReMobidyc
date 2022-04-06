@@ -13,8 +13,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDPercentileInspector class >> defaultSpec [
+{ #category : #layout }
+RMDPercentileInspector class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal

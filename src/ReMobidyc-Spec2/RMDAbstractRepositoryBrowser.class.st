@@ -15,8 +15,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDAbstractRepositoryBrowser class >> defaultSpec [
+{ #category : #layout }
+RMDAbstractRepositoryBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 0.3;
@@ -56,7 +56,7 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
 	browser := self new.
-	browser openDialogWithSpec okAction: [ aBlock cull: browser load ]
+	browser openDialog okAction: [ aBlock cull: browser load ]
 ]
 
 { #category : #operations }

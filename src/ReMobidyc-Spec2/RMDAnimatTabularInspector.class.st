@@ -10,8 +10,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDAnimatTabularInspector class >> defaultSpec [
+{ #category : #layout }
+RMDAnimatTabularInspector class >> defaultLayout [
 
 	<spec>
 	^ SpBoxLayout newVertical

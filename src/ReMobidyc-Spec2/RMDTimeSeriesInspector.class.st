@@ -24,8 +24,8 @@ RMDTimeSeriesInspector class >> chartWidth [
 	^ 760
 ]
 
-{ #category : #specs }
-RMDTimeSeriesInspector class >> defaultSpec [
+{ #category : #layout }
+RMDTimeSeriesInspector class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal

@@ -4,8 +4,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDCellColorAlphaRendererPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDCellColorAlphaRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;

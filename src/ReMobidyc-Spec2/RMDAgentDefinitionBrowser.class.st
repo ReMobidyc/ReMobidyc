@@ -22,8 +22,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDAgentDefinitionBrowser class >> defaultSpec [
+{ #category : #layout }
+RMDAgentDefinitionBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.3;

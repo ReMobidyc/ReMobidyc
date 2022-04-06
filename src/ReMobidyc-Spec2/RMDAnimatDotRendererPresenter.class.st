@@ -7,8 +7,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDAnimatDotRendererPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDAnimatDotRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:

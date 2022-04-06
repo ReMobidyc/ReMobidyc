@@ -7,8 +7,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDTabularInspector class >> defaultSpec [
+{ #category : #layout }
+RMDTabularInspector class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical add: #table
 ]

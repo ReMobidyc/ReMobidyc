@@ -8,8 +8,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDHistogramInspector class >> defaultSpec [
+{ #category : #layout }
+RMDHistogramInspector class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: '';

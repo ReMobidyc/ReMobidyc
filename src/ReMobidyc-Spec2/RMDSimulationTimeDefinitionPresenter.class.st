@@ -10,8 +10,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDSimulationTimeDefinitionPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDSimulationTimeDefinitionPresenter class >> defaultLayout [
 
 	<spec>
 	^ SpBoxLayout newVertical

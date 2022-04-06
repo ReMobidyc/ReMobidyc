@@ -7,8 +7,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
 
-{ #category : #specs }
-RMDScrollPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDScrollPresenter class >> defaultLayout [
 
 	^ SpScrollableLayout with: #presenter
 ]

@@ -9,8 +9,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDAnimatTimeSeriesInspector class >> defaultSpec [
+{ #category : #layout }
+RMDAnimatTimeSeriesInspector class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
