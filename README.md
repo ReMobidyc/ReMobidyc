@@ -119,3 +119,8 @@ To achieve the objectives above, ReːMobidyc will have the following major compo
 * Web servers and APIs
   - ReːMobidyc will have web-based UI so that models can be shared by research communities.
   - ReːMobidyc will provide web API to retrieve models and simulation data so that anyone can create specialized native applications.
+
+## Organizational Contributors
+The re:mobidyc project is supported by [DGtal Aqua Lab, Shizuoka University](https://wwp.shizuoka.ac.jp/dgtalaqualab/) and [Software Research Associates, Inc.](https://www.sra.co.jp/en/)
+
+[![DGtal Aqua Lab](images/DGTALAQUALAB-logo.png)](https://wwp.shizuoka.ac.jp/dgtalaqualab/)　　[![SRA logo](images/SRA-logo-large.png)](https://www.sra.co.jp/en/)
