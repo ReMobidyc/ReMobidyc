@@ -9,8 +9,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDVisualizerPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDVisualizerPresenter class >> defaultLayout [
 	<spec>
 	^ SpPanedLayout newHorizontal
 		add: #image;

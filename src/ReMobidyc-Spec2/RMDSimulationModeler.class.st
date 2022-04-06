@@ -11,8 +11,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDSimulationModeler class >> defaultSpec [
+{ #category : #layout }
+RMDSimulationModeler class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
@@ -47,7 +47,7 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 										   alpha: '0.5' asRMDExpression
 										   between: '0.0' asRMDExpression
 										   and: '1.0' asRMDExpression);
-								  yourself)) openWithSpec ];
+								  yourself)) open ];
 				help: 'Open a modeler window with a new simulation model'.
 			(aBuilder item: #Examples)
 				parent: 'ReMobidyc';
@@ -56,7 +56,7 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 					(aBuilder item: #SugarScape)
 						parent: #Examples;
 						label: 'sugar scape';
-						action: [ RMDSimulationModeler sugarScape openWithSpec ];
+						action: [ RMDSimulationModeler sugarScape open ];
 						help: 'A simple simulation of an energy cycle.'.
 					(aBuilder item: #GoatAndWolf)
 						parent: #Examples;
@@ -185,7 +185,7 @@ RMDSimulationModeler >> openObservatory [
 		               yourself.
 	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
-		  openWithSpec;
+		  open;
 		  yourself
 ]
 

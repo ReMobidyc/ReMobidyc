@@ -52,15 +52,16 @@ RMDPresenter >> newColorDropList [
 
 { #category : #widgets }
 RMDPresenter >> newColorDropList: anArrayOfColor [
+
 	^ self newDropList
-		items: anArrayOfColor;
-		display: [ :color | '' ];
-		iconBlock: [ :color | 
-			| form |
-			form := Form extent: 14 @ 14 depth: 32.
-			form getCanvas fillColor: color.
-			form ];
-		yourself
+		  items: anArrayOfColor;
+		  display: [ :color | '' ];
+		  displayIcon: [ :color | 
+			  | form |
+			  form := Form extent: 14 @ 14 depth: 32.
+			  form getCanvas fillColor: color.
+			  form ];
+		  yourself
 ]
 
 { #category : #widgets }

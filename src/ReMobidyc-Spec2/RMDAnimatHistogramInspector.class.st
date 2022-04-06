@@ -10,8 +10,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
 
-{ #category : #specs }
-RMDAnimatHistogramInspector class >> defaultSpec [
+{ #category : #layout }
+RMDAnimatHistogramInspector class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #populationLabel height: self buttonHeight;

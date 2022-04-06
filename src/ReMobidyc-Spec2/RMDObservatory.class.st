@@ -19,8 +19,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDObservatory class >> defaultSpec [
+{ #category : #layout }
+RMDObservatory class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal

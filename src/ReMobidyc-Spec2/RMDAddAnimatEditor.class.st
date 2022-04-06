@@ -9,8 +9,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDAddAnimatEditor class >> defaultSpec [
+{ #category : #layout }
+RMDAddAnimatEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
