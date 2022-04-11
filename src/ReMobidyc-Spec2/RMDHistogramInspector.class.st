@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDSpeciesInspector,
 	#instVars : [
 		'chartPresenters',
-		'visibleAttributes'
+		'visibleAttributes',
+		'spawnedPresenters'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -29,6 +30,18 @@ RMDHistogramInspector >> chartWidth [
 { #category : #accessing }
 RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: max divisions: divisions [
 
+	^ self
+		  chartWith: attributeDef
+		  values: values
+		  min: min
+		  max: max
+		  divisions: divisions
+		  extent: self chartWidth @ self chartHeight
+]
+
+{ #category : #accessing }
+RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: max divisions: divisions extent: aPoint [
+
 	| counts maxCount font fontHeight chartWidth chartHeight form canvas xScale yScale minString maxString |
 	counts := Array new: divisions + 2 withAll: 0.
 	values do: [ :value | 
@@ -38,8 +51,8 @@ RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: ma
 			         max: 1.
 		counts at: index put: (counts at: index) + 1 ].
 	maxCount := counts max.
-	chartWidth := self chartWidth.
-	chartHeight := self chartHeight.
+	chartWidth := aPoint x.
+	chartHeight := aPoint y.
 	font := TextStyle defaultFont.
 	fontHeight := font height.
 	form := Form
@@ -126,7 +139,8 @@ RMDHistogramInspector >> expandButtonFor: attributeDef values: values [
 RMDHistogramInspector >> initializePresenters [
 
 	super initializePresenters.
-	visibleAttributes := Dictionary new
+	visibleAttributes := Dictionary new.
+	spawnedPresenters := Dictionary new
 ]
 
 { #category : #accessing }
@@ -167,6 +181,33 @@ RMDHistogramInspector >> requestMinMaxDivisionsFor: attributeDef values: values 
 		  divisions }
 ]
 
+{ #category : #private }
+RMDHistogramInspector >> spawnButtonFor: attributeDef [
+
+	^ self newButton
+		  icon: self spawnIcon;
+		  action: [ 
+			  chartPresenters
+				  at: attributeDef identifier
+				  ifPresent: [ :presenter | 
+					  | spawnedPresenter |
+					  spawnedPresenter := presenter image asPresenter
+						                      autoScale: true;
+						                      yourself.
+					  spawnedPresenter open title:
+						  'Histgram of ' , self speciesName , '''s '
+						  , attributeDef printString.
+					  (spawnedPresenters
+						   at: attributeDef identifier
+						   ifAbsentPut: [ OrderedCollection new ]) add: spawnedPresenter ] ]
+]
+
+{ #category : #accessing }
+RMDHistogramInspector >> speciesName [
+
+	^ self subclassResponsibility
+]
+
 { #category : #updating }
 RMDHistogramInspector >> updateImage [
 
@@ -187,7 +228,23 @@ RMDHistogramInspector >> updateImage [
 									        min: triple first
 									        max: triple second
 									        divisions: triple third.
-								presenter image: form ] ] ] ] ]
+								presenter image: form ].
+						spawnedPresenters
+							at: attributeDef identifier
+							ifPresent: [ :presenters | 
+								presenters copy do: [ :presenter | 
+									presenter window isClosed
+										ifTrue: [ presenters remove: presenter ifAbsent: [  ] ]
+										ifFalse: [ 
+											| form |
+											form := self
+												        chartWith: attributeDef
+												        values: vals
+												        min: triple first
+												        max: triple second
+												        divisions: triple third
+												        extent: 0 @ -20 + presenter adapter widget extent.
+											presenter image: form ] ] ] ] ] ] ]
 ]
 
 { #category : #updating }
@@ -203,7 +260,11 @@ RMDHistogramInspector >> updateLayout [
 					at: attributeDef identifier
 					ifPresent: [ :triple | 
 						| form presenter |
-						newLayout add: (self collapseButtonFor: attributeDef) expand: false.
+						newLayout
+							add: (SpBoxLayout newHorizontal
+									 add: (self collapseButtonFor: attributeDef);
+									 add: (self spawnButtonFor: attributeDef) expand: false)
+							expand: false.
 						form := self
 							        chartWith: attributeDef
 							        values: vals

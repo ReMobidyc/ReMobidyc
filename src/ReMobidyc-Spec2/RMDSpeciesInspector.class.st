@@ -55,6 +55,12 @@ RMDSpeciesInspector >> interpreterDo: aBlock [
 	interpreter ifNotNil: aBlock
 ]
 
+{ #category : #accessing }
+RMDSpeciesInspector >> spawnIcon [
+
+	^ Smalltalk ui iconNamed: #expandBox
+]
+
 { #category : #private }
 RMDSpeciesInspector >> speciesDefinitionDo: aBlock [
 	^ self subclassResponsibility
