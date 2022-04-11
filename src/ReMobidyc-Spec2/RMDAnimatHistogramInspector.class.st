@@ -51,6 +51,12 @@ RMDAnimatHistogramInspector >> newLayout [
 		  yourself
 ]
 
+{ #category : #accessing }
+RMDAnimatHistogramInspector >> speciesName [
+
+	^ animat ifNil: [ 'Animat' ]
+]
+
 { #category : #updating }
 RMDAnimatHistogramInspector >> updateObservation [
 
