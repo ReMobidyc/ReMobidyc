@@ -23,6 +23,27 @@ RMDFunctionTest >> testCos [
 ]
 
 { #category : #tests }
+RMDFunctionTest >> testExp [
+
+	| exp |
+	exp := RMDFunction exp.
+	self assert: (exp value: 0) closeTo: 1.0.
+	self assert: (exp value: 1.0) closeTo: Float e.
+	self assert: (exp value: 12.3) closeTo: 12.3 exp
+]
+
+{ #category : #tests }
+RMDFunctionTest >> testLn [
+
+	| ln |
+	ln := RMDFunction ln.
+	self assert: (ln value: 0) equals: Float infinity negated.
+	self assert: (ln value: 1.0) closeTo: 0.0.
+	self assert: (ln value: Float e) closeTo: 1.0.
+	self assert: (ln value: 12.3) closeTo: 12.3 ln
+]
+
+{ #category : #tests }
 RMDFunctionTest >> testMax [
 	| f |
 	f := RMDFunction max.
@@ -50,6 +71,16 @@ RMDFunctionTest >> testPositive [
 	self assert: (f value: -10) equals: 0.
 	self assert: (f value: -20.0) equals: 0.0.
 	self assert: (f value: 10) equals: 10
+]
+
+{ #category : #tests }
+RMDFunctionTest >> testPower [
+
+	| power |
+	power := RMDFunction power.
+	self should: [ power value: -1.0 value: 0.0 ] raise: ArithmeticError.
+	self assert: (power value: 2.0 value: 3.0) closeTo: 8.0.
+	self assert: (power value: 0.0 value: 100.0) closeTo: 0.0
 ]
 
 { #category : #tests }

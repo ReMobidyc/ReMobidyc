@@ -14,9 +14,13 @@ RMDFunction class >> at: aString [
 
 	aString = 'abs' ifTrue: [ ^ self abs ].
 	aString = 'cos' ifTrue: [ ^ self cos ].
+	aString = 'exp' ifTrue: [ ^ self exp ].
+	aString = 'log' ifTrue: [ ^ self ln ].
+	aString = 'ln' ifTrue: [ ^ self ln ].
 	aString = 'max' ifTrue: [ ^ self max ].
 	aString = 'mean' ifTrue: [ ^ self mean ].
 	aString = 'min' ifTrue: [ ^ self min ].
+	aString = 'power' ifTrue: [ ^ self power ].
 	aString = 'sin' ifTrue: [ ^ self sin ].
 	aString = 'sum' ifTrue: [ ^ self sum ].
 	aString = 'positive' ifTrue: [ ^ self positive ].
@@ -26,6 +30,16 @@ RMDFunction class >> at: aString [
 { #category : #'typical instances' }
 RMDFunction class >> cos [
 	^ RMDCosFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> exp [
+	^ RMDExpFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> ln [
+	^ RMDLnFunction new
 ]
 
 { #category : #'typical instances' }
@@ -46,6 +60,11 @@ RMDFunction class >> min [
 { #category : #'typical instances' }
 RMDFunction class >> positive [
 	^ RMDPositiveFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> power [
+	^ RMDPowerFunction new
 ]
 
 { #category : #'typical instances' }
