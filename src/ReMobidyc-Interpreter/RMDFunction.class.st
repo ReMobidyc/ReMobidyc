@@ -20,6 +20,7 @@ RMDFunction class >> at: aString [
 	aString = 'max' ifTrue: [ ^ self max ].
 	aString = 'mean' ifTrue: [ ^ self mean ].
 	aString = 'min' ifTrue: [ ^ self min ].
+	aString = 'power' ifTrue: [ ^ self power ].
 	aString = 'sin' ifTrue: [ ^ self sin ].
 	aString = 'sum' ifTrue: [ ^ self sum ].
 	aString = 'positive' ifTrue: [ ^ self positive ].
@@ -59,6 +60,11 @@ RMDFunction class >> min [
 { #category : #'typical instances' }
 RMDFunction class >> positive [
 	^ RMDPositiveFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> power [
+	^ RMDPowerFunction new
 ]
 
 { #category : #'typical instances' }
