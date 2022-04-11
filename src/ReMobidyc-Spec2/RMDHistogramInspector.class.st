@@ -61,7 +61,7 @@ RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: ma
 	canvas := form getCanvas.
 	canvas fillColor: Color white.
 	xScale := chartWidth asFloat / counts size.
-	yScale := (chartHeight - fontHeight) asFloat / (maxCount * 1.1).
+	yScale := maxCount > 0 ifTrue: [(chartHeight - fontHeight) asFloat / (maxCount * 1.1)] ifFalse: [1.0].
 	minString := (min printShowingDecimalPlaces: 2) , ' ['
 	             , attributeDef unit printString , ']'.
 	maxString := (max printShowingDecimalPlaces: 2) , ' ['
