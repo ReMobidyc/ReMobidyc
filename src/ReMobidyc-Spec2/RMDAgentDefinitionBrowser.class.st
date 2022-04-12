@@ -64,15 +64,16 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addAttribute [
+
 	| attributeNode |
 	(attributeNode := RMDAttributeDeclarationNode
-		identifier: ''
-		unit: RMDUnit noDimension) asPresenter openDialogWithSpec
+		                  identifier: ''
+		                  unit: RMDUnit noDimension) asPresenter openDialog
 		title: 'Add attribute to ' , self agentName;
-		okAction: [ self
-				definitionDo: [ :definition | 
-					definition
-						attributeDeclarations: (definition attributeDeclarations copyWith: attributeNode).
+		okAction: [ 
+			self definitionDo: [ :definition | 
+					definition attributeDeclarations:
+							(definition attributeDeclarations copyWith: attributeNode).
 					self addInitializerWithAttribute: attributeNode animat: animat.
 					self updateAttributeList ] ]
 ]

@@ -8,8 +8,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDAttributeDeclarationPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDAttributeDeclarationPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
