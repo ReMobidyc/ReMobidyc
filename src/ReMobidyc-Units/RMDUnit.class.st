@@ -38,6 +38,11 @@ RMDUnit class >> day [
 ]
 
 { #category : #constants }
+RMDUnit class >> fg [
+	^ self at: 'fg'
+]
+
+{ #category : #constants }
 RMDUnit class >> hour [
 	^ self at: 'hour'
 ]
@@ -61,6 +66,9 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'km' scale: 1.0e3 siUnit: m)
 		value: #().
 	register
+		value: (self newSymbol: 'dm' scale: 1.0e-1 siUnit: m)
+		value: #().
+	register
 		value: (self newSymbol: 'cm' scale: 1.0e-2 siUnit: m)
 		value: #().
 	register
@@ -69,6 +77,12 @@ RMDUnit class >> initialize [
 	register
 		value: (self newSymbol: 'µm' scale: 1.0e-6 siUnit: m)
 		value: #('microm' 'micrometer').
+	register
+		value: (self newSymbol: 'nm' scale: 1.0e-9 siUnit: m)
+		value: #('nanom' 'nanometer').
+	register
+		value: (self newSymbol: 'pm' scale: 1.0e-9 siUnit: m)
+		value: #('picom' 'picometer').
 	register
 		value: (self newSymbol: 'mi' scale: 1609.344 siUnit: m)
 		value: #(mile miles).
@@ -95,6 +109,15 @@ RMDUnit class >> initialize [
 	register
 		value: (self newSymbol: 'µg' scale: 1.0e-9 siUnit: kg)
 		value: #().
+	register
+		value: (self newSymbol: 'ng' scale: 1.0e-12 siUnit: kg)
+		value: #('nanog' 'nanogram').
+	register
+		value: (self newSymbol: 'pg' scale: 1.0e-15 siUnit: kg)
+		value: #('picog' 'picogram').
+	register
+		value: (self newSymbol: 'fg' scale: 1.0e-18 siUnit: kg)
+		value: #('femtog' 'femtogram').
 	register
 		value: (self newSymbol: 'lb' scale: 0.45359237 siUnit: kg)
 		value: #().
@@ -166,29 +189,29 @@ RMDUnit class >> initialize [
 	"volume"
 	m3 := m2 * m.
 	register
-		value: (self newSymbol: 'Gl' scale: 1.0e6 siUnit: m3)
-		value: #(GL Gℓ).
+		value: (self newSymbol: 'GL' scale: 1.0e6 siUnit: m3)
+		value: #(Gl Gℓ).
 	register
-		value: (self newSymbol: 'Ml' scale: 1.0e3 siUnit: m3)
-		value: #(ML Mℓ).
+		value: (self newSymbol: 'ML' scale: 1.0e3 siUnit: m3)
+		value: #(Ml Mℓ).
 	register
-		value: (self newSymbol: 'kl' scale: 1.0 siUnit: m3)
-		value: #(kL kℓ '㎘').
+		value: (self newSymbol: 'kL' scale: 1.0 siUnit: m3)
+		value: #(kl kℓ '㎘').
 	register
-		value: (self newSymbol: 'hl' scale: 1.0e-1 siUnit: m3)
-		value: #(hL hℓ).
+		value: (self newSymbol: 'hL' scale: 1.0e-1 siUnit: m3)
+		value: #(hl hℓ).
 	register
 		value: (self newSymbol: 'daL' scale: 1.0e-2 siUnit: m3)
 		value: #(dal daℓ).
 	register
-		value: (self newSymbol: 'l' scale: 1.0e-3 siUnit: m3)
-		value: #(L ℓ litre liter).
+		value: (self newSymbol: 'L' scale: 1.0e-3 siUnit: m3)
+		value: #(l ℓ litre liter).
 	register
-		value: (self newSymbol: 'dl' scale: 1.0e-6 siUnit: m3)
-		value: #(dL dℓ mL mℓ '㎖').
+		value: (self newSymbol: 'dL' scale: 1.0e-6 siUnit: m3)
+		value: #(dl dℓ mL mℓ '㎖').
 	register
-		value: (self newSymbol: 'µl' scale: 1.0e-6 siUnit: m3)
-		value: #(µL µℓ).
+		value: (self newSymbol: 'µL' scale: 1.0e-6 siUnit: m3)
+		value: #(µl µℓ).
 	"force"
 	register
 		value: (self newSymbol: 'N' scale: 1.0 siUnit: (n := kg * m / s / s))
@@ -301,10 +324,12 @@ RMDUnit class >> initialize [
 	register
 		value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian)
 		value: #('degrees' '°').
+	"probability"
 	register
 		value: (self newSymbol: '%' scale: 1.0 - 2 siUnit: self noDimension)
-		value: #('percent')
-	"probability"
+		value: #('percent').
+	"amount of substance"
+	register value: (self newSISymbol: 'mol') value: #('㏖').
 ]
 
 { #category : #constants }
