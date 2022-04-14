@@ -18,8 +18,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDActionDefinitionBrowser class >> defaultSpec [
+{ #category : #layout }
+RMDActionDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -85,7 +85,7 @@ RMDActionDefinitionBrowser >> addAttributeDefinition [
 
 	| newDefinition |
 	newDefinition := RMDAttributeDefinitionNode template.
-	newDefinition asPresenter openDialogWithSpec okAction: [ 
+	newDefinition asPresenter openDialog okAction: [ 
 		node attributeDefinitions:
 			(node attributeDefinitions copyWith: newDefinition).
 		self nodeChanged ]

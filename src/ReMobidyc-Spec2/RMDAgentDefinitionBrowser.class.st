@@ -90,17 +90,17 @@ RMDAgentDefinitionBrowser >> addRenderer [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addTask [
+
 	| actionDefinitionBrowser |
-	actionDefinitionBrowser := (RMDTaskDefinitionBrowser
-		on: simulationModel)
-		taskDefinition: nil;
-		agentName: self agentName;
-		yourself.
-	actionDefinitionBrowser openDialogWithSpec
-		okAction: [ actionDefinitionBrowser taskDefinition
-				ifNotNil: [ :taskDefinition | 
-					simulationModel addTaskDefinition: taskDefinition.
-					self updateTaskList ] ]
+	actionDefinitionBrowser := (RMDTaskDefinitionBrowser on:
+			                            simulationModel)
+		                           taskDefinition: nil;
+		                           agentName: self agentName;
+		                           yourself.
+	actionDefinitionBrowser openDialog okAction: [ 
+		actionDefinitionBrowser taskDefinition ifNotNil: [ :taskDefinition | 
+			simulationModel addTaskDefinition: taskDefinition.
+			self updateTaskList ] ]
 ]
 
 { #category : #accessing }
