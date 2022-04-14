@@ -24,8 +24,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
-{ #category : #specs }
-RMDTaskDefinitionBrowser class >> defaultSpec [
+{ #category : #layout }
+RMDTaskDefinitionBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.4;
@@ -146,7 +146,7 @@ RMDTaskDefinitionBrowser >> addAction [
 
 	| newActionDef |
 	newActionDef := RMDActionDefinitionNode template.
-	newActionDef asPresenter openDialogWithSpec okAction: [ 
+	newActionDef asPresenter openDialog okAction: [ 
 		self simulationModel ifNotNil: [ :model | 
 			model addActionDefinition: newActionDef.
 			self taskDefinition ifNotNil: #resetAction.
