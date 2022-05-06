@@ -1,13 +1,13 @@
 Class {
-	#name : #RMDCellColorBrightnessRenderer,
-	#superclass : #RMDCellColorRangeRenderer,
+	#name : #RMDPatchColorBrightnessRenderer,
+	#superclass : #RMDPatchColorRangeRenderer,
 	#category : #'ReMobidyc-Visualization'
 }
 
 { #category : #'instance creation' }
-RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpressionNode between: aRMDLiteralNode1 and: aRMDLiteralNode2 [
+RMDPatchColorBrightnessRenderer class >> color: aColor brightness: aRMDExpressionNode between: aRMDLiteralNode1 and: aRMDLiteralNode2 [
 	<script:
-		'(RMDCellColorBrightnessRenderer color: Color green brightness: ''my grass'' asRMDExpression between: ''0 [kcal]'' asRMDExpression and: ''10000 [kcal]'' asRMDExpression) inspect'>
+		'(RMDPatchColorBrightnessRenderer color: Color green brightness: ''my grass'' asRMDExpression between: ''0 [kcal]'' asRMDExpression and: ''10000 [kcal]'' asRMDExpression) inspect'>
 	^ (self
 		expression: aRMDExpressionNode
 		min: aRMDLiteralNode1
@@ -17,7 +17,7 @@ RMDCellColorBrightnessRenderer class >> color: aColor brightness: aRMDExpression
 ]
 
 { #category : #accessing }
-RMDCellColorBrightnessRenderer >> colorFrom: aNumber [
+RMDPatchColorBrightnessRenderer >> colorFrom: aNumber [
 	^ Color
 		h: color hue
 		s: color saturation
@@ -26,14 +26,14 @@ RMDCellColorBrightnessRenderer >> colorFrom: aNumber [
 ]
 
 { #category : #accessing }
-RMDCellColorBrightnessRenderer >> name [
+RMDPatchColorBrightnessRenderer >> name [
 	^ 'color brightness'
 ]
 
 { #category : #printing }
-RMDCellColorBrightnessRenderer >> printOn: aStream [
+RMDPatchColorBrightnessRenderer >> printOn: aStream [
 
-	aStream nextPutAll: 'Cell -> '.
+	aStream nextPutAll: 'Patch -> '.
 	self printColor: color on: aStream.
 	aStream nextPutAll: ' with brightness proportional to '.
 	expression printOn: aStream.

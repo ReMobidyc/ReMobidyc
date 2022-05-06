@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellTabularInspector,
+	#name : #RMDPatchTabularInspector,
 	#superclass : #RMDTabularInspector,
 	#traits : 'TRMDCellObservatory',
 	#classTraits : 'TRMDCellObservatory classTrait',

@@ -21,7 +21,7 @@ RMDVisualizer class >> extent: aPoint [
 RMDVisualizer class >> sugarScape [
 	^ (self extent: 500 @ 500)
 		addBackgroundRendererColor: Color brown;
-		addCellRendererColor: Color green
+		addPatchRendererColor: Color green
 			alpha: 'here''s grass' asRMDExpression
 			between: '0[kcal]' asRMDExpression
 			and: '1000000[kcal]' asRMDExpression;
@@ -42,10 +42,10 @@ RMDVisualizer >> addBackgroundRendererColor: aColor [
 ]
 
 { #category : #'adding-removing' }
-RMDVisualizer >> addCellRenderer: aRMDExpressionNode color: aColor1 value: aRMDLiteralNode1 color: aColor2 value: aRMDLiteralnode2 color: aColor3 [
+RMDVisualizer >> addPatchRenderer: aRMDExpressionNode color: aColor1 value: aRMDLiteralNode1 color: aColor2 value: aRMDLiteralnode2 color: aColor3 [
 	^ self
 		addRenderer:
-			(RMDCellColorMapRenderer
+			(RMDPatchColorMapRenderer
 				expression: aRMDExpressionNode
 				color: aColor1
 				value: aRMDLiteralNode1
@@ -55,10 +55,10 @@ RMDVisualizer >> addCellRenderer: aRMDExpressionNode color: aColor1 value: aRMDL
 ]
 
 { #category : #'adding-removing' }
-RMDVisualizer >> addCellRendererColor: aColor alpha: aRMDExpressionNode between: aNumber and: anotherNumber [
+RMDVisualizer >> addPatchRendererColor: aColor alpha: aRMDExpressionNode between: aNumber and: anotherNumber [
 	^ self
 		addRenderer:
-			(RMDCellColorAlphaRenderer
+			(RMDPatchColorAlphaRenderer
 				color: aColor
 				alpha: aRMDExpressionNode
 				between: aNumber
@@ -66,10 +66,10 @@ RMDVisualizer >> addCellRendererColor: aColor alpha: aRMDExpressionNode between:
 ]
 
 { #category : #'adding-removing' }
-RMDVisualizer >> addCellRendererColor: aColor brightness: aRMDExpressionNode between: aNumber and: anotherNumber [
+RMDVisualizer >> addPatchRendererColor: aColor brightness: aRMDExpressionNode between: aNumber and: anotherNumber [
 	^ self
 		addRenderer:
-			(RMDCellColorBrightnessRenderer
+			(RMDPatchColorBrightnessRenderer
 				color: aColor
 				brightness: aRMDExpressionNode
 				between: aNumber
@@ -132,8 +132,8 @@ RMDVisualizer >> renderersReverseDo: aBlock [
 { #category : #visualizing }
 RMDVisualizer >> visualize: aRMDInterpreter [
 	| scale form canvas |
-	scale := extent x asFloat / aRMDInterpreter cellXDivisions asFloat
-		min: extent y asFloat / aRMDInterpreter cellYDivisions asFloat.
+	scale := extent x asFloat / aRMDInterpreter patchXDivisions asFloat
+		min: extent y asFloat / aRMDInterpreter patchYDivisions asFloat.
 	form := self formToWrite.
 	canvas := form getCanvas.
 	canvas fillColor: Color white.

@@ -66,7 +66,7 @@ RMDSimulationDefinitionPresenter >> newLayout [
 	newLayout
 		add: node timeDefinition asPresenter expand: false;
 		add: node worldInitializer asPresenter expand: false;
-		add: node cellInitializer asPresenter expand: false.
+		add: node patchInitializer asPresenter expand: false.
 	node animatInitializers do: [ :initializer | 
 		newLayout
 			add: (initializer asPresenter

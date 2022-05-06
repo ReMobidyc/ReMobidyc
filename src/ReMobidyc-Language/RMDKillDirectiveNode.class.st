@@ -24,9 +24,3 @@ RMDKillDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNod
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]
-
-{ #category : #'as yet unclassified' }
-RMDKillDirectiveNode >> typecheckIn: aRMDInterpreter [
-
-	aRMDInterpreter context objectDefinition notNil
-]

@@ -49,18 +49,6 @@ RMDFileMemory >> basePath: aFileReference [
 		initializeAllocation
 ]
 
-{ #category : #'accessing-individuals' }
-RMDFileMemory >> cell: anInteger [
-	super cell: anInteger.
-	spaceDirty := true
-]
-
-{ #category : #'accessing-individuals' }
-RMDFileMemory >> cellSize: anInteger [
-	super cellSize: anInteger.
-	spaceDirty := true
-]
-
 { #category : #defaults }
 RMDFileMemory >> defaultDigitsForTime [
 	^ 6
@@ -127,10 +115,10 @@ RMDFileMemory >> initializeAllocation [
 { #category : #initialization }
 RMDFileMemory >> initializeSpace [
 	self readSpace
-		at: 'cell' ifPresent: [ :v | cell := v ];
-		at: 'xCells' ifPresent: [ :v | xCells := v ];
-		at: 'yCells' ifPresent: [ :v | yCells := v ];
-		at: 'cellSize' ifPresent: [ :v | cellSize := v ].
+		at: 'patch' ifPresent: [ :v | patch := v ];
+		at: 'xPatches' ifPresent: [ :v | xPatches := v ];
+		at: 'yPatches' ifPresent: [ :v | yPatches := v ];
+		at: 'patchSize' ifPresent: [ :v | patchSize := v ].
 	spaceDirty := false
 ]
 
@@ -150,6 +138,18 @@ RMDFileMemory >> nextAvailableSlot: anInteger [
 	super nextAvailableSlot: anInteger.
 	oldSlot = anInteger
 		ifTrue: [ allocationDirty := true ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDFileMemory >> patch: anInteger [
+	super patch: anInteger.
+	spaceDirty := true
+]
+
+{ #category : #'accessing-individuals' }
+RMDFileMemory >> patchSize: anInteger [
+	super patchSize: anInteger.
+	spaceDirty := true
 ]
 
 { #category : #'accessing-storage' }
@@ -332,20 +332,21 @@ RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeSpace [
+
 	self spaceFile
 		ensureDelete;
 		writeStreamDo: [ :stream | 
-			stream nextPutAll: 'cell,'.
-			cell storeOn: stream.
+			stream nextPutAll: 'patch,'.
+			patch storeOn: stream.
 			stream lf.
-			stream nextPutAll: 'xCells,'.
-			xCells storeOn: stream.
+			stream nextPutAll: 'xPatches,'.
+			xPatches storeOn: stream.
 			stream lf.
-			stream nextPutAll: 'yCells,'.
-			yCells storeOn: stream.
+			stream nextPutAll: 'yPatches,'.
+			yPatches storeOn: stream.
 			stream lf.
-			stream nextPutAll: 'cellSize'.
-			cellSize storeOn: stream.
+			stream nextPutAll: 'patchSize'.
+			patchSize storeOn: stream.
 			stream lf ]
 ]
 
@@ -364,13 +365,13 @@ RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 ]
 
 { #category : #'accessing-individuals' }
-RMDFileMemory >> xCells: anInteger [
-	super xCells: anInteger.
+RMDFileMemory >> xPatches: anInteger [
+	super xPatches: anInteger.
 	spaceDirty := true
 ]
 
 { #category : #'accessing-individuals' }
-RMDFileMemory >> yCells: anInteger [
-	super yCells: anInteger.
+RMDFileMemory >> yPatches: anInteger [
+	super yPatches: anInteger.
 	spaceDirty := true
 ]

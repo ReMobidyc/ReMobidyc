@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellHistogramInspector,
+	#name : #RMDPatchHistogramInspector,
 	#superclass : #RMDHistogramInspector,
 	#traits : 'TRMDCellObservatory',
 	#classTraits : 'TRMDCellObservatory classTrait',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDCellHistogramInspector >> speciesName [
+RMDPatchHistogramInspector >> speciesName [
 
-	^ 'Cell'
+	^ 'Patch'
 ]

@@ -43,7 +43,7 @@ Goat metabolize@model where
 	simulation := '
 Simulation with
 	during 1000 [day] by 1[day]
-	1x1 of 1[m] Cell
+	1x1 of 1[m] Patch
 	9 Goat with
 		energy = uniform 5000 [kcal] to 20000 [kcal]
 		basal_metabolism = 3000 [kcal/s].
@@ -95,10 +95,10 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 			| xOffset yOffset |
 			xOffset := animatDef
 				attributeOffsetAt: 'x'
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
+				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
 			yOffset := animatDef
 				attributeOffsetAt: 'y'
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
+				ifAbsent: [ ^ KeyNotFound signal: 'y' ].
 			memory
 				animatsOf: animatDef identifier
 				do: [ :individual | 
@@ -118,25 +118,6 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 { #category : #directives }
 RMDInterpreter >> byChanceOf: aNumber [
 	^ self random < aNumber
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ memory cellAtXIndex: anInteger yIndex: anotherInteger
-]
-
-{ #category : #directives }
-RMDInterpreter >> cellDirective: aString variable: aRMDAttributeVariableNode [
-
-	aString = 'direction' ifTrue: [ 
-		^ self directionOfGradient: aRMDAttributeVariableNode identifier ].
-	^ self unknownDirectiveError: aString
-]
-
-{ #category : #'space access' }
-RMDInterpreter >> cellsDo: aBlock [
-
-	memory cellsDo: aBlock
 ]
 
 { #category : #'animat operations' }
@@ -204,12 +185,12 @@ RMDInterpreter >> directionOfGradient: aString [
 	vector := (east - west) @ (north - south).
 	(east <= here
 		and: [ west <= here and: [ south <= here and: [ north <= here ] ] ])
-		ifTrue: [ | x y cellX cellY |
+		ifTrue: [ | x y patchX patchY |
 			x := self readVariable: 'x' agent: nil ifAbsent: [ 0.0 ].
 			y := self readVariable: 'y' agent: nil ifAbsent: [ 0.0 ].
-			cellX := self cellLength * ((self cellX: x) + 0.5).
-			cellY := self cellLength * ((self cellY: y) + 0.5).
-			vector := (cellX - x) @ (cellY - y) ].
+			patchX := self patchLength * ((self patchX: x) + 0.5).
+			patchY := self patchLength * ((self patchY: y) + 0.5).
+			vector := (patchX - x) @ (patchY - y) ].
 	^ vector theta
 ]
 
@@ -299,16 +280,17 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 
 { #category : #'space access' }
 RMDInterpreter >> here [
-	| x y cellX cellY |
+
+	| x y patchX patchY |
 	x := self readVariable: 'x' agent: nil ifAbsent: [ ^ nil ].
 	y := self readVariable: 'y' agent: nil ifAbsent: [ ^ nil ].
-	cellX := (self cellX: x) floor + 1
-		min: 1
-		max: simulationModel cellXDivisions.
-	cellY := (self cellY: y) floor + 1
-		min: 1
-		max: simulationModel cellYDivisions.
-	^ memory cellAtXIndex: cellX yIndex: cellY
+	patchX := (self patchX: x) floor + 1
+		          min: 1
+		          max: simulationModel patchXDivisions.
+	patchY := (self patchY: y) floor + 1
+		          min: 1
+		          max: simulationModel patchYDivisions.
+	^ memory patchAtXIndex: patchX yIndex: patchY
 ]
 
 { #category : #'animat operations' }
@@ -318,8 +300,8 @@ RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
 				animatsOf: aRMDSpeciesDefinitionNode identifier
 				do: aBlock.
 			^ self ].
-	aRMDSpeciesDefinitionNode isCellDefinitionNode
-		ifTrue: [ memory cellsDo: aBlock.
+	aRMDSpeciesDefinitionNode isPatchDefinitionNode
+		ifTrue: [ memory patchesDo: aBlock.
 			^ self ].
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
 		ifTrue: [ memory worldDo: aBlock.
@@ -401,9 +383,28 @@ RMDInterpreter >> nextSeed [
 RMDInterpreter >> numberOfIndivisualsOf: aRMDSpeciesDefinitionNode [
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
 		ifTrue: [ ^ 1 ].
-	aRMDSpeciesDefinitionNode isCellDefinitionNode
-		ifTrue: [ ^ memory xCells * memory yCells ].
+	aRMDSpeciesDefinitionNode isPatchDefinitionNode
+		ifTrue: [ ^ memory xPatches * memory yPatches ].
 	^ memory numberOfAnimats: aRMDSpeciesDefinitionNode identifier
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
+	^ memory patchAtXIndex: anInteger yIndex: anotherInteger
+]
+
+{ #category : #directives }
+RMDInterpreter >> patchDirective: aString variable: aRMDAttributeVariableNode [
+
+	aString = 'direction' ifTrue: [ 
+		^ self directionOfGradient: aRMDAttributeVariableNode identifier ].
+	^ self unknownDirectiveError: aString
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> patchesDo: aBlock [
+
+	memory patchesDo: aBlock
 ]
 
 { #category : #simulating }
@@ -451,10 +452,10 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 			| xOffset yOffset |
 			xOffset := animatDef
 				attributeOffsetAt: 'x'
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'x' ].
+				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
 			yOffset := animatDef
 				attributeOffsetAt: 'y'
-				ifAbsent: [ ^ LibrarySymbolNotFoundError signal: 'y' ].
+				ifAbsent: [ ^ KeyNotFound signal: 'y' ].
 			memory
 				animatsOf: animatDef identifier
 				do: [ :individual | 
@@ -509,9 +510,9 @@ RMDInterpreter >> setupSimulation [
 	memory
 		initialize;
 		allocateWorld: simulationModel worldDefinition;
-		allocateCells: simulationModel cellDefinition
-		x: simulationModel cellXDivisions
-		y: simulationModel cellYDivisions.
+		allocatePatches: simulationModel patchDefinition
+		x: simulationModel patchXDivisions
+		y: simulationModel patchYDivisions.
 	memory worldDo: [ :world | 
 		self
 			withInitializerContextWithSubject: world
@@ -522,16 +523,16 @@ RMDInterpreter >> setupSimulation [
 						memory time.
 						world }.
 				simulationModel worldInitializer evalIn: self ] ].
-	memory cellsDo: [ :cell | 
+	memory patchesDo: [ :patch | 
 		self
-			withInitializerContextWithSubject: cell
-			species: simulationModel cellDefinition
+			withInitializerContextWithSubject: patch
+			species: simulationModel patchDefinition
 			do: [ 
 				context randomSeedWithAll: { 
 						randomSeed.
 						memory time.
-						cell }.
-				simulationModel cellInitializer evalIn: self ] ].
+						patch }.
+				simulationModel patchInitializer evalIn: self ] ].
 	simulationModel animatInitializersDo: [ :initializer | 
 		| animatDefinition |
 		animatDefinition := simulationModel
@@ -638,39 +639,39 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRM
 			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
-					          cellAtXIndex: ((self cellX: (self
+					          patchAtXIndex: ((self patchX: (self
 								             readVariable: 'x'
 								             agent: nil
 								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
-						           + 1 min: simulationModel cellXDivisions max: 1)
-					          yIndex: ((self cellY: (self
+						           + 1 min: simulationModel patchXDivisions max: 1)
+					          yIndex: ((self patchY: (self
 								             readVariable: 'y'
 								             agent: nil
 								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
-						           + 1 min: simulationModel cellYDivisions max: 1).
+						           + 1 min: simulationModel patchYDivisions max: 1).
 				  context
 					  location: here
-					  definition: simulationModel cellDefinition
+					  definition: simulationModel patchDefinition
 					  agent: 'here'.
 				  memory eastOf: here do: [ :east | 
 					  context
 						  location: east
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'east' ].
 				  memory westOf: here do: [ :west | 
 					  context
 						  location: west
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'west' ].
 				  memory southOf: here do: [ :south | 
 					  context
 						  location: south
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'south' ].
 				  memory northOf: here do: [ :north | 
 					  context
 						  location: north
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'north' ] ].
 			  aBlock cull: self cull: context ]
 ]
@@ -689,39 +690,39 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger1 species: aR
 			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
-					          cellAtXIndex: ((self cellX: (self
+					          patchAtXIndex: ((self patchX: (self
 								             readVariable: 'x'
 								             agent: nil
 								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
-						           + 1 min: simulationModel cellXDivisions max: 1)
-					          yIndex: ((self cellY: (self
+						           + 1 min: simulationModel patchXDivisions max: 1)
+					          yIndex: ((self patchY: (self
 								             readVariable: 'y'
 								             agent: nil
 								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
-						           + 1 min: simulationModel cellYDivisions max: 1).
+						           + 1 min: simulationModel patchYDivisions max: 1).
 				  context
 					  location: here
-					  definition: simulationModel cellDefinition
+					  definition: simulationModel patchDefinition
 					  agent: 'here'.
 				  memory eastOf: here do: [ :east | 
 					  context
 						  location: east
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'east' ].
 				  memory westOf: here do: [ :west | 
 					  context
 						  location: west
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'west' ].
 				  memory southOf: here do: [ :south | 
 					  context
 						  location: south
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'south' ].
 				  memory northOf: here do: [ :north | 
 					  context
 						  location: north
-						  definition: simulationModel cellDefinition
+						  definition: simulationModel patchDefinition
 						  agent: 'north' ] ].
 			  aBlock cull: self cull: context ]
 ]

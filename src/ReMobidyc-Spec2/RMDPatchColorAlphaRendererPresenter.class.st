@@ -1,18 +1,20 @@
 Class {
-	#name : #RMDCellColorBrightnessRendererPresenter,
-	#superclass : #RMDCellColorRangeRendererPresenter,
+	#name : #RMDPatchColorAlphaRendererPresenter,
+	#superclass : #RMDPatchColorRangeRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDCellColorBrightnessRendererPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDPatchColorAlphaRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
+		borderWidth: 0;
+		spacing: 0;
 		add:
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: 'Cells' expand: false)
+				add: 'Patches' expand: false)
 			height: self inputTextHeight;
 		add:
 			(SpBoxLayout newHorizontal
@@ -20,7 +22,7 @@ RMDCellColorBrightnessRendererPresenter class >> defaultSpec [
 				spacing: 5;
 				add: '        ' expand: false;
 				add: #colorDropList width: 60;
-				add: ' with brightness = ' expand: false;
+				add: ' with alpha = ' expand: false;
 				add: #expressionField;
 				add: '(' expand: false;
 				add: #minField width: 100;
@@ -42,6 +44,6 @@ RMDCellColorBrightnessRendererPresenter class >> defaultSpec [
 ]
 
 { #category : #accessing }
-RMDCellColorBrightnessRendererPresenter >> preferredHeight [
+RMDPatchColorAlphaRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight * 3
 ]

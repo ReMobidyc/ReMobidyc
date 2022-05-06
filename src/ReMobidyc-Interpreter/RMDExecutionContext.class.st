@@ -50,7 +50,7 @@ RMDExecutionContext >> subject: anInteger definition: aRMDSpeciesDefinitionNode 
 	aRMDSpeciesDefinitionNode
 		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	attributeDict at: nil put: dict.
-	aRMDSpeciesDefinitionNode isCellDefinitionNode
+	aRMDSpeciesDefinitionNode isPatchDefinitionNode
 		ifTrue: [ attributeDict at: 'here' put: dict ].
 	aRMDSpeciesDefinitionNode isWorldDefinitionNode
 		ifTrue: [ attributeDict at: 'world' put: dict ].

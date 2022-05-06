@@ -50,7 +50,7 @@ RMDRenderer >> isAnimatRendererFor: aString [
 ]
 
 { #category : #testing }
-RMDRenderer >> isCellRenderer [
+RMDRenderer >> isPatchRenderer [
 	^ false
 ]
 
@@ -66,11 +66,11 @@ RMDRenderer >> name [
 
 { #category : #private }
 RMDRenderer >> pointFromX: modelX y: modelY interpreter: aRMDInterpreter scale: scale [
-	| cellX cellY |
-	cellX := aRMDInterpreter cellX: modelX.
-	cellY := aRMDInterpreter cellY: modelY.
-	^ (cellX * scale)
-		@ ((aRMDInterpreter cellYDivisions asFloat - cellY) * scale)
+	| patchX patchY |
+	patchX := aRMDInterpreter patchX: modelX.
+	patchY := aRMDInterpreter patchY: modelY.
+	^ (patchX * scale)
+		@ ((aRMDInterpreter patchYDivisions asFloat - patchY) * scale)
 ]
 
 { #category : #printing }

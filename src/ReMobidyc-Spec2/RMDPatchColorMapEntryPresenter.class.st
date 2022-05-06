@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellColorMapEntryPresenter,
+	#name : #RMDPatchColorMapEntryPresenter,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'association',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-RMDCellColorMapEntryPresenter class >> defaultSpec [
+RMDPatchColorMapEntryPresenter class >> defaultSpec [
 	^ SpBoxLayout newHorizontal
 		borderWidth: 5;
 		spacing: 5;
@@ -23,26 +23,26 @@ RMDCellColorMapEntryPresenter class >> defaultSpec [
 ]
 
 { #category : #'instance creation' }
-RMDCellColorMapEntryPresenter class >> on: anAssociation [
+RMDPatchColorMapEntryPresenter class >> on: anAssociation [
 	^ self new
 		association: anAssociation;
 		yourself
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryPresenter >> association: anAssociation [
+RMDPatchColorMapEntryPresenter >> association: anAssociation [
 	association := anAssociation.
 	self associationChanged
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryPresenter >> associationChanged [
+RMDPatchColorMapEntryPresenter >> associationChanged [
 	self updateColorDropList.
 	self updateMinValueField
 ]
 
 { #category : #initialization }
-RMDCellColorMapEntryPresenter >> initializePresenters [
+RMDPatchColorMapEntryPresenter >> initializePresenters [
 	super initializePresenters.
 	colorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | 
@@ -59,12 +59,12 @@ RMDCellColorMapEntryPresenter >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryPresenter >> preferredHeight [
+RMDPatchColorMapEntryPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryPresenter >> updateColorDropList [
+RMDPatchColorMapEntryPresenter >> updateColorDropList [
 	association
 		ifNotNil: [ | color colors |
 			color := association value.
@@ -75,6 +75,6 @@ RMDCellColorMapEntryPresenter >> updateColorDropList [
 ]
 
 { #category : #accessing }
-RMDCellColorMapEntryPresenter >> updateMinValueField [
+RMDPatchColorMapEntryPresenter >> updateMinValueField [
 	association ifNotNil: [ minValueField syntaxNode: association key ]
 ]

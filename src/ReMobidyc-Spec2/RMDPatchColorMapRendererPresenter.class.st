@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellColorMapRendererPresenter,
-	#superclass : #RMDCellExpressionRendererPresenter,
+	#name : #RMDPatchColorMapRendererPresenter,
+	#superclass : #RMDPatchExpressionRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDCellColorMapRendererPresenter class >> defaultSpec [
+RMDPatchColorMapRendererPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
@@ -14,7 +14,7 @@ RMDCellColorMapRendererPresenter class >> defaultSpec [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: 'Cells' expand: false)
+				add: 'Patches' expand: false)
 			height: self inputTextHeight;
 		add:
 			(SpBoxLayout newVertical
@@ -31,24 +31,24 @@ RMDCellColorMapRendererPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDCellColorMapRendererPresenter >> initializePresenters [
+RMDPatchColorMapRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	self whenBuiltDo: [ self updateSpec ]
 ]
 
 { #category : #accessing }
-RMDCellColorMapRendererPresenter >> preferredHeight [
+RMDPatchColorMapRendererPresenter >> preferredHeight [
 	^ (renderer numberOfMinAndColors + 3) * self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellColorMapRendererPresenter >> rendererChanged [
+RMDPatchColorMapRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateSpec
 ]
 
 { #category : #updating }
-RMDCellColorMapRendererPresenter >> updateSpec [
+RMDPatchColorMapRendererPresenter >> updateSpec [
 	| theLayout |
 	layout ifNil: [ ^ self ].
 	theLayout := layout presenters second.

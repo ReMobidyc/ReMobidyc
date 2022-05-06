@@ -34,8 +34,8 @@ RMDBackgroundColorRenderer class >> white [
 { #category : #drawing }
 RMDBackgroundColorRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	| xDivisions yDivisions |
-	xDivisions := aRMDInterpreter cellXDivisions.
-	yDivisions := aRMDInterpreter cellYDivisions.
+	xDivisions := aRMDInterpreter patchXDivisions.
+	yDivisions := aRMDInterpreter patchYDivisions.
 	aCanvas
 		fillRectangle:
 			(0 @ 0
@@ -44,7 +44,7 @@ RMDBackgroundColorRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 ]
 
 { #category : #testing }
-RMDBackgroundColorRenderer >> isCellRenderer [
+RMDBackgroundColorRenderer >> isPatchRenderer [
 	^ true
 ]
 

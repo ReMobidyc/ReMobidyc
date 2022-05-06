@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCellColorRangeRenderer,
-	#superclass : #RMDCellColorRenderer,
+	#name : #RMDPatchColorRangeRenderer,
+	#superclass : #RMDPatchColorRenderer,
 	#instVars : [
 		'min',
 		'max'
@@ -9,54 +9,53 @@ Class {
 }
 
 { #category : #comparing }
-RMDCellColorRangeRenderer >> = anObject [
+RMDPatchColorRangeRenderer >> = anObject [
 
 	^ super = anObject and: [ 
 		  min = anObject min and: [ max = anObject max ] ]
 ]
 
 { #category : #comparing }
-RMDCellColorRangeRenderer >> hash [
+RMDPatchColorRangeRenderer >> hash [
 
 	^ (super hash bitXor: min hash) bitXor: max hash
 ]
 
 { #category : #initialization }
-RMDCellColorRangeRenderer >> initialize [
+RMDPatchColorRangeRenderer >> initialize [
 	super initialize.
 	min := 0.0.
 	max := 1.0
 ]
 
 { #category : #accessing }
-RMDCellColorRangeRenderer >> max [
+RMDPatchColorRangeRenderer >> max [
 	^ max
 ]
 
 { #category : #accessing }
-RMDCellColorRangeRenderer >> max: aRMDLiteral [
+RMDPatchColorRangeRenderer >> max: aRMDLiteral [
 	max := aRMDLiteral
 ]
 
 { #category : #accessing }
-RMDCellColorRangeRenderer >> min [
+RMDPatchColorRangeRenderer >> min [
 	^ min
 ]
 
 { #category : #accessing }
-RMDCellColorRangeRenderer >> min: aRMDLiteral [
+RMDPatchColorRangeRenderer >> min: aRMDLiteral [
 	min := aRMDLiteral
 ]
 
 { #category : #accessing }
-RMDCellColorRangeRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
-	| cellDef value |
-	cellDef := aRMDInterpreter cellDefinition.
+RMDPatchColorRangeRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
+
+	| patchDef value |
+	patchDef := aRMDInterpreter patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
-		species: cellDef
+		species: patchDef
 		do: [ value := expression evalIn: aRMDInterpreter ].
-	^ (value - min numeric) / (max numeric - min numeric)
-		min: 1.0
-		max: 0.0
+	^ value - min numeric / (max numeric - min numeric) min: 1.0 max: 0.0
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCellExpressionRenderer,
-	#superclass : #RMDCellRenderer,
+	#name : #RMDPatchExpressionRenderer,
+	#superclass : #RMDPatchRenderer,
 	#instVars : [
 		'expression'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDCellExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber max: anotherNumber [
+RMDPatchExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber max: anotherNumber [
 	^ self new
 		expression: aRMDExpressionNode;
 		min: aNumber;
@@ -17,13 +17,13 @@ RMDCellExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber m
 ]
 
 { #category : #comparing }
-RMDCellExpressionRenderer >> = anObject [
+RMDPatchExpressionRenderer >> = anObject [
 
 	^ super = anObject and: [ expression = anObject expression ]
 ]
 
 { #category : #drawing }
-RMDCellExpressionRenderer >> drawCell: anInteger interpreter: aRMDInterpreter bounds: aRectangle on: aCanvas [
+RMDPatchExpressionRenderer >> drawPatch: anInteger interpreter: aRMDInterpreter bounds: aRectangle on: aCanvas [
 	self
 		drawValue:
 			(self valueForIndividual: anInteger interpreter: aRMDInterpreter)
@@ -32,38 +32,39 @@ RMDCellExpressionRenderer >> drawCell: anInteger interpreter: aRMDInterpreter bo
 ]
 
 { #category : #drawing }
-RMDCellExpressionRenderer >> drawValue: aNumber bounds: aRectangle on: aFormCanvas [
+RMDPatchExpressionRenderer >> drawValue: aNumber bounds: aRectangle on: aFormCanvas [
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-RMDCellExpressionRenderer >> expression [
+RMDPatchExpressionRenderer >> expression [
 	^ expression
 ]
 
 { #category : #accessing }
-RMDCellExpressionRenderer >> expression: aRMDExpressionNode [
+RMDPatchExpressionRenderer >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
 { #category : #comparing }
-RMDCellExpressionRenderer >> hash [
+RMDPatchExpressionRenderer >> hash [
 
 	^ super hash bitXor: expression hash
 ]
 
 { #category : #initialization }
-RMDCellExpressionRenderer >> initialize [
+RMDPatchExpressionRenderer >> initialize [
 	super initialize.
 	expression := '0 []' asRMDExpression
 ]
 
 { #category : #accessing }
-RMDCellExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
-	| cellDef |
-	cellDef := aRMDInterpreter cellDefinition.
+RMDPatchExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
+
+	| patchDef |
+	patchDef := aRMDInterpreter patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
-		species: cellDef
+		species: patchDef
 		do: [ ^ expression evalIn: aRMDInterpreter ]
 ]

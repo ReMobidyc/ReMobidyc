@@ -44,8 +44,8 @@ RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 	r2 := range squared.
 	(yIndex0 - 1 max: 1) to: (yIndex0 + 1 min: yDivisions) do: [ :yIndex | 
 		(xIndex0 - 1 max: 1) to: (xIndex0 + 1 min: xDivisions) do: [ :xIndex | 
-			((animats at: yIndex) at: xIndex) ifNotNil: [ :cell | 
-				cell do: [ :animat | 
+			((animats at: yIndex) at: xIndex) ifNotNil: [ :patch | 
+				patch do: [ :animat | 
 					((xs at: animat) - x) squared + ((ys at: animat) - y) squared
 					<= r2 ifTrue: [ aBlock value: animat ] ] ] ] ]
 ]
