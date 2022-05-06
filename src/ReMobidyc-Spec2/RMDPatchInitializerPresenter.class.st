@@ -55,7 +55,12 @@ RMDPatchInitializerPresenter >> initializePresenters [
 		yourself.
 	sizeUnitDropList := self newDropList
 		items:
-			{(RMDUnit at: 'm').
+			{
+			(RMDUnit at: 'microm').
+			(RMDUnit at: 'mm').
+			(RMDUnit at: 'cm').
+			(RMDUnit at: 'dm').
+			(RMDUnit at: 'm').
 			(RMDUnit at: 'km').
 			(RMDUnit at: 'mile').
 			(RMDUnit at: 'yd').
