@@ -6,5 +6,5 @@ Trait {
 { #category : #enumerating }
 TRMDCellObservatory >> speciesDefinitionDo: aBlock [
 	self
-		interpreterDo: [ :interpreter | aBlock cull: interpreter cellDefinition ]
+		interpreterDo: [ :interpreter | aBlock cull: interpreter patchDefinition ]
 ]

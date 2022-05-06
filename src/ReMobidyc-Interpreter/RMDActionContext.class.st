@@ -54,11 +54,12 @@ RMDActionContext >> location [
 ]
 
 { #category : #accessing }
-RMDActionContext >> location: anInteger definition: aRMDCellDefinition agent: aString [
+RMDActionContext >> location: anInteger definition: aRMDPatchDefinition agent: aString [
+
 	| dict |
 	dict := Dictionary new.
-	aRMDCellDefinition
-		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
+	aRMDPatchDefinition attributeOffsetsDo: [ :identifier :offset | 
+		dict at: identifier put: anInteger + offset ].
 	attributeDict at: aString put: dict.
 	location := anInteger
 ]

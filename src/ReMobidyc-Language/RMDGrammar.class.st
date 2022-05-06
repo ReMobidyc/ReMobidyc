@@ -92,7 +92,7 @@ RMDGrammar >> additionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> agentDefinition [
 
-	^ self worldDefinition / self cellDefinition / self animatDefinition
+	^ self worldDefinition / self patchDefinition / self animatDefinition
 ]
 
 { #category : #'parsers-atoms' }
@@ -448,132 +448,6 @@ RMDGrammar >> bindNodeClass [
 ]
 
 { #category : #'parsers-visualizations' }
-RMDGrammar >> cellColorAlphaRenderer [
-
-	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
-	  , self color , 'with' asPParser trimBlanks
-	  , 'alpha' asPParser trimBlanks
-	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
-	  , expression , 'between' asPParser trimBlanks , literal
-	  , 'and' asPParser trimBlanks , literal
-	  , 'with' asPParser trimBlanks , self nat
-	  , 'pixels' asPParser trimBlanks , self color
-	  , 'grids' asPParser trimBlanks , '.' asPParser
-	  , #newline asPParser trimBlanks optional ==> [ :array | 
-	  (RMDCellColorAlphaRenderer
-		   color: (array at: 3)
-		   alpha: (array at: 8)
-		   between: (array at: 10)
-		   and: (array at: 12))
-		  borderWidth: (array at: 14);
-		  borderColor: (array at: 16);
-		  yourself ]
-]
-
-{ #category : #'parsers-visualizations' }
-RMDGrammar >> cellColorBrightnessRenderer [
-
-	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
-	  , self color , 'with' asPParser trimBlanks
-	  , 'brightness' asPParser trimBlanks
-	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
-	  , expression , 'between' asPParser trimBlanks , literal
-	  , 'and' asPParser trimBlanks , literal
-	  , 'with' asPParser trimBlanks , self nat
-	  , 'pixels' asPParser trimBlanks , self color
-	  , 'grids' asPParser trimBlanks , '.' asPParser
-	  , #newline asPParser trimBlanks optional ==> [ :array | 
-	  (RMDCellColorBrightnessRenderer
-		   color: (array at: 3)
-		   brightness: (array at: 8)
-		   between: (array at: 10)
-		   and: (array at: 12))
-		  borderWidth: (array at: 14);
-		  borderColor: (array at: 16);
-		  yourself ]
-]
-
-{ #category : #'parsers-visualizations' }
-RMDGrammar >> cellColorMapRenderer [
-
-	^ 'Cell' asPParser trimBlanks , '->' asPParser trimBlanks
-	  , 'map' asPParser trimBlanks , expression
-	  , 'with' asPParser trimBlanks , #newline asPParser trimBlanks
-	  ==> #fourth
-	  ,
-		  (self color , 'if' asPParser trimBlanks
-		   , '>=' asPParser trimBlanks , self literal
-		   , ',' asPParser trimBlanks , #newline asPParser
-		   ==> [ :array | (array at: 4) -> (array at: 1) ]) star
-	  , self color
-	  , (#newline asPParser , 'with' asPParser trimBlanks , self nat
-		   , 'pixels' asPParser trimBlanks ==> #third)
-	  ,
-	  (self color , 'grids' asPParser trimBlanks , '.' asPParser
-	   ==> #first) , #newline asPParser optional ==> [ :array | 
-	  | renderer |
-	  renderer := RMDCellColorMapRenderer
-		              expression: (array at: 1)
-		              color: (array at: 3).
-	  (array at: 2) do: [ :assoc | 
-		  renderer add: assoc value at: assoc key ].
-	  renderer
-		  borderWidth: (array at: 4);
-		  borderColor: (array at: 5).
-	  renderer ]
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> cellDefinition [
-	^ ('Cell' asPParser
-		,
-			((#blank asPParser , 'with' asPParser trimBlanks
-				, #newline asPParser trimBlanks
-				,
-					(self attributeDeclaration
-						onlySeparatedBy: #newline asPParser trimBlanks)
-				, #newline asPParser trimBlanks optional) ==> #fourth) optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :pair | 
-			self cellDefinitionNodeClass
-				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> cellDefinitionNodeClass [
-	^ RMDCellDefinitionNode
-]
-
-{ #category : #'class access' }
-RMDGrammar >> cellDirectiveNodeClass [
-	^ RMDCellDirectiveNode
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> cellInitializer [
-	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
-		, #digit asPParser plus flatten trimBlanks
-		, 'of' asPParser trimBlanks , literal , 'Cell' asPParser trimBlanks
-		,
-			(('with' asPParser , #newline asPParser trimBlanks
-				,
-					(self attributeInitializer
-						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
-				optional)
-		==> [ :array | 
-			self cellInitializerNodeClass
-				xDivisions: array first asInteger
-				yDivisions: array third asInteger
-				length: array fifth
-				cellAttributeInitializers: (array seventh ifNil: [ Array new ]) ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> cellInitializerNodeClass [
-	^ RMDCellInitializerNode
-]
-
-{ #category : #'parsers-visualizations' }
 RMDGrammar >> color [
 
 	^ #blank asPParser star , ((PP2ChoiceNode withAll:
@@ -663,7 +537,7 @@ RMDGrammar >> directionOfGradientDirective [
 		, ('neighbor''s' asPParser / 'neighbour''s' asPParser) trim
 		, identifier)
 		==> [ :pair | 
-			self cellDirectiveNodeClass
+			self patchDirectiveNodeClass
 				directive: 'direction'
 				identifier: pair fourth ]
 ]
@@ -939,6 +813,132 @@ RMDGrammar >> parenExpression [
 	^ ($( asPParser , guardedChoice , $) asPParser) ==> #second
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> patchColorAlphaRenderer [
+
+	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , self color , 'with' asPParser trimBlanks
+	  , 'alpha' asPParser trimBlanks
+	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
+	  , expression , 'between' asPParser trimBlanks , literal
+	  , 'and' asPParser trimBlanks , literal
+	  , 'with' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'grids' asPParser trimBlanks , '.' asPParser
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  (RMDPatchColorAlphaRenderer
+		   color: (array at: 3)
+		   alpha: (array at: 8)
+		   between: (array at: 10)
+		   and: (array at: 12))
+		  borderWidth: (array at: 14);
+		  borderColor: (array at: 16);
+		  yourself ]
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> patchColorBrightnessRenderer [
+
+	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , self color , 'with' asPParser trimBlanks
+	  , 'brightness' asPParser trimBlanks
+	  , 'proportional' asPParser trimBlanks , 'to' asPParser trimBlanks
+	  , expression , 'between' asPParser trimBlanks , literal
+	  , 'and' asPParser trimBlanks , literal
+	  , 'with' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'grids' asPParser trimBlanks , '.' asPParser
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  (RMDPatchColorBrightnessRenderer
+		   color: (array at: 3)
+		   brightness: (array at: 8)
+		   between: (array at: 10)
+		   and: (array at: 12))
+		  borderWidth: (array at: 14);
+		  borderColor: (array at: 16);
+		  yourself ]
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> patchColorMapRenderer [
+
+	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
+	  , 'map' asPParser trimBlanks , expression
+	  , 'with' asPParser trimBlanks , #newline asPParser trimBlanks
+	  ==> #fourth
+	  ,
+		  (self color , 'if' asPParser trimBlanks
+		   , '>=' asPParser trimBlanks , self literal
+		   , ',' asPParser trimBlanks , #newline asPParser
+		   ==> [ :array | (array at: 4) -> (array at: 1) ]) star
+	  , self color
+	  , (#newline asPParser , 'with' asPParser trimBlanks , self nat
+		   , 'pixels' asPParser trimBlanks ==> #third)
+	  ,
+	  (self color , 'grids' asPParser trimBlanks , '.' asPParser
+	   ==> #first) , #newline asPParser optional ==> [ :array | 
+	  | renderer |
+	  renderer := RMDPatchColorMapRenderer
+		              expression: (array at: 1)
+		              color: (array at: 3).
+	  (array at: 2) do: [ :assoc | 
+		  renderer add: assoc value at: assoc key ].
+	  renderer
+		  borderWidth: (array at: 4);
+		  borderColor: (array at: 5).
+	  renderer ]
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> patchDefinition [
+	^ ('Patch' asPParser
+		,
+			((#blank asPParser , 'with' asPParser trimBlanks
+				, #newline asPParser trimBlanks
+				,
+					(self attributeDeclaration
+						onlySeparatedBy: #newline asPParser trimBlanks)
+				, #newline asPParser trimBlanks optional) ==> #fourth) optional
+		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
+		==> [ :pair | 
+			self patchDefinitionNodeClass
+				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> patchDefinitionNodeClass [
+	^ RMDPatchDefinitionNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> patchDirectiveNodeClass [
+	^ RMDPatchDirectiveNode
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> patchInitializer [
+	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
+		, #digit asPParser plus flatten trimBlanks
+		, 'of' asPParser trimBlanks , literal , 'Patch' asPParser trimBlanks
+		,
+			(('with' asPParser , #newline asPParser trimBlanks
+				,
+					(self attributeInitializer
+						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
+				optional)
+		==> [ :array | 
+			self patchInitializerNodeClass
+				xDivisions: array first asInteger
+				yDivisions: array third asInteger
+				length: array fifth
+				patchAttributeInitializers: (array seventh ifNil: [ Array new ]) ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> patchInitializerNodeClass [
+	^ RMDPatchInitializerNode
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> placeholder [
 
@@ -966,8 +966,8 @@ RMDGrammar >> productNodeClass [
 RMDGrammar >> renderer [
 
 	^ self animatDotRenderer / self backgroundColorRenderer
-	  / self cellColorAlphaRenderer / self cellColorBrightnessRenderer
-	  / self cellColorMapRenderer
+	  / self patchColorAlphaRenderer / self patchColorBrightnessRenderer
+	  / self patchColorMapRenderer
 ]
 
 { #category : #'parsers-definitions' }
@@ -977,7 +977,7 @@ RMDGrammar >> simulationDefinition [
 		,
 			((self simulationTimeDefinition , #newline asPParser trimBlanks optional)
 				==> #first) , self worldInitializer optional
-		, ((self cellInitializer , #newline asPParser trimBlanks optional) ==> #first)
+		, ((self patchInitializer , #newline asPParser trimBlanks optional) ==> #first)
 		,
 			(self animatInitializer onlySeparatedBy: #newline asPParser trimBlanks) optional
 		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
@@ -985,7 +985,7 @@ RMDGrammar >> simulationDefinition [
 			self simulationDefinitionNodeClass
 				timeDefinition: array second
 				worldInitializer: array third
-				cellInitializer: array fourth
+				patchInitializer: array fourth
 				animatInitializers: (array fifth ifNil: [ { } ]) ]
 ]
 

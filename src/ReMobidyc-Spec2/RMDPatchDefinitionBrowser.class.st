@@ -1,19 +1,19 @@
 Class {
-	#name : #RMDCellDefinitionBrowser,
+	#name : #RMDPatchDefinitionBrowser,
 	#superclass : #RMDAgentDefinitionBrowser,
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #'instance creation' }
-RMDCellDefinitionBrowser class >> on: aRMDSimulationModel [
+RMDPatchDefinitionBrowser class >> on: aRMDSimulationModel [
 	<script:
-		'(RMDCellDefinitionBrowser on: RMDSimulationModel sugarScape ) openWithSpec'>
+		'(RMDPatchDefinitionBrowser on: RMDSimulationModel sugarScape ) openWithSpec'>
 	^ self new setSimulationModel: aRMDSimulationModel yourself
 ]
 
 { #category : #private }
-RMDCellDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	simulationModel simulationDefinition cellInitializer
+RMDPatchDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
+	simulationModel simulationDefinition patchInitializer
 		ifNotNil: [ :initializer | 
 			initializer
 				attributeInitializers:
@@ -25,18 +25,18 @@ RMDCellDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode anima
 ]
 
 { #category : #accessing }
-RMDCellDefinitionBrowser >> agentName [
-	^ 'Cell'
+RMDPatchDefinitionBrowser >> agentName [
+	^ 'Patch'
 ]
 
 { #category : #accessing }
-RMDCellDefinitionBrowser >> definitionDo: aBlock [
-	simulationModel ifNotNil: [ simulationModel cellDefinition ifNotNil: aBlock ]
+RMDPatchDefinitionBrowser >> definitionDo: aBlock [
+	simulationModel ifNotNil: [ simulationModel patchDefinition ifNotNil: aBlock ]
 ]
 
 { #category : #private }
-RMDCellDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	simulationModel simulationDefinition cellInitializer
+RMDPatchDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
+	simulationModel simulationDefinition patchInitializer
 		ifNotNil: [ :initializer | 
 			initializer
 				attributeInitializers:
@@ -46,10 +46,10 @@ RMDCellDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode an
 ]
 
 { #category : #enumerating }
-RMDCellDefinitionBrowser >> renderersDo: aBlock [
+RMDPatchDefinitionBrowser >> renderersDo: aBlock [
 	simulationModel
 		ifNotNil: [ simulationModel
 				renderersDo: [ :renderer | 
-					renderer isCellRenderer
+					renderer isPatchRenderer
 						ifTrue: [ aBlock cull: renderer ] ] ]
 ]

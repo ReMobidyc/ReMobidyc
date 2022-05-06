@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 RMDCellColorAlphaRendererTest >> renderer [
 
-	^ RMDCellColorAlphaRenderer
+	^ RMDPatchColorAlphaRenderer
 		  color: Color green
 		  alpha: 'my grass' asRMDExpression
 		  between: '0 [kcal]' asRMDExpression

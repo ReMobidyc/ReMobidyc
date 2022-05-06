@@ -33,7 +33,7 @@ RMDPresenter >> newAnimatInput [
 	^ self newValidatedTextInput
 		validation: [ :name | 
 			(self speciesValidation value: name)
-				and: [ (#('World' 'Cell') includes: name asString) not ] ]
+				and: [ (#('World' 'Patch') includes: name asString) not ] ]
 ]
 
 { #category : #widgets }

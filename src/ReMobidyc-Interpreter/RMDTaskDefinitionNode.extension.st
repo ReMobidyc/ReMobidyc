@@ -15,8 +15,8 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 
 	| subjectSpecies objectSpecies interactionSpace |
-	subjectSpecies := subjectIdentifier = 'Cell'
-		                  ifTrue: [ aRMDInterpreter cellDefinition ]
+	subjectSpecies := subjectIdentifier = 'Patch'
+		                  ifTrue: [ aRMDInterpreter patchDefinition ]
 		                  ifFalse: [ 
 			                  subjectIdentifier = 'World'
 				                  ifTrue: [ aRMDInterpreter worldDefinition ]
@@ -90,8 +90,8 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 
 	| subjectSpecies objectSpecies interactionSpace |
-	subjectSpecies := subjectIdentifier = 'Cell'
-		                  ifTrue: [ aRMDInterpreter cellDefinition ]
+	subjectSpecies := subjectIdentifier = 'Patch'
+		                  ifTrue: [ aRMDInterpreter patchDefinition ]
 		                  ifFalse: [ 
 			                  subjectIdentifier = 'World'
 				                  ifTrue: [ aRMDInterpreter worldDefinition ]
@@ -166,8 +166,8 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
 	| species |
-	species := subjectIdentifier = 'Cell'
-		           ifTrue: [ aRMDInterpreter cellDefinition ]
+	species := subjectIdentifier = 'Patch'
+		           ifTrue: [ aRMDInterpreter patchDefinition ]
 		           ifFalse: [ 
 			           subjectIdentifier = 'World'
 				           ifTrue: [ aRMDInterpreter worldDefinition ]

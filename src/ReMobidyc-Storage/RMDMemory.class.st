@@ -13,14 +13,14 @@ Class {
 		'nextValuesDirty',
 		'nextAvailableSlot',
 		'world',
-		'cell',
-		'xCells',
-		'yCells',
-		'cellSize',
 		'animats',
 		'seeds',
 		'ins',
-		'outs'
+		'outs',
+		'patch',
+		'patchSize',
+		'xPatches',
+		'yPatches'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -50,25 +50,25 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 ]
 
 { #category : #allocating }
-RMDMemory >> allocateCells: aRMDCellDefinitionNode x: anInteger1 y: anInteger2 [
+RMDMemory >> allocatePatches: aRMDPatchDefinitionNode x: anInteger1 y: anInteger2 [
 	self
 		nextAvailableSlot:
 			(self
-				cellSize: (aRMDCellDefinitionNode totalNumberOfAttributes max: 1);
-				cellSize)
+				patchSize: (aRMDPatchDefinitionNode totalNumberOfAttributes max: 1);
+				patchSize)
 				*
 					(self
-						xCells: anInteger1;
-						xCells)
+						xPatches: anInteger1;
+						xPatches)
 				*
 					(self
-						yCells: anInteger2;
-						yCells)
+						yPatches: anInteger2;
+						yPatches)
 				+
 					(self
-						cell: self nextAvailableSlot;
-						cell).
-	^ self cell
+						patch: self nextAvailableSlot;
+						patch).
+	^ self patch
 ]
 
 { #category : #allocating }
@@ -110,41 +110,6 @@ RMDMemory >> at: anInteger put: aNumber [
 	^ values at: anInteger put: aNumber
 ]
 
-{ #category : #'accessing-individuals' }
-RMDMemory >> cell [
-	^ cell
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> cell: anInteger [
-	cell := anInteger
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> cellAtXIndex: anInteger yIndex: anotherInteger [
-	^ ((anotherInteger - 1) * self xCells + anInteger - 1)
-		* self cellSize + self cell
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> cellSize [
-	^ cellSize
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> cellSize: anInteger [
-	cellSize := anInteger
-]
-
-{ #category : #'accessing-individuals' }
-RMDMemory >> cellsDo: aBlock [
-
-	self cellSize > 0 ifTrue: [ 
-		self cell to:
-		self cellSize * self xCells * self yCells + self cell - 1 by:
-		self cellSize do: [ :c | aBlock cull: c cull: (Array with: c) ] ]
-]
-
 { #category : #allocating }
 RMDMemory >> commitIns [
 
@@ -166,8 +131,8 @@ RMDMemory >> commitOuts [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> eastOf: anInteger do: aBlock [
-	(self xCellOf: anInteger) < self xCells
-		ifTrue: [ aBlock value: anInteger + self cellSize ]
+	(self xPatchOf: anInteger) < self xPatches
+		ifTrue: [ aBlock value: anInteger + self patchSize ]
 ]
 
 { #category : #timing }
@@ -200,11 +165,11 @@ RMDMemory >> initialize [
 	valuesDirty := false.
 	nextValuesDirty := false.
 	nextAvailableSlot := 1.
-	xCells := 0.
-	yCells := 0.
-	cellSize := 0.
+	xPatches := 0.
+	yPatches := 0.
+	patchSize := 0.
 	world := 1.
-	cell := nil.
+	patch := nil.
 	animats := Dictionary new.
 	seeds := Dictionary new.
 	ins := Dictionary new.
@@ -263,8 +228,8 @@ RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> northOf: anInteger do: aBlock [
-	(self yCellOf: anInteger) < self yCells
-		ifTrue: [ aBlock value: anInteger + (self cellSize * self xCells) ]
+	(self yPatchOf: anInteger) < self yPatches
+		ifTrue: [ aBlock value: anInteger + (self patchSize * self xPatches) ]
 ]
 
 { #category : #'accessing-individuals' }
@@ -280,6 +245,41 @@ RMDMemory >> oldAt: anInteger [
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
 	^ oldValues at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patch [
+	^ patch
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patch: anInteger [
+	patch := anInteger
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patchAtXIndex: anInteger yIndex: anotherInteger [
+	^ ((anotherInteger - 1) * self xPatches + anInteger - 1)
+		* self patchSize + self patch
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patchSize [
+	^ patchSize
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patchSize: anInteger [
+	patchSize := anInteger
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> patchesDo: aBlock [
+
+	self patchSize > 0 ifTrue: [ 
+		self patch to:
+		self patchSize * self xPatches * self yPatches + self patch - 1 by:
+		self patchSize do: [ :c | aBlock cull: c cull: (Array with: c) ] ]
 ]
 
 { #category : #'accessing-storage' }
@@ -325,8 +325,8 @@ RMDMemory >> seedAt: anInteger put: anotherInteger [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> southOf: anInteger do: aBlock [
-	(self yCellOf: anInteger) > 1
-		ifTrue: [ aBlock value: anInteger - (self cellSize * self xCells) ]
+	(self yPatchOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - (self patchSize * self xPatches) ]
 ]
 
 { #category : #timing }
@@ -394,8 +394,8 @@ RMDMemory >> time: anInteger [
 
 { #category : #'accessing-individuals' }
 RMDMemory >> westOf: anInteger do: aBlock [
-	(self xCellOf: anInteger) > 1
-		ifTrue: [ aBlock value: anInteger - self cellSize ]
+	(self xPatchOf: anInteger) > 1
+		ifTrue: [ aBlock value: anInteger - self patchSize ]
 ]
 
 { #category : #'accessing-individuals' }
@@ -425,31 +425,31 @@ RMDMemory >> writeValues: aDictionary forTime: anInteger [
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> xCellOf: anInteger [
-	^ (anInteger - self cell) // self cellSize \\ self xCells + 1
+RMDMemory >> xPatchOf: anInteger [
+	^ (anInteger - self patch) // self patchSize \\ self xPatches + 1
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> xCells [
-	^ xCells
+RMDMemory >> xPatches [
+	^ xPatches
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> xCells: anInteger [
-	xCells := anInteger
+RMDMemory >> xPatches: anInteger [
+	xPatches := anInteger
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> yCellOf: anInteger [
-	^ (anInteger - self cell) // self cellSize // self xCells + 1
+RMDMemory >> yPatchOf: anInteger [
+	^ (anInteger - self patch) // self patchSize // self xPatches + 1
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> yCells [
-	^ yCells
+RMDMemory >> yPatches [
+	^ yPatches
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> yCells: anInteger [
-	yCells := anInteger
+RMDMemory >> yPatches: anInteger [
+	yPatches := anInteger
 ]

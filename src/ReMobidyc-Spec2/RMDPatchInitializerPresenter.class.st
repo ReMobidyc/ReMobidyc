@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellInitializerPresenter,
+	#name : #RMDPatchInitializerPresenter,
 	#superclass : #RMDSpeciesInitializerPresenter,
 	#instVars : [
 		'xDivisionsField',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #specs }
-RMDCellInitializerPresenter class >> defaultSpec [
+RMDPatchInitializerPresenter class >> defaultSpec [
 
 	<spec>
 	^ super defaultSpec
@@ -23,14 +23,14 @@ RMDCellInitializerPresenter class >> defaultSpec [
 				   add: ' of ' expand: false;
 				   add: #sizeField width: 80;
 				   add: #sizeUnitDropList width: 80;
-				   add: ' Cell with' expand: false;
+				   add: ' Patch with' expand: false;
 				   yourself)
 		  height: self inputTextHeight;
 		  yourself
 ]
 
 { #category : #initialization }
-RMDCellInitializerPresenter >> initializePresenters [
+RMDPatchInitializerPresenter >> initializePresenters [
 	super initializePresenters.
 	xDivisionsField := self newNumberInput
 		beInteger;
@@ -81,7 +81,7 @@ RMDCellInitializerPresenter >> initializePresenters [
 ]
 
 { #category : #'instance creation' }
-RMDCellInitializerPresenter >> newLayout [
+RMDPatchInitializerPresenter >> newLayout [
 
 	| newLayout |
 	newLayout := SpBoxLayout newVertical
@@ -95,7 +95,7 @@ RMDCellInitializerPresenter >> newLayout [
 				              add: ' of ' asPresenter expand: false;
 				              add: sizeField width: 80;
 				              add: sizeUnitDropList width: 80;
-				              add: ' Cell with' asPresenter expand: false;
+				              add: ' Patch with' asPresenter expand: false;
 				              yourself)
 		             height: self class inputTextHeight;
 		             yourself.
@@ -111,7 +111,7 @@ RMDCellInitializerPresenter >> newLayout [
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> nodeChanged [
+RMDPatchInitializerPresenter >> nodeChanged [
 	super nodeChanged.
 	self
 		updateXDivisionsField;
@@ -121,46 +121,46 @@ RMDCellInitializerPresenter >> nodeChanged [
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> preferredHeight [
+RMDPatchInitializerPresenter >> preferredHeight [
 	^ (node attributeInitializers size + 1) * self class inputTextHeight
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> sizeField [
+RMDPatchInitializerPresenter >> sizeField [
 	^ sizeField
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> sizeUnitDropList [
+RMDPatchInitializerPresenter >> sizeUnitDropList [
 	^ sizeUnitDropList
 ]
 
 { #category : #updating }
-RMDCellInitializerPresenter >> updateSizeField [
+RMDPatchInitializerPresenter >> updateSizeField [
 	node ifNotNil: [ sizeField text: node size literal ]
 ]
 
 { #category : #updating }
-RMDCellInitializerPresenter >> updateSizeUnitField [
+RMDPatchInitializerPresenter >> updateSizeUnitField [
 	node ifNotNil: [ sizeUnitDropList selectItem: node size unit ]
 ]
 
 { #category : #updating }
-RMDCellInitializerPresenter >> updateXDivisionsField [
+RMDPatchInitializerPresenter >> updateXDivisionsField [
 	node ifNotNil: [ xDivisionsField text: node xDivisions printString ]
 ]
 
 { #category : #updating }
-RMDCellInitializerPresenter >> updateYDivisionsField [
+RMDPatchInitializerPresenter >> updateYDivisionsField [
 	node ifNotNil: [ yDivisionsField text: node yDivisions printString ]
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> xDivisionsField [
+RMDPatchInitializerPresenter >> xDivisionsField [
 	^ xDivisionsField
 ]
 
 { #category : #accessing }
-RMDCellInitializerPresenter >> yDivisionsField [
+RMDPatchInitializerPresenter >> yDivisionsField [
 	^ yDivisionsField
 ]

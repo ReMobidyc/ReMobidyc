@@ -4,11 +4,11 @@ Class {
 	#instVars : [
 		'simulationDefinition',
 		'animatDefinitions',
-		'cellDefinition',
 		'worldDefinition',
 		'actionDefinitions',
 		'renderers',
-		'taskDefinitions'
+		'taskDefinitions',
+		'patchDefinition'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -30,7 +30,7 @@ RMDSimulationModel class >> goatAndWolf [
 
 	^ self new
 		  load: RMDWorldDefinitionNode empty;
-		  load: RMDCellDefinitionNode grassField;
+		  load: RMDPatchDefinitionNode grassField;
 		  load: RMDAnimatDefinitionNode goat;
 		  load: RMDAnimatDefinitionNode wolf;
 		  load: RMDBuiltinRepository current gain;
@@ -54,7 +54,7 @@ RMDSimulationModel class >> goatAndWolf [
 		  load: (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
 		  load: RMDTaskDefinitionNode wolf_reproduce;
 		  load: (RMDTaskDefinitionNode
-				   cell_grow_grass: '1500[kcal/day]'
+				   patch_grow_grass: '1500[kcal/day]'
 				   upto: '1000000[kcal]');
 		  load: (RMDSimulationDefinitionNode
 				   timeDefinition:
@@ -62,7 +62,7 @@ RMDSimulationModel class >> goatAndWolf [
 						    during: '2[year]'
 						    by: '0.5[day]')
 				   worldInitializer: RMDWorldInitializerNode empty
-				   cellInitializer: (RMDCellInitializerNode
+				   patchInitializer: (RMDPatchInitializerNode
 						    grassInitializer: 10
 						    by: 10
 						    of: '5[km]'
@@ -78,7 +78,7 @@ RMDSimulationModel class >> goatAndWolf [
 							    bloodSugar: '2000[kcal]'
 							    to: '6000[kcal]') });
 		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
-		  addRenderer: (RMDCellColorAlphaRenderer
+		  addRenderer: (RMDPatchColorAlphaRenderer
 				   color: Color green
 				   alpha: 'here''s grass' asRMDExpression
 				   between: '0[kcal]' asRMDExpression
@@ -124,7 +124,7 @@ RMDSimulationModel class >> simulationDefinitionFileName [
 RMDSimulationModel class >> sugarScape [
 	^ self new
 		load: RMDWorldDefinitionNode empty;
-		load: RMDCellDefinitionNode grassField;
+		load: RMDPatchDefinitionNode grassField;
 		load: RMDAnimatDefinitionNode goat;
 		load: RMDBuiltinRepository current gain;
 		load: RMDBuiltinRepository current lose;
@@ -142,14 +142,14 @@ RMDSimulationModel class >> sugarScape [
 		load: (RMDTaskDefinitionNode goat_reproduce);
 		load:
 			(RMDTaskDefinitionNode
-				cell_grow_grass: '1000[kcal/day]'
+				patch_grow_grass: '1000[kcal/day]'
 				upto: '1000000[kcal]');
 		load:
 			(RMDSimulationDefinitionNode
 				timeDefinition: (RMDSimulationTimeDefinitionNode during: '2[year]' by: '0.5[day]')
 				worldInitializer: RMDWorldInitializerNode empty
-				cellInitializer:
-					(RMDCellInitializerNode
+				patchInitializer:
+					(RMDPatchInitializerNode
 						grassInitializer: 10
 						by: 10
 						of: '5[km]'
@@ -162,7 +162,7 @@ RMDSimulationModel class >> sugarScape [
 						to: '9000[kcal]')});
 		addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		addRenderer:
-			(RMDCellColorAlphaRenderer
+			(RMDPatchColorAlphaRenderer
 				color: Color green
 				alpha: 'here''s grass' asRMDExpression
 				between: '0[kcal]' asRMDExpression
@@ -269,36 +269,6 @@ RMDSimulationModel >> animatNames [
 	^ animatDefinitions keys asSortedCollection
 ]
 
-{ #category : #'accessing - definitions' }
-RMDSimulationModel >> cellDefinition [
-	^ cellDefinition
-]
-
-{ #category : #'accessing - definitions' }
-RMDSimulationModel >> cellDefinition: aRMDCellDefinitionNode [
-	cellDefinition := aRMDCellDefinitionNode
-]
-
-{ #category : #'accessing - initializers' }
-RMDSimulationModel >> cellInitializer [
-	^ simulationDefinition cellInitializer
-]
-
-{ #category : #'accessing - cells' }
-RMDSimulationModel >> cellLength [
-	^ simulationDefinition cellInitializer length
-]
-
-{ #category : #'accessing - cells' }
-RMDSimulationModel >> cellXDivisions [
-	^ simulationDefinition cellInitializer xDivisions
-]
-
-{ #category : #'accessing - cells' }
-RMDSimulationModel >> cellYDivisions [
-	^ simulationDefinition cellInitializer yDivisions
-]
-
 { #category : #'accessing - time' }
 RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
@@ -311,7 +281,7 @@ RMDSimulationModel >> duration [
 
 { #category : #'accessing - cells' }
 RMDSimulationModel >> east [
-	^ self cellLength * self cellXDivisions
+	^ self patchLength * self patchXDivisions
 ]
 
 { #category : #'exporting/importing' }
@@ -328,7 +298,7 @@ RMDSimulationModel >> exportAgents: aFileReference [
 	aFileReference lfWriteStreamDo: [ :stream | 
 		worldDefinition printOn: stream.
 		stream nextPut: Character cr.
-		cellDefinition printOn: stream.
+		patchDefinition printOn: stream.
 		stream nextPut: Character cr.
 		animatDefinitions valuesDo: [ :animatDefinition | 
 			animatDefinition printOn: stream.
@@ -348,8 +318,6 @@ RMDSimulationModel >> exportModel [
 
 { #category : #'exporting/importing' }
 RMDSimulationModel >> exportModel: aFileReference [
-
-	" #simulationDefinition . #animatDefinitions . #cellDefinition . #worldDefinition . #actionDefinitions . #renderers . #taskDefinitions "
 
 	aFileReference
 		ensureCreateDirectory;
@@ -531,8 +499,8 @@ RMDSimulationModel >> initialize [
 RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isWorldDefinitionNode
 		ifTrue: [ ^ self worldDefinition: aRMDSyntaxNode ].
-	aRMDSyntaxNode isCellDefinitionNode
-		ifTrue: [ ^ self cellDefinition: aRMDSyntaxNode ].
+	aRMDSyntaxNode isPatchDefinitionNode
+		ifTrue: [ ^ self patchDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isAnimatDefinitionNode
 		ifTrue: [ ^ self addAnimatDefinition: aRMDSyntaxNode ].
 	aRMDSyntaxNode isActionDefinitionNode
@@ -546,7 +514,7 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 
 { #category : #'accessing - cells' }
 RMDSimulationModel >> north [
-	^ self cellLength * self cellYDivisions
+	^ self patchLength * self patchYDivisions
 ]
 
 { #category : #'user interface' }
@@ -555,6 +523,36 @@ RMDSimulationModel >> open [
 	^ (RMDSimulationModeler on: self)
 		  openWithSpec;
 		  yourself
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> patchDefinition [
+	^ patchDefinition
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> patchDefinition: aRMDPatchDefinitionNode [
+	patchDefinition := aRMDPatchDefinitionNode
+]
+
+{ #category : #'accessing - initializers' }
+RMDSimulationModel >> patchInitializer [
+	^ simulationDefinition patchInitializer
+]
+
+{ #category : #'accessing - cells' }
+RMDSimulationModel >> patchLength [
+	^ simulationDefinition patchInitializer length
+]
+
+{ #category : #'accessing - cells' }
+RMDSimulationModel >> patchXDivisions [
+	^ simulationDefinition patchInitializer xDivisions
+]
+
+{ #category : #'accessing - cells' }
+RMDSimulationModel >> patchYDivisions [
+	^ simulationDefinition patchInitializer yDivisions
 ]
 
 { #category : #adding }
@@ -633,7 +631,7 @@ RMDSimulationModel >> repositoryName [
 RMDSimulationModel >> resetDefinitions [
 
 	simulationDefinition := RMDSimulationDefinitionNode empty.
-	cellDefinition := RMDCellDefinitionNode empty.
+	patchDefinition := RMDPatchDefinitionNode empty.
 	worldDefinition := RMDWorldDefinitionNode empty.
 	animatDefinitions := Dictionary new.
 	actionDefinitions := Dictionary new.

@@ -54,16 +54,16 @@ RMDMemoryTest >> testAllocateAnimat [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testAllocateCellsXY [
-	| cell individual |
-	cell := parser cellDefinition end
+RMDMemoryTest >> testAllocatePatchesXY [
+	| patch individual |
+	patch := parser patchDefinition end
 		parse:
-			'Cell with
+			'Patch with
 	grass [kcal]
 	fertility [kcal].'.
-	individual := memory allocateCells: cell x: 2 y: 3.
+	individual := memory allocatePatches: patch x: 2 y: 3.
 	self
-		assert: individual + (cell totalNumberOfAttributes * 2 * 3)
+		assert: individual + (patch totalNumberOfAttributes * 2 * 3)
 		equals:
 			(memory
 				allocateAnimat: (parser animatDefinition end parse: 'Goat is Animat.'))
@@ -141,91 +141,24 @@ RMDMemoryTest >> testAtPut [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testCell [
-	| cell individual |
-	cell := parser cellDefinition end
-		parse:
-			'Cell with
-	grass [kcal]
-	fertility [kcal].'.
-	individual := memory allocateCells: cell x: 2 y: 3.
-	self assert: memory cell equals: individual
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testCellAtXIndexYIndex [
-	| cell |
-	cell := parser cellDefinition end
-		parse:
-			'Cell with
-	grass [kcal]
-	fertility [kcal].'.
-	memory allocateCells: cell x: 2 y: 3.
-	self
-		assert:
-			(Array
-				streamContents: [ :stream | 
-					1 to: 2 do: [ :x | 
-						1 to: 3 do:
-							[ :y | stream nextPut: (memory cellAtXIndex: x yIndex: y) ] ] ])
-				asSortedCollection asArray
-		equals:
-			(memory cell to: memory cell + (cell totalNumberOfAttributes * 5)
-			by: cell totalNumberOfAttributes) asArray
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testCellSize [
-	| cell |
-	cell := parser cellDefinition end
-		parse:
-			'Cell with
-	grass [kcal]
-	fertility [kcal].'.
-	memory allocateCells: cell x: 2 y: 3.
-	self
-		assert: memory cellSize
-		equals: cell totalNumberOfAttributes
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testCellsDo [
-	| cell |
-	cell := parser cellDefinition end
-		parse:
-			'Cell with
-	grass [kcal]
-	fertility [kcal].'.
-	memory allocateCells: cell x: 2 y: 3.
-	self
-		assert:
-			(Array
-				streamContents:
-					[ :stream | memory cellsDo: [ :individual | stream nextPut: individual ] ])
-		equals:
-			(memory cell to: memory cell + (cell totalNumberOfAttributes * 5) by: cell totalNumberOfAttributes)
-				asArray
-]
-
-{ #category : #tests }
 RMDMemoryTest >> testEastOfDo [
 	memory
-		allocateCells:
-			(parser cellDefinition end
+		allocatePatches:
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	memory
-		eastOf: (memory cellAtXIndex: 2 yIndex: 2)
-		do: [ :cell | self fail ].
+		eastOf: (memory patchAtXIndex: 2 yIndex: 2)
+		do: [ :patch | self fail ].
 	self
 		should: [ memory
-				eastOf: (memory cellAtXIndex: 1 yIndex: 2)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+				eastOf: (memory patchAtXIndex: 1 yIndex: 2)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 2 yIndex: 2).
 					Error signal ] ]
 		raise: Error
 ]
@@ -269,29 +202,29 @@ RMDMemoryTest >> testNextAtPut [
 { #category : #tests }
 RMDMemoryTest >> testNorthOfDo [
 	memory
-		allocateCells:
-			(parser cellDefinition end
+		allocatePatches:
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	memory
-		northOf: (memory cellAtXIndex: 2 yIndex: 3)
-		do: [ :cell | self fail ].
+		northOf: (memory patchAtXIndex: 2 yIndex: 3)
+		do: [ :patch | self fail ].
 	self
 		should: [ memory
-				northOf: (memory cellAtXIndex: 2 yIndex: 2)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 3).
+				northOf: (memory patchAtXIndex: 2 yIndex: 2)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 2 yIndex: 3).
 					Error signal ] ]
 		raise: Error.
 	self
 		should: [ memory
-				northOf: (memory cellAtXIndex: 2 yIndex: 1)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+				northOf: (memory patchAtXIndex: 2 yIndex: 1)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 2 yIndex: 2).
 					Error signal ] ]
 		raise: Error
 ]
@@ -323,6 +256,73 @@ RMDMemoryTest >> testOldAtIfAbsent [
 	self assert: (memory oldAt: 3 ifAbsent: [ 9 ]) equals: 4.
 	self should: [ memory oldAt: 6 ] raise: KeyNotFound.
 	self assert: (memory oldAt: 6 ifAbsent: [ 10 ]) equals: 10
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testPatch [
+	| patch individual |
+	patch := parser patchDefinition end
+		parse:
+			'Patch with
+	grass [kcal]
+	fertility [kcal].'.
+	individual := memory allocatePatches: patch x: 2 y: 3.
+	self assert: memory patch equals: individual
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testPatchAtXIndexYIndex [
+	| patch |
+	patch := parser patchDefinition end
+		parse:
+			'Patch with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocatePatches: patch x: 2 y: 3.
+	self
+		assert:
+			(Array
+				streamContents: [ :stream | 
+					1 to: 2 do: [ :x | 
+						1 to: 3 do:
+							[ :y | stream nextPut: (memory patchAtXIndex: x yIndex: y) ] ] ])
+				asSortedCollection asArray
+		equals:
+			(memory patch to: memory patch + (patch totalNumberOfAttributes * 5)
+			by: patch totalNumberOfAttributes) asArray
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testPatchSize [
+	| patch |
+	patch := parser patchDefinition end
+		parse:
+			'Patch with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocatePatches: patch x: 2 y: 3.
+	self
+		assert: memory patchSize
+		equals: patch totalNumberOfAttributes
+]
+
+{ #category : #tests }
+RMDMemoryTest >> testPatchesDo [
+	| patch |
+	patch := parser patchDefinition end
+		parse:
+			'Patch with
+	grass [kcal]
+	fertility [kcal].'.
+	memory allocatePatches: patch x: 2 y: 3.
+	self
+		assert:
+			(Array
+				streamContents:
+					[ :stream | memory patchesDo: [ :individual | stream nextPut: individual ] ])
+		equals:
+			(memory patch to: memory patch + (patch totalNumberOfAttributes * 5) by: patch totalNumberOfAttributes)
+				asArray
 ]
 
 { #category : #tests }
@@ -396,30 +396,30 @@ RMDMemoryTest >> testSeedAtPut [
 
 { #category : #tests }
 RMDMemoryTest >> testSouthOfDo [
+
 	memory
-		allocateCells:
-			(parser cellDefinition end
-				parse:
-					'Cell with
+		allocatePatches: (parser patchDefinition end parse: 'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	memory
-		southOf: (memory cellAtXIndex: 2 yIndex: 1)
-		do: [ :cell | self fail ].
+		southOf: (memory patchAtXIndex: 2 yIndex: 1)
+		do: [ :patch | self fail ].
 	self
-		should: [ memory
-				southOf: (memory cellAtXIndex: 2 yIndex: 2)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 1).
+		should: [ 
+			memory
+				southOf: (memory patchAtXIndex: 2 yIndex: 2)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 2 yIndex: 1).
 					Error signal ] ]
 		raise: Error.
 	self
-		should: [ memory
-				southOf: (memory cellAtXIndex: 2 yIndex: 3)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 2 yIndex: 2).
+		should: [ 
+			memory
+				southOf: (memory patchAtXIndex: 2 yIndex: 3)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 2 yIndex: 2).
 					Error signal ] ]
 		raise: Error
 ]
@@ -470,22 +470,22 @@ RMDMemoryTest >> testTime [
 { #category : #tests }
 RMDMemoryTest >> testWestOfDo [
 	memory
-		allocateCells:
-			(parser cellDefinition end
+		allocatePatches:
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	memory
-		westOf: (memory cellAtXIndex: 1 yIndex: 2)
-		do: [ :cell | self fail ].
+		westOf: (memory patchAtXIndex: 1 yIndex: 2)
+		do: [ :patch | self fail ].
 	self
 		should: [ memory
-				westOf: (memory cellAtXIndex: 2 yIndex: 2)
-				do: [ :cell | 
-					self assert: cell equals: (memory cellAtXIndex: 1 yIndex: 2).
+				westOf: (memory patchAtXIndex: 2 yIndex: 2)
+				do: [ :patch | 
+					self assert: patch equals: (memory patchAtXIndex: 1 yIndex: 2).
 					Error signal ] ]
 		raise: Error
 ]
@@ -519,51 +519,51 @@ RMDMemoryTest >> testWorldDo [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testXCellOf [
+RMDMemoryTest >> testXPatchOf [
 	memory
-		allocateCells:
-			(parser cellDefinition end
+		allocatePatches:
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	self
-		assert: (memory xCellOf: (memory cellAtXIndex: 1 yIndex: 1))
+		assert: (memory xPatchOf: (memory patchAtXIndex: 1 yIndex: 1))
 		equals: 1.
 	self
-		assert: (memory xCellOf: (memory cellAtXIndex: 2 yIndex: 1))
+		assert: (memory xPatchOf: (memory patchAtXIndex: 2 yIndex: 1))
 		equals: 2.
 	self
-		assert: (memory xCellOf: (memory cellAtXIndex: 1 yIndex: 2))
+		assert: (memory xPatchOf: (memory patchAtXIndex: 1 yIndex: 2))
 		equals: 1.
 	self
-		assert: (memory xCellOf: (memory cellAtXIndex: 2 yIndex: 2))
+		assert: (memory xPatchOf: (memory patchAtXIndex: 2 yIndex: 2))
 		equals: 2
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testYCellOf [
+RMDMemoryTest >> testYPatchOf [
 	memory
-		allocateCells:
-			(parser cellDefinition end
+		allocatePatches:
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].')
 		x: 2
 		y: 3.
 	self
-		assert: (memory yCellOf: (memory cellAtXIndex: 1 yIndex: 1))
+		assert: (memory yPatchOf: (memory patchAtXIndex: 1 yIndex: 1))
 		equals: 1.
 	self
-		assert: (memory yCellOf: (memory cellAtXIndex: 2 yIndex: 1))
+		assert: (memory yPatchOf: (memory patchAtXIndex: 2 yIndex: 1))
 		equals: 1.
 	self
-		assert: (memory yCellOf: (memory cellAtXIndex: 1 yIndex: 2))
+		assert: (memory yPatchOf: (memory patchAtXIndex: 1 yIndex: 2))
 		equals: 2.
 	self
-		assert: (memory yCellOf: (memory cellAtXIndex: 2 yIndex: 2))
+		assert: (memory yPatchOf: (memory patchAtXIndex: 2 yIndex: 2))
 		equals: 2
 ]

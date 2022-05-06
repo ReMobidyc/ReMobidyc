@@ -115,50 +115,6 @@ RMDObservatory >> basicInformServer [
 			from: self ]
 ]
 
-{ #category : #private }
-RMDObservatory >> cellInspector [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDCellTabularInspector new interpreter: interpreter ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDCellPercentileInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDCellHistogramInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDCellTimeSeriesInspector new
-								    interpreter: interpreter;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
-]
-
 { #category : #api }
 RMDObservatory >> forceKill [
 	self runState: false.
@@ -241,6 +197,50 @@ RMDObservatory >> modelName: aString [
 	modelName := aString
 ]
 
+{ #category : #private }
+RMDObservatory >> patchInspector [
+
+	^ self newNotebook
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDPatchTabularInspector new interpreter: interpreter ];
+				   whenRetrievedDo: [ :content | content updateObservation ];
+				   title: 'Table';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDPatchPercentileInspector new
+								    interpreter: interpreter;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Percentile';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDPatchHistogramInspector new
+								    interpreter: interpreter;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Histogram';
+				   yourself);
+		  addPage: (self newNotebookPage
+				   presenterProvider: [ 
+					   RMDScrollPresenter with: (RMDPatchTimeSeriesInspector new
+								    interpreter: interpreter;
+								    updateLayout;
+								    updateObservation;
+								    yourself) ];
+				   whenRetrievedDo: [ :content | 
+				   content presenter updateObservation ];
+				   title: 'Time series';
+				   yourself);
+		  yourself
+]
+
 { #category : #api }
 RMDObservatory >> progress [
 	^ time / duration
@@ -306,10 +306,10 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self worldInspector ];
 						  title: 'World') ].
-			 interpreter cellDefinition allAttributeDeclarations ifNotEmpty: [ 
+			 interpreter patchDefinition allAttributeDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
-						  presenterProvider: [ self cellInspector ];
-						  title: 'Cell') ].
+						  presenterProvider: [ self patchInspector ];
+						  title: 'Patch') ].
 			 interpreter animatNames do: [ :animat | 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self animatInspector: animat ];

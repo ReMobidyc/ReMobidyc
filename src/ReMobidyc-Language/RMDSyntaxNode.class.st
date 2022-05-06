@@ -138,21 +138,6 @@ RMDSyntaxNode >> isBinaryRelationNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isCellDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isCellDirectiveNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isCellInitializerNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isConditionNode [
 	^ false
 ]
@@ -249,6 +234,21 @@ RMDSyntaxNode >> isNormalDistributionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPatchDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPatchDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isPatchInitializerNode [
 	^ false
 ]
 

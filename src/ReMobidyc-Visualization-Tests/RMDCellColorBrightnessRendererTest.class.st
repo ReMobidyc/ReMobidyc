@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 RMDCellColorBrightnessRendererTest >> renderer [
 
-	^ RMDCellColorBrightnessRenderer
+	^ RMDPatchColorBrightnessRenderer
 		  color: Color green
 		  brightness: 'my grass' asRMDExpression
 		  between: '0 [kcal]' asRMDExpression

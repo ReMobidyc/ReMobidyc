@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCellColorMapRenderer,
-	#superclass : #RMDCellColorRenderer,
+	#name : #RMDPatchColorMapRenderer,
+	#superclass : #RMDPatchColorRenderer,
 	#instVars : [
 		'minAndColors'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor [
+RMDPatchColorMapRenderer class >> expression: aRMDExpression color: aColor [
 
 	^ self new
 		  expression: aRMDExpression;
@@ -17,7 +17,7 @@ RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor [
 ]
 
 { #category : #'instance creation' }
-RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value: aRMDLiteral1 color: aColor2 [
+RMDPatchColorMapRenderer class >> expression: aRMDExpression color: aColor1 value: aRMDLiteral1 color: aColor2 [
 	^ self new
 		expression: aRMDExpression;
 		color: aColor1;
@@ -26,7 +26,7 @@ RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value
 ]
 
 { #category : #'instance creation' }
-RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value: aRMDLiteral1 color: aColor2 value: aRMDLiteral2 color: aColor3 [
+RMDPatchColorMapRenderer class >> expression: aRMDExpression color: aColor1 value: aRMDLiteral1 color: aColor2 value: aRMDLiteral2 color: aColor3 [
 	^ self new
 		expression: aRMDExpression;
 		color: aColor1;
@@ -36,19 +36,19 @@ RMDCellColorMapRenderer class >> expression: aRMDExpression color: aColor1 value
 ]
 
 { #category : #comparing }
-RMDCellColorMapRenderer >> = anObject [
+RMDPatchColorMapRenderer >> = anObject [
 
 	^ super = anObject and: [ 
 		  minAndColors hasEqualElements: anObject minAndColors ]
 ]
 
 { #category : #'adding-removing' }
-RMDCellColorMapRenderer >> add: aColor at: aRMDLiteralNode [
+RMDPatchColorMapRenderer >> add: aColor at: aRMDLiteralNode [
 	minAndColors add: aRMDLiteralNode -> aColor
 ]
 
 { #category : #accessing }
-RMDCellColorMapRenderer >> colorFrom: aNumber [
+RMDPatchColorMapRenderer >> colorFrom: aNumber [
 	self
 		minAndColorsDo: [ :min :c | 
 			min numeric <= aNumber
@@ -57,44 +57,44 @@ RMDCellColorMapRenderer >> colorFrom: aNumber [
 ]
 
 { #category : #comparing }
-RMDCellColorMapRenderer >> hash [
+RMDPatchColorMapRenderer >> hash [
 
 	^ super hash bitXor: minAndColors hash
 ]
 
 { #category : #initialization }
-RMDCellColorMapRenderer >> initialize [
+RMDPatchColorMapRenderer >> initialize [
 	super initialize.
 	minAndColors := SortedCollection
 		sortBlock: [ :more :less | less key numeric <= more key numeric ]
 ]
 
 { #category : #private }
-RMDCellColorMapRenderer >> minAndColors [
+RMDPatchColorMapRenderer >> minAndColors [
 
 	^ minAndColors
 ]
 
 { #category : #enumerating }
-RMDCellColorMapRenderer >> minAndColorsDo: aBlock [
+RMDPatchColorMapRenderer >> minAndColorsDo: aBlock [
 	minAndColors
 		do: [ :assoc | aBlock value: assoc key value: assoc value ]
 ]
 
 { #category : #accessing }
-RMDCellColorMapRenderer >> name [
+RMDPatchColorMapRenderer >> name [
 	^ 'color map'
 ]
 
 { #category : #enumerating }
-RMDCellColorMapRenderer >> numberOfMinAndColors [
+RMDPatchColorMapRenderer >> numberOfMinAndColors [
 	^ minAndColors size
 ]
 
 { #category : #printing }
-RMDCellColorMapRenderer >> printOn: aStream [
+RMDPatchColorMapRenderer >> printOn: aStream [
 
-	aStream nextPutAll: 'Cell -> map '.
+	aStream nextPutAll: 'Patch -> map '.
 	expression printOn: aStream.
 	aStream
 		nextPutAll: ' with ';
@@ -119,7 +119,7 @@ RMDCellColorMapRenderer >> printOn: aStream [
 ]
 
 { #category : #'adding-removing' }
-RMDCellColorMapRenderer >> removeAtIndex: anInteger ifAbsent: errorBlock [
+RMDPatchColorMapRenderer >> removeAtIndex: anInteger ifAbsent: errorBlock [
 	^ (anInteger between: 1 and: minAndColors size)
 		ifTrue: [ minAndColors removeAt: anInteger ]
 		ifFalse: [ errorBlock value ]

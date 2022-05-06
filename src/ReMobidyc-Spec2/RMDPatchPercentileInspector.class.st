@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellPercentileInspector,
+	#name : #RMDPatchPercentileInspector,
 	#superclass : #RMDPercentileInspector,
 	#traits : 'TRMDCellObservatory',
 	#classTraits : 'TRMDCellObservatory classTrait',

@@ -3,9 +3,9 @@ Class {
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'worldInitializer',
-		'cellInitializer',
 		'animatInitializers',
-		'timeDefinition'
+		'timeDefinition',
+		'patchInitializer'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -15,17 +15,17 @@ RMDSimulationDefinitionNode class >> empty [
 	^ self
 		timeDefinition: RMDSimulationTimeDefinitionNode empty
 		worldInitializer: RMDWorldInitializerNode empty
-		cellInitializer: RMDCellInitializerNode empty
+		patchInitializer: RMDPatchInitializerNode empty
 		animatInitializers: Array new
 ]
 
 { #category : #'instance creation' }
-RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode worldInitializer: aRMDWorldInitializerNode cellInitializer: aRMDCellInitializerNode animatInitializers: anArrayOfRMDAnimatInitializerNode [
-	<script: '(RMDSimulationDefinitionNode timeDefinition: (RMDSimulationTimeDefinitionNode during: ''100 [day]'' by: ''0.5 [day]'') worldInitializer: RMDWorldInitializerNode empty cellInitializer: (RMDCellInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') animatInitializers: {RMDAnimatInitializerNode goatInitializer}) inspect'>
+RMDSimulationDefinitionNode class >> timeDefinition: aRMDSimulationTimeDefinitionNode worldInitializer: aRMDWorldInitializerNode patchInitializer: aRMDPatchInitializerNode animatInitializers: anArrayOfRMDAnimatInitializerNode [
+	<script: '(RMDSimulationDefinitionNode timeDefinition: (RMDSimulationTimeDefinitionNode during: ''100 [day]'' by: ''0.5 [day]'') worldInitializer: RMDWorldInitializerNode empty patchInitializer: (RMDPatchInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') animatInitializers: {RMDAnimatInitializerNode goatInitializer}) inspect'>
 	^ self new
 		timeDefinition: aRMDSimulationTimeDefinitionNode;
 		worldInitializer: aRMDWorldInitializerNode;
-		cellInitializer: aRMDCellInitializerNode;
+		patchInitializer: aRMDPatchInitializerNode;
 		animatInitializers: anArrayOfRMDAnimatInitializerNode;
 		yourself
 ]
@@ -35,7 +35,7 @@ RMDSimulationDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ timeDefinition = anObject timeDefinition
 				and: [ worldInitializer = anObject worldInitializer
-						and: [ cellInitializer = anObject cellInitializer
+						and: [ patchInitializer = anObject patchInitializer
 								and: [ animatInitializers = anObject animatInitializers ] ] ] ]
 ]
 
@@ -55,20 +55,10 @@ RMDSimulationDefinitionNode >> animatInitializers: anArrayOfRMDSimulationAnimatI
 	animatInitializers := anArrayOfRMDSimulationAnimatInitializer
 ]
 
-{ #category : #accessing }
-RMDSimulationDefinitionNode >> cellInitializer [
-	^ cellInitializer
-]
-
-{ #category : #accessing }
-RMDSimulationDefinitionNode >> cellInitializer: aRMDSimulationCellInitializer [
-	cellInitializer := aRMDSimulationCellInitializer
-]
-
 { #category : #enumerating }
 RMDSimulationDefinitionNode >> childrenDo: aBlock [
 	aBlock
-		value: cellInitializer;
+		value: patchInitializer;
 		value: timeDefinition.
 	animatInitializers ifNotNil: [ animatInitializers do: aBlock ]
 ]
@@ -76,7 +66,7 @@ RMDSimulationDefinitionNode >> childrenDo: aBlock [
 { #category : #comparing }
 RMDSimulationDefinitionNode >> hash [
 	^ ((timeDefinition hash bitXor: worldInitializer hash)
-		bitXor: cellInitializer hash) bitXor: animatInitializers hash
+		bitXor: patchInitializer hash) bitXor: animatInitializers hash
 ]
 
 { #category : #testing }
@@ -84,11 +74,21 @@ RMDSimulationDefinitionNode >> isSimulationDefinitionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> patchInitializer [
+	^ patchInitializer
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> patchInitializer: aRMDSimulationPatchInitializer [
+	patchInitializer := aRMDSimulationPatchInitializer
+]
+
 { #category : #copying }
 RMDSimulationDefinitionNode >> postCopy [
 	timeDefinition := timeDefinition copy.
 	worldInitializer := worldInitializer copy.
-	cellInitializer := cellInitializer copy.
+	patchInitializer := patchInitializer copy.
 	animatInitializers := animatInitializers copy
 ]
 
@@ -102,7 +102,7 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 	aStream nextPut: Character cr.
 	worldInitializer printOn: aStream.
 	aStream nextPut: Character cr.
-	cellInitializer printOn: aStream.
+	patchInitializer printOn: aStream.
 	aStream nextPut: Character cr.
 	animatInitializers
 		do: [ :def | def printOn: aStream ]
@@ -117,7 +117,7 @@ RMDSimulationDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 	aStream
 		nextPutAll: 'Simulation with';
 		nextPut: Character cr.
-	cellInitializer
+	patchInitializer
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
@@ -145,7 +145,7 @@ RMDSimulationDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 RMDSimulationDefinitionNode >> replaceChildren: aDictionary [
 	timeDefinition := timeDefinition copyReplace: aDictionary.
 	worldInitializer := worldInitializer copyReplace: aDictionary.
-	cellInitializer := cellInitializer copyReplace: aDictionary.
+	patchInitializer := patchInitializer copyReplace: aDictionary.
 	animatInitializers := animatInitializers
 		collect: [ :node | node copyReplace: aDictionary ]
 ]

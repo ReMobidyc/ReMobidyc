@@ -1,15 +1,15 @@
 Class {
-	#name : #RMDCellColorRenderer,
-	#superclass : #RMDCellExpressionRenderer,
+	#name : #RMDPatchColorRenderer,
+	#superclass : #RMDPatchExpressionRenderer,
 	#category : #'ReMobidyc-Visualization'
 }
 
 { #category : #accessing }
-RMDCellColorRenderer >> colorFrom: aNumber [
+RMDPatchColorRenderer >> colorFrom: aNumber [
 	^ self subclassResponsibility 
 ]
 
 { #category : #drawing }
-RMDCellColorRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
+RMDPatchColorRenderer >> drawValue: aNumber bounds: aRectangle on: aCanvas [
 	aCanvas fillRectangle: aRectangle color: (self colorFrom: aNumber)
 ]

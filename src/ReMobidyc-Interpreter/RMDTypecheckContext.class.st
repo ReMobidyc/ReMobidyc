@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'subjectDefinition',
 		'objectDefinition',
-		'cellDefinition',
 		'worldDefinition',
 		'utilities',
 		'action',
 		'newDefinition',
-		'attributes'
+		'attributes',
+		'patchDefinition'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -23,25 +23,6 @@ RMDTypecheckContext >> action [
 RMDTypecheckContext >> action: aRMDActionDefinitionNode [
 	action := aRMDActionDefinitionNode.
 	self loadUtilityDefinitions
-]
-
-{ #category : #accessing }
-RMDTypecheckContext >> cellDefinition [
-	^ cellDefinition
-]
-
-{ #category : #accessing }
-RMDTypecheckContext >> cellDefinition: aRMDCellDefinitionNode [
-	| dict |
-	cellDefinition := aRMDCellDefinitionNode.
-	dict := Dictionary new.
-	cellDefinition
-		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	attributes at: 'here' put: dict.
-	attributes at: 'east' put: dict.
-	attributes at: 'west' put: dict.
-	attributes at: 'south' put: dict.
-	attributes at: 'north' put: dict
 ]
 
 { #category : #initialization }
@@ -82,6 +63,25 @@ RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
 { #category : #accessing }
 RMDTypecheckContext >> objectDefinition [
 	^ objectDefinition
+]
+
+{ #category : #accessing }
+RMDTypecheckContext >> patchDefinition [
+	^ patchDefinition
+]
+
+{ #category : #accessing }
+RMDTypecheckContext >> patchDefinition: aRMDPatchDefinitionNode [
+	| dict |
+	patchDefinition := aRMDPatchDefinitionNode.
+	dict := Dictionary new.
+	patchDefinition
+		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
+	attributes at: 'here' put: dict.
+	attributes at: 'east' put: dict.
+	attributes at: 'west' put: dict.
+	attributes at: 'south' put: dict.
+	attributes at: 'north' put: dict
 ]
 
 { #category : #accessing }

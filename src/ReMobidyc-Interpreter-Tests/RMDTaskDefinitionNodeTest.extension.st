@@ -7,7 +7,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 	model := RMDSimulationModel new.
 	model
 		load: RMDWorldDefinitionNode empty;
-		load: RMDCellDefinitionNode empty;
+		load: RMDPatchDefinitionNode empty;
 		load: (horseDefinition := parser animatDefinition end parse:
 					                    'Horse is Animat with
 		water [kg].');
@@ -25,8 +25,8 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 				 timeDefinition:
 					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')
 				 worldInitializer: RMDWorldInitializerNode empty
-				 cellInitializer:
-					 (parser cellInitializer end parse: '1x1 of 10 [m] Cell')
+				 patchInitializer:
+					 (parser patchInitializer end parse: '1x1 of 10 [m] Patch')
 				 animatInitializers: { 
 						 (parser animatInitializer end parse: '1 Horse with
 					x = 5[m]
@@ -74,8 +74,8 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 					         agent: nil
 					         ifAbsent: [ self fail ].
 				self
-					assert: water < 9.5 "water reduced" 
-					equals: (x - 5) squared + (y - 5) squared < 1. "within 1m from the horse"
+					assert: water < 9.5
+					equals: (x - 5) squared + (y - 5) squared < 1. "water reduced" "within 1m from the horse"
 				waterInTank := waterInTank + water ] ].
 	self assert: waterInTank closeTo: 40.0 - 2.0. "tanks lost 2kg of water at total."
 
@@ -103,7 +103,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 	model := RMDSimulationModel new.
 	model
 		load: RMDWorldDefinitionNode empty;
-		load: RMDCellDefinitionNode empty;
+		load: RMDPatchDefinitionNode empty;
 		load: (horseDefinition := parser animatDefinition end parse:
 					                    'Horse is Animat with
 		water [kg].');
@@ -121,8 +121,8 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 				 timeDefinition:
 					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')
 				 worldInitializer: RMDWorldInitializerNode empty
-				 cellInitializer:
-					 (parser cellInitializer end parse: '1x1 of 10 [m] Cell')
+				 patchInitializer:
+					 (parser patchInitializer end parse: '1x1 of 10 [m] Patch')
 				 animatInitializers: { 
 						 (parser animatInitializer end parse: '1 Horse with
 					x = 5[m]

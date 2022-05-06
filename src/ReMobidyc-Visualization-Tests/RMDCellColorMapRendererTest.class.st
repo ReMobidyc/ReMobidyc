@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 RMDCellColorMapRendererTest >> renderer [
 
-	^ RMDCellColorMapRenderer
+	^ RMDPatchColorMapRenderer
 		  expression: 'here''s val' asRMDExpression
 		  color: Color white
 		  value: '10' asRMDExpression
