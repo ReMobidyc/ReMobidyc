@@ -42,7 +42,7 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 				action: [ 
 					(RMDSimulationModeler on: (RMDSimulationModel new
 								  addRenderer: (RMDBackgroundColorRenderer color: Color black);
-								  addRenderer: (RMDCellColorAlphaRenderer
+								  addRenderer: (RMDPatchColorAlphaRenderer
 										   color: Color green
 										   alpha: '0.5' asRMDExpression
 										   between: '0.0' asRMDExpression
@@ -237,8 +237,8 @@ RMDSimulationModeler >> updatePages [
 						  title: 'World'
 						  provider: [ RMDWorldDefinitionBrowser on: simulationModel ]);
 				 nextPut: (SpNotebookPage
-						  title: 'Cell'
-						  provider: [ RMDCellDefinitionBrowser on: simulationModel ]).
+						  title: 'Patch'
+						  provider: [ RMDPatchDefinitionBrowser on: simulationModel ]).
 
 			 simulationModel animatNames do: [ :animat | 
 				 stream

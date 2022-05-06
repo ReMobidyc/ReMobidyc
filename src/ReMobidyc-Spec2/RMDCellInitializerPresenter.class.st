@@ -10,25 +10,6 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDCellInitializerPresenter class >> defaultSpec [
-
-	<spec>
-	^ super defaultSpec
-		  add: (SpBoxLayout newHorizontal
-				   vAlignCenter;
-				   add: #xDivisionsField expand: false;
-				   add: ' x ' expand: false;
-				   add: #yDivisionsField expand: false;
-				   add: ' of ' expand: false;
-				   add: #sizeField width: 80;
-				   add: #sizeUnitDropList width: 80;
-				   add: ' Cell with' expand: false;
-				   yourself)
-		  height: self inputTextHeight;
-		  yourself
-]
-
 { #category : #initialization }
 RMDCellInitializerPresenter >> initializePresenters [
 	super initializePresenters.
@@ -83,89 +64,4 @@ RMDCellInitializerPresenter >> initializePresenters [
 								unit: newUnit).
 					self updateSizeField ] ];
 		yourself
-]
-
-{ #category : #'instance creation' }
-RMDCellInitializerPresenter >> newLayout [
-
-	| newLayout |
-	newLayout := SpBoxLayout newVertical
-		             borderWidth: 0;
-		             spacing: 0;
-		             add: (SpBoxLayout newHorizontal
-				              vAlignCenter;
-				              add: xDivisionsField expand: false;
-				              add: ' x ' asPresenter expand: false;
-				              add: yDivisionsField expand: false;
-				              add: ' of ' asPresenter expand: false;
-				              add: sizeField width: 80;
-				              add: sizeUnitDropList width: 80;
-				              add: ' Cell with' asPresenter expand: false;
-				              yourself)
-		             height: self class inputTextHeight;
-		             yourself.
-
-	node ifNotNil: [ 
-		node attributeInitializers do: [ :initializer | 
-			newLayout
-				add: (initializer asPresenter
-						 disableIdentifier;
-						 yourself)
-				expand: false ] ].
-	^ newLayout
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> nodeChanged [
-	super nodeChanged.
-	self
-		updateXDivisionsField;
-		updateYDivisionsField;
-		updateSizeField;
-		updateSizeUnitField
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> preferredHeight [
-	^ (node attributeInitializers size + 1) * self class inputTextHeight
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> sizeField [
-	^ sizeField
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> sizeUnitDropList [
-	^ sizeUnitDropList
-]
-
-{ #category : #updating }
-RMDCellInitializerPresenter >> updateSizeField [
-	node ifNotNil: [ sizeField text: node size literal ]
-]
-
-{ #category : #updating }
-RMDCellInitializerPresenter >> updateSizeUnitField [
-	node ifNotNil: [ sizeUnitDropList selectItem: node size unit ]
-]
-
-{ #category : #updating }
-RMDCellInitializerPresenter >> updateXDivisionsField [
-	node ifNotNil: [ xDivisionsField text: node xDivisions printString ]
-]
-
-{ #category : #updating }
-RMDCellInitializerPresenter >> updateYDivisionsField [
-	node ifNotNil: [ yDivisionsField text: node yDivisions printString ]
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> xDivisionsField [
-	^ xDivisionsField
-]
-
-{ #category : #accessing }
-RMDCellInitializerPresenter >> yDivisionsField [
-	^ yDivisionsField
 ]

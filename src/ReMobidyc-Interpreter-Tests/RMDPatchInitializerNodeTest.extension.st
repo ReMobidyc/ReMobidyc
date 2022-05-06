@@ -1,36 +1,36 @@
-Extension { #name : #RMDCellInitializerNodeTest }
+Extension { #name : #RMDPatchInitializerNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
-RMDCellInitializerNodeTest >> testEvalIn [
-	| cellDef cellInitializer grass fertility count |
-	cellDef := parser cellDefinition end
+RMDPatchInitializerNodeTest >> testEvalIn [
+	| patchDef patchInitializer grass fertility count |
+	patchDef := parser patchDefinition end
 		parse:
-			'Cell with
+			'Patch with
 	grass [kcal]
 	fertility [kcal].'.
-	cellInitializer := parser cellInitializer
+	patchInitializer := parser patchInitializer
 		parse:
-			'10 x 11 of 2 [m] Cell with
+			'10 x 11 of 2 [m] Patch with
 			grass = 1000 [ kcal ]
 			fertility = 1100 [kcal]'.
-	interpreter memory allocateCells: cellDef x: 10 y: 11.
+	interpreter memory allocatePatches: patchDef x: 10 y: 11.
 	interpreter
-		individualsOf: cellDef
-		do: [ :cell | 
+		individualsOf: patchDef
+		do: [ :patch | 
 			interpreter
-				withInitializerContextWithSubject: cell
-				species: cellDef
-				do: [ cellInitializer evalIn: interpreter ] ].
+				withInitializerContextWithSubject: patch
+				species: patchDef
+				do: [ patchInitializer evalIn: interpreter ] ].
 	self assert: interpreter time closeTo: 0.0.
 	grass := 'kcal' asRMDUnit toSI: 1000.
 	fertility := 'kcal' asRMDUnit toSI: 1100.
 	count := 0.
 	interpreter
-		individualsOf: cellDef
-		do: [ :cell :lifehistory | 
+		individualsOf: patchDef
+		do: [ :patch :lifehistory | 
 			interpreter
 				withActionContextWithIndividual: lifehistory
-				species: cellDef
+				species: patchDef
 				do: [ self
 						assert: (interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])
 						equals: grass.

@@ -64,36 +64,6 @@ RMDAbstractInterpreter >> animatNames [
 	^ simulationModel ifNil: [ Array new ] ifNotNil: #animatNames
 ]
 
-{ #category : #'accessing - definitions' }
-RMDAbstractInterpreter >> cellDefinition [
-	^ simulationModel cellDefinition
-]
-
-{ #category : #'space access' }
-RMDAbstractInterpreter >> cellLength [
-	^ simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDAbstractInterpreter >> cellX: aNumber [
-	^ (aNumber - self west) / simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDAbstractInterpreter >> cellXDivisions [
-	^ simulationModel cellXDivisions
-]
-
-{ #category : #'space access' }
-RMDAbstractInterpreter >> cellY: aNumber [
-	^ (aNumber - self south) / simulationModel cellLength
-]
-
-{ #category : #'space access' }
-RMDAbstractInterpreter >> cellYDivisions [
-	^ simulationModel cellYDivisions
-]
-
 { #category : #private }
 RMDAbstractInterpreter >> context [
 	^ context
@@ -124,6 +94,36 @@ RMDAbstractInterpreter >> load: aRMDSyntaxNode [
 { #category : #'space access' }
 RMDAbstractInterpreter >> north [
 	^ simulationModel north
+]
+
+{ #category : #'accessing - definitions' }
+RMDAbstractInterpreter >> patchDefinition [
+	^ simulationModel patchDefinition
+]
+
+{ #category : #'space access' }
+RMDAbstractInterpreter >> patchLength [
+	^ simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDAbstractInterpreter >> patchX: aNumber [
+	^ (aNumber - self west) / simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDAbstractInterpreter >> patchXDivisions [
+	^ simulationModel patchXDivisions
+]
+
+{ #category : #'space access' }
+RMDAbstractInterpreter >> patchY: aNumber [
+	^ (aNumber - self south) / simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDAbstractInterpreter >> patchYDivisions [
+	^ simulationModel patchYDivisions
 ]
 
 { #category : #'accessing - definitions' }

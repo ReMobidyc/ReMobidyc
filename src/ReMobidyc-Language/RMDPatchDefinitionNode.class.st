@@ -1,37 +1,37 @@
 Class {
-	#name : #RMDCellDefinitionNode,
+	#name : #RMDPatchDefinitionNode,
 	#superclass : #RMDSpeciesDefinitionNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #accessing }
-RMDCellDefinitionNode class >> createBuiltinAttributes [
+RMDPatchDefinitionNode class >> createBuiltinAttributes [
 
 	^ {  }
 ]
 
 { #category : #'typical instances' }
-RMDCellDefinitionNode class >> grassField [
-	<script: 'RMDCellDefinitionNode grassField inspect'>
-	^ RMDGrammar new cellDefinition end parse: 'Cell with
+RMDPatchDefinitionNode class >> grassField [
+	<script: 'RMDPatchDefinitionNode grassField inspect'>
+	^ RMDGrammar new patchDefinition end parse: 'Patch with
 	grass [kcal].'
 ]
 
 { #category : #'typical instances' }
-RMDCellDefinitionNode class >> sugarField [
-	<script: 'RMDCellDefinitionNode sugarField inspect'>
-	^ RMDGrammar new cellDefinition end parse: 'Cell with
+RMDPatchDefinitionNode class >> sugarField [
+	<script: 'RMDPatchDefinitionNode sugarField inspect'>
+	^ RMDGrammar new patchDefinition end parse: 'Patch with
 	sugar [kcal].'
 ]
 
 { #category : #testing }
-RMDCellDefinitionNode >> isCellDefinitionNode [
+RMDPatchDefinitionNode >> isPatchDefinitionNode [
 	^ true
 ]
 
 { #category : #printing }
-RMDCellDefinitionNode >> printOn: aStream [
-	aStream nextPutAll: 'Cell'.
+RMDPatchDefinitionNode >> printOn: aStream [
+	aStream nextPutAll: 'Patch'.
 	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';
@@ -45,10 +45,10 @@ RMDCellDefinitionNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDCellDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDPatchDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
-	aStream nextPutAll: 'Cell'.
+	aStream nextPutAll: 'Patch'.
 	attributeDeclarations
 		ifNotEmpty: [ aStream
 				nextPutAll: ' with';

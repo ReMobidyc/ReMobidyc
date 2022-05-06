@@ -178,10 +178,10 @@ RMDGrammarTest >> testAgentDirective [
 	self assert: node directive equals: 'direction'.
 	self assert: node agentIdentifier equals: 'foo'.
 	node := grammar agentDirective parse: 'direction neighbor''s foo'.
-	self assert: node isCellDirectiveNode.
+	self assert: node isPatchDirectiveNode.
 	self assert: node directive equals: 'direction'.
-	self assert: node cellAttributeVariable agent equals: 'here'.
-	self assert: node cellAttributeVariable identifier equals: 'foo'.
+	self assert: node patchAttributeVariable agent equals: 'here'.
+	self assert: node patchAttributeVariable identifier equals: 'foo'.
 	node := grammar agentDirective parse: 'foo bar'.
 	self assert: node isPetit2Failure
 ]
@@ -495,107 +495,6 @@ RMDGrammarTest >> testBinaryRelation [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testCellColorAlphaRenderer [
-
-	| renderer |
-	renderer := grammar cellColorAlphaRenderer end parse:
-		            '	Cell -> yellow with alpha proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
-	self deny: renderer isPetit2Failure.
-	self assert: renderer color equals: Color yellow.
-	self
-		assert: renderer expression
-		equals: (grammar expression parse: 'here''s grass').
-	self
-		assert: renderer min
-		equals: (grammar literal parse: '100 [kcal]').
-	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testCellColorBrightnessRenderer [
-
-	| renderer |
-	renderer := grammar cellColorBrightnessRenderer end parse:
-		            '	Cell -> yellow with brightness proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
-	self deny: renderer isPetit2Failure.
-	self assert: renderer color equals: Color yellow.
-	self
-		assert: renderer expression
-		equals: (grammar expression parse: 'here''s grass').
-	self
-		assert: renderer min
-		equals: (grammar literal parse: '100 [kcal]').
-	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testCellColorMapRenderer [
-
-	| renderer |
-	renderer := grammar cellColorMapRenderer end parse:
-		            '	Cell -> map here''s grass with
-			green if >= 100 [kcal],
-			yellow if >= 50 [kcal],
-			red
-		with 2 pixels black grids.'.
-	self deny: renderer isPetit2Failure.
-	self assert: renderer color equals: Color red
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testCellDefinition [
-	| node |
-	node := grammar cellDefinition end parse: 'Cell.'.
-	self assert: node isCellDefinitionNode.
-	self assert: node attributeDeclarations isEmpty.
-	self assert: node equals: RMDCellDefinitionNode empty.
-	node := grammar cellDefinition end
-		parse:
-			'
-Cell with
-	sugar [kcal].' trim.
-	self assert: node isCellDefinitionNode.
-	self assert: node attributeDeclarations size equals: 1.
-	self
-		assert: node attributeDeclarations first identifier
-		equals: 'sugar'.
-	self
-		assert: node attributeDeclarations first unit
-		equals: RMDUnit kcal
-]
-
-{ #category : #tests }
-RMDGrammarTest >> testCellInitializer [
-	| node |
-	node := grammar cellInitializer parse: '10x20 of 5[m] Cell'.
-	self assert: node isCellInitializerNode.
-	self assert: node xDivisions equals: 10.
-	self assert: node yDivisions equals: 20.
-	self assert: node size literal equals: '5'.
-	self assert: node size unit equals: 'm' asRMDUnit.
-	self assert: node length closeTo: 5.0.
-	self assert: node attributeInitializers isEmpty.
-	node := grammar cellInitializer
-		parse:
-			'15x30 of 4[m^2] Cell with
-	green = 10000 [kcal]
-	fertility = 12345 [kcal]'.
-	self assert: node isCellInitializerNode.
-	self assert: node xDivisions equals: 15.
-	self assert: node yDivisions equals: 30.
-	self assert: node size literal equals: '4'.
-	self assert: node size unit equals: 'm^2' asRMDUnit.
-	self assert: node length closeTo: 2.0.
-	self assert: node attributeInitializers size equals: 2.
-	self
-		assert: node attributeInitializers first identifier
-		equals: 'green'.
-	self
-		assert: node attributeInitializers second identifier
-		equals: 'fertility'
-]
-
-{ #category : #tests }
 RMDGrammarTest >> testColor [
 
 	| color |
@@ -900,6 +799,107 @@ RMDGrammarTest >> testNormalDistribution [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testPatchColorAlphaRenderer [
+
+	| renderer |
+	renderer := grammar patchColorAlphaRenderer end parse:
+		            '	Patch -> yellow with alpha proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self
+		assert: renderer expression
+		equals: (grammar expression parse: 'here''s grass').
+	self
+		assert: renderer min
+		equals: (grammar literal parse: '100 [kcal]').
+	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPatchColorBrightnessRenderer [
+
+	| renderer |
+	renderer := grammar patchColorBrightnessRenderer end parse:
+		            '	Patch -> yellow with brightness proportional to here''s grass between 100 [kcal] and 0[kcal] with 2 pixels black grids.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self
+		assert: renderer expression
+		equals: (grammar expression parse: 'here''s grass').
+	self
+		assert: renderer min
+		equals: (grammar literal parse: '100 [kcal]').
+	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPatchColorMapRenderer [
+
+	| renderer |
+	renderer := grammar patchColorMapRenderer end parse:
+		            '	Patch -> map here''s grass with
+			green if >= 100 [kcal],
+			yellow if >= 50 [kcal],
+			red
+		with 2 pixels black grids.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color red
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPatchDefinition [
+	| node |
+	node := grammar patchDefinition end parse: 'Patch.'.
+	self assert: node isPatchDefinitionNode.
+	self assert: node attributeDeclarations isEmpty.
+	self assert: node equals: RMDPatchDefinitionNode empty.
+	node := grammar patchDefinition end
+		parse:
+			'
+Patch with
+	sugar [kcal].' trim.
+	self assert: node isPatchDefinitionNode.
+	self assert: node attributeDeclarations size equals: 1.
+	self
+		assert: node attributeDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node attributeDeclarations first unit
+		equals: RMDUnit kcal
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testPatchInitializer [
+	| node |
+	node := grammar patchInitializer parse: '10x20 of 5[m] Patch'.
+	self assert: node isPatchInitializerNode.
+	self assert: node xDivisions equals: 10.
+	self assert: node yDivisions equals: 20.
+	self assert: node size literal equals: '5'.
+	self assert: node size unit equals: 'm' asRMDUnit.
+	self assert: node length closeTo: 5.0.
+	self assert: node attributeInitializers isEmpty.
+	node := grammar patchInitializer
+		parse:
+			'15x30 of 4[m^2] Patch with
+	green = 10000 [kcal]
+	fertility = 12345 [kcal]'.
+	self assert: node isPatchInitializerNode.
+	self assert: node xDivisions equals: 15.
+	self assert: node yDivisions equals: 30.
+	self assert: node size literal equals: '4'.
+	self assert: node size unit equals: 'm^2' asRMDUnit.
+	self assert: node length closeTo: 2.0.
+	self assert: node attributeInitializers size equals: 2.
+	self
+		assert: node attributeInitializers first identifier
+		equals: 'green'.
+	self
+		assert: node attributeInitializers second identifier
+		equals: 'fertility'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPlaceholder [
 
 	| exp |
@@ -922,7 +922,7 @@ RMDGrammarTest >> testSimulationDefinition [
 		parse:
 			'Simulation with
 	during 10 [days] by 1 [day]
-	5 x 5 of 10[m] Cell with
+	5 x 5 of 10[m] Patch with
 	    fertility = uniform 1000[kcal] to 2000[kcal]
 	10 Goat with
 		x = uniform 0[m] to 50[m]

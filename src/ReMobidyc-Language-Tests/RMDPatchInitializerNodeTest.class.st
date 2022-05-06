@@ -1,15 +1,15 @@
 Class {
-	#name : #RMDCellInitializerNodeTest,
+	#name : #RMDPatchInitializerNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDCellInitializerNodeTest >> testCopyReplace [
+RMDPatchInitializerNodeTest >> testCopyReplace [
 	| node replacement |
-	node := parser cellInitializer end
+	node := parser patchInitializer end
 		parse:
-			'5 x 6 of 10 [m] Cell with
+			'5 x 6 of 10 [m] Patch with
 	grass = uniform 1000 [kcal] to 5000 [kcal]'.
 	replacement := Dictionary new
 		at: 'grass' put: 'sugar';
@@ -19,22 +19,22 @@ RMDCellInitializerNodeTest >> testCopyReplace [
 	self
 		assert: (node copyReplace: replacement)
 		equals:
-			(parser cellInitializer end
+			(parser patchInitializer end
 				parse:
-					'5 x 6 of 10 [m] Cell with
+					'5 x 6 of 10 [m] Patch with
 	sugar = uniform 2000 [kcal] to 5000 [kcal]')
 ]
 
 { #category : #tests }
-RMDCellInitializerNodeTest >> testPrintOn [
+RMDPatchInitializerNodeTest >> testPrintOn [
 
 	| node copy |
-	node := parser cellInitializer end parse: '10 x 20 of 3[m] Cell with
+	node := parser patchInitializer end parse: '10 x 20 of 3[m] Patch with
 		x = 1
 		y = 2'.
-	copy := parser cellInitializer end parse: node printString.
+	copy := parser patchInitializer end parse: node printString.
 	self assert: copy equals: node.
-	node := parser cellInitializer end parse: '10 x 20 of 3[m] Cell'.
-	copy := parser cellInitializer end parse: node printString.
+	node := parser patchInitializer end parse: '10 x 20 of 3[m] Patch'.
+	copy := parser patchInitializer end parse: node printString.
 	self assert: copy equals: node
 ]

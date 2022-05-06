@@ -17,18 +17,6 @@ Class {
 }
 
 { #category : #'typical instances' }
-RMDTaskDefinitionNode class >> cell_grow_grass: amountString upto: maxString [
-
-	<script:
-	'(RMDTaskDefinitionNode cell_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
-	^ ('Cell grow namely gain
-where
-	the thing -> here''s grass
-	the maximum -> ' , maxString , '
-	the amount -> ' , amountString , ' * delta time .') asRMDTaskDefinition
-]
-
-{ #category : #'typical instances' }
 RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
@@ -85,6 +73,18 @@ RMDTaskDefinitionNode class >> goat_walk_for_grass [
 where
 	the heading -> direction neighbor''s grass
 	the speed -> 1[km/day].' asRMDTaskDefinition
+]
+
+{ #category : #'typical instances' }
+RMDTaskDefinitionNode class >> patch_grow_grass: amountString upto: maxString [
+
+	<script:
+	'(RMDTaskDefinitionNode patch_grow_grass: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
+	^ ('Patch grow namely gain
+where
+	the thing -> here''s grass
+	the maximum -> ' , maxString , '
+	the amount -> ' , amountString , ' * delta time .') asRMDTaskDefinition
 ]
 
 { #category : #'instance creation' }

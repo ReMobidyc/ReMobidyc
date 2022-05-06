@@ -124,7 +124,7 @@ RMDSimulationModelTest >> testAddAnimatDefinition [
 RMDSimulationModelTest >> testAddRenderer [
 	| backgroundRenderer colorAlphaRenderer |
 	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
-	colorAlphaRenderer := RMDCellColorAlphaRenderer
+	colorAlphaRenderer := RMDPatchColorAlphaRenderer
 		color: Color white
 		alpha: 'my x' asRMDExpression
 		between: 0
@@ -226,7 +226,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -249,154 +249,6 @@ World with
 ]
 
 { #category : #running }
-RMDSimulationModelTest >> testCellDefinition [
-	| cell |
-	cell := parser cellDefinition end
-		parse:
-			'Cell with
-	grass [kcal].'.
-	model cellDefinition: cell.
-	self assert: model cellDefinition equals: cell
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testCellInitializer [
-	| sim |
-	sim := parser simulationDefinition end
-		parse:
-			'
-Simulation with
-	during 300[day] by 0.5[day]
-World with
-	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]
-10 Goat with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day]
-2 Wolf with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day].' trim.
-	self assert: sim isSimulationDefinitionNode.
-	model simulationDefinition: sim.
-	self
-		assert: model cellInitializer
-		equals:
-			(parser cellInitializer end
-				parse:
-					'5 x 6 of 10 [m] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]')
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testCellLength [
-	| sim |
-	sim := parser simulationDefinition end
-		parse:
-			'
-Simulation with
-	during 300[day] by 0.5[day]
-World with
-	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]
-10 Goat with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day]
-2 Wolf with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day].' trim.
-	self assert: sim isSimulationDefinitionNode.
-	model simulationDefinition: sim.
-	self assert: model cellLength closeTo: 10.0.
-	sim := parser simulationDefinition end
-		parse:
-			'
-Simulation with
-	during 300[day] by 0.5[day]
-World with
-	temperature = 30 [DegreeC]
-5 x 6 of 400 [m^2] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]
-10 Goat with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day]
-2 Wolf with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day].' trim.
-	self assert: sim isSimulationDefinitionNode.
-	model simulationDefinition: sim.
-	self assert: model cellLength closeTo: 20.0.
-
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testCellXDivisions [
-	| sim |
-	sim := parser simulationDefinition end
-		parse:
-			'
-Simulation with
-	during 300[day] by 0.5[day]
-World with
-	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]
-10 Goat with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day]
-2 Wolf with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day].' trim.
-	self assert: sim isSimulationDefinitionNode.
-	model simulationDefinition: sim.
-	self assert: model cellXDivisions equals: 5
-]
-
-{ #category : #running }
-RMDSimulationModelTest >> testCellYDivisions [
-	| sim |
-	sim := parser simulationDefinition end
-		parse:
-			'
-Simulation with
-	during 300[day] by 0.5[day]
-World with
-	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
-    grass = uniform 1000[kcal] to 5000[kcal]
-10 Goat with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day]
-2 Wolf with
-    x = uniform 0[m] to 50[m]
-    y = uniform 0[m] to 50[m]
-    blood_sugar = 1000[kcal]
-    age = 0[day].' trim.
-	self assert: sim isSimulationDefinitionNode.
-	model simulationDefinition: sim.
-	self assert: model cellYDivisions equals: 6
-]
-
-{ #category : #running }
 RMDSimulationModelTest >> testDeltaTime [
 	| sim |
 	sim := parser simulationDefinition end
@@ -406,7 +258,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -433,7 +285,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -460,7 +312,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -512,7 +364,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -530,10 +382,157 @@ World with
 ]
 
 { #category : #running }
+RMDSimulationModelTest >> testPatchDefinition [
+
+	| patch |
+	patch := parser patchDefinition end parse: 'Patch with
+	grass [kcal].'.
+	model patchDefinition: patch.
+	self assert: model patchDefinition equals: patch
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testPatchInitializer [
+	| sim |
+	sim := parser simulationDefinition end
+		parse:
+			'
+Simulation with
+	during 300[day] by 0.5[day]
+World with
+	temperature = 30 [DegreeC]
+5 x 6 of 10 [m] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]
+10 Goat with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day]
+2 Wolf with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day].' trim.
+	self assert: sim isSimulationDefinitionNode.
+	model simulationDefinition: sim.
+	self
+		assert: model patchInitializer
+		equals:
+			(parser patchInitializer end
+				parse:
+					'5 x 6 of 10 [m] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]')
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testPatchLength [
+	| sim |
+	sim := parser simulationDefinition end
+		parse:
+			'
+Simulation with
+	during 300[day] by 0.5[day]
+World with
+	temperature = 30 [DegreeC]
+5 x 6 of 10 [m] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]
+10 Goat with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day]
+2 Wolf with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day].' trim.
+	self assert: sim isSimulationDefinitionNode.
+	model simulationDefinition: sim.
+	self assert: model patchLength closeTo: 10.0.
+	sim := parser simulationDefinition end
+		parse:
+			'
+Simulation with
+	during 300[day] by 0.5[day]
+World with
+	temperature = 30 [DegreeC]
+5 x 6 of 400 [m^2] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]
+10 Goat with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day]
+2 Wolf with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day].' trim.
+	self assert: sim isSimulationDefinitionNode.
+	model simulationDefinition: sim.
+	self assert: model patchLength closeTo: 20.0.
+
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testPatchXDivisions [
+	| sim |
+	sim := parser simulationDefinition end
+		parse:
+			'
+Simulation with
+	during 300[day] by 0.5[day]
+World with
+	temperature = 30 [DegreeC]
+5 x 6 of 10 [m] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]
+10 Goat with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day]
+2 Wolf with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day].' trim.
+	self assert: sim isSimulationDefinitionNode.
+	model simulationDefinition: sim.
+	self assert: model patchXDivisions equals: 5
+]
+
+{ #category : #running }
+RMDSimulationModelTest >> testPatchYDivisions [
+	| sim |
+	sim := parser simulationDefinition end
+		parse:
+			'
+Simulation with
+	during 300[day] by 0.5[day]
+World with
+	temperature = 30 [DegreeC]
+5 x 6 of 10 [m] Patch with
+    grass = uniform 1000[kcal] to 5000[kcal]
+10 Goat with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day]
+2 Wolf with
+    x = uniform 0[m] to 50[m]
+    y = uniform 0[m] to 50[m]
+    blood_sugar = 1000[kcal]
+    age = 0[day].' trim.
+	self assert: sim isSimulationDefinitionNode.
+	model simulationDefinition: sim.
+	self assert: model patchYDivisions equals: 6
+]
+
+{ #category : #running }
 RMDSimulationModelTest >> testRenderersDo [
 	| backgroundRenderer colorAlphaRenderer |
 	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
-	colorAlphaRenderer := RMDCellColorAlphaRenderer
+	colorAlphaRenderer := RMDPatchColorAlphaRenderer
 		color: Color white
 		alpha: 'my x' asRMDExpression
 		between: 0
@@ -562,7 +561,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -589,7 +588,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -689,7 +688,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]
@@ -728,7 +727,7 @@ Simulation with
 	during 300[day] by 0.5[day]
 World with
 	temperature = 30 [DegreeC]
-5 x 6 of 10 [m] Cell with
+5 x 6 of 10 [m] Patch with
     grass = uniform 1000[kcal] to 5000[kcal]
 10 Goat with
     x = uniform 0[m] to 50[m]

@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellColorRangeRendererPresenter,
-	#superclass : #RMDCellExpressionRendererPresenter,
+	#name : #RMDPatchColorRangeRendererPresenter,
+	#superclass : #RMDPatchExpressionRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #initialization }
-RMDCellColorRangeRendererPresenter >> initializePresenters [
+RMDPatchColorRangeRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	minField := self newSyntaxNodeTextInput
 		beLiteral;
@@ -20,7 +20,7 @@ RMDCellColorRangeRendererPresenter >> initializePresenters [
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererPresenter >> rendererChanged [
+RMDPatchColorRangeRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
 		updateMinField;
@@ -28,11 +28,11 @@ RMDCellColorRangeRendererPresenter >> rendererChanged [
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererPresenter >> updateMaxField [
+RMDPatchColorRangeRendererPresenter >> updateMaxField [
 	renderer ifNotNil: [ maxField syntaxNode: renderer max ]
 ]
 
 { #category : #updating }
-RMDCellColorRangeRendererPresenter >> updateMinField [
+RMDPatchColorRangeRendererPresenter >> updateMinField [
 	renderer ifNotNil: [ minField syntaxNode: renderer min ]
 ]

@@ -28,7 +28,7 @@ RMDTypechecker >> newIndividual: animatString [
 { #category : #'type checking' }
 RMDTypechecker >> newTypecheckContext [
 	^ RMDTypecheckContext new
-		cellDefinition: self cellDefinition;
+		patchDefinition: self patchDefinition;
 		worldDefinition: self worldDefinition;
 		yourself
 ]
@@ -44,9 +44,9 @@ RMDTypechecker >> newTypecheckContextForAnimat: aString [
 ]
 
 { #category : #'type checking' }
-RMDTypechecker >> newTypecheckContextForCell [
+RMDTypechecker >> newTypecheckContextForPatch [
 	^ self newTypecheckContext 
-		subjectDefinition: self cellDefinition;
+		subjectDefinition: self patchDefinition;
 		yourself
 ]
 
@@ -58,8 +58,8 @@ RMDTypechecker >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
 	newContext := subject = 'World'
 		              ifTrue: [ self newTypecheckContextForWorld ]
 		              ifFalse: [ 
-			              subject = 'Cell'
-				              ifTrue: [ self newTypecheckContextForCell ]
+			              subject = 'Patch'
+				              ifTrue: [ self newTypecheckContextForPatch ]
 				              ifFalse: [ 
 				              self newTypecheckContextForAnimat: subject ] ].
 	aRMDTaskDefinitionNode hasObject ifTrue: [ 
@@ -129,8 +129,8 @@ RMDTypechecker >> typecheckInitializers [
 		withContext: self newTypecheckContextForWorld
 		do: [ simulationModel worldInitializer typecheckIn: self ].
 	self
-		withContext: self newTypecheckContextForCell
-		do: [ simulationModel cellInitializer typecheckIn: self ].
+		withContext: self newTypecheckContextForPatch
+		do: [ simulationModel patchInitializer typecheckIn: self ].
 	simulationModel
 		animatInitializersDo: [ :animatInitializer | 
 			self

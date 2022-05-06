@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellExpressionRendererPresenter,
+	#name : #RMDPatchExpressionRendererPresenter,
 	#superclass : #RMDRendererPresenter,
 	#instVars : [
 		'expressionField',
@@ -12,17 +12,17 @@ Class {
 }
 
 { #category : #api }
-RMDCellExpressionRendererPresenter >> disableAgentFields [
+RMDPatchExpressionRendererPresenter >> disableAgentFields [
 	
 ]
 
 { #category : #api }
-RMDCellExpressionRendererPresenter >> enableAgentFields [
+RMDPatchExpressionRendererPresenter >> enableAgentFields [
 	
 ]
 
 { #category : #initialization }
-RMDCellExpressionRendererPresenter >> initializePresenters [
+RMDPatchExpressionRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	borderColorDropList := self newColorDropList
 		whenSelectedItemChangedDo: [ :color | 
@@ -43,12 +43,12 @@ RMDCellExpressionRendererPresenter >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDCellExpressionRendererPresenter >> preferredHeight [ 
+RMDPatchExpressionRendererPresenter >> preferredHeight [ 
 	^ self subclassResponsibility 
 ]
 
 { #category : #accessing }
-RMDCellExpressionRendererPresenter >> rendererChanged [
+RMDPatchExpressionRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
 		updateExpressionField;
@@ -57,7 +57,7 @@ RMDCellExpressionRendererPresenter >> rendererChanged [
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererPresenter >> updateBorderColorDropList [
+RMDPatchExpressionRendererPresenter >> updateBorderColorDropList [
 	renderer
 		ifNotNil: [ | color colors |
 			color := renderer borderColor.
@@ -68,11 +68,11 @@ RMDCellExpressionRendererPresenter >> updateBorderColorDropList [
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererPresenter >> updateBorderWidthField [
+RMDPatchExpressionRendererPresenter >> updateBorderWidthField [
 	renderer ifNotNil: [ borderWidthField number: renderer borderWidth ]
 ]
 
 { #category : #updating }
-RMDCellExpressionRendererPresenter >> updateExpressionField [
+RMDPatchExpressionRendererPresenter >> updateExpressionField [
 	renderer ifNotNil: [ expressionField syntaxNode: renderer expression ]
 ]

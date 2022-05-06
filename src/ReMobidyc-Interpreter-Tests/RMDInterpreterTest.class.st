@@ -114,9 +114,9 @@ RMDInterpreterTest >> testSetUpSimulation [
 					'World with
 	temperature [DegreeC].');
 		load:
-			(parser cellDefinition end
+			(parser patchDefinition end
 				parse:
-					'Cell with
+					'Patch with
 	grass [kcal]
 	fertility [kcal].');
 		load:
@@ -131,7 +131,7 @@ RMDInterpreterTest >> testSetUpSimulation [
 	during 300 [day] by 0.5 [day]
 	World with
 		temperature = 30 [DegreeC]
-	5 x 6 of 10 [m] Cell with
+	5 x 6 of 10 [m] Patch with
 		grass = uniform 1000 [kcal] to 5000 [kcal]
 		fertility = 2000 [kcal]
 	10 Goat with
@@ -143,10 +143,10 @@ RMDInterpreterTest >> testSetUpSimulation [
 	kcal := RMDUnit kcal.
 	celsius := RMDUnit celsius.
 	self assert: (memory at: 1) closeTo: (celsius toSI: 30).
-	2 to: 5 * 6 * 2 + 1 by: 2 do: [ :cell | 
+	2 to: 5 * 6 * 2 + 1 by: 2 do: [ :patch | 
 		self
-			assert: ((memory at: cell) between: (kcal toSI: 1000) and: (kcal toSI: 5000)).
-		self assert: (memory at: cell + 1) closeTo: (kcal toSI: 2000) ].
+			assert: ((memory at: patch) between: (kcal toSI: 1000) and: (kcal toSI: 5000)).
+		self assert: (memory at: patch + 1) closeTo: (kcal toSI: 2000) ].
 	5 * 6 * 2 + 1 + 1 to: 5 * 6 * 2 + 1 + (10 * 4) by: 4 do: [ :goat | 
 		self assert: ((memory at: goat) between: 0.0 and: 50.0).
 		self assert: ((memory at: goat + 1) between: 0.0 and: 60.0).

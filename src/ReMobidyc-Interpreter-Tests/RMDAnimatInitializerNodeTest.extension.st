@@ -15,7 +15,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 				parse:
 					'Simulation with
 	during 10[day] by 0.5[day]
-	20x20 of  5[m] Cell.').
+	20x20 of  5[m] Patch.').
 	interpreter setupSimulation.
 	goatInitializer := parser animatInitializer end
 		parse:

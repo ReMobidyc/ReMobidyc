@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellInitializerNode,
+	#name : #RMDPatchInitializerNode,
 	#superclass : #RMDSpeciesInitializerNode,
 	#instVars : [
 		'xDivisions',
@@ -11,19 +11,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDCellInitializerNode class >> empty [
+RMDPatchInitializerNode class >> empty [
 	^ self
 		xDivisions: 1
 		yDivisions: 1
 		length: '1 [m]' asRMDExpression
-		cellAttributeInitializers: Array new
+		patchAttributeInitializers: Array new
 ]
 
 { #category : #'typical instances' }
-RMDCellInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: lengthString grass: minString to: maxString [
+RMDPatchInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: lengthString grass: minString to: maxString [
 	<script:
-		'(RMDCellInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') inspect'>
-	^ RMDGrammar new cellInitializer end
+		'(RMDPatchInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') inspect'>
+	^ RMDGrammar new patchInitializer end
 		parse:
 			(String
 				streamContents: [ :stream | 
@@ -33,7 +33,7 @@ RMDCellInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: 
 					stream
 						nextPutAll: ' of ';
 						nextPutAll: lengthString;
-						nextPutAll: ' Cell with';
+						nextPutAll: ' Patch with';
 						cr;
 						nextPutAll: '    grass = uniform ';
 						nextPutAll: minString;
@@ -42,17 +42,17 @@ RMDCellInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: 
 ]
 
 { #category : #'instance creation' }
-RMDCellInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 cellAttributeInitializers: anArrayOfRMDSimulationCellAttributeDefinitions [
+RMDPatchInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 patchAttributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions [
 	^ self new
 		xDivisions: aRMDExpression1;
 		yDivisions: aRMDExpression2;
 		size: aRMDExpression3;
-		attributeInitializers: anArrayOfRMDSimulationCellAttributeDefinitions;
+		attributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions;
 		yourself
 ]
 
 { #category : #comparing }
-RMDCellInitializerNode >> = anObject [
+RMDPatchInitializerNode >> = anObject [
 	^ self class = anObject class
 		and: [ xDivisions = anObject xDivisions
 				and:
@@ -60,24 +60,24 @@ RMDCellInitializerNode >> = anObject [
 ]
 
 { #category : #enumerating }
-RMDCellInitializerNode >> childrenDo: aBlock [
+RMDPatchInitializerNode >> childrenDo: aBlock [
 	aBlock value: length.
 	attributeInitializers do: aBlock
 ]
 
 { #category : #comparing }
-RMDCellInitializerNode >> hash [
+RMDPatchInitializerNode >> hash [
 	^ (((super hash bitXor: xDivisions hash) bitXor: yDivisions hash)
 		bitXor: size hash) bitXor: length hash
 ]
 
 { #category : #testing }
-RMDCellInitializerNode >> isCellInitializerNode [
+RMDPatchInitializerNode >> isPatchInitializerNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> length [
+RMDPatchInitializerNode >> length [
 	^ length
 		ifNil: [ length := size unit siUnit = RMDUnit m
 				ifTrue: [ size numeric ]
@@ -87,20 +87,20 @@ RMDCellInitializerNode >> length [
 ]
 
 { #category : #copying }
-RMDCellInitializerNode >> postCopy [
+RMDPatchInitializerNode >> postCopy [
 	super postCopy.
 	size := size copy
 ]
 
 { #category : #printing }
-RMDCellInitializerNode >> printOn: aStream [
+RMDPatchInitializerNode >> printOn: aStream [
 
 	xDivisions printOn: aStream.
 	aStream nextPutAll: ' x '.
 	yDivisions printOn: aStream.
 	aStream nextPutAll: ' of '.
 	size printOn: aStream.
-	aStream nextPutAll: ' Cell'.
+	aStream nextPutAll: ' Patch'.
 	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
@@ -113,7 +113,7 @@ RMDCellInitializerNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDPatchInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -131,7 +131,7 @@ RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxN
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	aStream nextPutAll: ' Cell'.
+	aStream nextPutAll: ' Patch'.
 	attributeInitializers ifNotEmpty: [ 
 		aStream
 			nextPutAll: ' with';
@@ -149,39 +149,39 @@ RMDCellInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxN
 ]
 
 { #category : #rewriting }
-RMDCellInitializerNode >> replaceChildren: aDictionary [
+RMDPatchInitializerNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: size ifPresent: [ :node | size := node copy ].
 	length := nil
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> size [
+RMDPatchInitializerNode >> size [
 	^ size
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> size: aRMDLiteralNode [
+RMDPatchInitializerNode >> size: aRMDLiteralNode [
 	size := aRMDLiteralNode.
 	length := nil
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> xDivisions [
+RMDPatchInitializerNode >> xDivisions [
 	^ xDivisions
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> xDivisions: anInteger [
+RMDPatchInitializerNode >> xDivisions: anInteger [
 	xDivisions := anInteger
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> yDivisions [
+RMDPatchInitializerNode >> yDivisions [
 	^ yDivisions
 ]
 
 { #category : #accessing }
-RMDCellInitializerNode >> yDivisions: anInteger [
+RMDPatchInitializerNode >> yDivisions: anInteger [
 	yDivisions := anInteger
 ]

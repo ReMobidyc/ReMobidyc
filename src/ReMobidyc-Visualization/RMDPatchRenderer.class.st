@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDCellRenderer,
+	#name : #RMDPatchRenderer,
 	#superclass : #RMDRenderer,
 	#instVars : [
 		'borderWidth',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #comparing }
-RMDCellRenderer >> = anObject [
+RMDPatchRenderer >> = anObject [
 
 	^ super = anObject and: [ 
 		  borderWidth = anObject borderWidth and: [ 
@@ -17,61 +17,61 @@ RMDCellRenderer >> = anObject [
 ]
 
 { #category : #accessing }
-RMDCellRenderer >> borderColor [
+RMDPatchRenderer >> borderColor [
 	^ borderColor
 ]
 
 { #category : #accessing }
-RMDCellRenderer >> borderColor: aColor [
+RMDPatchRenderer >> borderColor: aColor [
 	borderColor := aColor
 ]
 
 { #category : #accessing }
-RMDCellRenderer >> borderWidth [
+RMDPatchRenderer >> borderWidth [
 	^ borderWidth
 ]
 
 { #category : #accessing }
-RMDCellRenderer >> borderWidth: anInteger [
+RMDPatchRenderer >> borderWidth: anInteger [
 	borderWidth := anInteger
 ]
 
 { #category : #defaults }
-RMDCellRenderer >> defaultBorderColor [
+RMDPatchRenderer >> defaultBorderColor [
 	^ Color black
 ]
 
 { #category : #defaults }
-RMDCellRenderer >> defaultBorderWidth [
+RMDPatchRenderer >> defaultBorderWidth [
 	^ 2
 ]
 
 { #category : #defaults }
-RMDCellRenderer >> defaultColor [
+RMDPatchRenderer >> defaultColor [
 	^ Color white
 ]
 
 { #category : #drawing }
-RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
-	| xDivisions yDivisions cellLength |
-	xDivisions := aRMDInterpreter cellXDivisions.
-	yDivisions := aRMDInterpreter cellYDivisions.
-	cellLength := aRMDInterpreter cellLength.
-	1 to: yDivisions do: [ :cellY | 
-		1 to: xDivisions do: [ :cellX | 
+RMDPatchRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
+	| xDivisions yDivisions patchLength |
+	xDivisions := aRMDInterpreter patchXDivisions.
+	yDivisions := aRMDInterpreter patchYDivisions.
+	patchLength := aRMDInterpreter patchLength.
+	1 to: yDivisions do: [ :patchY | 
+		1 to: xDivisions do: [ :patchX | 
 			self
-				drawCell: (aRMDInterpreter cellAtXIndex: cellX yIndex: cellY)
+				drawPatch: (aRMDInterpreter patchAtXIndex: patchX yIndex: patchY)
 				interpreter: aRMDInterpreter
 				bounds:
 					((self
-						pointFromX: (cellX - 1) * cellLength
-						y: (cellY - 1) * cellLength
+						pointFromX: (patchX - 1) * patchLength
+						y: (patchY - 1) * patchLength
 						interpreter: aRMDInterpreter
 						scale: aNumber)
 						corner:
 							(self
-								pointFromX: cellX * cellLength
-								y: cellY * cellLength
+								pointFromX: patchX * patchLength
+								y: patchY * patchLength
 								interpreter: aRMDInterpreter
 								scale: aNumber))
 				on: aCanvas ] ].
@@ -90,24 +90,24 @@ RMDCellRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 ]
 
 { #category : #drawing }
-RMDCellRenderer >> drawCell: aNumber interpreter: aRMDInterpreter bounds: aRectangle on: aFormCanvas [
+RMDPatchRenderer >> drawPatch: aNumber interpreter: aRMDInterpreter bounds: aRectangle on: aFormCanvas [
 	^ self subclassResponsibility
 ]
 
 { #category : #comparing }
-RMDCellRenderer >> hash [
+RMDPatchRenderer >> hash [
 
 	^ (super hash bitXor: borderWidth hash) bitXor: borderColor hash
 ]
 
 { #category : #initialization }
-RMDCellRenderer >> initialize [
+RMDPatchRenderer >> initialize [
 	super initialize.
 	borderColor := self defaultBorderColor.
 	borderWidth := self defaultBorderWidth
 ]
 
 { #category : #testing }
-RMDCellRenderer >> isCellRenderer [
+RMDPatchRenderer >> isPatchRenderer [
 	^ true
 ]
