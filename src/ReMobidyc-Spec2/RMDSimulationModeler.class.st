@@ -62,7 +62,25 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 						parent: #Examples;
 						label: 'goat and wolf';
 						action: [ RMDSimulationModeler goatAndWolf openWithSpec ];
-						help: 'A simple simulation of plants, herbivore, and carnivore.' ] ]
+						help: 'A simple simulation of plants, herbivore, and carnivore.' ].
+			(aBuilder item: #ReMobidycSystem)
+				parent: 'ReMobidyc';
+				label: 'System';
+				with: [ 
+					(aBuilder item: #Upgrade)
+						parent: #ReMobidycSystem;
+						label: 'Upgrade from the official repository';
+						action: [ 
+							EpMonitor disableDuring: [ 
+									Metacello new
+										onConflictUseLoaded;
+										onWarningLog;
+										repository: 'github://ReMobidyc/ReMobidyc:main/';
+										baseline: 'ReMobidyc';
+										get;
+										load ] ];
+						help:
+						'Upgrade the re:mobidyc from the official github repository.' ] ]
 ]
 
 { #category : #'instance creation' }
