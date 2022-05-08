@@ -568,7 +568,6 @@ RMDGrammar >> expr1 [
 	^ literal / ('-' asPParser trimBlanks optional
 	   ,
 		   (self parenExpression / self agentDirective
-		    / self uniformDistribution / self normalDistribution
 		    / self apply / self attributeVariable / self placeholder
 		    / self utilityVariable) ==> [ :pair | 
 	   pair first
@@ -631,8 +630,15 @@ RMDGrammar >> expr5 [
 ]
 
 { #category : #'parsers-expressions' }
+RMDGrammar >> expr6 [
+
+	^ self uniformDistribution / self normalDistribution
+	  / self gammaDistribution / self expr5
+]
+
+{ #category : #'parsers-expressions' }
 RMDGrammar >> expression [
-	^ self expr5
+	^ self expr6
 ]
 
 { #category : #'class access' }
@@ -643,6 +649,20 @@ RMDGrammar >> externalVariableNodeClass [
 { #category : #'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> gammaDistribution [
+	^ ('gamma' asPParser trimBlanks , self expr5
+		, 'scale' asPParser trimBlanks , self expr5)
+		==>
+			[ :quad | self gammaDistributionNodeClass shape: quad second scale: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> gammaDistributionNodeClass [
+
+	^ RMDGammaDistributionNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -794,10 +814,10 @@ RMDGrammar >> newDirectiveNodeClass [
 	^ RMDNewDirectiveNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : #'parsers-expressions' }
 RMDGrammar >> normalDistribution [
-	^ ('normal' asPParser trimBlanks , literal
-		, 'sigma' asPParser trimBlanks , literal)
+	^ ('normal' asPParser trimBlanks , self expr5
+		, 'sigma' asPParser trimBlanks , self expr5)
 		==>
 			[ :quad | self normalDistributionNodeClass mean: quad second sigma: quad fourth ]
 ]
@@ -1154,12 +1174,12 @@ RMDGrammar >> unaryMinusNodeClass [
 	^ RMDUnaryMinusNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : #'parsers-expressions' }
 RMDGrammar >> uniformDistribution [
-	^ ('uniform' asPParser trimBlanks , literal
-		, 'to' asPParser trimBlanks , literal)
-		==>
-			[ :quad | self uniformDistributionNodeClass from: quad second to: quad fourth ]
+
+	^ 'uniform' asPParser trimBlanks , self expr5
+	  , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	  self uniformDistributionNodeClass from: quad second to: quad fourth ]
 ]
 
 { #category : #'class access' }

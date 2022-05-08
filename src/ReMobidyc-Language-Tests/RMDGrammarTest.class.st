@@ -601,9 +601,9 @@ RMDGrammarTest >> testExpr1 [
 	expr1 := grammar uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
 	self assert: expr1 isUniformDistributionNode.
 	self
-		assert: expr1 fromLiteral
+		assert: expr1 fromExpression
 		equals: (grammar literal parse: '-10cm').
-	self assert: expr1 toLiteral equals: (grammar literal parse: '2[cm]').
+	self assert: expr1 toExpression equals: (grammar literal parse: '2[cm]').
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
@@ -719,6 +719,21 @@ RMDGrammarTest >> testExpression [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testGammaDistribution [
+
+	| node |
+	node := grammar expression parse:
+		        'gamma 2.0[] scale 1[]'.
+	self assert: node isGammaDistributionNode.
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node scaleExpression
+		equals: (grammar expression parse: '1[]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testGuardedChoice [
 	| choice |
 	choice := grammar guardedChoice parse: '1 if x = 0, 2 if x = 1, 3'.
@@ -788,14 +803,15 @@ RMDGrammarTest >> testLiteral [
 RMDGrammarTest >> testNormalDistribution [
 
 	| node |
-	node := grammar normalDistribution parse: 'normal -10[m] sigma 2[cm]'.
+	node := grammar normalDistribution parse:
+		        'normal -10[m]+5[m] sigma 2[cm]'.
 	self assert: node isNormalDistributionNode.
 	self
-		assert: node meanLiteral
-		equals: (grammar literal parse: '-10[m]').
+		assert: node meanExpression
+		equals: (grammar expression parse: '-10[m]+5m').
 	self
-		assert: node sigmaLiteral
-		equals: (grammar literal parse: '2[cm]')
+		assert: node sigmaExpression
+		equals: (grammar expression parse: '2[cm]')
 ]
 
 { #category : #tests }
@@ -1005,13 +1021,17 @@ RMDGrammarTest >> testType [
 
 { #category : #tests }
 RMDGrammarTest >> testUniformDistribution [
+
 	| node |
-	node := grammar uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
+	node := grammar uniformDistribution parse:
+		        'uniform -10[cm]+5[m] to 2[m]'.
 	self assert: node isUniformDistributionNode.
 	self
-		assert: node fromLiteral
-		equals: (grammar literal parse: '-10cm').
-	self assert: node toLiteral equals: (grammar literal parse: '2[cm]')
+		assert: node fromExpression
+		equals: (grammar expression parse: '-10[cm]+5[m]').
+	self
+		assert: node toExpression
+		equals: (grammar expression parse: '2[cm]')
 ]
 
 { #category : #tests }

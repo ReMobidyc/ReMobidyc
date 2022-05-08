@@ -173,6 +173,11 @@ RMDSyntaxNode >> isFractionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isGammaDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isGreaterOrEqualNode [
 	^ false
 ]

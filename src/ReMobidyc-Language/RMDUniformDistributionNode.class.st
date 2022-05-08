@@ -2,47 +2,48 @@ Class {
 	#name : #RMDUniformDistributionNode,
 	#superclass : #RMDRandomNode,
 	#instVars : [
-		'fromLiteral',
-		'toLiteral'
+		'fromExpression',
+		'toExpression'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
-RMDUniformDistributionNode class >> from: aRMDLiteral to: anotherRMDLiteral [
+RMDUniformDistributionNode class >> from: aRMDExpressionNode to: anotherRMDExpressionNode [
+
 	^ self new
-		fromLiteral: aRMDLiteral;
-		toLiteral: anotherRMDLiteral;
-		yourself
+		  fromExpression: aRMDExpressionNode;
+		  toExpression: anotherRMDExpressionNode;
+		  yourself
 ]
 
 { #category : #comparing }
 RMDUniformDistributionNode >> = anObject [
 	^ self class = anObject class
-		and: [ fromLiteral = anObject fromLiteral
-				and: [ toLiteral = anObject toLiteral ] ]
+		and: [ fromExpression = anObject fromExpression
+				and: [ toExpression = anObject toExpression ] ]
 ]
 
 { #category : #enumerating }
 RMDUniformDistributionNode >> childrenDo: aBlock [
 	aBlock
-		value: fromLiteral;
-		value: toLiteral
+		value: fromExpression;
+		value: toExpression
 ]
 
 { #category : #accessing }
-RMDUniformDistributionNode >> fromLiteral [
-	^ fromLiteral
+RMDUniformDistributionNode >> fromExpression [
+	^ fromExpression
 ]
 
 { #category : #accessing }
-RMDUniformDistributionNode >> fromLiteral: aRMDLiteralNode [
-	fromLiteral := aRMDLiteralNode
+RMDUniformDistributionNode >> fromExpression: aRMDExpressionNode [
+	fromExpression := aRMDExpressionNode
 ]
 
 { #category : #comparing }
 RMDUniformDistributionNode >> hash [
-	^ (self class hash bitXor: fromLiteral hash) bitXor: toLiteral hash
+	^ (self class hash bitXor: fromExpression hash) bitXor: toExpression hash
 ]
 
 { #category : #testing }
@@ -52,53 +53,71 @@ RMDUniformDistributionNode >> isUniformDistributionNode [
 
 { #category : #copying }
 RMDUniformDistributionNode >> postCopy [
-	fromLiteral := fromLiteral copy.
-	toLiteral := toLiteral copy
+	fromExpression := fromExpression copy.
+	toExpression := toExpression copy
 ]
 
 { #category : #accessing }
 RMDUniformDistributionNode >> precedence [
-	^ 1
+	^ 10
 ]
 
 { #category : #printing }
 RMDUniformDistributionNode >> printOn: aStream [
+
 	aStream nextPutAll: 'uniform '.
-	fromLiteral printOn: aStream.
+	self precedence <= fromExpression precedence ifTrue: [ 
+		aStream nextPut: $( ].
+	fromExpression printOn: aStream.
+	self precedence <= fromExpression precedence ifTrue: [ 
+		aStream nextPut: $) ].
 	aStream nextPutAll: ' to '.
-	toLiteral printOn: aStream
+	self precedence <= toExpression precedence ifTrue: [ 
+		aStream nextPut: $( ].
+	toExpression printOn: aStream.
+	self precedence <= toExpression precedence ifTrue: [ 
+		aStream nextPut: $) ]
 ]
 
 { #category : #printing }
 RMDUniformDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'uniform '.
-	fromLiteral
+	self precedence <= fromExpression precedence ifTrue: [ 
+		aStream nextPut: $( ].
+	fromExpression
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
+	self precedence <= fromExpression precedence ifTrue: [ 
+		aStream nextPut: $) ].
 	aStream nextPutAll: ' to '.
-	toLiteral
+	self precedence <= toExpression precedence ifTrue: [ 
+		aStream nextPut: $( ].
+	toExpression
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	self precedence <= toExpression precedence ifTrue: [ 
+		aStream nextPut: $) ].
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }
 RMDUniformDistributionNode >> replaceChildren: aDictionary [
-	fromLiteral := fromLiteral copyReplace: aDictionary.
-	toLiteral := toLiteral copyReplace: aDictionary
+	fromExpression := fromExpression copyReplace: aDictionary.
+	toExpression := toExpression copyReplace: aDictionary
 ]
 
 { #category : #accessing }
-RMDUniformDistributionNode >> toLiteral [
-	^ toLiteral
+RMDUniformDistributionNode >> toExpression [
+	^ toExpression
 ]
 
 { #category : #accessing }
-RMDUniformDistributionNode >> toLiteral: aRMDLiteralNode [
-	toLiteral := aRMDLiteralNode
+RMDUniformDistributionNode >> toExpression: aRMDLiteralNode [
+	toExpression := aRMDLiteralNode
 ]
