@@ -47,6 +47,7 @@ The following pre-built packages are available.
 Documentation is still under construction. Please see the following "cheatsheats".
 
 * [Expressions](docs/cheatsheets/expressions.md)
+* [Units](docs/cheatsheets/units.md)
 
 ## Examples
 
