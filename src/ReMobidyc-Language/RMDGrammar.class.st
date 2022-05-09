@@ -1216,11 +1216,12 @@ RMDGrammar >> unitFactor [
 
 { #category : #'parsers-units' }
 RMDGrammar >> unitSymbol [
-	^ #letter asPParser plus flatten
-		==> [ :symbol | 
-			RMDUnitSymbol
-				at: symbol
-				ifAbsent: [ PP2Failure message: 'Unknown unit symbol: ' , symbol ] ]
+
+	^ (#letter asPParser plus , #digit asPParser optional) flatten
+	  ==> [ :symbol | 
+		  RMDUnitSymbol
+			  at: symbol
+			  ifAbsent: [ PP2Failure message: 'Unknown unit symbol: ' , symbol ] ]
 ]
 
 { #category : #'parsers-units' }
