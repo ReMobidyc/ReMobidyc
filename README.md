@@ -44,7 +44,7 @@ The following pre-built packages are available.
 
 ## Modeling Language
 
-Documentation is still under construction. Please see the following "cheatsheats".
+Documentation is still under construction. Please see the following "cheatsheets".
 
 * [Expressions](docs/cheatsheets/expressions.md)
 * [Units](docs/cheatsheets/units.md)
