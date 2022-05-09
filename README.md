@@ -42,6 +42,12 @@ The following pre-built packages are available.
 * [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-mac-x64.dmg)
 * [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-win64.zip)
 
+## Modeling Language
+
+Documentation is still under construction. Please see the following "cheatsheats".
+
+* [Expressions](docs/cheatsheets/expressions.md)
+
 ## Examples
 
 ### 1. Simplified SugarScape
