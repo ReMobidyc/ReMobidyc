@@ -81,7 +81,7 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'nm' scale: 1.0e-9 siUnit: m)
 		value: #('nanom' 'nanometer').
 	register
-		value: (self newSymbol: 'pm' scale: 1.0e-9 siUnit: m)
+		value: (self newSymbol: 'pm' scale: 1.0e-12 siUnit: m)
 		value: #('picom' 'picometer').
 	register
 		value: (self newSymbol: 'mi' scale: 1609.344 siUnit: m)
@@ -105,10 +105,10 @@ RMDUnit class >> initialize [
 		value: #().
 	register
 		value: (self newSymbol: 'mg' scale: 1.0e-6 siUnit: kg)
-		value: #().
+		value: #('millig' 'milligram').
 	register
 		value: (self newSymbol: 'µg' scale: 1.0e-9 siUnit: kg)
-		value: #().
+		value: #('microg' 'microgram').
 	register
 		value: (self newSymbol: 'ng' scale: 1.0e-12 siUnit: kg)
 		value: #('nanog' 'nanogram').
@@ -210,7 +210,7 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'dL' scale: 1.0e-6 siUnit: m3)
 		value: #(dl dℓ mL mℓ '㎖').
 	register
-		value: (self newSymbol: 'µL' scale: 1.0e-6 siUnit: m3)
+		value: (self newSymbol: 'µL' scale: 1.0e-9 siUnit: m3)
 		value: #(µl µℓ).
 	"force"
 	register

@@ -61,7 +61,7 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 					(aBuilder item: #GoatAndWolf)
 						parent: #Examples;
 						label: 'goat and wolf';
-						action: [ RMDSimulationModeler goatAndWolf openWithSpec ];
+						action: [ RMDSimulationModeler goatAndWolf open ];
 						help: 'A simple simulation of plants, herbivore, and carnivore.' ].
 			(aBuilder item: #ReMobidycSystem)
 				parent: 'ReMobidyc';
