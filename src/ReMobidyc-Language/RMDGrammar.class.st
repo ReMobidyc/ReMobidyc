@@ -491,6 +491,12 @@ RMDGrammar >> conjunctionNodeClass [
 	^ RMDConjunctionNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> deUnitExpressionNode [
+
+	^ RMDDeUnitExpressionNode
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> definition [
 	^ self attributeDefinition
@@ -554,6 +560,12 @@ RMDGrammar >> distanceDirective [
 			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> enUnitExpressionNode [
+
+	^ RMDEnUnitExpressionNode
+]
+
 { #category : #units }
 RMDGrammar >> energyUnits [
 	^ {('J' -> #(1.0 nil 'J')).
@@ -565,14 +577,31 @@ RMDGrammar >> energyUnits [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
 
-	^ literal / ('-' asPParser trimBlanks optional
-	   ,
-		   (self parenExpression / self agentDirective
-		    / self apply / self attributeVariable / self placeholder
-		    / self utilityVariable) ==> [ :pair | 
-	   pair first
-		   ifNil: [ pair second ]
-		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
+	^ ($( asPParser trimBlanks , self unit , $) asPParser trimBlanks
+	   ==> #second) optional
+	  , (literal / ('-' asPParser trimBlanks optional
+		    , (self parenExpression / self agentDirective / self apply
+			     / self attributeVariable / self placeholder
+			     / self utilityVariable) ==> [ :pair | 
+		    pair first
+			    ifNil: [ pair second ]
+			    ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ]))
+	  , ($[ asPParser trimBlanks , self unit , $] asPParser trimBlanks
+		   ==> #second) optional ==> [ :triple | 
+	  | expr |
+	  expr := triple second.
+	  triple first
+		  ifNil: [ 
+			  triple third
+				  ifNil: [ expr ]
+				  ifNotNil: [ :enUnit | 
+				  self enUnitExpressionNode expression: expr unit: enUnit ] ]
+		  ifNotNil: [ :deUnit | 
+			  triple third
+				  ifNil: [ 
+				  self deUnitExpressionNode expression: expr unit: deUnit ]
+				  ifNotNil: [ :enunit | 
+				  PP2Failure message: 'ambiguous unit conversion' ] ] ]
 ]
 
 { #category : #'parsers-expressions' }
