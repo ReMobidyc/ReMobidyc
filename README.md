@@ -38,9 +38,10 @@ EpMonitor disableDuring: [
 
 The following pre-built packages are available.
 
-* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobodyc-mac-arm64.dmg)
-* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-mac-x64.dmg)
-* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-2/remobidyc-win64.zip)
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobodyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-mac-x64.dmg)
+* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-linux-x64.zip)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-win-x64.zip)
 
 ## Modeling Language
 
