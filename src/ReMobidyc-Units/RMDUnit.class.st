@@ -38,6 +38,12 @@ RMDUnit class >> day [
 ]
 
 { #category : #constants }
+RMDUnit class >> fahrenheit [
+
+	^ self at: 'DegreeF'
+]
+
+{ #category : #constants }
 RMDUnit class >> fg [
 	^ self at: 'fg'
 ]
@@ -49,292 +55,296 @@ RMDUnit class >> hour [
 
 { #category : #'class initialization' }
 RMDUnit class >> initialize [
+
 	<script: 'RMDProportionalUnitSymbol initialize'>
 	| register m m2 m3 kg s kelvin n pa j w radian |
 	KnownUnits ifNil: [ KnownUnits := Dictionary new ].
 	KnownUnits removeAll.
 	KnownUnits at: '' put: RMDCompoundUnit noDimension.
 	register := [ :unit :variants | 
-	KnownUnits at: unit symbol put: unit.
-	variants do: [ :symbol | KnownUnits at: symbol asString put: unit ] ].
+	            KnownUnits at: unit symbol put: unit.
+	            variants do: [ :symbol | 
+		            KnownUnits at: symbol asString put: unit ] ].
 	"length"
-	register value: (m := self newSISymbol: 'm') value: #().
+	register value: (m := self newSISymbol: 'm') value: #(  ).
 	register
 		value: (self newSymbol: 'Mm' scale: 1.0e6 siUnit: m)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'km' scale: 1.0e3 siUnit: m)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'dm' scale: 1.0e-1 siUnit: m)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'cm' scale: 1.0e-2 siUnit: m)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'mm' scale: 1.0e-3 siUnit: m)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'µm' scale: 1.0e-6 siUnit: m)
-		value: #('microm' 'micrometer').
+		value: #( 'microm' 'micrometer' ).
 	register
 		value: (self newSymbol: 'nm' scale: 1.0e-9 siUnit: m)
-		value: #('nanom' 'nanometer').
+		value: #( 'nanom' 'nanometer' ).
 	register
 		value: (self newSymbol: 'pm' scale: 1.0e-12 siUnit: m)
-		value: #('picom' 'picometer').
+		value: #( 'picom' 'picometer' ).
 	register
 		value: (self newSymbol: 'mi' scale: 1609.344 siUnit: m)
-		value: #(mile miles).
+		value: #( mile miles ).
 	register
 		value: (self newSymbol: 'yd' scale: 0.9144 siUnit: m)
-		value: #(yard yards).
+		value: #( yard yards ).
 	register
 		value: (self newSymbol: 'ft' scale: 0.3048 siUnit: m)
-		value: #(feet foot).
+		value: #( feet foot ).
 	register
 		value: (self newSymbol: 'in' scale: 0.0254 siUnit: m)
-		value: #(inch inches).
+		value: #( inch inches ).
 	"mass"
-	register value: (kg := self newSISymbol: 'kg') value: #().
+	register value: (kg := self newSISymbol: 'kg') value: #(  ).
 	register
 		value: (self newSymbol: 't' scale: 1.0e3 siUnit: kg)
-		value: #(Mg).
+		value: #( Mg ).
 	register
 		value: (self newSymbol: 'g' scale: 1.0e-3 siUnit: kg)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'mg' scale: 1.0e-6 siUnit: kg)
-		value: #('millig' 'milligram').
+		value: #( 'millig' 'milligram' ).
 	register
 		value: (self newSymbol: 'µg' scale: 1.0e-9 siUnit: kg)
-		value: #('microg' 'microgram').
+		value: #( 'microg' 'microgram' ).
 	register
 		value: (self newSymbol: 'ng' scale: 1.0e-12 siUnit: kg)
-		value: #('nanog' 'nanogram').
+		value: #( 'nanog' 'nanogram' ).
 	register
 		value: (self newSymbol: 'pg' scale: 1.0e-15 siUnit: kg)
-		value: #('picog' 'picogram').
+		value: #( 'picog' 'picogram' ).
 	register
 		value: (self newSymbol: 'fg' scale: 1.0e-18 siUnit: kg)
-		value: #('femtog' 'femtogram').
+		value: #( 'femtog' 'femtogram' ).
 	register
 		value: (self newSymbol: 'lb' scale: 0.45359237 siUnit: kg)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'oz' scale: 0.028349523125 siUnit: kg)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'gr' scale: 0.00006479891 siUnit: kg)
-		value: #().
+		value: #(  ).
 	"time"
-	register value: (s := self newSISymbol: 's') value: #(sec secs s ss).
+	register
+		value: (s := self newSISymbol: 's')
+		value: #( sec secs s ss ).
 	register
 		value: (self newSymbol: 'day' scale: 86400.0 siUnit: s)
-		value: #('day' 'days').
+		value: #( 'day' 'days' ).
 	register
 		value: (self newSymbol: 'h' scale: 3600.0 siUnit: s)
-		value: #('hour' 'hours').
+		value: #( 'hour' 'hours' ).
 	register
 		value: (self newSymbol: 'min' scale: 60.0 siUnit: s)
-		value: #('mins' 'minute' 'minutes').
+		value: #( 'mins' 'minute' 'minutes' ).
 	register
 		value: (self newSymbol: 'ms' scale: 1.0e-3 siUnit: s)
-		value: #('msec').
+		value: #( 'msec' ).
 	register
 		value: (self newSymbol: 'µs' scale: 1.0e-6 siUnit: s)
-		value: #('µsec' 'micros' 'micross').
+		value: #( 'µsec' 'micros' 'micross' ).
 	register
 		value: (self newSymbol: 'week' scale: 604800.0 siUnit: s)
-		value: #('w' 'weeks').
+		value: #( 'w' 'weeks' ).
 	register
 		value: (self newSymbol: 'month' scale: 2592000.0 siUnit: s)
-		value: #('mo' 'months' 'mo30' 'month30' 'months30').
+		value: #( 'mo' 'months' 'mo30' 'month30' 'months30' ).
 	register
 		value: (self newSymbol: 'month31' scale: 2678400.0 siUnit: s)
-		value: #('mo31' 'months31').
+		value: #( 'mo31' 'months31' ).
 	register
 		value: (self newSymbol: 'year' scale: 31557600.0 siUnit: s)
-		value: #('y' 'yr' 'a' 'years').
+		value: #( 'y' 'yr' 'a' 'years' ).
 	"temperature"
-	register value: (kelvin := self newSISymbol: 'K') value: #(K 'Kelvin').
 	register
-		value:
-			(self
-				newSymbol: '°C'
-				fromSI: [ :t | t - 273.152519 ]
-				toSI: [ :t | t + 273.152519 ]
-				siUnit: kelvin)
-		value: #('°C' '℃' 'DegreeC' 'Celsius').
+		value: (kelvin := self newSISymbol: 'K')
+		value: #( K 'Kelvin' ).
 	register
-		value:
-			(self
-				newSymbol: '°F'
-				fromSI: [ :t | t * 1.8 - 459.67 ]
-				toSI: [ :t | (t + 459.67) / 1.8 ]
-				siUnit: kelvin)
-		value: #('F' '℉' 'DegreeF' 'Fahrenheit').
+		value: (self newSISymbol: '°C')
+		value: #( '°C' '℃' 'DegreeC' 'Celsius' ).
+	register
+		value: (self newSISymbol: '°F')
+		value: #( 'F' '℉' 'DegreeF' 'Fahrenheit' ).
 	"area"
 	m2 := m * m.
 	KnownUnits at: 'm2' put: m2.
 	register
 		value: (self newSymbol: 'ac' scale: 4046.8564224 siUnit: m2)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'a' scale: 100.0 siUnit: m2)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'ha' scale: 1.0e4 siUnit: m2)
-		value: #().
+		value: #(  ).
 	"volume"
 	m3 := m2 * m.
 	register
 		value: (self newSymbol: 'GL' scale: 1.0e6 siUnit: m3)
-		value: #(Gl Gℓ).
+		value: #( Gl Gℓ ).
 	register
 		value: (self newSymbol: 'ML' scale: 1.0e3 siUnit: m3)
-		value: #(Ml Mℓ).
+		value: #( Ml Mℓ ).
 	register
 		value: (self newSymbol: 'kL' scale: 1.0 siUnit: m3)
-		value: #(kl kℓ '㎘').
+		value: #( kl kℓ '㎘' ).
 	register
 		value: (self newSymbol: 'hL' scale: 1.0e-1 siUnit: m3)
-		value: #(hl hℓ).
+		value: #( hl hℓ ).
 	register
 		value: (self newSymbol: 'daL' scale: 1.0e-2 siUnit: m3)
-		value: #(dal daℓ).
+		value: #( dal daℓ ).
 	register
 		value: (self newSymbol: 'L' scale: 1.0e-3 siUnit: m3)
-		value: #(l ℓ litre liter).
+		value: #( l ℓ litre liter ).
 	register
 		value: (self newSymbol: 'dL' scale: 1.0e-6 siUnit: m3)
-		value: #(dl dℓ mL mℓ '㎖').
+		value: #( dl dℓ mL mℓ '㎖' ).
 	register
 		value: (self newSymbol: 'µL' scale: 1.0e-9 siUnit: m3)
-		value: #(µl µℓ).
+		value: #( µl µℓ ).
 	"force"
 	register
-		value: (self newSymbol: 'N' scale: 1.0 siUnit: (n := kg * m / s / s))
-		value: #().
+		value:
+		(self newSymbol: 'N' scale: 1.0 siUnit: (n := kg * m / s / s))
+		value: #(  ).
 	register
 		value: (self newSymbol: 'kgf' scale: 9.8 siUnit: n)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'dyn' scale: 1.0e-5 siUnit: n)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'lbf' scale: 4.4482216152605 siUnit: n)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'pdl' scale: 0.13825495437 siUnit: n)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'sn' scale: 1.0e3 siUnit: n)
-		value: #().
+		value: #(  ).
 	"Pressure"
 	register
 		value: (self newSymbol: 'Pa' scale: 1.0 siUnit: (pa := n / m2))
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'daPa' scale: 1.0e1 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'hPa' scale: 1.0e2 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'kPa' scale: 1.0e3 siUnit: pa)
-		value: #('pz').
+		value: #( 'pz' ).
 	register
 		value: (self newSymbol: 'MPa' scale: 1.0e6 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'GPa' scale: 1.0e9 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'dPa' scale: 1.0e-1 siUnit: pa)
-		value: #('Ba' 'b').
+		value: #( 'Ba' 'b' ).
 	register
 		value: (self newSymbol: 'cPa' scale: 1.0e-2 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'mPa' scale: 1.0e-3 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'μPa' scale: 1.0e-6 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'at' scale: 98066.5 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'psi' scale: 6894.757 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'Torr' scale: 133.322 siUnit: pa)
-		value: #('mmHg').
+		value: #( 'mmHg' ).
 	register
 		value: (self newSymbol: 'atm' scale: 101325 siUnit: pa)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'bar' scale: 100000 siUnit: pa)
-		value: #().
+		value: #(  ).
 
 	"Energy"
 	register
 		value: (self newSymbol: 'J' scale: 1.0 siUnit: (j := n * m))
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'cal' scale: 4.184 siUnit: j)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'kcal' scale: 4.184e3 siUnit: j)
-		value: #().
+		value: #(  ).
 	"Power"
 	register
 		value: (self newSymbol: 'W' scale: 1.0 siUnit: (w := j / s))
-		value: #('㍗').
+		value: #( '㍗' ).
 	register
 		value: (self newSymbol: 'kW' scale: 1.0e3 siUnit: w)
-		value: #('㎾' '㌗').
+		value: #( '㎾' '㌗' ).
 	register
 		value: (self newSymbol: 'MW' scale: 1.0e6 siUnit: w)
-		value: #('㎿').
+		value: #( '㎿' ).
 	register
 		value: (self newSymbol: 'GW' scale: 1.0e9 siUnit: w)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'mW' scale: 1.0e-3 siUnit: w)
-		value: #('㎽').
+		value: #( '㎽' ).
 	register
 		value: (self newSymbol: 'μW' scale: 1.0e-6 siUnit: w)
-		value: #('㎼').
+		value: #( '㎼' ).
 	register
 		value: (self newSymbol: 'nW' scale: 1.0e-9 siUnit: w)
-		value: #('㎻').
+		value: #( '㎻' ).
 	register
 		value: (self newSymbol: 'pW' scale: 1.0e-12 siUnit: w)
-		value: #('㎺').
+		value: #( '㎺' ).
 	register
 		value: (self newSymbol: 'PS' scale: 735.5 siUnit: w)
-		value: #().
+		value: #(  ).
 	register
 		value: (self newSymbol: 'HP' scale: 745 siUnit: w)
-		value: #('BHP' '㏋').
+		value: #( 'BHP' '㏋' ).
 	"angle"
-	register value: (radian := self newSISymbol: 'rad') value: #('㎭').
+	register value: (radian := self newSISymbol: 'rad') value: #( '㎭' ).
 	register
-		value: (self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian)
-		value: #('degrees' '°').
+		value:
+		(self newSymbol: 'degree' scale: Float pi / 180.0 siUnit: radian)
+		value: #( 'degrees' '°' ).
 	"probability"
 	register
 		value: (self newSymbol: '%' scale: 1.0 - 2 siUnit: self noDimension)
-		value: #('percent').
+		value: #( 'percent' ).
 	"amount of substance"
-	register value: (self newSISymbol: 'mol') value: #('㏖').
+	register value: (self newSISymbol: 'mol') value: #( '㏖' )
 ]
 
 { #category : #constants }
 RMDUnit class >> kcal [
 	^ self at: 'kcal'
+]
+
+{ #category : #constants }
+RMDUnit class >> kelvin [
+
+	^ self at: 'Kelvin'
 ]
 
 { #category : #constants }
@@ -448,6 +458,12 @@ RMDUnit >> isLength [
 { #category : #testing }
 RMDUnit >> isProportional [
 	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+RMDUnit >> isTemperature [
+
+	^ false
 ]
 
 { #category : #accessing }
