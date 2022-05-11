@@ -691,8 +691,13 @@ RMDGrammar >> fractionNodeClass [
 { #category : #'parsers-atoms' }
 RMDGrammar >> fractionString [
 
-	^ (self decimalString
-	   , ($/ asPParser trimBlanks , self decimalString) optional) flatten
+	^ self decimalString / self pi
+	  ,
+		  ($/ asPParser trimBlanks flatten , (self decimalString / self pi))
+			  optional ==> [ :pair | 
+	  pair first , (pair second
+		   ifNotNil: [ :pair2 | pair2 first , pair2 second ]
+		   ifNil: [ '' ]) ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -1016,6 +1021,14 @@ RMDGrammar >> patchInitializer [
 { #category : #'class access' }
 RMDGrammar >> patchInitializerNodeClass [
 	^ RMDPatchInitializerNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> pi [
+
+	^ $- asPParser trimBlanks optional
+	  , ('π' asPParser / 'pi' asPParser) trimBlanks
+	  ==> [ :pair | (pair first ifNil: [ '' ] ifNotNil: [ '-' ]) , 'π' ]
 ]
 
 { #category : #'parsers-atoms' }

@@ -40,8 +40,10 @@ RMDLiteralNode >> computeNumeric [
 			   ifTrue: [ 
 				   | index |
 				   index := literal indexOf: $/.
-				   (literal copyFrom: 1 to: index - 1) trim asNumber
-				   / (literal copyFrom: index + 1 to: literal size) trim asNumber ]
+				   (self numericFrom: (literal copyFrom: 1 to: index - 1) trim)
+				   /
+				   (self numericFrom:
+					    (literal copyFrom: index + 1 to: literal size) trim) ]
 			   ifFalse: [ literal asNumber ])
 ]
 
@@ -68,6 +70,25 @@ RMDLiteralNode >> literal: aString [
 { #category : #accessing }
 RMDLiteralNode >> numeric [
 	^ numeric ifNil: [ numeric := self computeNumeric ]
+]
+
+{ #category : #private }
+RMDLiteralNode >> numericFrom: aString [
+
+	| sign decimal |
+	aString first = $-
+		ifTrue: [ 
+			sign := -1.
+			decimal := aString copyWithoutFirst trim ]
+		ifFalse: [ 
+			sign := 1.
+			decimal := aString trim ].
+	^ sign * (decimal first isDigit
+		   ifTrue: [ decimal asNumber ]
+		   ifFalse: [ 
+			   decimal = 'π'
+				   ifTrue: [ Float pi ]
+				   ifFalse: [ (RMDUnresolvedReferenceError on: self) signal ] ])
 ]
 
 { #category : #copying }

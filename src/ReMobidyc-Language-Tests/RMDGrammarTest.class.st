@@ -833,7 +833,13 @@ RMDGrammarTest >> testLiteral [
 	literal := grammar literal parse: '3[m]'.
 	self assert: literal literal equals: '3'.
 	self assert: literal unit equals: (grammar type parse: '[m]').
-	self assert: literal numeric closeTo: 3
+	self assert: literal numeric closeTo: 3.
+	literal := grammar literal parse: '-pi/2[rad]'.
+	self assert: literal literal equals: '-π/2'.
+	self assert: literal unit equals: (grammar type parse: '[rad]').
+	self assert: literal numeric closeTo: Float pi / -2.0.
+	
+	
 ]
 
 { #category : #tests }
