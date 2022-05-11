@@ -491,6 +491,19 @@ RMDGrammar >> conjunctionNodeClass [
 	^ RMDConjunctionNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> deUnitExpressionNode [
+
+	^ RMDDeUnitExpressionNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> decimalString [
+
+	^ ($- asPParser optional , #digit asPParser plus
+	   , ($. asPParser , #digit asPParser plus) optional) flatten
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> definition [
 	^ self attributeDefinition
@@ -554,6 +567,12 @@ RMDGrammar >> distanceDirective [
 			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> enUnitExpressionNode [
+
+	^ RMDEnUnitExpressionNode
+]
+
 { #category : #units }
 RMDGrammar >> energyUnits [
 	^ {('J' -> #(1.0 nil 'J')).
@@ -565,14 +584,31 @@ RMDGrammar >> energyUnits [
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr1 [
 
-	^ literal / ('-' asPParser trimBlanks optional
-	   ,
-		   (self parenExpression / self agentDirective
-		    / self apply / self attributeVariable / self placeholder
-		    / self utilityVariable) ==> [ :pair | 
-	   pair first
-		   ifNil: [ pair second ]
-		   ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ])
+	^ ($( asPParser trimBlanks , self unit , $) asPParser trimBlanks
+	   ==> #second) optional
+	  , (literal / ('-' asPParser trimBlanks optional
+		    , (self parenExpression / self agentDirective / self apply
+			     / self attributeVariable / self placeholder
+			     / self utilityVariable) ==> [ :pair | 
+		    pair first
+			    ifNil: [ pair second ]
+			    ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ]))
+	  , ($[ asPParser trimBlanks , self unit , $] asPParser trimBlanks
+		   ==> #second) optional ==> [ :triple | 
+	  | expr |
+	  expr := triple second.
+	  triple first
+		  ifNil: [ 
+			  triple third
+				  ifNil: [ expr ]
+				  ifNotNil: [ :enUnit | 
+				  self enUnitExpressionNode expression: expr unit: enUnit ] ]
+		  ifNotNil: [ :deUnit | 
+			  triple third
+				  ifNil: [ 
+				  self deUnitExpressionNode expression: expr unit: deUnit ]
+				  ifNotNil: [ :enunit | 
+				  PP2Failure message: 'ambiguous unit conversion' ] ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -633,7 +669,8 @@ RMDGrammar >> expr5 [
 RMDGrammar >> expr6 [
 
 	^ self uniformDistribution / self normalDistribution
-	  / self gammaDistribution / self expr5
+	  / self gammaDistribution / self logLogisticDistribution
+	  / self expr5
 ]
 
 { #category : #'parsers-expressions' }
@@ -649,6 +686,18 @@ RMDGrammar >> externalVariableNodeClass [
 { #category : #'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> fractionString [
+
+	^ self decimalString / self pi
+	  ,
+		  ($/ asPParser trimBlanks flatten , (self decimalString / self pi))
+			  optional ==> [ :pair | 
+	  pair first , (pair second
+		   ifNotNil: [ :pair2 | pair2 first , pair2 second ]
+		   ifNil: [ '' ]) ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -748,18 +797,33 @@ RMDGrammar >> lifeDirective [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> literal [
-	^ (($- asPParser optional , #digit asPParser plus
-		, ($. asPParser , #digit asPParser plus) optional) flatten
-		, self type optional)
-		==> [ :pair | 
-			self literalNodeClass
-				literal: pair first
-				unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
+
+	^ self fractionString , self type optional ==> [ :pair | 
+	  self literalNodeClass
+		  literal: pair first
+		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
 { #category : #'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> logLogisticDistribution [
+
+	^ ('loglogistic' asPParser / 'fisk' asPParser) trimBlanks
+	  , self expr5 , 'shape' asPParser trimBlanks , self expr5
+	  ==> [ :quad | 
+		  self logLogisticDistributionNodeClass
+			  scale: quad second
+			  shape: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> logLogisticDistributionNodeClass [
+
+	^ RMDLogLogisticDistributionNode
 ]
 
 { #category : #'parsers-definitions' }
@@ -957,6 +1021,14 @@ RMDGrammar >> patchInitializer [
 { #category : #'class access' }
 RMDGrammar >> patchInitializerNodeClass [
 	^ RMDPatchInitializerNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> pi [
+
+	^ $- asPParser trimBlanks optional
+	  , ('π' asPParser / 'pi' asPParser) trimBlanks
+	  ==> [ :pair | (pair first ifNil: [ '' ] ifNotNil: [ '-' ]) , 'π' ]
 ]
 
 { #category : #'parsers-atoms' }

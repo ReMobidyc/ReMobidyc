@@ -495,6 +495,26 @@ RMDGrammarTest >> testBinaryRelation [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testCastingExpression [
+
+	| node |
+	node := grammar expression end parse: 'x [m]'.
+	self assert: node isEnUnitExpressionNode.
+	self
+		assert: node expression
+		equals: (grammar expression end parse: 'x').
+	self assert: node unit equals: RMDUnit m.
+	node := grammar expression end parse: '(m) x'.
+	self assert: node isDeUnitExpressionNode.
+	self
+		assert: node expression
+		equals: (grammar expression end parse: 'x').
+	self assert: node unit equals: RMDUnit m.
+	node := grammar expression end parse: '(m)x[m]'.
+	self assert: node isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testColor [
 
 	| color |
@@ -581,6 +601,7 @@ RMDGrammarTest >> testCondition [
 
 { #category : #tests }
 RMDGrammarTest >> testExpr1 [
+
 	| expr1 |
 	expr1 := grammar expr1 parse: 'x'.
 	self assert: expr1 isUtilityVariableNode.
@@ -603,20 +624,36 @@ RMDGrammarTest >> testExpr1 [
 	self
 		assert: expr1 fromExpression
 		equals: (grammar literal parse: '-10cm').
-	self assert: expr1 toExpression equals: (grammar literal parse: '2[cm]').
+	self
+		assert: expr1 toExpression
+		equals: (grammar literal parse: '2[cm]').
 	expr1 := grammar expr1 parse: 'f(x)'.
 	self assert: expr1 isApplyNode.
 	self assert: expr1 function equals: 'f'.
 	self
 		assert: expr1 arguments
-		equals: {(RMDUtilityVariableNode identifier: 'x')}.
+		equals: { (RMDUtilityVariableNode identifier: 'x') }.
 	expr1 := grammar expr1 parse: '1[m]'.
 	self assert: expr1 isLiteralNode.
 	self assert: expr1 numeric closeTo: 1.
 	expr1 := grammar expr1 parse: '1'.
 	self assert: expr1 isLiteralNode.
 	self assert: expr1 numeric closeTo: 1.
-	self assert: expr1 unit hasDimension not
+	self assert: expr1 unit hasDimension not.
+	expr1 := grammar expression end parse: 'x [m]'.
+	self assert: expr1 isEnUnitExpressionNode.
+	self
+		assert: expr1 expression
+		equals: (grammar expression end parse: 'x').
+	self assert: expr1 unit equals: RMDUnit m.
+	expr1 := grammar expression end parse: '(m) x'.
+	self assert: expr1 isDeUnitExpressionNode.
+	self
+		assert: expr1 expression
+		equals: (grammar expression end parse: 'x').
+	self assert: expr1 unit equals: RMDUnit m.
+	expr1 := grammar expression end parse: '(m)x[m]'.
+	self assert: expr1 isPetit2Failure
 ]
 
 { #category : #tests }
@@ -796,7 +833,35 @@ RMDGrammarTest >> testLiteral [
 	literal := grammar literal parse: '3[m]'.
 	self assert: literal literal equals: '3'.
 	self assert: literal unit equals: (grammar type parse: '[m]').
-	self assert: literal numeric closeTo: 3
+	self assert: literal numeric closeTo: 3.
+	literal := grammar literal parse: '-pi/2[rad]'.
+	self assert: literal literal equals: '-π/2'.
+	self assert: literal unit equals: (grammar type parse: '[rad]').
+	self assert: literal numeric closeTo: Float pi / -2.0.
+	
+	
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testLogLogisticDistribution [
+
+	| node |
+	node := grammar expression parse: 'loglogistic 2.0[] shape 1[]'.
+	self assert: node isLogLogisticDistributionNode.
+	self
+		assert: node scaleExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '1[]').
+	node := grammar expression parse: 'fisk 2.0[] shape 1[]'.
+	self assert: node isLogLogisticDistributionNode.
+	self
+		assert: node scaleExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '1[]')
 ]
 
 { #category : #tests }

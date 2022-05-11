@@ -21,6 +21,13 @@ RMDSIUnitSymbol >> isProportional [
 	^ true
 ]
 
+{ #category : #testing }
+RMDSIUnitSymbol >> isTemperature [
+
+	^ self == self class kelvin or: [ 
+		  self == self class fahrenheit or: [ self == self class celsius ] ]
+]
+
 { #category : #accessing }
 RMDSIUnitSymbol >> siUnit [
 	^ self

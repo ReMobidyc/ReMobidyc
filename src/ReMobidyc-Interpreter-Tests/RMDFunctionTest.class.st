@@ -40,7 +40,8 @@ RMDFunctionTest >> testLn [
 	self assert: (ln value: 0) equals: Float infinity negated.
 	self assert: (ln value: 1.0) closeTo: 0.0.
 	self assert: (ln value: Float e) closeTo: 1.0.
-	self assert: (ln value: 12.3) closeTo: 12.3 ln
+	self assert: (ln value: 12.3) closeTo: 12.3 ln.
+	self should: [ ln value: -1.0 ] raise: ArithmeticError
 ]
 
 { #category : #tests }
@@ -91,6 +92,17 @@ RMDFunctionTest >> testSin [
 	self assert: (f value: Float pi / 2) closeTo: 1.0.
 	self assert: (f value: Float pi) closeTo: 0.0.
 
+]
+
+{ #category : #tests }
+RMDFunctionTest >> testSqrt [
+
+	| sqrt |
+	sqrt := RMDFunction sqrt.
+	self assert: (sqrt value: 0) equals: 0.0.
+	self assert: (sqrt value: 1.0) closeTo: 1.0.
+	self assert: (sqrt value: 12.3 squared) closeTo: 12.3.
+	self should: [ sqrt value: -1.0 ] raise: ArithmeticError
 ]
 
 { #category : #tests }

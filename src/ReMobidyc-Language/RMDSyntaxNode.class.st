@@ -148,12 +148,24 @@ RMDSyntaxNode >> isConjunctionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDeUnitExpressionNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
 
 { #category : #testing }
 RMDSyntaxNode >> isDisjunctionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isEnUnitExpressionNode [
+
 	^ false
 ]
 
@@ -214,6 +226,11 @@ RMDSyntaxNode >> isLifeDirectiveNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isLiteralNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isLogLogisticDistributionNode [
 	^ false
 ]
 

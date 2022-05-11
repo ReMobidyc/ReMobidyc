@@ -35,7 +35,16 @@ RMDLiteralNode >> childrenDo: aBlock [
 
 { #category : #private }
 RMDLiteralNode >> computeNumeric [
-	^ unit toSI: literal asNumber
+
+	^ unit toSI: ((literal includes: $/)
+			   ifTrue: [ 
+				   | index |
+				   index := literal indexOf: $/.
+				   (self numericFrom: (literal copyFrom: 1 to: index - 1) trim)
+				   /
+				   (self numericFrom:
+					    (literal copyFrom: index + 1 to: literal size) trim) ]
+			   ifFalse: [ literal asNumber ])
 ]
 
 { #category : #comparing }
@@ -61,6 +70,25 @@ RMDLiteralNode >> literal: aString [
 { #category : #accessing }
 RMDLiteralNode >> numeric [
 	^ numeric ifNil: [ numeric := self computeNumeric ]
+]
+
+{ #category : #private }
+RMDLiteralNode >> numericFrom: aString [
+
+	| sign decimal |
+	aString first = $-
+		ifTrue: [ 
+			sign := -1.
+			decimal := aString copyWithoutFirst trim ]
+		ifFalse: [ 
+			sign := 1.
+			decimal := aString trim ].
+	^ sign * (decimal first isDigit
+		   ifTrue: [ decimal asNumber ]
+		   ifFalse: [ 
+			   decimal = 'π'
+				   ifTrue: [ Float pi ]
+				   ifFalse: [ (RMDUnresolvedReferenceError on: self) signal ] ])
 ]
 
 { #category : #copying }
