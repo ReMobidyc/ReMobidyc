@@ -636,6 +636,9 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRM
 				   subjectLifehistory: anArrayOfInteger
 				   definition: aRMDAnimatDefinitionNode)
 		  do: [ 
+			  context
+				  world: memory world
+				  definition: simulationModel worldDefinition.
 			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
@@ -684,6 +687,9 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger1 species: aR
 				   subjectLifehistory: anArrayOfInteger1
 				   definition: aRMDAnimatDefinitionNode1)
 		  do: [ 
+			  context
+				  world: memory world
+				  definition: simulationModel worldDefinition.
 			  context
 				  object: anArrayOfInteger2 last
 				  definition: aRMDAnimatDefinitionNode2.
