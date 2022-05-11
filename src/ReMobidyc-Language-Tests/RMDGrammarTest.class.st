@@ -837,6 +837,28 @@ RMDGrammarTest >> testLiteral [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testLogLogisticDistribution [
+
+	| node |
+	node := grammar expression parse: 'loglogistic 2.0[] shape 1[]'.
+	self assert: node isLogLogisticDistributionNode.
+	self
+		assert: node scaleExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '1[]').
+	node := grammar expression parse: 'fisk 2.0[] shape 1[]'.
+	self assert: node isLogLogisticDistributionNode.
+	self
+		assert: node scaleExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '1[]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testNormalDistribution [
 
 	| node |

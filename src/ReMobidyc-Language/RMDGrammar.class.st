@@ -669,7 +669,8 @@ RMDGrammar >> expr5 [
 RMDGrammar >> expr6 [
 
 	^ self uniformDistribution / self normalDistribution
-	  / self gammaDistribution / self expr5
+	  / self gammaDistribution / self logLogisticDistribution
+	  / self expr5
 ]
 
 { #category : #'parsers-expressions' }
@@ -801,6 +802,23 @@ RMDGrammar >> literal [
 { #category : #'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
+]
+
+{ #category : #'parsers-expressions' }
+RMDGrammar >> logLogisticDistribution [
+
+	^ ('loglogistic' asPParser / 'fisk' asPParser) trimBlanks
+	  , self expr5 , 'shape' asPParser trimBlanks , self expr5
+	  ==> [ :quad | 
+		  self logLogisticDistributionNodeClass
+			  scale: quad second
+			  shape: quad fourth ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> logLogisticDistributionNodeClass [
+
+	^ RMDLogLogisticDistributionNode
 ]
 
 { #category : #'parsers-definitions' }

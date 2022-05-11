@@ -230,6 +230,11 @@ RMDSyntaxNode >> isLiteralNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isLogLogisticDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isNegationNode [
 	^ false
 ]
