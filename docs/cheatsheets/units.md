@@ -58,13 +58,14 @@ The base uit is second [s].
 | `µs` | `µsec` `micros` `micross` | 10^-6 [s] |
 
 ## Temperature
-The base unit is Kelvin [K].
+Although SI defines the base unit be Kelvin [K], re:mobidyc handles Celsius [°C] and Fahrenheit [°F] as base units.
+The three units are handled as independent dimensions and no automatic conversions will be made.
 
 | symbol | alternatives | definition |
 | -----|------- | ----------- |
 | `K` | `K` `Kelvin` | |
-| `°C` | `°C` `℃` `DegreeC` `Celsius` | t + 273.152519 |
-| `°F` | `F` `℉` `DegreeF` `Fahrenheit` | (t + 459.67) / 1.8 |
+| `°C` | `°C` `℃` `DegreeC` `Celsius` | |
+| `°F` | `F` `℉` `DegreeF` `Fahrenheit` | |
 
 ## Angle
 The coherent derived unit is radian [rad] ([1]).
