@@ -6,26 +6,26 @@ Class {
 		'context',
 		'contextSemaphore'
 	],
-	#classVars : [
-		'StandardLibrary'
-	],
 	#category : #'ReMobidyc-Interpreter'
 }
 
 { #category : #'library access' }
 RMDAbstractInterpreter class >> standardLibrary [
 
-	^ StandardLibrary ifNil: [ 
-		  StandardLibrary := { 
-			                     ('min' -> RMDFunction min).
-			                     ('max' -> RMDFunction max).
-			                     ('mean' -> RMDFunction mean).
-			                     ('sum' -> RMDFunction sum).
-			                     ('sin' -> RMDFunction sin).
-			                     ('cos' -> RMDFunction cos).
-			                     ('abs' -> RMDFunction abs).
-			                     ('positive' -> RMDFunction positive) }
-			                     asDictionary ]
+	^ { 
+		  ('exp' -> RMDFunction exp).
+		  ('log' -> RMDFunction ln).
+		  ('ln' -> RMDFunction ln).
+		  ('power' -> RMDFunction power).
+		  ('sqrt' -> RMDFunction sqrt).
+		  ('min' -> RMDFunction min).
+		  ('max' -> RMDFunction max).
+		  ('mean' -> RMDFunction mean).
+		  ('sum' -> RMDFunction sum).
+		  ('sin' -> RMDFunction sin).
+		  ('cos' -> RMDFunction cos).
+		  ('abs' -> RMDFunction abs).
+		  ('positive' -> RMDFunction positive) } asDictionary
 ]
 
 { #category : #'accessing - definitions' }

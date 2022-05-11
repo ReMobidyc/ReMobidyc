@@ -17,5 +17,10 @@ RMDLnFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpre
 
 { #category : #accessing }
 RMDLnFunction >> value: aNumber [
-	^ aNumber ln
+
+	^ aNumber >= 0
+		  ifTrue: [ aNumber ln ]
+		  ifFalse: [ 
+			  ArithmeticError signal:
+				  'A non-negative number should be given to the logarithm function.' ]
 ]

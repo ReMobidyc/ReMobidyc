@@ -126,7 +126,7 @@ RMDCompoundUnit >> printOn: aStream [
 			numerators
 				do: [ :assoc | 
 					assoc key printOn: aStream.
-					assoc value > 1
+					assoc value ~= 1
 						ifTrue: [ aStream nextPut: $^.
 							assoc value printOn: aStream ] ]
 				separatedBy: [ aStream nextPut: $• ] ].
@@ -137,7 +137,7 @@ RMDCompoundUnit >> printOn: aStream [
 			denominators
 				do: [ :assoc | 
 					assoc key printOn: aStream.
-					assoc value < -1
+					assoc value ~= -1
 						ifTrue: [ aStream nextPut: $^.
 							assoc value abs printOn: aStream ] ]
 				separatedBy: [ aStream nextPut: $• ] ]

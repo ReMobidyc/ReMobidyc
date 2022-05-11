@@ -21,6 +21,7 @@ RMDFunction class >> at: aString [
 	aString = 'mean' ifTrue: [ ^ self mean ].
 	aString = 'min' ifTrue: [ ^ self min ].
 	aString = 'power' ifTrue: [ ^ self power ].
+	aString = 'sqrt' ifTrue: [ ^ self sqrt ].
 	aString = 'sin' ifTrue: [ ^ self sin ].
 	aString = 'sum' ifTrue: [ ^ self sum ].
 	aString = 'positive' ifTrue: [ ^ self positive ].
@@ -70,6 +71,11 @@ RMDFunction class >> power [
 { #category : #'typical instances' }
 RMDFunction class >> sin [
 	^ RMDSinFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> sqrt [
+	^ RMDSquareRootFunction new
 ]
 
 { #category : #'typical instances' }
