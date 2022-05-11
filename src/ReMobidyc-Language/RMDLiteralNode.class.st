@@ -35,7 +35,14 @@ RMDLiteralNode >> childrenDo: aBlock [
 
 { #category : #private }
 RMDLiteralNode >> computeNumeric [
-	^ unit toSI: literal asNumber
+
+	^ unit toSI: ((literal includes: $/)
+			   ifTrue: [ 
+				   | index |
+				   index := literal indexOf: $/.
+				   (literal copyFrom: 1 to: index - 1) trim asNumber
+				   / (literal copyFrom: index + 1 to: literal size) trim asNumber ]
+			   ifFalse: [ literal asNumber ])
 ]
 
 { #category : #comparing }

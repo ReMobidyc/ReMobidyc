@@ -497,6 +497,13 @@ RMDGrammar >> deUnitExpressionNode [
 	^ RMDDeUnitExpressionNode
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> decimalString [
+
+	^ ($- asPParser optional , #digit asPParser plus
+	   , ($. asPParser , #digit asPParser plus) optional) flatten
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> definition [
 	^ self attributeDefinition
@@ -680,6 +687,13 @@ RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
 ]
 
+{ #category : #'parsers-atoms' }
+RMDGrammar >> fractionString [
+
+	^ (self decimalString
+	   , ($/ asPParser trimBlanks , self decimalString) optional) flatten
+]
+
 { #category : #'parsers-expressions' }
 RMDGrammar >> gammaDistribution [
 	^ ('gamma' asPParser trimBlanks , self expr5
@@ -777,13 +791,11 @@ RMDGrammar >> lifeDirective [
 
 { #category : #'parsers-atoms' }
 RMDGrammar >> literal [
-	^ (($- asPParser optional , #digit asPParser plus
-		, ($. asPParser , #digit asPParser plus) optional) flatten
-		, self type optional)
-		==> [ :pair | 
-			self literalNodeClass
-				literal: pair first
-				unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
+
+	^ self fractionString , self type optional ==> [ :pair | 
+	  self literalNodeClass
+		  literal: pair first
+		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
 { #category : #'class access' }
