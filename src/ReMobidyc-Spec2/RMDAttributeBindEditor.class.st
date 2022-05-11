@@ -19,8 +19,8 @@ RMDAttributeBindEditor class >> actionDefinition: aRMDActionDefinitionNode excep
 		yourself
 ]
 
-{ #category : #specs }
-RMDAttributeBindEditor class >> defaultSpec [
+{ #category : #layout }
+RMDAttributeBindEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal

@@ -170,7 +170,7 @@ RMDTaskDefinitionBrowser >> addReplacement [
 					               actionDefinition: actionDefinition
 					               except:
 					               (taskDefinition attributeBinds collect:
-						                #placeholder)) openDialogWithSpec okAction: [ 
+						                #placeholder)) openDialog okAction: [ 
 					bindEditor attributeBindNode ifNotNil: [ :bindNode | 
 						taskDefinition attributeBinds:
 							(taskDefinition attributeBinds copyWith: bindNode).
@@ -225,7 +225,7 @@ RMDTaskDefinitionBrowser >> editReplacement [
 								               select: [ :bind | bind ~= oldBind ]
 								               thenCollect: #placeholder).
 					bindEditor attributeBindNode: oldBind.
-					bindEditor openDialogWithSpec okAction: [ 
+					bindEditor openDialog okAction: [ 
 						bindEditor attributeBindNode ifNotNil: [ :newBind | 
 							| index |
 							index := taskDefinition attributeBinds indexOf: oldBind.

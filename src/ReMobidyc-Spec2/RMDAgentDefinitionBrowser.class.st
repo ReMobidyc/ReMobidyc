@@ -115,23 +115,23 @@ RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> editAttribute [
-	attributeList selection selectedItem
-		ifNotNil: [ :originalAttributeNode | 
-			| newAttributeNode |
-			newAttributeNode := originalAttributeNode copy.
-			newAttributeNode asPresenter openDialogWithSpec
-				title: 'Edit attribute of ' , self agentName;
-				okAction: [ self
-						definitionDo: [ :definition | 
-							definition
-								attributeDeclarations:
-									((definition attributeDeclarations copyWithout: originalAttributeNode)
-										copyWith: newAttributeNode).
-							self
-								removeInitializerWithAttribute: originalAttributeNode
-									animat: animat;
-								addInitializerWithAttribute: newAttributeNode animat: animat.
-							self updateAttributeList ] ] ]
+
+	attributeList selection selectedItem ifNotNil: [ 
+		:originalAttributeNode | 
+		| newAttributeNode |
+		newAttributeNode := originalAttributeNode copy.
+		newAttributeNode asPresenter openDialog
+			title: 'Edit attribute of ' , self agentName;
+			okAction: [ 
+				self definitionDo: [ :definition | 
+						definition attributeDeclarations:
+								((definition attributeDeclarations copyWithout:
+										  originalAttributeNode) copyWith: newAttributeNode).
+						self
+							removeInitializerWithAttribute: originalAttributeNode
+							animat: animat;
+							addInitializerWithAttribute: newAttributeNode animat: animat.
+						self updateAttributeList ] ] ]
 ]
 
 { #category : #operations }
@@ -150,7 +150,7 @@ RMDAgentDefinitionBrowser >> editTask [
 				                           taskDefinition: oldTaskDefinition copy;
 				                           agentName: self agentName;
 				                           yourself.
-			actionDefinitionBrowser openDialogWithSpec okAction: [ 
+			actionDefinitionBrowser openDialog okAction: [ 
 				actionDefinitionBrowser taskDefinition ifNotNil: [ :taskDefinition | 
 					simulationModel
 						removeTaskDefinition: oldTaskDefinition ifAbsent: [  ];
