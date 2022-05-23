@@ -128,8 +128,8 @@ RMDInterpreter >> changeStage: animatString [
 		                    animatDefinitionAt: animatString
 		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
 	newIndividual := memory
-		                 addAnimat: animatDefinition
-		                 lifehistory: context subjectLifehistory.
+		                 stageAnimat: animatDefinition
+		                 with: context subject.
 	memory seedAt: newIndividual put: self nextSeed.
 	context
 		newIndividuals: { newIndividual }
@@ -354,8 +354,8 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 	newIndividuals := (1 to: anInteger) collect: [ :i | 
 		                  | id |
 		                  id := memory
-			                        addAnimat: animatDefinition
-			                        lifehistory: #(  ).
+			                        reproduceAnimat: animatDefinition
+			                        with: context subject.
 		                  memory seedAt: id put: self nextSeed.
 		                  id ].
 	context newIndividuals: newIndividuals definition: animatDefinition.
@@ -629,11 +629,11 @@ RMDInterpreter >> unknownDirectiveError: aString [
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRMDAnimatDefinitionNode do: aBlock [
+RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
-				   subjectLifehistory: anArrayOfInteger
+				   subject: anInteger
 				   definition: aRMDAnimatDefinitionNode)
 		  do: [ 
 			  context
@@ -680,18 +680,18 @@ RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger species: aRM
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anArrayOfInteger1 species: aRMDAnimatDefinitionNode1 object: anArrayOfInteger2 species: aRMDAnimatDefinitionNode2 do: aBlock [
+RMDInterpreter >> withActionContextWithIndividual: anInteger1 species: aRMDAnimatDefinitionNode1 object: anInteger2 species: aRMDAnimatDefinitionNode2 do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
-				   subjectLifehistory: anArrayOfInteger1
+				   subject: anInteger1
 				   definition: aRMDAnimatDefinitionNode1)
 		  do: [ 
 			  context
 				  world: memory world
 				  definition: simulationModel worldDefinition.
 			  context
-				  object: anArrayOfInteger2 last
+				  object: anInteger2
 				  definition: aRMDAnimatDefinitionNode2.
 			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 				  | here |

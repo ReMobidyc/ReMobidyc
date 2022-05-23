@@ -12,6 +12,8 @@ Class {
 		'valuesDirty',
 		'nextValuesDirty',
 		'nextAvailableSlot',
+		'stageLinks',
+		'reproductionLinks',
 		'world',
 		'animats',
 		'seeds',
@@ -26,26 +28,13 @@ Class {
 }
 
 { #category : #allocating }
-RMDMemory >> addAnimat: aRMDAnimatDefinitionNode lifehistory: anArrayOfInteger [
-
-	| individual animat |
-	self nextAvailableSlot: (individual := self nextAvailableSlot)
-		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
-	animat := aRMDAnimatDefinitionNode identifier.
-	(ins at: animat ifAbsentPut: [ Set new ]) add:
-		(anArrayOfInteger copyWith: individual).
-	^ individual
-]
-
-{ #category : #allocating }
 RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 
 	| individual animat |
 	self nextAvailableSlot: (individual := self nextAvailableSlot)
 		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
 	animat := aRMDAnimatDefinitionNode identifier.
-	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add:
-		(Array with: individual).
+	(animats at: animat ifAbsentPut: [ Set new: 1024 ]) add: individual.
 	^ individual
 ]
 
@@ -83,8 +72,8 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 { #category : #'accessing-individuals' }
 RMDMemory >> animatsOf: aString do: aBlock [
 
-	(animats at: aString ifAbsent: [ ^ self ]) asArray do: [ :ids | 
-		aBlock cull: ids last cull: ids]
+	(animats at: aString ifAbsent: [ ^ self ]) asArray do: [ :individual | 
+		aBlock cull: individual ]
 ]
 
 { #category : #accessing }
@@ -124,7 +113,7 @@ RMDMemory >> commitOuts [
 
 	animats keysAndValuesDo: [ :animatName :individuals | 
 		individuals asArray do: [ :individual | 
-			(outs includes: individual last) ifTrue: [ 
+			(outs includes: individual) ifTrue: [ 
 				individuals remove: individual ifAbsent: [  ] ] ] ].
 	outs removeAll
 ]
@@ -170,6 +159,8 @@ RMDMemory >> initialize [
 	patchSize := 0.
 	world := 1.
 	patch := nil.
+	stageLinks := Dictionary new.
+	reproductionLinks := Dictionary new.
 	animats := Dictionary new.
 	seeds := Dictionary new.
 	ins := Dictionary new.
@@ -248,6 +239,12 @@ RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> parentOf: anInteger [
+
+	^ reproductionLinks at: anInteger ifAbsent: [ nil ]
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> patch [
 	^ patch
 ]
@@ -279,7 +276,13 @@ RMDMemory >> patchesDo: aBlock [
 	self patchSize > 0 ifTrue: [ 
 		self patch to:
 		self patchSize * self xPatches * self yPatches + self patch - 1 by:
-		self patchSize do: [ :c | aBlock cull: c cull: (Array with: c) ] ]
+		self patchSize do: [ :c | aBlock cull: c ] ]
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> previousStageOf: anInteger [
+
+	^ stageLinks at: anInteger ifAbsent: [ nil ]
 ]
 
 { #category : #'accessing-storage' }
@@ -311,6 +314,18 @@ RMDMemory >> removeSeedAt: anInteger [
 		  ifAbsent: []
 ]
 
+{ #category : #allocating }
+RMDMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
+
+	| individual animat |
+	self nextAvailableSlot: (individual := self nextAvailableSlot)
+		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
+	animat := aRMDAnimatDefinitionNode identifier.
+	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
+	reproductionLinks at: individual put: anInteger.
+	^ individual
+]
+
 { #category : #'accessing-individuals' }
 RMDMemory >> seedAt: anInteger [
 
@@ -329,11 +344,24 @@ RMDMemory >> southOf: anInteger do: aBlock [
 		ifTrue: [ aBlock value: anInteger - (self patchSize * self xPatches) ]
 ]
 
+{ #category : #allocating }
+RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
+
+	| individual animat |
+	self nextAvailableSlot: (individual := self nextAvailableSlot)
+		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
+	animat := aRMDAnimatDefinitionNode identifier.
+	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
+	stageLinks at: individual put: anInteger.
+	^ individual
+]
+
 { #category : #timing }
 RMDMemory >> sunrise [
+
 	oldValues := time >= 1
-		ifTrue: [ self readValuesForTime: time - 1 ]
-		ifFalse: [ Dictionary new ].
+		             ifTrue: [ self readValuesForTime: time - 1 ]
+		             ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time.
 	nextValues := values copy.
 	nextDeltas := Dictionary new.
@@ -406,7 +434,7 @@ RMDMemory >> world [
 { #category : #'accessing-individuals' }
 RMDMemory >> worldDo: aBlock [
 
-	aBlock cull: world cull: { world }
+	aBlock cull: world
 ]
 
 { #category : #'accessing-storage' }

@@ -3,14 +3,12 @@ Extension { #name : #RMDDieDirectiveNodeTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDDieDirectiveNodeTest >> testEvalIn [
 
-	| aLifeHistory |
-	interpreter
-		individualsOf: aDef
-		do: [ :a :lifeHistory | aLifeHistory := lifeHistory ].
+	| individual |
+	interpreter individualsOf: aDef do: [ :i | individual := i ].
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.
 	interpreter
-		withActionContextWithIndividual: aLifeHistory
+		withActionContextWithIndividual: individual
 		species: aDef
 		do: [ RMDDieDirectiveNode new evalIn: interpreter ].
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.

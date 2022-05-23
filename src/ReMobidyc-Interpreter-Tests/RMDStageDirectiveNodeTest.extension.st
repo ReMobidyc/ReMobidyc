@@ -3,17 +3,13 @@ Extension { #name : #RMDStageDirectiveNodeTest }
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDStageDirectiveNodeTest >> testEvalIn [
 
-	| aLifeHistory bLifeHistory newBLifeHistory |
-	interpreter
-		individualsOf: aDef
-		do: [ :a :lifeHistory | aLifeHistory := lifeHistory ].
-	interpreter
-		individualsOf: bDef
-		do: [ :b :lifeHistory | bLifeHistory := lifeHistory ].
+	| individualA individualB newB |
+	interpreter individualsOf: aDef do: [ :a | individualA := a ].
+	interpreter individualsOf: bDef do: [ :b | individualB := b ].
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.
 	interpreter
-		withActionContextWithIndividual: aLifeHistory
+		withActionContextWithIndividual: individualA
 		species: aDef
 		do: [ 
 		(RMDStageDirectiveNode animatIdentifier: 'B') evalIn: interpreter ].
@@ -22,10 +18,12 @@ RMDStageDirectiveNodeTest >> testEvalIn [
 	interpreter tick.
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 0.
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 2.
-	interpreter individualsOf: bDef do: [ :b :lifeHistory | 
-		lifeHistory ~= bLifeHistory ifTrue: [ 
-			newBLifeHistory := lifeHistory ] ].
-	self assert: aLifeHistory size equals: 1.
-	self assert: newBLifeHistory size equals: 2.
-	self assert: newBLifeHistory first equals: aLifeHistory last
+	interpreter
+		individualsOf: bDef
+		do: [ :b | b ~= individualB ifTrue: [ newB := b ] ].
+	self assert: (interpreter memory previousStageOf: individualA) isNil.
+	self assert: (interpreter memory previousStageOf: individualB) isNil.
+	self
+		assert: (interpreter memory previousStageOf: newB)
+		equals: individualA
 ]

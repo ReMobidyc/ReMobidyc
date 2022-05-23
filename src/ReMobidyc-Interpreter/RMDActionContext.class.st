@@ -8,21 +8,10 @@ Class {
 		'object',
 		'objectDefinition',
 		'newDefinition',
-		'newIndividuals',
-		'subjectLifehistory'
+		'newIndividuals'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
-
-{ #category : #'instance creation' }
-RMDActionContext class >> subjectLifehistory: anArrayOfInteger definition: aRMDSpeciesDefinitionNode [
-
-	^ self new
-		  subject: anArrayOfInteger last
-		  definition: aRMDSpeciesDefinitionNode;
-		  subjectLifehistory: anArrayOfInteger;
-		  yourself
-]
 
 { #category : #accessing }
 RMDActionContext >> action [
@@ -117,18 +106,6 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aS
 { #category : #accessing }
 RMDActionContext >> objectDefinition [
 	^ objectDefinition
-]
-
-{ #category : #accessing }
-RMDActionContext >> subjectLifehistory [
-
-	^ subjectLifehistory
-]
-
-{ #category : #accessing }
-RMDActionContext >> subjectLifehistory: anArrayOfInteger [
-
-	subjectLifehistory := anArrayOfInteger
 ]
 
 { #category : #'utility access' }
