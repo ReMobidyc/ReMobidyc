@@ -5,9 +5,10 @@ Class {
 		'digitsPerDirectoryLevel',
 		'basePath',
 		'digitsForTime',
-		'stagesDirty',
 		'spaceDirty',
-		'allocationDirty'
+		'allocationDirty',
+		'stageLinksDirty',
+		'reproductionLinksDirty'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -41,12 +42,15 @@ RMDFileMemory >> basePath [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> basePath: aFileReference [
+
 	basePath := aFileReference
-		ensureCreateDirectory;
-		yourself.
+		            ensureCreateDirectory;
+		            yourself.
 	self
 		initializeSpace;
-		initializeAllocation
+		initializeAllocation;
+		initializeStageLinks;
+		initializeReproductionLinks
 ]
 
 { #category : #defaults }
@@ -99,9 +103,10 @@ RMDFileMemory >> initialize [
 	super initialize.
 	digitsForTime := self defaultDigitsForTime.
 	digitsPerDirectoryLevel := self defaultDigitsPerDirectoryLevel.
-	stagesDirty := false.
 	spaceDirty := false.
-	allocationDirty := false
+	allocationDirty := false.
+	stageLinksDirty := false.
+	reproductionLinksDirty := false
 ]
 
 { #category : #initialization }
@@ -113,6 +118,14 @@ RMDFileMemory >> initializeAllocation [
 ]
 
 { #category : #initialization }
+RMDFileMemory >> initializeReproductionLinks [
+
+	self readReproductionLinks ifNotNil: [ :links | 
+		reproductionLinks := links.
+		reproductionLinksDirty := false ]
+]
+
+{ #category : #initialization }
 RMDFileMemory >> initializeSpace [
 	self readSpace
 		at: 'patch' ifPresent: [ :v | patch := v ];
@@ -120,6 +133,14 @@ RMDFileMemory >> initializeSpace [
 		at: 'yPatches' ifPresent: [ :v | yPatches := v ];
 		at: 'patchSize' ifPresent: [ :v | patchSize := v ].
 	spaceDirty := false
+]
+
+{ #category : #initialization }
+RMDFileMemory >> initializeStageLinks [
+
+	self readStageLinks ifNotNil: [ :links | 
+		stageLinks := links.
+		stageLinksDirty := false ]
 ]
 
 { #category : #accessing }
@@ -181,11 +202,25 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 			whileTrue: [ csvStream next ].
 		csvStream atEnd ] whileFalse: [ 
 			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
-				vals
-					at: row first
-					put: (row copyWithoutFirst collect: [ :lifehistory | 
-							 (lifehistory substrings: '-') collect: #asInteger ]) ] ].
+				vals at: row first put: row copyWithoutFirst ] ].
 		^ vals ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> readReproductionLinks [
+
+	self reproductionLinksFile
+		ensureCreateFile;
+		readStreamDo: [ :stream | 
+			| params |
+			params := Dictionary new.
+			[ stream atEnd ] whileFalse: [ 
+					(stream nextLine truncate substrings: ',') ifNotEmpty: [ :pair | 
+							pair size = 2 ifTrue: [ 
+									params
+										at: pair first trim asInteger
+										put: pair second trim asInteger ] ] ].
+			^ params ]
 ]
 
 { #category : #'accessing-storage' }
@@ -223,6 +258,23 @@ RMDFileMemory >> readSpace [
 ]
 
 { #category : #'accessing-storage' }
+RMDFileMemory >> readStageLinks [
+
+	self stageLinksFile
+		ensureCreateFile;
+		readStreamDo: [ :stream | 
+			| params |
+			params := Dictionary new.
+			[ stream atEnd ] whileFalse: [ 
+					(stream nextLine truncate substrings: ',') ifNotEmpty: [ :pair | 
+							pair size = 2 ifTrue: [ 
+									params
+										at: pair first trim asInteger
+										put: pair second trim asInteger ] ] ].
+			^ params ]
+]
+
+{ #category : #'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
 	| ref |
 	ref := (self directoryForId: anInteger) / self valuesFileBasename.
@@ -243,6 +295,23 @@ RMDFileMemory >> readValuesForTime: anInteger [
 			^ vals ]
 ]
 
+{ #category : #allocating }
+RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
+
+	reproductionLinksDirty := true.
+	^ super reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> reproductionLinksFile [
+	^ self basePath / self stageLinksFileBasename
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> reproductionLinksFileBasename [
+	^ 'reproductionLinks.csv'
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> seedsFileBasename [
 	^ 'seeds.csv'
@@ -258,6 +327,23 @@ RMDFileMemory >> spaceFileBasename [
 	^ 'space.csv'
 ]
 
+{ #category : #allocating }
+RMDFileMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
+
+	stageLinksDirty := true.
+	^ super stageAnimat: aRMDAnimatDefinitionNode with: anInteger
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> stageLinksFile [
+	^ self basePath / self stageLinksFileBasename
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> stageLinksFileBasename [
+	^ 'stageLinks.csv'
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> stagesFile [
 	^ self basePath / self stagesFileBasename
@@ -270,13 +356,20 @@ RMDFileMemory >> stagesFileBasename [
 
 { #category : #timing }
 RMDFileMemory >> sunset [
+
 	super sunset.
-	spaceDirty
-		ifTrue: [ self writeSpace.
-			spaceDirty := false ].
-	allocationDirty
-		ifTrue: [ self writeAllocation.
-			allocationDirty := false ]
+	spaceDirty ifTrue: [ 
+		self writeSpace.
+		spaceDirty := false ].
+	allocationDirty ifTrue: [ 
+		self writeAllocation.
+		allocationDirty := false ].
+	stageLinksDirty ifTrue: [ 
+		self writeStageLinks.
+		stageLinksDirty := false ].
+	reproductionLinksDirty ifTrue: [ 
+		self writeReproductionLinks.
+		reproductionLinksDirty := false ]
 ]
 
 { #category : #'accessing-storage' }
@@ -306,14 +399,25 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 		writeStreamDo: [ :csvStream | 
 			aDictionary keysAndValuesDo: [ :animat :individuals | 
 					animat printOn: csvStream.
-					csvStream nextPut: $,.
-					individuals
-						do: [ :lifehistory | 
-							lifehistory
+					individuals ifNotEmpty: [ 
+							csvStream nextPut: $,.
+							individuals
 								do: [ :id | id printOn: csvStream ]
-								separatedBy: [ csvStream nextPut: $- ] ]
-						separatedBy: [ csvStream nextPut: $, ].
+								separatedBy: [ csvStream nextPut: $, ] ].
 					csvStream lf ] ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> writeReproductionLinks [
+
+	self reproductionLinksFile
+		ensureDelete;
+		writeStreamDo: [ :stream | 
+			reproductionLinks keysAndValuesDo: [ :key :value | 
+					key printOn: stream.
+					stream nextPut: $,.
+					value printOn: stream.
+					stream nextPut: Character lf ] ]
 ]
 
 { #category : #'accessing-storage' }
@@ -348,6 +452,19 @@ RMDFileMemory >> writeSpace [
 			stream nextPutAll: 'patchSize'.
 			patchSize storeOn: stream.
 			stream lf ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> writeStageLinks [
+
+	self stageLinksFile
+		ensureDelete;
+		writeStreamDo: [ :stream | 
+			stageLinks keysAndValuesDo: [ :key :value | 
+					key printOn: stream.
+					stream nextPut: $,.
+					value printOn: stream.
+					stream nextPut: Character lf ] ]
 ]
 
 { #category : #'accessing-storage' }
