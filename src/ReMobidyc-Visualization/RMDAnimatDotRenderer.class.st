@@ -74,5 +74,6 @@ RMDAnimatDotRenderer >> printOn: aStream [
 	diameter y printOn: aStream.
 	aStream nextPutAll: ' pixels '.
 	self printColorOn: aStream.
-	aStream nextPutAll: ' dot.'
+	aStream nextPutAll: ' dot.'.
+	aStream cr
 ]

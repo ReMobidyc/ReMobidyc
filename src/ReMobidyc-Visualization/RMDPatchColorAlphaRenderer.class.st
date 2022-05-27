@@ -41,5 +41,7 @@ RMDPatchColorAlphaRenderer >> printOn: aStream [
 	borderWidth asInteger printOn: aStream.
 	aStream nextPutAll: ' pixels '.
 	self printColor: borderColor on: aStream.
-	aStream nextPutAll: ' grids.'
+	aStream
+		nextPutAll: ' grids.';
+		cr
 ]

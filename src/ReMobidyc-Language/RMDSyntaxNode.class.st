@@ -68,12 +68,24 @@ RMDSyntaxNode >> isActionDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isActionsFileNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAdditionNode [
 	^ false
 ]
 
 { #category : #testing }
 RMDSyntaxNode >> isAgentDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAgentsFileNode [
+
 	^ false
 ]
 
@@ -296,6 +308,12 @@ RMDSyntaxNode >> isSimulationDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isSimulationFileNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSimulationTimeDefinitionNode [
 	^ false
 ]
@@ -326,6 +344,12 @@ RMDSyntaxNode >> isTaskDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isTasksFileNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isUnaryMinusNode [
 	^ false
 ]
@@ -342,6 +366,12 @@ RMDSyntaxNode >> isUtilityDefinitionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isUtilityVariableNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isVisualizationFileNode [
+
 	^ false
 ]
 

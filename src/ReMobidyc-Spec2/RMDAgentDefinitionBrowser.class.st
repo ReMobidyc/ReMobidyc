@@ -19,7 +19,7 @@ Class {
 		'attributeList',
 		'removeAttributeButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Components'
 }
 
 { #category : #layout }

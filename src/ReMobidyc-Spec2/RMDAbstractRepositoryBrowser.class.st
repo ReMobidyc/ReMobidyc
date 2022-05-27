@@ -47,8 +47,7 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject [
 
 	| browser |
 	browser := self new forSave.
-	browser openDialogWithSpec okAction: [ 
-		browser save: anObject ]
+	browser openDialog okAction: [ browser save: anObject ]
 ]
 
 { #category : #utilities }
