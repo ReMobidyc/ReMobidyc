@@ -5,7 +5,7 @@ Class {
 		'#image',
 		'#interpreter => ObservableSlot'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Components'
 }
 
 { #category : #initialization }

@@ -63,6 +63,11 @@ RMDRepository >> isModifiable [
 ]
 
 { #category : #'accessing-models' }
+RMDRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+	^ self subclassResponsibility 
+]
+
+{ #category : #'accessing-models' }
 RMDRepository >> modelNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]

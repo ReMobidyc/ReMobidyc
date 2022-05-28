@@ -353,8 +353,7 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		renderers do: [ :renderer | 
-			renderer printOn: stream.
-			stream nextPut: Character cr ] ]
+			renderer printOn: stream ] ]
 ]
 
 { #category : #'exporting/importing' }

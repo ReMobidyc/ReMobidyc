@@ -84,6 +84,19 @@ RMDGrammar >> actionIdentifier [
 	^ identifier
 ]
 
+{ #category : #'parsers-files' }
+RMDGrammar >> actionsFile [
+
+	^ self actionDefinition star
+	  ==> [ :actions | self actionsFileNodeClass actions: actions ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> actionsFileNodeClass [
+
+	^ RMDActionsFileNode
+]
+
 { #category : #'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
@@ -129,6 +142,19 @@ RMDGrammar >> agentReference [
 	  (('new' asPParser , #space asPParser) trimBlanks
 	   ==> [ :str | #new ])
 	  / (identifier , '''s ' asPParser trimBlanks ==> #first)
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> agentsFile [
+
+	^ self agentDefinition star
+	  ==> [ :agents | self agentsFileNodeClass agents: agents ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> agentsFileNodeClass [
+
+	^ RMDAgentsFileNode
 ]
 
 { #category : #units }
@@ -1086,6 +1112,19 @@ RMDGrammar >> simulationDefinitionNodeClass [
 	^ RMDSimulationDefinitionNode
 ]
 
+{ #category : #'parsers-files' }
+RMDGrammar >> simulationFile [
+
+	^ self simulationDefinition ==> [ :simulation | 
+	  self simulationFileNodeClass simulationDefinition: simulation ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> simulationFileNodeClass [
+
+	^ RMDSimulationFileNode
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> simulationTimeDefinition [
 	^ (('during' asPParser trimBlanks , literal) ==> #last
@@ -1136,17 +1175,20 @@ RMDGrammar >> taskDefinition [
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
-		   (self attributeBind onlySeparatedBy: #newline asPParser trimBlanks)
-		   ==> #fourth) optional , $. asPParser trimBlanks ==> [ :quad | 
-	  self bindNodeClass
-		  subjectIdentifier: quad first first
-		  verbIdentifier: quad first second
-		  objectIdentifier: quad first fourth
-		  actionIdentifier: quad first sixth
-		  nearest: quad first third
-		  within: quad first fifth
-		  guard: quad second
-		  attributeBinds: (quad third ifNil: [ Array new ]) ]
+		   (self attributeBind onlySeparatedBy:
+			    #newline asPParser trimBlanks) ==> #fourth) optional
+	  ,
+	  ($. asPParser trimBlanks , #newline asPParser trimBlanks optional)
+	  ==> [ :quad | 
+		  self bindNodeClass
+			  subjectIdentifier: quad first first
+			  verbIdentifier: quad first second
+			  objectIdentifier: quad first fourth
+			  actionIdentifier: quad first sixth
+			  nearest: quad first third
+			  within: quad first fifth
+			  guard: quad second
+			  attributeBinds: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1200,6 +1242,19 @@ RMDGrammar >> taskDefinitionHeaderWithoutNamely [
 		  object.
 		  range.
 		  action } ]
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> tasksFile [
+
+	^ self taskDefinition star
+	  ==> [ :tasks | self tasksFileNodeClass tasks: tasks ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> tasksFileNodeClass [
+
+	^ RMDTasksFileNode
 ]
 
 { #category : #units }
@@ -1329,6 +1384,20 @@ RMDGrammar >> utilityVariable [
 { #category : #'class access' }
 RMDGrammar >> utilityVariableNodeClass [
 	^ RMDUtilityVariableNode
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> visualizationFile [
+
+	^ self renderer star
+	  ==> [ :renderers | 
+	  self visualizationFileNodeClass renderers: renderers ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> visualizationFileNodeClass [
+
+	^ RMDVisualizationFileNode
 ]
 
 { #category : #units }

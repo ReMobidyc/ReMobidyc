@@ -28,8 +28,15 @@ RMDSimulationModeler class >> goatAndWolf [
 	^ RMDSimulationModeler on: RMDSimulationModel goatAndWolf
 ]
 
+{ #category : #'instance creation' }
+RMDSimulationModeler class >> on: aRMDSimulationModel [
+	^ self new
+		setSimulationModel: aRMDSimulationModel;
+		yourself
+]
+
 { #category : #menus }
-RMDSimulationModeler class >> golapMenuOn: aBuilder [
+RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
 	(aBuilder item: #ReMobidyc)
@@ -81,13 +88,6 @@ RMDSimulationModeler class >> golapMenuOn: aBuilder [
 										load ] ];
 						help:
 						'Upgrade the re:mobidyc from the official github repository.' ] ]
-]
-
-{ #category : #'instance creation' }
-RMDSimulationModeler class >> on: aRMDSimulationModel [
-	^ self new
-		setSimulationModel: aRMDSimulationModel;
-		yourself
 ]
 
 { #category : #examples }

@@ -167,6 +167,46 @@ where
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testActionsFile [
+
+	| node |
+	node := grammar actionsFile parse: 'to walk is
+	when my energy > 0
+	my delta x'' = sin(my heading) * walking_distance
+	my delta cost'' = 3.2 [ kcal / km ] * walking_distance
+where
+	walking_speed = 10[km/h] if my energy > 1000[kcal],
+	                4[km/h]
+	walking_distance = walking_speed * delta time.
+to starve is
+	when my energy < 1000 [kcal]
+	with die
+	world''s delta population'' = -1.'.
+	self assert: node isActionsFileNode.
+	self assert: node actions size equals: 2.
+	self assert: node actions first identifier equals: 'walk'.
+	self assert: node actions second identifier equals: 'starve'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAgensFile [
+
+	| node |
+	node := grammar agentsFile parse: 'World.
+Patch with
+    sugar [kcal].
+Ant is Animat with
+    blood_sugar [kcal].
+'.
+	self assert: node isAgentsFileNode.
+	self assert: node agents size equals: 3.
+	self assert: node agents first isWorldDefinitionNode.
+	self assert: node agents second isPatchDefinitionNode.
+	self assert: node agents third isAnimatDefinitionNode.
+	self assert: node agents third identifier equals: 'Ant'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testAgentDirective [
 	| node |
 	node := grammar agentDirective parse: 'distance foo'.
@@ -1015,6 +1055,24 @@ RMDGrammarTest >> testSimulationDefinition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testSimulationFile [
+
+	| node |
+	node := grammar simulationFile end parse: 'Simulation with
+	during 10 [days] by 1 [day]
+	5 x 5 of 10[m] Patch with
+	    fertility = uniform 1000[kcal] to 2000[kcal]
+	10 Goat with
+		x = uniform 0[m] to 50[m]
+		y = uniform 20[m] to 30[m].'.
+	self assert: node isSimulationFileNode.
+	self assert: node simulationDefinition isSimulationDefinitionNode.
+	self
+		assert: node simulationDefinition timeDefinition duration
+		equals: (grammar literal parse: '10[day]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testSimulationTimeDefinition [
 	| node |
 	node := grammar simulationTimeDefinition parse: 'during 100 [days] by 1 [hour]'.
@@ -1065,6 +1123,22 @@ RMDGrammarTest >> testTaskDefinitionHeader [
 	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
 when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testTasksFile [
+
+	| node |
+	node := grammar tasksFile parse: 'Patch grow.
+Goat move namely walk
+when my blood_sugar > my hunger
+where
+	the energy -> sugar
+	the speed -> slow_speed.'.
+	self assert: node isTasksFileNode.
+	self assert: node tasks size equals: 2.
+	self assert: node tasks first subjectIdentifier equals: 'Patch'.
+	self assert: node tasks second verbIdentifier equals: 'move'
 ]
 
 { #category : #tests }
@@ -1199,6 +1273,19 @@ RMDGrammarTest >> testVariable [
 	self assert: variable isAttributeVariableNode.
 	self assert: variable agent equals: 'foo'.
 	self assert: variable identifier equals: 'bar'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testVisualizationFile [
+
+	| node |
+	node := grammar visualizationFile end parse: 'World -> black.
+Patch -> green with alpha proportional to here''s  grass between 0 [kcal] and 100 [kcal]with 2 pixels black grids.
+Grasshopper_Adult -> 7@7 pixels yellow dot.
+Grasshopper_Egg -> 7@7 pixels cyan dot.
+'.
+	self assert: node isVisualizationFileNode.
+	self assert: node renderers size equals: 4
 ]
 
 { #category : #tests }

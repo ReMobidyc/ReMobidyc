@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDPatchDefinitionBrowser,
 	#superclass : #RMDAgentDefinitionBrowser,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Components'
 }
 
 { #category : #'instance creation' }

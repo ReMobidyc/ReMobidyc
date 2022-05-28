@@ -8,7 +8,7 @@ Class {
 		'identifierField',
 		'definitionBodyField'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Components'
 }
 
 { #category : #layout }

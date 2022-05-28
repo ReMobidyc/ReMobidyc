@@ -92,6 +92,11 @@ RMDBuiltinRepository >> lose [
 ]
 
 { #category : #'accessing-models' }
+RMDBuiltinRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+	^ errorBlock value
+]
+
+{ #category : #'accessing-models' }
 RMDBuiltinRepository >> modelNamed: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
