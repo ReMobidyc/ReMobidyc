@@ -28,6 +28,14 @@ RMDRepositoryModelsBrowser >> addItem [
 		itemList items: (itemList items copyWith: newItem) ]
 ]
 
+{ #category : #operations }
+RMDRepositoryModelsBrowser >> file [
+
+	^ self repository ifNotNil: [ :repo | 
+		  self item ifNotNil: [ :item | 
+			  repo modelFileNamed: item ifAbsent: [ nil ] ] ]
+]
+
 { #category : #private }
 RMDRepositoryModelsBrowser >> getModel: aString [
 

@@ -117,12 +117,21 @@ RMDLocalFileRepository >> isModifiable [
 ]
 
 { #category : #'accessing-models' }
-RMDLocalFileRepository >> modelNamed: aString ifAbsent: errorBlock [
+RMDLocalFileRepository >> modelFileNamed: aString ifAbsent: errorBlock [
 
 	| ref |
 	ref := self modelsDirectory / aString.
 	ref isDirectory ifFalse: [ ^ errorBlock value ].
-	^ RMDSimulationModel importModel: ref ifError: errorBlock
+	^ ref
+]
+
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> modelNamed: aString ifAbsent: errorBlock [
+
+	^ RMDSimulationModel
+		  importModel:
+		  (self modelFileNamed: aString ifAbsent: [ ^ errorBlock value ])
+		  ifError: errorBlock
 ]
 
 { #category : #'accessing-models' }

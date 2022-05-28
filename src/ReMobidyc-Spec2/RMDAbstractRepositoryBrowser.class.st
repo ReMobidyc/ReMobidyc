@@ -219,7 +219,8 @@ RMDAbstractRepositoryBrowser >> isForSave [
 { #category : #accessing }
 RMDAbstractRepositoryBrowser >> isForSave: aBoolean [
 
-	isForSave := aBoolean = true
+	isForSave := aBoolean = true.
+	self updateButtons
 ]
 
 { #category : #accessing }

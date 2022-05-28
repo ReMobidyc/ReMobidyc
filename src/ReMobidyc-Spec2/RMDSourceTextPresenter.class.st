@@ -66,10 +66,11 @@ RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
 
 { #category : #initialization }
 RMDSourceTextPresenter >> initialize [
+
 	super initialize.
 	highlightColor := Color red darker.
 	highlights := Array new.
-	self whenSubmitDo: [ self prettyPrint ]
+	self whenSubmitDo: [ :t | self prettyPrint ]
 ]
 
 { #category : #api }
