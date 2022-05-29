@@ -202,7 +202,9 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 			whileTrue: [ csvStream next ].
 		csvStream atEnd ] whileFalse: [ 
 			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
-				vals at: row first put: row copyWithoutFirst ] ].
+				vals
+					at: row first
+					put: (row copyWithoutFirst collect: #asInteger) asSet ] ].
 		^ vals ]
 ]
 
@@ -304,7 +306,7 @@ RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> reproductionLinksFile [
-	^ self basePath / self stageLinksFileBasename
+	^ self basePath / self reproductionLinksFileBasename
 ]
 
 { #category : #'accessing-storage' }
@@ -398,7 +400,7 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 		ensureDelete;
 		writeStreamDo: [ :csvStream | 
 			aDictionary keysAndValuesDo: [ :animat :individuals | 
-					animat printOn: csvStream.
+					csvStream nextPutAll: animat.
 					individuals ifNotEmpty: [ 
 							csvStream nextPut: $,.
 							individuals
