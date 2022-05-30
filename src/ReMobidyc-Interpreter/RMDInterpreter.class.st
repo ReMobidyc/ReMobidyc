@@ -506,52 +506,53 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 
-	memory time: 0.
-	memory
-		initialize;
-		allocateWorld: simulationModel worldDefinition;
-		allocatePatches: simulationModel patchDefinition
-		x: simulationModel patchXDivisions
-		y: simulationModel patchYDivisions.
-	memory worldDo: [ :world | 
-		self
-			withInitializerContextWithSubject: world
-			species: simulationModel worldDefinition
-			do: [ 
-				context randomSeedWithAll: { 
-						randomSeed.
-						memory time.
-						world }.
-				simulationModel worldInitializer evalIn: self ] ].
-	memory patchesDo: [ :patch | 
-		self
-			withInitializerContextWithSubject: patch
-			species: simulationModel patchDefinition
-			do: [ 
-				context randomSeedWithAll: { 
-						randomSeed.
-						memory time.
-						patch }.
-				simulationModel patchInitializer evalIn: self ] ].
-	simulationModel animatInitializersDo: [ :initializer | 
-		| animatDefinition |
-		animatDefinition := simulationModel
-			                    animatDefinitionAt: initializer animat
-			                    ifAbsent: [ 
-			                    ^ KeyNotFound signal: initializer animat ].
-		initializer population timesRepeat: [ 
-			| animat |
-			animat := memory allocateAnimat: animatDefinition.
-
+	memory world ifNil: [ 
+		memory
+			initialize;
+			allocateWorld: simulationModel worldDefinition;
+			allocatePatches: simulationModel patchDefinition
+			x: simulationModel patchXDivisions
+			y: simulationModel patchYDivisions.
+		memory worldDo: [ :world | 
 			self
-				withInitializerContextWithSubject: animat
-				species: animatDefinition
+				withInitializerContextWithSubject: world
+				species: simulationModel worldDefinition
 				do: [ 
 					context randomSeedWithAll: { 
 							randomSeed.
 							memory time.
-							animat }.
-					initializer evalIn: self ] ] ].
+							world }.
+					simulationModel worldInitializer evalIn: self ] ].
+		memory patchesDo: [ :patch | 
+			self
+				withInitializerContextWithSubject: patch
+				species: simulationModel patchDefinition
+				do: [ 
+					context randomSeedWithAll: { 
+							randomSeed.
+							memory time.
+							patch }.
+					simulationModel patchInitializer evalIn: self ] ].
+		simulationModel animatInitializersDo: [ :initializer | 
+			| animatDefinition |
+			animatDefinition := simulationModel
+				                    animatDefinitionAt: initializer animat
+				                    ifAbsent: [ 
+				                    ^ KeyNotFound signal: initializer animat ].
+			initializer population timesRepeat: [ 
+				| animat |
+				animat := memory allocateAnimat: animatDefinition.
+
+				self
+					withInitializerContextWithSubject: animat
+					species: animatDefinition
+					do: [ 
+						context randomSeedWithAll: { 
+								randomSeed.
+								memory time.
+								animat }.
+						initializer evalIn: self ] ] ] ].
+	memory time: 0.
 	self timeChanged
 ]
 

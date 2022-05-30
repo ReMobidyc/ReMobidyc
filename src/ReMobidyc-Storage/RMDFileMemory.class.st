@@ -20,6 +20,15 @@ RMDFileMemory class >> on: aFileReference [
 		yourself
 ]
 
+{ #category : #allocating }
+RMDFileMemory >> allocateWorld: aRMDWorldDefinitionNode [
+
+	| id |
+	id := super allocateWorld: aRMDWorldDefinitionNode.
+	allocationDirty := true.
+	^ id
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> allocationFile [
 	^ self basePath / self allocationFileBasename
@@ -111,9 +120,11 @@ RMDFileMemory >> initialize [
 
 { #category : #initialization }
 RMDFileMemory >> initializeAllocation [
+
 	self readAllocation
 		at: 'latestTime' ifPresent: [ :v | latestTime := v ];
-		at: 'nextAvailableSlot' ifPresent: [ :v | nextAvailableSlot := v ].
+		at: 'nextAvailableSlot' ifPresent: [ :v | nextAvailableSlot := v ];
+		at: 'world' ifPresent: [ :v | world := v ].
 	allocationDirty := false
 ]
 
@@ -148,8 +159,8 @@ RMDFileMemory >> latestTime: anInteger [
 	| oldLatestTime |
 	oldLatestTime := self latestTime.
 	super latestTime: anInteger.
-	oldLatestTime = anInteger
-		ifTrue: [ allocationDirty := true ]
+	oldLatestTime = latestTime
+		ifFalse: [ allocationDirty := true ]
 ]
 
 { #category : #accessing }
@@ -381,6 +392,7 @@ RMDFileMemory >> valuesFileBasename [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAllocation [
+
 	self allocationFile
 		ensureDelete;
 		writeStreamDo: [ :stream | 
@@ -389,6 +401,9 @@ RMDFileMemory >> writeAllocation [
 			stream lf.
 			stream nextPutAll: 'nextAvailableSlot,'.
 			nextAvailableSlot storeOn: stream.
+			stream lf.
+			stream nextPutAll: 'world,'.
+			world storeOn: stream.
 			stream lf ]
 ]
 
@@ -451,7 +466,7 @@ RMDFileMemory >> writeSpace [
 			stream nextPutAll: 'yPatches,'.
 			yPatches storeOn: stream.
 			stream lf.
-			stream nextPutAll: 'patchSize'.
+			stream nextPutAll: 'patchSize,'.
 			patchSize storeOn: stream.
 			stream lf ]
 ]
