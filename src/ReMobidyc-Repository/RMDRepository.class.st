@@ -4,6 +4,11 @@ Class {
 	#category : #'ReMobidyc-Repository'
 }
 
+{ #category : #'accessing-models' }
+RMDRepository >> actionFileNamed: aString ifAbsent: errorBlock [
+	^ self subclassResponsibility 
+]
+
 { #category : #'accessing-actions' }
 RMDRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 

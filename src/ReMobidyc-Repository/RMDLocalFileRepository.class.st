@@ -34,6 +34,15 @@ RMDLocalFileRepository class >> on: aFileReference name: aString [
 ]
 
 { #category : #'accessing-actions' }
+RMDLocalFileRepository >> actionFileNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self actionsDirectory / aString withExtension: 'rmd'.
+	ref isFile ifFalse: [ ^ errorBlock value ].
+	^ ref
+]
+
+{ #category : #'accessing-actions' }
 RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	| ref action |
