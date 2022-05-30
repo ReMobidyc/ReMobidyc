@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'simulationModel',
 		'views',
-		'runButton',
+		'runOnMemoryButton',
+		'runOnFileButton',
 		'simulationDefinitionPresenter',
 		'menuBar'
 	],
@@ -16,7 +17,10 @@ RMDSimulationModeler class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
-		  add: #runButton height: self buttonHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: #runOnMemoryButton;
+				   add: #runOnFileButton)
+		  height: self buttonHeight;
 		  add: #views yourself;
 		  yourself
 ]
@@ -177,11 +181,16 @@ RMDSimulationModeler >> initializePresenters [
 		         whenPageRemovedDo: [ :page | 
 			         self removeAnimatNamed: page title ];
 		         yourself.
-	runButton := self newButton
-		             label: 'run';
-		             action: [ self openObservatory ];
-		             state: false;
-		             yourself
+	runOnMemoryButton := self newButton
+		                     label: 'Run';
+		                     action: [ self openObservatory ];
+		                     state: false;
+		                     yourself.
+	runOnFileButton := self newButton
+		                   label: 'Run & Record';
+		                   action: [ self openObservatoryOnDirectory ];
+		                   state: false;
+		                   yourself
 ]
 
 { #category : #initialization }
@@ -198,6 +207,42 @@ RMDSimulationModeler >> openObservatory [
 	| interpreter |
 	interpreter := RMDInterpreter new
 		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel: simulationModel;
+		               yourself.
+	interpreter setupSimulation.
+	^ (RMDObservatory interpreter: interpreter)
+		  open;
+		  yourself
+]
+
+{ #category : #api }
+RMDSimulationModeler >> openObservatoryOnDirectory [
+
+	RMDRepositoryModelsBrowser
+		openForSave: simulationModel
+		ifAccepted: [ :ref | self openObservatoryOnDirectory: ref ]
+]
+
+{ #category : #api }
+RMDSimulationModeler >> openObservatoryOnDirectory: aFileReference [
+
+	| memoryRef interpreter |
+	memoryRef := aFileReference / 'memory'.
+	memoryRef isDirectory ifTrue: [ 
+		(UIManager default
+			 confirm:
+			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
+			 label: 'Simulation result exists'
+			 trueChoice: 'Erase & Open'
+			 falseChoice: 'Open'
+			 cancelChoice: 'Cancel'
+			 default: false)
+			ifNil: [ ^ self ]
+			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
+	interpreter := RMDInterpreter new
+		               setMemory:
+			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
 		               setContext: RMDActionContext new;
 		               simulationModel: simulationModel;
 		               yourself.
@@ -277,9 +322,4 @@ RMDSimulationModeler >> updatePages [
 							  yourself ]) ]).
 	selection > 0 ifTrue: [ 
 		views selectPageIndex: (selection min: views pages size) ]
-]
-
-{ #category : #'api-events' }
-RMDSimulationModeler >> whenRunStateChangedDo: aBlock [
-	runButton whenStateChangedDo: aBlock
 ]

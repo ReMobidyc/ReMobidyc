@@ -31,6 +31,14 @@ RMDRepositoryActionsBrowser >> addItem [
 			itemList items: (itemList items copyWith: newItem) ]
 ]
 
+{ #category : #accessing }
+RMDRepositoryActionsBrowser >> file [
+
+	^ self repository ifNotNil: [ :repo | 
+		  self item ifNotNil: [ :item | 
+			  repo actionFileNamed: item ifAbsent: [ nil ] ] ]
+]
+
 { #category : #private }
 RMDRepositoryActionsBrowser >> getAction: aString [
 

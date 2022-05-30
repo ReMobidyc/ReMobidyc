@@ -181,7 +181,7 @@ RMDFileMemory >> readAllocation [
 			| params |
 			params := Dictionary new.
 			[ stream atEnd ]
-				whileFalse: [ (stream nextLine truncate substrings: ',')
+				whileFalse: [ (stream nextLine trim substrings: ',')
 						ifNotEmpty: [ :pair | 
 							pair size = 2
 								ifTrue: [ params at: pair first put: pair second asInteger ] ] ].
@@ -217,7 +217,7 @@ RMDFileMemory >> readReproductionLinks [
 			| params |
 			params := Dictionary new.
 			[ stream atEnd ] whileFalse: [ 
-					(stream nextLine truncate substrings: ',') ifNotEmpty: [ :pair | 
+					(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
 							pair size = 2 ifTrue: [ 
 									params
 										at: pair first trim asInteger
@@ -252,7 +252,7 @@ RMDFileMemory >> readSpace [
 			| params |
 			params := Dictionary new.
 			[ stream atEnd ]
-				whileFalse: [ (stream nextLine truncate substrings: ',')
+				whileFalse: [ (stream nextLine trim substrings: ',')
 						ifNotEmpty: [ :pair | 
 							pair size = 2
 								ifTrue: [ params at: pair first put: pair second asInteger ] ] ].
@@ -268,7 +268,7 @@ RMDFileMemory >> readStageLinks [
 			| params |
 			params := Dictionary new.
 			[ stream atEnd ] whileFalse: [ 
-					(stream nextLine truncate substrings: ',') ifNotEmpty: [ :pair | 
+					(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
 							pair size = 2 ifTrue: [ 
 									params
 										at: pair first trim asInteger

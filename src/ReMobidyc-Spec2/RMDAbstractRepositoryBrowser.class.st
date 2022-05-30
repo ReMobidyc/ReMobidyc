@@ -51,6 +51,16 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject [
 ]
 
 { #category : #utilities }
+RMDAbstractRepositoryBrowser class >> openForSave: anObject ifAccepted: aBlock [
+
+	| browser |
+	browser := self new forSave.
+	browser openDialog okAction: [ 
+		browser save: anObject.
+		aBlock cull: browser file cull: browser ]
+]
+
+{ #category : #utilities }
 RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
@@ -130,6 +140,12 @@ RMDAbstractRepositoryBrowser >> enableOk [
 
 	self withWindowDo: [ :window | 
 		window buttons ifNotEmpty: [ :buttons | buttons first enable ] ]
+]
+
+{ #category : #accessing }
+RMDAbstractRepositoryBrowser >> file [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #operations }

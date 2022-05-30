@@ -22,6 +22,12 @@ RMDBuiltinRepository class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> actionFileNamed: aString ifAbsent: errorBlock [
+
+	^ errorBlock value
+]
+
 { #category : #'accessing-actions' }
 RMDBuiltinRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ (self actionNames includes: aString)
