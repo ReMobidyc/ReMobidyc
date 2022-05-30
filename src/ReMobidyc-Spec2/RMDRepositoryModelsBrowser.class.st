@@ -107,7 +107,14 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 	self item
 		ifNotNil: [ :item | 
 			(self getModel: item) ifNotNil: [ :model | 
-				descriptionText text: 'Animats: ' asText allBold
-					, (', ' join: (model animatDefinitions collect: #identifier)) ] ]
+				| description |
+				description := 'Animats: ' asText allBold
+				               ,
+				               (', ' join:
+					                (model animatDefinitions collect: #identifier)).
+				(self file / 'memory') isDirectory ifTrue: [ 
+					description := description , '
+with a result' asText ].
+				descriptionText text: description ] ]
 		ifNil: [ descriptionText text: '' ]
 ]

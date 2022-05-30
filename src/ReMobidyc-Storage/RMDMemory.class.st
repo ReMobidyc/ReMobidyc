@@ -157,7 +157,7 @@ RMDMemory >> initialize [
 	xPatches := 0.
 	yPatches := 0.
 	patchSize := 0.
-	world := 1.
+	world := nil.
 	patch := nil.
 	stageLinks := Dictionary new.
 	reproductionLinks := Dictionary new.
@@ -372,7 +372,7 @@ RMDMemory >> sunrise [
 { #category : #timing }
 RMDMemory >> sunset [
 
-	self commitOuts.
+	latestTime = time ifTrue: [ self commitOuts ].
 	values keysAndValuesDo: [ :id :value | 
 		nextValues at: id ifAbsentPut: [ value ] ].
 	nextDeltas ifNotEmpty: [ 
@@ -386,12 +386,13 @@ RMDMemory >> sunset [
 			nextDeltas removeKey: id ifAbsent: [  ].
 			nextValuesDirty := true.
 			true ] ].
-	valuesDirty ifTrue: [ self writeValues: values forTime: time ].
-	nextValuesDirty ifTrue: [ 
-		self writeValues: nextValues forTime: time + 1 ].
-	self writeAnimats: animats forTime: time.
-	self writeSeeds: seeds forTime: time.
-	self commitIns
+	latestTime = time ifTrue: [ 
+		valuesDirty ifTrue: [ self writeValues: values forTime: time ].
+		nextValuesDirty ifTrue: [ 
+			self writeValues: nextValues forTime: time + 1 ].
+		self writeAnimats: animats forTime: time.
+		self writeSeeds: seeds forTime: time.
+		self commitIns ]
 ]
 
 { #category : #timing }
