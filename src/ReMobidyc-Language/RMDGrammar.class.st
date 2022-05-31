@@ -1344,7 +1344,8 @@ RMDGrammar >> unitFactor [
 { #category : #'parsers-units' }
 RMDGrammar >> unitSymbol [
 
-	^ (#letter asPParser plus , #digit asPParser optional) flatten
+	^ ((#space asPParser / $/ asPParser / $] asPParser / $) asPParser
+	    / $^ asPParser / $* asPParser) not , #any asPParser) plus flatten
 	  ==> [ :symbol | 
 		  RMDUnitSymbol
 			  at: symbol
