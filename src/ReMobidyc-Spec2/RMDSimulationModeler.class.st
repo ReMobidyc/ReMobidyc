@@ -152,10 +152,23 @@ RMDSimulationModeler >> fileMenu [
 		  addGroup: [ :group | 
 			  group addItem: [ :item | 
 					  item
-						  name: 'Load...';
+						  name: 'New';
 						  action: [ 
-							  RMDRepositoryModelsBrowser openToLoadDo: [ :model | 
-									  self setSimulationModel: model ] ] ].
+							  self setSimulationModel: (RMDSimulationModel new
+										   addRenderer:
+											   (RMDBackgroundColorRenderer color: Color black);
+										   addRenderer: (RMDPatchColorAlphaRenderer
+												    color: Color green
+												    alpha: '0.5' asRMDExpression
+												    between: '0.0' asRMDExpression
+												    and: '1.0' asRMDExpression);
+										   yourself) ] ].
+			  group addItem: [ :item | 
+				  item
+					  name: 'Load...';
+					  action: [ 
+						  RMDRepositoryModelsBrowser openToLoadDo: [ :model | 
+								  self setSimulationModel: model ] ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save As...';
