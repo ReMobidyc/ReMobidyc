@@ -181,9 +181,10 @@ RMDObservatory >> initializePresenters [
 
 { #category : #initialization }
 RMDObservatory >> initializeWindow: aWindowPresenter [
+
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
-		title: 'Re:Mobidyc - Observatory';
+		title: self windowTitle;
 		initialExtent: 900 @ 600
 ]
 
@@ -194,7 +195,9 @@ RMDObservatory >> modelName [
 
 { #category : #accessing }
 RMDObservatory >> modelName: aString [
-	modelName := aString
+
+	modelName := aString.
+	self updateWindowTitle
 ]
 
 { #category : #private }
@@ -367,6 +370,19 @@ RMDObservatory >> updateTimeLabel [
 								printOn: stream.
 							stream nextPutAll: ' ]' ]).
 			timeSlider value: time / duration ]
+]
+
+{ #category : #private }
+RMDObservatory >> updateWindowTitle [
+
+	self window ifNotNil: [ :window | window title: self windowTitle ]
+]
+
+{ #category : #private }
+RMDObservatory >> windowTitle [
+
+	^ 'Observatory'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 ]
 
 { #category : #private }
