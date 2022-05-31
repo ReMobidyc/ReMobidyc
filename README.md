@@ -23,6 +23,7 @@ curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-
 ### 2. from Pharo
 
 If you have the [Pharo](https://pharo.org/) installation, you can install re:mobidyc by evaluating the following expression.
+(Open a Playground by the Browse>>Playground menu in the menubar, then copy&paste the text below into the Playground. Select all the pasted text and select the "Do-it" in the right-click menu.)
 
 ```
 EpMonitor disableDuring: [
@@ -38,10 +39,10 @@ EpMonitor disableDuring: [
 
 The following pre-built packages are available.
 
-* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobodyc-mac-arm64.dmg)
-* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-mac-x64.dmg)
-* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-linux-x64.zip)
-* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-3/remobidyc-win-x64.zip)
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-5/remobodyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-5/remobidyc-mac-x64.dmg)
+* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-5/remobidyc-linux-x64.zip)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-5/remobidyc-win-x64.zip)
 
 ## Modeling Language
 
