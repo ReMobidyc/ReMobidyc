@@ -121,11 +121,9 @@ RMDModelFileTextBrowser >> initializePresenters [
 RMDModelFileTextBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Model Editor'
-		,
-		(modelFileReference
-			 ifNotNil: [ :ref | ' (', ref printString, ')' ]
-			 ifNil: [ '' ])
+	aWindowPresenter
+		title: self windowTitle;
+		initialExtent: 800 @ 600
 ]
 
 { #category : #accessing }
@@ -137,7 +135,8 @@ RMDModelFileTextBrowser >> modelFileReference [
 { #category : #accessing }
 RMDModelFileTextBrowser >> modelFileReference: aFileReference [
 
-	modelFileReference := aFileReference
+	modelFileReference := aFileReference.
+	self updateWindowTitle
 ]
 
 { #category : #parsers }
@@ -215,8 +214,22 @@ RMDModelFileTextBrowser >> updateSourceText [
 		sourceText text: (editingTexts at: item ifAbsent: [ item contents ]) ]
 ]
 
+{ #category : #private }
+RMDModelFileTextBrowser >> updateWindowTitle [
+
+	self window ifNotNil: [ :window | window title: self windowTitle ]
+]
+
 { #category : #parsers }
 RMDModelFileTextBrowser >> visualizationFileParser [
 
 	^ RMDGrammar new visualizationFile end
+]
+
+{ #category : #private }
+RMDModelFileTextBrowser >> windowTitle [
+
+	^ 'Modeler' , (modelFileReference
+		   ifNil: [ '' ]
+		   ifNotNil: [ ' @ ' , modelFileReference basename ])
 ]

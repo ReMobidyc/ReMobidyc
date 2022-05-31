@@ -51,6 +51,16 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject [
 ]
 
 { #category : #utilities }
+RMDAbstractRepositoryBrowser class >> openForSave: anObject do: aBlock [
+
+	| browser |
+	browser := self new forSave.
+	browser openDialog okAction: [ 
+		browser save: anObject.
+		aBlock cull: anObject cull: browser ]
+]
+
+{ #category : #utilities }
 RMDAbstractRepositoryBrowser class >> openForSave: anObject ifAccepted: aBlock [
 
 	| browser |
@@ -65,7 +75,8 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
 	browser := self new.
-	browser openDialog okAction: [ aBlock cull: browser load ]
+	browser openDialog okAction: [ 
+		aBlock cull: browser load cull: browser ]
 ]
 
 { #category : #operations }

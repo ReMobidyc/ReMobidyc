@@ -7,7 +7,8 @@ Class {
 		'runOnMemoryButton',
 		'runOnFileButton',
 		'simulationDefinitionPresenter',
-		'menuBar'
+		'menuBar',
+		'modelFileReference'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -154,7 +155,8 @@ RMDSimulationModeler >> fileMenu [
 					  item
 						  name: 'New';
 						  action: [ 
-							  self setSimulationModel: (RMDSimulationModel new
+							  self
+								  setSimulationModel: (RMDSimulationModel new
 										   addRenderer:
 											   (RMDBackgroundColorRenderer color: Color black);
 										   addRenderer: (RMDPatchColorAlphaRenderer
@@ -162,18 +164,24 @@ RMDSimulationModeler >> fileMenu [
 												    alpha: '0.5' asRMDExpression
 												    between: '0.0' asRMDExpression
 												    and: '1.0' asRMDExpression);
-										   yourself) ] ].
+										   yourself);
+								  modelFileReference: nil ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Load...';
 					  action: [ 
-						  RMDRepositoryModelsBrowser openToLoadDo: [ :model | 
-								  self setSimulationModel: model ] ] ].
+						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+								  self
+									  setSimulationModel: model;
+									  modelFileReference: repBrowser file ] ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save As...';
 					  action: [ 
-						  RMDRepositoryModelsBrowser openForSave: simulationModel ] ] ];
+						  RMDRepositoryModelsBrowser
+							  openForSave: simulationModel
+							  do: [ :model :repBrowser | 
+								  self modelFileReference: repBrowser file ] ] ] ];
 		  yourself
 ]
 
@@ -208,10 +216,24 @@ RMDSimulationModeler >> initializePresenters [
 
 { #category : #initialization }
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
+
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
-		title: 'Re:Mobidyc - Simulation Modeler';
+		title: self windowTitle;
 		initialExtent: 800 @ 600
+]
+
+{ #category : #accessing }
+RMDSimulationModeler >> modelFileReference [
+
+	^ modelFileReference
+]
+
+{ #category : #accessing }
+RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
+
+	modelFileReference := aFileReferenceOrNil.
+	self updateWindowTitle
 ]
 
 { #category : #api }
@@ -225,6 +247,8 @@ RMDSimulationModeler >> openObservatory [
 		               yourself.
 	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
+		  modelName:
+			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
 		  open;
 		  yourself
 ]
@@ -261,6 +285,7 @@ RMDSimulationModeler >> openObservatoryOnDirectory: aFileReference [
 		               yourself.
 	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
+		  modelName: aFileReference basename;
 		  open;
 		  yourself
 ]
@@ -335,4 +360,18 @@ RMDSimulationModeler >> updatePages [
 							  yourself ]) ]).
 	selection > 0 ifTrue: [ 
 		views selectPageIndex: (selection min: views pages size) ]
+]
+
+{ #category : #private }
+RMDSimulationModeler >> updateWindowTitle [
+
+	self window ifNotNil: [ :window | window title: self windowTitle ]
+]
+
+{ #category : #private }
+RMDSimulationModeler >> windowTitle [
+
+	^ 'Modeler' , (modelFileReference
+		   ifNil: [ '' ]
+		   ifNotNil: [ ' @ ' , modelFileReference basename ])
 ]
