@@ -23,7 +23,7 @@ curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-
 ### 2. from Pharo
 
 If you have the [Pharo](https://pharo.org/) installation, you can install re:mobidyc by evaluating the following expression.
-(Open a Playground by the Browse>>Playground menu in the menubar, then copy&paste the text below into the Playground. Select all the pasted text and select the "Do-it" in the right-click menu.)
+(Open a Playground by the Browse>>Playground menu in the menubar, then copy&paste the text below into the Playground. Select all the pasted text and select the "Do-it" in the right-click menu. After the system loads the latest re:mobidyc code, save the image by the Pharo>>Save menu in the menubar.)
 
 ```
 EpMonitor disableDuring: [
