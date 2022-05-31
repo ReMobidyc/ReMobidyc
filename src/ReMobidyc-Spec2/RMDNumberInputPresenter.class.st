@@ -24,7 +24,7 @@ RMDNumberInputPresenter >> acceptNumebr: aNumber [
 RMDNumberInputPresenter >> initialize [
 
 	super initialize.
-	self whenSubmitDo: [ self prettyPrint ]
+	self whenSubmitDo: [:t | self prettyPrint ]
 ]
 
 { #category : #api }

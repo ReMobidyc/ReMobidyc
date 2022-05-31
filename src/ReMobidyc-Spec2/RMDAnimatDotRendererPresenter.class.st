@@ -27,12 +27,14 @@ RMDAnimatDotRendererPresenter class >> defaultLayout [
 
 { #category : #initialization }
 RMDAnimatDotRendererPresenter >> initializePresenters [
+
 	super initializePresenters.
 	diameterField := self newNumberInput
-		beInteger;
-		whenLastValidNumberChangedDo: [ :diameter | 
-			renderer diameter: diameter.
-			self valueChanged ]
+		                 beInteger;
+		                 whenLastValidNumberChangedDo: [ :diameter | 
+			                 renderer diameter: diameter.
+			                 self valueChanged ];
+		                 yourself
 ]
 
 { #category : #accessing }

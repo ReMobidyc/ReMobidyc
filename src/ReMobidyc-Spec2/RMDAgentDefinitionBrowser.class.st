@@ -345,18 +345,14 @@ RMDAgentDefinitionBrowser >> updateAttributeList [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateRendererList [
-	rendererList
-		items:
-			(Array
-				streamContents: [ :stream | 
-					self
-						renderersDo: [ :renderer | 
-							stream
-								nextPut: (renderer asPresenter enabled: false);
-								yourself ] ]).
-	rendererList items
-		do:
-			[ :item | item withWidgetDo: [ :w | w update: #color: with: {Color white} ] ]
+
+	rendererList items: (Array streamContents: [ :stream | 
+			 self renderersDo: [ :renderer | 
+				 stream
+					 nextPut: renderer asPresenter disableAgentFields;
+					 yourself ] ]).
+	rendererList items do: [ :item | 
+		item withWidgetDo: [ :w | w update: #color: with: { Color white } ] ]
 ]
 
 { #category : #updating }

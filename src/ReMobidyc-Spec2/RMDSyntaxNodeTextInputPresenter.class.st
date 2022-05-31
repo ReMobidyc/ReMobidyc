@@ -111,7 +111,7 @@ RMDSyntaxNodeTextInputPresenter >> color: aColor [
 RMDSyntaxNodeTextInputPresenter >> initialize [
 
 	super initialize.
-	self whenSubmitDo: [ self prettyPrint ]
+	self whenSubmitDo: [ :t | self prettyPrint ]
 ]
 
 { #category : #api }
