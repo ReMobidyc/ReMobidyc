@@ -47,6 +47,92 @@ RMDObservatory class >> interpreter: aRMDInterpreter [
 		yourself
 ]
 
+{ #category : #utilities }
+RMDObservatory class >> openOnFileFromUser [
+
+	<script: 'RMDObservatory openOnFileFromUser'>
+	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+		self openOnFileOn: repBrowser file ]
+]
+
+{ #category : #'instance creation' }
+RMDObservatory class >> openOnFileOn: aFileReference [
+
+	| memoryRef interpreter |
+	memoryRef := aFileReference / 'memory'.
+	memoryRef isDirectory ifTrue: [ 
+		(UIManager default
+			 confirm:
+			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
+			 label: 'Simulation result exists'
+			 trueChoice: 'Erase & Open'
+			 falseChoice: 'Open'
+			 cancelChoice: 'Cancel'
+			 default: false)
+			ifNil: [ ^ self ]
+			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
+	interpreter := RMDInterpreter new
+		               setMemory:
+			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
+		               setContext: RMDActionContext new;
+		               simulationModel:
+			               (RMDSimulationModel
+				                importModel: aFileReference
+				                ifError: [ ^ nil ]);
+		               yourself.
+	interpreter setupSimulation.
+	^ (self interpreter: interpreter)
+		  modelName: aFileReference basename;
+		  open;
+		  yourself
+]
+
+{ #category : #utilities }
+RMDObservatory class >> openOnMemoryFromUser [
+
+	<script: 'RMDObservatory openOnMemoryFromUser'>
+	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+		self openOnMemoryOn: repBrowser file ]
+]
+
+{ #category : #'instance creation' }
+RMDObservatory class >> openOnMemoryOn: aFileReference [
+
+	| interpreter |
+	interpreter := RMDInterpreter new
+		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel:
+			               (RMDSimulationModel
+				                importModel: aFileReference
+				                ifError: [ ^ nil ]);
+		               yourself.
+	interpreter setupSimulation.
+	^ (self interpreter: interpreter)
+		  modelName: aFileReference basename;
+		  open;
+		  yourself
+]
+
+{ #category : #menus }
+RMDObservatory class >> remobidycMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #ObservatoryOnMemory)
+		parent: 'ReMobidyc';
+		order: 10;
+		label: 'Observatory';
+		action: [ RMDObservatory openOnMemoryFromUser ];
+		help: 'Open&Run an Observatory on an existing model'.
+	(aBuilder item: #ObservatoryOnFile)
+		parent: 'ReMobidyc';
+		order: 11;
+		label: 'Observatory with Recording';
+		action: [ RMDObservatory openOnFileFromUser ];
+		help: 'Open&Run an Observatory on an existing model with recording the simulation results'.
+
+]
+
 { #category : #examples }
 RMDObservatory class >> sugarScape [
 	<script: 'RMDObservatory sugarScape openWithSpec'>

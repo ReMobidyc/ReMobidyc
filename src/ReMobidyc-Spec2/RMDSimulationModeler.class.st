@@ -50,7 +50,8 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 		with: [ 
 			(aBuilder item: #OpenNew)
 				parent: 'ReMobidyc';
-				label: 'Modeler';
+				order: 1;
+				label: 'Modeler (GUI)';
 				action: [ 
 					(RMDSimulationModeler on: (RMDSimulationModel new
 								  addRenderer: (RMDBackgroundColorRenderer color: Color black);
@@ -63,6 +64,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 				help: 'Open a modeler window with a new simulation model'.
 			(aBuilder item: #Examples)
 				parent: 'ReMobidyc';
+				order: 99;
 				label: 'Examples';
 				with: [ 
 					(aBuilder item: #SugarScape)
@@ -77,6 +79,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 						help: 'A simple simulation of plants, herbivore, and carnivore.' ].
 			(aBuilder item: #ReMobidycSystem)
 				parent: 'ReMobidyc';
+				order: 100;
 				label: 'System';
 				with: [ 
 					(aBuilder item: #Upgrade)
@@ -168,12 +171,17 @@ RMDSimulationModeler >> fileMenu [
 								  modelFileReference: nil ] ].
 			  group addItem: [ :item | 
 				  item
-					  name: 'Load...';
+					  name: 'Open...';
 					  action: [ 
 						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
 								  self
 									  setSimulationModel: model;
 									  modelFileReference: repBrowser file ] ] ].
+			  group addItem: [ :item | 
+				  item
+					  name: 'Save';
+					  enabled: [ modelFileReference notNil ];
+					  action: [ simulationModel exportModel: modelFileReference ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save As...';
@@ -209,7 +217,7 @@ RMDSimulationModeler >> initializePresenters [
 		                     yourself.
 	runOnFileButton := self newButton
 		                   label: 'Run & Record';
-		                   action: [ self openObservatoryOnDirectory ];
+		                   action: [ self openObservatoryOnFile ];
 		                   state: false;
 		                   yourself
 ]
@@ -236,7 +244,7 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 	self updateWindowTitle
 ]
 
-{ #category : #api }
+{ #category : #operations }
 RMDSimulationModeler >> openObservatory [
 
 	| interpreter |
@@ -253,19 +261,21 @@ RMDSimulationModeler >> openObservatory [
 		  yourself
 ]
 
-{ #category : #api }
-RMDSimulationModeler >> openObservatoryOnDirectory [
+{ #category : #operations }
+RMDSimulationModeler >> openObservatoryOnFile [
 
 	modelFileReference
-		ifNotNil: [ self openObservatoryOnDirectory: modelFileReference ]
+		ifNotNil: [ 
+			simulationModel exportModel: modelFileReference.
+			self openObservatoryOnFile: modelFileReference ]
 		ifNil: [ 
 			RMDRepositoryModelsBrowser
 				openForSave: simulationModel
-				ifAccepted: [ :ref | self openObservatoryOnDirectory: ref ] ]
+				ifAccepted: [ :ref | self openObservatoryOnFile: ref ] ]
 ]
 
-{ #category : #api }
-RMDSimulationModeler >> openObservatoryOnDirectory: aFileReference [
+{ #category : #operations }
+RMDSimulationModeler >> openObservatoryOnFile: aFileReference [
 
 	| memoryRef interpreter |
 	memoryRef := aFileReference / 'memory'.
