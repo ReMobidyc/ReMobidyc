@@ -256,9 +256,12 @@ RMDSimulationModeler >> openObservatory [
 { #category : #api }
 RMDSimulationModeler >> openObservatoryOnDirectory [
 
-	RMDRepositoryModelsBrowser
-		openForSave: simulationModel
-		ifAccepted: [ :ref | self openObservatoryOnDirectory: ref ]
+	modelFileReference
+		ifNotNil: [ self openObservatoryOnDirectory: modelFileReference ]
+		ifNil: [ 
+			RMDRepositoryModelsBrowser
+				openForSave: simulationModel
+				ifAccepted: [ :ref | self openObservatoryOnDirectory: ref ] ]
 ]
 
 { #category : #api }
