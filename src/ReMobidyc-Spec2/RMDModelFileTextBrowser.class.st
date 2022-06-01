@@ -2,10 +2,13 @@ Class {
 	#name : #RMDModelFileTextBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
+		'#runOnMemoryButton',
+		'#runOnFileButton',
 		'#fileList',
 		'#sourceText',
 		'#modelFileReference => ObservableSlot',
-		'#editingTexts'
+		'#editingTexts',
+		'#menuBar'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -13,11 +16,17 @@ Class {
 { #category : #layout }
 RMDModelFileTextBrowser class >> defaultLayout [
 
-	^ SpPanedLayout newHorizontal
-		  add: #fileList;
-		  add: #sourceText;
-		  positionOfSlider: 0.3;
-		  yourself
+	^ SpBoxLayout newVertical
+		  add: #menuBar height: self toolbarHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: #runOnMemoryButton;
+				   add: #runOnFileButton)
+		  height: self buttonHeight;
+		  add: (SpPanedLayout newHorizontal
+				   add: #fileList;
+				   add: #sourceText;
+				   positionOfSlider: 0.3;
+				   yourself)
 ]
 
 { #category : #'instance creation' }
@@ -43,7 +52,8 @@ RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #TextBrowser)
 		parent: 'ReMobidyc';
-		label: 'Text Model Browser';
+		order: 2;
+		label: 'Modeler (text)';
 		action: [ RMDModelFileTextBrowser openFromRepository ];
 		help: 'Open a text-based browser on a local repository'
 ]
@@ -80,6 +90,50 @@ RMDModelFileTextBrowser >> agentsFileParser [
 	^ RMDGrammar new agentsFile end
 ]
 
+{ #category : #operations }
+RMDModelFileTextBrowser >> confirmSaveAllFor: aString [
+
+	| answer |
+	editingTexts ifEmpty: [ ^ false ].
+	answer := UIManager default
+		          confirm: 'Save model?'
+		          trueChoice: 'Save&' , aString
+		          falseChoice: aString , ' without save'
+		          cancelChoice: 'Cancel'
+		          default: nil.
+	answer
+		ifTrue: [ self saveAll ]
+		ifFalse: [ editingTexts removeAll ].
+	^ answer
+]
+
+{ #category : #menu }
+RMDModelFileTextBrowser >> fileMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Open...';
+						  action: [ 
+							  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+									  self modelFileReference: repBrowser file ] ] ].
+			  group addItem: [ :item | 
+				  item
+					  name: 'Save';
+					  enabled: [modelFileReference notNil and: [editingTexts notEmpty]];
+					  action: [ self simulationModel exportModel: modelFileReference ] ].
+			  group addItem: [ :item | 
+				  item
+					  name: 'Save As...';
+					  action: [ 
+						  RMDRepositoryModelsBrowser
+							  openForSave: self simulationModel
+							  do: [ :model :repBrowser | 
+								  self modelFileReference: repBrowser file ] ] ] ];
+		  yourself
+]
+
 { #category : #updating }
 RMDModelFileTextBrowser >> forgetEditingTextAt: ref [
 
@@ -102,6 +156,23 @@ RMDModelFileTextBrowser >> initialize [
 RMDModelFileTextBrowser >> initializePresenters [
 
 	super initializePresenters.
+	menuBar := self newMenuBar
+		           addGroup: [ :group | 
+			           group addItem: [ :item | 
+					           item
+						           name: 'File';
+						           subMenu: self fileMenu ] ];
+		           yourself.
+	runOnMemoryButton := self newButton
+		                     label: 'Run';
+		                     action: [ self openObservatory ];
+		                     state: false;
+		                     yourself.
+	runOnFileButton := self newButton
+		                   label: 'Run & Record';
+		                   action: [ self openObservatoryOnFile ];
+		                   state: false;
+		                   yourself.
 	fileList := self newList
 		            display: [ :ref | ref basenameWithoutExtension: 'rmd' ];
 		            displayIcon: [ :ref | 
@@ -111,7 +182,7 @@ RMDModelFileTextBrowser >> initializePresenters [
 		            yourself.
 	sourceText := (self newSourceWith: self freeTextParser)
 		              whenTextChangedDo: [ self updateEditingText ];
-		              whenSubmitDo: [:text | self acceptSourceText ];
+		              whenSubmitDo: [ :text | self acceptSourceText ];
 		              yourself.
 	(self observablePropertyNamed: #modelFileReference) whenChangedDo: [ 
 		self updateFileList ]
@@ -135,14 +206,77 @@ RMDModelFileTextBrowser >> modelFileReference [
 { #category : #accessing }
 RMDModelFileTextBrowser >> modelFileReference: aFileReference [
 
+	editingTexts removeAll.
 	modelFileReference := aFileReference.
 	self updateWindowTitle
+]
+
+{ #category : #operations }
+RMDModelFileTextBrowser >> openObservatory [
+
+	| interpreter |
+	(self confirmSaveAllFor: 'Run') ifNil: [ ^ self ].
+	interpreter := RMDInterpreter new
+		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel: self simulationModel;
+		               yourself.
+	interpreter setupSimulation.
+	^ (RMDObservatory interpreter: interpreter)
+		  modelName:
+			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
+		  open;
+		  yourself
+]
+
+{ #category : #operations }
+RMDModelFileTextBrowser >> openObservatoryOnFile [
+
+	| memoryRef interpreter |
+	(self confirmSaveAllFor: 'Run') ifNil: [ ^ self ].
+	memoryRef := modelFileReference / 'memory'.
+	memoryRef isDirectory ifTrue: [ 
+		(UIManager default
+			 confirm:
+			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
+			 label: 'Simulation result exists'
+			 trueChoice: 'Erase & Open'
+			 falseChoice: 'Open'
+			 cancelChoice: 'Cancel'
+			 default: false)
+			ifNil: [ ^ self ]
+			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
+	interpreter := RMDInterpreter new
+		               setMemory:
+			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
+		               setContext: RMDActionContext new;
+		               simulationModel: self simulationModel;
+		               yourself.
+	interpreter setupSimulation.
+	^ (RMDObservatory interpreter: interpreter)
+		  modelName: modelFileReference basename;
+		  open;
+		  yourself
+]
+
+{ #category : #operations }
+RMDModelFileTextBrowser >> saveAll [
+
+	editingTexts keysAndValuesDo: [ :ref :text | 
+		ref writeStreamDo: [ :stream | stream nextPutAll: text asString ] ].
+	editingTexts removeAll
 ]
 
 { #category : #parsers }
 RMDModelFileTextBrowser >> simulationFileParser [
 
 	^ RMDGrammar new simulationFile end
+]
+
+{ #category : #accessing }
+RMDModelFileTextBrowser >> simulationModel [
+
+	^ RMDSimulationModel importModel: modelFileReference ifError: [ nil ]
 ]
 
 { #category : #parsers }
