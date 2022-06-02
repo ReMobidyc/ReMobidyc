@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDAnimatDefinitionNode,
-	#superclass : #RMDSpeciesDefinitionNode,
+	#superclass : #RMDAgentDefinitionNode,
 	#instVars : [
 		'identifier'
 	],

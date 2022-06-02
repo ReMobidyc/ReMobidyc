@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSpeciesInitializerNode,
+	#name : #RMDAgentInitializerNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'attributeInitializers'
@@ -8,43 +8,43 @@ Class {
 }
 
 { #category : #comparing }
-RMDSpeciesInitializerNode >> = anObject [
+RMDAgentInitializerNode >> = anObject [
 	^ self class = anObject class
 		and: [ attributeInitializers = anObject attributeInitializers ]
 ]
 
 { #category : #accessing }
-RMDSpeciesInitializerNode >> attributeInitializers [
+RMDAgentInitializerNode >> attributeInitializers [
 	^ attributeInitializers
 ]
 
 { #category : #accessing }
-RMDSpeciesInitializerNode >> attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
+RMDAgentInitializerNode >> attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
 	attributeInitializers := anArrayOfRMDSimulationAttributeInitializerNode
 ]
 
 { #category : #enumerating }
-RMDSpeciesInitializerNode >> childrenDo: aBlock [
+RMDAgentInitializerNode >> childrenDo: aBlock [
 	attributeInitializers do: aBlock
 ]
 
 { #category : #comparing }
-RMDSpeciesInitializerNode >> hash [
+RMDAgentInitializerNode >> hash [
 	^ attributeInitializers hash
 ]
 
 { #category : #testing }
-RMDSpeciesInitializerNode >> isSpeciesInitializerNode [
+RMDAgentInitializerNode >> isAgentInitializerNode [
 	^ true
 ]
 
 { #category : #copying }
-RMDSpeciesInitializerNode >> postCopy [
+RMDAgentInitializerNode >> postCopy [
 	attributeInitializers := attributeInitializers collect: #copy
 ]
 
 { #category : #rewriting }
-RMDSpeciesInitializerNode >> replaceChildren: aDictionary [
+RMDAgentInitializerNode >> replaceChildren: aDictionary [
 	attributeInitializers := attributeInitializers
 		collect: [ :node | node copyReplace: aDictionary ]
 ]

@@ -11,6 +11,11 @@ RMDPresenter >> addIcon [
 	^ Smalltalk ui icons add
 ]
 
+{ #category : #private }
+RMDPresenter >> agentNameValidation [
+	^ [ :name | name asString allSatisfy: [ :c | c isLetter or: [ c isDigit ] ] ]
+]
+
 { #category : #icons }
 RMDPresenter >> editIcon [
 	^ Smalltalk ui icons edit
@@ -32,7 +37,7 @@ RMDPresenter >> initializePresenters [
 RMDPresenter >> newAnimatInput [
 	^ self newValidatedTextInput
 		validation: [ :name | 
-			(self speciesValidation value: name)
+			(self agentNameValidation value: name)
 				and: [ (#('World' 'Patch') includes: name asString) not ] ]
 ]
 
@@ -105,9 +110,4 @@ RMDPresenter >> replacementIcon [
 RMDPresenter >> repositoryIcon [
 
 	^ Smalltalk ui icons database
-]
-
-{ #category : #private }
-RMDPresenter >> speciesValidation [
-	^ [ :name | name asString allSatisfy: [ :c | c isLetter or: [ c isDigit ] ] ]
 ]

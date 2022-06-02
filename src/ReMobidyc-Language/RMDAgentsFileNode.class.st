@@ -8,10 +8,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAgentsFileNode class >> agents: anArrayOfRMDSpeciesDefinitionNode [
+RMDAgentsFileNode class >> agents: anArrayOfRMDAgentDefinitionNode [
 
 	^ self new
-		  agents: anArrayOfRMDSpeciesDefinitionNode;
+		  agents: anArrayOfRMDAgentDefinitionNode;
 		  yourself
 ]
 
@@ -22,9 +22,9 @@ RMDAgentsFileNode >> agents [
 ]
 
 { #category : #accessing }
-RMDAgentsFileNode >> agents: anArrayOfRMDSpeciesDefinitionNode [
+RMDAgentsFileNode >> agents: anArrayOfRMDAgentDefinitionNode [
 
-	agents := anArrayOfRMDSpeciesDefinitionNode
+	agents := anArrayOfRMDAgentDefinitionNode
 ]
 
 { #category : #enumerating }

@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSpeciesInspector,
+	#name : #RMDAgentInspector,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'#interpreter => ObservableSlot'
@@ -8,40 +8,45 @@ Class {
 }
 
 { #category : #private }
-RMDSpeciesInspector >> attributeValuesDo: aBlock [
+RMDAgentInspector >> agentDefinitionDo: aBlock [
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
+RMDAgentInspector >> attributeValuesDo: aBlock [
 	interpreter
 		ifNotNil: [ self
-				speciesDefinitionDo: [ :speciesDefinition | 
+				agentDefinitionDo: [ :agentDefinition | 
 					^ aBlock
 						cull:
 							(RMDAttributeValues
 								fromInterpreter: interpreter
-								animat: speciesDefinition) ] ]
+								animat: agentDefinition) ] ]
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> collapsedIcon [
+RMDAgentInspector >> collapsedIcon [
 	^ Smalltalk ui theme 	treeUnexpandedForm
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> expandedIcon [
+RMDAgentInspector >> expandedIcon [
 	^ Smalltalk ui theme 	treeExpandedForm
 ]
 
 { #category : #initialization }
-RMDSpeciesInspector >> initialize [
+RMDAgentInspector >> initialize [
 	super initialize.
 	self property: #interpreter whenChangedDo: [ self updateObservation ]
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> interpreter [
+RMDAgentInspector >> interpreter [
 	^ interpreter
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> interpreter: aRMDInterpreter [
+RMDAgentInspector >> interpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	interpreter announcer weak
@@ -51,22 +56,17 @@ RMDSpeciesInspector >> interpreter: aRMDInterpreter [
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> interpreterDo: aBlock [
+RMDAgentInspector >> interpreterDo: aBlock [
 	interpreter ifNotNil: aBlock
 ]
 
 { #category : #accessing }
-RMDSpeciesInspector >> spawnIcon [
+RMDAgentInspector >> spawnIcon [
 
 	^ Smalltalk ui iconNamed: #expandBox
 ]
 
 { #category : #private }
-RMDSpeciesInspector >> speciesDefinitionDo: aBlock [
-	^ self subclassResponsibility
-]
-
-{ #category : #private }
-RMDSpeciesInspector >> updateObservation [
+RMDAgentInspector >> updateObservation [
 	^ self subclassResponsibility 
 ]

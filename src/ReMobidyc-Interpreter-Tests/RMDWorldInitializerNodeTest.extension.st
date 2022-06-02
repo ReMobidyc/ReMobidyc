@@ -14,13 +14,13 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	interpreter individualsOf: worldDef do: [ :world | 
 		interpreter
 			withInitializerContextWithSubject: world
-			species: worldDef
+			agent: worldDef
 			do: [ worldInitializer evalIn: interpreter ] ].
 	count := 0.
 	interpreter individualsOf: worldDef do: [ :world | 
 		interpreter
 			withActionContextWithIndividual: world
-			species: worldDef
+			agent: worldDef
 			do: [ 
 				self
 					assert:

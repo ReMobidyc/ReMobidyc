@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDWorldHistogramInspector >> speciesName [
+RMDWorldHistogramInspector >> agentName [
 
 	^ 'World'
 ]

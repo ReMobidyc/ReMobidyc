@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDHistogramInspector,
-	#superclass : #RMDSpeciesInspector,
+	#superclass : #RMDAgentInspector,
 	#instVars : [
 		'chartPresenters',
 		'visibleAttributes',
@@ -15,6 +15,12 @@ RMDHistogramInspector class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: '';
 		  yourself
+]
+
+{ #category : #accessing }
+RMDHistogramInspector >> agentName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -195,17 +201,11 @@ RMDHistogramInspector >> spawnButtonFor: attributeDef [
 						                      autoScale: true;
 						                      yourself.
 					  spawnedPresenter open title:
-						  'Histgram of ' , self speciesName , '''s '
+						  'Histgram of ' , self agentName , '''s '
 						  , attributeDef printString.
 					  (spawnedPresenters
 						   at: attributeDef identifier
 						   ifAbsentPut: [ OrderedCollection new ]) add: spawnedPresenter ] ]
-]
-
-{ #category : #accessing }
-RMDHistogramInspector >> speciesName [
-
-	^ self subclassResponsibility
 ]
 
 { #category : #updating }

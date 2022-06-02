@@ -10,7 +10,7 @@ RMDStageDirectiveNodeTest >> testEvalIn [
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.
 	interpreter
 		withActionContextWithIndividual: individualA
-		species: aDef
+		agent: aDef
 		do: [ 
 		(RMDStageDirectiveNode animatIdentifier: 'B') evalIn: interpreter ].
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.

@@ -65,6 +65,6 @@ RMDPatchExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInt
 	patchDef := aRMDInterpreter patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
-		species: patchDef
+		agent: patchDef
 		do: [ ^ expression evalIn: aRMDInterpreter ]
 ]

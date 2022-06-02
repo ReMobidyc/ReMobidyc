@@ -10,9 +10,9 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDExecutionContext class >> subject: anInteger definition: aRMDSpeciesDefinitionNode [
+RMDExecutionContext class >> subject: anInteger definition: aRMDAgentDefinitionNode [
 	^ self new
-		subject: anInteger definition: aRMDSpeciesDefinitionNode;
+		subject: anInteger definition: aRMDAgentDefinitionNode;
 		yourself
 ]
 
@@ -44,18 +44,18 @@ RMDExecutionContext >> subject [
 ]
 
 { #category : #accessing }
-RMDExecutionContext >> subject: anInteger definition: aRMDSpeciesDefinitionNode [
+RMDExecutionContext >> subject: anInteger definition: aRMDAgentDefinitionNode [
 	| dict |
 	dict := Dictionary new.
-	aRMDSpeciesDefinitionNode
+	aRMDAgentDefinitionNode
 		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	attributeDict at: nil put: dict.
-	aRMDSpeciesDefinitionNode isPatchDefinitionNode
+	aRMDAgentDefinitionNode isPatchDefinitionNode
 		ifTrue: [ attributeDict at: 'here' put: dict ].
-	aRMDSpeciesDefinitionNode isWorldDefinitionNode
+	aRMDAgentDefinitionNode isWorldDefinitionNode
 		ifTrue: [ attributeDict at: 'world' put: dict ].
 	subject := anInteger.
-	subjectDefinition := aRMDSpeciesDefinitionNode 
+	subjectDefinition := aRMDAgentDefinitionNode 
 ]
 
 { #category : #accessing }

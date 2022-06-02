@@ -294,19 +294,18 @@ RMDInterpreter >> here [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> individualsOf: aRMDSpeciesDefinitionNode do: aBlock [
-	aRMDSpeciesDefinitionNode isAnimatDefinitionNode
-		ifTrue: [ memory
-				animatsOf: aRMDSpeciesDefinitionNode identifier
-				do: aBlock.
-			^ self ].
-	aRMDSpeciesDefinitionNode isPatchDefinitionNode
-		ifTrue: [ memory patchesDo: aBlock.
-			^ self ].
-	aRMDSpeciesDefinitionNode isWorldDefinitionNode
-		ifTrue: [ memory worldDo: aBlock.
-			^ self ].
-	^ self error: 'Unknown species type'
+RMDInterpreter >> individualsOf: aRMDAgentDefinitionNode do: aBlock [
+
+	aRMDAgentDefinitionNode isAnimatDefinitionNode ifTrue: [ 
+		memory animatsOf: aRMDAgentDefinitionNode identifier do: aBlock.
+		^ self ].
+	aRMDAgentDefinitionNode isPatchDefinitionNode ifTrue: [ 
+		memory patchesDo: aBlock.
+		^ self ].
+	aRMDAgentDefinitionNode isWorldDefinitionNode ifTrue: [ 
+		memory worldDo: aBlock.
+		^ self ].
+	^ self error: 'Unknown agent type'
 ]
 
 { #category : #initialization }
@@ -380,12 +379,12 @@ RMDInterpreter >> nextSeed [
 ]
 
 { #category : #'animat operations' }
-RMDInterpreter >> numberOfIndivisualsOf: aRMDSpeciesDefinitionNode [
-	aRMDSpeciesDefinitionNode isWorldDefinitionNode
-		ifTrue: [ ^ 1 ].
-	aRMDSpeciesDefinitionNode isPatchDefinitionNode
-		ifTrue: [ ^ memory xPatches * memory yPatches ].
-	^ memory numberOfAnimats: aRMDSpeciesDefinitionNode identifier
+RMDInterpreter >> numberOfIndivisualsOf: aRMDAgentDefinitionNode [
+
+	aRMDAgentDefinitionNode isWorldDefinitionNode ifTrue: [ ^ 1 ].
+	aRMDAgentDefinitionNode isPatchDefinitionNode ifTrue: [ 
+		^ memory xPatches * memory yPatches ].
+	^ memory numberOfAnimats: aRMDAgentDefinitionNode identifier
 ]
 
 { #category : #'space access' }
@@ -516,7 +515,7 @@ RMDInterpreter >> setupSimulation [
 		memory worldDo: [ :world | 
 			self
 				withInitializerContextWithSubject: world
-				species: simulationModel worldDefinition
+				agent: simulationModel worldDefinition
 				do: [ 
 					context randomSeedWithAll: { 
 							randomSeed.
@@ -526,7 +525,7 @@ RMDInterpreter >> setupSimulation [
 		memory patchesDo: [ :patch | 
 			self
 				withInitializerContextWithSubject: patch
-				species: simulationModel patchDefinition
+				agent: simulationModel patchDefinition
 				do: [ 
 					context randomSeedWithAll: { 
 							randomSeed.
@@ -545,7 +544,7 @@ RMDInterpreter >> setupSimulation [
 
 				self
 					withInitializerContextWithSubject: animat
-					species: animatDefinition
+					agent: animatDefinition
 					do: [ 
 						context randomSeedWithAll: { 
 								randomSeed.
@@ -630,7 +629,7 @@ RMDInterpreter >> unknownDirectiveError: aString [
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimatDefinitionNode do: aBlock [
+RMDInterpreter >> withActionContextWithIndividual: anInteger agent: aRMDAnimatDefinitionNode do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
@@ -681,7 +680,7 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger species: aRMDAnimat
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anInteger1 species: aRMDAnimatDefinitionNode1 object: anInteger2 species: aRMDAnimatDefinitionNode2 do: aBlock [
+RMDInterpreter >> withActionContextWithIndividual: anInteger1 agent: aRMDAnimatDefinitionNode1 object: anInteger2 agent: aRMDAnimatDefinitionNode2 do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
@@ -735,23 +734,23 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger1 species: aRMDAnima
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withInitializerContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
+RMDInterpreter >> withInitializerContextWithSubject: anInteger agent: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
 		  withContext: (RMDInitializerContext
 				   subject: anInteger
-				   definition: aRMDSpeciesDefinitionNode)
+				   definition: aRMDAgentDefinitionNode)
 		  do: aBlock
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withObserverContextWithSubject: anInteger species: aRMDSpeciesDefinitionNode do: aBlock [
+RMDInterpreter >> withObserverContextWithSubject: anInteger agent: aRMDAgentDefinitionNode do: aBlock [
+
 	^ self
-		withContext:
-			(RMDObserverContext
-				subject: anInteger
-				definition: aRMDSpeciesDefinitionNode)
-		do: aBlock
+		  withContext: (RMDObserverContext
+				   subject: anInteger
+				   definition: aRMDAgentDefinitionNode)
+		  do: aBlock
 ]
 
 { #category : #'space access' }

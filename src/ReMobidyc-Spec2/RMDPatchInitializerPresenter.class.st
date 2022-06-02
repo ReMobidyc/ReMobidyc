@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDPatchInitializerPresenter,
-	#superclass : #RMDSpeciesInitializerPresenter,
+	#superclass : #RMDAgentInitializerPresenter,
 	#instVars : [
 		'xDivisionsField',
 		'yDivisionsField',

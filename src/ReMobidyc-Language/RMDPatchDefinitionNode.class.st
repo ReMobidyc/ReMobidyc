@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDPatchDefinitionNode,
-	#superclass : #RMDSpeciesDefinitionNode,
+	#superclass : #RMDAgentDefinitionNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 

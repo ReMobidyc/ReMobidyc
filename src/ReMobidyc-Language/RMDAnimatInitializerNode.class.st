@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDAnimatInitializerNode,
-	#superclass : #RMDSpeciesInitializerNode,
+	#superclass : #RMDAgentInitializerNode,
 	#instVars : [
 		'population',
 		'animat'

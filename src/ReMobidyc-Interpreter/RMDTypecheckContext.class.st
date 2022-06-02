@@ -90,9 +90,9 @@ RMDTypecheckContext >> subjectDefinition [
 ]
 
 { #category : #accessing }
-RMDTypecheckContext >> subjectDefinition: aRMDSpeciesDefinitionNode [
+RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
 	| dict |
-	subjectDefinition := aRMDSpeciesDefinitionNode.
+	subjectDefinition := aRMDAgentDefinitionNode.
 	dict := Dictionary new.
 	subjectDefinition
 		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].

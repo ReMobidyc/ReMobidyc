@@ -79,7 +79,17 @@ RMDSyntaxNode >> isAdditionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAgentDefinitionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAgentDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isAgentInitializerNode [
 	^ false
 ]
 
@@ -315,16 +325,6 @@ RMDSyntaxNode >> isSimulationFileNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isSimulationTimeDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isSpeciesDefinitionNode [
-	^ false
-]
-
-{ #category : #testing }
-RMDSyntaxNode >> isSpeciesInitializerNode [
 	^ false
 ]
 

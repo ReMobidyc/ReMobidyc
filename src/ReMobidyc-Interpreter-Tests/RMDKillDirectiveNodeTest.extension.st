@@ -10,9 +10,9 @@ RMDKillDirectiveNodeTest >> testEvalIn [
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.
 	interpreter
 		withActionContextWithIndividual: individualA
-		species: aDef
+		agent: aDef
 		object: individualB
-		species: bDef
+		agent: bDef
 		do: [ RMDKillDirectiveNode new evalIn: interpreter ].
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.

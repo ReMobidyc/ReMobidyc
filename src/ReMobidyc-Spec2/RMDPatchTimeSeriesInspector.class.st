@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #enumerating }
-RMDPatchTimeSeriesInspector >> speciesDefinitionDo: aBlock [
+RMDPatchTimeSeriesInspector >> agentDefinitionDo: aBlock [
 
 	aBlock cull: interpreter patchDefinition
 ]

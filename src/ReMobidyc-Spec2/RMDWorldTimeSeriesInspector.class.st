@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #enumerating }
-RMDWorldTimeSeriesInspector >> speciesDefinitionDo: aBlock [
+RMDWorldTimeSeriesInspector >> agentDefinitionDo: aBlock [
 
 	aBlock cull: interpreter worldDefinition
 ]
