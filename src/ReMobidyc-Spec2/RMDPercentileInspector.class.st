@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDPercentileInspector,
-	#superclass : #RMDSpeciesInspector,
+	#superclass : #RMDAgentInspector,
 	#instVars : [
 		'showsPercentiles',
 		'showsMin',

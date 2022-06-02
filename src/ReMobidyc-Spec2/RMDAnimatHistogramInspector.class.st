@@ -19,6 +19,12 @@ RMDAnimatHistogramInspector class >> defaultLayout [
 ]
 
 { #category : #accessing }
+RMDAnimatHistogramInspector >> agentName [
+
+	^ animat ifNil: [ 'Animat' ]
+]
+
+{ #category : #accessing }
 RMDAnimatHistogramInspector >> animat [
 	^ animat
 ]
@@ -49,12 +55,6 @@ RMDAnimatHistogramInspector >> newLayout [
 	^ SpBoxLayout newVertical
 		  add: populationLabel height: self class buttonHeight;
 		  yourself
-]
-
-{ #category : #accessing }
-RMDAnimatHistogramInspector >> speciesName [
-
-	^ animat ifNil: [ 'Animat' ]
 ]
 
 { #category : #updating }

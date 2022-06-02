@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDWorldInitializerNode,
-	#superclass : #RMDSpeciesInitializerNode,
+	#superclass : #RMDAgentInitializerNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 

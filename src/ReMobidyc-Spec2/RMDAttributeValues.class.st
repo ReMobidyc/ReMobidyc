@@ -11,26 +11,26 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDSpeciesDefinitionNode [
+RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDefinitionNode [
 
 	| attributeDeclarations attributeValues ids individualIndex attributeStats |
-	attributeDeclarations := aRMDSpeciesDefinitionNode
+	attributeDeclarations := aRMDAgentDefinitionNode
 		                        allAttributeDeclarations.
 	ids := Array new:
 		       (aRMDInterpreter numberOfIndivisualsOf:
-			        aRMDSpeciesDefinitionNode).
+			        aRMDAgentDefinitionNode).
 	attributeValues := (1 to: attributeDeclarations size) collect: [ :i | 
 		                  Array new: ids size ].
 	individualIndex := 1.
 	aRMDInterpreter
-		individualsOf: aRMDSpeciesDefinitionNode
+		individualsOf: aRMDAgentDefinitionNode
 		do: [ :id | 
 			ids at: individualIndex put: id.
 			aRMDInterpreter
 				withObserverContextWithSubject: id
-				species: aRMDSpeciesDefinitionNode
+				agent: aRMDAgentDefinitionNode
 				do: [ 
-					aRMDSpeciesDefinitionNode allAttributeDeclarations doWithIndex: [ 
+					aRMDAgentDefinitionNode allAttributeDeclarations doWithIndex: [ 
 						:attributeDef 
 						:attributeIndex | 
 						(attributeValues at: attributeIndex)

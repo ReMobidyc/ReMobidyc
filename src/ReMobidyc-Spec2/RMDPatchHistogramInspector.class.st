@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : #accessing }
-RMDPatchHistogramInspector >> speciesName [
+RMDPatchHistogramInspector >> agentName [
 
 	^ 'Patch'
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDPatchInitializerNode,
-	#superclass : #RMDSpeciesInitializerNode,
+	#superclass : #RMDAgentInitializerNode,
 	#instVars : [
 		'xDivisions',
 		'yDivisions',

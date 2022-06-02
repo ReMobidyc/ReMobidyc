@@ -28,6 +28,12 @@ RMDAnimatTimeSeriesInspector class >> defaultLayout [
 		  add: SpBoxLayout newVertical
 ]
 
+{ #category : #enumerating }
+RMDAnimatTimeSeriesInspector >> agentDefinitionDo: aBlock [
+
+	interpreter animatDefinitionAt: self animat ifPresent: aBlock
+]
+
 { #category : #accessing }
 RMDAnimatTimeSeriesInspector >> animat [
 	^ animat
@@ -140,12 +146,6 @@ RMDAnimatTimeSeriesInspector >> newLayout [
 				   add: showsTotal)
 		  height: self class buttonHeight;
 		  yourself
-]
-
-{ #category : #enumerating }
-RMDAnimatTimeSeriesInspector >> speciesDefinitionDo: aBlock [
-
-	interpreter animatDefinitionAt: self animat ifPresent: aBlock
 ]
 
 { #category : #updating }

@@ -4,7 +4,7 @@ Trait {
 }
 
 { #category : #enumerating }
-TRMDWorldObservatory >> speciesDefinitionDo: aBlock [
+TRMDWorldObservatory >> agentDefinitionDo: aBlock [
 	self
 		interpreterDo: [ :interpreter | aBlock cull: interpreter worldDefinition ]
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDSpeciesDefinitionNode,
+	#name : #RMDAgentDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'attributeDeclarations',
@@ -12,43 +12,44 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDSpeciesDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+RMDAgentDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
 	^ self new
 		attributeDeclarations: anArrayOfRMDAttributeDeclarationNode;
 		yourself
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode class >> builtinAttributes [
+RMDAgentDefinitionNode class >> builtinAttributes [
 	^ builtinAttributes
 		ifNil: [ builtinAttributes := self createBuiltinAttributes ]
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode class >> createBuiltinAttributes [
+RMDAgentDefinitionNode class >> createBuiltinAttributes [
 	^ self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
-RMDSpeciesDefinitionNode class >> empty [
+RMDAgentDefinitionNode class >> empty [
 	^ self attributeDeclarations: #()
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode class >> flushBuiltinAttributes [
+RMDAgentDefinitionNode class >> flushBuiltinAttributes [
+
 	<script:
-		'RMDSpeciesDefinitionNode allSubclassesDo: [:c | c flushBuiltinAttributes ]'>
+	'RMDAgentDefinitionNode allSubclassesDo: [:c | c flushBuiltinAttributes ]'>
 	builtinAttributes := nil
 ]
 
 { #category : #comparing }
-RMDSpeciesDefinitionNode >> = anObject [
+RMDAgentDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ attributeDeclarations = anObject attributeDeclarations ]
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> allAttributeDeclarations [
+RMDAgentDefinitionNode >> allAttributeDeclarations [
 	^ (self builtinAttributes
 		collect:
 			[ :assoc | RMDAttributeDeclarationNode identifier: assoc key unit: assoc value ])
@@ -56,7 +57,7 @@ RMDSpeciesDefinitionNode >> allAttributeDeclarations [
 ]
 
 { #category : #utilities }
-RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
+RMDAgentDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 	^ (self attributeOffsets associations
 		collect: [ :assoc | 
 			assoc key
@@ -65,34 +66,34 @@ RMDSpeciesDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> attributeDeclarations [
+RMDAgentDefinitionNode >> attributeDeclarations [
 	^ attributeDeclarations
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> attributeDeclarations: anArrayOfAttributeDeclaration [
+RMDAgentDefinitionNode >> attributeDeclarations: anArrayOfAttributeDeclaration [
 	attributeDeclarations := anArrayOfAttributeDeclaration.
 	attributeOffsets := nil
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> attributeDeclarationsDo: aBlock [
+RMDAgentDefinitionNode >> attributeDeclarationsDo: aBlock [
 	attributeDeclarations do: aBlock
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> attributeIdentifiersDo: aBlock [
+RMDAgentDefinitionNode >> attributeIdentifiersDo: aBlock [
 	attributeDeclarations
 		do: [ :attribute | aBlock value: attribute identifier ]
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> attributeOffsetAt: aString ifAbsent: errorBlock [
+RMDAgentDefinitionNode >> attributeOffsetAt: aString ifAbsent: errorBlock [
 	^ self attributeOffsets at: aString ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> attributeOffsets [
+RMDAgentDefinitionNode >> attributeOffsets [
 	^ attributeOffsets
 		ifNil: [ | offset |
 			attributeOffsets := Dictionary new.
@@ -108,12 +109,12 @@ RMDSpeciesDefinitionNode >> attributeOffsets [
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> attributeOffsetsDo: aBlock [
+RMDAgentDefinitionNode >> attributeOffsetsDo: aBlock [
 	self attributeOffsets keysAndValuesDo: aBlock
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> attributeUnitsDo: aBlock [
+RMDAgentDefinitionNode >> attributeUnitsDo: aBlock [
 	self builtinAttributes
 		do: [ :assoc | aBlock value: assoc key value: assoc value ].
 	self
@@ -121,45 +122,45 @@ RMDSpeciesDefinitionNode >> attributeUnitsDo: aBlock [
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> builtinAttributes [
+RMDAgentDefinitionNode >> builtinAttributes [
 	^ self class builtinAttributes
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> childrenDo: aBlock [
+RMDAgentDefinitionNode >> childrenDo: aBlock [
 	attributeDeclarations do: aBlock
 ]
 
 { #category : #comparing }
-RMDSpeciesDefinitionNode >> hash [
+RMDAgentDefinitionNode >> hash [
 	^ self class hash bitXor: attributeDeclarations hash
 ]
 
 { #category : #testing }
-RMDSpeciesDefinitionNode >> isSpeciesDefinitionNode [
+RMDAgentDefinitionNode >> isAgentDefinitionNode [
 	^ true
 ]
 
 { #category : #copying }
-RMDSpeciesDefinitionNode >> postCopy [
+RMDAgentDefinitionNode >> postCopy [
 	attributeDeclarations := attributeDeclarations collect: #copy.
 	attributeOffsets := nil
 ]
 
 { #category : #rewriting }
-RMDSpeciesDefinitionNode >> replaceChildren: aDictionary [
+RMDAgentDefinitionNode >> replaceChildren: aDictionary [
 	attributeDeclarations := attributeDeclarations
 		collect: [ :node | node copyReplace: aDictionary ].
 	attributeOffsets := nil
 ]
 
 { #category : #accessing }
-RMDSpeciesDefinitionNode >> totalNumberOfAttributes [
+RMDAgentDefinitionNode >> totalNumberOfAttributes [
 	^ self builtinAttributes size + attributeDeclarations size
 ]
 
 { #category : #enumerating }
-RMDSpeciesDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
+RMDAgentDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
 
 	self attributeUnitsDo: [ :identifier :unit | 
 		aString = identifier ifTrue: [ ^ unit ] ].

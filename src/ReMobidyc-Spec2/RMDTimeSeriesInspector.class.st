@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDTimeSeriesInspector,
-	#superclass : #RMDSpeciesInspector,
+	#superclass : #RMDAgentInspector,
 	#instVars : [
 		'chartPresenters',
 		'showsMin',

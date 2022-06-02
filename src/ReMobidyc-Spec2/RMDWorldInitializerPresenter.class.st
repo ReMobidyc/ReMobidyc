@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDWorldInitializerPresenter,
-	#superclass : #RMDSpeciesInitializerPresenter,
+	#superclass : #RMDAgentInitializerPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 

@@ -1,12 +1,12 @@
-Extension { #name : #RMDSpeciesInitializerNode }
+Extension { #name : #RMDAgentInitializerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDSpeciesInitializerNode >> evalIn: aRMDInterpreter [
+RMDAgentInitializerNode >> evalIn: aRMDInterpreter [
 	attributeInitializers
 		do: [ :initializer | initializer evalIn: aRMDInterpreter ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDSpeciesInitializerNode >> typecheckIn: aRMDInterpreter [
+RMDAgentInitializerNode >> typecheckIn: aRMDInterpreter [
 	^ self subclassResponsibility
 ]

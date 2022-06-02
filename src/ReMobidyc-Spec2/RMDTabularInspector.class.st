@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDTabularInspector,
-	#superclass : #RMDSpeciesInspector,
+	#superclass : #RMDAgentInspector,
 	#instVars : [
 		'table'
 	],

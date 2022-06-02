@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDAnimatInitializerPresenter,
-	#superclass : #RMDSpeciesInitializerPresenter,
+	#superclass : #RMDAgentInitializerPresenter,
 	#instVars : [
 		'populationField',
 		'animatField',

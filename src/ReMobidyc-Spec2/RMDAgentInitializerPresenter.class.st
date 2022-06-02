@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDSpeciesInitializerPresenter,
+	#name : #RMDAgentInitializerPresenter,
 	#superclass : #RMDSyntaxNodePresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #specs }
-RMDSpeciesInitializerPresenter class >> defaultSpec [
+RMDAgentInitializerPresenter class >> defaultSpec [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
@@ -14,7 +14,7 @@ RMDSpeciesInitializerPresenter class >> defaultSpec [
 ]
 
 { #category : #initialization }
-RMDSpeciesInitializerPresenter >> initializePresenters [
+RMDAgentInitializerPresenter >> initializePresenters [
 	super initializePresenters.
 	self
 		whenBuiltDo: [ self
@@ -27,18 +27,18 @@ RMDSpeciesInitializerPresenter >> initializePresenters [
 ]
 
 { #category : #layouting }
-RMDSpeciesInitializerPresenter >> newLayout [
+RMDAgentInitializerPresenter >> newLayout [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
-RMDSpeciesInitializerPresenter >> nodeChanged [
+RMDAgentInitializerPresenter >> nodeChanged [
 	self updateAttributeInitializersList
 ]
 
 { #category : #updating }
-RMDSpeciesInitializerPresenter >> updateAttributeInitializersList [
+RMDAgentInitializerPresenter >> updateAttributeInitializersList [
 
 	self layout: self newLayout
 ]

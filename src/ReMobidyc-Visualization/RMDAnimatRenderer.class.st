@@ -43,7 +43,7 @@ RMDAnimatRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 		do: [ :individual | 
 			aRMDInterpreter
 				withObserverContextWithSubject: individual
-				species: animatDefinition
+				agent: animatDefinition
 				do: [ | x y |
 					x := aRMDInterpreter
 						readVariable: 'x'

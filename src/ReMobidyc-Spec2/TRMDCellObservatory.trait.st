@@ -4,7 +4,7 @@ Trait {
 }
 
 { #category : #enumerating }
-TRMDCellObservatory >> speciesDefinitionDo: aBlock [
+TRMDCellObservatory >> agentDefinitionDo: aBlock [
 	self
 		interpreterDo: [ :interpreter | aBlock cull: interpreter patchDefinition ]
 ]

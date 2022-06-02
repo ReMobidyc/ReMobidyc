@@ -4,7 +4,7 @@ Trait {
 }
 
 { #category : #enumerating }
-TRMDAnimatObservatory >> speciesDefinitionDo: aBlock [
+TRMDAnimatObservatory >> agentDefinitionDo: aBlock [
 	self
 		interpreterDo: [ :interpreter | interpreter animatDefinitionAt: self animat ifPresent: aBlock ]
 ]
