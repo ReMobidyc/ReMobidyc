@@ -347,7 +347,7 @@ RMDObservatory >> recordAPNG [
 
 { #category : #accessing }
 RMDObservatory >> requestModelName [
-	^ UIManager default request: 'model name' initialAnswer: 'Sugar Scape'
+	^ UIManager default request: 'model name' initialAnswer: 're:mobidyc'
 ]
 
 { #category : #api }

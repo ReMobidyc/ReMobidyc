@@ -179,12 +179,14 @@ RMDGrammar >> animatAttributePart [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> animatDefinition [
-	^ (self animatHeader , self animatAttributePart optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :quad | 
-			self animatDefinitionNodeClass
-				identifier: quad first
-				attributeDeclarations: (quad second ifNil: [ Array new ]) ]
+
+	^ self animatHeader , self animatAttributePart optional
+	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
+	  ==> [ :quad | 
+		  self animatDefinitionNodeClass
+			  identifier: quad first first
+			  species: quad first second
+			  attributeDeclarations: (quad second ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -212,7 +214,10 @@ RMDGrammar >> animatDotRenderer [
 RMDGrammar >> animatHeader [
 
 	^ agentIdentifier , 'is' asPParser trimBlanks
-	  , 'Animat' asPParser trimBlanks ==> #first
+	  , agentIdentifier trimBlanks ==> [ :triple | 
+	  { 
+		  triple first.
+		  triple third } ]
 ]
 
 { #category : #'parsers-definitions' }
