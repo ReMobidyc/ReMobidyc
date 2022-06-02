@@ -13,7 +13,9 @@ RMDPresenter >> addIcon [
 
 { #category : #private }
 RMDPresenter >> agentNameValidation [
-	^ [ :name | name asString allSatisfy: [ :c | c isLetter or: [ c isDigit ] ] ]
+
+	^ [ :name | 
+	  (RMDGrammar new agentIdentifier parse: name) isPetit2Success ]
 ]
 
 { #category : #icons }
