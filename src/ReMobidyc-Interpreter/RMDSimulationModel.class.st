@@ -579,7 +579,7 @@ RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 	simulationDefinition animatInitializers:
 		(simulationDefinition animatInitializers reject: [ :initializer | 
 			 initializer animat = aString ]).
-	simulationDefinition removeRenderersForAnimat: aString. 
+	self removeRenderersForAnimat: aString.
 	^ animatDefinition
 ]
 

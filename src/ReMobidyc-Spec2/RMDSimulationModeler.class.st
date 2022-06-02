@@ -129,23 +129,29 @@ RMDSimulationModeler >> addAnimatInitializer [
 ]
 
 { #category : #private }
-RMDSimulationModeler >> addAnimatNamed: aString [
+RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 
-	| name animatDefinitionNode |
-	name := RMDGrammar new agentIdentifier end parse: aString.
-	name isPetit2Failure ifTrue: [ 
+	| stageName speciesName animatDefinitionNode |
+	stageName := RMDGrammar new agentIdentifier end parse: aString.
+	stageName isPetit2Failure ifTrue: [ 
 		UIManager default alert: 'Invalid animat name: ' , aString.
 		^ nil ].
-	(simulationModel animatDefinitionAt: name ifAbsent: [ nil ]) 
+	speciesName := RMDGrammar new agentIdentifier end parse:
+		               anotherString.
+	speciesName isPetit2Failure ifTrue: [ 
+		UIManager default alert: 'Invalid animat name: ' , anotherString.
+		^ nil ].
+	(simulationModel animatDefinitionAt: stageName ifAbsent: [ nil ]) 
 		ifNotNil: [ 
-			UIManager default alert: name , ' is already defined.'.
+			UIManager default alert: stageName , ' is already defined.'.
 			^ nil ].
 	animatDefinitionNode := RMDAnimatDefinitionNode
-		                        identifier: name
+		                        identifier: stageName
+		                        species: speciesName
 		                        attributeDeclarations: Array new.
 	simulationModel load: animatDefinitionNode.
 	simulationModel addRenderer:
-		(RMDAnimatDotRenderer on: name diameter: 7 color: Color yellow).
+		(RMDAnimatDotRenderer on: stageName diameter: 7 color: Color yellow).
 	self updatePages
 ]
 
@@ -208,7 +214,7 @@ RMDSimulationModeler >> initializePresenters [
 		         whenSelectedPageChangedDo: [ 
 			         simulationDefinitionPresenter ifNotNil: #nodeChanged ];
 		         whenPageRemovedDo: [ :page | 
-			         self removeAnimatNamed: page title ];
+			         self removeSpeciesNamed: page title ];
 		         yourself.
 	runOnMemoryButton := self newButton
 		                     label: 'Run';
@@ -319,6 +325,22 @@ RMDSimulationModeler >> removeAnimatNamed: aString [
 ]
 
 { #category : #private }
+RMDSimulationModeler >> removeSpeciesNamed: aString [
+
+	| stages |
+	stages := (simulationModel animatDefinitions values
+		           select: [ :animat | animat species = aString ]
+		           thenCollect: #identifier) asSortedCollection asArray.
+	stages ifNotEmpty: [ 
+		(UIManager default
+			 confirm: 'Sure to remove ' , (', ' join: stages) , '?'
+			 label: 'Confirmation to remove species definitions') ifTrue: [ 
+			stages do: [ :stage | 
+				simulationModel removeAnimat: stage ifAbsent: [  ] ] ].
+		self updatePages ]
+]
+
+{ #category : #private }
 RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
 	simulationDefinitionPresenter
@@ -327,15 +349,29 @@ RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	self updatePages
 ]
 
+{ #category : #accessing }
+RMDSimulationModeler >> simulationDefinitionPresenter [
+
+	^ simulationDefinitionPresenter
+]
+
+{ #category : #accessing }
+RMDSimulationModeler >> simulationModel [
+
+	^ simulationModel
+]
+
 { #category : #private }
 RMDSimulationModeler >> updatePages [
 
-	| selection |
+	| selection species |
 	selection := views selectedPageIndex.
-
+	species := (simulationModel animatDefinitions collect: #species)
+		           asSet asSortedCollection.
 	views pages: (Array streamContents: [ :stream | 
 			 stream
-				 nextPut: (SpNotebookPage title: 'Simulation Conditions' provider: [ 
+				 nextPut:
+					 (SpNotebookPage title: 'Simulation Conditions' provider: [ 
 							  RMDScrollPresenter with:
 									  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter 
 										                                     on:
@@ -353,23 +389,22 @@ RMDSimulationModeler >> updatePages [
 				 nextPut: (SpNotebookPage
 						  title: 'Patch'
 						  provider: [ RMDPatchDefinitionBrowser on: simulationModel ]).
-
-			 simulationModel animatNames do: [ :animat | 
+			 species do: [ :speciesName | 
 				 stream
 					 nextPut: (SpNotebookPage
-							  title: animat
+							  title: speciesName
 							  provider: [ 
-								  RMDAnimatDefinitionBrowser
-									  on: simulationModel
-									  animat: animat ]) beCloseable;
+								  RMDSpeciesDefinitionBrowser on: self species: speciesName ])
+							 beCloseable;
 					 yourself ].
 			 stream nextPut:
 				 (SpNotebookPage
 					  title: ''
 					  icon: Smalltalk ui icons add
 					  provider: [ 
-						  RMDAddAnimatEditor new
-							  action: [ :name | self addAnimatNamed: name ];
+						  RMDAddSpeciesEditor new
+							  action: [ :speciesName :stageName | 
+								  self addAnimatNamed: stageName species: speciesName ];
 							  yourself ]) ]).
 	selection > 0 ifTrue: [ 
 		views selectPageIndex: (selection min: views pages size) ]

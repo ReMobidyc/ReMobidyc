@@ -1,21 +1,27 @@
 Class {
-	#name : #RMDAddAnimatEditor,
+	#name : #RMDAddSpeciesEditor,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'#animatField',
-		'#createButton',
-		'#action => ObservableSlot'
+		'speciesField',
+		'stageField',
+		'action',
+		'createButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
 
 { #category : #layout }
-RMDAddAnimatEditor class >> defaultLayout [
+RMDAddSpeciesEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: 'New animat name' expand: false;
-				   add: #animatField
+				   add: 'New species name' expand: false;
+				   add: #speciesField
+				   expand: true
+				   fill: true
+				   padding: 20;
+				   add: 'stage name' expand: false;
+				   add: #stageField
 				   expand: true
 				   fill: true
 				   padding: 20;
@@ -28,41 +34,45 @@ RMDAddAnimatEditor class >> defaultLayout [
 ]
 
 { #category : #accessing }
-RMDAddAnimatEditor >> action [
+RMDAddSpeciesEditor >> action [
 
 	^ action
 ]
 
 { #category : #accessing }
-RMDAddAnimatEditor >> action: anObject [
+RMDAddSpeciesEditor >> action: aBlock [
 
-	action := anObject
+	action := aBlock
 ]
 
 { #category : #'api - focus' }
-RMDAddAnimatEditor >> defaultKeyboardFocus [
+RMDAddSpeciesEditor >> defaultKeyboardFocus [
 
-	^ animatField
+	^ speciesField
 ]
 
 { #category : #initialization }
-RMDAddAnimatEditor >> initializePresenters [
+RMDAddSpeciesEditor >> initializePresenters [
 
 	super initializePresenters.
-	animatField := self newAnimatInput.
+	speciesField := self newAnimatInput.
+	stageField := self newAnimatInput.
 	createButton := self newButton
 		                icon: Smalltalk ui icons add;
 		                action: [ 
-			                action value: animatField text asString trim ];
+			                action
+				                value: speciesField text asString trim
+				                value: stageField text asString trim ];
 		                yourself.
 	action := [ :text |  ].
 	self focusOrder: { 
-			animatField.
+			speciesField.
+			stageField.
 			createButton } asOrderedCollection
 ]
 
 { #category : #enumerating }
-RMDAddAnimatEditor >> whenActionChangedDo: aBlock [
+RMDAddSpeciesEditor >> whenActionChangedDo: aBlock [
 
 	self property: #action whenChangedDo: aBlock
 ]

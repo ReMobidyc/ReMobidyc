@@ -250,11 +250,12 @@ Goat is Animat with
 	node := grammar animatDefinition
 		parse:
 			'
-Goat is Animat with
+BabyGoat is Goat with
 	sugar [kcal]
 	age [day].' trim.
 	self assert: node isAnimatDefinitionNode.
-	self assert: node identifier equals: 'Goat'.
+	self assert: node identifier equals: 'BabyGoat'.
+	self assert: node species equals: 'Goat'.
 	self assert: node attributeDeclarations size equals: 2.
 	self
 		assert: node attributeDeclarations first identifier

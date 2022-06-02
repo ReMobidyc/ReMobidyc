@@ -2,7 +2,8 @@ Class {
 	#name : #RMDAnimatDefinitionNode,
 	#superclass : #RMDAgentDefinitionNode,
 	#instVars : [
-		'identifier'
+		'identifier',
+		'species'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -18,21 +19,23 @@ RMDAnimatDefinitionNode class >> createBuiltinAttributes [
 { #category : #'typical instances' }
 RMDAnimatDefinitionNode class >> goat [
 	<script: 'RMDAnimatDefinitionNode goat inspect'>
-	^ RMDGrammar new animatDefinition end parse: 'Goat is Animat with
+	^ RMDGrammar new animatDefinition end parse: 'Goat is Goat with
 	blood_sugar [kcal].'
 ]
 
 { #category : #'instance creation' }
-RMDAnimatDefinitionNode class >> identifier: aString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+
 	^ (self attributeDeclarations: anArrayOfRMDAttributeDeclarationNode)
-		identifier: aString;
-		yourself
+		  identifier: aString;
+		  species: anotherString;
+		  yourself
 ]
 
 { #category : #'typical instances' }
 RMDAnimatDefinitionNode class >> wolf [
 	<script: 'RMDAnimatDefinitionNode wolf inspect'>
-	^ RMDGrammar new animatDefinition end parse: 'Wolf is Animat with
+	^ RMDGrammar new animatDefinition end parse: 'Wolf is Wolf with
 	blood_sugar [kcal].'
 ]
 
@@ -56,6 +59,13 @@ RMDAnimatDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #initialization }
+RMDAnimatDefinitionNode >> initialize [
+
+	super initialize.
+	species := 'Animat'
+]
+
 { #category : #testing }
 RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 	^ true
@@ -63,43 +73,47 @@ RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 
 { #category : #printing }
 RMDAnimatDefinitionNode >> printOn: aStream [
+
 	aStream
 		nextPutAll: identifier;
-		nextPutAll: ' is Animat'.
-	attributeDeclarations
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			attributeDeclarations
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def printOn: aStream ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+		nextPutAll: ' is ';
+		nextPutAll: species.
+	attributeDeclarations ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		attributeDeclarations
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
 
 { #category : #printing }
 RMDAnimatDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream
 		nextPutAll: identifier;
-		nextPutAll: ' is Animat'.
-	attributeDeclarations
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			attributeDeclarations
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+		nextPutAll: ' is ';
+		nextPutAll: species.
+	attributeDeclarations ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		attributeDeclarations
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $..
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }
@@ -108,6 +122,18 @@ RMDAnimatDefinitionNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ]
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> species [
+
+	^ species
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> species: aString [
+
+	species := aString
 ]
 
 { #category : #accessing }
