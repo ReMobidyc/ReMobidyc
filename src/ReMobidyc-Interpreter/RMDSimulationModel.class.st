@@ -661,6 +661,14 @@ RMDSimulationModel >> speciesNames [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> stagesNamesOf: aString [
+
+	^ (animatDefinitions values
+		   select: [ :animat | animat species = aString ]
+		   thenCollect: #identifier) asSortedCollection
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString [
 
 	^ (animatDefinitions values select: [ :animat | 
