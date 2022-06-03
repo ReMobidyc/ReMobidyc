@@ -34,10 +34,7 @@ RMDDeUnitExpressionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: '('.
-	unit
-		printOn: aStream
-		ifIncludedIn: aCollectionOfRMDSyntaxNode
-		addSectionTo: aCollection.
+	unit printOn: aStream.
 	aStream nextPutAll: ')'.
 	self precedence < expression precedence ifTrue: [ 
 		aStream nextPut: $( ].
