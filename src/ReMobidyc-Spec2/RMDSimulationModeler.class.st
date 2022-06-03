@@ -364,10 +364,8 @@ RMDSimulationModeler >> simulationModel [
 { #category : #private }
 RMDSimulationModeler >> updatePages [
 
-	| selection species |
+	| selection |
 	selection := views selectedPageIndex.
-	species := (simulationModel animatDefinitions collect: #species)
-		           asSet asSortedCollection.
 	views pages: (Array streamContents: [ :stream | 
 			 stream
 				 nextPut:
@@ -389,7 +387,7 @@ RMDSimulationModeler >> updatePages [
 				 nextPut: (SpNotebookPage
 						  title: 'Patch'
 						  provider: [ RMDPatchDefinitionBrowser on: simulationModel ]).
-			 species do: [ :speciesName | 
+			 simulationModel speciesNames do: [ :speciesName | 
 				 stream
 					 nextPut: (SpNotebookPage
 							  title: speciesName
