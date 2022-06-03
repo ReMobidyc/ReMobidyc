@@ -162,7 +162,7 @@ RMDActionDefinitionBrowser >> editDirectives [
 			           ((SpStringTableColumn evaluated: [ :pair | pair first ])
 				            beNotEditable;
 				            yourself).
-	chooser openDialogWithSpec okAction: [ 
+	chooser openDialog okAction: [ 
 		node lifeDirectives: (directives
 				 select: #second
 				 thenCollect: [ :triple | triple third value ]).
