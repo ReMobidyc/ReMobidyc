@@ -9,8 +9,6 @@ Class {
 		'values',
 		'oldValues',
 		'old2Values',
-		'valuesDirty',
-		'nextValuesDirty',
 		'nextAvailableSlot',
 		'stageLinks',
 		'reproductionLinks',
@@ -95,7 +93,7 @@ RMDMemory >> at: anInteger ifAbsentPut: aBlock [
 
 { #category : #accessing }
 RMDMemory >> at: anInteger put: aNumber [
-	valuesDirty := true.
+
 	^ values at: anInteger put: aNumber
 ]
 
@@ -130,9 +128,7 @@ RMDMemory >> fastSunrise [
 	old2Values := oldValues.
 	oldValues := values.
 	values := nextValues copy.
-	nextDeltas := Dictionary new.
-	valuesDirty := false.
-	nextValuesDirty := false
+	nextDeltas := Dictionary new
 ]
 
 { #category : #timing }
@@ -151,8 +147,6 @@ RMDMemory >> initialize [
 	oldValues := Dictionary new.
 	old2Values := Dictionary new.
 	nextDeltas := Dictionary new.
-	valuesDirty := false.
-	nextValuesDirty := false.
 	nextAvailableSlot := 1.
 	xPatches := 0.
 	yPatches := 0.
@@ -196,7 +190,6 @@ RMDMemory >> nextAt: anInteger ifAbsentPut: aBlock [
 
 { #category : #accessing }
 RMDMemory >> nextAt: anInteger put: aNumber [
-	nextValuesDirty := true.
 	^ nextValues at: anInteger put: aNumber
 ]
 
@@ -372,11 +365,12 @@ RMDMemory >> sunrise [
 { #category : #timing }
 RMDMemory >> sunset [
 
-	latestTime = time ifTrue: [ self commitOuts ].
+	latestTime = time ifTrue: [ 
+		self writeAnimats: animats forTime: time.
+		self commitOuts ].
 	values keysAndValuesDo: [ :id :value | 
 		nextValues at: id ifAbsentPut: [ value ] ].
 	nextDeltas ifNotEmpty: [ 
-		nextValuesDirty := true.
 		nextDeltas keysAndValuesDo: [ :id :delta | 
 			| nextValue |
 			nextValue := nextValues at: id ifAbsent: [ values at: id ].
@@ -384,13 +378,10 @@ RMDMemory >> sunset [
 	nextValues keysAndValuesRemove: [ :id :value | 
 		value isNil and: [ 
 			nextDeltas removeKey: id ifAbsent: [  ].
-			nextValuesDirty := true.
 			true ] ].
 	latestTime = time ifTrue: [ 
-		valuesDirty ifTrue: [ self writeValues: values forTime: time ].
-		nextValuesDirty ifTrue: [ 
-			self writeValues: nextValues forTime: time + 1 ].
-		self writeAnimats: animats forTime: time.
+		self writeValues: values forTime: time.
+		self writeValues: nextValues forTime: time + 1.
 		self writeSeeds: seeds forTime: time.
 		self commitIns ]
 ]
@@ -413,7 +404,7 @@ RMDMemory >> time [
 RMDMemory >> time: anInteger [
 
 	(anInteger isInteger and: [ 
-		 anInteger between: 0 and: self latestTime ]) ifFalse: [ 
+		 anInteger between: 0 and: self latestTime]) ifFalse: [ 
 		^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.

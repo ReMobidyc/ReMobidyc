@@ -7,10 +7,10 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 	aRMDInterpreter
 		initializeVariableIfNotInitialized: 'x'
 		with: [ RMDUniformDistributionXNode current evalIn: aRMDInterpreter ]
-		ifAbsent: [ ^ KeyNotFound signal: 'x' ];
+		ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ];
 		initializeVariableIfNotInitialized: 'y'
 		with: [ RMDUniformDistributionYNode current evalIn: aRMDInterpreter ]
-		ifAbsent: [ ^ KeyNotFound signal: 'y' ]
+		ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
