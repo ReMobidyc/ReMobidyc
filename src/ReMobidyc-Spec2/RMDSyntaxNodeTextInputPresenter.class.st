@@ -100,6 +100,12 @@ RMDSyntaxNodeTextInputPresenter >> beNewDirective [
 	self parser: RMDGrammar new newDirective end
 ]
 
+{ #category : #api }
+RMDSyntaxNodeTextInputPresenter >> beStageDirective [
+
+	self parser: RMDGrammar new stageDirective end
+]
+
 { #category : #accessing }
 RMDSyntaxNodeTextInputPresenter >> color: aColor [
 

@@ -160,7 +160,10 @@ RMDAttributeBindEditor >> updateExpressionFieldType [
 			expressionField enable.
 			placeholder isNewDirectiveNode
 				ifTrue: [ expressionField beNewDirective ]
-				ifFalse: [ expressionField beExpression ] ]
+				ifFalse: [ 
+					placeholder isStageDirectiveNode
+						ifTrue: [ expressionField beStageDirective ]
+						ifFalse: [ expressionField beExpression ] ] ]
 		ifNil: [ expressionField disable ]
 ]
 

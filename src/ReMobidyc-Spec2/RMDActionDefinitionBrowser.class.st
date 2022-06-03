@@ -342,7 +342,7 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 				     ifNone: [ nil ])
 				    ifNotNil: [ :directive | directive animatIdentifier ]
 				    ifNil: [ '-' ])) ifNotNil: [ :name | 
-		  name trim ifEmpty: [ nil ] ]
+		  name trim ifEmpty: [ '-' ] ]
 ]
 
 { #category : #updating }
