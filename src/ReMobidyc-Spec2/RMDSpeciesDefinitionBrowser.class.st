@@ -76,15 +76,13 @@ RMDSpeciesDefinitionBrowser >> updateStages [
 		ifTrue: [ ^ self ].
 	selection := stagesNotebook selectedPageIndex.
 	stagesNotebook pages:
-		((modeler simulationModel animatDefinitions values
-			  select: [ :animat | animat species = species ]
-			  thenCollect: [ :animat | 
-				  (SpNotebookPage title: animat identifier provider: [ 
-						   RMDAnimatDefinitionBrowser
-							   on: modeler simulationModel
-							   animat: animat identifier ])
-					  beCloseable;
-					  yourself ]) copyWith:
+		(((modeler simulationModel stagesOf: species) collect: [ :stageName | 
+			  (SpNotebookPage title: stageName provider: [ 
+					   RMDAnimatDefinitionBrowser
+						   on: modeler simulationModel
+						   animat: stageName ])
+				  beCloseable;
+				  yourself ]) copyWith:
 			 (SpNotebookPage
 				  title: ''
 				  icon: Smalltalk ui icons add

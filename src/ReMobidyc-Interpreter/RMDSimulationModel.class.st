@@ -654,6 +654,21 @@ RMDSimulationModel >> south [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> speciesNames [
+
+	^ (animatDefinitions values collect: #species) asSet
+		  asSortedCollection
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> stagesOf: aString [
+
+	^ (animatDefinitions values select: [ :animat | 
+		   animat species = aString ]) asSortedCollection: [ :less :more | 
+		  less identifier <= more identifier ]
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> taskDefinitions [
 	^ Array withAll: taskDefinitions
 ]
