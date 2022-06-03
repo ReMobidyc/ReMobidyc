@@ -31,7 +31,9 @@ RMDStageDirectiveNode >> animatIdentifier [
 { #category : #accessing }
 RMDStageDirectiveNode >> animatIdentifier: aString [
 
-	animatIdentifier := aString
+	animatIdentifier := aString = '-'
+		                    ifTrue: [ nil ]
+		                    ifFalse: [ aString ]
 ]
 
 { #category : #comparing }
@@ -56,7 +58,7 @@ RMDStageDirectiveNode >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'stage ';
-		nextPutAll: animatIdentifier
+		nextPutAll: (animatIdentifier ifNil: [ '-' ])
 ]
 
 { #category : #printing }
@@ -66,7 +68,7 @@ RMDStageDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 	start := aStream position + 1.
 	aStream
 		nextPutAll: 'stage ';
-		nextPutAll: animatIdentifier.
+		nextPutAll: (animatIdentifier ifNil: [ '-' ]).
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]

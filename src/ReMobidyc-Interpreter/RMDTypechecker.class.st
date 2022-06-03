@@ -20,7 +20,8 @@ RMDTypechecker >> changeStage: animatString [
 	| animatDefinition |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
-		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+		                    ifAbsent: [ 
+		                    ^ RMDUnresolvedReferenceError on: self ].
 	context newDefinition: animatDefinition.
 	^ animatString
 ]

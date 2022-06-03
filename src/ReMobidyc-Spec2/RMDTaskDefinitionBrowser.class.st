@@ -195,7 +195,7 @@ RMDTaskDefinitionBrowser >> editAction [
 	self actionDefinition ifNotNil: [ :oldActionDef | 
 		| newActionDef |
 		newActionDef := oldActionDef copy.
-		newActionDef asPresenter openDialogWithSpec okAction: [ 
+		newActionDef asPresenter openDialog okAction: [ 
 			self actionDefinition ifNotNil: [ :actionDefinition | 
 				self simulationModel ifNotNil: [ :model | 
 					model

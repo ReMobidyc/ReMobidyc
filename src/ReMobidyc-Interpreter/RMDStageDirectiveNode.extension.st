@@ -11,5 +11,5 @@ RMDStageDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	animatIdentifier ifNil: [ 
 		^ (RMDUnresolvedReferenceError on: self) signal ].
-	aRMDInterpreter newIndividual: animatIdentifier
+	aRMDInterpreter changeStage: animatIdentifier
 ]
