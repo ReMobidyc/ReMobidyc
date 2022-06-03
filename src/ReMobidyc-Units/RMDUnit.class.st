@@ -330,7 +330,7 @@ RMDUnit class >> initialize [
 		value: #( 'degrees' '°' ).
 	"probability"
 	register
-		value: (self newSymbol: '%' scale: 1.0 - 2 siUnit: self noDimension)
+		value: (self newSymbol: '%' scale: 1.0e-2 siUnit: self noDimension)
 		value: #( 'percent' ).
 	"amount of substance"
 	register value: (self newSISymbol: 'mol') value: #( '㏖' )
