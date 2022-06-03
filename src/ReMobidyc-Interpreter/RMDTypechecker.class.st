@@ -15,6 +15,17 @@ RMDTypechecker class >> sugarScape [
 ]
 
 { #category : #directives }
+RMDTypechecker >> changeStage: animatString [
+
+	| animatDefinition |
+	animatDefinition := simulationModel
+		                    animatDefinitionAt: animatString
+		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+	context newDefinition: animatDefinition.
+	^ animatString
+]
+
+{ #category : #directives }
 RMDTypechecker >> newIndividual: animatString [
 
 	| animatDefinition |

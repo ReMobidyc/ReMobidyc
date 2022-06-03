@@ -15,6 +15,13 @@ RMDStageDirectiveNode class >> animatIdentifier: aString [
 		  yourself
 ]
 
+{ #category : #comparing }
+RMDStageDirectiveNode >> = anObject [
+
+	^ self class = anObject class and: [ 
+		  animatIdentifier = anObject animatIdentifier ]
+]
+
 { #category : #accessing }
 RMDStageDirectiveNode >> animatIdentifier [
 
@@ -25,6 +32,18 @@ RMDStageDirectiveNode >> animatIdentifier [
 RMDStageDirectiveNode >> animatIdentifier: aString [
 
 	animatIdentifier := aString
+]
+
+{ #category : #comparing }
+RMDStageDirectiveNode >> hash [
+
+	^ super hash bitXor: animatIdentifier hash
+]
+
+{ #category : #testing }
+RMDStageDirectiveNode >> isPlaceholderNode [
+
+	^ animatIdentifier isNil
 ]
 
 { #category : #testing }
@@ -50,4 +69,12 @@ RMDStageDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		nextPutAll: animatIdentifier.
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
+]
+
+{ #category : #rewriting }
+RMDStageDirectiveNode >> replaceChildren: aDictionary [
+
+	aDictionary
+		at: animatIdentifier
+		ifPresent: [ :node | animatIdentifier := node copy ]
 ]
