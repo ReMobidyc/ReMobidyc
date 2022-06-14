@@ -327,7 +327,7 @@ RMDGrammar >> attributeBind [
 	^ self placeholder , '->' asPParser trimBlanks , expression
 	  /
 	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
-	  / (self stageDirective , '->' asPParser trimBlanks , expression)
+	  / (self stageDirective , '->' asPParser trimBlanks , self stageDirective)
 	  ==> [ :triple | 
 		  self attributeBindNodeClass
 			  placeholder: triple first
@@ -1151,7 +1151,9 @@ RMDGrammar >> simulationTimeDefinitionNodeClass [
 { #category : #'parsers-directives' }
 RMDGrammar >> stageDirective [
 
-	^ 'stage' asPParser , #blank asPParser plus , agentIdentifier
+	^ 'stage' asPParser , #blank asPParser plus
+	  ,
+	  (agentIdentifier / ('-' asPParser trimBlanks ==> [ :minus | nil ]))
 	  ==> [ :triple | 
 		  self stageDirectiveNodeClass animatIdentifier: triple third ]
 ]
