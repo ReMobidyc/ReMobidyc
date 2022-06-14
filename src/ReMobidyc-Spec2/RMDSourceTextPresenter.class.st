@@ -104,7 +104,7 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
 	self basicSyntaxNode: aRMDSyntaxNode.
-	super text: (aRMDSyntaxNode isString
+	self text: (aRMDSyntaxNode isString
 			 ifTrue: [ aRMDSyntaxNode ]
 			 ifFalse: [ self highlightedTextFrom: aRMDSyntaxNode ])
 ]

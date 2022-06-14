@@ -181,6 +181,7 @@ RMDModelFileTextBrowser >> initializePresenters [
 		            whenSelectionChangedDo: [ self updateSourceText ];
 		            yourself.
 	sourceText := (self newSourceWith: self freeTextParser)
+		              contextMenu: [ self sourceTextContextMenu ];
 		              whenTextChangedDo: [ self updateEditingText ];
 		              whenSubmitDo: [ :text | self acceptSourceText ];
 		              yourself.
@@ -277,6 +278,19 @@ RMDModelFileTextBrowser >> simulationFileParser [
 RMDModelFileTextBrowser >> simulationModel [
 
 	^ RMDSimulationModel importModel: modelFileReference ifError: [ nil ]
+]
+
+{ #category : #menu }
+RMDModelFileTextBrowser >> sourceTextContextMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Accept';
+						  shortcut: $s command;
+						  action: [ self acceptSourceText ] ] ];
+		  yourself
 ]
 
 { #category : #parsers }
