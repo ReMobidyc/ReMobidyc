@@ -119,28 +119,28 @@ RMDCompoundUnit >> isProportional [
 
 { #category : #printing }
 RMDCompoundUnit >> printOn: aStream [
-	(unitSymbolsAndOrders associations
-		select: [ :assoc | assoc value > 0 ])
+
+	(unitSymbolsAndOrders associations select: [ :assoc | 
+		 assoc value > 0 ])
 		ifEmpty: [ aStream nextPutAll: '1' ]
 		ifNotEmpty: [ :numerators | 
 			numerators
 				do: [ :assoc | 
 					assoc key printOn: aStream.
-					assoc value ~= 1
-						ifTrue: [ aStream nextPut: $^.
-							assoc value printOn: aStream ] ]
-				separatedBy: [ aStream nextPut: $• ] ].
-	(unitSymbolsAndOrders associations
-		select: [ :assoc | assoc value < 0 ])
-		ifNotEmpty: [ :denominators | 
-			aStream nextPutAll: '/'.
-			denominators
-				do: [ :assoc | 
-					assoc key printOn: aStream.
-					assoc value ~= -1
-						ifTrue: [ aStream nextPut: $^.
-							assoc value abs printOn: aStream ] ]
-				separatedBy: [ aStream nextPut: $• ] ]
+					assoc value ~= 1 ifTrue: [ 
+						aStream nextPut: $^.
+						assoc value printOn: aStream ] ]
+				separatedBy: [ aStream nextPut: $  ] ].
+	(unitSymbolsAndOrders associations select: [ :assoc | 
+		 assoc value < 0 ]) ifNotEmpty: [ :denominators | 
+		aStream nextPutAll: '/'.
+		denominators
+			do: [ :assoc | 
+				assoc key printOn: aStream.
+				assoc value ~= -1 ifTrue: [ 
+					aStream nextPut: $^.
+					assoc value abs printOn: aStream ] ]
+			separatedBy: [ aStream nextPut: $  ] ]
 ]
 
 { #category : #private }
