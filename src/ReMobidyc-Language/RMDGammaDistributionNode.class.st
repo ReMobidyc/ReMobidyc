@@ -121,7 +121,7 @@ RMDGammaDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'gamma '.
-	scaleExpression
+	shapeExpression
 		printOn: aStream
 		ifIncludedIn: aCollectionOfRMDSyntaxNode
 		addSectionTo: aCollection.
