@@ -327,6 +327,7 @@ RMDGrammar >> attributeBind [
 	^ self placeholder , '->' asPParser trimBlanks , expression
 	  /
 	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
+	  / (self stageDirective , '->' asPParser trimBlanks , expression)
 	  ==> [ :triple | 
 		  self attributeBindNodeClass
 			  placeholder: triple first
