@@ -286,19 +286,24 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	importActionButton := self newButton
 		                      icon: self repositoryIcon;
 		                      action: [ self importAction ];
+		                      help: 'Import an action from repository';
 		                      yourself.
 	addActionButton := self newButton
 		                   icon: self addIcon;
 		                   action: [ self addAction ];
+		                   help: 'Define a new action';
 		                   yourself.
 	removeActionButton := self newButton
 		                      icon: self removeIcon;
 		                      action: [ self removeAction ];
+		                      help: 'Remove the selected action';
 		                      disable;
 		                      yourself.
 	editActionButton := self newButton
 		                    icon: self editIcon;
 		                    action: [ self editAction ];
+		                    help:
+			                    'Edit the definition of the selected action';
 		                    disable;
 		                    yourself.
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
@@ -338,7 +343,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 				                     evaluated: [ :item | 
 					                     | actionAttribute actionDefinition |
 					                     actionAttribute := item placeholder
-						                                       printString asText.
+						                                        printString asText.
 					                     actionDefinition := self actionDefinition.
 					                     (actionDefinition isNil or: [ 
 							                      (actionDefinition includesNode:
@@ -370,15 +375,20 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	addReplacementButton := self newButton
 		                        icon: self addIcon;
 		                        action: [ self addReplacement ];
+		                        help:
+			                        'Add a new replacement rule with a placeholder';
 		                        yourself.
 	removeReplacementButton := self newButton
 		                           icon: self removeIcon;
 		                           action: [ self removeReplacement ];
+		                           help:
+			                           'Remove the selected replacement rule';
 		                           disable;
 		                           yourself.
 	editReplacementButton := self newButton
 		                         icon: self editIcon;
 		                         action: [ self editReplacement ];
+		                         help: 'Edit the selected replacement rule';
 		                         disable;
 		                         yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)

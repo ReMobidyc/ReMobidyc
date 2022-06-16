@@ -165,43 +165,48 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	attributeList := self newTable
-		                beSingleSelection;
-		                beResizable;
-		                showColumnHeaders;
-		                addColumn: (SpStringTableColumn
-				                 title: 'name'
-				                 evaluated: [ :item | item identifier ]);
-		                addColumn:
-			                (SpStringTableColumn
-				                 title: 'unit'
-				                 evaluated: [ :item | 
-					                 | unit |
-					                 unit := item unit.
-					                 unit hasDimension
-						                 ifTrue: [ unit printString ]
-						                 ifFalse: [ '' ] ]);
-		                whenModelChangedDo: [ attributeList selectItem: nil ];
-		                whenSelectionChangedDo: [ 
-			                | selected |
-			                selected := attributeList selection selectedItem
-				                            notNil.
-			                removeAttributeButton enabled: selected.
-			                editAttributeButton enabled: selected ];
-		                yourself.
+		                 beSingleSelection;
+		                 beResizable;
+		                 showColumnHeaders;
+		                 addColumn: (SpStringTableColumn
+				                  title: 'name'
+				                  evaluated: [ :item | item identifier ]);
+		                 addColumn:
+			                 (SpStringTableColumn
+				                  title: 'unit'
+				                  evaluated: [ :item | 
+					                  | unit |
+					                  unit := item unit.
+					                  unit hasDimension
+						                  ifTrue: [ unit printString ]
+						                  ifFalse: [ '' ] ]);
+		                 whenModelChangedDo: [ 
+			                 attributeList selectItem: nil ];
+		                 whenSelectionChangedDo: [ 
+			                 | selected |
+			                 selected := attributeList selection selectedItem
+				                             notNil.
+			                 removeAttributeButton enabled: selected.
+			                 editAttributeButton enabled: selected ];
+		                 yourself.
 	addAttributeButton := self newButton
-		                     icon: self addIcon;
-		                     action: [ self addAttribute ];
-		                     yourself.
-	removeAttributeButton := self newButton
-		                        icon: self removeIcon;
-		                        action: [ self removeAttribute ];
-		                        disable;
-		                        yourself.
-	editAttributeButton := self newButton
-		                      icon: self editIcon;
-		                      action: [ self editAttribute ];
-		                      disable;
+		                      icon: self addIcon;
+		                      action: [ self addAttribute ];
+		                      help: 'Add a new attribute';
 		                      yourself.
+	removeAttributeButton := self newButton
+		                         icon: self removeIcon;
+		                         action: [ self removeAttribute ];
+		                         help: 'Remove the selected attribute';
+		                         disable;
+		                         yourself.
+	editAttributeButton := self newButton
+		                       icon: self editIcon;
+		                       action: [ self editAttribute ];
+		                       help:
+			                       'Edit the definition of the selected attribute';
+		                       disable;
+		                       yourself.
 	rendererList := self newComponentList
 		                beSingleSelection;
 		                whenModelChangedDo: [ rendererList selectItem: nil ];
@@ -215,15 +220,18 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 	addRendererButton := self newButton
 		                     icon: self addIcon;
 		                     action: [ self addRenderer ];
+		                     help: 'Add a new visualization';
 		                     yourself.
 	removeRendererButton := self newButton
 		                        icon: self removeIcon;
 		                        action: [ self removeRenderer ];
+		                        help: 'Remove the selected visualization';
 		                        disable;
 		                        yourself.
 	editRendererButton := self newButton
 		                      icon: self editIcon;
 		                      action: [ self editRenderer ];
+		                      help: 'Edit the selected visualization';
 		                      disable;
 		                      yourself.
 	taskList := self newTable
@@ -251,15 +259,18 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 	addTaskButton := self newButton
 		                 icon: self addIcon;
 		                 action: [ self addTask ];
+		                 help: 'Add a new task';
 		                 yourself.
 	removeTaskButton := self newButton
 		                    icon: self removeIcon;
 		                    action: [ self removeTask ];
+		                    help: 'Remove the selected task';
 		                    disable;
 		                    yourself.
 	editTaskButton := self newButton
 		                  icon: self editIcon;
 		                  action: [ self editTask ];
+		                  help: 'Edit the definition of the selected task';
 		                  disable;
 		                  yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)

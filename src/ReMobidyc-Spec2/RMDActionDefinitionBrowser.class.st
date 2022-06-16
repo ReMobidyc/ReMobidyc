@@ -195,14 +195,17 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                   node identifier: identifier ];
 		                   yourself.
 	objectField := self newSyntaxNodeTextInput
-		               parser: RMDGrammar new agentIdentifier optional trimBlanks end;
+		               parser:
+			               RMDGrammar new agentIdentifier optional trimBlanks
+				               end;
 		               placeholder: '(object)';
 		               autoAccept: true;
 		               whenLastValidSyntaxNodeChangedDo: [ :animat | 
 			               node object: animat ];
 		               yourself.
 	guardField := self newSyntaxNodeTextInput
-		              parser: RMDGrammar new condition optional trimBlanks end;
+		              parser:
+			              RMDGrammar new condition optional trimBlanks end;
 		              placeholder: 'guard condition';
 		              autoAccept: true;
 		              whenLastValidSyntaxNodeChangedDo: [ :guard | 
@@ -212,30 +215,36 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                    color: Color white;
 		                    label: 'no directive';
 		                    action: [ self editDirectives ];
+		                    help:
+			                    'Edit directives such as new, stage, die and kill';
 		                    yourself.
 	attributeDefinitionList := self newList
-		                          display: [ :attributeDef | 
-			                          attributeDef printString ];
-		                          whenSelectionChangedDo: [ 
-			                          self updateAttributeButtons ];
-		                          yourself.
+		                           display: [ :attributeDef | 
+			                           attributeDef printString ];
+		                           whenSelectionChangedDo: [ 
+			                           self updateAttributeButtons ];
+		                           yourself.
 	addAttributeButton := self newButton
-		                     label: '';
-		                     icon: Smalltalk ui icons add;
-		                     action: [ self addAttributeDefinition ];
-		                     yourself.
-	removeAttributeButton := self newButton
-		                        label: '';
-		                        icon: Smalltalk ui icons remove;
-		                        action: [ self removeAttributeDefinition ];
-		                        disable;
-		                        yourself.
-	editAttributeButton := self newButton
 		                      label: '';
-		                      icon: Smalltalk ui icons edit;
-		                      action: [ self editAttributeDefinition ];
-		                      disable;
+		                      icon: Smalltalk ui icons add;
+		                      action: [ self addAttributeDefinition ];
+		                      help: 'Add a new attribute';
 		                      yourself.
+	removeAttributeButton := self newButton
+		                         label: '';
+		                         icon: Smalltalk ui icons remove;
+		                         action: [ self removeAttributeDefinition ];
+		                         help: 'Remove the selected attribute';
+		                         disable;
+		                         yourself.
+	editAttributeButton := self newButton
+		                       label: '';
+		                       icon: Smalltalk ui icons edit;
+		                       action: [ self editAttributeDefinition ];
+		                       help:
+			                       'Edit the definition of the selected attribute';
+		                       disable;
+		                       yourself.
 	utilityDefinitionList := self newList
 		                         display: [ :utilityDef | 
 			                         utilityDef printString ];
@@ -246,17 +255,21 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                    label: '';
 		                    icon: Smalltalk ui icons add;
 		                    action: [ self addUtilityDefinition ];
+		                    help: 'Add a new utility variable';
 		                    yourself.
 	removeUtilityButton := self newButton
 		                       label: '';
 		                       icon: Smalltalk ui icons remove;
 		                       action: [ self removeUtilityDefinition ];
+		                       help: 'Remove the selected utility variable';
 		                       disable;
 		                       yourself.
 	editUtilityButton := self newButton
 		                     label: '';
 		                     icon: Smalltalk ui icons edit;
 		                     action: [ self editUtilityDefinition ];
+		                     help:
+			                     'Edit the definition of the selected utility variable';
 		                     disable;
 		                     yourself.
 	self whenBuiltDo: [ 

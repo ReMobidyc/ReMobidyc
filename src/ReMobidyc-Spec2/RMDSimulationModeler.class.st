@@ -236,11 +236,15 @@ RMDSimulationModeler >> initializePresenters [
 	runOnMemoryButton := self newButton
 		                     label: 'Run';
 		                     action: [ self openObservatory ];
+		                     help:
+			                     'Open an on-memory Observatory window of this model';
 		                     state: false;
 		                     yourself.
 	runOnFileButton := self newButton
 		                   label: 'Run & Record';
 		                   action: [ self openObservatoryOnFile ];
+		                   help:
+			                   'Open an Observatory window of this model that records the trace into the model directory';
 		                   state: false;
 		                   yourself
 ]
