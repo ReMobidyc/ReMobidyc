@@ -30,7 +30,7 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.4;
 		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.5;
+				   positionOfSlider: 0.6;
 				   add: (SpBoxLayout newVertical
 						    add: 'Actions' expand: false;
 						    add: #actionList;
@@ -49,17 +49,17 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 		  add: (SpBoxLayout newVertical
 				   add: 'Task Specialization' expand: false;
 				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.5;
+						    positionOfSlider: 0.6;
 						    add: (SpBoxLayout newVertical
 								     add: (SpBoxLayout newHorizontal
 										      vAlignCenter;
-										      add: #verbIdentifierField;
-										      add: #nearestCheckBox width: 100;
-										      add: #objectIdentifierField;
+										      add: #verbIdentifierField expand: true;
+										      add: #nearestCheckBox width: 80;
+										      add: #objectIdentifierField width: 120;
 										      add: (SpBoxLayout newHorizontal
 												       vAlignCenter;
 												       add: 'within ' expand: false;
-												       add: #rangeField))
+												       add: #rangeField width: 100) expand: false)
 								     height: self inputTextHeight;
 								     add: #replacementList;
 								     add: (SpBoxLayout newHorizontal
@@ -403,7 +403,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Task definition'.
-	aWindowPresenter initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 900 @ 600
 ]
 
 { #category : #operations }
