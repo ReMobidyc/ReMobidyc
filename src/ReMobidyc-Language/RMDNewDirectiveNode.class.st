@@ -50,7 +50,7 @@ RMDNewDirectiveNode >> animatIdentifier: aString [
 { #category : #enumerating }
 RMDNewDirectiveNode >> childrenDo: aBlock [
 
-	aBlock value: quantity
+	quantity ifNotNil: [ aBlock value: quantity ]
 ]
 
 { #category : #comparing }
@@ -118,6 +118,14 @@ RMDNewDirectiveNode >> quantity [
 RMDNewDirectiveNode >> quantity: anInteger [
 
 	quantity := anInteger
+]
+
+{ #category : #rewriting }
+RMDNewDirectiveNode >> renameAnimat: aString to: anotherString [
+
+	animatIdentifier = aString ifTrue: [ 
+		animatIdentifier := anotherString ].
+	super renameAnimat: aString to: anotherString
 ]
 
 { #category : #rewriting }

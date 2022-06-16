@@ -27,7 +27,9 @@ RMDAttributeBindNode >> = anObject [
 
 { #category : #enumerating }
 RMDAttributeBindNode >> childrenDo: aBlock [
-	
+
+	placeholder ifNotNil: [ aBlock value: placeholder ].
+	replacement ifNotNil: [ aBlock value: replacement ]
 ]
 
 { #category : #comparing }

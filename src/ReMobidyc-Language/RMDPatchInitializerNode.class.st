@@ -61,7 +61,8 @@ RMDPatchInitializerNode >> = anObject [
 
 { #category : #enumerating }
 RMDPatchInitializerNode >> childrenDo: aBlock [
-	aBlock value: length.
+
+	length ifNotNil: [ aBlock value: length ].
 	attributeInitializers do: aBlock
 ]
 

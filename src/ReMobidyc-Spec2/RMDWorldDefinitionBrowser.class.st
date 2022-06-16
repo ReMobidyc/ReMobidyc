@@ -5,25 +5,24 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDWorldDefinitionBrowser class >> on: aRMDSimulationModel [
-	<script:
-		'(RMDWorldDefinitionBrowser on: RMDSimulationModel sugarScape) openWithSpec'>
+RMDWorldDefinitionBrowser class >> on: aRMDSimulationModeler [
+
 	^ self new
-		setSimulationModel: aRMDSimulationModel;
-		yourself
+		  setModeler: aRMDSimulationModeler;
+		  yourself
 ]
 
 { #category : #private }
 RMDWorldDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	simulationModel simulationDefinition worldInitializer
-		ifNotNil: [ :initializer | 
-			initializer
-				attributeInitializers:
-					(initializer attributeInitializers
-						copyWith:
-							(RMDAttributeInitializerNode
-								identifier: aRMDAttributeNode identifier
-								expression: (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
+
+	self simulationModel simulationDefinition worldInitializer ifNotNil: [ 
+		:initializer | 
+		initializer attributeInitializers:
+			(initializer attributeInitializers copyWith:
+				 (RMDAttributeInitializerNode
+					  identifier: aRMDAttributeNode identifier
+					  expression:
+					  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
 ]
 
 { #category : #accessing }
@@ -33,26 +32,25 @@ RMDWorldDefinitionBrowser >> agentName [
 
 { #category : #accessing }
 RMDWorldDefinitionBrowser >> definitionDo: aBlock [
-	simulationModel
-		ifNotNil: [ simulationModel worldDefinition ifNotNil: aBlock ]
+
+	self simulationModel ifNotNil: [ :model | 
+		model worldDefinition ifNotNil: aBlock ]
 ]
 
 { #category : #private }
 RMDWorldDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	simulationModel simulationDefinition worldInitializer
-		ifNotNil: [ :initializer | 
-			initializer
-				attributeInitializers:
-					(initializer attributeInitializers
-						reject:
-							[ :attributeInitializer | attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
+
+	self simulationModel simulationDefinition worldInitializer ifNotNil: [ 
+		:initializer | 
+		initializer attributeInitializers:
+			(initializer attributeInitializers reject: [ :attributeInitializer | 
+				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
 ]
 
 { #category : #enumerating }
 RMDWorldDefinitionBrowser >> renderersDo: aBlock [
-	simulationModel
-		ifNotNil: [ simulationModel
-				renderersDo: [ :renderer | 
-					renderer isWorldRenderer
-						ifTrue: [ aBlock cull: renderer ] ] ]
+
+	self simulationModel ifNotNil: [ :model | 
+		model renderersDo: [ :renderer | 
+			renderer isWorldRenderer ifTrue: [ aBlock cull: renderer ] ] ]
 ]

@@ -135,6 +135,13 @@ RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 ]
 
 { #category : #rewriting }
+RMDAnimatInitializerNode >> renameAnimat: aString to: anotherString [
+
+	animat = aString ifTrue: [ animat := anotherString ].
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDAnimatInitializerNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: animat ifPresent: [ :node | animat := node copy ]

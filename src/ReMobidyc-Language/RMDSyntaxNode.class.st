@@ -421,6 +421,13 @@ RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSe
 ]
 
 { #category : #rewriting }
+RMDSyntaxNode >> renameAnimat: aString to: anotherString [
+
+	self childrenDo: [ :node | 
+		node renameAnimat: aString to: anotherString ]
+]
+
+{ #category : #rewriting }
 RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
 ]

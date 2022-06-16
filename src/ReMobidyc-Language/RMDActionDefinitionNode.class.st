@@ -337,6 +337,13 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 ]
 
 { #category : #rewriting }
+RMDActionDefinitionNode >> renameAnimat: aString to: anotherString [
+
+	object = aString ifTrue: [ object := anotherString ].
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDActionDefinitionNode >> replaceChildren: aDictionary [
 
 	aDictionary

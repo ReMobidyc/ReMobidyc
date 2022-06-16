@@ -155,6 +155,23 @@ RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 	self updatePages
 ]
 
+{ #category : #operations }
+RMDSimulationModeler >> copyStage: aString to: anotherString [
+
+	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 
+		ifNil: [ 
+			UIManager default alert: 'No animat named ' , aString.
+			^ self ].
+	(self simulationModel
+		 animatDefinitionAt: anotherString
+		 ifAbsent: [ nil ]) ifNotNil: [ 
+		UIManager default alert:
+			'The stage ' , anotherString , ' already exists.'.
+		^ self ].
+	self simulationModel copyAnimat: aString to: anotherString.
+	self updatePages
+]
+
 { #category : #menu }
 RMDSimulationModeler >> fileMenu [
 
@@ -340,6 +357,23 @@ RMDSimulationModeler >> removeSpeciesNamed: aString [
 		self updatePages ]
 ]
 
+{ #category : #operations }
+RMDSimulationModeler >> renameStage: aString to: anotherString [
+
+	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 
+		ifNil: [ 
+			UIManager default alert: 'No animat named ' , aString.
+			^ self ].
+	(self simulationModel
+		 animatDefinitionAt: anotherString
+		 ifAbsent: [ nil ]) ifNotNil: [ 
+		UIManager default alert:
+			'The stage ' , anotherString , ' already exists.'.
+		^ self ].
+	self simulationModel renameAnimat: aString to: anotherString.
+	self updatePages
+]
+
 { #category : #private }
 RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel.
@@ -383,10 +417,10 @@ RMDSimulationModeler >> updatePages [
 										                                    yourself) ]);
 				 nextPut: (SpNotebookPage
 						  title: 'World'
-						  provider: [ RMDWorldDefinitionBrowser on: simulationModel ]);
+						  provider: [ RMDWorldDefinitionBrowser on: self ]);
 				 nextPut: (SpNotebookPage
 						  title: 'Patch'
-						  provider: [ RMDPatchDefinitionBrowser on: simulationModel ]).
+						  provider: [ RMDPatchDefinitionBrowser on: self ]).
 			 simulationModel speciesNames do: [ :speciesName | 
 				 stream
 					 nextPut: (SpNotebookPage
