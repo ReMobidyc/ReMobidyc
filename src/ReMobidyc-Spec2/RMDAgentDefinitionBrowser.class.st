@@ -2,7 +2,7 @@ Class {
 	#name : #RMDAgentDefinitionBrowser,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'simulationModel',
+		'modeler',
 		'visualizer',
 		'animat',
 		'rendererList',
@@ -93,13 +93,13 @@ RMDAgentDefinitionBrowser >> addTask [
 
 	| actionDefinitionBrowser |
 	actionDefinitionBrowser := (RMDTaskDefinitionBrowser on:
-			                            simulationModel)
+			                            self simulationModel)
 		                           taskDefinition: nil;
 		                           agentName: self agentName;
 		                           yourself.
 	actionDefinitionBrowser openDialog okAction: [ 
 		actionDefinitionBrowser taskDefinition ifNotNil: [ :taskDefinition | 
-			simulationModel addTaskDefinition: taskDefinition.
+			self simulationModel addTaskDefinition: taskDefinition.
 			self updateTaskList ] ]
 ]
 
@@ -146,13 +146,13 @@ RMDAgentDefinitionBrowser >> editTask [
 		oldTaskDefinition isTaskDefinitionNode ifTrue: [ 
 			| actionDefinitionBrowser |
 			actionDefinitionBrowser := (RMDTaskDefinitionBrowser on:
-					                            simulationModel)
+					                            self simulationModel)
 				                           taskDefinition: oldTaskDefinition copy;
 				                           agentName: self agentName;
 				                           yourself.
 			actionDefinitionBrowser openDialog okAction: [ 
 				actionDefinitionBrowser taskDefinition ifNotNil: [ :taskDefinition | 
-					simulationModel
+					self simulationModel
 						removeTaskDefinition: oldTaskDefinition ifAbsent: [  ];
 						addTaskDefinition: taskDefinition.
 					self updateTaskList.
@@ -301,27 +301,28 @@ RMDAgentDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode a
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeRenderer [
-	rendererList selection selectedItem
-		ifNotNil: [ :rendererPresenter | 
-			(self newLabel
-				label: 'OK to remove ' , rendererPresenter name , '?';
-				yourself) openDialogWithSpec
-				title: 'Remove visualization from ' , self agentName;
-				extent: 400 @ (self class buttonHeight * 3.5);
-				okAction: [ simulationModel
-								removeRenderer: rendererPresenter renderer
-								ifAbsent: [  ].
-							self updateRendererList ] ]
+
+	rendererList selection selectedItem ifNotNil: [ :rendererPresenter | 
+		(self newLabel
+			 label: 'OK to remove ' , rendererPresenter name , '?';
+			 yourself) openDialogWithSpec
+			title: 'Remove visualization from ' , self agentName;
+			extent: 400 @ (self class buttonHeight * 3.5);
+			okAction: [ 
+				self simulationModel
+					removeRenderer: rendererPresenter renderer
+					ifAbsent: [  ].
+				self updateRendererList ] ]
 ]
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeTask [
-	taskList selection selectedItem
-		ifNotNil: [ :taskDefinition | 
-			simulationModel
-				removeTaskDefinition: taskDefinition
-				ifAbsent: [ KeyNotFound signal: taskDefinition ].
-			self updateTaskList ]
+
+	taskList selection selectedItem ifNotNil: [ :taskDefinition | 
+		self simulationModel
+			removeTaskDefinition: taskDefinition
+			ifAbsent: [ KeyNotFound signal: taskDefinition ].
+		self updateTaskList ]
 ]
 
 { #category : #enumerating }
@@ -330,11 +331,17 @@ RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 ]
 
 { #category : #private }
-RMDAgentDefinitionBrowser >> setSimulationModel: aRMDSimulationModel [
-	simulationModel := aRMDSimulationModel.
+RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
+
+	modeler := aRMDSimulationModeler.
 	self updateAttributeList.
 	self updateRendererList.
 	self updateTaskList
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionBrowser >> simulationModel [
+	^ modeler ifNotNil: #simulationModel
 ]
 
 { #category : #updating }
@@ -357,32 +364,34 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateSourceText [
-	simulationModel
-		ifNotNil: [ taskList selection selectedItem
-				ifNotNil: [ :taskDefinition | 
-					| highlights |
-					highlights := Set new: 10.
-					[ [ simulationModel typecheck: taskDefinition ]
-						on: RMDTypeError
-						do: [ :ex | 
-							highlights add: ex ast.
-							ex resume: ex unit ] ]
-						on: RMDUnresolvedReferenceError
-						do: [ :ex | highlights add: ex ast ].
-					sourceText highlights: highlights.
-					sourceText
-						text: (taskDefinition actionWith: simulationModel) printString asText ]
-				ifNil: [ sourceText text: '' ] ]
+
+	self simulationModel ifNotNil: [ :model | 
+		taskList selection selectedItem
+			ifNotNil: [ :taskDefinition | 
+				| highlights |
+				highlights := Set new: 10.
+				[ 
+				[ model typecheck: taskDefinition ]
+					on: RMDTypeError
+					do: [ :ex | 
+						highlights add: ex ast.
+						ex resume: ex unit ] ]
+					on: RMDUnresolvedReferenceError
+					do: [ :ex | highlights add: ex ast ].
+				sourceText highlights: highlights.
+				sourceText text:
+					(taskDefinition actionWith: model) printString asText ]
+			ifNil: [ sourceText text: '' ] ]
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateTaskList [
-	simulationModel
-		ifNotNil: [ | selectedBehavior |
-			selectedBehavior := taskList selection selectedItem.
-			taskList
-				items:
-					(simulationModel taskDefinitions
-						select: [ :behavior | behavior subjectIdentifier = self agentName ]);
-				selectItem: selectedBehavior ]
+
+	self simulationModel ifNotNil: [ :model | 
+		| selectedBehavior |
+		selectedBehavior := taskList selection selectedItem.
+		taskList
+			items: (model taskDefinitions select: [ :behavior | 
+						 behavior subjectIdentifier = self agentName ]);
+			selectItem: selectedBehavior ]
 ]

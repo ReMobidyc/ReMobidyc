@@ -269,6 +269,26 @@ RMDSimulationModel >> animatNames [
 	^ animatDefinitions keys asSortedCollection
 ]
 
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> copyAnimat: aString to: anotherString [
+
+	| animatDef |
+	animatDef := self animatDefinitionAt: aString ifAbsent: [ ^ self ].
+	(animatDefinitions includesKey: anotherString) ifTrue: [ ^ self ].
+	animatDef := animatDef copy.
+	animatDef renameAnimat: aString to: anotherString.
+	self addAnimatDefinition: animatDef.
+	taskDefinitions do: [ :taskDef | 
+		taskDef subjectIdentifier = aString ifTrue: [ 
+			self addTaskDefinition: (taskDef copy
+					 subjectIdentifier: anotherString;
+					 yourself) ] ].
+	renderers do: [ :renderer | 
+		(renderer isAnimatRendererFor: aString) ifTrue: [ 
+			self addRenderer:
+				(renderer copy renameAnimat: aString to: anotherString) ] ]
+]
+
 { #category : #'accessing - time' }
 RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
@@ -598,6 +618,24 @@ RMDSimulationModel >> removeRenderersForAnimat: aString [
 { #category : #adding }
 RMDSimulationModel >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
 	^ taskDefinitions remove: aRMDTaskDefinitionNode ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> renameAnimat: aString to: anotherString [
+
+	(animatDefinitions includesKey: aString) ifFalse: [ ^ self ].
+	(animatDefinitions includesKey: anotherString) ifTrue: [ ^ self ].
+	simulationDefinition renameAnimat: aString to: anotherString.
+	animatDefinitions valuesDo: [ :animatDef | 
+		animatDef renameAnimat: aString to: anotherString ].
+	animatDefinitions := (animatDefinitions values collect: [ :def | 
+		                      def identifier -> def ]) asDictionary.
+	actionDefinitions valuesDo: [ :actionDef | 
+		actionDef renameAnimat: aString to: anotherString ].
+	taskDefinitions do: [ :taskDef | 
+		taskDef renameAnimat: aString to: anotherString ].
+	renderers do: [ :renderer | 
+		renderer renameAnimat: aString to: anotherString ]
 ]
 
 { #category : #'accessing - definitions' }

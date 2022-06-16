@@ -74,6 +74,14 @@ RMDStageDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 ]
 
 { #category : #rewriting }
+RMDStageDirectiveNode >> renameAnimat: aString to: anotherString [
+
+	animatIdentifier = aString ifTrue: [ 
+		animatIdentifier := anotherString ].
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDStageDirectiveNode >> replaceChildren: aDictionary [
 
 	aDictionary

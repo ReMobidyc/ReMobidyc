@@ -80,7 +80,7 @@ RMDSpeciesDefinitionBrowser >> updateStages [
 			  :stageName | 
 			  (SpNotebookPage title: stageName provider: [ 
 					   RMDAnimatDefinitionBrowser
-						   on: modeler simulationModel
+						   on: modeler
 						   animat: stageName ])
 				  beCloseable;
 				  yourself ]) copyWith:

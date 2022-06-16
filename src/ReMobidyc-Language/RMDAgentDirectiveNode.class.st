@@ -91,6 +91,13 @@ RMDAgentDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 ]
 
 { #category : #rewriting }
+RMDAgentDirectiveNode >> renameAnimat: aString to: anotherString [
+
+	agentIdentifier = aString ifTrue: [ agentIdentifier := anotherString ].
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDAgentDirectiveNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary

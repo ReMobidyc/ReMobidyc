@@ -91,3 +91,9 @@ RMDRenderer >> printColorOn: aStream [
 
 	self printColor: color on: aStream
 ]
+
+{ #category : #rewriting }
+RMDRenderer >> renameAnimat: aString to: anotherString [
+
+	
+]

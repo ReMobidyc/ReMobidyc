@@ -88,6 +88,14 @@ RMDAttributeVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 ]
 
 { #category : #rewriting }
+RMDAttributeVariableNode >> renameAnimat: aString to: anotherString [
+
+	agent = aString uncapitalized ifTrue: [ 
+		agent := anotherString uncapitalized ].
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDAttributeVariableNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: agent ifPresent: [ :node | agent := node copy ]

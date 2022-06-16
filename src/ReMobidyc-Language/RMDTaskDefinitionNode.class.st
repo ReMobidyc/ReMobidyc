@@ -403,6 +403,17 @@ RMDTaskDefinitionNode >> range: aRMDLiteral [
 ]
 
 { #category : #rewriting }
+RMDTaskDefinitionNode >> renameAnimat: aString to: anotherString [
+
+	subjectIdentifier = aString ifTrue: [ 
+		subjectIdentifier := anotherString ].
+	objectIdentifier = aString ifTrue: [ 
+		objectIdentifier := anotherString ].
+	self resetAction.
+	super renameAnimat: aString to: anotherString
+]
+
+{ #category : #rewriting }
 RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 
 	aDictionary
