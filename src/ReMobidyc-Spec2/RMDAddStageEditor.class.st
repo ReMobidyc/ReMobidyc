@@ -54,6 +54,7 @@ RMDAddStageEditor >> initializePresenters [
 		                icon: Smalltalk ui icons add;
 		                action: [ 
 			                action value: nameField text asString trim ];
+		                help: 'Add a new stage of this species';
 		                yourself.
 	action := [ :text |  ].
 	self focusOrder: { 

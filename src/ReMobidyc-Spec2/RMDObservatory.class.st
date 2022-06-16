@@ -236,6 +236,7 @@ RMDObservatory >> initializePresenters [
 	runButton := self newButton
 		             label: 'run';
 		             action: [ self runState: self runState not ];
+		             help: 'Run the simulation to the end';
 		             state: false;
 		             whenStateChangedDo: [ :state | 
 			             state == true ifTrue: [ 
@@ -255,11 +256,14 @@ RMDObservatory >> initializePresenters [
 	stepButton := self newButton
 		              label: 'step';
 		              action: [ self stepSimulation ];
+		              help: 'Run the simulation just one step forward';
 		              enabled: true;
 		              yourself.
 	recordAnimatedPngButton := self newButton
 		                           icon: Smalltalk ui icons smallScreenshot;
 		                           action: [ self recordAPNG ];
+		                           help:
+			                           'Create an animated PNG file (warning: this takes a loooong time!)';
 		                           enabled: true;
 		                           yourself.
 	self whenDisplayDo: [ (views pageAt: 1) activePresenter updateImage ]

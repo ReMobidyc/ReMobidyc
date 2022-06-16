@@ -195,15 +195,19 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 	addRepositoryButton := self newButton
 		                       icon: self addIcon;
 		                       action: [ self addRepository ];
+		                       help: 'Add a new repository';
 		                       yourself.
 	removeRepositoryButton := self newButton
 		                          icon: self removeIcon;
 		                          action: [ self removeRepository ];
+		                          help: 'Remove the selected repository';
 		                          disable;
 		                          yourself.
 	editRepositoryButton := self newButton
 		                        icon: self editIcon;
 		                        action: [ self editRepository ];
+		                        help:
+			                        'Edit the configuration of the selected repository';
 		                        disable;
 		                        yourself.
 	itemList := self newItemList
@@ -215,11 +219,14 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 	newItemButton := self newButton
 		                 icon: self addIcon;
 		                 action: [ self addItem ];
+		                 help: 'Add a new item in the repository';
 		                 disable;
 		                 yourself.
 	removeItemButton := self newButton
 		                    icon: self removeIcon;
 		                    action: [ self removeItem ];
+		                    help:
+			                    'Remove the selected item from the repository';
 		                    disable;
 		                    yourself.
 	descriptionText := self newText

@@ -63,7 +63,9 @@ RMDAddSpeciesEditor >> initializePresenters [
 			                action
 				                value: speciesField text asString trim
 				                value: stageField text asString trim ];
-		                yourself.
+		                help:
+			                'Add a new animat that represent the given stage of the given species'
+				                yourself.
 	action := [ :text |  ].
 	self focusOrder: { 
 			speciesField.
