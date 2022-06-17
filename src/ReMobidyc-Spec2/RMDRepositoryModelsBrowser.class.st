@@ -107,11 +107,19 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 	self item
 		ifNotNil: [ :item | 
 			(self getModel: item) ifNotNil: [ :model | 
-				| description |
+				| animatDefs description |
+				animatDefs := OrderedDictionary new.
+				model animatDefinitions do: [ :animatDef | 
+					(animatDefs
+						 at: animatDef species
+						 ifAbsentPut: [ OrderedCollection new ]) add:
+						animatDef identifier ].
 				description := 'Animats: ' asText allBold
 				               ,
-				               (', ' join:
-					                (model animatDefinitions collect: #identifier)).
+					               (', ' join:
+						                (animatDefs keys collect: [ :species | 
+							                 species , ' ('
+							                 , (', ' join: (animatDefs at: species)) , ')' ])).
 				(self file / 'memory') isDirectory ifTrue: [ 
 					description := description , '
 with a result' asText ].
