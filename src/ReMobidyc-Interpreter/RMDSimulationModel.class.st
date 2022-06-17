@@ -266,7 +266,8 @@ RMDSimulationModel >> animatInitializersDo: aBlock [
 
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> animatNames [
-	^ animatDefinitions keys asSortedCollection
+
+	^ animatDefinitions keys asArray
 ]
 
 { #category : #'accessing - definitions' }
@@ -629,7 +630,7 @@ RMDSimulationModel >> renameAnimat: aString to: anotherString [
 	animatDefinitions valuesDo: [ :animatDef | 
 		animatDef renameAnimat: aString to: anotherString ].
 	animatDefinitions := (animatDefinitions values collect: [ :def | 
-		                      def identifier -> def ]) asDictionary.
+		                      def identifier -> def ]) asOrderedDictionary.
 	actionDefinitions valuesDo: [ :actionDef | 
 		actionDef renameAnimat: aString to: anotherString ].
 	taskDefinitions do: [ :taskDef | 
@@ -670,8 +671,8 @@ RMDSimulationModel >> resetDefinitions [
 	simulationDefinition := RMDSimulationDefinitionNode empty.
 	patchDefinition := RMDPatchDefinitionNode empty.
 	worldDefinition := RMDWorldDefinitionNode empty.
-	animatDefinitions := Dictionary new.
-	actionDefinitions := Dictionary new.
+	animatDefinitions := OrderedDictionary new.
+	actionDefinitions := OrderedDictionary new.
 	taskDefinitions := OrderedCollection new.
 	renderers := OrderedCollection new
 ]
@@ -694,24 +695,28 @@ RMDSimulationModel >> south [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> speciesNames [
 
-	^ (animatDefinitions values collect: #species) asSet
-		  asSortedCollection
+	| names |
+	names := OrderedCollection new.
+	animatDefinitions valuesDo: [ :animatDef | 
+		| speciesName |
+		speciesName := animatDef species.
+		(names includes: speciesName) ifFalse: [ names add: speciesName ] ].
+	^ names asArray
 ]
 
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> stagesNamesOf: aString [
 
 	^ (animatDefinitions values
-		   select: [ :animat | animat species = aString ]
-		   thenCollect: #identifier) asSortedCollection
+		  select: [ :animat | animat species = aString ]
+		  thenCollect: #identifier) asArray
 ]
 
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString [
 
 	^ (animatDefinitions values select: [ :animat | 
-		   animat species = aString ]) asSortedCollection: [ :less :more | 
-		  less identifier <= more identifier ]
+		  animat species = aString ]) asArray
 ]
 
 { #category : #'accessing - definitions' }
