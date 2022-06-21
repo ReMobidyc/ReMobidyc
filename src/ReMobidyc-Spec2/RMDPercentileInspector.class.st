@@ -8,7 +8,8 @@ Class {
 		'showsMean',
 		'showsSd',
 		'chartPresenters',
-		'visibleAttributes'
+		'visibleAttributes',
+		'spawnedPresenters'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -25,6 +26,12 @@ RMDPercentileInspector class >> defaultLayout [
 				   add: #showsSd)
 		  height: self buttonHeight;
 		  add: SpBoxLayout newVertical
+]
+
+{ #category : #accessing }
+RMDPercentileInspector >> agentName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -236,6 +243,7 @@ RMDPercentileInspector >> initializePresenters [
 
 	super initializePresenters.
 	visibleAttributes := Set new.
+	spawnedPresenters := Dictionary new.
 	showsPercentiles := self newCheckBox
 		                    labelOnRight;
 		                    label: 'percentiles';
@@ -271,7 +279,7 @@ RMDPercentileInspector >> initializePresenters [
 		           labelClickable: true;
 		           whenChangedDo: [ self updateObservation ];
 		           yourself.
-	self whenBuiltDo: [self updateImage]
+	self whenBuiltDo: [ self updateImage ]
 ]
 
 { #category : #accessing }
@@ -288,6 +296,27 @@ RMDPercentileInspector >> newLayout [
 		  yourself
 ]
 
+{ #category : #private }
+RMDPercentileInspector >> spawnButtonFor: attributeDef [
+
+	^ self newButton
+		  icon: self spawnIcon;
+		  action: [ 
+			  chartPresenters
+				  at: attributeDef identifier
+				  ifPresent: [ :presenter | 
+					  | spawnedPresenter |
+					  spawnedPresenter := presenter image asPresenter
+						                      autoScale: true;
+						                      yourself.
+					  spawnedPresenter open title:
+						  'Percentile chart of ' , self agentName , '''s '
+						  , attributeDef printString.
+					  (spawnedPresenters
+						   at: attributeDef identifier
+						   ifAbsentPut: [ OrderedCollection new ]) add: spawnedPresenter ] ]
+]
+
 { #category : #updating }
 RMDPercentileInspector >> updateImage [
 
@@ -301,7 +330,20 @@ RMDPercentileInspector >> updateImage [
 						ifPresent: [ :presenter | 
 							| form |
 							form := self chartWith: attributeDef values: vals stats: stats.
-							presenter image: form ] ] ] ] ]
+							presenter image: form ].
+					spawnedPresenters
+						at: attributeDef identifier
+						ifPresent: [ :presenters | 
+							presenters copy do: [ :presenter | 
+								presenter window isClosed
+									ifTrue: [ presenters remove: presenter ifAbsent: [  ] ]
+									ifFalse: [ 
+										| form |
+										form := self
+											        chartWith: attributeDef
+											        values: vals
+											        stats: stats.
+										presenter image: form ] ] ] ] ] ] ]
 ]
 
 { #category : #updating }
@@ -317,7 +359,9 @@ RMDPercentileInspector >> updateLayout [
 					ifTrue: [ 
 						| form presenter |
 						newLayout
-							add: (self collapseButtonFor: attributeDef)
+							add: (SpBoxLayout newHorizontal
+									 add: (self collapseButtonFor: attributeDef);
+									 add: (self spawnButtonFor: attributeDef) expand: false)
 							expand: false.
 						form := self chartWith: attributeDef values: vals stats: stats.
 						presenter := self newImage.

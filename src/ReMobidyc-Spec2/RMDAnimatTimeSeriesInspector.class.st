@@ -35,6 +35,12 @@ RMDAnimatTimeSeriesInspector >> agentDefinitionDo: aBlock [
 ]
 
 { #category : #accessing }
+RMDAnimatTimeSeriesInspector >> agentName [
+
+	^ animat ifNil: [ 'Animat' ]
+]
+
+{ #category : #accessing }
 RMDAnimatTimeSeriesInspector >> animat [
 	^ animat
 ]
@@ -134,8 +140,8 @@ RMDAnimatTimeSeriesInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   hAlignCenter;
-				   add: 'Population')
+				   add: 'Population';
+				   add: self spawnPopulationButton expand: false)
 		  expand: false;
 		  add: populationPresenter height: self chartHeight;
 		  add: (SpBoxLayout newHorizontal
@@ -149,10 +155,28 @@ RMDAnimatTimeSeriesInspector >> newLayout [
 ]
 
 { #category : #updating }
+RMDAnimatTimeSeriesInspector >> spawnPopulationButton [
+
+	^ self newButton
+		  icon: self spawnIcon;
+		  action: [ 
+			  | spawnedPresenter |
+			  spawnedPresenter := populationPresenter image asPresenter
+				                      autoScale: true;
+				                      yourself.
+			  spawnedPresenter open title: 'Population of ' , self agentName.
+			  spawnedPresenters at: nil put: spawnedPresenter ]
+]
+
+{ #category : #updating }
 RMDAnimatTimeSeriesInspector >> updateImage [
 
 	super updateImage.
-	populationPresenter image: self chartWithPopulation
+	populationPresenter image: self chartWithPopulation.
+	spawnedPresenters
+		at: nil
+		ifPresent: [ :presenter | 
+		presenter image: populationPresenter image ]
 ]
 
 { #category : #updating }

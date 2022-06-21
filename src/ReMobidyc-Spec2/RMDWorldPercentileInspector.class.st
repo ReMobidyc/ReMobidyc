@@ -5,3 +5,9 @@ Class {
 	#classTraits : 'TRMDWorldObservatory classTrait',
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
+
+{ #category : #accessing }
+RMDWorldPercentileInspector >> agentName [
+
+	^ 'World'
+]

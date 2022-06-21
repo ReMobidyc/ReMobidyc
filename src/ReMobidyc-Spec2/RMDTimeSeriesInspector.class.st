@@ -9,7 +9,8 @@ Class {
 		'showsSd',
 		'showsTotal',
 		'visibleAttributes',
-		'attributeTimeSeries'
+		'attributeTimeSeries',
+		'spawnedPresenters'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }
@@ -221,6 +222,7 @@ RMDTimeSeriesInspector >> initializePresenters [
 	super initializePresenters.
 	visibleAttributes := Set new.
 	attributeTimeSeries := Dictionary new.
+	spawnedPresenters := Dictionary new.
 	showsMin := self newCheckBox
 		            labelOnRight;
 		            label: 'min';
@@ -250,13 +252,13 @@ RMDTimeSeriesInspector >> initializePresenters [
 		           whenChangedDo: [ self updateObservation ];
 		           yourself.
 	showsTotal := self newCheckBox
-		           labelOnRight;
-		           label: 'total';
-		           state: false;
-		           labelClickable: true;
-		           whenChangedDo: [ self updateObservation ];
-		           yourself.
-		
+		              labelOnRight;
+		              label: 'total';
+		              state: false;
+		              labelClickable: true;
+		              whenChangedDo: [ self updateObservation ];
+		              yourself.
+
 	self whenBuiltDo: [ self updateImage ]
 ]
 

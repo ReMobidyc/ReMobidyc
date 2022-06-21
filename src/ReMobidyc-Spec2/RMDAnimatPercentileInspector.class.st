@@ -26,6 +26,12 @@ RMDAnimatPercentileInspector class >> defaultSpec [
 ]
 
 { #category : #accessing }
+RMDAnimatPercentileInspector >> agentName [
+
+	^ animat ifNil: [ 'Animat' ]
+]
+
+{ #category : #accessing }
 RMDAnimatPercentileInspector >> animat [
 	^ animat
 ]
