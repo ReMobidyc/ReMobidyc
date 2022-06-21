@@ -68,6 +68,14 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> animatOfIndividual: anInteger ifAbsent: errorBlock [
+
+	animats keysAndValuesDo: [ :animat :inds | 
+		(inds includes: anInteger) ifTrue: [ ^ animat ] ].
+	^ errorBlock value
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> animatsOf: aString do: aBlock [
 
 	(animats at: aString ifAbsent: [ ^ self ]) asArray do: [ :individual | 
@@ -134,6 +142,38 @@ RMDMemory >> fastSunrise [
 { #category : #timing }
 RMDMemory >> fastSunset [
 	^ self sunset
+]
+
+{ #category : #'accessing-links' }
+RMDMemory >> findCurrentOf: anInteger ifPresent: aBlock ifAbsent: errorBlock [
+
+	| individual |
+	individual := anInteger.
+	(self animatOfIndividual: individual ifAbsent: [ nil ]) ifNotNil: [ 
+		:animat | ^ aBlock cull: individual cull: animat ].
+	[ 
+	individual := self previousStageOf: individual.
+	individual notNil ] whileTrue: [ 
+		(self animatOfIndividual: individual ifAbsent: [ nil ]) ifNotNil: [ 
+			:animat | ^ aBlock cull: individual cull: animat ] ].
+	individual := anInteger.
+	[ 
+	individual := stageLinks keyAtValue: individual ifAbsent: [ nil ].
+	individual notNil ] whileTrue: [ 
+		(self animatOfIndividual: individual ifAbsent: [ nil ]) ifNotNil: [ 
+			:animat | ^ aBlock cull: individual cull: animat ] ].
+	^ errorBlock value
+]
+
+{ #category : #'accessing-links' }
+RMDMemory >> firstStageOf: anInteger [
+
+	| stage prevStage |
+	stage := anInteger.
+	[ 
+	prevStage := self previousStageOf: stage.
+	prevStage notNil ] whileTrue: [ stage := prevStage ].
+	^ stage
 ]
 
 { #category : #initialization }
@@ -272,7 +312,7 @@ RMDMemory >> patchesDo: aBlock [
 		self patchSize do: [ :c | aBlock cull: c ] ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : #'accessing-links' }
 RMDMemory >> previousStageOf: anInteger [
 
 	^ stageLinks at: anInteger ifAbsent: [ nil ]
@@ -347,6 +387,19 @@ RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
 	stageLinks at: individual put: anInteger.
 	^ individual
+]
+
+{ #category : #'accessing-links' }
+RMDMemory >> stageHistoryOf: anInteger [
+
+	| stage |
+	stage := anInteger.
+	^ (Array streamContents: [ :stream | 
+		   | prevStage |
+		   [ 
+		   stream nextPut: stage.
+		   prevStage := self previousStageOf: stage.
+		   prevStage notNil ] whileTrue: [ stage := prevStage ] ]) reverse
 ]
 
 { #category : #timing }

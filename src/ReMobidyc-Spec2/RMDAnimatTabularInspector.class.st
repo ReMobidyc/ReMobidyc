@@ -29,6 +29,14 @@ RMDAnimatTabularInspector >> animat: aString [
 	animat := aString
 ]
 
+{ #category : #private }
+RMDAnimatTabularInspector >> createTable [
+
+	^ super createTable
+		  contextMenu: [ self tableContextMenu ];
+		  yourself
+]
+
 { #category : #initialization }
 RMDAnimatTabularInspector >> initialize [
 	super initialize.
@@ -42,6 +50,39 @@ RMDAnimatTabularInspector >> initializePresenters [
 	populationLabel := self newLabel
 		                   label: 'population: ';
 		                   yourself
+]
+
+{ #category : #operations }
+RMDAnimatTabularInspector >> openIndividualInspectorOn: anInteger [
+
+	^ RMDIndividualTabularInspector new
+		  interpreter: interpreter;
+		  agent: anInteger;
+		  open;
+		  yourself
+]
+
+{ #category : #menu }
+RMDAnimatTabularInspector >> tableContextMenu [
+
+	^ self newMenu
+		  addItem: [ :item | 
+			  item
+				  name: 'Open individual inspector';
+				  icon: (Smalltalk ui iconNamed: 'history');
+				  action: [ 
+					  table selectedItem ifNotNil: [ :selectedItem | 
+							  | column idString |
+							  column := table columns
+								            detect: [ :c | c title = 'ID' ]
+								            ifNone: [ nil ].
+							  idString := column
+								              ifNotNil: [ 
+									              column evaluation value: selectedItem ]
+								              ifNil: [ '' ].
+							  idString asInteger ifNotNil: [ :id | 
+									  self openIndividualInspectorOn: id ] ] ] ];
+		  yourself
 ]
 
 { #category : #private }

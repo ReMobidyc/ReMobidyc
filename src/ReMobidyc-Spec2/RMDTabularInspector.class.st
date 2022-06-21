@@ -13,14 +13,20 @@ RMDTabularInspector class >> defaultLayout [
 	^ SpBoxLayout newVertical add: #table
 ]
 
+{ #category : #private }
+RMDTabularInspector >> createTable [
+
+	^ self newTable
+		  beSingleSelection;
+		  beResizable;
+		  showColumnHeaders;
+		  yourself
+]
+
 { #category : #initialization }
 RMDTabularInspector >> initializePresenters [
 	super initializePresenters.
-	table := self newTable
-		beSingleSelection;
-		beResizable;
-		showColumnHeaders;
-		yourself.
+	table := self createTable.
 	self updateTable
 ]
 
