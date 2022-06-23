@@ -363,8 +363,23 @@ RMDUnit class >> m2 [
 ]
 
 { #category : #constants }
+RMDUnit class >> min [
+	^ self at: 'minute'
+]
+
+{ #category : #constants }
+RMDUnit class >> minute [
+	^ self at: 'minute'
+]
+
+{ #category : #constants }
 RMDUnit class >> month [
 	^ self at: 'month'
+]
+
+{ #category : #constants }
+RMDUnit class >> msec [
+	^ self at: 'msec'
 ]
 
 { #category : #'instance creation' }
@@ -402,6 +417,16 @@ RMDUnit class >> rad [
 { #category : #constants }
 RMDUnit class >> s [
 	^ self at: 's'
+]
+
+{ #category : #constants }
+RMDUnit class >> sec [
+	^ self at: 'sec'
+]
+
+{ #category : #constants }
+RMDUnit class >> second [
+	^ self at: 'sec'
 ]
 
 { #category : #constants }

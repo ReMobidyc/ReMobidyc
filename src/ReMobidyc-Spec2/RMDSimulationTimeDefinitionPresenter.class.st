@@ -41,63 +41,66 @@ RMDSimulationTimeDefinitionPresenter >> durationUnitDropList [
 
 { #category : #initialization }
 RMDSimulationTimeDefinitionPresenter >> initializePresenters [
+
 	super initializePresenters.
 	durationField := self newNumberInput
-		beFloat;
-		autoAccept: true;
-		whenLastValidNumberChangedDo: [ :val | 
-			node
-				ifNotNil: [ node
-						duration:
-							(RMDLiteralNode
-								literal: val printString
-								unit: durationUnitDropList selectedItem) ] ];
-		yourself.
+		                 beFloat;
+		                 autoAccept: true;
+		                 whenLastValidNumberChangedDo: [ :val | 
+			                 node ifNotNil: [ 
+					                 node duration: (RMDLiteralNode
+								                  literal: val printString
+								                  unit: durationUnitDropList selectedItem) ] ];
+		                 yourself.
 	durationUnitDropList := self newDropList
-		items:
-			{RMDUnit year.
-			RMDUnit month.
-			RMDUnit week.
-			RMDUnit day.
-			RMDUnit hour};
-		selectIndex: 4;
-		whenSelectedItemChangedDo: [ :newUnit | 
-			node
-				ifNotNil: [ node
-						duration:
-							(RMDLiteralNode
-								literal: (newUnit fromSI: node duration numeric) printString
-								unit: newUnit).
-					self updateDurationField ] ];
-		yourself.
+		                        items: { 
+				                        RMDUnit year.
+				                        RMDUnit month.
+				                        RMDUnit week.
+				                        RMDUnit day.
+				                        RMDUnit hour.
+				                        RMDUnit minute.
+				                        RMDUnit second };
+		                        selectIndex: 4;
+		                        whenSelectedItemChangedDo: [ :newUnit | 
+			                        node ifNotNil: [ 
+					                        node duration: (RMDLiteralNode
+								                         literal:
+									                         (newUnit fromSI:
+											                          node duration numeric)
+										                         printString
+								                         unit: newUnit).
+					                        self updateDurationField ] ];
+		                        yourself.
 	stepField := self newNumberInput
-		beFloat;
-		autoAccept: true;
-		whenLastValidNumberChangedDo: [ :val | 
-			node
-				ifNotNil: [ node
-						step:
-							(RMDLiteralNode
-								literal: val printString
-								unit: stepUnitDropList selectedItem) ] ];
-		yourself.
+		             beFloat;
+		             autoAccept: true;
+		             whenLastValidNumberChangedDo: [ :val | 
+			             node ifNotNil: [ 
+					             node step: (RMDLiteralNode
+								              literal: val printString
+								              unit: stepUnitDropList selectedItem) ] ];
+		             yourself.
 	stepUnitDropList := self newDropList
-		items:
-			{RMDUnit year.
-			RMDUnit month.
-			RMDUnit week.
-			RMDUnit day.
-			RMDUnit hour};
-		selectIndex: 4;
-		whenSelectedItemChangedDo: [ :newUnit | 
-			node
-				ifNotNil: [ node
-						step:
-							(RMDLiteralNode
-								literal: (newUnit fromSI: node step numeric) printString
-								unit: newUnit).
-					self updateStepField ] ];
-		yourself
+		                    items: { 
+				                    RMDUnit year.
+				                    RMDUnit month.
+				                    RMDUnit week.
+				                    RMDUnit day.
+				                    RMDUnit hour.
+				                    RMDUnit minute.
+				                    RMDUnit second.
+				                    RMDUnit msec };
+		                    selectIndex: 4;
+		                    whenSelectedItemChangedDo: [ :newUnit | 
+			                    node ifNotNil: [ 
+					                    node step: (RMDLiteralNode
+								                     literal:
+									                     (newUnit fromSI: node step numeric)
+										                     printString
+								                     unit: newUnit).
+					                    self updateStepField ] ];
+		                    yourself
 ]
 
 { #category : #accessing }
