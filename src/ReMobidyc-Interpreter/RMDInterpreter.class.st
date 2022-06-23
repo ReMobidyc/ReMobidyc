@@ -237,7 +237,7 @@ RMDInterpreter >> duration [
 { #category : #exporting }
 RMDInterpreter >> exportAPNG: aFileReference [
 
-	^ self exportAPNG: aFileReference extent: 500 @ 500
+	^ self exportAPNG: aFileReference extent: 250 @ 250
 ]
 
 { #category : #exporting }
@@ -250,8 +250,8 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 	aFileReference binaryWriteStreamDo: [ :stream | 
 		| writer visualizer |
 		writer := RMDAPNGWriter on: stream.
-		writer numPlays: 1.
-		visualizer := RMDVisualizer extent: aPoint.
+		"writer numPlays: 1."
+		visualizer := RMDVisualizer extent: 500@500.
 		self simulationModel renderersDo: [ :renderer | 
 			visualizer addRenderer: renderer ].
 		[ 
@@ -261,7 +261,7 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 			to: self duration
 			during: [ :progress | 
 				[ self time < self duration ] whileTrue: [ 
-					writer nextPutImage: (visualizer visualize: self).
+					writer nextPutImage: ((visualizer visualize: self) scaledToSize: aPoint).
 					self performTasks.
 					self tick.
 					self bounceOutOfBoundsAnimats.

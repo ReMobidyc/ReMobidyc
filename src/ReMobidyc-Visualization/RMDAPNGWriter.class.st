@@ -16,7 +16,7 @@ Class {
 { #category : #examples }
 RMDAPNGWriter class >> examplePNG [
 
-	<script: 'APNGWriter examplePNG'>
+	<script: 'RMDAPNGWriter examplePNG'>
 	| form |
 	form := Form extent: 500 @ 500 depth: 32.
 	form getCanvas fillColor: Color red.
@@ -37,7 +37,7 @@ RMDAPNGWriter class >> examplePNG [
 { #category : #examples }
 RMDAPNGWriter class >> examplePNG2 [
 
-	<script: 'APNGWriter examplePNG2'>
+	<script: 'RMDAPNGWriter examplePNG2'>
 	| form |
 	form := Form extent: 500 @ 500 depth: 32.
 	form getCanvas fillColor: Color red.
@@ -136,6 +136,11 @@ RMDAPNGWriter >> nextImage [
 
 { #category : #accessing }
 RMDAPNGWriter >> nextPutImage: aForm [
+	self nextPutImage: aForm delay: 0
+]
+
+{ #category : #accessing }
+RMDAPNGWriter >> nextPutImage: aForm delay: anInteger [
 
 	acTL
 		ifNil: [ 
@@ -144,11 +149,11 @@ RMDAPNGWriter >> nextPutImage: aForm [
 				nextPutAll: self fileSignature;
 				write_IHDR: aForm;
 				write_acTL;
-				write_fcTL: aForm offset: 0 @ 0 delay: 0;
+				write_fcTL: aForm offset: 0 @ 0 delay: anInteger;
 				write_IDAT: aForm ]
 		ifNotNil: [ 
 			self
-				write_fcTL: aForm offset: 0 @ 0 delay: 0;
+				write_fcTL: aForm offset: 0 @ 0 delay: anInteger;
 				write_fdAT: aForm ]
 ]
 
@@ -277,7 +282,7 @@ RMDAPNGWriter >> write_fcTL: aForm offset: aPoint delay: anInteger [
 			nextInt32Put:
 				(aPoint ifNil: [ 0 ] ifNotNil: [ aPoint y asInteger ]);
 			nextNumber: 2 put: (anInteger ifNil: [ 0 ] ifNotNil: #asInteger);
-			nextNumber: 2 put: 0;
+			nextNumber: 2 put: 60;
 			nextPut: disposeOp;
 			nextPut: blendOp ].
 
