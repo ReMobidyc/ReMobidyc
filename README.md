@@ -120,7 +120,7 @@ As a tool for scientific research, ReːMobidyc will provide the following featur
 To achieve the objectives above, ReːMobidyc will have the following major components.
 
 * Persistent storage
-  - ReːMobidyc will use a DBMS as its persistent storage to store models, states of agents at all simulation steps, input data and output data.
+  - ReːMobidyc will use persistent storages, such as file systems and RDBs, to store models, states of agents at all simulation steps, input data and output data.
 
 * Reproducible random numbers
   - ReːMobidyc will have its own random number generator and make its code open so that all actions taken in a simulation can be accurately reproduceable.
