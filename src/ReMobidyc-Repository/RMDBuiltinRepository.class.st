@@ -53,6 +53,12 @@ RMDBuiltinRepository >> addAction: aRMDActionDefinitionNode named: aString [
 	
 ]
 
+{ #category : #'accessing-icons' }
+RMDBuiltinRepository >> addIcon: aForm named: aString [
+
+	^ self shouldNotImplement
+]
+
 { #category : #'accessing-models' }
 RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString [
 
@@ -79,6 +85,18 @@ RMDBuiltinRepository >> gain [
 RMDBuiltinRepository >> icon [
 
 	^ Smalltalk ui icons objects
+]
+
+{ #category : #'accessing-icons' }
+RMDBuiltinRepository >> iconNamed: aString ifAbsent: errorBlock [
+
+	^ errorBlock value
+]
+
+{ #category : #'accessing-icons' }
+RMDBuiltinRepository >> iconNames [
+
+	^ Array new
 ]
 
 { #category : #testing }
@@ -130,6 +148,12 @@ RMDBuiltinRepository >> name [
 
 { #category : #'accessing-actions' }
 RMDBuiltinRepository >> removeActionNamed: aString ifAbsent: errorBlock [
+]
+
+{ #category : #'accessing-icons' }
+RMDBuiltinRepository >> removeIconNamed: aString ifAbsent: errorBlock [
+
+	^ errorBlock value
 ]
 
 { #category : #'accessing-models' }

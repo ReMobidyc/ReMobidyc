@@ -73,6 +73,15 @@ RMDLocalFileRepository >> addAction: aRMDActionDefinitionNode named: aString [
 		aRMDActionDefinitionNode printOn: stream ]
 ]
 
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> addIcon: aForm named: aString [
+
+	PNGReadWriter
+		putForm: aForm
+		onFileNamed:
+		(self iconsDirectory / aString withExtension: 'png') ensureDelete
+]
+
 { #category : #'accessing-models' }
 RMDLocalFileRepository >> addModel: aRMDSimulationModel named: aString [
 
@@ -110,6 +119,34 @@ RMDLocalFileRepository >> directory: aFileReference [
 RMDLocalFileRepository >> icon [
 
 	^ Smalltalk ui icons open
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconFileNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self iconsDirectory / aString withExtension: 'png'.
+	ref isFile ifFalse: [ ^ errorBlock value ].
+	^ ref
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconNamed: aString ifAbsent: errorBlock [
+
+	^ PNGReadWriter formFromFileNamed:
+		  (self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ])
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconNames [
+
+	^ (self iconsDirectory filesMatching: '*.png') collect: #basename
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconsDirectory [
+
+	^ (self directory / 'icons') ensureCreateDirectory
 ]
 
 { #category : #initialization }
@@ -183,6 +220,14 @@ RMDLocalFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 
 	| ref |
 	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock value ].
+	ref ensureDelete
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> removeIconNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ].
 	ref ensureDelete
 ]
 
