@@ -33,6 +33,12 @@ RMDRepository >> addAction: aRMDActionDefinitionNode named: aString [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-icons' }
+RMDRepository >> addIcon: aForm named: aString [
+
+	^ self subclassResponsibility
+]
+
 { #category : #'accessing-models' }
 RMDRepository >> addModel: aRMDSimulationModel named: aString [
 
@@ -43,6 +49,24 @@ RMDRepository >> addModel: aRMDSimulationModel named: aString [
 RMDRepository >> icon [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-icons' }
+RMDRepository >> iconNamed: aString ifAbsent: errorBlock [
+	^ self subclassResponsibility 
+]
+
+{ #category : #'accessing-icons' }
+RMDRepository >> iconNames [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-icons' }
+RMDRepository >> icons [
+
+	^ self iconNames
+		  collect: [ :name | self iconNamed: name ifAbsent: [ nil ] ]
+		  thenSelect: #notNil
 ]
 
 { #category : #controlling }
@@ -96,10 +120,27 @@ RMDRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-icons' }
+RMDRepository >> removeIconNamed: aString ifAbsent: errorBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : #'accessing-models' }
 RMDRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-icons' }
+RMDRepository >> renameIconNamed: aString to: anotherString ifAbsent: errorBlock [
+
+	| form |
+	form := self iconNamed: aString ifAbsent: [ ^ errorBlock value ].
+	self addIcon: form named: anotherString.
+	(self iconNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
+		self removeIconNamed: aString ifAbsent: [ ^ errorBlock value ] ].
+	^ form
 ]
 
 { #category : #accessing }

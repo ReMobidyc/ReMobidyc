@@ -46,8 +46,7 @@ RMDLocalFileRepository >> actionFileNamed: aString ifAbsent: errorBlock [
 RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	| ref action |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
+	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock ].
 	action := RMDGrammar new actionDefinition end parse: ref contents.
 	action isPetit2Failure ifTrue: [ ^ errorBlock value ].
 	^ action
@@ -72,6 +71,15 @@ RMDLocalFileRepository >> addAction: aRMDActionDefinitionNode named: aString [
 	ref := self actionsDirectory / aString withExtension: 'rmd'.
 	ref ensureDelete writeStreamDo: [ :stream | 
 		aRMDActionDefinitionNode printOn: stream ]
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> addIcon: aForm named: aString [
+
+	PNGReadWriter
+		putForm: aForm
+		onFileNamed:
+		(self iconsDirectory / aString withExtension: 'png') ensureDelete
 ]
 
 { #category : #'accessing-models' }
@@ -111,6 +119,34 @@ RMDLocalFileRepository >> directory: aFileReference [
 RMDLocalFileRepository >> icon [
 
 	^ Smalltalk ui icons open
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconFileNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self iconsDirectory / aString withExtension: 'png'.
+	ref isFile ifFalse: [ ^ errorBlock value ].
+	^ ref
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconNamed: aString ifAbsent: errorBlock [
+
+	^ PNGReadWriter formFromFileNamed:
+		  (self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ])
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconNames [
+
+	^ (self iconsDirectory filesMatching: '*.png') collect: #basename
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> iconsDirectory [
+
+	^ (self directory / 'icons') ensureCreateDirectory
 ]
 
 { #category : #initialization }
@@ -183,8 +219,15 @@ RMDLocalFileRepository >> name: aString [
 RMDLocalFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 
 	| ref |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
+	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock value ].
+	ref ensureDelete
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> removeIconNamed: aString ifAbsent: errorBlock [
+
+	| ref |
+	ref := self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ].
 	ref ensureDelete
 ]
 
