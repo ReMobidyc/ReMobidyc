@@ -46,8 +46,7 @@ RMDLocalFileRepository >> actionFileNamed: aString ifAbsent: errorBlock [
 RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	| ref action |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
+	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock ].
 	action := RMDGrammar new actionDefinition end parse: ref contents.
 	action isPetit2Failure ifTrue: [ ^ errorBlock value ].
 	^ action
@@ -183,8 +182,7 @@ RMDLocalFileRepository >> name: aString [
 RMDLocalFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 
 	| ref |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
+	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock value ].
 	ref ensureDelete
 ]
 
