@@ -220,6 +220,21 @@ RMDGrammar >> animatHeader [
 		  triple third } ]
 ]
 
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> animatIconRenderer [
+
+	^ self agentIdentifier , '->' asPParser trimBlanks , $" asPParser
+	  ,
+	  ('\"' asPParser / ($" asPParser not , #any asPParser)) star flatten
+	  , $" asPParser , 'icon' asPParser trimBlanks
+	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
+	  ==> [ :array | 
+		  | animat icon |
+		  animat := array at: 1.
+		  icon := (array at: 4) copyReplaceAll: '\"' with: '"'.
+		  RMDAnimatIconRenderer on: animat iconName: icon ]
+]
+
 { #category : #'parsers-definitions' }
 RMDGrammar >> animatInitializer [
 
@@ -1089,9 +1104,9 @@ RMDGrammar >> productNodeClass [
 { #category : #'parsers-visualizations' }
 RMDGrammar >> renderer [
 
-	^ self animatDotRenderer / self backgroundColorRenderer
-	  / self patchColorAlphaRenderer / self patchColorBrightnessRenderer
-	  / self patchColorMapRenderer
+	^ self animatDotRenderer / self animatIconRenderer
+	  / self backgroundColorRenderer / self patchColorAlphaRenderer
+	  / self patchColorBrightnessRenderer / self patchColorMapRenderer
 ]
 
 { #category : #'parsers-definitions' }

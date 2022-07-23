@@ -25,6 +25,12 @@ RMDWorldDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode anim
 					  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
 ]
 
+{ #category : #menus }
+RMDWorldDefinitionBrowser >> addRendererMenu [
+
+	^ self newMenu
+]
+
 { #category : #accessing }
 RMDWorldDefinitionBrowser >> agentName [
 	^ 'World'
@@ -35,6 +41,13 @@ RMDWorldDefinitionBrowser >> definitionDo: aBlock [
 
 	self simulationModel ifNotNil: [ :model | 
 		model worldDefinition ifNotNil: aBlock ]
+]
+
+{ #category : #initialization }
+RMDWorldDefinitionBrowser >> initializePresenters [
+
+	super initializePresenters.
+	addRendererButton disable
 ]
 
 { #category : #private }

@@ -25,6 +25,31 @@ RMDPatchDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode anim
 					  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
 ]
 
+{ #category : #menus }
+RMDPatchDefinitionBrowser >> addRendererMenu [
+
+	^ self newMenu addGroup: [ :group | 
+		  group
+			  addItem: [ :item | 
+				  item
+					  name: 'expression -> transparency';
+					  action: [ 
+						  self addRenderer: (RMDPatchColorAlphaRenderer
+									   color: Color green
+									   alpha: '0.5' asRMDExpression
+									   between: '0.0' asRMDExpression
+									   and: '1.0' asRMDExpression) ] ];
+			  addItem: [ :item | 
+				  item
+					  name: 'expression -> brightness';
+					  action: [ 
+						  self addRenderer: (RMDPatchColorBrightnessRenderer
+									   color: Color green
+									   brightness: '0.5' asRMDExpression
+									   between: '0.0' asRMDExpression
+									   and: '1.0' asRMDExpression) ] ] ]
+]
+
 { #category : #accessing }
 RMDPatchDefinitionBrowser >> agentName [
 	^ 'Patch'
