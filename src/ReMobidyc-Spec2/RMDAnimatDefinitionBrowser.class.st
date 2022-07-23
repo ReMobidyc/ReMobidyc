@@ -18,7 +18,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 				   yourself)
 		  height: self buttonHeight;
 		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.3;
+				   positionOfSlider: 0.4;
 				   add: (SpPanedLayout newHorizontal
 						    positionOfSlider: 0.5;
 						    add: (SpBoxLayout newVertical
@@ -34,6 +34,11 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newVertical
 								     add: 'Visualization' expand: false;
 								     add: #rendererList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addRendererButton width: self buttonHeight;
+										      add: #removeRendererButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
 								     yourself);
 						    yourself);
 				   add: (SpBoxLayout newVertical
@@ -63,6 +68,28 @@ RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModeler animat: aString [
 		  yourself
 ]
 
+{ #category : #menus }
+RMDAnimatDefinitionBrowser >> addIconRendererMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  icon: self addIcon;
+						  action: [ 
+							  self addNewIconToSimulationModelDo: [ :iconName | 
+									  self addRenderer:
+											  (RMDAnimatIconRenderer on: animat iconName: iconName) ] ] ] ];
+		  addGroup: [ :group | 
+			  modeler simulationModel iconNames do: [ :iconName | 
+				  group addItem: [ :item | 
+					  item
+						  name: iconName;
+						  action: [ 
+							  self addRenderer:
+									  (RMDAnimatIconRenderer on: animat iconName: iconName) ] ] ] ]
+]
+
 { #category : #private }
 RMDAnimatDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: aString [
 
@@ -75,6 +102,32 @@ RMDAnimatDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode ani
 						  identifier: aRMDAttributeNode identifier
 						  expression:
 						  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ] ]
+]
+
+{ #category : #operations }
+RMDAnimatDefinitionBrowser >> addNewIconToSimulationModelDo: aBlock [
+
+	^ modeler addNewIconDo: aBlock
+]
+
+{ #category : #menus }
+RMDAnimatDefinitionBrowser >> addRendererMenu [
+
+	^ self newMenu addGroup: [ :group | 
+		  group
+			  addItem: [ :item | 
+				  item
+					  name: 'dot';
+					  action: [ 
+						  self addRenderer:
+								  (RMDAnimatDotRenderer
+									   on: animat
+									   diameter: 2
+									   color: Color gray) ] ];
+			  addItem: [ :item | 
+				  item
+					  name: 'icon';
+					  subMenu: self addIconRendererMenu ] ]
 ]
 
 { #category : #accessing }

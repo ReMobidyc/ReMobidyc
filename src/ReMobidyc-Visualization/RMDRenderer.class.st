@@ -38,6 +38,10 @@ RMDRenderer >> hash [
 	^ self class hash bitXor: color hash
 ]
 
+{ #category : #enumerating }
+RMDRenderer >> iconNamesDo: aBlock [
+]
+
 { #category : #initialization }
 RMDRenderer >> initialize [
 	super initialize.

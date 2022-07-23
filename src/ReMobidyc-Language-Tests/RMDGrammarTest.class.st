@@ -290,6 +290,23 @@ RMDGrammarTest >> testAnimatDotRenderer [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAnimatIconRenderer [
+
+	| renderer |
+	renderer := grammar animatIconRenderer end parse:
+		            '    Goat -> "star.png" icon.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer animat equals: 'Goat'.
+	self assert: renderer iconName equals: 'star.png'.
+	renderer := grammar animatIconRenderer end parse:
+		            '    Wolf -> "star\"green\".png" icon.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer animat equals: 'Wolf'.
+	self assert: renderer iconName equals: 'star"green".png'.
+
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testAnimatInitializer [
 	| node |
 	node := grammar animatInitializer parse: '100 Goat'.

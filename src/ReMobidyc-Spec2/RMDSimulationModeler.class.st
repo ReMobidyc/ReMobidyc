@@ -156,6 +156,28 @@ RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 ]
 
 { #category : #operations }
+RMDSimulationModeler >> addNewIconDo: aBlock [
+
+	| icons |
+	icons := simulationModel iconNames asSet.
+	RMDRepositoryIconsBrowser openToLoadDo: [ :form :browser | 
+		| iconName |
+		iconName := ''.
+		[ iconName = '' ] whileTrue: [ 
+			iconName := (UIManager default
+				             request: 'Icon name'
+				             initialAnswer: browser file basename) ifNotNil: [ 
+				            :name | 
+				            (icons includes: name)
+					            ifTrue: [ '' ]
+					            ifFalse: [ name ] ] ].
+		(iconName endsWith: '.png') ifFalse: [ 
+			iconName := iconName , '.png' ].
+		simulationModel iconAt: iconName put: form.
+		aBlock value: iconName ]
+]
+
+{ #category : #operations }
 RMDSimulationModeler >> copyStage: aString to: anotherString [
 
 	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 

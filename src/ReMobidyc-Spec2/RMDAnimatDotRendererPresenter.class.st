@@ -15,8 +15,6 @@ RMDAnimatDotRendererPresenter class >> defaultLayout [
 			(SpBoxLayout newHorizontal
 				borderWidth: 5;
 				spacing: 5;
-				add: #animatField width: 100;
-				add: ' → ' expand: false;
 				add: #colorDropList width: 60;
 				add: ' dot of ' expand: false;
 				add: #diameterField width: 40;

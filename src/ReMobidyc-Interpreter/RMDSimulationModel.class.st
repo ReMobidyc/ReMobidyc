@@ -8,7 +8,8 @@ Class {
 		'actionDefinitions',
 		'renderers',
 		'taskDefinitions',
-		'patchDefinition'
+		'patchDefinition',
+		'icons'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -88,6 +89,12 @@ RMDSimulationModel class >> goatAndWolf [
 		  addRenderer:
 			  (RMDAnimatDotRenderer on: 'Wolf' diameter: 10 color: Color red);
 		  yourself
+]
+
+{ #category : #accessing }
+RMDSimulationModel class >> iconsDirectoryName [
+
+	^ 'icons'
 ]
 
 { #category : #importing }
@@ -327,6 +334,16 @@ RMDSimulationModel >> exportAgents: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> exportIcons: aFileReference [
+
+	self removeUnusedIcons.
+	icons keysAndValuesDo: [ :name :form | 
+		PNGReadWriter
+			putForm: form
+			onFileNamed: (aFileReference / name) ensureDeleteFile ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportModel [
 
 	(UIManager default
@@ -349,6 +366,9 @@ RMDSimulationModel >> exportModel: aFileReference [
 		exportAgents: aFileReference / self class agentsFileName;
 		exportActions: aFileReference / self class actionsFileName;
 		exportTasks: aFileReference / self class tasksFileName;
+		exportIcons:
+			(aFileReference / self class iconsDirectoryName)
+				ensureCreateDirectory;
 		exportVisualization:
 			aFileReference / self class visualizationFileName
 ]
@@ -375,6 +395,24 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 	aFileReference lfWriteStreamDo: [ :stream | 
 		renderers do: [ :renderer | 
 			renderer printOn: stream ] ]
+]
+
+{ #category : #'accessing - icons' }
+RMDSimulationModel >> iconAt: aString ifAbsent: errorBlock [
+
+	^ icons at: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - icons' }
+RMDSimulationModel >> iconAt: aString put: aForm [
+
+	^ icons at: aString put: aForm
+]
+
+{ #category : #'accessing - icons' }
+RMDSimulationModel >> iconNames [
+
+	^ icons keys asSortedCollection
 ]
 
 { #category : #'exporting/importing' }
@@ -424,6 +462,15 @@ RMDSimulationModel >> importAgents: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> importIcons: aFileReference [
+
+	aFileReference isDirectory ifFalse: [ ^ self ].
+	(aFileReference filesMatching: '*.png') do: [ :pngRef | 
+		(PNGReadWriter formFromFileNamed: pngRef) ifNotNil: [ :form | 
+			self iconAt: pngRef basename put: form ] ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> importModel [
 
 	(UIManager default
@@ -440,6 +487,7 @@ RMDSimulationModel >> importModel [
 
 { #category : #'exporting/importing' }
 RMDSimulationModel >> importModel: aFileReference [
+
 	self resetDefinitions.
 	self
 		importSimulationDefinition:
@@ -447,6 +495,7 @@ RMDSimulationModel >> importModel: aFileReference [
 		importAgents: aFileReference / self class agentsFileName;
 		importActions: aFileReference / self class actionsFileName;
 		importTasks: aFileReference / self class tasksFileName;
+		importIcons: aFileReference / self class iconsDirectoryName;
 		importVisualization:
 			aFileReference / self class visualizationFileName
 ]
@@ -604,6 +653,12 @@ RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 	^ animatDefinition
 ]
 
+{ #category : #'accessing - icons' }
+RMDSimulationModel >> removeIconAt: aString ifAbsent: errorBlock [
+
+	^ icons removeKey: aString ifAbsent: errorBlock
+]
+
 { #category : #adding }
 RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
@@ -619,6 +674,17 @@ RMDSimulationModel >> removeRenderersForAnimat: aString [
 { #category : #adding }
 RMDSimulationModel >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
 	^ taskDefinitions remove: aRMDTaskDefinitionNode ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - icons' }
+RMDSimulationModel >> removeUnusedIcons [
+
+	| names |
+	names := Set new: icons size + 4.
+	renderers do: [ :renderer | 
+		renderer iconNamesDo: [ :iconName | names add: iconName ] ].
+	icons keysAndValuesRemove: [ :name :form | 
+		(names includes: name) not ]
 ]
 
 { #category : #'accessing - definitions' }
@@ -674,7 +740,8 @@ RMDSimulationModel >> resetDefinitions [
 	animatDefinitions := OrderedDictionary new.
 	actionDefinitions := OrderedDictionary new.
 	taskDefinitions := OrderedCollection new.
-	renderers := OrderedCollection new
+	renderers := OrderedCollection new.
+	icons := Dictionary new
 ]
 
 { #category : #'accessing - definitions' }

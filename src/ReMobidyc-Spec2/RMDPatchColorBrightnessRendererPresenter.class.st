@@ -4,8 +4,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDPatchColorBrightnessRendererPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDPatchColorBrightnessRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:

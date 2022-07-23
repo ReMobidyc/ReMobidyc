@@ -58,6 +58,10 @@ RMDRendererPresenter >> rendererChanged [
 	self updateColorDropList
 ]
 
+{ #category : #accessing }
+RMDRendererPresenter >> simulationModel: aRMDSimulationModel [
+]
+
 { #category : #updating }
 RMDRendererPresenter >> updateColorDropList [
 	renderer

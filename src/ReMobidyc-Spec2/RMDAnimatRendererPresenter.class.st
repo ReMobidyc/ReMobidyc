@@ -9,12 +9,12 @@ Class {
 
 { #category : #api }
 RMDAnimatRendererPresenter >> disableAgentFields [
-	animatField enabled: false
+	animatField disable
 ]
 
 { #category : #api }
 RMDAnimatRendererPresenter >> enableAgentFields [
-	animatField enabled: true
+	animatField enable
 ]
 
 { #category : #initialization }
@@ -34,5 +34,8 @@ RMDAnimatRendererPresenter >> rendererChanged [
 
 { #category : #updating }
 RMDAnimatRendererPresenter >> updateAnimatField [
-	animatField text: renderer animat
+
+	animatField
+		text: renderer animat;
+		disable
 ]

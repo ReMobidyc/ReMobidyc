@@ -3,7 +3,6 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'modeler',
-		'visualizer',
 		'animat',
 		'rendererList',
 		'addRendererButton',
@@ -26,7 +25,7 @@ Class {
 RMDAgentDefinitionBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
-		  positionOfSlider: 0.3;
+		  positionOfSlider: 0.4;
 		  add: (SpPanedLayout newHorizontal
 				   positionOfSlider: 0.5;
 				   add: (SpBoxLayout newVertical
@@ -42,6 +41,11 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: 'Visualization' expand: false;
 						    add: #rendererList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #addRendererButton width: self buttonHeight;
+								     add: #removeRendererButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
 						    yourself);
 				   yourself);
 		  add: (SpBoxLayout newVertical
@@ -85,7 +89,21 @@ RMDAgentDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode anim
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addRenderer [
-	^ self notYetImplemented
+
+	self addRendererMenu openWithSpecAtPointer
+]
+
+{ #category : #menus }
+RMDAgentDefinitionBrowser >> addRenderer: aRMDRenderer [
+
+	modeler simulationModel addRenderer: aRMDRenderer.
+	self updateRendererList
+]
+
+{ #category : #menus }
+RMDAgentDefinitionBrowser >> addRendererMenu [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #operations }
@@ -316,7 +334,7 @@ RMDAgentDefinitionBrowser >> removeRenderer [
 	rendererList selection selectedItem ifNotNil: [ :rendererPresenter | 
 		(self newLabel
 			 label: 'OK to remove ' , rendererPresenter name , '?';
-			 yourself) openDialogWithSpec
+			 yourself) openDialog
 			title: 'Remove visualization from ' , self agentName;
 			extent: 400 @ (self class buttonHeight * 3.5);
 			okAction: [ 
@@ -366,11 +384,10 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 
 	rendererList items: (Array streamContents: [ :stream | 
 			 self renderersDo: [ :renderer | 
-				 stream
-					 nextPut: renderer asPresenter disableAgentFields;
-					 yourself ] ]).
-	rendererList items do: [ :item | 
-		item withWidgetDo: [ :w | w update: #color: with: { Color white } ] ]
+				 stream nextPut: (renderer asPresenter
+						  simulationModel: modeler simulationModel;
+						  disableAgentFields;
+						  yourself) ] ])
 ]
 
 { #category : #updating }
