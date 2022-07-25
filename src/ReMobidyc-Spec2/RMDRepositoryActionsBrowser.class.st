@@ -55,7 +55,7 @@ RMDRepositoryActionsBrowser >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDRepositoryActionsBrowser >> itemsInRepository [
 
-	^ self repository ifNotNil: #actionNames ifNil: [ #(  ) ]
+	^ (self repository ifNotNil: #actionNames ifNil: [ #(  ) ]) asSortedCollection
 ]
 
 { #category : #private }

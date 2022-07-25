@@ -56,7 +56,7 @@ RMDRepositoryIconsBrowser >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDRepositoryIconsBrowser >> itemsInRepository [
 
-	^ self repository ifNotNil: #iconNames ifNil: [ #(  ) ]
+	^ (self repository ifNotNil: #iconNames ifNil: [ #(  ) ]) asSortedCollection
 ]
 
 { #category : #actions }

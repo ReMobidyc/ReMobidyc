@@ -52,7 +52,7 @@ RMDRepositoryModelsBrowser >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDRepositoryModelsBrowser >> itemsInRepository [
 
-	^ self repository ifNotNil: #modelNames ifNil: [ #(  ) ]
+	^ (self repository ifNotNil: #modelNames ifNil: [ #(  ) ]) asSortedCollection
 ]
 
 { #category : #operations }

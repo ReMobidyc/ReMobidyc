@@ -2,7 +2,8 @@ Class {
 	#name : #RMDAnimatIconRenderer,
 	#superclass : #RMDAnimatRenderer,
 	#instVars : [
-		'iconName'
+		'iconName',
+		'scale'
 	],
 	#category : #'ReMobidyc-Visualization'
 }
@@ -17,20 +18,79 @@ RMDAnimatIconRenderer class >> on: aString iconName: anotherString [
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+RMDAnimatIconRenderer class >> on: aString iconName: anotherString scale: aNumber [
+
+	<script:
+	'(RMDAnimatIconRenderer on: ''Goat'' iconName: ''goat.png'') inspect'>
+	^ (self on: aString)
+		  iconName: anotherString;
+		  scale: aNumber;
+		  yourself
+]
+
 { #category : #comparing }
 RMDAnimatIconRenderer >> = anObject [
 
 	^ super = anObject and: [ iconName = anObject iconName ]
 ]
 
+{ #category : #defaults }
+RMDAnimatIconRenderer >> defaultScale [
+	^ 1.0
+]
+
+{ #category : #drawing }
+RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
+
+	| form animatDefinition |
+	form := (aRMDInterpreter simulationModel
+		         iconAt: iconName
+		         ifAbsent: [ ^ self ]) magnifyBy: scale.
+	animatDefinition := animat isString
+		                    ifTrue: [ 
+			                    aRMDInterpreter
+				                    animatDefinitionAt: animat
+				                    ifAbsent: [ ^ KeyNotFound signal: animat ] ]
+		                    ifFalse: [ animat ].
+	aRMDInterpreter individualsOf: animatDefinition do: [ :individual | 
+		aRMDInterpreter
+			withObserverContextWithSubject: individual
+			agent: animatDefinition
+			do: [ 
+				| x y |
+				x := aRMDInterpreter
+					     readVariable: 'x'
+					     agent: nil
+					     ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+				y := aRMDInterpreter
+					     readVariable: 'y'
+					     agent: nil
+					     ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+				self
+					drawForm: form
+					at: (self
+							 pointFromX: x
+							 y: y
+							 interpreter: aRMDInterpreter
+							 scale: aNumber)
+					on: aCanvas ] ]
+]
+
+{ #category : #drawing }
+RMDAnimatIconRenderer >> drawForm: aForm at: aPoint on: aCanvas [
+
+	aCanvas paintImage: aForm at: aPoint - (aForm extent // 2)
+]
+
 { #category : #drawing }
 RMDAnimatIconRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoint on: aCanvas [
 
 	| form |
-	form := aRMDInterpreter simulationModel
-		        iconAt: iconName
-		        ifAbsent: [ ^ self ].
-	aCanvas paintImage: form at: aPoint - (form extent // 2)
+	form := (aRMDInterpreter simulationModel
+		         iconAt: iconName
+		         ifAbsent: [ ^ self ]) magnifyBy: scale.
+	self drawForm: form at: aPoint on: aCanvas
 ]
 
 { #category : #comparing }
@@ -57,6 +117,12 @@ RMDAnimatIconRenderer >> iconNamesDo: aBlock [
 	iconName ifNotNil: [ aBlock value: iconName ]
 ]
 
+{ #category : #initialization }
+RMDAnimatIconRenderer >> initialize [ 
+	super initialize.
+	scale := self defaultScale
+]
+
 { #category : #accessing }
 RMDAnimatIconRenderer >> name [
 
@@ -69,7 +135,19 @@ RMDAnimatIconRenderer >> printOn: aStream [
 	aStream
 		nextPutAll: animat;
 		nextPutAll: ' -> "';
-		nextPutAll: (iconName asString copyReplaceAll: '"' with: '\"');
-		nextPutAll: '" icon.'.
+		nextPutAll: (iconName asString copyReplaceAll: '"' with: '\" ');
+		nextPutAll: '" '.
+	scale printOn: aStream.
+	aStream nextPutAll: 'x icon.'.
 	aStream cr
+]
+
+{ #category : #accessing }
+RMDAnimatIconRenderer >> scale [
+	^ scale
+]
+
+{ #category : #accessing }
+RMDAnimatIconRenderer >> scale: aNumber [
+	scale := aNumber asFloat
 ]

@@ -3,6 +3,7 @@ Class {
 	#superclass : #RMDAnimatRendererPresenter,
 	#instVars : [
 		'iconNameButton',
+		'scaleField',
 		'iconImage',
 		'simulationModel'
 	],
@@ -18,6 +19,8 @@ RMDAnimatIconRendererPresenter class >> defaultLayout [
 				   borderWidth: 5;
 				   spacing: 5;
 				   add: #iconNameButton expand: false;
+				   add: #scaleField width: 100;
+				   add: 'x ' expand: false;
 				   add: #iconImage width: 40;
 				   yourself)
 		  height: self inputTextHeight
@@ -71,7 +74,9 @@ RMDAnimatIconRendererPresenter >> changeIconName [
 RMDAnimatIconRendererPresenter >> iconName: aString [
 
 	renderer iconName: aString.
-	self updateIconNameButton
+	self
+		updateIconNameButton;
+		updateScaleField
 ]
 
 { #category : #initialization }
@@ -79,6 +84,17 @@ RMDAnimatIconRendererPresenter >> initializePresenters [
 
 	super initializePresenters.
 	iconNameButton := self newLabel.
+	scaleField := self newNumberInput
+		              beFloat;
+		              minimum: 0.0;
+		              maximum: 4.0;
+		              climbRate: 0.1;
+		              number: 1.0;
+		              whenNumberChangedDo: [ :number | 
+			              renderer ifNotNil: [ 
+					              renderer scale: number.
+					              self updateIconNameButton ] ];
+		              yourself.
 	iconImage := self newButton
 		             action: [ self changeIconName ];
 		             yourself
@@ -91,8 +107,11 @@ RMDAnimatIconRendererPresenter >> preferredHeight [
 
 { #category : #accessing }
 RMDAnimatIconRendererPresenter >> rendererChanged [
+
 	super rendererChanged.
-	self updateIconNameButton
+	self
+		updateIconNameButton;
+		updateScaleField
 ]
 
 { #category : #accessing }
@@ -105,7 +124,9 @@ RMDAnimatIconRendererPresenter >> simulationModel [
 RMDAnimatIconRendererPresenter >> simulationModel: aRMDSimulationModel [
 
 	simulationModel := aRMDSimulationModel.
-	self updateIconNameButton
+	self
+		updateIconNameButton;
+		updateScaleField
 ]
 
 { #category : #updating }
@@ -114,5 +135,12 @@ RMDAnimatIconRendererPresenter >> updateIconNameButton [
 	renderer ifNotNil: [ 
 		iconNameButton label: renderer iconName.
 		iconImage icon: (simulationModel ifNotNil: [ 
-				 simulationModel iconAt: renderer iconName ifAbsent: [ nil ] ]) ]
+				 (simulationModel iconAt: renderer iconName ifAbsent: [ nil ]) 
+					 magnifyBy: renderer scale ]) ]
+]
+
+{ #category : #updating }
+RMDAnimatIconRendererPresenter >> updateScaleField [
+
+	renderer ifNotNil: [ scaleField number: renderer scale ]
 ]
