@@ -226,13 +226,15 @@ RMDGrammar >> animatIconRenderer [
 	^ self agentIdentifier , '->' asPParser trimBlanks , $" asPParser
 	  ,
 	  ('\"' asPParser / ($" asPParser not , #any asPParser)) star flatten
-	  , $" asPParser , 'icon' asPParser trimBlanks
+	  , $" asPParser , self decimalString trimBlanks
+	  , 'x ' asPParser trimBlanks , 'icon' asPParser trimBlanks
 	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
 	  ==> [ :array | 
-		  | animat icon |
+		  | animat icon scale |
 		  animat := array at: 1.
 		  icon := (array at: 4) copyReplaceAll: '\"' with: '"'.
-		  RMDAnimatIconRenderer on: animat iconName: icon ]
+		  scale := (array at: 6) asNumber.
+		  RMDAnimatIconRenderer on: animat iconName: icon scale: scale ]
 ]
 
 { #category : #'parsers-definitions' }
