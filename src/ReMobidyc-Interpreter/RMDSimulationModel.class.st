@@ -340,7 +340,7 @@ RMDSimulationModel >> exportIcons: aFileReference [
 	icons keysAndValuesDo: [ :name :form | 
 		PNGReadWriter
 			putForm: form
-			onFileNamed: (aFileReference / name) ensureDeleteFile ]
+			onFileNamed: (aFileReference / name) ensureDelete ]
 ]
 
 { #category : #'exporting/importing' }
