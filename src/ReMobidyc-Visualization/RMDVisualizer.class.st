@@ -31,9 +31,9 @@ RMDVisualizer class >> sugarScape [
 
 { #category : #'adding-removing' }
 RMDVisualizer >> addAnimatDotRenderer: aString diameter: aNumber color: aColor [
-	^ self
-		addRenderer:
-			(RMDAnimatDotRenderer on: aString diameter: aNumber color: aColor)
+
+	^ self addRenderer:
+		  (RMDAnimatDotRenderer on: aString shapeSize: aNumber color: aColor)
 ]
 
 { #category : #'adding-removing' }

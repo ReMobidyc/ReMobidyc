@@ -85,9 +85,9 @@ RMDSimulationModel class >> goatAndWolf [
 				   between: '0[kcal]' asRMDExpression
 				   and: '1000000[kcal]' asRMDExpression);
 		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Goat' diameter: 7 color: Color yellow);
+			  (RMDAnimatDotRenderer on: 'Goat' shapeSize: 7 color: Color yellow);
 		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Wolf' diameter: 10 color: Color red);
+			  (RMDAnimatDotRenderer on: 'Wolf' shapeSize: 10 color: Color red);
 		  yourself
 ]
 
@@ -129,53 +129,53 @@ RMDSimulationModel class >> simulationDefinitionFileName [
 
 { #category : #'instance creation' }
 RMDSimulationModel class >> sugarScape [
+
 	^ self new
-		load: RMDWorldDefinitionNode empty;
-		load: RMDPatchDefinitionNode grassField;
-		load: RMDAnimatDefinitionNode goat;
-		load: RMDBuiltinRepository current gain;
-		load: RMDBuiltinRepository current lose;
-		load: RMDBuiltinRepository current transfer;
-		load: RMDBuiltinRepository current move;
-		load: RMDBuiltinRepository current starve;
-		load: RMDActionDefinitionNode reproduce;
-		load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
-		load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
-		load: RMDTaskDefinitionNode goat_walk_for_grass;
-		load:
-			(RMDTaskDefinitionNode
-				goat_eat: '3000 [kcal/day]'
-				upto: '10000[kcal]');
-		load: (RMDTaskDefinitionNode goat_reproduce);
-		load:
-			(RMDTaskDefinitionNode
-				patch_grow_grass: '1000[kcal/day]'
-				upto: '1000000[kcal]');
-		load:
-			(RMDSimulationDefinitionNode
-				timeDefinition: (RMDSimulationTimeDefinitionNode during: '2[year]' by: '0.5[day]')
-				worldInitializer: RMDWorldInitializerNode empty
-				patchInitializer:
-					(RMDPatchInitializerNode
-						grassInitializer: 10
-						by: 10
-						of: '5[km]'
-						grass: '0[kcal]'
-						to: '700000[kcal]')
-				animatInitializers:
-					{(RMDAnimatInitializerNode
-						goatInitializer: 100
-						bloodSugar: '5000[kcal]'
-						to: '9000[kcal]')});
-		addRenderer: (RMDBackgroundColorRenderer color: Color black);
-		addRenderer:
-			(RMDPatchColorAlphaRenderer
-				color: Color green
-				alpha: 'here''s grass' asRMDExpression
-				between: '0[kcal]' asRMDExpression
-				and: '1000000[kcal]' asRMDExpression);
-		addRenderer: (RMDAnimatDotRenderer on: 'Goat' diameter: 7 color: Color yellow);
-		yourself
+		  load: RMDWorldDefinitionNode empty;
+		  load: RMDPatchDefinitionNode grassField;
+		  load: RMDAnimatDefinitionNode goat;
+		  load: RMDBuiltinRepository current gain;
+		  load: RMDBuiltinRepository current lose;
+		  load: RMDBuiltinRepository current transfer;
+		  load: RMDBuiltinRepository current move;
+		  load: RMDBuiltinRepository current starve;
+		  load: RMDActionDefinitionNode reproduce;
+		  load: (RMDTaskDefinitionNode goat_respire: '2500 [kcal/day]');
+		  load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
+		  load: RMDTaskDefinitionNode goat_walk_for_grass;
+		  load:
+			  (RMDTaskDefinitionNode
+				   goat_eat: '3000 [kcal/day]'
+				   upto: '10000[kcal]');
+		  load: RMDTaskDefinitionNode goat_reproduce;
+		  load: (RMDTaskDefinitionNode
+				   patch_grow_grass: '1000[kcal/day]'
+				   upto: '1000000[kcal]');
+		  load: (RMDSimulationDefinitionNode
+				   timeDefinition:
+					   (RMDSimulationTimeDefinitionNode
+						    during: '2[year]'
+						    by: '0.5[day]')
+				   worldInitializer: RMDWorldInitializerNode empty
+				   patchInitializer: (RMDPatchInitializerNode
+						    grassInitializer: 10
+						    by: 10
+						    of: '5[km]'
+						    grass: '0[kcal]'
+						    to: '700000[kcal]')
+				   animatInitializers: { (RMDAnimatInitializerNode
+						    goatInitializer: 100
+						    bloodSugar: '5000[kcal]'
+						    to: '9000[kcal]') });
+		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
+		  addRenderer: (RMDPatchColorAlphaRenderer
+				   color: Color green
+				   alpha: 'here''s grass' asRMDExpression
+				   between: '0[kcal]' asRMDExpression
+				   and: '1000000[kcal]' asRMDExpression);
+		  addRenderer:
+			  (RMDAnimatDotRenderer on: 'Goat' shapeSize: 7 color: Color yellow);
+		  yourself
 ]
 
 { #category : #accessing }

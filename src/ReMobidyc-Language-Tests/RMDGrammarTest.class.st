@@ -279,13 +279,13 @@ RMDGrammarTest >> testAnimatDotRenderer [
 		            '    Goat -> 10 pixels yellow dot.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color yellow.
-	self assert: renderer diameter equals: 10 @ 10.
+	self assert: renderer shapeSize equals: 10.
 	self assert: renderer animat equals: 'Goat'.
 	renderer := grammar animatDotRenderer end parse:
-		            '    Wolf -> 12@13 pixels #FF0000 dot.'.
+		            '    Wolf -> 12 pixels #FF0000 dot.'.
 	self deny: renderer isPetit2Failure.
 	self assert: renderer color equals: Color red.
-	self assert: renderer diameter equals: 12 @ 13.
+	self assert: renderer shapeSize equals: 12.
 	self assert: renderer animat equals: 'Wolf'
 ]
 
@@ -324,6 +324,42 @@ RMDGrammarTest >> testAnimatInitializer [
 	self assert: node population equals: 5.
 	self assert: node animat equals: 'Wolf'.
 	self assert: node attributeInitializers size equals: 2
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAnimatRectangleRenderer [
+
+	| renderer |
+	renderer := grammar animatRectangleRenderer end parse:
+		            '    Goat -> 10 pixels yellow rectangle.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self assert: renderer shapeSize equals: 10.
+	self assert: renderer animat equals: 'Goat'.
+	renderer := grammar animatRectangleRenderer end parse:
+		            '    Wolf -> 12 pixels #FF0000 rectangle.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color red.
+	self assert: renderer shapeSize equals: 12.
+	self assert: renderer animat equals: 'Wolf'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testAnimatTriangleRenderer [
+
+	| renderer |
+	renderer := grammar animatTriangleRenderer end parse:
+		            '    Goat -> 10 pixels yellow triangle.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color yellow.
+	self assert: renderer shapeSize equals: 10.
+	self assert: renderer animat equals: 'Goat'.
+	renderer := grammar animatTriangleRenderer end parse:
+		            '    Wolf -> 12 pixels #FF0000 triangle.'.
+	self deny: renderer isPetit2Failure.
+	self assert: renderer color equals: Color red.
+	self assert: renderer shapeSize equals: 12.
+	self assert: renderer animat equals: 'Wolf'
 ]
 
 { #category : #tests }

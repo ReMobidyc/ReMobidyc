@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDAnimatDotRendererPresenter,
+	#name : #RMDAnimatRectangleRendererPresenter,
 	#superclass : #RMDAnimatShapeRendererPresenter,
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #layout }
-RMDAnimatDotRendererPresenter class >> defaultLayout [
+{ #category : #specs }
+RMDAnimatRectangleRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		add:
@@ -13,7 +13,7 @@ RMDAnimatDotRendererPresenter class >> defaultLayout [
 				borderWidth: 5;
 				spacing: 5;
 				add: #colorDropList width: 60;
-				add: ' dot of ' expand: false;
+				add: ' rectangle of ' expand: false;
 				add: #shapeSizeField width: 40;
 				add: ' pixels' expand: false;
 				yourself)
