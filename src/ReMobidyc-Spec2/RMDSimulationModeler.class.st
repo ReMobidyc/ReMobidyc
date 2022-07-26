@@ -151,7 +151,7 @@ RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 		                        attributeDeclarations: Array new.
 	simulationModel load: animatDefinitionNode.
 	simulationModel addRenderer:
-		(RMDAnimatDotRenderer on: stageName diameter: 7 color: Color yellow).
+		(RMDAnimatDotRenderer on: stageName shapeSize: 7 color: Color yellow).
 	self updatePages
 ]
 

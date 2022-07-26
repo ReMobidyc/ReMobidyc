@@ -7,8 +7,5 @@ Class {
 { #category : #accessing }
 RMDAnimatDotRendererTest >> renderer [
 
-	^ RMDAnimatDotRenderer
-		  on: 'Turtle'
-		  diameter: 15 @ 20
-		  color: Color green
+	^ RMDAnimatDotRenderer on: 'Turtle' shapeSize: 15 color: Color green
 ]

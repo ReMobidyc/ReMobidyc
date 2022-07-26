@@ -67,30 +67,11 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 					     readVariable: 'y'
 					     agent: nil
 					     ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-				self
-					drawForm: form
-					at: (self
-							 pointFromX: x
-							 y: y
-							 interpreter: aRMDInterpreter
-							 scale: aNumber)
-					on: aCanvas ] ]
-]
-
-{ #category : #drawing }
-RMDAnimatIconRenderer >> drawForm: aForm at: aPoint on: aCanvas [
-
-	aCanvas paintImage: aForm at: aPoint - (aForm extent // 2)
-]
-
-{ #category : #drawing }
-RMDAnimatIconRenderer >> drawIndividual: anInteger with: aRMDInterpreter at: aPoint on: aCanvas [
-
-	| form |
-	form := (aRMDInterpreter simulationModel
-		         iconAt: iconName
-		         ifAbsent: [ ^ self ]) magnifyBy: scale.
-	self drawForm: form at: aPoint on: aCanvas
+				aCanvas paintImage: form at: (self
+						 pointFromX: x
+						 y: y
+						 interpreter: aRMDInterpreter
+						 scale: aNumber) - (form extent // 2) ] ]
 ]
 
 { #category : #comparing }

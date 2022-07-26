@@ -122,7 +122,25 @@ RMDAnimatDefinitionBrowser >> addRendererMenu [
 						  self addRenderer:
 								  (RMDAnimatDotRenderer
 									   on: animat
-									   diameter: 2
+									   shapeSize: 10
+									   color: Color gray) ] ];
+			  addItem: [ :item | 
+				  item
+					  name: 'rectangle';
+					  action: [ 
+						  self addRenderer:
+								  (RMDAnimatRectangleRenderer
+									   on: animat
+									   shapeSize: 10
+									   color: Color gray) ] ];
+			  addItem: [ :item | 
+				  item
+					  name: 'triangle';
+					  action: [ 
+						  self addRenderer:
+								  (RMDAnimatTriangleRenderer
+									   on: animat
+									   shapeSize: 10
 									   color: Color gray) ] ];
 			  addItem: [ :item | 
 				  item

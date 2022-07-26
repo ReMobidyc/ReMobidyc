@@ -198,16 +198,13 @@ RMDGrammar >> animatDefinitionNodeClass [
 RMDGrammar >> animatDotRenderer [
 
 	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
-	  , ('@' asPParser trimBlanks , self nat ==> #second) optional
 	  , 'pixels' asPParser trimBlanks , self color
 	  , 'dot' asPParser trimBlanks , '.' asPParser trimBlanks
 	  , #newline asPParser trimBlanks optional ==> [ :array | 
 	  RMDAnimatDotRenderer
 		  on: (array at: 1)
-		  diameter: ((array at: 4)
-				   ifNotNil: [ :y | (array at: 3) @ y ]
-				   ifNil: [ array at: 3 ])
-		  color: (array at: 6) ]
+		  shapeSize: (array at: 3)
+		  color: (array at: 5) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -254,6 +251,32 @@ RMDGrammar >> animatInitializer [
 { #category : #'class access' }
 RMDGrammar >> animatInitializerNodeClass [
 	^ RMDAnimatInitializerNode
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> animatRectangleRenderer [
+
+	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'rectangle' asPParser trimBlanks , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  RMDAnimatRectangleRenderer
+		  on: (array at: 1)
+		  shapeSize: (array at: 3)
+		  color: (array at: 5) ]
+]
+
+{ #category : #'parsers-visualizations' }
+RMDGrammar >> animatTriangleRenderer [
+
+	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
+	  , 'pixels' asPParser trimBlanks , self color
+	  , 'triangle' asPParser trimBlanks , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :array | 
+	  RMDAnimatTriangleRenderer
+		  on: (array at: 1)
+		  shapeSize: (array at: 3)
+		  color: (array at: 5) ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -1106,7 +1129,8 @@ RMDGrammar >> productNodeClass [
 { #category : #'parsers-visualizations' }
 RMDGrammar >> renderer [
 
-	^ self animatDotRenderer / self animatIconRenderer
+	^ self animatDotRenderer / self animatRectangleRenderer
+	  / self animatTriangleRenderer / self animatIconRenderer
 	  / self backgroundColorRenderer / self patchColorAlphaRenderer
 	  / self patchColorBrightnessRenderer / self patchColorMapRenderer
 ]
