@@ -1336,8 +1336,8 @@ RMDGrammarTest >> testVisualizationFile [
 	| node |
 	node := grammar visualizationFile end parse: 'World -> black.
 Patch -> green with alpha proportional to here''s  grass between 0 [kcal] and 100 [kcal]with 2 pixels black grids.
-Grasshopper_Adult -> 7@7 pixels yellow dot.
-Grasshopper_Egg -> 7@7 pixels cyan dot.
+Grasshopper_Adult -> 7 pixels yellow dot.
+Grasshopper_Egg -> 7 pixels cyan dot.
 '.
 	self assert: node isVisualizationFileNode.
 	self assert: node renderers size equals: 4
