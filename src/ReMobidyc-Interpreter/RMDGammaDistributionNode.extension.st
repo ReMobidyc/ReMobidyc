@@ -16,7 +16,7 @@ RMDGammaDistributionNode >> typecheckIn: aRMDInterpreter [
 		RMDType noDimension ]
 		on: RMDTypeUnificationError
 		do: [ :ex | 
-		ex resignalAs: (RMDTypeError on: scaleExpression with: ex type1) ].
+			ex resignalAs: (RMDTypeError on: scaleExpression with: ex type1) ].
 	^ [ shapeExpression typecheckIn: aRMDInterpreter ]
 		  on: RMDTypeUnificationError
 		  do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]

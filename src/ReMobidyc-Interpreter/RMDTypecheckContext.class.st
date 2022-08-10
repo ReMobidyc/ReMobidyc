@@ -6,6 +6,7 @@ Class {
 		'objectDefinition',
 		'worldDefinition',
 		'utilities',
+		'utilityTypes',
 		'action',
 		'newDefinition',
 		'attributes',
@@ -29,6 +30,7 @@ RMDTypecheckContext >> action: aRMDActionDefinitionNode [
 RMDTypecheckContext >> initialize [
 	super initialize.
 	utilities := Dictionary new.
+	utilityTypes := Dictionary new.
 	attributes := Dictionary new
 ]
 
@@ -100,13 +102,15 @@ RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
 ]
 
 { #category : #accessing }
-RMDTypecheckContext >> typeAt: aString ifAbsent: errorBlock [
-	^ utilities at: aString ifAbsent: errorBlock
+RMDTypecheckContext >> typeAt: aString ifAbsentPut: errorBlock [
+
+	^ utilityTypes at: aString ifAbsentPut: errorBlock
 ]
 
 { #category : #accessing }
 RMDTypecheckContext >> typeAt: aString put: aRMDType [
-	^ utilities at: aString put: aRMDType
+
+	^ utilityTypes at: aString put: aRMDType
 ]
 
 { #category : #accessing }
@@ -115,6 +119,12 @@ RMDTypecheckContext >> typeOfVariable: aString agent: agentReference ifAbsent: e
 		at: agentReference
 		ifPresent: [ :dict | dict at: aString ifAbsent: errorBlock ]
 		ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDTypecheckContext >> utilityAt: aString ifAbsent: errorBlock [
+
+	^ utilities at: aString ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
