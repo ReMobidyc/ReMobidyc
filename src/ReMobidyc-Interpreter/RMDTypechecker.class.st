@@ -112,8 +112,10 @@ RMDTypechecker >> typeOfDirective: aString [
 
 { #category : #'type checking' }
 RMDTypechecker >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
-	^ (self context typeAt: aString ifAbsent: errorBlock)
-		typecheckIn: self
+
+	^ self context typeAt: aString ifAbsentPut: [ 
+		  (self context utilityAt: aString ifAbsent: [ ^ errorBlock value ]) 
+			  typecheckIn: self ]
 ]
 
 { #category : #'type checking' }
@@ -126,7 +128,9 @@ RMDTypechecker >> typeOfVariable: aString agent: anotherString ifAbsent: errorBl
 
 { #category : #'type checking' }
 RMDTypechecker >> typeUtilityVariable: aString as: aRMDType [
-	self context typeAt: aString put: aRMDType
+
+	self context typeAt: aString put: aRMDType.
+	^ aRMDType
 ]
 
 { #category : #'type checking' }

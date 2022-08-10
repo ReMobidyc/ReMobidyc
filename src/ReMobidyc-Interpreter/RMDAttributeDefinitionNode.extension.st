@@ -24,5 +24,6 @@ RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 	variableType := variable typecheckIn: aRMDInterpreter.
 	bodyType := definitionBody typecheckIn: aRMDInterpreter.
 	variableType = bodyType
-		ifFalse: [ ^ RMDTypeError on: self with: bodyType ]
+		ifFalse: [ ^ RMDTypeError on: self with: bodyType ].
+	^ variableType
 ]

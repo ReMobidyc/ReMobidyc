@@ -8,8 +8,7 @@ RMDProductNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDProductNode >> typecheckIn: aRMDInterpreter [
-	^ RMDUnitType
-		unit:
-			(expression1 typecheckIn: aRMDInterpreter) unit
-				* (expression2 typecheckIn: aRMDInterpreter) unit
+
+	^ RMDUnitType unit: (expression1 typecheckIn: aRMDInterpreter) unit
+		  * (expression2 typecheckIn: aRMDInterpreter) unit
 ]

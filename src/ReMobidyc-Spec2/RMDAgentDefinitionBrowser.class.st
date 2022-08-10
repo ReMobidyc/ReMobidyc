@@ -306,21 +306,19 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
-	attributeList selection selectedItem
-		ifNotNil: [ :attributeNode | 
-			(self newLabel
-				label: 'OK to remove ' , attributeNode identifier , '?';
-				yourself) openDialogWithSpec
-				title: 'Remove attribute from ' , self agentName;
-				extent: 400 @ (self class buttonHeight * 3.5);
-				okAction: [ self
-								definitionDo: [ :definitionNode | 
-									definitionNode
-										attributeDeclarations: (definitionNode attributeDeclarations copyWithout: attributeNode).
-									self
-										removeInitializerWithAttribute: attributeNode
-										animat: animat.
-									self updateAttributeList ] ] ]
+
+	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
+		(self newLabel
+			 label: 'OK to remove ' , attributeNode identifier , '?';
+			 yourself) openDialog
+			title: 'Remove attribute from ' , self agentName;
+			extent: 400 @ (self class buttonHeight * 3.5);
+			okAction: [ 
+				self definitionDo: [ :definitionNode | 
+					definitionNode attributeDeclarations:
+						(definitionNode attributeDeclarations copyWithout: attributeNode).
+					self removeInitializerWithAttribute: attributeNode animat: animat.
+					self updateAttributeList ] ] ]
 ]
 
 { #category : #private }
