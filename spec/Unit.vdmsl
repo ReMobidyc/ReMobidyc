@@ -1,0 +1,167 @@
+module Unit
+imports
+    from AST
+        types
+            Unit renamed Unit;
+            SIBaseUnit renamed SIBaseUnit;,
+    from Utilities functions pow: real * int -> real;
+	-- length
+exports all
+definitions
+values
+	-- no dimension
+     nodimension = mk_Unit([], 1);
+     m = mk_Unit([mk_(<m>, 1)], 1);
+     Mm = mk_Unit([mk_(<m>, 1)], 1000000);
+     km = mk_Unit([mk_(<m>, 1)], 1000);
+     cm = mk_Unit([mk_(<m>, 1)], 0.01);
+     mm = mk_Unit([mk_(<m>, 1)], 0.001);
+     μm = mk_Unit([mk_(<m>, 1)], 0.001 ** 2);
+     nm = mk_Unit([mk_(<m>, 1)], 0.001 ** 3);
+     pm = mk_Unit([mk_(<m>, 1)], 0.001 ** 4);
+     mi = mk_Unit([mk_(<m>, 1)], 1609.344);
+     yd = mk_Unit([mk_(<m>, 1)], 0.9144);
+     ft = mk_Unit([mk_(<m>, 1)], 0.3048);
+   -- weight
+     inch = mk_Unit([mk_(<m>, 1)], 0.0254);
+     kg = mk_Unit([mk_(<kg>, 1)], 1);
+     t = mk_Unit([mk_(<kg>, 1)], 1000);
+     g = mk_Unit([mk_(<kg>, 1)], 0.001);
+     mg = mk_Unit([mk_(<kg>, 1)], 0.001 ** 2);
+     μg = mk_Unit([mk_(<kg>, 1)], 0.001 ** 3);
+     ng = mk_Unit([mk_(<kg>, 1)], 0.001 ** 4);
+     pg = mk_Unit([mk_(<kg>, 1)], 0.001 ** 5);
+     fg = mk_Unit([mk_(<kg>, 1)], 0.001 ** 6);
+     lb = mk_Unit([mk_(<kg>, 1)], 0.45359237);
+     oz = mk_Unit([mk_(<kg>, 1)], 0.028349523125);
+	-- time
+     gr = mk_Unit([mk_(<kg>, 1)], 0.00006479891);
+     s = mk_Unit([mk_(<s>, 1)], 1);
+     year = mk_Unit([mk_(<s>, 1)], 31557600);
+     month31 = mk_Unit([mk_(<s>, 1)], 2678400);
+     month = mk_Unit([mk_(<s>, 1)], 2592000);
+     week = mk_Unit([mk_(<s>, 1)], 604800);
+     day = mk_Unit([mk_(<s>, 1)], 60  * 60  * 24);
+     h = mk_Unit([mk_(<s>, 1)], 60  * 60);
+     min = mk_Unit([mk_(<s>, 1)], 60);
+     ms = mk_Unit([mk_(<s>, 1)], 0.001);
+	-- temperature
+     μs = mk_Unit([mk_(<s>, 1)], 0.001 ** 2);
+     K = mk_Unit([mk_(<K>, 1)], 1);
+     ℃ = mk_Unit([mk_(<℃>, 1)], 1);
+	-- angle
+     ℉ = mk_Unit([mk_(<℉>, 1)], 1);
+     rad = mk_Unit([mk_(<rad>, 1)], 1);
+	-- amount
+     degree = mk_Unit([mk_(<rad>, 1)], 0.017453292519943295);
+	-- area
+     mol = mk_Unit([mk_(<mol>, 1)], 1);
+     m2 = mk_Unit([mk_(<m>, 2)], 1);
+     ha = mk_Unit([mk_(<m>, 2)], 10000);
+     a = mk_Unit([mk_(<m>, 2)], 100);
+	-- volume
+     ac = mk_Unit([mk_(<m>, 2)], 4046.8564224);
+     m3 = mk_Unit([mk_(<m>, 3)], 1);
+     GL = mk_Unit([mk_(<m>, 3)], 1000000);
+     ML = mk_Unit([mk_(<m>, 3)], 1000);
+     kL = mk_Unit([mk_(<m>, 3)], 1);
+     hL = mk_Unit([mk_(<m>, 3)], 0.1);
+     daL = mk_Unit([mk_(<m>, 3)], 0.01);
+     L = mk_Unit([mk_(<m>, 3)], 0.001);
+     dL = mk_Unit([mk_(<m>, 3)], 0.000001);
+	-- force
+     μL = mk_Unit([mk_(<m>, 3)], 0.000000001);
+     N = mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 1);
+     kgf = mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 9.8);
+     dyn = mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 0.00001);
+     lbf =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 4.4482216152605);
+     pdl =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 0.13825495437);
+	-- pressure
+     sn = mk_Unit([mk_(<kg>, 1), mk_(<m>, 1), mk_(<s>, -2)], 1000);
+     Pa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 1);
+     daPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 10);
+     hPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 100);
+     kPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 1000);
+     MPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 1000000);
+     GPa =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 1000000000);
+     dPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 0.1);
+     cPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 0.01);
+     mPa = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 0.001);
+     μPa =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 0.000001);
+     at = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 98066.5);
+     psi =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 6894.757);
+     Torr =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 133.322);
+     atm = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 101325);
+	-- energy
+     bar = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 100000);
+     J = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 1);
+     cal = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 4.184);
+	-- power
+     kcal = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 4184);
+     W = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 1);
+     kW = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 1000);
+     MW = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 1000000);
+     GW =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 1000000000);
+     mW = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.001);
+     μW = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000001);
+     nW =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000000001);
+     pW =
+        mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000000000001);
+     PS = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 735.5);
+	-- probability
+     HP = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 745);
+     percent = mk_Unit([], 0.01);
+
+functions
+    toSI : Unit * real -> real
+    toSI(mk_Unit(-, scale), value) == value  * scale;
+    
+    fromSI : Unit * real -> real
+    fromSI(mk_Unit(-, scale), value) == value / scale;
+    
+    pow : Unit * int -> Unit
+    pow(mk_Unit(bases, scale), order) ==
+        let
+            mulOrder : seq of (SIBaseUnit * int) * int -> seq of (SIBaseUnit * int)
+            mulOrder(baseAndOrders, o1) ==
+                cases baseAndOrders:
+                    [] -> [],
+                    [mk_(b, o2)]^rest -> [mk_(b, o1  * o2)] ^ mulOrder(rest, o1)
+                    end
+        in mk_Unit(mulOrder(bases, order), Utilities`pow(scale, order));
+    
+    mul : Unit * Unit -> Unit
+    mul(mk_Unit(bases1, scale1), mk_Unit(bases2, scale2)) ==
+        let
+            addBases : seq of (SIBaseUnit * int) * SIBaseUnit * int -> seq of (SIBaseUnit * int)
+            addBases(bases1, base2, order2) ==
+                cases bases1:
+                    [] -> [mk_(base2, order2)],
+                    [mk_(b1, o1)]^rest1 ->
+                        if
+                            b1 = base2
+                        then
+                            [mk_(b1, o1 + order2)] ^ rest1
+                        else
+                            [mk_(b1, o1)] ^ addBases(rest1, base2, order2)
+                    end,
+            mergeBases : seq of (SIBaseUnit * int) * seq of (SIBaseUnit * int) -> seq of (SIBaseUnit * int)
+            mergeBases(bases1, bases2) ==
+                cases bases2:
+                    [] -> bases1,
+                    [mk_(b2, o2)]^rest2 -> mergeBases(addBases(bases1, b2, o2), rest2)
+                    end
+        in mk_Unit(mergeBases(bases1, bases2), scale1  * scale2);
+    
+    fraction : Unit * Unit -> Unit
+    fraction(unit1, unit2) == mul(unit1, pow(unit2, -1));
+
+end Unit

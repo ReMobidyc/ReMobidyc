@@ -1,0 +1,49 @@
+module Interpreter
+imports
+    from AST all,
+    from Unit all,
+    from Utilities functions pow: real * int -> real renamed pow;
+exports functions eval : AST`Expression -> real;
+definitions
+functions
+    eval : AST`Expression -> real
+    eval(expr) ==
+        cases expr:
+            mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
+            mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
+            mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
+            mk_AST`Product(expr1, expr2) -> eval(expr1)  * eval(expr2),
+            mk_AST`Fraction(expr1, expr2) -> eval(expr1) / eval(expr2),
+            mk_AST`Power(expr, order) -> pow(eval(expr), order),
+            mk_AST`Minus(expr) -> -eval(expr),
+            mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
+            mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr))
+            end;
+/*
+     Expression =
+        Variable| Apply| GuardedChoices|
+        Placeholder;
+     GuardedChoices :: seq1 of (Condition * Expression) Expression;
+	-- atoms
+     Variable =
+        AttributeVariable| NewAttributeVariable| UtilityVariable;
+     AttributeVariable :: agent : [Identifier] identifier : Identifier;
+     NewAttributeVariable :: identifier : Identifier;
+     UtilityVariable :: identifier : Identifier;
+
+	-- composite
+     Apply :: function : Identifier arguments : seq1 of Expression;
+   -- randoms
+     UniformDistribution ::
+        beginSection : Expression endSection : Expression;
+     NormalDistribution :: mean : Expression sigma : Expression;
+     GammaDistribution :: shape : Expression scale : Expression;
+     LogLogisticDistribution :: scale : Expression shape : Expression;
+	-- directives
+     Directive = AgentDirective| PatchDirective;
+     AgentDirective ::
+        <direction>| <distance>| <time>| <deltatime> agent : [Identifier];
+     PatchDirective :: <gradient> Identifier;
+*/
+
+end Interpreter
