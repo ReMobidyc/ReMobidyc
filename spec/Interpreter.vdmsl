@@ -2,9 +2,21 @@ module Interpreter
 imports
     from AST all,
     from Unit all,
-    from Utilities functions pow: real * int -> real renamed pow;
+    from Utilities functions pow: real * int -> real renamed pow;,
+    from Random all,
+    from MATH
+        functions
+            ln renamed ln;
+            sqrt renamed sqrt;
+            cos renamed cos;
 exports functions eval : AST`Expression -> real;
+
+
+		/*** distributions ***/
 definitions
+types
+     Context :: random : Random`RandomGenerator;
+
 functions
     eval : AST`Expression -> real
     eval(expr) ==
@@ -19,6 +31,21 @@ functions
             mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
             mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr))
             end;
+    
+    uniform : real * real * real -> real
+    uniform(sectionFrom, sectionTo, x) ==
+        x  * (sectionTo - sectionFrom) + sectionFrom
+    pre isUnit(x);
+    
+    normal : real * real * real * real -> real
+    normal(mean, sigma, x1, x2) ==
+        sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
+        + mean
+    pre isUnit(x1) and isUnit(x2);
+    
+    isUnit : real -> bool
+    isUnit(x) == x >= 0 and x <= 1;
+		
 /*
      Expression =
         Variable| Apply| GuardedChoices|
@@ -45,5 +72,16 @@ functions
         <direction>| <distance>| <time>| <deltatime> agent : [Identifier];
      PatchDirective :: <gradient> Identifier;
 */
+
+state Interpreter of
+    context : Context
+init s == s = mk_Interpreter(mk_Context(mk_Random`RandomGenerator(1)))
+end
+
+operations
+    random : () ==> real
+    random() ==
+        (context .random := Random`next(context.random);
+        return Random`value(context.random));
 
 end Interpreter
