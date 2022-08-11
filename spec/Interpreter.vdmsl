@@ -6,9 +6,10 @@ imports
     from Random all,
     from MATH
         functions
-            ln renamed ln;
             sqrt renamed sqrt;
             cos renamed cos;
+            exp renamed exp;
+            ln renamed ln;
 exports functions eval : AST`Expression -> real;
 
 
@@ -31,21 +32,7 @@ functions
             mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
             mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr))
             end;
-    
-    uniform : real * real * real -> real
-    uniform(sectionFrom, sectionTo, x) ==
-        x  * (sectionTo - sectionFrom) + sectionFrom
-    pre isUnit(x);
-    
-    normal : real * real * real * real -> real
-    normal(mean, sigma, x1, x2) ==
-        sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
-        + mean
-    pre isUnit(x1) and isUnit(x2);
-    
-    isUnit : real -> bool
-    isUnit(x) == x >= 0 and x <= 1;
-		
+    		
 /*
      Expression =
         Variable| Apply| GuardedChoices|
@@ -82,6 +69,54 @@ operations
     random : () ==> real
     random() ==
         (context .random := Random`next(context.random);
-        return Random`value(context.random));
+        return Random`value(context.random))
+    post  RESULT >= 0 and RESULT <= 1;
+    
+    uniform : real * real ==> real
+    uniform(sectionFrom, sectionTo) ==
+        return let x = random() in x  * (sectionTo - sectionFrom) + sectionFrom;
+    
+    normal : real * real ==> real
+    normal(mean, sigma) ==
+        return let x1 = random(), x2 = random()
+            in
+                sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
+                + mean;
+    
+    gamma : real * real ==> real
+    gamma(shape, scale) ==
+        return (if shape <= 1.0 then ahrensDiester(shape) else marsagliaTsang(shape))
+             * scale;
+    
+    ahrensDiester : real ==> real
+    ahrensDiester(shape) ==
+        let e = 2.718281828459045, c1 = e / (shape + e)
+        in
+            while true
+            do
+                (dcl u1:real, u2:real;
+                u1 := random();
+                u2 := random();
+                if
+                    u1 <= c1
+                then
+                    (let x = (u1 / c1) ** (1 / shape) in if u2 <= exp(-x) then return x)
+                else
+                    (let x = -ln((1 - u1) / (c1  * shape))
+                    in if u2 <= x ** (shape - 1.0) then return x))
+    pre  shape <= 1;
+    
+    marsagliaTsang : real ==> real
+    marsagliaTsang(shape) ==
+        let c1 = shape - 1 / 3, c2 = 1 / sqrt(9  * c1)
+        in
+            while true
+            do
+                (dcl z:real := normal(0, 1), v:real, u:real;
+                while c2  * z <= -1.0 do z := normal(0, 1);
+                v := let t = c2  * z + 1.0 in t  * t  * t;
+                u := random();
+                if u < 1.0 - 0.0331  * z  * z  * z  * z then return c1  * v;
+                if ln(u) < 0.5  * z  * z + c1  * (1.0 - v + ln(v)) then return c1  * v);
 
 end Interpreter
