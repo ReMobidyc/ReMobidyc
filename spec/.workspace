@@ -1,0 +1,21 @@
+fold((lambda x:real, y:real & x + y), [1,2,3,4,5,6,7,8,9]) 45
+
+2 ** 3
+toSI(mul(, 1)
+
+toSI(percent, 10)
+
+mul(km, pow(h, -1))
+fraction(km, h)
+
+eval(mk_AST`Literal(1.0, Unit`km))
+
+exp(1, 2)
+
+-2 ** 3.2
+
+value(next(next(next(mk_RandomGenerator(1234)))))
+
+2**31−1 2147483648
+
+[ahrensDiester(0.5)*3.14 | i in set {1,...,10}]

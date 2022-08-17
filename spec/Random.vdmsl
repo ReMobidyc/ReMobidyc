@@ -1,0 +1,20 @@
+module Random
+exports all
+definitions
+types
+     RandomGenerator :: seed : nat;
+
+values
+     factor : nat = 742938285;
+     modulo : nat = 2147483647;
+
+functions
+    value : Random`RandomGenerator -> real
+    value(mk_Random`RandomGenerator(seed)) ==
+        (seed - 1) / (modulo - 1);
+    
+    next : Random`RandomGenerator -> Random`RandomGenerator
+    next(mk_Random`RandomGenerator(seed)) ==
+        mk_Random`RandomGenerator(seed  * factor mod modulo);
+
+end Random
