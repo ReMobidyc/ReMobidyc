@@ -19,8 +19,8 @@ RMDAgentInitializerNode >> attributeInitializers [
 ]
 
 { #category : #accessing }
-RMDAgentInitializerNode >> attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
-	attributeInitializers := anArrayOfRMDSimulationAttributeInitializerNode
+RMDAgentInitializerNode >> attributeInitializers: anArayOfRMDAttributeInitializerNode [
+	attributeInitializers := anArayOfRMDAttributeInitializerNode
 ]
 
 { #category : #enumerating }
