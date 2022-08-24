@@ -95,7 +95,7 @@ RMDNormalDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynt
 		addSectionTo: aCollection.
 	self precedence <= meanExpression precedence ifTrue: [ 
 		aStream nextPut: $) ].
-	aStream nextPutAll: ' mean '.
+	aStream nextPutAll: ' sigma '.
 	self precedence <= sigmaExpression precedence ifTrue: [ 
 		aStream nextPut: $( ].
 	sigmaExpression
