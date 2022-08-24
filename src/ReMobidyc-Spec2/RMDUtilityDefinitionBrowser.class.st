@@ -8,8 +8,8 @@ Class {
 	#category : #'ReMobidyc-Spec2-Components'
 }
 
-{ #category : #specs }
-RMDUtilityDefinitionBrowser class >> defaultSpec [
+{ #category : #layout }
+RMDUtilityDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal

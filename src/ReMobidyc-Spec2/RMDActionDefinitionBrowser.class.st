@@ -108,7 +108,7 @@ RMDActionDefinitionBrowser >> editAttributeDefinition [
 	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
 		| newDefinition index |
 		newDefinition := oldDefinition copy.
-		newDefinition asPresenter openDialogWithSpec okAction: [ 
+		newDefinition asPresenter openDialog okAction: [ 
 			node attributeDefinitions
 				at: (index := node attributeDefinitions indexOf: oldDefinition)
 				put: newDefinition.
@@ -175,7 +175,7 @@ RMDActionDefinitionBrowser >> editUtilityDefinition [
 	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
 		| newDefinition index |
 		newDefinition := oldDefinition copy.
-		newDefinition asPresenter openDialogWithSpec okAction: [ 
+		newDefinition asPresenter openDialog okAction: [ 
 			node utilityDefinitions
 				at: (index := node utilityDefinitions indexOf: oldDefinition)
 				put: newDefinition.
