@@ -18,7 +18,7 @@ RMDSimulationTimeDefinitionPresenter class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   vAlignCenter;
 				   borderWidth: 5;
-				   spacing: 5;
+				   spacing: 10;
 				   add: 'during ' expand: false;
 				   add: #durationField width: 80;
 				   add: #durationUnitDropList width: 80;
@@ -26,7 +26,7 @@ RMDSimulationTimeDefinitionPresenter class >> defaultLayout [
 				   add: #stepField width: 60;
 				   add: #stepUnitDropList width: 80;
 				   yourself)
-		  height: self buttonHeight
+		  expand: false
 ]
 
 { #category : #accessing }
@@ -114,7 +114,7 @@ RMDSimulationTimeDefinitionPresenter >> nodeChanged [
 { #category : #accessing }
 RMDSimulationTimeDefinitionPresenter >> preferredHeight [
 
-	^ self class buttonHeight
+	^ self class buttonHeight * 2
 ]
 
 { #category : #accessing }

@@ -61,10 +61,10 @@ RMDSimulationDefinitionPresenter >> newLayout [
 
 	| newLayout |
 	newLayout := SpBoxLayout newVertical
-		             spacing: 10;
+		             spacing: 15;
 		             yourself.
 	newLayout
-		add: node timeDefinition asPresenter expand: false;
+		add: node timeDefinition asPresenter height: self class buttonHeight;
 		add: node worldInitializer asPresenter expand: false;
 		add: node patchInitializer asPresenter expand: false.
 	node animatInitializers do: [ :initializer | 
