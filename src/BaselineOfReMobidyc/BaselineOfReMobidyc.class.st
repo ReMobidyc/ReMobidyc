@@ -112,10 +112,13 @@ BaselineOfReMobidyc >> logoDirectoryPath [
 
 { #category : #scripts }
 BaselineOfReMobidyc >> postLoad [
+
 	<script: 'BaselineOfReMobidyc new postLoad'>
 	self installLogos.
 	PharoLightTheme beCurrent.
 	PolymorphSystemSettings desktopLogoFileName: ''.
-	PolymorphSystemSettings
-		desktopLogoFileName: (self logoDirectoryPath / 'default.png') fullName
+	PolymorphSystemSettings desktopLogoFileName:
+		(self logoDirectoryPath / 'default.png') fullName.
+	PolymorphSystemSettings desktopColor:
+		(Color cyan mixed: 0.02 with: Color white)
 ]
