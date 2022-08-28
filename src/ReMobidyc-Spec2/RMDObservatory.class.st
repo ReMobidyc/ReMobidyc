@@ -275,7 +275,7 @@ RMDObservatory >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self windowTitle;
-		initialExtent: 900 @ 600
+		initialExtent: 1100 @ 600
 ]
 
 { #category : #accessing }
