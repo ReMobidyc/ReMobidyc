@@ -310,7 +310,6 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                enabled: false;
 		                editable: false;
 		                highlights: Array new;
-		                whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
 		                       beIdentifier;
