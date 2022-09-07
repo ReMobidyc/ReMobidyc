@@ -1,8 +1,0 @@
-module Utilities
-exports all
-definitions
-functions
-    pow : real * int -> real
-    pow(x, y) == if y >= 0 then x ** y else 1 / x ** (abs y);
-
-end Utilities

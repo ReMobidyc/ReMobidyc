@@ -2,6 +2,14 @@ module AST
 exports all
 definitions
 types
+	/*** simulation definitions **/
+     SimulationDefinition ::
+        timeDefinition : SimulationTimeDefinition
+        worldInitializer : WorldInitializer
+        patchInitializer : PatchInitializer
+        animatInitializers : seq of AnimatInitializer;
+     SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
+
 	/*** agent definitions **/
      AnimatDefinition ::
         identifier : AgentIdentifier
@@ -22,6 +30,19 @@ types
         lifeDirectives : seq of LifeDirective
         attributeDefinitions : seq of AttributeDefinition
         utilityDefinitions : seq of UtilityDefinition;
+
+	/*** task definitions ***/
+     TaskDefinition ::
+        subjectIdentifier : AgentIdentifier
+        verbIdentifier : Identifier
+        objectIdentifier : [AgentIdentifier]
+        nearest : bool
+        range : Expression
+        actionIdentifier : Identifier
+        replacements : seq of Replacement;
+     Replacement ::
+        placeholder : Placeholder| DirectivePlaceholder
+        replacement : Expression| Condition| NewDirective| StageDirective;
 	--
      LifeDirective =
         DieDirective| KillDirective| NewDirective| StageDirective|
@@ -72,7 +93,7 @@ types
 	/*** Expressions ***/
      Expression =
         Variable| Literal| Casting| Apply| Arithmetics| Distribution|
-        GuardedChoices| Placeholder;
+        GuardedChoices| Directive| Placeholder;
      GuardedChoices :: seq1 of (Condition * Expression) Expression;
 	-- atoms
      Variable =

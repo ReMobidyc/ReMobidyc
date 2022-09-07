@@ -2,7 +2,7 @@ module Interpreter
 imports
     from AST all,
     from Unit all,
-    from Utilities functions pow: real * int -> real renamed pow;,
+    from Memory all,
     from Random all,
     from MATH
         functions
@@ -10,62 +10,107 @@ imports
             cos renamed cos;
             exp renamed exp;
             ln renamed ln;
-exports functions eval : AST`Expression -> real;
+exports operations eval : AST`Expression ==> real;
 
 
 		/*** distributions ***/
 definitions
 types
-     Context :: random : Random`RandomGenerator;
+     SimulationModel ::
+        simulationDefinition : AST`SimulationDefinition
+        animatDefinitions : AST`SimulationDefinition
+        worldDefinition : AST`WorldDefinition
+        patchDefinition : AST`PatchDefinition
+        actionDefinitions : AST`ActionDefinition
+        taskDefinitions : map AST`Identifier to AST`TaskDefinition;
+     Context = ActionContext;
+     ActionContext ::
+        attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
+        utilities : map AST`Identifier to (AST`Expression| real)
+        action : AST`ActionDefinition
+        random : Random`RandomGenerator;
 
-functions
-    eval : AST`Expression -> real
+values
+     AGENT_NEW = "new";
+     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
+
+operations
+    eval : AST`Expression ==> real
     eval(expr) ==
-        cases expr:
-            mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
-            mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
-            mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
-            mk_AST`Product(expr1, expr2) -> eval(expr1)  * eval(expr2),
-            mk_AST`Fraction(expr1, expr2) -> eval(expr1) / eval(expr2),
-            mk_AST`Power(expr, order) -> pow(eval(expr), order),
-            mk_AST`Minus(expr) -> -eval(expr),
-            mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
-            mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr))
-            end;
-    		
-/*
-     Expression =
-        Variable| Apply| GuardedChoices|
-        Placeholder;
-     GuardedChoices :: seq1 of (Condition * Expression) Expression;
-	-- atoms
-     Variable =
-        AttributeVariable| NewAttributeVariable| UtilityVariable;
-     AttributeVariable :: agent : [Identifier] identifier : Identifier;
-     NewAttributeVariable :: identifier : Identifier;
-     UtilityVariable :: identifier : Identifier;
-
-	-- composite
-     Apply :: function : Identifier arguments : seq1 of Expression;
-   -- randoms
-     UniformDistribution ::
-        beginSection : Expression endSection : Expression;
-     NormalDistribution :: mean : Expression sigma : Expression;
-     GammaDistribution :: shape : Expression scale : Expression;
-     LogLogisticDistribution :: scale : Expression shape : Expression;
-	-- directives
-     Directive = AgentDirective| PatchDirective;
-     AgentDirective ::
-        <direction>| <distance>| <time>| <deltatime> agent : [Identifier];
-     PatchDirective :: <gradient> Identifier;
-*/
+        return cases expr:
+                mk_AST`UtilityVariable(identifier) -> readUtility(identifier),
+                mk_AST`AttributeVariable(agent, identifier) ->
+                    readVariable(agent, identifier),
+                mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
+                mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
+                mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
+                mk_AST`Product(expr1, expr2) -> eval(expr1)  * eval(expr2),
+                mk_AST`Fraction(expr1, expr2) -> eval(expr1) / eval(expr2),
+                mk_AST`Power(expr, order) -> pow(eval(expr), order),
+                mk_AST`Minus(expr) -> -eval(expr),
+                mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
+                mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr)),
+                mk_AST`UniformDistribution(expr1, expr2) ->
+                    uniform(eval(expr1), eval(expr2)),
+                mk_AST`NormalDistribution(mean, sigma) ->
+                    normal(eval(mean), eval(sigma)),
+                mk_AST`GammaDistribution(shape, scale) ->
+                    gamma(eval(shape), eval(scale)),
+                mk_AST`LogLogisticDistribution(scale, shape) ->
+                    logLogistic(eval(scale), eval(shape)),
+                mk_AST`Apply(func, args) -> undefined,
+                mk_AST`AgentDirective(directive, agent) -> undefined,
+                mk_AST`PatchDirective(directive, agent) -> undefined,
+                mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
+                    undefined,
+                others -> undefined
+                end;
 
 state Interpreter of
-    context : Context
-init s == s = mk_Interpreter(mk_Context(mk_Random`RandomGenerator(1)))
+    simulationModel : [token]
+    context : [Context]
+init s == s = mk_Interpreter(nil, nil)
 end
 
 operations
+    readUtility : AST`Identifier ==> real
+    readUtility(identifier) ==
+        (dcl v:AST`Expression| real := context.utilities(identifier);
+        if
+            is_(v, AST`Expression)
+        then
+            (v := eval(v);
+            context .utilities(identifier) := v);
+        return v);
+    
+    readVariable : [AST`Identifier] * AST`Identifier ==> real
+    readVariable(agent, identifier) ==
+        return Memory`read(getAddress(agent, identifier));
+    
+    writeVariable : [AST`Identifier] * AST`Identifier * real ==> ()
+    writeVariable(agent, identifier, data) ==
+        Memory`write(getAddress(agent, identifier), data);
+    
+    writeDeltaVariable : [AST`Identifier] * AST`Identifier * real ==> ()
+    writeDeltaVariable(agent, identifier, data) ==
+        Memory`writeDelta(getAddress(agent, identifier), data);
+    
+    getAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
+    getAddress(agent, identifier) ==
+        if
+            agent in set dom context.attributes
+        then
+            let attr = context.attributes(agent)
+            in
+                (if
+                    identifier in set dom attr
+                then
+                    return attr(identifier)
+                else
+                    exit UNRESOLVED_REFERENCE)
+        else
+            exit UNRESOLVED_REFERENCE;
+    
     random : () ==> real
     random() ==
         (context .random := Random`next(context.random);
@@ -127,5 +172,9 @@ operations
                     then
                         return c1  * v  * scale)))
     pre  scale > 0 and shape > 0;
+
+functions
+    pow : real * int -> real
+    pow(x, y) == if y >= 0 then x ** y else 1 / x ** (abs y);
 
 end Interpreter

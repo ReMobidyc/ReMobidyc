@@ -3,8 +3,7 @@ imports
     from AST
         types
             Unit renamed Unit;
-            SIBaseUnit renamed SIBaseUnit;,
-    from Utilities functions pow: real * int -> real;
+            SIBaseUnit renamed SIBaseUnit;
 	-- length
 exports all
 definitions
@@ -135,8 +134,10 @@ functions
                 cases baseAndOrders:
                     [] -> [],
                     [mk_(b, o2)]^rest -> [mk_(b, o1  * o2)] ^ mulOrder(rest, o1)
-                    end
-        in mk_Unit(mulOrder(bases, order), Utilities`pow(scale, order));
+                    end,
+            fpow : real * int -> real
+            fpow(x, y) == if y >= 0 then x ** y else 1 / x ** (abs y)
+        in mk_Unit(mulOrder(bases, order), fpow(scale, order));
     
     mul : Unit * Unit -> Unit
     mul(mk_Unit(bases1, scale1), mk_Unit(bases2, scale2)) ==
