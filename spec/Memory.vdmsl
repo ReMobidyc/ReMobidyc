@@ -5,6 +5,7 @@ exports
         read : Address ==> real;
         write : Address * real ==> ();
         writeDelta : Address * real ==> ();
+        timeTicks : () ==> nat;
 definitions
 types
      Address = nat1;
@@ -16,7 +17,8 @@ state Memory of
     vals : map Address to real
     next : map Address to real
     delta : map Address to real
-init s == s = mk_Memory({|->}, {|->}, {|->})
+    ticks : nat
+init s == s = mk_Memory({|->}, {|->}, {|->}, 0)
 end
 
 operations
@@ -36,5 +38,8 @@ operations
             delta(address) := delta(address) + data
         else
             exit ADDRESS_ERROR;
+    
+    timeTicks : () ==> nat
+    timeTicks() == return ticks;
 
 end Memory

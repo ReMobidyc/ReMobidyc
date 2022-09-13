@@ -8,21 +8,23 @@ types
         worldInitializer : WorldInitializer
         patchInitializer : PatchInitializer
         animatInitializers : seq of AnimatInitializer;
-     SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
 
 	/*** agent definitions **/
+     SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
      AnimatDefinition ::
         identifier : AgentIdentifier
         species : AgentIdentifier
         attributeDeclarations : seq of AttributeDeclaration;
      PatchDefinition ::
         attributeDeclarations : seq of AttributeDeclaration;
+	  --
      WorldDefinition ::
         attributeDeclarations : seq of AttributeDeclaration;
-	  --
-     AttributeDeclaration :: identifier : Identifier unit : Unit;
 
 	/*** action definitions ***/
+     AttributeDeclaration :: identifier : Identifier unit : Unit;
+
+	/*** task definitions ***/
      ActionDefinition ::
         identifier : Identifier
         object : [AgentIdentifier]
@@ -30,8 +32,6 @@ types
         lifeDirectives : seq of LifeDirective
         attributeDefinitions : seq of AttributeDefinition
         utilityDefinitions : seq of UtilityDefinition;
-
-	/*** task definitions ***/
      TaskDefinition ::
         subjectIdentifier : AgentIdentifier
         verbIdentifier : Identifier
@@ -40,10 +40,10 @@ types
         range : Expression
         actionIdentifier : Identifier
         replacements : seq of Replacement;
+	--
      Replacement ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression| Condition| NewDirective| StageDirective;
-	--
      LifeDirective =
         DieDirective| KillDirective| NewDirective| StageDirective|
         DirectivePlaceholder;
@@ -66,15 +66,15 @@ types
         attributeVariable : AttributeVariable| Placeholder;
      AssignableDeltaAttributeVariable ::
         attributeVariable : AttributeVariable;
+	/*** task definitions ***/
      AssignableDifferentialAttributeVariable ::
         attributeVariable : AttributeVariable;
-	/*** task definitions ***/
      AttributeBind ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression;
-     Placeholder :: identifier : Identifier;
 
 	/*** simulation definition ***/
+     Placeholder :: identifier : Identifier;
      AnimatInitializer ::
         animat : AgentIdentifier
         population : nat1
@@ -84,26 +84,26 @@ types
         yDivisions : nat1
         size : Literal
         attributeInitializers : seq of AttributeInitializer;
+	--
      WorldInitializer ::
         attributeInitializers : seq of AttributeInitializer;
-	--
-     AttributeInitializer ::
-        identifier : Identifier expression : Expression;
 
 	/*** Expressions ***/
+     AttributeInitializer ::
+        identifier : Identifier expression : Expression;
      Expression =
         Variable| Literal| Casting| Apply| Arithmetics| Distribution|
         GuardedChoices| Directive| Placeholder;
-     GuardedChoices :: seq1 of (Condition * Expression) Expression;
 	-- atoms
+     GuardedChoices :: seq1 of (Condition * Expression) Expression;
      Variable =
         AttributeVariable| NewAttributeVariable| UtilityVariable;
      AttributeVariable :: agent : [Identifier] identifier : Identifier;
      NewAttributeVariable :: identifier : Identifier;
      UtilityVariable :: identifier : Identifier;
-     Literal :: real Unit;
 
 	-- composite
+     Literal :: real Unit;
      Apply :: function : Identifier arguments : seq1 of Expression;
      Arithmetics =
         Addition| Subtraction| Product| Fraction| Power| Minus;
@@ -112,8 +112,8 @@ types
      Product :: Expression Expression;
      Fraction :: Expression Expression;
      Power :: Expression int;
-     Minus :: Expression;
    -- randoms
+     Minus :: Expression;
      Distribution =
         UniformDistribution| UniformDistributionX| UniformDistributionY|
         NormalDistribution| GammaDistribution| LogLogisticDistribution;
@@ -123,13 +123,13 @@ types
      UniformDistributionY = <uniform_distribution_y>;
      NormalDistribution :: mean : Expression sigma : Expression;
      GammaDistribution :: shape : Expression scale : Expression;
-     LogLogisticDistribution :: scale : Expression shape : Expression;
 	-- directives
+     LogLogisticDistribution :: scale : Expression shape : Expression;
      Directive = AgentDirective| PatchDirective;
      AgentDirective ::
-        <direction>| <distance>| <time>| <deltatime> agent : [Identifier];
-     PatchDirective :: <gradient> Identifier;
+        <direction>| <distance>| <time>| <delta_time> agent : [Identifier];
 	-- type casting
+     PatchDirective :: <direction_of_gradient> Identifier;
      Casting = DeUnitCasting| EnUnitCasting;
      DeUnitCasting :: Unit Expression;
      EnUnitCasting :: Expression Unit;
@@ -137,9 +137,9 @@ types
         inv mk_Unit(us, -) ==
             card {u | mk_(u, -) in seq us} = len us
             and (forall mk_(-, o) in set elems us & o <> 0);
-     SIBaseUnit = <kg>| <m>| <s>| <℃>| <K>| <℉>| <rad>| <mol>;
 	
 	-- condition
+     SIBaseUnit = <kg>| <m>| <s>| <℃>| <K>| <℉>| <rad>| <mol>;
      Condition =
         Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
         NotEqual| Negation| Conjunction| Disjunction| Placeholder;
@@ -151,8 +151,8 @@ types
      NotEqual :: Expression Expression;
      Negation :: Condition;
      Conjunction :: Condition Condition;
-     Disjunction :: Condition Condition;
 	-- lexicals
+     Disjunction :: Condition Condition;
      Identifier = seq of char;
      AgentIdentifier = seq of char;
 
