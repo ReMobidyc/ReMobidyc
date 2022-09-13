@@ -1,0 +1,159 @@
+module AST
+exports all
+definitions
+types
+	/*** simulation definitions **/
+     SimulationDefinition ::
+        timeDefinition : SimulationTimeDefinition
+        worldInitializer : WorldInitializer
+        patchInitializer : PatchInitializer
+        animatInitializers : seq of AnimatInitializer;
+     SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
+
+	/*** agent definitions **/
+     AnimatDefinition ::
+        identifier : AgentIdentifier
+        species : AgentIdentifier
+        attributeDeclarations : seq of AttributeDeclaration;
+     PatchDefinition ::
+        attributeDeclarations : seq of AttributeDeclaration;
+     WorldDefinition ::
+        attributeDeclarations : seq of AttributeDeclaration;
+	  --
+     AttributeDeclaration :: identifier : Identifier unit : Unit;
+
+	/*** action definitions ***/
+     ActionDefinition ::
+        identifier : Identifier
+        object : [AgentIdentifier]
+        guard : [Expression]
+        lifeDirectives : seq of LifeDirective
+        attributeDefinitions : seq of AttributeDefinition
+        utilityDefinitions : seq of UtilityDefinition;
+
+	/*** task definitions ***/
+     TaskDefinition ::
+        subjectIdentifier : AgentIdentifier
+        verbIdentifier : Identifier
+        objectIdentifier : [AgentIdentifier]
+        nearest : bool
+        range : Expression
+        actionIdentifier : Identifier
+        replacements : seq of Replacement;
+     Replacement ::
+        placeholder : Placeholder| DirectivePlaceholder
+        replacement : Expression| Condition| NewDirective| StageDirective;
+	--
+     LifeDirective =
+        DieDirective| KillDirective| NewDirective| StageDirective|
+        DirectivePlaceholder;
+     DieDirective = <die>;
+     KillDirective = <kill>;
+     NewDirective :: stage : AgentIdentifier quantity : nat1;
+     StageDirective :: stage : AgentIdentifier;
+     DirectivePlaceholder =
+        NewDirectivePlaceholder| StageDirectivePlaceholder;
+     NewDirectivePlaceholder = <new>;
+     StageDirectivePlaceholder = <stage>;
+     AttributeDefinition ::
+        variable : AssignableVariable expression : Expression;
+     UtilityDefinition ::
+        variable : AssignableVariable expression : Expression;
+     AssignableVariable =
+        AssignableAttributeVariable| AssignableDeltaAttributeVariable|
+        AssignableDifferentialAttributeVariable;
+     AssignableAttributeVariable ::
+        attributeVariable : AttributeVariable| Placeholder;
+     AssignableDeltaAttributeVariable ::
+        attributeVariable : AttributeVariable;
+     AssignableDifferentialAttributeVariable ::
+        attributeVariable : AttributeVariable;
+	/*** task definitions ***/
+     AttributeBind ::
+        placeholder : Placeholder| DirectivePlaceholder
+        replacement : Expression;
+     Placeholder :: identifier : Identifier;
+
+	/*** simulation definition ***/
+     AnimatInitializer ::
+        animat : AgentIdentifier
+        population : nat1
+        attributeInitializers : seq of AttributeInitializer;
+     PatchInitializer ::
+        xDivisions : nat1
+        yDivisions : nat1
+        size : Literal
+        attributeInitializers : seq of AttributeInitializer;
+     WorldInitializer ::
+        attributeInitializers : seq of AttributeInitializer;
+	--
+     AttributeInitializer ::
+        identifier : Identifier expression : Expression;
+
+	/*** Expressions ***/
+     Expression =
+        Variable| Literal| Casting| Apply| Arithmetics| Distribution|
+        GuardedChoices| Directive| Placeholder;
+     GuardedChoices :: seq1 of (Condition * Expression) Expression;
+	-- atoms
+     Variable =
+        AttributeVariable| NewAttributeVariable| UtilityVariable;
+     AttributeVariable :: agent : [Identifier] identifier : Identifier;
+     NewAttributeVariable :: identifier : Identifier;
+     UtilityVariable :: identifier : Identifier;
+     Literal :: real Unit;
+
+	-- composite
+     Apply :: function : Identifier arguments : seq1 of Expression;
+     Arithmetics =
+        Addition| Subtraction| Product| Fraction| Power| Minus;
+     Addition :: Expression Expression;
+     Subtraction :: Expression Expression;
+     Product :: Expression Expression;
+     Fraction :: Expression Expression;
+     Power :: Expression int;
+     Minus :: Expression;
+   -- randoms
+     Distribution =
+        UniformDistribution| UniformDistributionX| UniformDistributionY|
+        NormalDistribution| GammaDistribution| LogLogisticDistribution;
+     UniformDistribution ::
+        beginSection : Expression endSection : Expression;
+     UniformDistributionX = <uniform_distribution_x>;
+     UniformDistributionY = <uniform_distribution_y>;
+     NormalDistribution :: mean : Expression sigma : Expression;
+     GammaDistribution :: shape : Expression scale : Expression;
+     LogLogisticDistribution :: scale : Expression shape : Expression;
+	-- directives
+     Directive = AgentDirective| PatchDirective;
+     AgentDirective ::
+        <direction>| <distance>| <time>| <deltatime> agent : [Identifier];
+     PatchDirective :: <gradient> Identifier;
+	-- type casting
+     Casting = DeUnitCasting| EnUnitCasting;
+     DeUnitCasting :: Unit Expression;
+     EnUnitCasting :: Expression Unit;
+     Unit :: seq of (SIBaseUnit * int) scale : real
+        inv mk_Unit(us, -) ==
+            card {u | mk_(u, -) in seq us} = len us
+            and (forall mk_(-, o) in set elems us & o <> 0);
+     SIBaseUnit = <kg>| <m>| <s>| <℃>| <K>| <℉>| <rad>| <mol>;
+	
+	-- condition
+     Condition =
+        Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
+        NotEqual| Negation| Conjunction| Disjunction| Placeholder;
+     Equality :: Expression Expression;
+     GreaterOrEqual :: Expression Expression;
+     GreaterThan :: Expression Expression;
+     LessOrEqual :: Expression Expression;
+     LessThan :: Expression Expression;
+     NotEqual :: Expression Expression;
+     Negation :: Condition;
+     Conjunction :: Condition Condition;
+     Disjunction :: Condition Condition;
+	-- lexicals
+     Identifier = seq of char;
+     AgentIdentifier = seq of char;
+
+end AST

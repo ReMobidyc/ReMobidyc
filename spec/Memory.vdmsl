@@ -1,0 +1,40 @@
+module Memory
+exports
+    types Address;
+    operations
+        read : Address ==> real;
+        write : Address * real ==> ();
+        writeDelta : Address * real ==> ();
+definitions
+types
+     Address = nat1;
+
+values
+     ADDRESS_ERROR = <ADDRESS_ERROR>;
+
+state Memory of
+    vals : map Address to real
+    next : map Address to real
+    delta : map Address to real
+init s == s = mk_Memory({|->}, {|->}, {|->})
+end
+
+operations
+    read : Address ==> real
+    read(address) ==
+        if address in set dom vals then return vals(address) else exit ADDRESS_ERROR;
+    
+    write : Address * real ==> ()
+    write(address, data) ==
+        if address in set dom next then next(address) := data else exit ADDRESS_ERROR;
+    
+    writeDelta : Address * real ==> ()
+    writeDelta(address, data) ==
+        if
+            address in set dom delta
+        then
+            delta(address) := delta(address) + data
+        else
+            exit ADDRESS_ERROR;
+
+end Memory
