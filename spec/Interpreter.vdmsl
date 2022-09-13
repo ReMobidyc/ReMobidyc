@@ -10,6 +10,7 @@ imports
             cos renamed cos;
             exp renamed exp;
             ln renamed ln;
+            atan renamed atan;
 exports operations eval : AST`Expression ==> real;
 
 
@@ -59,15 +60,24 @@ operations
                 mk_AST`LogLogisticDistribution(scale, shape) ->
                     logLogistic(eval(scale), eval(shape)),
                 mk_AST`Apply(func, args) -> undefined,
-                mk_AST`AgentDirective(directive, agent) -> undefined,
-                mk_AST`PatchDirective(directive, agent) -> undefined,
+                mk_AST`AgentDirective(directive, agent) ->
+                    cases directive:
+                        <direction> -> directionOfAgent(agent),
+                        <distance> -> distanceFromAgent(agent),
+                        <time> -> simulationTime(),
+                        <delta_time> -> deltaTime()
+                        end,
+                mk_AST`PatchDirective(directive, identifier) ->
+                    cases directive:
+                        <direction_of_gradient> -> directionOfGradient(identifier)
+                        end,
                 mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
                     undefined,
                 others -> undefined
                 end;
 
 state Interpreter of
-    simulationModel : [token]
+    simulationModel : [SimulationModel]
     context : [Context]
 init s == s = mk_Interpreter(nil, nil)
 end
@@ -172,9 +182,91 @@ operations
                     then
                         return c1  * v  * scale)))
     pre  scale > 0 and shape > 0;
+    
+    directionOfGradient : AST`Identifier ==> real
+    directionOfGradient(attribute) ==
+        return let
+                here = readVariable("here", attribute),
+                east = readVariable("east", attribute),
+                west = readVariable("west", attribute),
+                south = readVariable("south", attribute),
+                north = readVariable("north", attribute)
+            in
+                (if
+                        ((here >= east and here >= west) and here >= south) and here >= north
+                    then
+                        let x = readVariable(nil, "x"), y = readVariable(nil, "y")
+                        in
+                            theta(
+                                patchLength()  * (floor patchX(x) + 0.5) - x,
+                                patchLength()  * (floor patchY(y) + 0.5) - y)
+                    else
+                        theta(east - west, north - south));
+    
+    directionOfAgent : AST`Identifier ==> real
+    directionOfAgent(agent) ==
+        return theta(
+                readVariable(agent, "x") - readVariable(nil, "x"),
+                readVariable(agent, "y") - readVariable(nil, "y"));
+    
+    distanceFromAgent : AST`Identifier ==> real
+    distanceFromAgent(agent) ==
+        return let
+                x = readVariable(agent, "x") - readVariable(nil, "x"),
+                y = readVariable(agent, "y") - readVariable(nil, "y")
+            in sqrt(x ** 2 + y ** 2);
+    
+    simulationTime : () ==> real
+    simulationTime() == return Memory`timeTicks()  * deltaTime();
+    
+    deltaTime : () ==> real
+    deltaTime() ==
+        return eval(simulationModel.simulationDefinition.timeDefinition.timeStep);
+    
+    patchLength : () ==> real
+    patchLength() ==
+        return eval(simulationModel.simulationDefinition.patchInitializer.size);
+    
+    worldWest : () ==> real
+    worldWest() == return 0;
+    
+    worldEast : () ==> real
+    worldEast() ==
+        return simulationModel.simulationDefinition.patchInitializer.xDivisions
+             * patchLength();
+    
+    worldSouth : () ==> real
+    worldSouth() == return 0;
+    
+    worldNorth : () ==> real
+    worldNorth() ==
+        return simulationModel.simulationDefinition.patchInitializer.yDivisions
+             * patchLength();
+    
+    patchX : real ==> real
+    patchX(x) == return (x - worldWest()) / patchLength();
+    
+    patchY : real ==> real
+    patchY(y) == return (y - worldSouth()) / patchLength();
 
 functions
     pow : real * int -> real
     pow(x, y) == if y >= 0 then x ** y else 1 / x ** (abs y);
+    
+    theta : real * real -> real
+    theta(x, y) ==
+        if
+            x = 0
+        then
+            if y >= 0 then 1.570796326794897 else 4.71238898038469
+        else
+            (let th = atan(y / x)
+                in
+                    (if
+                            x >= 0
+                        then
+                            if y >= 0 then th else 6.283185307179586 + th
+                        else
+                            3.141592653589793 + th));
 
 end Interpreter
