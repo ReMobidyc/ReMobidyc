@@ -2,10 +2,10 @@ Class {
 	#name : #RMDSimulationDefinitionNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'worldInitializer',
-		'animatInitializers',
 		'timeDefinition',
-		'patchInitializer'
+		'worldInitializer',
+		'patchInitializer',
+		'animatInitializers'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
