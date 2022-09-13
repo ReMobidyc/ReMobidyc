@@ -188,8 +188,8 @@ RMDInterpreter >> directionOfGradient: aString [
 		ifTrue: [ | x y patchX patchY |
 			x := self readVariable: 'x' agent: nil ifAbsent: [ 0.0 ].
 			y := self readVariable: 'y' agent: nil ifAbsent: [ 0.0 ].
-			patchX := self patchLength * ((self patchX: x) + 0.5).
-			patchY := self patchLength * ((self patchY: y) + 0.5).
+			patchX := self patchLength * ((self patchX: x) floor + 0.5).
+			patchY := self patchLength * ((self patchY: y) floor + 0.5).
 			vector := (patchX - x) @ (patchY - y) ].
 	^ vector theta
 ]
