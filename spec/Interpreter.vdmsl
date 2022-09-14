@@ -7,6 +7,7 @@ imports
     from MATH
         functions
             sqrt renamed sqrt;
+            sin renamed sin;
             cos renamed cos;
             exp renamed exp;
             ln renamed ln;
@@ -59,7 +60,7 @@ operations
                     gamma(eval(shape), eval(scale)),
                 mk_AST`LogLogisticDistribution(scale, shape) ->
                     logLogistic(eval(scale), eval(shape)),
-                mk_AST`Apply(func, args) -> undefined,
+                mk_AST`Apply(func, args) -> apply(func, [eval(x) | x in seq args]),
                 mk_AST`AgentDirective(directive, agent) ->
                     cases directive:
                         <direction> -> directionOfAgent(agent),
@@ -72,8 +73,33 @@ operations
                         <direction_of_gradient> -> directionOfGradient(identifier)
                         end,
                 mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
-                    undefined,
+                    cases guardsAndExpressions:
+                        [] -> eval(defaultExpression),
+                        [mk_(guard, expr)]^rest ->
+                            if
+                                evalCond(guard)
+                            then
+                                eval(guard)
+                            else
+                                eval(mk_AST`GuardedChoices(rest, defaultExpression))
+                        end,
                 others -> undefined
+                end;
+    
+    evalCond : AST`Condition ==> bool
+    evalCond(cond) ==
+        return cases cond:
+                mk_AST`Equality(expr1, expr2) -> eval(expr1) = eval(expr2),
+                mk_AST`GreaterOrEqual(expr1, expr2) -> eval(expr1) >= eval(expr2),
+                mk_AST`GreaterThan(expr1, expr2) -> eval(expr1) > eval(expr2),
+                mk_AST`LessOrEqual(expr1, expr2) -> eval(expr1) <= eval(expr2),
+                mk_AST`LessThan(expr1, expr2) -> eval(expr1) < eval(expr2),
+                mk_AST`NotEqual(expr1, expr2) -> eval(expr1) <> eval(expr2),
+                mk_AST`Negation(cond) -> not evalCond(cond),
+                mk_AST`Conjunction(cond1, cond2) ->
+                    evalCond(cond1) and evalCond(cond2),
+                mk_AST`Disjunction(cond1, cond2) ->
+                    evalCond(cond1) or evalCond(cond2)
                 end;
 
 state Interpreter of
@@ -250,6 +276,46 @@ operations
     patchY(y) == return (y - worldSouth()) / patchLength();
 
 functions
+    apply : seq1 of char * seq1 of real -> real
+    apply(func, args) ==
+        cases func:
+            "abs" -> if len args = 1 then abs (hd args) else undefined,
+            "cos" -> if len args = 1 then abs (hd args) else undefined,
+            "exp" -> if len args = 1 then exp(hd args) else undefined,
+            "ln" -> if len args = 1 then ln(hd args) else undefined,
+            "max" -> max(args),
+            "min" -> min(args),
+            "mean" -> sum(args) / len args,
+            "positive" ->
+                if len args = 1 then let x = hd args in (if x >= 0 then x else 0) else undefined,
+            "power" ->
+                if len args = 2 then (args(1)) ** (args(2)) else undefined,
+            "sin" -> if len args = 1 then sin(hd args) else undefined,
+            "sqrt" -> if len args = 1 then sqrt(hd args) else undefined,
+            "sum" -> sum(args)
+            end;
+    
+    max : seq1 of real -> real
+    max(xs) ==
+        cases xs:
+            [x] -> x,
+            [x]^rest -> let m = max(rest) in (if x >= m then x else m)
+            end;
+    
+    min : seq1 of real -> real
+    min(xs) ==
+        cases xs:
+            [x] -> x,
+            [x]^rest -> let m = min(rest) in (if x <= m then x else m)
+            end;
+    
+    sum : seq1 of real -> real
+    sum(xs) ==
+        cases xs:
+            [x] -> x,
+            [x]^rest -> x + sum(rest)
+            end;
+    
     pow : real * int -> real
     pow(x, y) == if y >= 0 then x ** y else 1 / x ** (abs y);
     
