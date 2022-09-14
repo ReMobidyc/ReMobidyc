@@ -203,7 +203,6 @@ RMDInterpreter >> directive: aString object: anotherString [
 	aString = 'distance' ifTrue: [ ^ self distance: anotherString ].
 	aString = 'time' ifTrue: [ ^ self time ].
 	aString = 'delta time' ifTrue: [ ^ self deltaTime ].
-	aString = 'terminate' ifTrue: [ ^ self terminate: anotherString ].
 	^ self unknownDirectiveError: aString
 ]
 
