@@ -1,11 +1,5 @@
 module Memory
-exports
-    types Address;
-    operations
-        read : Address ==> real;
-        write : Address * real ==> ();
-        writeDelta : Address * real ==> ();
-        timeTicks : () ==> nat;
+exports all
 definitions
 types
      Address = nat1;
@@ -17,8 +11,9 @@ state Memory of
     vals : map Address to real
     next : map Address to real
     delta : map Address to real
+    storage : seq of (map Address to real)
     ticks : nat
-init s == s = mk_Memory({|->}, {|->}, {|->}, 0)
+init s == s = mk_Memory({|->}, {|->}, {|->}, [], 0)
 end
 
 operations
@@ -39,7 +34,31 @@ operations
         else
             exit ADDRESS_ERROR;
     
-    timeTicks : () ==> nat
-    timeTicks() == return ticks;
+    setTime : nat ==> ()
+    setTime(t) ==
+        (if
+            t = 0
+        then
+            (vals := {|->};
+            delta := {|->};
+            ticks := 0;
+            return );
+        ticks := t;
+        if
+            ticks = len storage + 1
+        then
+            storage
+                := storage ^ [{a |-> next(a) + delta(a) | a in set dom next}];
+        if ticks > len storage + 1 then exit <INVALID_TIME>;
+        vals := storage(ticks);
+        next := vals;
+        delta := {a |-> 0 | a in set dom vals};
+        return );
+    
+    getTime : () ==> nat
+    getTime() == return ticks;
+    
+    tick : () ==> ()
+    tick() == setTime(getTime() + 1);
 
 end Memory

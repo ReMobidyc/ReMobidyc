@@ -243,7 +243,7 @@ operations
             in sqrt(x ** 2 + y ** 2);
     
     simulationTime : () ==> real
-    simulationTime() == return Memory`timeTicks()  * deltaTime();
+    simulationTime() == return Memory`getTime()  * deltaTime();
     
     deltaTime : () ==> real
     deltaTime() ==
