@@ -1,6 +1,9 @@
 fold((lambda x:real, y:real & x + y), [1,2,3,4,5,6,7,8,9]) 45
 
-2 ** 3
+let x:Memory`Address = 1 in x
+
+setTime(1)
+
 toSI(mul(, 1)
 
 toSI(percent, 10)

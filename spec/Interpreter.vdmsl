@@ -28,7 +28,8 @@ types
      Context = ActionContext;
      ActionContext ::
         attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
-        utilities : map AST`Identifier to (AST`Expression| real)
+        utilities : map AST`Identifier to real
+        utilityDefinitions : map AST`Identifier to AST`Expression
         action : AST`ActionDefinition
         random : Random`RandomGenerator;
 
@@ -109,15 +110,21 @@ init s == s = mk_Interpreter(nil, nil)
 end
 
 operations
+    setupActionContext : AST`ActionDefinition * Memory`Address * [Memory`Address] ==> ()
+    setupActionContext(actionDefinition, subject, object) ==
+        is not yet specified;
+    
     readUtility : AST`Identifier ==> real
     readUtility(identifier) ==
-        (dcl v:AST`Expression| real := context.utilities(identifier);
         if
-            is_(v, AST`Expression)
+            identifier in set dom context.utilities
         then
-            (v := eval(v);
-            context .utilities(identifier) := v);
-        return v);
+            return context.utilities(identifier)
+        else
+            let val = eval(context.utilityDefinitions(identifier))
+            in
+                (context .utilities(identifier) := val;
+                return val);
     
     readVariable : [AST`Identifier] * AST`Identifier ==> real
     readVariable(agent, identifier) ==
@@ -243,7 +250,7 @@ operations
             in sqrt(x ** 2 + y ** 2);
     
     simulationTime : () ==> real
-    simulationTime() == return Memory`timeTicks()  * deltaTime();
+    simulationTime() == return Memory`getTime()  * deltaTime();
     
     deltaTime : () ==> real
     deltaTime() ==
