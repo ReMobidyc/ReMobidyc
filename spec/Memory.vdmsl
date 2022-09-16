@@ -1,4 +1,5 @@
 module Memory
+imports from AST all
 exports all
 definitions
 types
@@ -12,12 +13,33 @@ state Memory of
     vals : map Address to real
     next : map Address to real
     delta : map Address to real
+    nextAvailableSlot : Address
+    animats : map AST`Identifier to set of Address
+    newBorns : map AST`Identifier to set of Address
+    deads : map AST`Identifier to set of Address
     storage : seq of (map Address to real)
     ticks : nat
-init s == s = mk_Memory({|->}, {|->}, {|->}, [], 0)
+init s ==
+    s = mk_Memory({|->}, {|->}, {|->}, 1, {|->}, {|->}, {|->}, [], 0)
 end
 
 operations
+    allocate : AST`Identifier * nat1 ==> Address
+    allocate(identifier, size) ==
+        let address : Address = nextAvailableSlot
+        in
+            (nextAvailableSlot := nextAvailableSlot + size;
+            newBorns(identifier)
+                := (if identifier in set dom newBorns then newBorns(identifier) else {})
+                union {address};
+            return address);
+    
+    deallocate : AST`Identifier * Address ==> ()
+    deallocate(identifier, address) ==
+        deads(identifier)
+            := (if identifier in set dom deads then deads(identifier) else {})
+            union {address};
+    
     read : Address ==> real
     read(address) ==
         if address in set dom vals then return vals(address) else exit ADDRESS_ERROR;
@@ -51,13 +73,21 @@ operations
     
     store : () ==> ()
     store() ==
-        storage
+        (storage
             := storage ^ [{a |-> next(a) + delta(a) | a in set dom next}];
+        animats
+            := {animat
+            |-> (animats(animat)
+                \ (if animat in set dom deads then deads(animat) else {}))
+            union (if animat in set dom newBorns then newBorns(animat) else {})
+            | animat in set dom animats});
     
     load : nat1 ==> ()
     load(t) ==
         (vals := storage(t);
         next := vals;
-        delta := {a |-> 0 | a in set dom vals});
+        delta := {a |-> 0 | a in set dom vals};
+        newBorns := {|->};
+        deads := {|->});
 
 end Memory
