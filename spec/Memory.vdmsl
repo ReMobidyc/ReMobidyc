@@ -6,6 +6,7 @@ types
 
 values
      ADDRESS_ERROR = <ADDRESS_ERROR>;
+     TIME_ERROR = <TIME_ERROR>;
 
 state Memory of
     vals : map Address to real
@@ -34,25 +35,12 @@ operations
         else
             exit ADDRESS_ERROR;
     
-    setTime : nat ==> ()
+    setTime : nat1 ==> ()
     setTime(t) ==
-        (if
-            t = 0
-        then
-            (vals := {|->};
-            delta := {|->};
-            ticks := 0;
-            return );
+        (if t = len storage + 1 then store();
+        if t > len storage + 1 then exit TIME_ERROR;
+        load(t);
         ticks := t;
-        if
-            ticks = len storage + 1
-        then
-            storage
-                := storage ^ [{a |-> next(a) + delta(a) | a in set dom next}];
-        if ticks > len storage + 1 then exit <INVALID_TIME>;
-        vals := storage(ticks);
-        next := vals;
-        delta := {a |-> 0 | a in set dom vals};
         return );
     
     getTime : () ==> nat
@@ -60,5 +48,16 @@ operations
     
     tick : () ==> ()
     tick() == setTime(getTime() + 1);
+    
+    store : () ==> ()
+    store() ==
+        storage
+            := storage ^ [{a |-> next(a) + delta(a) | a in set dom next}];
+    
+    load : nat1 ==> ()
+    load(t) ==
+        (vals := storage(t);
+        next := vals;
+        delta := {a |-> 0 | a in set dom vals});
 
 end Memory
