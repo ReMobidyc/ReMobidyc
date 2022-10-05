@@ -1,0 +1,191 @@
+module MemoryTest
+imports
+    from UnitTesting
+        operations
+            assert renamed assert;
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from Memory all
+exports all
+definitions
+operations
+    testReset : () ==> ()
+    testReset() ==
+        (Memory`reset();
+        assertEquals(Memory`getTime(), 0, "time reset to 0"));
+    
+    testAllocate : () ==> ()
+    testAllocate() ==
+        (Memory`reset();
+        assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
+        assertEquals(Memory`getAnimats("B"), {}, "no animat at the beginning");
+        let
+            a1 = Memory`allocate("A", 4),
+            b1 = Memory`allocate("B", 2),
+            a2 = Memory`allocate("A", 4)
+        in
+            (assertEquals(
+                Memory`getAnimats("A"),
+                {},
+                "the allocated animat should not be available at this time.");
+            assertEquals(
+                Memory`getAnimats("B"),
+                {},
+                "the allocated animat should not be available at this time.");
+            Memory`tick();
+            assertEquals(
+                Memory`getAnimats("A"),
+                {a1, a2},
+                "the allocated animat should be registered at this time.");
+            assertEquals(
+                Memory`getAnimats("B"),
+                {b1},
+                "the allocated animat should be registered at this time.")));
+    
+    testDeallocate : () ==> ()
+    testDeallocate() ==
+        (Memory`reset();
+        let
+            a1 = Memory`allocate("A", 4),
+            b1 = Memory`allocate("B", 2),
+            a2 = Memory`allocate("A", 4)
+        in
+            (Memory`tick();
+            assertEquals(Memory`getAnimats("A"), {a1, a2}, "two animats A allocated");
+            assertEquals(Memory`getAnimats("B"), {b1}, "one animat B allocated");
+            Memory`deallocate("A", a1);
+            Memory`deallocate("B", b1);
+            assertEquals(
+                Memory`getAnimats("A"),
+                {a1, a2},
+                "the deallocation of a1 is not in effect at this time.");
+            assertEquals(
+                Memory`getAnimats("B"),
+                {b1},
+                "the deallocation of b1 is not in effect at this time.");
+            Memory`tick();
+            assertEquals(
+                Memory`getAnimats("A"),
+                {a2},
+                "the deallocation of a1 is in effect at this time.");
+            assertEquals(
+                Memory`getAnimats("B"),
+                {},
+                "the deallocation of b1 is in effect at this time.")));
+    
+    testGetAnimats : () ==> ()
+    testGetAnimats() ==
+        (Memory`reset();
+        assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
+        let a1 = Memory`allocate("A", 4)
+        in
+            (Memory`tick();
+            assertEquals(
+                Memory`getAnimats("A"),
+                {a1},
+                "the allocated animat should be registered at this time.")));
+    
+    testRead : () ==> ()
+    testRead() ==
+        (Memory`reset();
+        Memory`write(1, 2);
+        Memory`write(3, 4);
+        Memory`tick();
+        assertEquals(Memory`read(1), 2, "read the written value");
+        assertEquals(Memory`read(3), 4, "read the written value");
+        Memory`write(1, 10);
+        Memory`write(3, 20);
+        assertEquals(Memory`read(1), 2, "read the original value");
+        assertEquals(Memory`read(3), 4, "read the original value");
+        Memory`tick();
+        assertEquals(Memory`read(1), 10, "read the updated value");
+        assertEquals(Memory`read(3), 20, "read the updated value"));
+    
+    testWrite : () ==> ()
+    testWrite() ==
+        (Memory`reset();
+        Memory`write(1, 2);
+        Memory`tick();
+        assertEquals(Memory`read(1), 2, "read the written value");
+        Memory`write(1, 3);
+        assertEquals(Memory`read(1), 2, "the value is not updated yet.");
+        Memory`tick();
+        assertEquals(Memory`read(1), 3, "read the updated value"));
+    
+    testWriteDelta : () ==> ()
+    testWriteDelta() ==
+        (Memory`reset();
+        Memory`write(1, 2);
+        Memory`write(3, 4);
+        Memory`tick();
+        assertEquals(Memory`read(1), 2, "read the written value");
+        assertEquals(Memory`read(3), 4, "read the written value");
+        Memory`writeDelta(1, 10);
+        Memory`write(3, 20);
+        Memory`writeDelta(3, 30);
+        Memory`writeDelta(3, 40);
+        assertEquals(Memory`read(1), 2, "read the original value");
+        assertEquals(Memory`read(3), 4, "read the original value");
+        Memory`tick();
+        assertEquals(Memory`read(1), 12, "read the updated value");
+        assertEquals(Memory`read(3), 90, "read the updated value"));
+    
+    testGetTime : () ==> ()
+    testGetTime() ==
+        (Memory`reset();
+        assertEquals(Memory`getTime(), 0, "reset to zero");
+        Memory`tick();
+        assertEquals(Memory`getTime(), 1, "one tick");
+        Memory`tick();
+        assertEquals(Memory`getTime(), 2, "two ticks"));
+    
+    testSetTime : () ==> ()
+    testSetTime() ==
+        (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
+        Memory`reset();
+        Memory`write(1, 10);
+        a1 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 0, "reset to zero");
+        Memory`tick();
+        Memory`write(1, 20);
+        a2 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 1, "one tick");
+        Memory`tick();
+        assertEquals(Memory`getTime(), 2, "two ticks");
+        assertEquals(Memory`read(1), 20, "20 is the latest value");
+        assertEquals(Memory`getAnimats("A"), {a1, a2}, "Two instances of A so far");
+        Memory`setTime(1);
+        assertEquals(Memory`getTime(), 1, "set to 1");
+        assertEquals(Memory`read(1), 10, "10 is the value at time 1");
+        assertEquals(Memory`getAnimats("A"), {a1}, "Only one instance of A at time=1"));
+    
+    testGetLatestTime : () ==> ()
+    testGetLatestTime() ==
+        (Memory`reset();
+        Memory`tick();
+        assertEquals(Memory`getLatestTime(), 1, "t_max = 1 after one tick.");
+        Memory`tick();
+        assertEquals(Memory`getLatestTime(), 2, "t_max = 2 after two ticks.");
+        Memory`setTime(1);
+        assertEquals(Memory`getLatestTime(), 2, "t_max = 2 even though t is set to 1."));
+    
+    testTick : () ==> ()
+    testTick() ==
+        (dcl a1:[Memory`Address] := nil;
+        Memory`reset();
+        a1 := Memory`allocate("A", 1);
+        Memory`write(a1, 10);
+        Memory`tick();
+        assertEquals(Memory`getAnimats("A"), {a1}, "a1 is allocated.");
+        assertEquals(Memory`read(a1), 10, "the first slot of a1 is set to 10");
+        assertEquals(Memory`getTime(), 1, "t = 1 after one tick.");
+        Memory`write(a1, 20);
+        Memory`deallocate("A", a1);
+        assertEquals(Memory`read(a1), 10, "the first slot of a1 is still set to 20");
+        Memory`tick();
+        assertEquals(Memory`getTime(), 2, "t = 2 after two ticks.");
+        trap (Memory`ADDRESS_ERROR) with skip
+        in
+            (let - = Memory`read(a1) in exit "should be inaccessible"));
+
+end MemoryTest
