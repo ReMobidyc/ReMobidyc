@@ -1,0 +1,29 @@
+module UnitTest
+imports
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from Unit all
+exports all
+definitions
+operations
+    testToSI : () ==> ()
+    testToSI() ==
+        (assertApproxEquals(Unit`toSI(Unit`kg, 10.0), 10.0, 1.0e-16, "10 kg = 10 kg");
+        assertApproxEquals(Unit`toSI(Unit`g, 10.0), 0.01, 1.0e-16, "10 g = 0.01 kg");
+        assertApproxEquals(Unit`toSI(Unit`℃, 27.0), 27.0, 1.0e-16, "27 ℃ = 27 ℃"));
+    
+    testFromSI : () ==> ()
+    testFromSI() ==
+        (assertApproxEquals(Unit`fromSI(Unit`kg, 10.0), 10.0, 1.0e-16, "10 kg = 10 kg");
+        assertApproxEquals(Unit`fromSI(Unit`g, 0.01), 10, 1.0e-16, "10 g = 0.01 kg");
+        assertApproxEquals(
+            Unit`fromSI(Unit`kph, Unit`toSI(Unit`mph, 65)),
+            105,
+            1.0,
+            "65 mph = 110 km/h"));
+
+	/*** agent definitions **/
+
+end UnitTest

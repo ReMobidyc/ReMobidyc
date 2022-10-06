@@ -12,10 +12,7 @@ imports
             exp renamed exp;
             ln renamed ln;
             atan renamed atan;
-exports operations eval : AST`Expression ==> real;
-
-
-		/*** distributions ***/
+exports all
 definitions
 types
      SimulationModel ::
@@ -36,6 +33,7 @@ types
 values
      AGENT_NEW = "new";
      UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
+     NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
 operations
     eval : AST`Expression ==> real
@@ -113,6 +111,9 @@ operations
     setupActionContext : AST`ActionDefinition * Memory`Address * [Memory`Address] ==> ()
     setupActionContext(actionDefinition, subject, object) ==
         is not yet specified;
+    
+    setContext : Context ==> ()
+    setContext(c) == context := c;
     
     readUtility : AST`Identifier ==> real
     readUtility(identifier) ==
@@ -281,27 +282,38 @@ operations
     
     patchY : real ==> real
     patchY(y) == return (y - worldSouth()) / patchLength();
-
-functions
-    apply : seq1 of char * seq1 of real -> real
+    
+    pure apply : seq1 of char * seq1 of real ==> real
     apply(func, args) ==
         cases func:
-            "abs" -> if len args = 1 then abs (hd args) else undefined,
-            "cos" -> if len args = 1 then abs (hd args) else undefined,
-            "exp" -> if len args = 1 then exp(hd args) else undefined,
-            "ln" -> if len args = 1 then ln(hd args) else undefined,
-            "max" -> max(args),
-            "min" -> min(args),
-            "mean" -> sum(args) / len args,
+            "abs" ->
+                if len args = 1 then return abs (hd args) else exit NUM_ARGS_ERROR,
+            "cos" ->
+                if len args = 1 then return cos(hd args) else exit NUM_ARGS_ERROR,
+            "exp" ->
+                if len args = 1 then return exp(hd args) else exit NUM_ARGS_ERROR,
+            "ln" ->
+                if len args = 1 then return ln(hd args) else exit NUM_ARGS_ERROR,
+            "max" -> return max(args),
+            "min" -> return min(args),
+            "mean" -> return sum(args) / len args,
             "positive" ->
-                if len args = 1 then let x = hd args in (if x >= 0 then x else 0) else undefined,
+                if
+                    len args = 1
+                then
+                    return let x = hd args in (if x >= 0 then x else 0)
+                else
+                    exit NUM_ARGS_ERROR,
             "power" ->
-                if len args = 2 then (args(1)) ** (args(2)) else undefined,
-            "sin" -> if len args = 1 then sin(hd args) else undefined,
-            "sqrt" -> if len args = 1 then sqrt(hd args) else undefined,
-            "sum" -> sum(args)
+                if len args = 2 then return (args(1)) ** (args(2)) else exit NUM_ARGS_ERROR,
+            "sin" ->
+                if len args = 1 then return sin(hd args) else exit NUM_ARGS_ERROR,
+            "sqrt" ->
+                if len args = 1 then return sqrt(hd args) else exit NUM_ARGS_ERROR,
+            "sum" -> return sum(args)
             end;
-    
+
+functions
     max : seq1 of real -> real
     max(xs) ==
         cases xs:

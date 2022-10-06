@@ -14,39 +14,52 @@ state Memory of
     next : map Address to real
     delta : map Address to real
     nextAvailableSlot : Address
-    animats : map AST`Identifier to set of Address
-    newBorns : map AST`Identifier to set of Address
-    deads : map AST`Identifier to set of Address
-    storage : seq of (map Address to real)
+    animats : map Address to (AST`Identifier * nat1)
+    newBorns : map Address to (AST`Identifier * nat1)
+    deads : set of Address
+    valuesStorage : seq of (map Address to real)
+    animatsStorage : seq of (map Address to (AST`Identifier * nat1))
     ticks : nat
 init s ==
-    s = mk_Memory({|->}, {|->}, {|->}, 1, {|->}, {|->}, {|->}, [], 0)
+    s = mk_Memory({|->}, {|->}, {|->}, 1, {|->}, {|->}, {}, [], [], 0)
 end
 
 operations
+    reset : () ==> ()
+    reset() ==
+        (vals := {|->};
+        next := {|->};
+        delta := {|->};
+        nextAvailableSlot := 1;
+        animats := {|->};
+        newBorns := {|->};
+        deads := {};
+        valuesStorage := [];
+        animatsStorage := [];
+        ticks := 0);
+    
     allocate : AST`Identifier * nat1 ==> Address
     allocate(identifier, size) ==
         let address : Address = nextAvailableSlot
         in
             (nextAvailableSlot := nextAvailableSlot + size;
-            newBorns(identifier)
-                := (if identifier in set dom newBorns then newBorns(identifier) else {})
-                union {address};
+            newBorns(address) := mk_(identifier, size);
             return address);
     
     deallocate : AST`Identifier * Address ==> ()
-    deallocate(identifier, address) ==
-        deads(identifier)
-            := (if identifier in set dom deads then deads(identifier) else {})
-            union {address};
+    deallocate(identifier, address) == deads := deads union {address};
     
-    read : Address ==> real
+    getAnimats : AST`Identifier ==> set of Address
+    getAnimats(animatName) ==
+        return {a | a in set dom animats
+                & let mk_(n, -) = animats(a) in n = animatName};
+    
+    pure read : Address ==> real
     read(address) ==
         if address in set dom vals then return vals(address) else exit ADDRESS_ERROR;
     
     write : Address * real ==> ()
-    write(address, data) ==
-        if address in set dom next then next(address) := data else exit ADDRESS_ERROR;
+    write(address, data) == next(address) := data;
     
     writeDelta : Address * real ==> ()
     writeDelta(address, data) ==
@@ -57,37 +70,40 @@ operations
         else
             exit ADDRESS_ERROR;
     
+    pure getTime : () ==> nat
+    getTime() == return ticks;
+    
     setTime : nat1 ==> ()
     setTime(t) ==
-        (if t = len storage + 1 then store();
-        if t > len storage + 1 then exit TIME_ERROR;
-        load(t);
-        ticks := t;
-        return );
+        (if ticks = len valuesStorage then store();
+        if t > len valuesStorage + 1 then exit TIME_ERROR;
+        load(t));
     
-    getTime : () ==> nat
-    getTime() == return ticks;
+    pure getLatestTime : () ==> nat
+    getLatestTime() == return len valuesStorage;
     
     tick : () ==> ()
     tick() == setTime(getTime() + 1);
     
     store : () ==> ()
     store() ==
-        (storage
-            := storage ^ [{a |-> next(a) + delta(a) | a in set dom next}];
-        animats
-            := {animat
-            |-> (animats(animat)
-                \ (if animat in set dom deads then deads(animat) else {}))
-            union (if animat in set dom newBorns then newBorns(animat) else {})
-            | animat in set dom animats});
+        (valuesStorage
+            := valuesStorage
+            ^ [{a |-> next(a) + (if a in set dom delta then delta(a) else 0)
+            | a in set dom next \ deads}];
+        animatsStorage
+            := animatsStorage ^ [deads <-: animats munion newBorns])
+    pre  ticks = len valuesStorage and ticks = len animatsStorage;
     
     load : nat1 ==> ()
     load(t) ==
-        (vals := storage(t);
+        (vals := valuesStorage(t);
+        animats := animatsStorage(t);
         next := vals;
         delta := {a |-> 0 | a in set dom vals};
         newBorns := {|->};
-        deads := {|->});
+        deads := {};
+        ticks := t)
+    pre  t <= len valuesStorage and t <= len animatsStorage;
 
 end Memory
