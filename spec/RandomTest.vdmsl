@@ -1,0 +1,45 @@
+module RandomTest
+imports
+    from Random all,
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;
+exports all
+definitions
+operations
+    testNext : () ==> ()
+    testNext() ==
+        (assertEquals(
+            Random`next(mk_Random`RandomGenerator(1)),
+            mk_Random`RandomGenerator(742938285),
+            "next to 1");
+        assertEquals(
+            Random`next(mk_Random`RandomGenerator(2)),
+            mk_Random`RandomGenerator(1485876570),
+            "next to 2");
+        assertEquals(
+            Random`next(mk_Random`RandomGenerator(1024)),
+            mk_Random`RandomGenerator(559592802),
+            "next to 1024"));
+    
+    testValue : () ==> ()
+    testValue() ==
+        (assertApproxEquals(Random`value(mk_Random`RandomGenerator(1)), 0, 1.0e-8, "zero");
+        assertApproxEquals(
+            Random`value(mk_Random`RandomGenerator(123456789)),
+            0.05748904688049950346,
+            1.0e-16,
+            "value from seed 123456789");
+        assertApproxEquals(
+            Random`value(mk_Random`RandomGenerator(987654321)),
+            0.45991238249457663157,
+            1.0e-16,
+            "value from seed 987654321");
+        assertApproxEquals(
+            Random`value(mk_Random`RandomGenerator(Random`modulo - 1)),
+            0.99999999953433871225,
+            1.0e-16,
+            "value from max seed"));
+
+end RandomTest

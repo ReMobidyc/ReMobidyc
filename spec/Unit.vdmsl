@@ -83,13 +83,13 @@ values
      at = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 98066.5);
      psi =
         mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 6894.757);
+	-- energy
      Torr =
         mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 133.322);
-	-- energy
      atm = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 101325);
      bar = mk_Unit([mk_(<kg>, 1), mk_(<m>, -1), mk_(<s>, -2)], 100000);
-     J = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 1);
 	-- power
+     J = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 1);
      cal = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 4.184);
      kcal = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -2)], 4184);
      W = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 1);
@@ -101,12 +101,14 @@ values
      μW = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000001);
      nW =
         mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000000001);
+	-- probability
      pW =
         mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 0.000000000001);
-	-- probability
      PS = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 735.5);
      HP = mk_Unit([mk_(<kg>, 1), mk_(<m>, 2), mk_(<s>, -3)], 745);
      percent = mk_Unit([], 0.01);
+     mph = fraction(mi, h);
+     kph = fraction(km, h);
 
 functions
     toSI : Unit * real -> real

@@ -1,0 +1,506 @@
+module InterpreterTest
+imports
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from Interpreter all,
+    from AST all,
+    from Unit all,
+    from Random all
+exports all
+definitions
+operations
+    testEval_UtilityVariable : () ==> ()
+    testEval_UtilityVariable() == skip;
+    
+    testEval_Literal : () ==> ()
+    testEval_Literal() ==
+        assertApproxEquals(
+            Interpreter`eval(mk_AST`Literal(65, Unit`mph)),
+            29.0576,
+            1.0e-16,
+            "65 [mph] ->  29.0576 [m/s]");
+    
+    testEval_Addition : () ==> ()
+    testEval_Addition() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Addition(
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension))),
+            3,
+            1.0e-16,
+            "1+2 -> 3");
+    
+    testEval_Subtraction : () ==> ()
+    testEval_Subtraction() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Subtraction(
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension))),
+            -1,
+            1.0e-16,
+            "1-2 -> -1");
+    
+    testEval_Product : () ==> ()
+    testEval_Product() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Product(
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension))),
+            6,
+            1.0e-16,
+            "2 * 3 -> 6");
+    
+    testEval_Fraction : () ==> ()
+    testEval_Fraction() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Fraction(
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(4, Unit`nodimension))),
+            0.5,
+            1.0e-16,
+            "2/4 -> 0.5");
+    
+    testEval_Power : () ==> ()
+    testEval_Power() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Power(mk_AST`Literal(2, Unit`nodimension), 3)),
+            8,
+            1.0e-16,
+            "2^3 -> 8");
+    
+    testEval_Minus : () ==> ()
+    testEval_Minus() ==
+        assertApproxEquals(
+            Interpreter`eval(mk_AST`Minus(mk_AST`Literal(2, Unit`nodimension))),
+            -2,
+            1.0e-16,
+            "-(2) -> -2");
+    
+    testEval_DeUnitCasting : () ==> ()
+    testEval_DeUnitCasting() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`DeUnitCasting(Unit`kph, mk_AST`Literal(65, Unit`mph))),
+            105,
+            1.0,
+            "(km/h)65 [mph] ->  105");
+    
+    testEval_EnUnitCasting : () ==> ()
+    testEval_EnUnitCasting() ==
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`EnUnitCasting(mk_AST`Literal(65, Unit`nodimension), Unit`mph)),
+            29.0576,
+            1.0e-16,
+            "(65) [mph] ->  29.0576 [m/s]");
+    
+    testEval_UniformDistribution : () ==> ()
+    testEval_UniformDistribution() ==
+        (Interpreter`setContext(
+            mk_Interpreter`ActionContext(
+                {|->},
+                {|->},
+                {|->},
+                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
+                mk_Random`RandomGenerator(1)));
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`UniformDistribution(
+                    mk_AST`Literal(10, Unit`nodimension),
+                    mk_AST`Literal(50, Unit`nodimension))),
+            23.83830392159635,
+            1.0e-8,
+            "1st value from uniform distribution from 10 to 50");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`UniformDistribution(
+                    mk_AST`Literal(10, Unit`nodimension),
+                    mk_AST`Literal(50, Unit`nodimension))),
+            41.86838808643481,
+            1.0e-8,
+            "2nd value from uniform distribution from 10 to 50"));
+    
+    testEval_NormalDistribution : () ==> ()
+    testEval_NormalDistribution() ==
+        (Interpreter`setContext(
+            mk_Interpreter`ActionContext(
+                {|->},
+                {|->},
+                {|->},
+                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
+                mk_Random`RandomGenerator(1)));
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`NormalDistribution(
+                    mk_AST`Literal(50, Unit`nodimension),
+                    mk_AST`Literal(10, Unit`nodimension))),
+            54.214993615707726,
+            1.0e-8,
+            "1st value from normal distribution mean=50, sigma=10");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`NormalDistribution(
+                    mk_AST`Literal(50, Unit`nodimension),
+                    mk_AST`Literal(10, Unit`nodimension))),
+            54.944818486290174,
+            1.0e-8,
+            "2nd value from normal distribution mean=50, sigma=10"));
+    
+    testEval_GammaDistribution : () ==> ()
+    testEval_GammaDistribution() ==
+        (Interpreter`setContext(
+            mk_Interpreter`ActionContext(
+                {|->},
+                {|->},
+                {|->},
+                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
+                mk_Random`RandomGenerator(1)));
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`GammaDistribution(
+                    mk_AST`Literal(5, Unit`nodimension),
+                    mk_AST`Literal(10, Unit`nodimension))),
+            56.37713803791577,
+            1.0e-8,
+            "1st value from gamma distribution shape=5 scale=10");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`GammaDistribution(
+                    mk_AST`Literal(5, Unit`nodimension),
+                    mk_AST`Literal(10, Unit`nodimension))),
+            51.928175276498735,
+            1.0e-8,
+            "2nd value from gamma distribution shape=5 scale=10"));
+    
+    testEval_LogLogisticDistribution : () ==> ()
+    testEval_LogLogisticDistribution() ==
+        (Interpreter`setContext(
+            mk_Interpreter`ActionContext(
+                {|->},
+                {|->},
+                {|->},
+                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
+                mk_Random`RandomGenerator(1)));
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`LogLogisticDistribution(
+                    mk_AST`Literal(10, Unit`nodimension),
+                    mk_AST`Literal(5, Unit`nodimension))),
+            8.8,
+            1.0e-8,
+            "1st value from log-logistic distribution scale=10 shape=5");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`LogLogisticDistribution(
+                    mk_AST`Literal(10, Unit`nodimension),
+                    mk_AST`Literal(5, Unit`nodimension))),
+            12,
+            1.0e-8,
+            "2nd value from log-logistic distribution scale=10 shape=5"));
+    
+    testEval_Apply_abs : () ==> ()
+    testEval_Apply_abs() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("abs", [mk_AST`Literal(-5.0, Unit`nodimension)])),
+            5.0,
+            1.0e-16,
+            "abs(-5.0) = 5.0");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("abs", [mk_AST`Literal(5.0, Unit`nodimension)])),
+            5.0,
+            1.0e-16,
+            "abs(5.0) = 5.0");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "abs",
+                            [mk_AST`Literal(-5.0, Unit`nodimension),
+                            mk_AST`Literal(5.0, Unit`nodimension)]))
+            in exit "abs takes only one argument.");
+    
+    testEval_Apply_cos : () ==> ()
+    testEval_Apply_cos() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("cos", [mk_AST`Literal(90, Unit`degree)])),
+            0.0,
+            1.0e-16,
+            "cos(pi/2) = 0");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("cos", [mk_AST`Literal(180, Unit`degree)])),
+            -1.0,
+            1.0e-16,
+            "cos(pi) = -1.0");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "cos",
+                            [mk_AST`Literal(90, Unit`degree), mk_AST`Literal(180, Unit`degree)]))
+            in exit "cos takes only one argument.");
+    
+    testEval_Apply_exp : () ==> ()
+    testEval_Apply_exp() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("exp", [mk_AST`Literal(0, Unit`nodimension)])),
+            1.0,
+            1.0e-16,
+            "exp(0) = 1");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("exp", [mk_AST`Literal(3, Unit`nodimension)])),
+            2.71828 ** 3,
+            1.0e-4,
+            "exp(3) = 20.085496391455552");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "exp",
+                            [mk_AST`Literal(0, Unit`nodimension),
+                            mk_AST`Literal(3, Unit`nodimension)]))
+            in exit "exp takes only one argument.");
+    
+    testEval_Apply_ln : () ==> ()
+    testEval_Apply_ln() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("ln", [mk_AST`Literal(1, Unit`nodimension)])),
+            0.0,
+            1.0e-16,
+            "ln(1) = 0");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("ln", [mk_AST`Literal(2.71818, Unit`nodimension)])),
+            1.0,
+            1.0e-4,
+            "ln(2.71828) = 1.0");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "ln",
+                            [mk_AST`Literal(1, Unit`nodimension),
+                            mk_AST`Literal(2.71828, Unit`nodimension)]))
+            in exit "ln takes only one argument.");
+    
+    testEval_Apply_max : () ==> ()
+    testEval_Apply_max() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "max",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(-2, Unit`nodimension)])),
+            1.0,
+            1.0e-16,
+            "max(1, -2) = 1");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "max",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension),
+                    mk_AST`Literal(4, Unit`nodimension)])),
+            4.0,
+            1.0e-4,
+            "max(1, 2, 3, 4) = 4"));
+    
+    testEval_Apply_min : () ==> ()
+    testEval_Apply_min() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "min",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(-2, Unit`nodimension)])),
+            -2.0,
+            1.0e-16,
+            "min(1, -2) = -2");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "min",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension),
+                    mk_AST`Literal(4, Unit`nodimension)])),
+            1.0,
+            1.0e-4,
+            "min(1, 2, 3, 4) = 1"));
+    
+    testEval_Apply_mean : () ==> ()
+    testEval_Apply_mean() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "mean",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(-2, Unit`nodimension)])),
+            -0.5,
+            1.0e-16,
+            "mean(1, -2) = -0.5");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "mean",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension),
+                    mk_AST`Literal(4, Unit`nodimension)])),
+            2.5,
+            1.0e-16,
+            "mean(1, 2, 3, 4) = 2.5"));
+    
+    testEval_Apply_positive : () ==> ()
+    testEval_Apply_positive() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("positive", [mk_AST`Literal(-5.0, Unit`nodimension)])),
+            0.0,
+            1.0e-16,
+            "positive(-5.0) = 0");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("positive", [mk_AST`Literal(5.0, Unit`nodimension)])),
+            5.0,
+            1.0e-16,
+            "positive(5.0) = 5.0");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "positive",
+                            [mk_AST`Literal(-5.0, Unit`nodimension),
+                            mk_AST`Literal(5.0, Unit`nodimension)]))
+            in exit "positive takes only one argument.");
+    
+    testEval_Apply_power : () ==> ()
+    testEval_Apply_power() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "power",
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension)])),
+            8,
+            1.0e-16,
+            "pow(2, 3) = 8");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "power",
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1 / 2, Unit`nodimension)])),
+            1.41421356,
+            1.0e-8,
+            "pow(2, 1/2) = 1.41421356");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply("power", [mk_AST`Literal(1, Unit`nodimension)]))
+            in exit "positive takes exactly two arguments.";
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "power",
+                            [mk_AST`Literal(2, Unit`nodimension),
+                            mk_AST`Literal(3, Unit`nodimension),
+                            mk_AST`Literal(4, Unit`nodimension)]))
+            in exit "positive takes exactly two arguments.");
+    
+    testEval_Apply_sin : () ==> ()
+    testEval_Apply_sin() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("sin", [mk_AST`Literal(90, Unit`degree)])),
+            1.0,
+            1.0e-12,
+            "sin(pi/2) = 1");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("sin", [mk_AST`Literal(180, Unit`degree)])),
+            0.0,
+            1.0e-12,
+            "sin(pi) = 0.0");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "sin",
+                            [mk_AST`Literal(90, Unit`degree), mk_AST`Literal(180, Unit`degree)]))
+            in exit "sin takes only one argument.");
+    
+    testEval_Apply_sqrt : () ==> ()
+    testEval_Apply_sqrt() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply("sqrt", [mk_AST`Literal(2, Unit`nodimension)])),
+            1.41421356,
+            1.0e-8,
+            "sqrt(2) = 1.41421356");
+        trap (Interpreter`NUM_ARGS_ERROR) with skip
+        in
+            let
+                - =
+                    Interpreter`eval(
+                        mk_AST`Apply(
+                            "sqrt",
+                            [mk_AST`Literal(1, Unit`nodimension),
+                            mk_AST`Literal(2.71828, Unit`nodimension)]))
+            in exit "sqrt takes only one argument.");
+    
+    testEval_Apply_sum : () ==> ()
+    testEval_Apply_sum() ==
+        (assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "sum",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(-2, Unit`nodimension)])),
+            -1,
+            1.0e-16,
+            "sum(1, -2) = -1");
+        assertApproxEquals(
+            Interpreter`eval(
+                mk_AST`Apply(
+                    "sum",
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension),
+                    mk_AST`Literal(4, Unit`nodimension)])),
+            10,
+            1.0e-16,
+            "sum(1, 2, 3, 4) = 10"));
+
+end InterpreterTest

@@ -167,7 +167,7 @@ operations
         Memory`tick();
         assertEquals(Memory`getLatestTime(), 2, "t_max = 2 after two ticks.");
         Memory`setTime(1);
-        assertEquals(Memory`getLatestTime(), 2, "t_max = 2 even though t is set to 1."));
+        assertEquals(Memory`getLatestTime(), 3, "t_max = 3 even though t is set to 1."));
     
     testTick : () ==> ()
     testTick() ==
@@ -187,5 +187,45 @@ operations
         trap (Memory`ADDRESS_ERROR) with skip
         in
             (let - = Memory`read(a1) in exit "should be inaccessible"));
+    
+    testLoad : () ==> ()
+    testLoad() ==
+        (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
+        Memory`reset();
+        Memory`write(1, 10);
+        a1 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 0, "reset to zero");
+        Memory`tick();
+        Memory`write(1, 20);
+        a2 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 1, "one tick");
+        Memory`tick();
+        assertEquals(Memory`getTime(), 2, "two ticks");
+        assertEquals(Memory`read(1), 20, "20 is the latest value");
+        assertEquals(Memory`getAnimats("A"), {a1, a2}, "Two instances of A so far");
+        Memory`load(1);
+        assertEquals(Memory`getTime(), 1, "set to 1");
+        assertEquals(Memory`read(1), 10, "10 is the value at time 1");
+        assertEquals(Memory`getAnimats("A"), {a1}, "Only one instance of A at time=1"));
+    
+    testStore : () ==> ()
+    testStore() ==
+        (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
+        Memory`reset();
+        Memory`write(1, 10);
+        a1 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 0, "reset to zero");
+        Memory`tick();
+        Memory`write(1, 20);
+        a2 := Memory`allocate("A", 2);
+        assertEquals(Memory`getTime(), 1, "one tick");
+        Memory`store();
+        Memory`load(1);
+        assertEquals(Memory`getAnimats("A"), {a1}, "only a1 at the initial");
+        Memory`load(2);
+        assertEquals(
+            Memory`getAnimats("A"),
+            {a1, a2},
+            "a1 and a2 stored by the store operation."));
 
 end MemoryTest
