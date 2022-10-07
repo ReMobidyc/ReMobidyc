@@ -17,10 +17,10 @@ definitions
 types
      SimulationModel ::
         simulationDefinition : AST`SimulationDefinition
-        animatDefinitions : AST`SimulationDefinition
+        animatDefinitions : map AST`Identifier to AST`AnimatDefinition
         worldDefinition : AST`WorldDefinition
         patchDefinition : AST`PatchDefinition
-        actionDefinitions : AST`ActionDefinition
+        actionDefinitions : map AST`Identifier to AST`ActionDefinition
         taskDefinitions : map AST`Identifier to AST`TaskDefinition;
      Context = ActionContext;
      ActionContext ::
@@ -104,13 +104,37 @@ operations
 state Interpreter of
     simulationModel : [SimulationModel]
     context : [Context]
-init s == s = mk_Interpreter(nil, nil)
+    randomSeed : nat1
+init s == s = mk_Interpreter(nil, nil, 1)
 end
 
 operations
-    setupActionContext : AST`ActionDefinition * Memory`Address * [Memory`Address] ==> ()
-    setupActionContext(actionDefinition, subject, object) ==
+    setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
+    [Memory`Address] ==> ()
+    setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
         is not yet specified;
+    
+    pure actionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
+    nat1 ==> ActionContext
+    actionContextSV(actionDefinition, subjectDefinition, subject, random) ==
+        return mk_ActionContext(
+                {nil |-> attributeOffsets(subjectDefinition, subject)},
+                {|->},
+                {attrDef.identifier |-> attrDef.expression
+                | attrDef in seq actionDefinition.utilityDefinitions},
+                actionDefinition,
+                mk_Random`RandomGenerator(random));
+    
+    pure attributeOffsets : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
+    attributeOffsets(agentDefinition, animat) ==
+        return let
+                attributes : seq of AST`Identifier =
+                    (if is_AST`AnimatDefinition(agentDefinition) then ["x", "y"] else [])
+                    ^ [decl.identifier
+                        | decl in seq agentDefinition.attributeDeclarations]
+            in
+                {attributes(offset) |-> animat + offset - 1
+                | offset in set inds attributes};
     
     setContext : Context ==> ()
     setContext(c) == context := c;
