@@ -85,7 +85,7 @@ types
      AttributeVariable :: agent : [Identifier] identifier : Identifier;
      NewAttributeVariable :: identifier : Identifier;
      UtilityVariable :: identifier : Identifier;
-     Literal :: real Unit;
+     Literal :: val : real unit : Unit;
      GuardedChoices :: seq1 of (Condition * Expression) Expression;
      Apply :: function : Identifier arguments : seq1 of Expression;
      Arithmetics =

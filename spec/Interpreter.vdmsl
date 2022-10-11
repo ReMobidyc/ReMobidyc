@@ -34,6 +34,8 @@ values
      AGENT_NEW = "new";
      UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
+     X_ATTRIBUTE_NAME = "x";
+     Y_ATTRIBUTE_NAME = "y";
 
 operations
     eval : AST`Expression ==> real
@@ -117,19 +119,31 @@ operations
     pure actionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
     nat1 ==> ActionContext
     actionContextSV(actionDefinition, subjectDefinition, subject, random) ==
-        return mk_ActionContext(
-                {nil |-> attributeOffsets(subjectDefinition, subject)},
-                {|->},
-                {attrDef.identifier |-> attrDef.expression
-                | attrDef in seq actionDefinition.utilityDefinitions},
-                actionDefinition,
-                mk_Random`RandomGenerator(random));
+        let
+            myAttributeOffsets = attributeOffsets(subjectDefinition, subject),
+            x = Memory`read(subject + myAttributeOffsets(X_ATTRIBUTE_NAME)),
+            y = Memory`read(subject + myAttributeOffsets(Y_ATTRIBUTE_NAME)),
+            hereAttributeOffsets =
+                attributeOffsets(simulationModel.patchDefinition, patchXY(x, y))
+        in
+            return mk_ActionContext(
+                    {nil |-> myAttributeOffsets, "here" |-> hereAttributeOffsets},
+                    {|->},
+                    {attrDef.identifier |-> attrDef.expression
+                    | attrDef in seq actionDefinition.utilityDefinitions},
+                    actionDefinition,
+                    mk_Random`RandomGenerator(random));
     
     pure attributeOffsets : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
     attributeOffsets(agentDefinition, animat) ==
         return let
                 attributes : seq of AST`Identifier =
-                    (if is_AST`AnimatDefinition(agentDefinition) then ["x", "y"] else [])
+                    (if
+                            is_AST`AnimatDefinition(agentDefinition)
+                        then
+                            [X_ATTRIBUTE_NAME, Y_ATTRIBUTE_NAME]
+                        else
+                            [])
                     ^ [decl.identifier
                         | decl in seq agentDefinition.attributeDeclarations]
             in
@@ -253,7 +267,9 @@ operations
                 (if
                         ((here >= east and here >= west) and here >= south) and here >= north
                     then
-                        let x = readVariable(nil, "x"), y = readVariable(nil, "y")
+                        let
+                            x = readVariable(nil, X_ATTRIBUTE_NAME),
+                            y = readVariable(nil, Y_ATTRIBUTE_NAME)
                         in
                             theta(
                                 patchLength()  * (floor patchX(x) + 0.5) - x,
@@ -264,48 +280,100 @@ operations
     directionOfAgent : AST`Identifier ==> real
     directionOfAgent(agent) ==
         return theta(
-                readVariable(agent, "x") - readVariable(nil, "x"),
-                readVariable(agent, "y") - readVariable(nil, "y"));
+                readVariable(agent, X_ATTRIBUTE_NAME)
+                - readVariable(nil, X_ATTRIBUTE_NAME),
+                readVariable(agent, Y_ATTRIBUTE_NAME)
+                - readVariable(nil, Y_ATTRIBUTE_NAME));
     
     distanceFromAgent : AST`Identifier ==> real
     distanceFromAgent(agent) ==
         return let
-                x = readVariable(agent, "x") - readVariable(nil, "x"),
-                y = readVariable(agent, "y") - readVariable(nil, "y")
+                x =
+                    readVariable(agent, X_ATTRIBUTE_NAME)
+                    - readVariable(nil, X_ATTRIBUTE_NAME),
+                y =
+                    readVariable(agent, Y_ATTRIBUTE_NAME)
+                    - readVariable(nil, Y_ATTRIBUTE_NAME)
             in sqrt(x ** 2 + y ** 2);
     
     simulationTime : () ==> real
     simulationTime() == return Memory`getTime()  * deltaTime();
     
-    deltaTime : () ==> real
+    pure deltaTime : () ==> real
     deltaTime() ==
-        return eval(simulationModel.simulationDefinition.timeDefinition.timeStep);
+        let
+            timestepLiteral =
+                simulationModel.simulationDefinition.timeDefinition.timeStep
+        in return Unit`toSI(timestepLiteral.unit, timestepLiteral.val);
     
-    patchLength : () ==> real
+    pure patchXDivisions : () ==> nat1
+    patchXDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.xDivisions;
+    
+    pure patchYDivisions : () ==> nat1
+    patchYDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.yDivisions;
+    
+    pure patchLength : () ==> real
     patchLength() ==
-        return eval(simulationModel.simulationDefinition.patchInitializer.size);
+        let
+            sizeLiteral =
+                simulationModel.simulationDefinition.patchInitializer.size
+        in return Unit`toSI(sizeLiteral.unit, sizeLiteral.val);
     
-    worldWest : () ==> real
+    pure worldWest : () ==> real
     worldWest() == return 0;
     
-    worldEast : () ==> real
-    worldEast() ==
-        return simulationModel.simulationDefinition.patchInitializer.xDivisions
-             * patchLength();
+    pure worldEast : () ==> real
+    worldEast() == return patchXDivisions()  * patchLength();
     
-    worldSouth : () ==> real
+    pure worldSouth : () ==> real
     worldSouth() == return 0;
     
-    worldNorth : () ==> real
-    worldNorth() ==
-        return simulationModel.simulationDefinition.patchInitializer.yDivisions
-             * patchLength();
+    pure worldNorth : () ==> real
+    worldNorth() == return patchYDivisions()  * patchLength();
     
-    patchX : real ==> real
+    pure patchX : real ==> real
     patchX(x) == return (x - worldWest()) / patchLength();
     
-    patchY : real ==> real
+    pure patchY : real ==> real
     patchY(y) == return (y - worldSouth()) / patchLength();
+    
+    pure patchXY : real * real ==> nat
+    patchXY(x, y) ==
+        return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
+            + floor patchX(x);
+    
+    pure southPatchOfXY : real * real ==> nat
+    southPatchOfXY(x, y) ==
+        let j = floor patchY(y) - 1
+        in
+            return Memory`getPatchBase()
+                + patchXDivisions()  * (if j >= 0 then j else 0)
+                + floor patchX(x);
+    
+    pure northPatchOfXY : real * real ==> nat
+    northPatchOfXY(x, y) ==
+        let j = floor patchY(y) + 1
+        in
+            return Memory`getPatchBase()
+                + patchXDivisions()
+                 * (if j < patchYDivisions() then j else patchYDivisions() - 1)
+                + floor patchX(x);
+    
+    pure westPatchOfXY : real * real ==> nat
+    westPatchOfXY(x, y) ==
+        let i = floor patchX(x) - 1
+        in
+            return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
+                + (if i >= 0 then i else 0);
+    
+    pure eastPatchOfXY : real * real ==> nat
+    eastPatchOfXY(x, y) ==
+        let i = floor patchX(x) + 1
+        in
+            return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
+                + (if i < patchYDivisions() then i else patchYDivisions() - 1);
     
     pure apply : seq1 of char * seq1 of real ==> real
     apply(func, args) ==

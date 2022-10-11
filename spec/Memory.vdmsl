@@ -13,7 +13,9 @@ state Memory of
     vals : map Address to real
     next : map Address to real
     delta : map Address to real
-    nextAvailableSlot : Address
+    nextAvailableSlot : [Address]
+    world : Address
+    patchBase : [Address]
     animats : map Address to (AST`Identifier * nat1)
     newBorns : map Address to (AST`Identifier * nat1)
     deads : set of Address
@@ -21,7 +23,8 @@ state Memory of
     animatsStorage : seq of (map Address to (AST`Identifier * nat1))
     ticks : nat
 init s ==
-    s = mk_Memory({|->}, {|->}, {|->}, 1, {|->}, {|->}, {}, [], [], 0)
+    s
+    = mk_Memory({|->}, {|->}, {|->}, nil, 1, nil, {|->}, {|->}, {}, [], [], 0)
 end
 
 operations
@@ -30,7 +33,9 @@ operations
         (vals := {|->};
         next := {|->};
         delta := {|->};
-        nextAvailableSlot := 1;
+        nextAvailableSlot := nil;
+        world := 1;
+        patchBase := nil;
         animats := {|->};
         newBorns := {|->};
         deads := {};
@@ -38,18 +43,35 @@ operations
         animatsStorage := [];
         ticks := 0);
     
-    allocate : AST`Identifier * nat1 ==> Address
-    allocate(identifier, size) ==
+    allocateWorld : nat1 ==> ()
+    allocateWorld(size) == patchBase := world + size
+    pre  patchBase = nil;
+    
+    allocatePatches : nat1 * nat1 ==> ()
+    allocatePatches(num, size) ==
+        nextAvailableSlot := patchBase + num  * size
+    pre  patchBase <> nil and nextAvailableSlot = nil;
+    
+    allocateAnimat : AST`Identifier * nat1 ==> Address
+    allocateAnimat(identifier, size) ==
         let address : Address = nextAvailableSlot
         in
             (nextAvailableSlot := nextAvailableSlot + size;
             newBorns(address) := mk_(identifier, size);
-            return address);
+            return address)
+    pre  nextAvailableSlot <> nil;
     
-    deallocate : AST`Identifier * Address ==> ()
-    deallocate(identifier, address) == deads := deads union {address};
+    deallocateAnimat : AST`Identifier * Address ==> ()
+    deallocateAnimat(identifier, address) ==
+        deads := deads union {address};
     
-    getAnimats : AST`Identifier ==> set of Address
+    pure getWorld : () ==> Address
+    getWorld() == return world;
+    
+    pure getPatchBase : () ==> Address
+    getPatchBase() == return patchBase;
+    
+    pure getAnimats : AST`Identifier ==> set of Address
     getAnimats(animatName) ==
         return {a | a in set dom animats
                 & let mk_(n, -) = animats(a) in n = animatName};
