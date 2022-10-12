@@ -67,13 +67,35 @@ operations
         let
             myAttributeAddresses =
                 attributeAddresses(subjectDefinition, subject),
-            x = Memory`read(subject + myAttributeAddresses(X_ATTRIBUTE_NAME)),
-            y = Memory`read(subject + myAttributeAddresses(Y_ATTRIBUTE_NAME)),
-            hereAttributeAddresses =
-                attributeAddresses(simulationModel.patchDefinition, patchXY(x, y))
+            normalizedX =
+                normalizeX(
+                    Memory`read(subject + myAttributeAddresses(X_ATTRIBUTE_NAME))),
+            normalizedY =
+                normalizeY(
+                    Memory`read(subject + myAttributeAddresses(Y_ATTRIBUTE_NAME)))
         in
             (attributes
-                := {nil |-> myAttributeAddresses, "here" |-> hereAttributeAddresses};
+                := {nil |-> myAttributeAddresses,
+                "here"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY)),
+                "south"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY - 1)),
+                "north"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY + 1)),
+                "west"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX - 1, normalizedY)),
+                "east"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX + 1, normalizedY))};
             utilities := {|->};
             utilityDefinitions
                 := {attrDef.identifier |-> attrDef.expression
@@ -179,56 +201,10 @@ operations
     pure worldNorth : () ==> real
     worldNorth() == return patchYDivisions()  * patchLength();
     
-    pure patchX : real ==> real
-    patchX(x) == return (x - worldWest()) / patchLength();
+    pure normalizeX : real ==> real
+    normalizeX(x) == return (x - worldWest()) / patchLength();
     
-    pure patchY : real ==> real
-    patchY(y) == return (y - worldSouth()) / patchLength();
-    
-    pure patchXY : real * real ==> nat
-    patchXY(x, y) ==
-        return Memory`getPatchBase()
-            + patchXDivisions()
-             * within(floor patchY(y), 0, patchYDivisions() - 1)
-            + within(floor patchX(x), 0, patchXDivisions() - 1);
-    
-    pure southPatchOfXY : real * real ==> nat
-    southPatchOfXY(x, y) ==
-        return Memory`getPatchBase()
-            + patchXDivisions()
-             * within(floor patchY(y) - 1, 0, patchYDivisions() - 1)
-            + within(floor patchX(x), 0, patchXDivisions() - 1);
-    
-    pure northPatchOfXY : real * real ==> nat
-    northPatchOfXY(x, y) ==
-        return Memory`getPatchBase()
-            + patchXDivisions()
-             * within(floor patchY(y) + 1, 0, patchYDivisions() - 1)
-            + within(floor patchX(x), 0, patchXDivisions() - 1);
-    
-    pure westPatchOfXY : real * real ==> nat
-    westPatchOfXY(x, y) ==
-        return Memory`getPatchBase()
-            + patchXDivisions()
-             * within(floor patchY(y), 0, patchYDivisions() - 1)
-            + within(floor patchX(x) - 1, 0, patchXDivisions() - 1);
-    
-    pure eastPatchOfXY : real * real ==> nat
-    eastPatchOfXY(x, y) ==
-        return Memory`getPatchBase()
-            + patchXDivisions()
-             * within(floor patchY(y), 0, patchYDivisions() - 1)
-            + within(floor patchX(x) + 1, 0, patchXDivisions() - 1);
-
-functions
-    within : real * real * real -> real
-    within(x, min, max) ==
-        if x < min
-            then min
-        elseif x > max
-            then max
-        else
-            x
-    pre min <= max;
+    pure normalizeY : real ==> real
+    normalizeY(y) == return (y - worldSouth()) / patchLength();
 
 end Context

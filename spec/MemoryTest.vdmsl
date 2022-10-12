@@ -18,7 +18,7 @@ operations
     testAllocateAnimat() ==
         (Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
         assertEquals(Memory`getAnimats("B"), {}, "no animat at the beginning");
         let
@@ -48,7 +48,7 @@ operations
     testDeallocateAnimat() ==
         (Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         let
             a1 = Memory`allocateAnimat("A", 4),
             b1 = Memory`allocateAnimat("B", 2),
@@ -81,7 +81,7 @@ operations
     testGetAnimats() ==
         (Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
         let a1 = Memory`allocateAnimat("A", 4)
         in
@@ -150,7 +150,7 @@ operations
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
         a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");
@@ -182,7 +182,7 @@ operations
         (dcl a1:[Memory`Address] := nil;
         Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         a1 := Memory`allocateAnimat("A", 1);
         Memory`write(a1, 10);
         Memory`tick();
@@ -203,7 +203,7 @@ operations
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
         a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");
@@ -225,7 +225,7 @@ operations
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
         Memory`allocateWorld(1);
-        Memory`allocatePatches(1, 1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
         a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");

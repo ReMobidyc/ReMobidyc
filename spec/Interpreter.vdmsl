@@ -174,8 +174,8 @@ operations
                             y = readVariable(nil, Context`Y_ATTRIBUTE_NAME)
                         in
                             theta(
-                                Context`patchLength()  * (floor Context`patchX(x) + 0.5) - x,
-                                Context`patchLength()  * (floor Context`patchY(y) + 0.5) - y)
+                                Context`patchLength()  * (floor Context`normalizeX(x) + 0.5) - x,
+                                Context`patchLength()  * (floor Context`normalizeY(y) + 0.5) - y)
                     else
                         theta(east - west, north - south));
     

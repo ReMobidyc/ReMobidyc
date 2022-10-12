@@ -24,6 +24,4 @@ operations
             1.0,
             "65 mph = 110 km/h"));
 
-	/*** agent definitions **/
-
 end UnitTest

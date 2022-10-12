@@ -16,6 +16,8 @@ state Memory of
     nextAvailableSlot : [Address]
     world : Address
     patchBase : [Address]
+    xDivisions : [nat1]
+    yDivisions : [nat1]
     animats : map Address to (AST`Identifier * nat1)
     newBorns : map Address to (AST`Identifier * nat1)
     deads : set of Address
@@ -24,7 +26,8 @@ state Memory of
     ticks : nat
 init s ==
     s
-    = mk_Memory({|->}, {|->}, {|->}, nil, 1, nil, {|->}, {|->}, {}, [], [], 0)
+    = mk_Memory(
+        {|->}, {|->}, {|->}, nil, 1, nil, nil, nil, {|->}, {|->}, {}, [], [], 0)
 end
 
 operations
@@ -36,6 +39,8 @@ operations
         nextAvailableSlot := nil;
         world := 1;
         patchBase := nil;
+        xDivisions := nil;
+        yDivisions := nil;
         animats := {|->};
         newBorns := {|->};
         deads := {};
@@ -44,13 +49,20 @@ operations
         ticks := 0);
     
     allocateWorld : nat1 ==> ()
-    allocateWorld(size) == patchBase := world + size
+    allocateWorld(size) ==
+        (patchBase := world + size;
+        xDivisions := nil;
+        yDivisions := nil)
     pre  patchBase = nil;
     
-    allocatePatches : nat1 * nat1 ==> ()
-    allocatePatches(num, size) ==
-        nextAvailableSlot := patchBase + num  * size
-    pre  patchBase <> nil and nextAvailableSlot = nil;
+    allocatePatches : nat1 * nat1 * nat1 ==> ()
+    allocatePatches(xDivs, yDivs, size) ==
+        (xDivisions := xDivs;
+        yDivisions := yDivs;
+        nextAvailableSlot := patchBase + xDivs  * yDivs  * size)
+    pre 
+        ((patchBase <> nil and nextAvailableSlot = nil) and xDivisions = nil)
+        and yDivisions = nil;
     
     allocateAnimat : AST`Identifier * nat1 ==> Address
     allocateAnimat(identifier, size) ==
@@ -67,6 +79,12 @@ operations
     
     pure getWorld : () ==> Address
     getWorld() == return world;
+    
+    pure getPatch : real * real ==> nat
+    getPatch(normalizedX, normalizedY) ==
+        return patchBase
+            + xDivisions  * within(floor normalizedY, 0, yDivisions - 1)
+            + within(floor normalizedX, 0, xDivisions - 1);
     
     pure getPatchBase : () ==> Address
     getPatchBase() == return patchBase;
@@ -127,5 +145,16 @@ operations
         deads := {};
         ticks := t)
     pre  t <= len valuesStorage and t <= len animatsStorage;
+
+functions
+    within : real * real * real -> real
+    within(x, min, max) ==
+        if x < min
+            then min
+        elseif x > max
+            then max
+        else
+            x
+    pre min <= max;
 
 end Memory
