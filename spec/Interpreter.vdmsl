@@ -1,5 +1,6 @@
 module Interpreter
 imports
+    from Context all,
     from AST all,
     from Unit all,
     from Memory all,
@@ -14,36 +15,19 @@ imports
             atan renamed atan;
 exports all
 definitions
-types
-     SimulationModel ::
-        simulationDefinition : AST`SimulationDefinition
-        animatDefinitions : map AST`Identifier to AST`AnimatDefinition
-        worldDefinition : AST`WorldDefinition
-        patchDefinition : AST`PatchDefinition
-        actionDefinitions : map AST`Identifier to AST`ActionDefinition
-        taskDefinitions : map AST`Identifier to AST`TaskDefinition;
-     Context = ActionContext;
-     ActionContext ::
-        attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
-        utilities : map AST`Identifier to real
-        utilityDefinitions : map AST`Identifier to AST`Expression
-        action : AST`ActionDefinition
-        random : Random`RandomGenerator;
-
 values
-     AGENT_NEW = "new";
-     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
-     X_ATTRIBUTE_NAME = "x";
-     Y_ATTRIBUTE_NAME = "y";
 
 operations
     eval : AST`Expression ==> real
     eval(expr) ==
         return cases expr:
-                mk_AST`UtilityVariable(identifier) -> readUtility(identifier),
+                mk_AST`UtilityVariable(identifier) ->
+                    let val = Context`readUtility(identifier)
+                    in
+                        (if val <> nil then val else eval(Context`getUtilityDefinition(identifier))),
                 mk_AST`AttributeVariable(agent, identifier) ->
-                    readVariable(agent, identifier),
+                    Memory`read(Context`getAttributeAddress(agent, identifier)),
                 mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
                 mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
                 mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
@@ -103,109 +87,27 @@ operations
                     evalCond(cond1) or evalCond(cond2)
                 end;
 
-state Interpreter of
-    simulationModel : [SimulationModel]
-    context : [Context]
-    randomSeed : nat1
-init s == s = mk_Interpreter(nil, nil, 1)
-end
-
 operations
-    setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
-    [Memory`Address] ==> ()
-    setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
-        is not yet specified;
-    
-    pure actionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
-    nat1 ==> ActionContext
-    actionContextSV(actionDefinition, subjectDefinition, subject, random) ==
-        let
-            myAttributeOffsets = attributeOffsets(subjectDefinition, subject),
-            x = Memory`read(subject + myAttributeOffsets(X_ATTRIBUTE_NAME)),
-            y = Memory`read(subject + myAttributeOffsets(Y_ATTRIBUTE_NAME)),
-            hereAttributeOffsets =
-                attributeOffsets(simulationModel.patchDefinition, patchXY(x, y))
-        in
-            return mk_ActionContext(
-                    {nil |-> myAttributeOffsets, "here" |-> hereAttributeOffsets},
-                    {|->},
-                    {attrDef.identifier |-> attrDef.expression
-                    | attrDef in seq actionDefinition.utilityDefinitions},
-                    actionDefinition,
-                    mk_Random`RandomGenerator(random));
-    
-    pure attributeOffsets : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
-    attributeOffsets(agentDefinition, animat) ==
-        return let
-                attributes : seq of AST`Identifier =
-                    (if
-                            is_AST`AnimatDefinition(agentDefinition)
-                        then
-                            [X_ATTRIBUTE_NAME, Y_ATTRIBUTE_NAME]
-                        else
-                            [])
-                    ^ [decl.identifier
-                        | decl in seq agentDefinition.attributeDeclarations]
-            in
-                {attributes(offset) |-> animat + offset - 1
-                | offset in set inds attributes};
-    
-    setContext : Context ==> ()
-    setContext(c) == context := c;
-    
-    readUtility : AST`Identifier ==> real
-    readUtility(identifier) ==
-        if
-            identifier in set dom context.utilities
-        then
-            return context.utilities(identifier)
-        else
-            let val = eval(context.utilityDefinitions(identifier))
-            in
-                (context .utilities(identifier) := val;
-                return val);
-    
     readVariable : [AST`Identifier] * AST`Identifier ==> real
     readVariable(agent, identifier) ==
-        return Memory`read(getAddress(agent, identifier));
+        return Memory`read(Context`getAttributeAddress(agent, identifier));
     
     writeVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeVariable(agent, identifier, data) ==
-        Memory`write(getAddress(agent, identifier), data);
+        Memory`write(Context`getAttributeAddress(agent, identifier), data);
     
     writeDeltaVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeDeltaVariable(agent, identifier, data) ==
-        Memory`writeDelta(getAddress(agent, identifier), data);
-    
-    getAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
-    getAddress(agent, identifier) ==
-        if
-            agent in set dom context.attributes
-        then
-            let attr = context.attributes(agent)
-            in
-                (if
-                    identifier in set dom attr
-                then
-                    return attr(identifier)
-                else
-                    exit UNRESOLVED_REFERENCE)
-        else
-            exit UNRESOLVED_REFERENCE;
-    
-    random : () ==> real
-    random() ==
-        (context .random := Random`next(context.random);
-        return Random`value(context.random))
-    post  RESULT >= 0 and RESULT <= 1;
+        Memory`writeDelta(Context`getAttributeAddress(agent, identifier), data);
     
     uniform : real * real ==> real
     uniform(sectionFrom, sectionTo) ==
-        return let x = random() in x  * (sectionTo - sectionFrom) + sectionFrom;
+        return let x = Context`nextRandom()
+            in x  * (sectionTo - sectionFrom) + sectionFrom;
     
     normal : real * real ==> real
     normal(mean, sigma) ==
-        return let x1 = random(), x2 = random()
+        return let x1 = Context`nextRandom(), x2 = Context`nextRandom()
             in
                 sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
                 + mean
@@ -213,7 +115,7 @@ operations
     
     logLogistic : real * real ==> real
     logLogistic(scale, shape) ==
-        let p : real = random()
+        let p : real = Context`nextRandom()
         in return scale  * (p / (1 - p)) ** (1 / shape)
     pre  scale > 0 and shape > 0;
     
@@ -228,8 +130,8 @@ operations
                 while true
                 do
                     (dcl u1:real, u2:real;
-                    u1 := random();
-                    u2 := random();
+                    u1 := Context`nextRandom();
+                    u2 := Context`nextRandom();
                     if
                         u1 <= c1
                     then
@@ -247,7 +149,7 @@ operations
                     (dcl z:real := normal(0, 1), v:real, u:real;
                     while c2  * z <= -1.0 do z := normal(0, 1);
                     v := let t = c2  * z + 1.0 in t  * t  * t;
-                    u := random();
+                    u := Context`nextRandom();
                     if u < 1.0 - 0.0331  * z  * z  * z  * z then return c1  * v  * scale;
                     if
                         ln(u) < 0.5  * z  * z + c1  * (1.0 - v + ln(v))
@@ -268,112 +170,39 @@ operations
                         ((here >= east and here >= west) and here >= south) and here >= north
                     then
                         let
-                            x = readVariable(nil, X_ATTRIBUTE_NAME),
-                            y = readVariable(nil, Y_ATTRIBUTE_NAME)
+                            x = readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                            y = readVariable(nil, Context`Y_ATTRIBUTE_NAME)
                         in
                             theta(
-                                patchLength()  * (floor patchX(x) + 0.5) - x,
-                                patchLength()  * (floor patchY(y) + 0.5) - y)
+                                Context`patchLength()  * (floor Context`patchX(x) + 0.5) - x,
+                                Context`patchLength()  * (floor Context`patchY(y) + 0.5) - y)
                     else
                         theta(east - west, north - south));
     
     directionOfAgent : AST`Identifier ==> real
     directionOfAgent(agent) ==
         return theta(
-                readVariable(agent, X_ATTRIBUTE_NAME)
-                - readVariable(nil, X_ATTRIBUTE_NAME),
-                readVariable(agent, Y_ATTRIBUTE_NAME)
-                - readVariable(nil, Y_ATTRIBUTE_NAME));
+                readVariable(agent, Context`X_ATTRIBUTE_NAME)
+                - readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                readVariable(agent, Context`Y_ATTRIBUTE_NAME)
+                - readVariable(nil, Context`Y_ATTRIBUTE_NAME));
     
     distanceFromAgent : AST`Identifier ==> real
     distanceFromAgent(agent) ==
         return let
                 x =
-                    readVariable(agent, X_ATTRIBUTE_NAME)
-                    - readVariable(nil, X_ATTRIBUTE_NAME),
+                    readVariable(agent, Context`X_ATTRIBUTE_NAME)
+                    - readVariable(nil, Context`X_ATTRIBUTE_NAME),
                 y =
-                    readVariable(agent, Y_ATTRIBUTE_NAME)
-                    - readVariable(nil, Y_ATTRIBUTE_NAME)
+                    readVariable(agent, Context`Y_ATTRIBUTE_NAME)
+                    - readVariable(nil, Context`Y_ATTRIBUTE_NAME)
             in sqrt(x ** 2 + y ** 2);
     
     simulationTime : () ==> real
-    simulationTime() == return Memory`getTime()  * deltaTime();
+    simulationTime() == return Context`simulationTime();
     
     pure deltaTime : () ==> real
-    deltaTime() ==
-        let
-            timestepLiteral =
-                simulationModel.simulationDefinition.timeDefinition.timeStep
-        in return Unit`toSI(timestepLiteral.unit, timestepLiteral.val);
-    
-    pure patchXDivisions : () ==> nat1
-    patchXDivisions() ==
-        return simulationModel.simulationDefinition.patchInitializer.xDivisions;
-    
-    pure patchYDivisions : () ==> nat1
-    patchYDivisions() ==
-        return simulationModel.simulationDefinition.patchInitializer.yDivisions;
-    
-    pure patchLength : () ==> real
-    patchLength() ==
-        let
-            sizeLiteral =
-                simulationModel.simulationDefinition.patchInitializer.size
-        in return Unit`toSI(sizeLiteral.unit, sizeLiteral.val);
-    
-    pure worldWest : () ==> real
-    worldWest() == return 0;
-    
-    pure worldEast : () ==> real
-    worldEast() == return patchXDivisions()  * patchLength();
-    
-    pure worldSouth : () ==> real
-    worldSouth() == return 0;
-    
-    pure worldNorth : () ==> real
-    worldNorth() == return patchYDivisions()  * patchLength();
-    
-    pure patchX : real ==> real
-    patchX(x) == return (x - worldWest()) / patchLength();
-    
-    pure patchY : real ==> real
-    patchY(y) == return (y - worldSouth()) / patchLength();
-    
-    pure patchXY : real * real ==> nat
-    patchXY(x, y) ==
-        return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
-            + floor patchX(x);
-    
-    pure southPatchOfXY : real * real ==> nat
-    southPatchOfXY(x, y) ==
-        let j = floor patchY(y) - 1
-        in
-            return Memory`getPatchBase()
-                + patchXDivisions()  * (if j >= 0 then j else 0)
-                + floor patchX(x);
-    
-    pure northPatchOfXY : real * real ==> nat
-    northPatchOfXY(x, y) ==
-        let j = floor patchY(y) + 1
-        in
-            return Memory`getPatchBase()
-                + patchXDivisions()
-                 * (if j < patchYDivisions() then j else patchYDivisions() - 1)
-                + floor patchX(x);
-    
-    pure westPatchOfXY : real * real ==> nat
-    westPatchOfXY(x, y) ==
-        let i = floor patchX(x) - 1
-        in
-            return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
-                + (if i >= 0 then i else 0);
-    
-    pure eastPatchOfXY : real * real ==> nat
-    eastPatchOfXY(x, y) ==
-        let i = floor patchX(x) + 1
-        in
-            return Memory`getPatchBase() + patchXDivisions()  * floor patchY(y)
-                + (if i < patchYDivisions() then i else patchYDivisions() - 1);
+    deltaTime() == return Context`deltaTime();
     
     pure apply : seq1 of char * seq1 of real ==> real
     apply(func, args) ==

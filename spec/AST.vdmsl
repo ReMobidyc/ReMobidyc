@@ -2,6 +2,13 @@ module AST
 exports all
 definitions
 types
+     SimulationModel ::
+        simulationDefinition : AST`SimulationDefinition
+        animatDefinitions : map AST`Identifier to AST`AnimatDefinition
+        worldDefinition : AST`WorldDefinition
+        patchDefinition : AST`PatchDefinition
+        actionDefinitions : map AST`Identifier to AST`ActionDefinition
+        taskDefinitions : seq of AST`TaskDefinition;
      SimulationDefinition ::
         timeDefinition : SimulationTimeDefinition
         worldInitializer : WorldInitializer

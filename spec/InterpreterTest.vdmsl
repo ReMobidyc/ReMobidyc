@@ -5,6 +5,7 @@ imports
             assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
     from Interpreter all,
+    from Context all,
     from AST all,
     from Unit all,
     from Random all
@@ -24,8 +25,8 @@ values
             [],
             [],
             [mk_AST`UtilityDefinition("dt", mk_AST`Literal(1, Unit`s))]);
-     exampleSimulationModel : Interpreter`SimulationModel =
-        mk_Interpreter`SimulationModel(
+     exampleSimulationModel : AST`SimulationModel =
+        mk_AST`SimulationModel(
             mk_AST`SimulationDefinition(
                 mk_AST`SimulationTimeDefinition(mk_AST`Literal(10, Unit`s), mk_AST`Literal(1, Unit`s)),
                 mk_AST`WorldInitializer([]),
@@ -35,12 +36,9 @@ values
             mk_AST`WorldDefinition([]),
             mk_AST`PatchDefinition([]),
             {"age" |-> exampleActionAge},
-            {|->});
+            []);
 
 operations
-    testEval_UtilityVariable : () ==> ()
-    testEval_UtilityVariable() == skip;
-    
     testEval_Literal : () ==> ()
     testEval_Literal() ==
         assertApproxEquals(
@@ -130,14 +128,7 @@ operations
     
     testEval_UniformDistribution : () ==> ()
     testEval_UniformDistribution() ==
-        (Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {|->},
-                {|->},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
-        assertApproxEquals(
+        (assertApproxEquals(
             Interpreter`eval(
                 mk_AST`UniformDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
@@ -156,14 +147,7 @@ operations
     
     testEval_NormalDistribution : () ==> ()
     testEval_NormalDistribution() ==
-        (Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {|->},
-                {|->},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
-        assertApproxEquals(
+        (assertApproxEquals(
             Interpreter`eval(
                 mk_AST`NormalDistribution(
                     mk_AST`Literal(50, Unit`nodimension),
@@ -182,14 +166,7 @@ operations
     
     testEval_GammaDistribution : () ==> ()
     testEval_GammaDistribution() ==
-        (Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {|->},
-                {|->},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
-        assertApproxEquals(
+        (assertApproxEquals(
             Interpreter`eval(
                 mk_AST`GammaDistribution(
                     mk_AST`Literal(5, Unit`nodimension),
@@ -208,14 +185,7 @@ operations
     
     testEval_LogLogisticDistribution : () ==> ()
     testEval_LogLogisticDistribution() ==
-        (Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {|->},
-                {|->},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
-        assertApproxEquals(
+        (assertApproxEquals(
             Interpreter`eval(
                 mk_AST`LogLogisticDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
@@ -532,29 +502,16 @@ operations
     
     testEval_UtilityVariable : () ==> ()
     testEval_UtilityVariable() ==
-        (Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {|->},
-                {"x" |-> mk_AST`Literal(1, Unit`m)},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
+        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertApproxEquals(
             Interpreter`eval(mk_AST`UtilityVariable("x")),
             1.0,
             1.0e-16,
             "compute and read the utility variable");
-        Interpreter`setContext(
-            mk_Interpreter`ActionContext(
-                {|->},
-                {"x" |-> 10},
-                {"x" |-> mk_AST`Literal(1, Unit`m)},
-                mk_AST`ActionDefinition("action", nil, nil, [], [], []),
-                mk_Random`RandomGenerator(1)));
-        assertApproxEquals(
+        Context`writeUtility("x", 10);
+        assertEquals(
             Interpreter`eval(mk_AST`UtilityVariable("x")),
             10,
-            1.0e-16,
             "read a cached value of the utility variable"));
 
 end InterpreterTest

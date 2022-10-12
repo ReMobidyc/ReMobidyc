@@ -1,0 +1,234 @@
+module Context
+imports
+    from AST all,
+    from Unit all,
+    from Memory all,
+    from Random all
+exports all
+definitions
+values
+     emptySimulationModel : AST`SimulationModel =
+        mk_AST`SimulationModel(
+            emptySimulationDefinition,
+            {|->},
+            emptyWorldDefinition,
+            emptyPatchDefinition,
+            {|->},
+            []);
+     emptySimulationDefinition : AST`SimulationDefinition =
+        mk_AST`SimulationDefinition(
+            emptySimulationTimeDefinition,
+            emptyWorldInitializer,
+            emptyPatchInitializer,
+            []);
+     emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
+        mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
+     emptyWorldDefinition : AST`WorldDefinition =
+        mk_AST`WorldDefinition([]);
+     emptyPatchDefinition : AST`PatchDefinition =
+        mk_AST`PatchDefinition([]);
+     emptyWorldInitializer : AST`WorldInitializer =
+        mk_AST`WorldInitializer([]);
+     emptyPatchInitializer : AST`PatchInitializer =
+        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), []);
+     AGENT_NEW = "new";
+     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
+     X_ATTRIBUTE_NAME = "x";
+     Y_ATTRIBUTE_NAME = "y";
+
+state Context of
+    simulationModel : [AST`SimulationModel]
+    attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
+    utilities : map AST`Identifier to real
+    utilityDefinitions : map AST`Identifier to AST`Expression
+    action : [AST`ActionDefinition]
+    random : Random`RandomGenerator
+    randomSeed : nat1
+init s ==
+    s
+    = mk_Context(nil, {|->}, {|->}, {|->}, nil, mk_Random`RandomGenerator(1), 1)
+end
+
+operations
+    setSimulationModel : AST`SimulationModel ==> ()
+    setSimulationModel(model) == simulationModel := model;
+    
+    getSimulationModel : () ==> [AST`SimulationModel]
+    getSimulationModel() == return simulationModel;
+    
+    setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
+    [Memory`Address] ==> ()
+    setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
+        is not yet specified;
+    
+    setupActionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
+    nat1 ==> ()
+    setupActionContextSV(actionDefinition, subjectDefinition, subject, seed) ==
+        let
+            myAttributeAddresses =
+                attributeAddresses(subjectDefinition, subject),
+            x = Memory`read(subject + myAttributeAddresses(X_ATTRIBUTE_NAME)),
+            y = Memory`read(subject + myAttributeAddresses(Y_ATTRIBUTE_NAME)),
+            hereAttributeAddresses =
+                attributeAddresses(simulationModel.patchDefinition, patchXY(x, y))
+        in
+            (attributes
+                := {nil |-> myAttributeAddresses, "here" |-> hereAttributeAddresses};
+            utilities := {|->};
+            utilityDefinitions
+                := {attrDef.identifier |-> attrDef.expression
+                | attrDef in seq actionDefinition.utilityDefinitions};
+            action := actionDefinition;
+            random := mk_Random`RandomGenerator(seed));
+    
+    pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
+    attributeAddresses(agentDefinition, animat) ==
+        return let
+                attributes : seq of AST`Identifier =
+                    (if
+                            is_AST`AnimatDefinition(agentDefinition)
+                        then
+                            [X_ATTRIBUTE_NAME, Y_ATTRIBUTE_NAME]
+                        else
+                            [])
+                    ^ [decl.identifier
+                        | decl in seq agentDefinition.attributeDeclarations]
+            in
+                {attributes(offset) |-> animat + offset - 1
+                | offset in set inds attributes};
+    
+    pure readUtility : AST`Identifier ==> [real]
+    readUtility(identifier) ==
+        return if identifier in set dom utilities then utilities(identifier) else nil;
+    
+    writeUtility : AST`Identifier * real ==> ()
+    writeUtility(identifier, val) == utilities(identifier) := val;
+    
+    pure getUtilityDefinition : AST`Identifier ==> AST`Expression
+    getUtilityDefinition(identifier) ==
+        if
+            identifier in set dom utilityDefinitions
+        then
+            return utilityDefinitions(identifier)
+        else
+            exit UNRESOLVED_REFERENCE;
+    
+    setUtilityDefinition : AST`Identifier * AST`Expression ==> ()
+    setUtilityDefinition(identifier, expression) ==
+        utilityDefinitions(identifier) := expression;
+    
+    getAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
+    getAddress(agent, identifier) == return 1;
+    
+    getAttributeAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
+    getAttributeAddress(agent, identifier) ==
+        if
+            agent in set dom attributes
+        then
+            let attr = attributes(agent)
+            in
+                (if
+                    identifier in set dom attr
+                then
+                    return attr(identifier)
+                else
+                    exit UNRESOLVED_REFERENCE)
+        else
+            exit UNRESOLVED_REFERENCE;
+    
+    nextRandom : () ==> real
+    nextRandom() ==
+        (random := Random`next(random);
+        return Random`value(random))
+    post  RESULT >= 0 and RESULT <= 1;
+    
+    simulationTime : () ==> real
+    simulationTime() == return Memory`getTime()  * deltaTime();
+    
+    pure deltaTime : () ==> real
+    deltaTime() ==
+        let
+            timestepLiteral =
+                simulationModel.simulationDefinition.timeDefinition.timeStep
+        in return Unit`toSI(timestepLiteral.unit, timestepLiteral.val);
+    
+    pure patchXDivisions : () ==> nat1
+    patchXDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.xDivisions;
+    
+    pure patchYDivisions : () ==> nat1
+    patchYDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.yDivisions;
+    
+    pure patchLength : () ==> real
+    patchLength() ==
+        let
+            sizeLiteral =
+                simulationModel.simulationDefinition.patchInitializer.size
+        in return Unit`toSI(sizeLiteral.unit, sizeLiteral.val);
+    
+    pure worldWest : () ==> real
+    worldWest() == return 0;
+    
+    pure worldEast : () ==> real
+    worldEast() == return patchXDivisions()  * patchLength();
+    
+    pure worldSouth : () ==> real
+    worldSouth() == return 0;
+    
+    pure worldNorth : () ==> real
+    worldNorth() == return patchYDivisions()  * patchLength();
+    
+    pure patchX : real ==> real
+    patchX(x) == return (x - worldWest()) / patchLength();
+    
+    pure patchY : real ==> real
+    patchY(y) == return (y - worldSouth()) / patchLength();
+    
+    pure patchXY : real * real ==> nat
+    patchXY(x, y) ==
+        return Memory`getPatchBase()
+            + patchXDivisions()
+             * within(floor patchY(y), 0, patchYDivisions() - 1)
+            + within(floor patchX(x), 0, patchXDivisions() - 1);
+    
+    pure southPatchOfXY : real * real ==> nat
+    southPatchOfXY(x, y) ==
+        return Memory`getPatchBase()
+            + patchXDivisions()
+             * within(floor patchY(y) - 1, 0, patchYDivisions() - 1)
+            + within(floor patchX(x), 0, patchXDivisions() - 1);
+    
+    pure northPatchOfXY : real * real ==> nat
+    northPatchOfXY(x, y) ==
+        return Memory`getPatchBase()
+            + patchXDivisions()
+             * within(floor patchY(y) + 1, 0, patchYDivisions() - 1)
+            + within(floor patchX(x), 0, patchXDivisions() - 1);
+    
+    pure westPatchOfXY : real * real ==> nat
+    westPatchOfXY(x, y) ==
+        return Memory`getPatchBase()
+            + patchXDivisions()
+             * within(floor patchY(y), 0, patchYDivisions() - 1)
+            + within(floor patchX(x) - 1, 0, patchXDivisions() - 1);
+    
+    pure eastPatchOfXY : real * real ==> nat
+    eastPatchOfXY(x, y) ==
+        return Memory`getPatchBase()
+            + patchXDivisions()
+             * within(floor patchY(y), 0, patchYDivisions() - 1)
+            + within(floor patchX(x) + 1, 0, patchXDivisions() - 1);
+
+functions
+    within : real * real * real -> real
+    within(x, min, max) ==
+        if x < min
+            then min
+        elseif x > max
+            then max
+        else
+            x
+    pre min <= max;
+
+end Context
