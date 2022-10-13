@@ -198,7 +198,7 @@ operations
                     - readVariable(nil, Context`Y_ATTRIBUTE_NAME)
             in sqrt(x ** 2 + y ** 2);
     
-    simulationTime : () ==> real
+    pure simulationTime : () ==> real
     simulationTime() == return Context`simulationTime();
     
     pure deltaTime : () ==> real

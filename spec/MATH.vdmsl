@@ -64,8 +64,7 @@ functions
     pre a > 0;
     
     fac : nat -> nat1
-    fac(a) == is not yet specified
-    -- pre a < 21;;;;
+    fac(a) == is not yet specified;
 
 values
      pi = pi_f();

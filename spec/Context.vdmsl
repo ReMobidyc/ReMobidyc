@@ -164,7 +164,7 @@ operations
         return Random`value(random))
     post  RESULT >= 0 and RESULT <= 1;
     
-    simulationTime : () ==> real
+    pure simulationTime : () ==> real
     simulationTime() == return Memory`getTime()  * deltaTime();
     
     pure deltaTime : () ==> real
