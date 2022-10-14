@@ -48,5 +48,39 @@ operations
             Context`readUtility("x"),
             10,
             "read a cached value of the utility variable"));
+    
+    testWriteUtility : () ==> ()
+    testWriteUtility() ==
+        (assertEquals(Context`readUtility("x"), nil, "no value is set yet");
+        Context`writeUtility("x", 10);
+        assertEquals(
+            Context`readUtility("x"),
+            10,
+            "read a cached value of the utility variable"));
+    
+    testGetUtilityDefinition : () ==> ()
+    testGetUtilityDefinition() ==
+        (trap (Context`UNRESOLVED_REFERENCE) with skip
+        in
+            let d = Context`getUtilityDefinition("x")
+            in exit "unresolvable because x is not defined yet";
+        Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(1, Unit`m),
+            "x is defined as x = 1[m]"));
+    
+    testSetUtilityDefinition : () ==> ()
+    testSetUtilityDefinition() ==
+        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(1, Unit`m),
+            "x is defined as x = 1[m]");
+        Context`setUtilityDefinition("x", mk_AST`Literal(2, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(2, Unit`m),
+            "x is defined as x = 2[m]"));
 
 end ContextTest
