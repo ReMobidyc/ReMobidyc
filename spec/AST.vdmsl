@@ -64,9 +64,9 @@ types
      AssignableAttributeVariable ::
         attributeVariable : AttributeVariable| Placeholder;
      AssignableDeltaAttributeVariable ::
-        attributeVariable : AttributeVariable;
+        attributeVariable : AttributeVariable| Placeholder;
      AssignableDifferentialAttributeVariable ::
-        attributeVariable : AttributeVariable;
+        attributeVariable : AttributeVariable| Placeholder;
      AttributeBind ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression;
@@ -139,5 +139,50 @@ types
      Disjunction :: Condition Condition;
      Identifier = seq of char;
      AgentIdentifier = seq of char;
+
+types
+     ReplacementMap =
+        map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
+     ReplacementAST =
+        Placeholder| DirectivePlaceholder| NewDirective| StageDirective|
+        ActionDefinition| Expression| Condition| AttributeDefinition|
+        UtilityDefinition| AssignableVariable;
+
+functions
+    replace : ReplacementAST * ReplacementMap -> ReplacementAST
+    replace(ast, replacement) ==
+        if
+            ast in set dom replacement
+        then
+            replacement(ast)
+        else
+            cases ast:
+                mk_ActionDefinition(
+                    identifier,
+                    object,
+                    guard,
+                    lifeDirectives,
+                    attributeDefinitions,
+                    utilityDefinitions) ->
+                    mk_ActionDefinition(
+                        identifier,
+                        object,
+                        replace(guard, replacement),
+                        [replace(directive, replacement) | directive in seq lifeDirectives],
+                        [replace(attrDef, replacement)
+                            | attrDef in seq attributeDefinitions],
+                        [replace(utilDef, replacement) | utilDef in seq utilityDefinitions]),
+                mk_AttributeDefinition(var, exp) ->
+                    mk_AttributeDefinition(replace(var, replacement), replace(exp, replacement)),
+                mk_UtilityDefinition(ident, exp) ->
+                    mk_UtilityDefinition(ident, replace(exp, replacement)),
+                mk_AssignableAttributeVariable(var) ->
+                    mk_AssignableAttributeVariable(replace(var, replacement)),
+                mk_AssignableDeltaAttributeVariable(var) ->
+                    mk_AssignableDeltaAttributeVariable(replace(var, replacement)),
+                mk_AssignableDifferentialAttributeVariable(var) ->
+                    mk_AssignableDifferentialAttributeVariable(replace(var, replacement)),
+                others -> ast
+                end;
 
 end AST
