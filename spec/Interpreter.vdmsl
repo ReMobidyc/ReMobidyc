@@ -74,17 +74,26 @@ operations
     evalCond : AST`Condition ==> bool
     evalCond(cond) ==
         return cases cond:
-                mk_AST`Equality(expr1, expr2) -> eval(expr1) = eval(expr2),
-                mk_AST`GreaterOrEqual(expr1, expr2) -> eval(expr1) >= eval(expr2),
-                mk_AST`GreaterThan(expr1, expr2) -> eval(expr1) > eval(expr2),
-                mk_AST`LessOrEqual(expr1, expr2) -> eval(expr1) <= eval(expr2),
-                mk_AST`LessThan(expr1, expr2) -> eval(expr1) < eval(expr2),
+                mk_AST`Equality(exprs) ->
+                    card {eval(expr) | expr in seq exprs} = 1,
+                mk_AST`GreaterOrEqual(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        eval(exprs(i)) >= eval(exprs(i + 1)),
+                mk_AST`GreaterThan(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        eval(exprs(i)) > eval(exprs(i + 1)),
+                mk_AST`LessOrEqual(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        eval(exprs(i)) <= eval(exprs(i + 1)),
+                mk_AST`LessThan(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        eval(exprs(i)) < eval(exprs(i + 1)),
                 mk_AST`NotEqual(expr1, expr2) -> eval(expr1) <> eval(expr2),
                 mk_AST`Negation(cond) -> not evalCond(cond),
-                mk_AST`Conjunction(cond1, cond2) ->
-                    evalCond(cond1) and evalCond(cond2),
-                mk_AST`Disjunction(cond1, cond2) ->
-                    evalCond(cond1) or evalCond(cond2)
+                mk_AST`Conjunction(conds) ->
+                    forall cond in seq conds & evalCond(cond),
+                mk_AST`Disjunction(conds) ->
+                    exists cond in seq conds & evalCond(cond)
                 end;
 
 operations

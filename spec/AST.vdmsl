@@ -128,15 +128,22 @@ types
      Condition =
         Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
         NotEqual| Negation| Conjunction| Disjunction| Placeholder;
-     Equality :: Expression Expression;
-     GreaterOrEqual :: Expression Expression;
-     GreaterThan :: Expression Expression;
-     LessOrEqual :: Expression Expression;
-     LessThan :: Expression Expression;
+     Equality :: seq1 of Expression
+        inv mk_Equality(exprs) == len exprs >= 2;
+     GreaterOrEqual :: seq1 of Expression
+        inv mk_GreaterOrEqual(exprs) == len exprs >= 2;
+     GreaterThan :: seq1 of Expression
+        inv mk_GreaterThan(exprs) == len exprs >= 2;
+     LessOrEqual :: seq1 of Expression
+        inv mk_LessOrEqual(exprs) == len exprs >= 2;
+     LessThan :: seq1 of Expression
+        inv mk_LessThan(exprs) == len exprs >= 2;
      NotEqual :: Expression Expression;
      Negation :: Condition;
-     Conjunction :: Condition Condition;
-     Disjunction :: Condition Condition;
+     Conjunction :: seq1 of Condition
+        inv mk_Conjunction(conds) == len conds >= 2;
+     Disjunction :: seq1 of Condition
+        inv mk_Disjunction(conds) == len conds >= 2;
      Identifier = seq of char;
      AgentIdentifier = seq of char;
 
@@ -157,14 +164,14 @@ functions
             replacement(ast)
         else
             cases ast:
-                mk_ActionDefinition(
+                mk_AST`ActionDefinition(
                     identifier,
                     object,
                     guard,
                     lifeDirectives,
                     attributeDefinitions,
                     utilityDefinitions) ->
-                    mk_ActionDefinition(
+                    mk_AST`ActionDefinition(
                         identifier,
                         object,
                         replace(guard, replacement),
@@ -172,17 +179,90 @@ functions
                         [replace(attrDef, replacement)
                             | attrDef in seq attributeDefinitions],
                         [replace(utilDef, replacement) | utilDef in seq utilityDefinitions]),
-                mk_AttributeDefinition(var, exp) ->
-                    mk_AttributeDefinition(replace(var, replacement), replace(exp, replacement)),
-                mk_UtilityDefinition(ident, exp) ->
-                    mk_UtilityDefinition(ident, replace(exp, replacement)),
-                mk_AssignableAttributeVariable(var) ->
-                    mk_AssignableAttributeVariable(replace(var, replacement)),
-                mk_AssignableDeltaAttributeVariable(var) ->
-                    mk_AssignableDeltaAttributeVariable(replace(var, replacement)),
-                mk_AssignableDifferentialAttributeVariable(var) ->
-                    mk_AssignableDifferentialAttributeVariable(replace(var, replacement)),
+                mk_AST`AttributeDefinition(var, exp) ->
+                    mk_AST`AttributeDefinition(replace(var, replacement), replace(exp, replacement)),
+                mk_AST`UtilityDefinition(ident, exp) ->
+                    mk_AST`UtilityDefinition(ident, replace(exp, replacement)),
+                mk_AST`AssignableAttributeVariable(var) ->
+                    mk_AST`AssignableAttributeVariable(replace(var, replacement)),
+                mk_AST`AssignableDeltaAttributeVariable(var) ->
+                    mk_AST`AssignableDeltaAttributeVariable(replace(var, replacement)),
+                mk_AST`AssignableDifferentialAttributeVariable(var) ->
+                    mk_AST`AssignableDifferentialAttributeVariable(replace(var, replacement)),
                 others -> ast
+                end;
+    
+    replaceExpression : Expression * ReplacementMap -> Expression
+    replaceExpression(expression, replacement) ==
+        if
+            expression in set dom replacement
+        then
+            replacement(expression)
+        else
+            cases expression:
+                mk_AST`GuardedChoices(conditionExpressionPairs, defaultExpression) ->
+                    mk_AST`GuardedChoices(
+                        [mk_(
+                            replaceCondition(cond, replacement),
+                            replaceExpression(expr, replacement))
+                            | mk_(cond, expr) in seq conditionExpressionPairs],
+                        replaceExpression(defaultExpression, replacement)),
+                mk_AST`Apply(function, arguments) ->
+                    mk_AST`Apply(
+                        function,
+                        [replaceExpression(arg, replacement) | arg in seq arguments]),
+                mk_AST`Addition(expr1, expr2) ->
+                    mk_AST`Addition(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Subtraction(expr1, expr2) ->
+                    mk_AST`Subtraction(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Product(expr1, expr2) ->
+                    mk_AST`Product(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Fraction(expr1, expr2) ->
+                    mk_AST`Fraction(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Power(expr1, order) ->
+                    mk_AST`Power(replaceExpression(expr1, replacement), order),
+                mk_AST`Minus(expr) ->
+                    mk_AST`Minus(replaceExpression(expr, replacement)),
+                others -> expression
+                end;
+    
+    replaceCondition : Condition * ReplacementMap -> Condition
+    replaceCondition(condition, replacement) ==
+        if
+            condition in set dom replacement
+        then
+            replacement(condition)
+        else
+            cases condition:
+                mk_AST`Equality(exprs) ->
+                    mk_AST`Equality([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`GreaterOrEqual(exprs) ->
+                    mk_AST`GreaterOrEqual([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`GreaterThan(exprs) ->
+                    mk_AST`GreaterThan([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`LessOrEqual(exprs) ->
+                    mk_AST`LessOrEqual([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`LessThan(exprs) ->
+                    mk_AST`LessThan([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`NotEqual(expr1, expr2) ->
+                    mk_AST`NotEqual(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Negation(cond) ->
+                    mk_AST`Negation(replace(cond, replacement)),
+                mk_AST`Conjunction(conds) ->
+                    mk_AST`Conjunction([replaceCondition(cond, replacement) | cond in seq conds]),
+                mk_AST`Disjunction(conds) ->
+                    mk_AST`Disjunction([replaceCondition(cond, replacement) | cond in seq conds]),
+                others -> condition
                 end;
 
 end AST

@@ -2,6 +2,7 @@ module InterpreterTest
 imports
     from UnitTesting
         operations
+            assert renamed assert;
             assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
     from Interpreter all,
@@ -513,5 +514,214 @@ operations
             Interpreter`eval(mk_AST`UtilityVariable("x")),
             10,
             "read a cached value of the utility variable"));
+
+/*         Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
+        NotEqual| Negation| Conjunction| Disjunction| Placeholder;
+*/
+    
+    testEvalCond_Equality : () ==> ()
+    testEvalCond_Equality() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`Equality(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "1 = 1 is true");
+        assert(
+            Interpreter`evalCond(
+                mk_AST`Equality(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "1 = 1 = 1 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`Equality(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "1 = 1 = 2 is false"));
+    
+    testEvalCond_GreaterOrEqual : () ==> ()
+    testEvalCond_GreaterOrEqual() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`GreaterOrEqual(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "2 >= 1 is true");
+        assert(
+            Interpreter`evalCond(
+                mk_AST`GreaterOrEqual(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "2 >= 1 >= 1 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`GreaterOrEqual(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "2 >= 1 >= 2 is false"));
+    
+    testEvalCond_GreaterThan : () ==> ()
+    testEvalCond_GreaterThan() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`GreaterThan(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "2 > 1 is true");
+        assert(
+            Interpreter`evalCond(
+                mk_AST`GreaterThan(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(0, Unit`nodimension)])),
+            "2 > 1 > 0 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`GreaterThan(
+                    [mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "2 > 1 > 1 is false"));
+    
+    testEvalCond_LessOrEqual : () ==> ()
+    testEvalCond_LessOrEqual() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`LessOrEqual(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "1 <= 2 is true");
+        assert(
+            Interpreter`evalCond(
+                mk_AST`LessOrEqual(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "1 <= 2 <= 2 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`LessOrEqual(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)])),
+            "1 <= 2 <= 1 is false"));
+    
+    testEvalCond_LessThan : () ==> ()
+    testEvalCond_LessThan() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`LessThan(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "1 < 2 is true");
+        assert(
+            Interpreter`evalCond(
+                mk_AST`LessThan(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(3, Unit`nodimension)])),
+            "1 < 2 < 3 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`LessThan(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension)])),
+            "1 < 2 < 2 is false"));
+    
+    testEvalCond_NotEqual : () ==> ()
+    testEvalCond_NotEqual() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`NotEqual(
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(2, Unit`nodimension))),
+            "1 /= 2 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`NotEqual(
+                    mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension))),
+            "1 /= 1 is false"));
+    
+    testEvalCond_Negation : () ==> ()
+    testEvalCond_Negation() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`Negation(
+                    mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(2, Unit`nodimension)]))),
+            "not 1 = 2 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`Negation(
+                    mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(1, Unit`nodimension)]))),
+            "not 1 = 1 is false"));
+    
+    testEvalCond_Conjunction : () ==> ()
+    testEvalCond_Conjunction() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`Conjunction(
+                    [mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(1, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(2, Unit`nodimension),
+                        mk_AST`Literal(2, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(3, Unit`nodimension),
+                        mk_AST`Literal(3, Unit`nodimension)])])),
+            "1=1 and 2=2 and 3=3 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`Conjunction(
+                    [mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(1, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(2, Unit`nodimension),
+                        mk_AST`Literal(2, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(3, Unit`nodimension),
+                        mk_AST`Literal(4, Unit`nodimension)])])),
+            "1=1 and 2=2 and 3=4 is false"));
+    
+    testEvalCond_Disjunction : () ==> ()
+    testEvalCond_Disjunction() ==
+        (assert(
+            Interpreter`evalCond(
+                mk_AST`Disjunction(
+                    [mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(1, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(2, Unit`nodimension),
+                        mk_AST`Literal(3, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(3, Unit`nodimension),
+                        mk_AST`Literal(4, Unit`nodimension)])])),
+            "1=1 or 2=3 or 3=4 is true");
+        assert(
+            not Interpreter`evalCond(
+                mk_AST`Disjunction(
+                    [mk_AST`Equality(
+                        [mk_AST`Literal(1, Unit`nodimension),
+                        mk_AST`Literal(2, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(2, Unit`nodimension),
+                        mk_AST`Literal(3, Unit`nodimension)]),
+                    mk_AST`Equality(
+                        [mk_AST`Literal(3, Unit`nodimension),
+                        mk_AST`Literal(4, Unit`nodimension)])])),
+            "1=2 or 2=3 or 3=4 is false"));
 
 end InterpreterTest

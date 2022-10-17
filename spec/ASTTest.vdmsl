@@ -1,0 +1,173 @@
+module ASTTest
+imports
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from AST all,
+    from Unit all
+exports all
+definitions
+values
+     placeholder1 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder1");
+     placeholder2 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder2");
+     placeholder3 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder3");
+     replacement1 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var1");
+     replacement2 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var2");
+     replacement3 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var3");
+     replacementMap : AST`ReplacementMap =
+        {placeholder1 |-> replacement1, placeholder2 |-> replacement2,
+        placeholder3 |-> replacement3};
+     expression1 : AST`Expression = mk_AST`Literal(1, Unit`nodimension);
+     expression2 : AST`Expression = mk_AST`Literal(2, Unit`nodimension);
+     expression3 : AST`Expression = mk_AST`Literal(3, Unit`nodimension);
+     condition1 : AST`Condition =
+        mk_AST`Equality([expression1, expression1]);
+     condition2 : AST`Condition =
+        mk_AST`Equality([expression2, expression2]);
+     condition3 : AST`Condition =
+        mk_AST`Equality([expression3, expression3]);
+
+operations
+    testReplaceExpression_Placeholder : () ==> ()
+    testReplaceExpression_Placeholder() ==
+        (assertEquals(
+            AST`replaceExpression(placeholder1, replacementMap),
+            replacement1,
+            "the placeholder1 -> var1");
+        let free = mk_AST`Placeholder("free")
+        in
+            assertEquals(
+                AST`replaceExpression(free, replacementMap),
+                free,
+                "the free -> the free"));
+    
+    testReplaceExpression_Literal : () ==> ()
+    testReplaceExpression_Literal() ==
+        let literal = mk_AST`Literal(1, Unit`nodimension)
+        in
+            assertEquals(AST`replaceExpression(literal, replacementMap), literal, "1 -> 1");
+    
+    testReplaceExpression_UtilityVariable : () ==> ()
+    testReplaceExpression_UtilityVariable() ==
+        let utilityVariable = mk_AST`UtilityVariable("var")
+        in
+            assertEquals(
+                AST`replaceExpression(utilityVariable, replacementMap),
+                utilityVariable,
+                "var -> var");
+    
+    testReplaceExpression_AttributeVariable : () ==> ()
+    testReplaceExpression_AttributeVariable() ==
+        let attributeVariable = mk_AST`AttributeVariable(nil, "var")
+        in
+            assertEquals(
+                AST`replaceExpression(attributeVariable, replacementMap),
+                attributeVariable,
+                "my var -> my var");
+    
+    testReplaceExpression_NewAttributeVariable : () ==> ()
+    testReplaceExpression_NewAttributeVariable() ==
+        let newAttributeVariable = mk_AST`NewAttributeVariable("var")
+        in
+            assertEquals(
+                AST`replaceExpression(newAttributeVariable, replacementMap),
+                newAttributeVariable,
+                "new var -> new var");
+    
+    testReplaceExpression_GuardedChoices : () ==> ()
+    testReplaceExpression_GuardedChoices() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`GuardedChoices(
+                    [mk_(condition1, placeholder1), mk_(placeholder2, expression2)],
+                    placeholder3),
+                {placeholder1 |-> replacement1, placeholder2 |-> condition2,
+                placeholder3 |-> replacement3}),
+            mk_AST`GuardedChoices(
+                [mk_(condition1, replacement1), mk_(condition2, expression2)],
+                replacement3),
+            "the placeholder1 if 1=1, 2 if the placeholder2, the placeholder3 -> var1 if 1 = 1, 2 if 2=2, var3");
+    
+    testReplaceExpression_Apply : () ==> ()
+    testReplaceExpression_Apply() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Apply("f", [expression1, placeholder1]), replacementMap),
+            mk_AST`Apply("f", [expression1, replacement1]),
+            "f(1, the placeholder1) -> f(1, var1)");
+    
+    testReplaceExpression_Addition : () ==> ()
+    testReplaceExpression_Addition() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Addition(placeholder1, expression1), replacementMap),
+            mk_AST`Addition(replacement1, expression1),
+            "the placeholder1 + 1 = var1 + 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Addition(expression1, replacement1), replacementMap),
+            mk_AST`Addition(expression1, replacement1),
+            "1 + the placeholder1 = 1 + var1"));
+    
+    testReplaceExpression_Subtraction : () ==> ()
+    testReplaceExpression_Subtraction() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Subtraction(placeholder1, expression1), replacementMap),
+            mk_AST`Subtraction(replacement1, expression1),
+            "the placeholder1 - 1 = var1 - 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Subtraction(expression1, replacement1), replacementMap),
+            mk_AST`Subtraction(expression1, replacement1),
+            "1 - the placeholder1 = 1 - var1"));
+    
+    testReplaceExpression_Product : () ==> ()
+    testReplaceExpression_Product() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Product(placeholder1, expression1), replacementMap),
+            mk_AST`Product(replacement1, expression1),
+            "the placeholder1 * 1 = var1 * 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Product(expression1, replacement1), replacementMap),
+            mk_AST`Product(expression1, replacement1),
+            "1 * the placeholder1 = 1 * var1"));
+    
+    testReplaceExpression_Fraction : () ==> ()
+    testReplaceExpression_Fraction() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Fraction(placeholder1, expression1), replacementMap),
+            mk_AST`Fraction(replacement1, expression1),
+            "the placeholder1 / 1 = var1 / 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Fraction(expression1, replacement1), replacementMap),
+            mk_AST`Fraction(expression1, replacement1),
+            "1 / the placeholder1 = 1 / var1"));
+    
+    testReplaceExpression_Power : () ==> ()
+    testReplaceExpression_Power() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Power(placeholder1, 2), replacementMap),
+            mk_AST`Power(replacement1, 2),
+            "the placeholder1 ^ 2 = var1 ^ 2");
+    
+    testReplaceExpression_Minus : () ==> ()
+    testReplaceExpression_Minus() ==
+        assertEquals(
+            AST`replaceExpression(mk_AST`Minus(placeholder1), replacementMap),
+            mk_AST`Minus(replacement1),
+            "- the placeholder1 = - var1");
+
+end ASTTest
