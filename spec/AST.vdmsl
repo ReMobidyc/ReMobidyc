@@ -29,7 +29,7 @@ types
      ActionDefinition ::
         identifier : Identifier
         object : [AgentIdentifier]
-        guard : [Expression]
+        guard : [Condition]
         lifeDirectives : seq of LifeDirective
         attributeDefinitions : seq of AttributeDefinition
         utilityDefinitions : seq of UtilityDefinition;
@@ -49,7 +49,7 @@ types
         DirectivePlaceholder;
      DieDirective = <die>;
      KillDirective = <kill>;
-     NewDirective :: stage : AgentIdentifier quantity : nat1;
+     NewDirective :: stage : AgentIdentifier quantity : Expression;
      StageDirective :: stage : AgentIdentifier;
      DirectivePlaceholder =
         NewDirectivePlaceholder| StageDirectivePlaceholder;
@@ -147,6 +147,21 @@ types
      Identifier = seq of char;
      AgentIdentifier = seq of char;
 
+values
+     dieDirective : DieDirective = <die>;
+     killDirective : KillDirective = <kill>;
+     newDirectivePlaceholder : NewDirectivePlaceholder = <new>;
+     stageDirectivePlaceholder : StageDirectivePlaceholder = <stage>;
+     uniformDistributionX : UniformDistributionX =
+        <uniform_distribution_x>;
+     uniformDistributionY : UniformDistributionY =
+        <uniform_distribution_y>;
+     directionDirective = <direction>;
+     distanceDirective = <distance>;
+     timeDirective = <time>;
+     deltaTimeDirective = <delta_time>;
+     directionOfGradientDirective = <direction_of_gradient>;
+
 types
      ReplacementMap =
         map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
@@ -156,41 +171,58 @@ types
         UtilityDefinition| AssignableVariable;
 
 functions
-    replace : ReplacementAST * ReplacementMap -> ReplacementAST
-    replace(ast, replacement) ==
-        if
-            ast in set dom replacement
-        then
-            replacement(ast)
-        else
-            cases ast:
-                mk_AST`ActionDefinition(
-                    identifier,
-                    object,
-                    guard,
-                    lifeDirectives,
-                    attributeDefinitions,
-                    utilityDefinitions) ->
-                    mk_AST`ActionDefinition(
-                        identifier,
-                        object,
-                        replace(guard, replacement),
-                        [replace(directive, replacement) | directive in seq lifeDirectives],
-                        [replace(attrDef, replacement)
-                            | attrDef in seq attributeDefinitions],
-                        [replace(utilDef, replacement) | utilDef in seq utilityDefinitions]),
-                mk_AST`AttributeDefinition(var, exp) ->
-                    mk_AST`AttributeDefinition(replace(var, replacement), replace(exp, replacement)),
-                mk_AST`UtilityDefinition(ident, exp) ->
-                    mk_AST`UtilityDefinition(ident, replace(exp, replacement)),
-                mk_AST`AssignableAttributeVariable(var) ->
-                    mk_AST`AssignableAttributeVariable(replace(var, replacement)),
-                mk_AST`AssignableDeltaAttributeVariable(var) ->
-                    mk_AST`AssignableDeltaAttributeVariable(replace(var, replacement)),
-                mk_AST`AssignableDifferentialAttributeVariable(var) ->
-                    mk_AST`AssignableDifferentialAttributeVariable(replace(var, replacement)),
-                others -> ast
-                end;
+    replaceActionDefinition : AST`ActionDefinition * ReplacementMap -> AST`ActionDefinition
+    replaceActionDefinition(actionDefinition, replacement) ==
+        mu(actionDefinition,
+            guard
+            |-> if
+                actionDefinition.guard <> nil
+            then
+                replaceCondition(actionDefinition.guard, replacement)
+            else
+                nil,
+            lifeDirectives
+            |-> [replaceLifeDirective(directive, replacement)
+                | directive in seq actionDefinition.lifeDirectives],
+            attributeDefinitions
+            |-> [replaceAttributeDefinition(attrDef, replacement)
+                | attrDef in seq actionDefinition.attributeDefinitions],
+            utilityDefinitions
+            |-> [replaceUtilityDefinition(utilDef, replacement)
+                | utilDef in seq actionDefinition.utilityDefinitions]);
+    
+    replaceLifeDirective : AST`LifeDirective * ReplacementMap -> AST`LifeDirective
+    replaceLifeDirective(directive, replacement) ==
+        cases directive:
+            mk_AST`NewDirective(stage, quantity) ->
+                mk_AST`NewDirective(stage, replaceExpression(quantity, replacement)),
+            others ->
+                if directive in set dom replacement then replacement(directive) else directive
+            end;
+    
+    replaceAttributeDefinition : AST`AttributeDefinition * ReplacementMap -> AST`AttributeDefinition
+    replaceAttributeDefinition(attributeDefinition, replacement) ==
+        let
+            attributeVariable = attributeDefinition.variable.attributeVariable,
+            variable =
+                mu(attributeDefinition.variable,
+                    attributeVariable
+                    |-> if
+                        attributeVariable in set dom replacement
+                    then
+                        replacement(attributeVariable)
+                    else
+                        attributeVariable)
+        in
+            mk_AttributeDefinition(
+                variable,
+                replaceExpression(attributeDefinition.expression, replacement));
+    
+    replaceUtilityDefinition : AST`UtilityDefinition * ReplacementMap -> AST`UtilityDefinition
+    replaceUtilityDefinition(utilityDefinition, replacement) ==
+        mu(utilityDefinition,
+            expression
+            |-> replaceExpression(utilityDefinition.expression, replacement));
     
     replaceExpression : Expression * ReplacementMap -> Expression
     replaceExpression(expression, replacement) ==
@@ -231,6 +263,26 @@ functions
                     mk_AST`Power(replaceExpression(expr1, replacement), order),
                 mk_AST`Minus(expr) ->
                     mk_AST`Minus(replaceExpression(expr, replacement)),
+                mk_AST`UniformDistribution(expr1, expr2) ->
+                    mk_AST`UniformDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`NormalDistribution(expr1, expr2) ->
+                    mk_AST`NormalDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`GammaDistribution(expr1, expr2) ->
+                    mk_AST`GammaDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`LogLogisticDistribution(expr1, expr2) ->
+                    mk_AST`LogLogisticDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`DeUnitCasting(unit, expr) ->
+                    mk_AST`DeUnitCasting(unit, replaceExpression(expr, replacement)),
+                mk_AST`EnUnitCasting(expr, unit) ->
+                    mk_AST`EnUnitCasting(replaceExpression(expr, replacement), unit),
                 others -> expression
                 end;
     
@@ -257,7 +309,7 @@ functions
                         replaceExpression(expr1, replacement),
                         replaceExpression(expr2, replacement)),
                 mk_AST`Negation(cond) ->
-                    mk_AST`Negation(replace(cond, replacement)),
+                    mk_AST`Negation(replaceCondition(cond, replacement)),
                 mk_AST`Conjunction(conds) ->
                     mk_AST`Conjunction([replaceCondition(cond, replacement) | cond in seq conds]),
                 mk_AST`Disjunction(conds) ->
