@@ -19,6 +19,23 @@ values
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
 operations
+    evalAttributeDefinition : AST`AttributeDefinition ==> ()
+    evalAttributeDefinition(attributeDefinition) ==
+        let value = evalExpression(attributeDefinition.expression)
+        in
+            cases attributeDefinition.variable:
+                mk_AST`AssignableAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeVariable(agent, variable, value),
+                mk_AST`AssignableDeltaAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeDeltaVariable(agent, variable, value),
+                mk_AST`AssignableDifferentialAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeDeltaVariable(agent, variable, value  * deltaTime()),
+                others -> exit Context`UNRESOLVED_REFERENCE
+                end;
+    
     evalExpression : AST`Expression ==> real
     evalExpression(expr) ==
         return cases expr:

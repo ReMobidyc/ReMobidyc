@@ -8,7 +8,8 @@ imports
     from Interpreter all,
     from AST all,
     from Unit all,
-    from Random all
+    from Random all,
+    from Memory all
 exports all
 definitions
 values
@@ -39,6 +40,37 @@ values
             []);
 
 operations
+    testSetupInitializationContext : () ==> ()
+    testSetupInitializationContext() ==
+        (Context`setSimulationModel(exampleSimulationModel);
+        Memory`allocateWorld(0);
+        Memory`allocatePatches(1, 1, 0);
+        let
+            animat1 =
+                Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
+        in
+            (Context`setupInitializationContext(exampleAnimatA, animat1, 1);
+            assertEquals(animat1, 3, "the animat1 is allocated at 3");
+            assertEquals(
+                Context`getAttributeAddress(nil, "x"),
+                animat1 + 0,
+                "my x is allocated at the allocated address + 0.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "y"),
+                animat1 + 1,
+                "my y is allocated at the allocated address + 1.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "age"),
+                animat1 + 2,
+                "my age is allocated at the allocated address + 2.")));
+    
+    testAttributeAddresses : () ==> ()
+    testAttributeAddresses() ==
+        assertEquals(
+            Context`attributeAddresses(exampleAnimatA, 3),
+            {"x" |-> 3, "y" |-> 4, "age" |-> 5},
+            "attributes for animat definition");
+    
     testReadUtility : () ==> ()
     testReadUtility() ==
         (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));

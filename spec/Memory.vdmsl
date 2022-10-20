@@ -48,28 +48,34 @@ operations
         animatsStorage := [];
         ticks := 0);
     
-    allocateWorld : nat1 ==> ()
+    allocateWorld : nat ==> ()
     allocateWorld(size) ==
-        (patchBase := world + size;
-        xDivisions := nil;
-        yDivisions := nil)
+        let allocSize = if size = 0 then 1 else size
+        in
+            (patchBase := world + allocSize;
+            xDivisions := nil;
+            yDivisions := nil)
     pre  patchBase = nil;
     
-    allocatePatches : nat1 * nat1 * nat1 ==> ()
+    allocatePatches : nat1 * nat1 * nat ==> ()
     allocatePatches(xDivs, yDivs, size) ==
-        (xDivisions := xDivs;
-        yDivisions := yDivs;
-        nextAvailableSlot := patchBase + xDivs  * yDivs  * size)
+        let allocSize = if size = 0 then 1 else size
+        in
+            (xDivisions := xDivs;
+            yDivisions := yDivs;
+            nextAvailableSlot := patchBase + xDivs  * yDivs  * allocSize)
     pre 
         ((patchBase <> nil and nextAvailableSlot = nil) and xDivisions = nil)
         and yDivisions = nil;
     
-    allocateAnimat : AST`Identifier * nat1 ==> Address
+    allocateAnimat : AST`Identifier * nat ==> Address
     allocateAnimat(identifier, size) ==
-        let address : Address = nextAvailableSlot
+        let
+            address : Address = nextAvailableSlot,
+            allocSize = if size = 0 then 1 else size
         in
-            (nextAvailableSlot := nextAvailableSlot + size;
-            newBorns(address) := mk_(identifier, size);
+            (nextAvailableSlot := nextAvailableSlot + allocSize;
+            newBorns(address) := mk_(identifier, allocSize);
             return address)
     pre  nextAvailableSlot <> nil;
     

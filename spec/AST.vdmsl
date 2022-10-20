@@ -1,4 +1,5 @@
 module AST
+imports from Unit all
 exports all
 definitions
 types
@@ -162,6 +163,33 @@ values
      deltaTimeDirective = <delta_time>;
      directionOfGradientDirective = <direction_of_gradient>;
 
+values
+     emptySimulationModel : AST`SimulationModel =
+        mk_AST`SimulationModel(
+            emptySimulationDefinition,
+            {|->},
+            emptyWorldDefinition,
+            emptyPatchDefinition,
+            {|->},
+            []);
+     emptySimulationDefinition : AST`SimulationDefinition =
+        mk_AST`SimulationDefinition(
+            emptySimulationTimeDefinition,
+            emptyWorldInitializer,
+            emptyPatchInitializer,
+            []);
+     emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
+        mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
+     emptyWorldDefinition : AST`WorldDefinition =
+        mk_AST`WorldDefinition([]);
+     emptyPatchDefinition : AST`PatchDefinition =
+        mk_AST`PatchDefinition([]);
+     emptyWorldInitializer : AST`WorldInitializer =
+        mk_AST`WorldInitializer([]);
+     emptyPatchInitializer : AST`PatchInitializer =
+        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), []);
+     AGENT_NEW = "new";
+
 types
      ReplacementMap =
         map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
@@ -171,6 +199,11 @@ types
         UtilityDefinition| AssignableVariable;
 
 functions
+    sizeOfAgent : AST`AgentDefinition -> nat
+    sizeOfAgent(agentDefinition) ==
+        len agentDefinition.attributeDeclarations
+        + (if is_(agentDefinition, AST`AnimatDefinition) then 2 else 0);
+    
     replaceActionDefinition : AST`ActionDefinition * ReplacementMap -> AST`ActionDefinition
     replaceActionDefinition(actionDefinition, replacement) ==
         mu(actionDefinition,

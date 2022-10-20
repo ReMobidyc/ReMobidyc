@@ -7,37 +7,12 @@ imports
 exports all
 definitions
 values
-     emptySimulationModel : AST`SimulationModel =
-        mk_AST`SimulationModel(
-            emptySimulationDefinition,
-            {|->},
-            emptyWorldDefinition,
-            emptyPatchDefinition,
-            {|->},
-            []);
-     emptySimulationDefinition : AST`SimulationDefinition =
-        mk_AST`SimulationDefinition(
-            emptySimulationTimeDefinition,
-            emptyWorldInitializer,
-            emptyPatchInitializer,
-            []);
-     emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
-        mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
-     emptyWorldDefinition : AST`WorldDefinition =
-        mk_AST`WorldDefinition([]);
-     emptyPatchDefinition : AST`PatchDefinition =
-        mk_AST`PatchDefinition([]);
-     emptyWorldInitializer : AST`WorldInitializer =
-        mk_AST`WorldInitializer([]);
-     emptyPatchInitializer : AST`PatchInitializer =
-        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), []);
-     AGENT_NEW = "new";
      UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
      X_ATTRIBUTE_NAME = "x";
      Y_ATTRIBUTE_NAME = "y";
 
 state Context of
-    simulationModel : [AST`SimulationModel]
+    simulationModel : AST`SimulationModel
     attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
     utilities : map AST`Identifier to real
     utilityDefinitions : map AST`Identifier to AST`Expression
@@ -46,7 +21,14 @@ state Context of
     randomSeed : nat1
 init s ==
     s
-    = mk_Context(nil, {|->}, {|->}, {|->}, nil, mk_Random`RandomGenerator(1), 1)
+    = mk_Context(
+        AST`emptySimulationModel,
+        {|->},
+        {|->},
+        {|->},
+        nil,
+        mk_Random`RandomGenerator(1),
+        1)
 end
 
 operations
@@ -60,6 +42,14 @@ operations
     [Memory`Address] ==> ()
     setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
         is not yet specified;
+    
+    setupInitializationContext : AST`AgentDefinition * Memory`Address * nat1 ==> ()
+    setupInitializationContext(subjectDefinition, subject, seed) ==
+        (attributes
+            := {nil |-> attributeAddresses(subjectDefinition, subject)};
+        utilities := {|->};
+        utilityDefinitions := {|->};
+        random := mk_Random`RandomGenerator(seed));
     
     setupActionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
     nat1 ==> ()
@@ -76,6 +66,9 @@ operations
         in
             (attributes
                 := {nil |-> myAttributeAddresses,
+                "world"
+                |-> attributeAddresses(
+                    simulationModel.worldDefinition, Memory`getWorld()),
                 "here"
                 |-> attributeAddresses(
                     simulationModel.patchDefinition,
@@ -138,9 +131,6 @@ operations
     setUtilityDefinition : AST`Identifier * AST`Expression ==> ()
     setUtilityDefinition(identifier, expression) ==
         utilityDefinitions(identifier) := expression;
-    
-    getAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
-    getAddress(agent, identifier) == return 1;
     
     getAttributeAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
     getAttributeAddress(agent, identifier) ==

@@ -35,6 +35,52 @@ values
         mk_AST`Equality([expression3, expression3]);
 
 operations
+    testSizeOfAgent_World : () ==> ()
+    testSizeOfAgent_World() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`WorldDefinition([])),
+            0,
+            "size of the empty world.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`WorldDefinition(
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+            3,
+            "size of World with 3 attributes is 3."));
+    
+    testSizeOfAgent_Patch : () ==> ()
+    testSizeOfAgent_Patch() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`PatchDefinition([])),
+            0,
+            "size of the empty patch.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`PatchDefinition(
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+            3,
+            "size of Patch with 3 attributes is 3."));
+    
+    testSizeOfAgent_Animat : () ==> ()
+    testSizeOfAgent_Animat() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`AnimatDefinition("Stage", "Species", [])),
+            2,
+            "size of the empty animat is 2 including x and y.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`AnimatDefinition(
+                    "Stage",
+                    "Species",
+                    [mk_AST`AttributeDeclaration("heading", Unit`degree),
+                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s))])),
+            4,
+            "size of Animat with 2 attributes is 4 including x and y."));
+    
     testReplaceExpression_Placeholder : () ==> ()
     testReplaceExpression_Placeholder() ==
         (assertEquals(
