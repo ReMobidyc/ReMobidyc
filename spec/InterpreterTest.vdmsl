@@ -43,7 +43,7 @@ operations
     testEval_Literal : () ==> ()
     testEval_Literal() ==
         assertApproxEquals(
-            Interpreter`eval(mk_AST`Literal(65, Unit`mph)),
+            Interpreter`evalExpression(mk_AST`Literal(65, Unit`mph)),
             29.0576,
             1.0e-16,
             "65 [mph] ->  29.0576 [m/s]");
@@ -51,7 +51,7 @@ operations
     testEval_Addition : () ==> ()
     testEval_Addition() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Addition(
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension))),
@@ -62,7 +62,7 @@ operations
     testEval_Subtraction : () ==> ()
     testEval_Subtraction() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Subtraction(
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension))),
@@ -73,7 +73,7 @@ operations
     testEval_Product : () ==> ()
     testEval_Product() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Product(
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(3, Unit`nodimension))),
@@ -84,7 +84,7 @@ operations
     testEval_Fraction : () ==> ()
     testEval_Fraction() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Fraction(
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(4, Unit`nodimension))),
@@ -95,7 +95,7 @@ operations
     testEval_Power : () ==> ()
     testEval_Power() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Power(mk_AST`Literal(2, Unit`nodimension), 3)),
             8,
             1.0e-16,
@@ -104,7 +104,8 @@ operations
     testEval_Minus : () ==> ()
     testEval_Minus() ==
         assertApproxEquals(
-            Interpreter`eval(mk_AST`Minus(mk_AST`Literal(2, Unit`nodimension))),
+            Interpreter`evalExpression(
+                mk_AST`Minus(mk_AST`Literal(2, Unit`nodimension))),
             -2,
             1.0e-16,
             "-(2) -> -2");
@@ -112,7 +113,7 @@ operations
     testEval_DeUnitCasting : () ==> ()
     testEval_DeUnitCasting() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`DeUnitCasting(Unit`kph, mk_AST`Literal(65, Unit`mph))),
             105,
             1.0,
@@ -121,7 +122,7 @@ operations
     testEval_EnUnitCasting : () ==> ()
     testEval_EnUnitCasting() ==
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`EnUnitCasting(mk_AST`Literal(65, Unit`nodimension), Unit`mph)),
             29.0576,
             1.0e-16,
@@ -130,7 +131,7 @@ operations
     testEval_UniformDistribution : () ==> ()
     testEval_UniformDistribution() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`UniformDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
                     mk_AST`Literal(50, Unit`nodimension))),
@@ -138,7 +139,7 @@ operations
             1.0e-8,
             "1st value from uniform distribution from 10 to 50");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`UniformDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
                     mk_AST`Literal(50, Unit`nodimension))),
@@ -149,7 +150,7 @@ operations
     testEval_NormalDistribution : () ==> ()
     testEval_NormalDistribution() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`NormalDistribution(
                     mk_AST`Literal(50, Unit`nodimension),
                     mk_AST`Literal(10, Unit`nodimension))),
@@ -157,7 +158,7 @@ operations
             1.0e-8,
             "1st value from normal distribution mean=50, sigma=10");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`NormalDistribution(
                     mk_AST`Literal(50, Unit`nodimension),
                     mk_AST`Literal(10, Unit`nodimension))),
@@ -168,7 +169,7 @@ operations
     testEval_GammaDistribution : () ==> ()
     testEval_GammaDistribution() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`GammaDistribution(
                     mk_AST`Literal(5, Unit`nodimension),
                     mk_AST`Literal(10, Unit`nodimension))),
@@ -176,7 +177,7 @@ operations
             1.0e-8,
             "1st value from gamma distribution shape=5 scale=10");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`GammaDistribution(
                     mk_AST`Literal(5, Unit`nodimension),
                     mk_AST`Literal(10, Unit`nodimension))),
@@ -187,7 +188,7 @@ operations
     testEval_LogLogisticDistribution : () ==> ()
     testEval_LogLogisticDistribution() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`LogLogisticDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
                     mk_AST`Literal(5, Unit`nodimension))),
@@ -195,7 +196,7 @@ operations
             1.0e-8,
             "1st value from log-logistic distribution scale=10 shape=5");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`LogLogisticDistribution(
                     mk_AST`Literal(10, Unit`nodimension),
                     mk_AST`Literal(5, Unit`nodimension))),
@@ -206,13 +207,13 @@ operations
     testEval_Apply_abs : () ==> ()
     testEval_Apply_abs() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("abs", [mk_AST`Literal(-5.0, Unit`nodimension)])),
             5.0,
             1.0e-16,
             "abs(-5.0) = 5.0");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("abs", [mk_AST`Literal(5.0, Unit`nodimension)])),
             5.0,
             1.0e-16,
@@ -221,7 +222,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "abs",
                             [mk_AST`Literal(-5.0, Unit`nodimension),
@@ -231,13 +232,13 @@ operations
     testEval_Apply_cos : () ==> ()
     testEval_Apply_cos() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("cos", [mk_AST`Literal(90, Unit`degree)])),
             0.0,
             1.0e-16,
             "cos(pi/2) = 0");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("cos", [mk_AST`Literal(180, Unit`degree)])),
             -1.0,
             1.0e-16,
@@ -246,7 +247,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "cos",
                             [mk_AST`Literal(90, Unit`degree), mk_AST`Literal(180, Unit`degree)]))
@@ -255,13 +256,13 @@ operations
     testEval_Apply_exp : () ==> ()
     testEval_Apply_exp() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("exp", [mk_AST`Literal(0, Unit`nodimension)])),
             1.0,
             1.0e-16,
             "exp(0) = 1");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("exp", [mk_AST`Literal(3, Unit`nodimension)])),
             2.71828 ** 3,
             1.0e-4,
@@ -270,7 +271,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "exp",
                             [mk_AST`Literal(0, Unit`nodimension),
@@ -280,13 +281,13 @@ operations
     testEval_Apply_ln : () ==> ()
     testEval_Apply_ln() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("ln", [mk_AST`Literal(1, Unit`nodimension)])),
             0.0,
             1.0e-16,
             "ln(1) = 0");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("ln", [mk_AST`Literal(2.71818, Unit`nodimension)])),
             1.0,
             1.0e-4,
@@ -295,7 +296,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "ln",
                             [mk_AST`Literal(1, Unit`nodimension),
@@ -305,7 +306,7 @@ operations
     testEval_Apply_max : () ==> ()
     testEval_Apply_max() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "max",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -314,7 +315,7 @@ operations
             1.0e-16,
             "max(1, -2) = 1");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "max",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -328,7 +329,7 @@ operations
     testEval_Apply_min : () ==> ()
     testEval_Apply_min() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "min",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -337,7 +338,7 @@ operations
             1.0e-16,
             "min(1, -2) = -2");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "min",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -351,7 +352,7 @@ operations
     testEval_Apply_mean : () ==> ()
     testEval_Apply_mean() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "mean",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -360,7 +361,7 @@ operations
             1.0e-16,
             "mean(1, -2) = -0.5");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "mean",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -374,13 +375,13 @@ operations
     testEval_Apply_positive : () ==> ()
     testEval_Apply_positive() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("positive", [mk_AST`Literal(-5.0, Unit`nodimension)])),
             0.0,
             1.0e-16,
             "positive(-5.0) = 0");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("positive", [mk_AST`Literal(5.0, Unit`nodimension)])),
             5.0,
             1.0e-16,
@@ -389,7 +390,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "positive",
                             [mk_AST`Literal(-5.0, Unit`nodimension),
@@ -399,7 +400,7 @@ operations
     testEval_Apply_power : () ==> ()
     testEval_Apply_power() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "power",
                     [mk_AST`Literal(2, Unit`nodimension),
@@ -408,7 +409,7 @@ operations
             1.0e-16,
             "pow(2, 3) = 8");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "power",
                     [mk_AST`Literal(2, Unit`nodimension),
@@ -420,14 +421,14 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply("power", [mk_AST`Literal(1, Unit`nodimension)]))
             in exit "positive takes exactly two arguments.";
         trap (Interpreter`NUM_ARGS_ERROR) with skip
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "power",
                             [mk_AST`Literal(2, Unit`nodimension),
@@ -438,13 +439,13 @@ operations
     testEval_Apply_sin : () ==> ()
     testEval_Apply_sin() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("sin", [mk_AST`Literal(90, Unit`degree)])),
             1.0,
             1.0e-12,
             "sin(pi/2) = 1");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("sin", [mk_AST`Literal(180, Unit`degree)])),
             0.0,
             1.0e-12,
@@ -453,7 +454,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "sin",
                             [mk_AST`Literal(90, Unit`degree), mk_AST`Literal(180, Unit`degree)]))
@@ -462,7 +463,7 @@ operations
     testEval_Apply_sqrt : () ==> ()
     testEval_Apply_sqrt() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply("sqrt", [mk_AST`Literal(2, Unit`nodimension)])),
             1.41421356,
             1.0e-8,
@@ -471,7 +472,7 @@ operations
         in
             let
                 - =
-                    Interpreter`eval(
+                    Interpreter`evalExpression(
                         mk_AST`Apply(
                             "sqrt",
                             [mk_AST`Literal(1, Unit`nodimension),
@@ -481,7 +482,7 @@ operations
     testEval_Apply_sum : () ==> ()
     testEval_Apply_sum() ==
         (assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "sum",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -490,7 +491,7 @@ operations
             1.0e-16,
             "sum(1, -2) = -1");
         assertApproxEquals(
-            Interpreter`eval(
+            Interpreter`evalExpression(
                 mk_AST`Apply(
                     "sum",
                     [mk_AST`Literal(1, Unit`nodimension),
@@ -505,13 +506,13 @@ operations
     testEval_UtilityVariable() ==
         (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertApproxEquals(
-            Interpreter`eval(mk_AST`UtilityVariable("x")),
+            Interpreter`evalExpression(mk_AST`UtilityVariable("x")),
             1.0,
             1.0e-16,
             "compute and read the utility variable");
         Context`writeUtility("x", 10);
         assertEquals(
-            Interpreter`eval(mk_AST`UtilityVariable("x")),
+            Interpreter`evalExpression(mk_AST`UtilityVariable("x")),
             10,
             "read a cached value of the utility variable"));
 
@@ -519,157 +520,157 @@ operations
         NotEqual| Negation| Conjunction| Disjunction| Placeholder;
 */
     
-    testEvalCond_Equality : () ==> ()
-    testEvalCond_Equality() ==
+    testevalCondition_Equality : () ==> ()
+    testevalCondition_Equality() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`Equality(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "1 = 1 is true");
         assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`Equality(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "1 = 1 = 1 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`Equality(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "1 = 1 = 2 is false"));
     
-    testEvalCond_GreaterOrEqual : () ==> ()
-    testEvalCond_GreaterOrEqual() ==
+    testevalCondition_GreaterOrEqual : () ==> ()
+    testevalCondition_GreaterOrEqual() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`GreaterOrEqual(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "2 >= 1 is true");
         assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`GreaterOrEqual(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "2 >= 1 >= 1 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`GreaterOrEqual(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "2 >= 1 >= 2 is false"));
     
-    testEvalCond_GreaterThan : () ==> ()
-    testEvalCond_GreaterThan() ==
+    testevalCondition_GreaterThan : () ==> ()
+    testevalCondition_GreaterThan() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`GreaterThan(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "2 > 1 is true");
         assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`GreaterThan(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(0, Unit`nodimension)])),
             "2 > 1 > 0 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`GreaterThan(
                     [mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "2 > 1 > 1 is false"));
     
-    testEvalCond_LessOrEqual : () ==> ()
-    testEvalCond_LessOrEqual() ==
+    testevalCondition_LessOrEqual : () ==> ()
+    testevalCondition_LessOrEqual() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`LessOrEqual(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "1 <= 2 is true");
         assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`LessOrEqual(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "1 <= 2 <= 2 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`LessOrEqual(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension)])),
             "1 <= 2 <= 1 is false"));
     
-    testEvalCond_LessThan : () ==> ()
-    testEvalCond_LessThan() ==
+    testevalCondition_LessThan : () ==> ()
+    testevalCondition_LessThan() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`LessThan(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "1 < 2 is true");
         assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`LessThan(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(3, Unit`nodimension)])),
             "1 < 2 < 3 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`LessThan(
                     [mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension)])),
             "1 < 2 < 2 is false"));
     
-    testEvalCond_NotEqual : () ==> ()
-    testEvalCond_NotEqual() ==
+    testevalCondition_NotEqual : () ==> ()
+    testevalCondition_NotEqual() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`NotEqual(
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension))),
             "1 /= 2 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`NotEqual(
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(1, Unit`nodimension))),
             "1 /= 1 is false"));
     
-    testEvalCond_Negation : () ==> ()
-    testEvalCond_Negation() ==
+    testevalCondition_Negation : () ==> ()
+    testevalCondition_Negation() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`Negation(
                     mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),
                         mk_AST`Literal(2, Unit`nodimension)]))),
             "not 1 = 2 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`Negation(
                     mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),
                         mk_AST`Literal(1, Unit`nodimension)]))),
             "not 1 = 1 is false"));
     
-    testEvalCond_Conjunction : () ==> ()
-    testEvalCond_Conjunction() ==
+    testevalCondition_Conjunction : () ==> ()
+    testevalCondition_Conjunction() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`Conjunction(
                     [mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),
@@ -682,7 +683,7 @@ operations
                         mk_AST`Literal(3, Unit`nodimension)])])),
             "1=1 and 2=2 and 3=3 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`Conjunction(
                     [mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),
@@ -695,10 +696,10 @@ operations
                         mk_AST`Literal(4, Unit`nodimension)])])),
             "1=1 and 2=2 and 3=4 is false"));
     
-    testEvalCond_Disjunction : () ==> ()
-    testEvalCond_Disjunction() ==
+    testevalCondition_Disjunction : () ==> ()
+    testevalCondition_Disjunction() ==
         (assert(
-            Interpreter`evalCond(
+            Interpreter`evalCondition(
                 mk_AST`Disjunction(
                     [mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),
@@ -711,7 +712,7 @@ operations
                         mk_AST`Literal(4, Unit`nodimension)])])),
             "1=1 or 2=3 or 3=4 is true");
         assert(
-            not Interpreter`evalCond(
+            not Interpreter`evalCondition(
                 mk_AST`Disjunction(
                     [mk_AST`Equality(
                         [mk_AST`Literal(1, Unit`nodimension),

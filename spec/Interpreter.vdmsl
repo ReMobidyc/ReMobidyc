@@ -19,33 +19,45 @@ values
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
 operations
-    eval : AST`Expression ==> real
-    eval(expr) ==
+    evalExpression : AST`Expression ==> real
+    evalExpression(expr) ==
         return cases expr:
                 mk_AST`UtilityVariable(identifier) ->
                     let val = Context`readUtility(identifier)
                     in
-                        (if val <> nil then val else eval(Context`getUtilityDefinition(identifier))),
+                        (if
+                                val <> nil
+                            then
+                                val
+                            else
+                                evalExpression(Context`getUtilityDefinition(identifier))),
                 mk_AST`AttributeVariable(agent, identifier) ->
                     Memory`read(Context`getAttributeAddress(agent, identifier)),
                 mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
-                mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
-                mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
-                mk_AST`Product(expr1, expr2) -> eval(expr1)  * eval(expr2),
-                mk_AST`Fraction(expr1, expr2) -> eval(expr1) / eval(expr2),
-                mk_AST`Power(expr, order) -> pow(eval(expr), order),
-                mk_AST`Minus(expr) -> -eval(expr),
-                mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
-                mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr)),
+                mk_AST`Addition(expr1, expr2) ->
+                    evalExpression(expr1) + evalExpression(expr2),
+                mk_AST`Subtraction(expr1, expr2) ->
+                    evalExpression(expr1) - evalExpression(expr2),
+                mk_AST`Product(expr1, expr2) ->
+                    evalExpression(expr1)  * evalExpression(expr2),
+                mk_AST`Fraction(expr1, expr2) ->
+                    evalExpression(expr1) / evalExpression(expr2),
+                mk_AST`Power(expr, order) -> pow(evalExpression(expr), order),
+                mk_AST`Minus(expr) -> -evalExpression(expr),
+                mk_AST`DeUnitCasting(unit, expr) ->
+                    Unit`fromSI(unit, evalExpression(expr)),
+                mk_AST`EnUnitCasting(expr, unit) ->
+                    Unit`toSI(unit, evalExpression(expr)),
                 mk_AST`UniformDistribution(expr1, expr2) ->
-                    uniform(eval(expr1), eval(expr2)),
+                    uniform(evalExpression(expr1), evalExpression(expr2)),
                 mk_AST`NormalDistribution(mean, sigma) ->
-                    normal(eval(mean), eval(sigma)),
+                    normal(evalExpression(mean), evalExpression(sigma)),
                 mk_AST`GammaDistribution(shape, scale) ->
-                    gamma(eval(shape), eval(scale)),
+                    gamma(evalExpression(shape), evalExpression(scale)),
                 mk_AST`LogLogisticDistribution(scale, shape) ->
-                    logLogistic(eval(scale), eval(shape)),
-                mk_AST`Apply(func, args) -> apply(func, [eval(x) | x in seq args]),
+                    logLogistic(evalExpression(scale), evalExpression(shape)),
+                mk_AST`Apply(func, args) ->
+                    apply(func, [evalExpression(x) | x in seq args]),
                 mk_AST`AgentDirective(directive, agent) ->
                     cases directive:
                         <direction> -> directionOfAgent(agent),
@@ -59,41 +71,42 @@ operations
                         end,
                 mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
                     cases guardsAndExpressions:
-                        [] -> eval(defaultExpression),
+                        [] -> evalExpression(defaultExpression),
                         [mk_(guard, expr)]^rest ->
                             if
-                                evalCond(guard)
+                                evalCondition(guard)
                             then
-                                eval(guard)
+                                evalExpression(guard)
                             else
-                                eval(mk_AST`GuardedChoices(rest, defaultExpression))
+                                evalExpression(mk_AST`GuardedChoices(rest, defaultExpression))
                         end,
                 others -> undefined
                 end;
     
-    evalCond : AST`Condition ==> bool
-    evalCond(cond) ==
+    evalCondition : AST`Condition ==> bool
+    evalCondition(cond) ==
         return cases cond:
                 mk_AST`Equality(exprs) ->
-                    card {eval(expr) | expr in seq exprs} = 1,
+                    card {evalExpression(expr) | expr in seq exprs} = 1,
                 mk_AST`GreaterOrEqual(exprs) ->
                     forall i in set {1, ..., len exprs - 1} &
-                        eval(exprs(i)) >= eval(exprs(i + 1)),
+                        evalExpression(exprs(i)) >= evalExpression(exprs(i + 1)),
                 mk_AST`GreaterThan(exprs) ->
                     forall i in set {1, ..., len exprs - 1} &
-                        eval(exprs(i)) > eval(exprs(i + 1)),
+                        evalExpression(exprs(i)) > evalExpression(exprs(i + 1)),
                 mk_AST`LessOrEqual(exprs) ->
                     forall i in set {1, ..., len exprs - 1} &
-                        eval(exprs(i)) <= eval(exprs(i + 1)),
+                        evalExpression(exprs(i)) <= evalExpression(exprs(i + 1)),
                 mk_AST`LessThan(exprs) ->
                     forall i in set {1, ..., len exprs - 1} &
-                        eval(exprs(i)) < eval(exprs(i + 1)),
-                mk_AST`NotEqual(expr1, expr2) -> eval(expr1) <> eval(expr2),
-                mk_AST`Negation(cond) -> not evalCond(cond),
+                        evalExpression(exprs(i)) < evalExpression(exprs(i + 1)),
+                mk_AST`NotEqual(expr1, expr2) ->
+                    evalExpression(expr1) <> evalExpression(expr2),
+                mk_AST`Negation(cond) -> not evalCondition(cond),
                 mk_AST`Conjunction(conds) ->
-                    forall cond in seq conds & evalCond(cond),
+                    forall cond in seq conds & evalCondition(cond),
                 mk_AST`Disjunction(conds) ->
-                    exists cond in seq conds & evalCond(cond)
+                    exists cond in seq conds & evalCondition(cond)
                 end;
 
 operations
