@@ -18,7 +18,53 @@ definitions
 values
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
+state Interpreter of
+    globalSeed : nat1
+init s == s = mk_Interpreter(1)
+end
+
 operations
+    evalWorldInitializer : AST`WorldInitializer ==> ()
+    evalWorldInitializer(worldInitializer) ==
+        let worldDefinition = Context`getSimulationModel().worldDefinition
+        in
+            (Memory`allocateWorld(AST`sizeOfAgent(worldDefinition));
+            let world = Memory`getWorld()
+            in
+                (Context`setupInitializationContext(worldDefinition, world, Random`hash([globalSeed, world]));
+                for attributeInitializer in worldInitializer.attributeInitializers
+                do evalAttributeInitializer(attributeInitializer)));
+    
+    evalPatchInitializer : AST`PatchInitializer ==> ()
+    evalPatchInitializer(patchInitializer) ==
+        let
+            patchDefinition = Context`getSimulationModel().patchDefinition,
+            xDivisions = patchInitializer.xDivisions,
+            yDivisions = patchInitializer.yDivisions
+        in
+            (Memory`allocatePatches(xDivisions, yDivisions, AST`sizeOfAgent(patchDefinition));
+            for x = 0 to  xDivisions - 1
+            do
+                for y = 0 to  yDivisions - 1
+                do
+                    let patch = Memory`getPatch(x, y)
+                    in
+                        (Context`setupInitializationContext(patchDefinition, patch, Random`hash([globalSeed, patch]));
+                        for attributeInitializer in patchInitializer.attributeInitializers
+                        do evalAttributeInitializer(attributeInitializer)));
+    
+    evalAttributeInitializer : AST`AttributeInitializer ==> ()
+    evalAttributeInitializer(attributeInitializer) ==
+        writeVariable(
+            nil,
+            attributeInitializer.identifier,
+            evalExpression(attributeInitializer.expression));
+    
+    evalActionDefinition : AST`ActionDefinition ==> ()
+    evalActionDefinition(actionDefinition) ==
+        for attributeDefinition in actionDefinition.attributeDefinitions
+        do evalAttributeDefinition(attributeDefinition);
+    
     evalAttributeDefinition : AST`AttributeDefinition ==> ()
     evalAttributeDefinition(attributeDefinition) ==
         let value = evalExpression(attributeDefinition.expression)

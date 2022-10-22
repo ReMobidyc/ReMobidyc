@@ -58,11 +58,9 @@ operations
             myAttributeAddresses =
                 attributeAddresses(subjectDefinition, subject),
             normalizedX =
-                normalizeX(
-                    Memory`read(subject + myAttributeAddresses(X_ATTRIBUTE_NAME))),
+                normalizeX(Memory`read(myAttributeAddresses(X_ATTRIBUTE_NAME))),
             normalizedY =
-                normalizeY(
-                    Memory`read(subject + myAttributeAddresses(Y_ATTRIBUTE_NAME)))
+                normalizeY(Memory`read(myAttributeAddresses(Y_ATTRIBUTE_NAME)))
         in
             (attributes
                 := {nil |-> myAttributeAddresses,
