@@ -26,7 +26,7 @@ end
 operations
     evalWorldInitializer : AST`WorldInitializer ==> ()
     evalWorldInitializer(worldInitializer) ==
-        let worldDefinition = Context`getSimulationModel().worldDefinition
+        let worldDefinition = Context`getWorldDefinition()
         in
             (Memory`allocateWorld(AST`sizeOfAgent(worldDefinition));
             let world = Memory`getWorld()
@@ -38,7 +38,7 @@ operations
     evalPatchInitializer : AST`PatchInitializer ==> ()
     evalPatchInitializer(patchInitializer) ==
         let
-            patchDefinition = Context`getSimulationModel().patchDefinition,
+            patchDefinition = Context`getPatchDefinition(),
             xDivisions = patchInitializer.xDivisions,
             yDivisions = patchInitializer.yDivisions
         in
@@ -52,6 +52,26 @@ operations
                         (Context`setupInitializationContext(patchDefinition, patch, Random`hash([globalSeed, patch]));
                         for attributeInitializer in patchInitializer.attributeInitializers
                         do evalAttributeInitializer(attributeInitializer)));
+    
+    evalAnimatInitializer : AST`AnimatInitializer ==> ()
+    evalAnimatInitializer(animatInitializer) ==
+        let
+            animatName = animatInitializer.animat,
+            animatDefinition = Context`getAnimatDefinition(animatName)
+        in
+            for i = 1 to  animatInitializer.population
+            do
+                let
+                    animat =
+                        Memory`allocateAnimat(
+                            animatName, AST`sizeOfAgent(animatDefinition))
+                in
+                    (Context`setupInitializationContext(animatDefinition, animat, Random`hash([globalSeed, animat]));
+                    writeVariable(nil, "x", uniform(Context`worldWest(), Context`worldEast()));
+                    writeVariable(nil, "y", uniform(Context`worldSouth(), Context`worldNorth()));
+                    for attributeInitializer
+                    in animatInitializer.attributeInitializers
+                    do evalAttributeInitializer(attributeInitializer));
     
     evalAttributeInitializer : AST`AttributeInitializer ==> ()
     evalAttributeInitializer(attributeInitializer) ==

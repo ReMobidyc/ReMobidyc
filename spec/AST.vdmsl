@@ -5,7 +5,7 @@ definitions
 types
      SimulationModel ::
         simulationDefinition : AST`SimulationDefinition
-        animatDefinitions : map AST`Identifier to AST`AnimatDefinition
+        animatDefinitions : map AST`AgentIdentifier to AST`AnimatDefinition
         worldDefinition : AST`WorldDefinition
         patchDefinition : AST`PatchDefinition
         actionDefinitions : map AST`Identifier to AST`ActionDefinition

@@ -38,9 +38,9 @@ values
                 mk_AST`WorldInitializer(
                     [mk_AST`AttributeInitializer("temperature", mk_AST`Literal(30, Unit`℃))]),
                 mk_AST`PatchInitializer(
-                    1,
-                    1,
-                    mk_AST`Literal(1, Unit`m),
+                    10,
+                    10,
+                    mk_AST`Literal(0.1, Unit`m),
                     [mk_AST`AttributeInitializer("depth", mk_AST`Literal(10, Unit`m))]),
                 [mk_AST`AnimatInitializer(
                     "AnimatA",
@@ -67,6 +67,27 @@ operations
         Interpreter`evalPatchInitializer(exampleSimulationModel.simulationDefinition.patchInitializer);
         Memory`tick();
         assertEquals(Memory`read(Memory`getPatch(0, 0)), 10.0, "here's depth"));
+    
+    testEvalAnimatInitializer : () ==> ()
+    testEvalAnimatInitializer() ==
+        (Context`setSimulationModel(exampleSimulationModel);
+        Interpreter`evalWorldInitializer(exampleSimulationModel.simulationDefinition.worldInitializer);
+        Interpreter`evalPatchInitializer(exampleSimulationModel.simulationDefinition.patchInitializer);
+        Interpreter`evalAnimatInitializer(exampleSimulationModel.simulationDefinition.animatInitializers(1));
+        Memory`tick();
+        let animats = Memory`getAnimats("AnimatA")
+        in
+            (assertEquals(card animats, 3, "num AnimatA");
+            for all animat in set animats do
+                (let x = Memory`read(animat + 0)
+                in
+                    (assert(x >= 0, "my x >= 0");
+                    assert(x <= 1.0, "my x <= 1"));
+                let y = Memory`read(animat + 1)
+                in
+                    (assert(y >= 0, "my y >= 0");
+                    assert(y <= 1.0, "my y <= 1"));
+                assertEquals(Memory`read(animat + 2), 0, "my age"))));
     
     testEvalAttributeInitializer : () ==> ()
     testEvalAttributeInitializer() ==

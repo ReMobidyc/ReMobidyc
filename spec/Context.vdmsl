@@ -38,6 +38,23 @@ operations
     getSimulationModel : () ==> [AST`SimulationModel]
     getSimulationModel() == return simulationModel;
     
+    getWorldDefinition : () ==> AST`WorldDefinition
+    getWorldDefinition() == return simulationModel.worldDefinition;
+    
+    getPatchDefinition : () ==> AST`PatchDefinition
+    getPatchDefinition() == return simulationModel.patchDefinition;
+    
+    getAnimatDefinition : AST`AgentIdentifier ==> AST`AnimatDefinition
+    getAnimatDefinition(identifier) ==
+        let animatDefinitions = simulationModel.animatDefinitions
+        in
+            if
+                identifier in set dom animatDefinitions
+            then
+                return animatDefinitions(identifier)
+            else
+                exit UNRESOLVED_REFERENCE;
+    
     setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
     [Memory`Address] ==> ()
     setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
