@@ -18,6 +18,7 @@ RMDAnimatIconRendererPresenter class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   borderWidth: 5;
 				   spacing: 5;
+				   add: #animatLabel expand: false;
 				   add: #iconNameButton expand: false;
 				   add: #scaleField width: 100;
 				   add: 'x ' expand: false;
