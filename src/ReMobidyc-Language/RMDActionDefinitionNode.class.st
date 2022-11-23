@@ -212,6 +212,12 @@ RMDActionDefinitionNode >> lifeDirectives: anArrayOfRMDLifeDirective [
 ]
 
 { #category : #accessing }
+RMDActionDefinitionNode >> name [
+
+	^ identifier , (object ifNil: [ '' ] ifNotNil: [ ' ' , object ])
+]
+
+{ #category : #accessing }
 RMDActionDefinitionNode >> object [
 	^ object
 ]
