@@ -400,8 +400,9 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 
 { #category : #initialization }
 RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
+
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Task definition'.
+	aWindowPresenter title: self title.
 	aWindowPresenter initialExtent: 900 @ 600
 ]
 
@@ -465,7 +466,17 @@ RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 			actionList selectItem: (actionList items
 					 detect: [ :action | actionIdentifier = action identifier ]
 					 ifNone: [ nil ]) ] ].
-	self updateReplacementList
+	self
+		updateReplacementList;
+		updateTitle
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionBrowser >> title [
+
+	^ 'Task definition' , (self taskDefinition
+		   ifNil: [ '' ]
+		   ifNotNil: [ :task | ' of ' , task name ])
 ]
 
 { #category : #updating }
@@ -596,6 +607,12 @@ RMDTaskDefinitionBrowser >> updateTemplateText [
 		ifNotNil: [ :actionDefinition | 
 		templateText syntaxNode: actionDefinition ]
 		ifNil: [ templateText text: '' ]
+]
+
+{ #category : #updating }
+RMDTaskDefinitionBrowser >> updateTitle [
+
+	self window ifNotNil: [ :w | w title: self title ]
 ]
 
 { #category : #updating }
