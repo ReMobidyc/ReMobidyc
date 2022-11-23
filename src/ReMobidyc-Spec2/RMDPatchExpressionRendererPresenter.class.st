@@ -11,16 +11,6 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #api }
-RMDPatchExpressionRendererPresenter >> disableAgentFields [
-	
-]
-
-{ #category : #api }
-RMDPatchExpressionRendererPresenter >> enableAgentFields [
-	
-]
-
 { #category : #initialization }
 RMDPatchExpressionRendererPresenter >> initializePresenters [
 	super initializePresenters.

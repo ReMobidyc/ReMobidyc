@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'renderer',
-		'colorDropList'
+		'colorDropList',
+		'agentFieldEnabled'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -15,14 +16,21 @@ RMDRendererPresenter class >> on: aRMDRenderer [
 		yourself
 ]
 
-{ #category : #api }
+{ #category : #accessing }
 RMDRendererPresenter >> disableAgentFields [
-	^ self subclassResponsibility
+
+	agentFieldEnabled := false
 ]
 
-{ #category : #api }
+{ #category : #accessing }
 RMDRendererPresenter >> enableAgentFields [
-	^ self subclassResponsibility
+	agentFieldEnabled := true
+]
+
+{ #category : #initialization }
+RMDRendererPresenter >> initialize [
+	super initialize.
+	agentFieldEnabled := true
 ]
 
 { #category : #initialization }

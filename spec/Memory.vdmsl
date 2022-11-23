@@ -13,7 +13,11 @@ state Memory of
     vals : map Address to real
     next : map Address to real
     delta : map Address to real
-    nextAvailableSlot : Address
+    nextAvailableSlot : [Address]
+    world : Address
+    patchBase : [Address]
+    xDivisions : [nat1]
+    yDivisions : [nat1]
     animats : map Address to (AST`Identifier * nat1)
     newBorns : map Address to (AST`Identifier * nat1)
     deads : set of Address
@@ -21,7 +25,9 @@ state Memory of
     animatsStorage : seq of (map Address to (AST`Identifier * nat1))
     ticks : nat
 init s ==
-    s = mk_Memory({|->}, {|->}, {|->}, 1, {|->}, {|->}, {}, [], [], 0)
+    s
+    = mk_Memory(
+        {|->}, {|->}, {|->}, nil, 1, nil, nil, nil, {|->}, {|->}, {}, [], [], 0)
 end
 
 operations
@@ -30,7 +36,11 @@ operations
         (vals := {|->};
         next := {|->};
         delta := {|->};
-        nextAvailableSlot := 1;
+        nextAvailableSlot := nil;
+        world := 1;
+        patchBase := nil;
+        xDivisions := nil;
+        yDivisions := nil;
         animats := {|->};
         newBorns := {|->};
         deads := {};
@@ -38,18 +48,54 @@ operations
         animatsStorage := [];
         ticks := 0);
     
-    allocate : AST`Identifier * nat1 ==> Address
-    allocate(identifier, size) ==
-        let address : Address = nextAvailableSlot
+    allocateWorld : nat ==> ()
+    allocateWorld(size) ==
+        let allocSize = if size = 0 then 1 else size
         in
-            (nextAvailableSlot := nextAvailableSlot + size;
-            newBorns(address) := mk_(identifier, size);
-            return address);
+            (patchBase := world + allocSize;
+            xDivisions := nil;
+            yDivisions := nil)
+    pre  patchBase = nil;
     
-    deallocate : AST`Identifier * Address ==> ()
-    deallocate(identifier, address) == deads := deads union {address};
+    allocatePatches : nat1 * nat1 * nat ==> ()
+    allocatePatches(xDivs, yDivs, size) ==
+        let allocSize = if size = 0 then 1 else size
+        in
+            (xDivisions := xDivs;
+            yDivisions := yDivs;
+            nextAvailableSlot := patchBase + xDivs  * yDivs  * allocSize)
+    pre 
+        ((patchBase <> nil and nextAvailableSlot = nil) and xDivisions = nil)
+        and yDivisions = nil;
     
-    getAnimats : AST`Identifier ==> set of Address
+    allocateAnimat : AST`Identifier * nat ==> Address
+    allocateAnimat(identifier, size) ==
+        let
+            address : Address = nextAvailableSlot,
+            allocSize = if size = 0 then 1 else size
+        in
+            (nextAvailableSlot := nextAvailableSlot + allocSize;
+            newBorns(address) := mk_(identifier, allocSize);
+            return address)
+    pre  nextAvailableSlot <> nil;
+    
+    deallocateAnimat : AST`Identifier * Address ==> ()
+    deallocateAnimat(identifier, address) ==
+        deads := deads union {address};
+    
+    pure getWorld : () ==> Address
+    getWorld() == return world;
+    
+    pure getPatch : real * real ==> nat
+    getPatch(normalizedX, normalizedY) ==
+        return patchBase
+            + xDivisions  * within(floor normalizedY, 0, yDivisions - 1)
+            + within(floor normalizedX, 0, xDivisions - 1);
+    
+    pure getPatchBase : () ==> Address
+    getPatchBase() == return patchBase;
+    
+    pure getAnimats : AST`Identifier ==> set of Address
     getAnimats(animatName) ==
         return {a | a in set dom animats
                 & let mk_(n, -) = animats(a) in n = animatName};
@@ -105,5 +151,16 @@ operations
         deads := {};
         ticks := t)
     pre  t <= len valuesStorage and t <= len animatsStorage;
+
+functions
+    within : real * real * real -> real
+    within(x, min, max) ==
+        if x < min
+            then min
+        elseif x > max
+            then max
+        else
+            x
+    pre min <= max;
 
 end Memory

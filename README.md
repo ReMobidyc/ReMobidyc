@@ -4,17 +4,17 @@
 
 <img alt="logo" src="images/logo-light1.png" width=600>
 
-# re:mobidyc
-reːmobidyc (or ReMobidyc without an exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+# reːmobidyc
+reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
 
 ## Installation
 
-Re:mobidyc is implemented on the [Pharo](https://pharo.org/) system.
-There are three ways to install re:mobidyc.
+reːmobidyc is implemented on the [Pharo](https://pharo.org/) system.
+There are three ways to install reːmobidyc.
 
 ### 1. from command shell
 
-The following one-liner will download Pharo and install re:mobidyc.
+The following one-liner will download Pharo and install reːmobidyc.
 
 ```
 curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-remobidyc.sh | bash
@@ -22,8 +22,8 @@ curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-
 
 ### 2. from Pharo
 
-If you have the [Pharo](https://pharo.org/) installation, you can install re:mobidyc by evaluating the following expression.
-(Open a Playground by the Browse>>Playground menu in the menubar, then copy&paste the text below into the Playground. Select all the pasted text and select the "Do-it" in the right-click menu. After the system loads the latest re:mobidyc code, save the image by the Pharo>>Save menu in the menubar.)
+If you have the [Pharo](https://pharo.org/) installation, you can install reːmobidyc by evaluating the following expression.
+(Open a Playground by the Browse>>Playground menu in the menubar, then copy&paste the text below into the Playground. Select all the pasted text and select the "Do-it" in the right-click menu. After the system loads the latest reːmobidyc code, save the image by the Pharo>>Save menu in the menubar.)
 
 ```
 EpMonitor disableDuring: [
@@ -75,22 +75,22 @@ This example exhibits life stages of individuals.
 [A tutorial](Tutorials/Grasshoppers/Grasshoppers.md) to build this Grasshopper model is available.
 
 ## Background
-Re:Mobidyc is a variation of Mobidyc that inherits the design rationale
+reːMobidyc is a variation of Mobidyc that inherits the design rationale
 of Mobidyc.
-The objective of Re:Mobidyc is to renovate the original Mobidyc keeping
+The objective of reːMobidyc is to renovate the original Mobidyc keeping
 its design principles.
 The base system is changed from VisualWorks to Pharo.
 They are both Smalltalk systems, and Pharo is today's most actively
 developed/used open-source Smalltalk system.
 We will renovate the implementation of Mobidyc from its very basis to
 apply outcomes from computer science.
-The development of Re:Mobidyc is just beginning, and we will need time
+The development of reːMobidyc is just beginning, and we will need time
 to re-produce the functionality of the original Mobidyc.
 
 [1] [The original Mobidyc site](https://mobidyc.cnrs.fr/index.php?title=English_summary)
 
 ## Design Rationale
-As a tool for scientific research, ReːMobidyc will provide the following features
+As a tool for scientific research, reːMobidyc will provide the following features
 
 * Easy to model
   - A behavior of an agent will be defined in a declarative manner instead of series of commands, if-statements and loops.
@@ -102,7 +102,7 @@ As a tool for scientific research, ReːMobidyc will provide the following featur
   - A definition can have assertions that double-checks its behavior so that the user can be sure that the model is defined as intended.
 
 * Easy to reproduce
-  - ReːMobidyc will make all simulation reproduceable including randomized actions.
+  - reːMobidyc will make all simulation reproduceable including randomized actions.
 
 * Easy to verify output
   - States of agents at every step in simulation will be stored in persistent memory so that the user and reviewers can check its validity.
@@ -114,22 +114,22 @@ As a tool for scientific research, ReːMobidyc will provide the following featur
   - The user can publish her/his model along with input/intermediate/output data and visualized images as an evidence in scientific research.
 
 * Easy to implement
-  - ReːMobidyc will define its own modeling language in formal specification language so that its execution engine can be implemneted by third persons with complete compatibility.
+  - reːMobidyc will define its own modeling language in formal specification language so that its execution engine can be implemneted by third persons with complete compatibility.
 
 ## Architectural design
-To achieve the objectives above, ReːMobidyc will have the following major components.
+To achieve the objectives above, reːMobidyc will have the following major components.
 
 * Persistent storage
-  - ReːMobidyc will use persistent storages, such as file systems and RDBs, to store models, states of agents at all simulation steps, input data and output data.
+  - reːMobidyc will use persistent storages, such as file systems and RDBs, to store models, states of agents at all simulation steps, input data and output data.
 
 * Reproducible random numbers
-  - ReːMobidyc will have its own random number generator and make its code open so that all actions taken in a simulation can be accurately reproduceable.
+  - reːMobidyc will have its own random number generator and make its code open so that all actions taken in a simulation can be accurately reproduceable.
 
 * Web servers and APIs
-  - ReːMobidyc will have web-based UI so that models can be shared by research communities.
-  - ReːMobidyc will provide web API to retrieve models and simulation data so that anyone can create specialized native applications.
+  - reːMobidyc will have web-based UI so that models can be shared by research communities.
+  - reːMobidyc will provide web API to retrieve models and simulation data so that anyone can create specialized native applications.
 
 ## Organizational Contributors
-The re:mobidyc project is supported by [DGtal Aqua Lab, Shizuoka University](https://wwp.shizuoka.ac.jp/dgtalaqualab/) and [Software Research Associates, Inc.](https://www.sra.co.jp/en/)
+The reːmobidyc project is supported by [DGtal Aqua Lab, Shizuoka University](https://wwp.shizuoka.ac.jp/dgtalaqualab/) and [Software Research Associates, Inc.](https://www.sra.co.jp/en/)
 
 [![DGtal Aqua Lab](images/DGTALAQUALAB-logo.png)](https://wwp.shizuoka.ac.jp/dgtalaqualab/)　　[![SRA logo](images/SRA-logo-large.png)](https://www.sra.co.jp/en/)

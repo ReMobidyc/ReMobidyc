@@ -16,5 +16,16 @@ functions
     next : Random`RandomGenerator -> Random`RandomGenerator
     next(mk_Random`RandomGenerator(seed)) ==
         mk_Random`RandomGenerator(seed  * factor mod modulo);
+    
+    hash : seq1 of nat1 -> nat1
+    hash(seeds) ==
+        let
+            calcSeed : nat1 * seq of nat1 -> nat1
+            calcSeed(x, ys) ==
+                cases ys:
+                    [z]^zs -> calcSeed((x + z)  * factor mod modulo, zs),
+                    others -> x  * factor mod modulo
+                    end
+        in calcSeed(hd seeds, tl seeds);
 
 end Random

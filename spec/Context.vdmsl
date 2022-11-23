@@ -1,0 +1,215 @@
+module Context
+imports
+    from AST all,
+    from Unit all,
+    from Memory all,
+    from Random all
+exports all
+definitions
+values
+     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
+     X_ATTRIBUTE_NAME = "x";
+     Y_ATTRIBUTE_NAME = "y";
+
+state Context of
+    simulationModel : AST`SimulationModel
+    attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
+    utilities : map AST`Identifier to real
+    utilityDefinitions : map AST`Identifier to AST`Expression
+    action : [AST`ActionDefinition]
+    random : Random`RandomGenerator
+    randomSeed : nat1
+init s ==
+    s
+    = mk_Context(
+        AST`emptySimulationModel,
+        {|->},
+        {|->},
+        {|->},
+        nil,
+        mk_Random`RandomGenerator(1),
+        1)
+end
+
+operations
+    setSimulationModel : AST`SimulationModel ==> ()
+    setSimulationModel(model) == simulationModel := model;
+    
+    getSimulationModel : () ==> [AST`SimulationModel]
+    getSimulationModel() == return simulationModel;
+    
+    getWorldDefinition : () ==> AST`WorldDefinition
+    getWorldDefinition() == return simulationModel.worldDefinition;
+    
+    getPatchDefinition : () ==> AST`PatchDefinition
+    getPatchDefinition() == return simulationModel.patchDefinition;
+    
+    getAnimatDefinition : AST`AgentIdentifier ==> AST`AnimatDefinition
+    getAnimatDefinition(identifier) ==
+        let animatDefinitions = simulationModel.animatDefinitions
+        in
+            if
+                identifier in set dom animatDefinitions
+            then
+                return animatDefinitions(identifier)
+            else
+                exit UNRESOLVED_REFERENCE;
+    
+    setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
+    [Memory`Address] ==> ()
+    setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
+        is not yet specified;
+    
+    setupInitializationContext : AST`AgentDefinition * Memory`Address * nat1 ==> ()
+    setupInitializationContext(subjectDefinition, subject, seed) ==
+        (attributes
+            := {nil |-> attributeAddresses(subjectDefinition, subject)};
+        utilities := {|->};
+        utilityDefinitions := {|->};
+        random := mk_Random`RandomGenerator(seed));
+    
+    setupActionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
+    nat1 ==> ()
+    setupActionContextSV(actionDefinition, subjectDefinition, subject, seed) ==
+        let
+            myAttributeAddresses =
+                attributeAddresses(subjectDefinition, subject),
+            normalizedX =
+                normalizeX(Memory`read(myAttributeAddresses(X_ATTRIBUTE_NAME))),
+            normalizedY =
+                normalizeY(Memory`read(myAttributeAddresses(Y_ATTRIBUTE_NAME)))
+        in
+            (attributes
+                := {nil |-> myAttributeAddresses,
+                "world"
+                |-> attributeAddresses(
+                    simulationModel.worldDefinition, Memory`getWorld()),
+                "here"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY)),
+                "south"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY - 1)),
+                "north"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX, normalizedY + 1)),
+                "west"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX - 1, normalizedY)),
+                "east"
+                |-> attributeAddresses(
+                    simulationModel.patchDefinition,
+                    Memory`getPatch(normalizedX + 1, normalizedY))};
+            utilities := {|->};
+            utilityDefinitions
+                := {attrDef.identifier |-> attrDef.expression
+                | attrDef in seq actionDefinition.utilityDefinitions};
+            action := actionDefinition;
+            random := mk_Random`RandomGenerator(seed));
+    
+    pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
+    attributeAddresses(agentDefinition, animat) ==
+        return let
+                attributes : seq of AST`Identifier =
+                    (if
+                            is_AST`AnimatDefinition(agentDefinition)
+                        then
+                            [X_ATTRIBUTE_NAME, Y_ATTRIBUTE_NAME]
+                        else
+                            [])
+                    ^ [decl.identifier
+                        | decl in seq agentDefinition.attributeDeclarations]
+            in
+                {attributes(offset) |-> animat + offset - 1
+                | offset in set inds attributes};
+    
+    pure readUtility : AST`Identifier ==> [real]
+    readUtility(identifier) ==
+        return if identifier in set dom utilities then utilities(identifier) else nil;
+    
+    writeUtility : AST`Identifier * real ==> ()
+    writeUtility(identifier, val) == utilities(identifier) := val;
+    
+    pure getUtilityDefinition : AST`Identifier ==> AST`Expression
+    getUtilityDefinition(identifier) ==
+        if
+            identifier in set dom utilityDefinitions
+        then
+            return utilityDefinitions(identifier)
+        else
+            exit UNRESOLVED_REFERENCE;
+    
+    setUtilityDefinition : AST`Identifier * AST`Expression ==> ()
+    setUtilityDefinition(identifier, expression) ==
+        utilityDefinitions(identifier) := expression;
+    
+    getAttributeAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
+    getAttributeAddress(agent, identifier) ==
+        if
+            agent in set dom attributes
+        then
+            let attr = attributes(agent)
+            in
+                (if
+                    identifier in set dom attr
+                then
+                    return attr(identifier)
+                else
+                    exit UNRESOLVED_REFERENCE)
+        else
+            exit UNRESOLVED_REFERENCE;
+    
+    nextRandom : () ==> real
+    nextRandom() ==
+        (random := Random`next(random);
+        return Random`value(random))
+    post  RESULT >= 0 and RESULT <= 1;
+    
+    pure simulationTime : () ==> real
+    simulationTime() == return Memory`getTime()  * deltaTime();
+    
+    pure deltaTime : () ==> real
+    deltaTime() ==
+        let
+            timestepLiteral =
+                simulationModel.simulationDefinition.timeDefinition.timeStep
+        in return Unit`toSI(timestepLiteral.unit, timestepLiteral.val);
+    
+    pure patchXDivisions : () ==> nat1
+    patchXDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.xDivisions;
+    
+    pure patchYDivisions : () ==> nat1
+    patchYDivisions() ==
+        return simulationModel.simulationDefinition.patchInitializer.yDivisions;
+    
+    pure patchLength : () ==> real
+    patchLength() ==
+        let
+            sizeLiteral =
+                simulationModel.simulationDefinition.patchInitializer.size
+        in return Unit`toSI(sizeLiteral.unit, sizeLiteral.val);
+    
+    pure worldWest : () ==> real
+    worldWest() == return 0;
+    
+    pure worldEast : () ==> real
+    worldEast() == return patchXDivisions()  * patchLength();
+    
+    pure worldSouth : () ==> real
+    worldSouth() == return 0;
+    
+    pure worldNorth : () ==> real
+    worldNorth() == return patchYDivisions()  * patchLength();
+    
+    pure normalizeX : real ==> real
+    normalizeX(x) == return (x - worldWest()) / patchLength();
+    
+    pure normalizeY : real ==> real
+    normalizeY(y) == return (y - worldSouth()) / patchLength();
+
+end Context

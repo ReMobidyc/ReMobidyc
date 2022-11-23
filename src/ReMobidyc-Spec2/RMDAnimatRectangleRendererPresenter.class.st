@@ -6,16 +6,17 @@ Class {
 
 { #category : #specs }
 RMDAnimatRectangleRendererPresenter class >> defaultLayout [
+
 	<spec>
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				borderWidth: 5;
-				spacing: 5;
-				add: #colorDropList width: 60;
-				add: ' rectangle of ' expand: false;
-				add: #shapeSizeField width: 40;
-				add: ' pixels' expand: false;
-				yourself)
-		height: self inputTextHeight
+		  add: (SpBoxLayout newHorizontal
+				   borderWidth: 5;
+				   spacing: 5;
+				   add: #animatLabel expand: false;
+				   add: #colorDropList width: 60;
+				   add: ' rectangle of ' expand: false;
+				   add: #shapeSizeField width: 40;
+				   add: ' pixels' expand: false;
+				   yourself)
+		  height: self inputTextHeight
 ]

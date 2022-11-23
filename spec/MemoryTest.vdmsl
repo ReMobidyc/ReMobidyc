@@ -14,15 +14,17 @@ operations
         (Memory`reset();
         assertEquals(Memory`getTime(), 0, "time reset to 0"));
     
-    testAllocate : () ==> ()
-    testAllocate() ==
+    testAllocateAnimat : () ==> ()
+    testAllocateAnimat() ==
         (Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
         assertEquals(Memory`getAnimats("B"), {}, "no animat at the beginning");
         let
-            a1 = Memory`allocate("A", 4),
-            b1 = Memory`allocate("B", 2),
-            a2 = Memory`allocate("A", 4)
+            a1 = Memory`allocateAnimat("A", 4),
+            b1 = Memory`allocateAnimat("B", 2),
+            a2 = Memory`allocateAnimat("A", 4)
         in
             (assertEquals(
                 Memory`getAnimats("A"),
@@ -42,19 +44,21 @@ operations
                 {b1},
                 "the allocated animat should be registered at this time.")));
     
-    testDeallocate : () ==> ()
-    testDeallocate() ==
+    testDeallocateAnimat : () ==> ()
+    testDeallocateAnimat() ==
         (Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         let
-            a1 = Memory`allocate("A", 4),
-            b1 = Memory`allocate("B", 2),
-            a2 = Memory`allocate("A", 4)
+            a1 = Memory`allocateAnimat("A", 4),
+            b1 = Memory`allocateAnimat("B", 2),
+            a2 = Memory`allocateAnimat("A", 4)
         in
             (Memory`tick();
             assertEquals(Memory`getAnimats("A"), {a1, a2}, "two animats A allocated");
             assertEquals(Memory`getAnimats("B"), {b1}, "one animat B allocated");
-            Memory`deallocate("A", a1);
-            Memory`deallocate("B", b1);
+            Memory`deallocateAnimat("A", a1);
+            Memory`deallocateAnimat("B", b1);
             assertEquals(
                 Memory`getAnimats("A"),
                 {a1, a2},
@@ -76,8 +80,10 @@ operations
     testGetAnimats : () ==> ()
     testGetAnimats() ==
         (Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         assertEquals(Memory`getAnimats("A"), {}, "no animat at the beginning");
-        let a1 = Memory`allocate("A", 4)
+        let a1 = Memory`allocateAnimat("A", 4)
         in
             (Memory`tick();
             assertEquals(
@@ -143,12 +149,14 @@ operations
     testSetTime() ==
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
-        a1 := Memory`allocate("A", 2);
+        a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");
         Memory`tick();
         Memory`write(1, 20);
-        a2 := Memory`allocate("A", 2);
+        a2 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 1, "one tick");
         Memory`tick();
         assertEquals(Memory`getTime(), 2, "two ticks");
@@ -173,14 +181,16 @@ operations
     testTick() ==
         (dcl a1:[Memory`Address] := nil;
         Memory`reset();
-        a1 := Memory`allocate("A", 1);
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
+        a1 := Memory`allocateAnimat("A", 1);
         Memory`write(a1, 10);
         Memory`tick();
         assertEquals(Memory`getAnimats("A"), {a1}, "a1 is allocated.");
         assertEquals(Memory`read(a1), 10, "the first slot of a1 is set to 10");
         assertEquals(Memory`getTime(), 1, "t = 1 after one tick.");
         Memory`write(a1, 20);
-        Memory`deallocate("A", a1);
+        Memory`deallocateAnimat("A", a1);
         assertEquals(Memory`read(a1), 10, "the first slot of a1 is still set to 20");
         Memory`tick();
         assertEquals(Memory`getTime(), 2, "t = 2 after two ticks.");
@@ -192,12 +202,14 @@ operations
     testLoad() ==
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
-        a1 := Memory`allocate("A", 2);
+        a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");
         Memory`tick();
         Memory`write(1, 20);
-        a2 := Memory`allocate("A", 2);
+        a2 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 1, "one tick");
         Memory`tick();
         assertEquals(Memory`getTime(), 2, "two ticks");
@@ -212,12 +224,14 @@ operations
     testStore() ==
         (dcl a1:[Memory`Address] := nil, a2:[Memory`Address] := nil;
         Memory`reset();
+        Memory`allocateWorld(1);
+        Memory`allocatePatches(1, 1, 1);
         Memory`write(1, 10);
-        a1 := Memory`allocate("A", 2);
+        a1 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 0, "reset to zero");
         Memory`tick();
         Memory`write(1, 20);
-        a2 := Memory`allocate("A", 2);
+        a2 := Memory`allocateAnimat("A", 2);
         assertEquals(Memory`getTime(), 1, "one tick");
         Memory`store();
         Memory`load(1);

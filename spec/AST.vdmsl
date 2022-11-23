@@ -1,15 +1,20 @@
 module AST
+imports from Unit all
 exports all
 definitions
 types
-	/*** simulation definitions **/
+     SimulationModel ::
+        simulationDefinition : AST`SimulationDefinition
+        animatDefinitions : map AST`AgentIdentifier to AST`AnimatDefinition
+        worldDefinition : AST`WorldDefinition
+        patchDefinition : AST`PatchDefinition
+        actionDefinitions : map AST`Identifier to AST`ActionDefinition
+        taskDefinitions : seq of AST`TaskDefinition;
      SimulationDefinition ::
         timeDefinition : SimulationTimeDefinition
         worldInitializer : WorldInitializer
         patchInitializer : PatchInitializer
         animatInitializers : seq of AnimatInitializer;
-
-	/*** agent definitions **/
      SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
      AnimatDefinition ::
         identifier : AgentIdentifier
@@ -17,18 +22,15 @@ types
         attributeDeclarations : seq of AttributeDeclaration;
      PatchDefinition ::
         attributeDeclarations : seq of AttributeDeclaration;
-	  --
      WorldDefinition ::
         attributeDeclarations : seq of AttributeDeclaration;
-
-	/*** action definitions ***/
+     AgentDefinition =
+        AnimatDefinition| PatchDefinition| WorldDefinition;
      AttributeDeclaration :: identifier : Identifier unit : Unit;
-
-	/*** task definitions ***/
      ActionDefinition ::
         identifier : Identifier
         object : [AgentIdentifier]
-        guard : [Expression]
+        guard : [Condition]
         lifeDirectives : seq of LifeDirective
         attributeDefinitions : seq of AttributeDefinition
         utilityDefinitions : seq of UtilityDefinition;
@@ -40,7 +42,6 @@ types
         range : Expression
         actionIdentifier : Identifier
         replacements : seq of Replacement;
-	--
      Replacement ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression| Condition| NewDirective| StageDirective;
@@ -49,7 +50,7 @@ types
         DirectivePlaceholder;
      DieDirective = <die>;
      KillDirective = <kill>;
-     NewDirective :: stage : AgentIdentifier quantity : nat1;
+     NewDirective :: stage : AgentIdentifier quantity : Expression;
      StageDirective :: stage : AgentIdentifier;
      DirectivePlaceholder =
         NewDirectivePlaceholder| StageDirectivePlaceholder;
@@ -57,23 +58,19 @@ types
      StageDirectivePlaceholder = <stage>;
      AttributeDefinition ::
         variable : AssignableVariable expression : Expression;
-     UtilityDefinition ::
-        variable : AssignableVariable expression : Expression;
+     UtilityDefinition :: identifier : Identifier expression : Expression;
      AssignableVariable =
         AssignableAttributeVariable| AssignableDeltaAttributeVariable|
         AssignableDifferentialAttributeVariable;
      AssignableAttributeVariable ::
         attributeVariable : AttributeVariable| Placeholder;
      AssignableDeltaAttributeVariable ::
-        attributeVariable : AttributeVariable;
-	/*** task definitions ***/
+        attributeVariable : AttributeVariable| Placeholder;
      AssignableDifferentialAttributeVariable ::
-        attributeVariable : AttributeVariable;
+        attributeVariable : AttributeVariable| Placeholder;
      AttributeBind ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression;
-
-	/*** simulation definition ***/
      Placeholder :: identifier : Identifier;
      AnimatInitializer ::
         animat : AgentIdentifier
@@ -84,24 +81,19 @@ types
         yDivisions : nat1
         size : Literal
         attributeInitializers : seq of AttributeInitializer;
-	--
      WorldInitializer ::
         attributeInitializers : seq of AttributeInitializer;
-
-	/*** Expressions ***/
      AttributeInitializer ::
         identifier : Identifier expression : Expression;
      Expression =
         Variable| Literal| Casting| Apply| Arithmetics| Distribution|
         GuardedChoices| Directive| Placeholder;
-	-- atoms
      Variable =
         AttributeVariable| NewAttributeVariable| UtilityVariable;
      AttributeVariable :: agent : [Identifier] identifier : Identifier;
      NewAttributeVariable :: identifier : Identifier;
      UtilityVariable :: identifier : Identifier;
-     Literal :: real Unit;
-	-- composite
+     Literal :: val : real unit : Unit;
      GuardedChoices :: seq1 of (Condition * Expression) Expression;
      Apply :: function : Identifier arguments : seq1 of Expression;
      Arithmetics =
@@ -112,7 +104,6 @@ types
      Fraction :: Expression Expression;
      Power :: Expression int;
      Minus :: Expression;
-   -- randoms
      Distribution =
         UniformDistribution| UniformDistributionX| UniformDistributionY|
         NormalDistribution| GammaDistribution| LogLogisticDistribution;
@@ -123,12 +114,10 @@ types
      NormalDistribution :: mean : Expression sigma : Expression;
      GammaDistribution :: shape : Expression scale : Expression;
      LogLogisticDistribution :: scale : Expression shape : Expression;
-	-- directives
      Directive = AgentDirective| PatchDirective;
      AgentDirective ::
         <direction>| <distance>| <time>| <delta_time> agent : [Identifier];
      PatchDirective :: <direction_of_gradient> Identifier;
-	-- type casting
      Casting = DeUnitCasting| EnUnitCasting;
      DeUnitCasting :: Unit Expression;
      EnUnitCasting :: Expression Unit;
@@ -137,22 +126,228 @@ types
             card {u | mk_(u, -) in seq us} = len us
             and (forall mk_(-, o) in set elems us & o <> 0);
      SIBaseUnit = <kg>| <m>| <s>| <℃>| <K>| <℉>| <rad>| <mol>;
-
-	-- condition
      Condition =
         Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
         NotEqual| Negation| Conjunction| Disjunction| Placeholder;
-     Equality :: Expression Expression;
-     GreaterOrEqual :: Expression Expression;
-     GreaterThan :: Expression Expression;
-     LessOrEqual :: Expression Expression;
-     LessThan :: Expression Expression;
+     Equality :: seq1 of Expression
+        inv mk_Equality(exprs) == len exprs >= 2;
+     GreaterOrEqual :: seq1 of Expression
+        inv mk_GreaterOrEqual(exprs) == len exprs >= 2;
+     GreaterThan :: seq1 of Expression
+        inv mk_GreaterThan(exprs) == len exprs >= 2;
+     LessOrEqual :: seq1 of Expression
+        inv mk_LessOrEqual(exprs) == len exprs >= 2;
+     LessThan :: seq1 of Expression
+        inv mk_LessThan(exprs) == len exprs >= 2;
      NotEqual :: Expression Expression;
      Negation :: Condition;
-     Conjunction :: Condition Condition;
-     Disjunction :: Condition Condition;
-	-- lexicals
+     Conjunction :: seq1 of Condition
+        inv mk_Conjunction(conds) == len conds >= 2;
+     Disjunction :: seq1 of Condition
+        inv mk_Disjunction(conds) == len conds >= 2;
      Identifier = seq of char;
      AgentIdentifier = seq of char;
+
+values
+     dieDirective : DieDirective = <die>;
+     killDirective : KillDirective = <kill>;
+     newDirectivePlaceholder : NewDirectivePlaceholder = <new>;
+     stageDirectivePlaceholder : StageDirectivePlaceholder = <stage>;
+     uniformDistributionX : UniformDistributionX =
+        <uniform_distribution_x>;
+     uniformDistributionY : UniformDistributionY =
+        <uniform_distribution_y>;
+     directionDirective = <direction>;
+     distanceDirective = <distance>;
+     timeDirective = <time>;
+     deltaTimeDirective = <delta_time>;
+     directionOfGradientDirective = <direction_of_gradient>;
+
+values
+     emptySimulationModel : AST`SimulationModel =
+        mk_AST`SimulationModel(
+            emptySimulationDefinition,
+            {|->},
+            emptyWorldDefinition,
+            emptyPatchDefinition,
+            {|->},
+            []);
+     emptySimulationDefinition : AST`SimulationDefinition =
+        mk_AST`SimulationDefinition(
+            emptySimulationTimeDefinition,
+            emptyWorldInitializer,
+            emptyPatchInitializer,
+            []);
+     emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
+        mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
+     emptyWorldDefinition : AST`WorldDefinition =
+        mk_AST`WorldDefinition([]);
+     emptyPatchDefinition : AST`PatchDefinition =
+        mk_AST`PatchDefinition([]);
+     emptyWorldInitializer : AST`WorldInitializer =
+        mk_AST`WorldInitializer([]);
+     emptyPatchInitializer : AST`PatchInitializer =
+        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), []);
+     AGENT_NEW = "new";
+
+types
+     ReplacementMap =
+        map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
+     ReplacementAST =
+        Placeholder| DirectivePlaceholder| NewDirective| StageDirective|
+        ActionDefinition| Expression| Condition| AttributeDefinition|
+        UtilityDefinition| AssignableVariable;
+
+functions
+    sizeOfAgent : AST`AgentDefinition -> nat
+    sizeOfAgent(agentDefinition) ==
+        len agentDefinition.attributeDeclarations
+        + (if is_(agentDefinition, AST`AnimatDefinition) then 2 else 0);
+    
+    replaceActionDefinition : AST`ActionDefinition * ReplacementMap -> AST`ActionDefinition
+    replaceActionDefinition(actionDefinition, replacement) ==
+        mu(actionDefinition,
+            guard
+            |-> if
+                actionDefinition.guard <> nil
+            then
+                replaceCondition(actionDefinition.guard, replacement)
+            else
+                nil,
+            lifeDirectives
+            |-> [replaceLifeDirective(directive, replacement)
+                | directive in seq actionDefinition.lifeDirectives],
+            attributeDefinitions
+            |-> [replaceAttributeDefinition(attrDef, replacement)
+                | attrDef in seq actionDefinition.attributeDefinitions],
+            utilityDefinitions
+            |-> [replaceUtilityDefinition(utilDef, replacement)
+                | utilDef in seq actionDefinition.utilityDefinitions]);
+    
+    replaceLifeDirective : AST`LifeDirective * ReplacementMap -> AST`LifeDirective
+    replaceLifeDirective(directive, replacement) ==
+        cases directive:
+            mk_AST`NewDirective(stage, quantity) ->
+                mk_AST`NewDirective(stage, replaceExpression(quantity, replacement)),
+            others ->
+                if directive in set dom replacement then replacement(directive) else directive
+            end;
+    
+    replaceAttributeDefinition : AST`AttributeDefinition * ReplacementMap -> AST`AttributeDefinition
+    replaceAttributeDefinition(attributeDefinition, replacement) ==
+        let
+            attributeVariable = attributeDefinition.variable.attributeVariable,
+            variable =
+                mu(attributeDefinition.variable,
+                    attributeVariable
+                    |-> if
+                        attributeVariable in set dom replacement
+                    then
+                        replacement(attributeVariable)
+                    else
+                        attributeVariable)
+        in
+            mk_AttributeDefinition(
+                variable,
+                replaceExpression(attributeDefinition.expression, replacement));
+    
+    replaceUtilityDefinition : AST`UtilityDefinition * ReplacementMap -> AST`UtilityDefinition
+    replaceUtilityDefinition(utilityDefinition, replacement) ==
+        mu(utilityDefinition,
+            expression
+            |-> replaceExpression(utilityDefinition.expression, replacement));
+    
+    replaceExpression : Expression * ReplacementMap -> Expression
+    replaceExpression(expression, replacement) ==
+        if
+            expression in set dom replacement
+        then
+            replacement(expression)
+        else
+            cases expression:
+                mk_AST`GuardedChoices(conditionExpressionPairs, defaultExpression) ->
+                    mk_AST`GuardedChoices(
+                        [mk_(
+                            replaceCondition(cond, replacement),
+                            replaceExpression(expr, replacement))
+                            | mk_(cond, expr) in seq conditionExpressionPairs],
+                        replaceExpression(defaultExpression, replacement)),
+                mk_AST`Apply(function, arguments) ->
+                    mk_AST`Apply(
+                        function,
+                        [replaceExpression(arg, replacement) | arg in seq arguments]),
+                mk_AST`Addition(expr1, expr2) ->
+                    mk_AST`Addition(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Subtraction(expr1, expr2) ->
+                    mk_AST`Subtraction(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Product(expr1, expr2) ->
+                    mk_AST`Product(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Fraction(expr1, expr2) ->
+                    mk_AST`Fraction(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Power(expr1, order) ->
+                    mk_AST`Power(replaceExpression(expr1, replacement), order),
+                mk_AST`Minus(expr) ->
+                    mk_AST`Minus(replaceExpression(expr, replacement)),
+                mk_AST`UniformDistribution(expr1, expr2) ->
+                    mk_AST`UniformDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`NormalDistribution(expr1, expr2) ->
+                    mk_AST`NormalDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`GammaDistribution(expr1, expr2) ->
+                    mk_AST`GammaDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`LogLogisticDistribution(expr1, expr2) ->
+                    mk_AST`LogLogisticDistribution(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`DeUnitCasting(unit, expr) ->
+                    mk_AST`DeUnitCasting(unit, replaceExpression(expr, replacement)),
+                mk_AST`EnUnitCasting(expr, unit) ->
+                    mk_AST`EnUnitCasting(replaceExpression(expr, replacement), unit),
+                others -> expression
+                end;
+    
+    replaceCondition : Condition * ReplacementMap -> Condition
+    replaceCondition(condition, replacement) ==
+        if
+            condition in set dom replacement
+        then
+            replacement(condition)
+        else
+            cases condition:
+                mk_AST`Equality(exprs) ->
+                    mk_AST`Equality([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`GreaterOrEqual(exprs) ->
+                    mk_AST`GreaterOrEqual([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`GreaterThan(exprs) ->
+                    mk_AST`GreaterThan([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`LessOrEqual(exprs) ->
+                    mk_AST`LessOrEqual([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`LessThan(exprs) ->
+                    mk_AST`LessThan([replaceExpression(expr, replacement) | expr in seq exprs]),
+                mk_AST`NotEqual(expr1, expr2) ->
+                    mk_AST`NotEqual(
+                        replaceExpression(expr1, replacement),
+                        replaceExpression(expr2, replacement)),
+                mk_AST`Negation(cond) ->
+                    mk_AST`Negation(replaceCondition(cond, replacement)),
+                mk_AST`Conjunction(conds) ->
+                    mk_AST`Conjunction([replaceCondition(cond, replacement) | cond in seq conds]),
+                mk_AST`Disjunction(conds) ->
+                    mk_AST`Disjunction([replaceCondition(cond, replacement) | cond in seq conds]),
+                others -> condition
+                end;
 
 end AST

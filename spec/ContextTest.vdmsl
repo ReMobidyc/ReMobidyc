@@ -1,0 +1,146 @@
+module ContextTest
+imports
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from Context all,
+    from Interpreter all,
+    from AST all,
+    from Unit all,
+    from Random all,
+    from Memory all
+exports all
+definitions
+values
+     exampleWorld : AST`WorldDefinition = mk_AST`WorldDefinition([]);
+     examplePatch : AST`PatchDefinition = mk_AST`PatchDefinition([]);
+     exampleAnimatA : AST`AnimatDefinition =
+        mk_AST`AnimatDefinition(
+            "AnimatA", "Stage1", [mk_AST`AttributeDeclaration("age", Unit`day)]);
+     exampleActionAge : AST`ActionDefinition =
+        mk_AST`ActionDefinition(
+            "age",
+            nil,
+            nil,
+            [],
+            [],
+            [mk_AST`UtilityDefinition("dt", mk_AST`Literal(1, Unit`s))]);
+     exampleSimulationModel : AST`SimulationModel =
+        mk_AST`SimulationModel(
+            mk_AST`SimulationDefinition(
+                mk_AST`SimulationTimeDefinition(mk_AST`Literal(10, Unit`s), mk_AST`Literal(1, Unit`s)),
+                mk_AST`WorldInitializer([]),
+                mk_AST`PatchInitializer(1, 1, mk_AST`Literal(1, Unit`m), []),
+                [mk_AST`AnimatInitializer("AnimatA", 3, [])]),
+            {"AnimatA" |-> exampleAnimatA},
+            mk_AST`WorldDefinition([]),
+            mk_AST`PatchDefinition([]),
+            {"age" |-> exampleActionAge},
+            []);
+
+operations
+    testSetupActionContextSV : () ==> ()
+    testSetupActionContextSV() ==
+        (Context`setSimulationModel(exampleSimulationModel);
+        Memory`allocateWorld(0);
+        Memory`allocatePatches(1, 1, 0);
+        let
+            animat1 =
+                Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
+        in
+            (Memory`write(animat1 + 0, 0.1);
+            Memory`write(animat1 + 1, 0.2);
+            Memory`write(animat1 + 2, 0.0);
+            Memory`tick();
+            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            assertEquals(animat1, 3, "the animat1 is allocated at 3");
+            assertEquals(
+                Context`getAttributeAddress(nil, "x"),
+                animat1 + 0,
+                "my x is allocated at the allocated address + 0.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "y"),
+                animat1 + 1,
+                "my y is allocated at the allocated address + 1.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "age"),
+                animat1 + 2,
+                "my age is allocated at the allocated address + 2.")));
+    
+    testSetupInitializationContext : () ==> ()
+    testSetupInitializationContext() ==
+        (Context`setSimulationModel(exampleSimulationModel);
+        Memory`allocateWorld(0);
+        Memory`allocatePatches(1, 1, 0);
+        let
+            animat1 =
+                Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
+        in
+            (Context`setupInitializationContext(exampleAnimatA, animat1, 1);
+            assertEquals(animat1, 3, "the animat1 is allocated at 3");
+            assertEquals(
+                Context`getAttributeAddress(nil, "x"),
+                animat1 + 0,
+                "my x is allocated at the allocated address + 0.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "y"),
+                animat1 + 1,
+                "my y is allocated at the allocated address + 1.");
+            assertEquals(
+                Context`getAttributeAddress(nil, "age"),
+                animat1 + 2,
+                "my age is allocated at the allocated address + 2.")));
+    
+    testAttributeAddresses : () ==> ()
+    testAttributeAddresses() ==
+        assertEquals(
+            Context`attributeAddresses(exampleAnimatA, 3),
+            {"x" |-> 3, "y" |-> 4, "age" |-> 5},
+            "attributes for animat definition");
+    
+    testReadUtility : () ==> ()
+    testReadUtility() ==
+        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(Context`readUtility("x"), nil, "no value is set yet");
+        Context`writeUtility("x", 10);
+        assertEquals(
+            Context`readUtility("x"),
+            10,
+            "read a cached value of the utility variable"));
+    
+    testWriteUtility : () ==> ()
+    testWriteUtility() ==
+        (assertEquals(Context`readUtility("x"), nil, "no value is set yet");
+        Context`writeUtility("x", 10);
+        assertEquals(
+            Context`readUtility("x"),
+            10,
+            "read a cached value of the utility variable"));
+    
+    testGetUtilityDefinition : () ==> ()
+    testGetUtilityDefinition() ==
+        (trap (Context`UNRESOLVED_REFERENCE) with skip
+        in
+            let d = Context`getUtilityDefinition("x")
+            in exit "unresolvable because x is not defined yet";
+        Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(1, Unit`m),
+            "x is defined as x = 1[m]"));
+    
+    testSetUtilityDefinition : () ==> ()
+    testSetUtilityDefinition() ==
+        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(1, Unit`m),
+            "x is defined as x = 1[m]");
+        Context`setUtilityDefinition("x", mk_AST`Literal(2, Unit`m));
+        assertEquals(
+            Context`getUtilityDefinition("x"),
+            mk_AST`Literal(2, Unit`m),
+            "x is defined as x = 2[m]"));
+
+end ContextTest

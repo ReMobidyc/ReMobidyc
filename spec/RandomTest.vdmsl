@@ -41,5 +41,11 @@ operations
             0.99999999953433871225,
             1.0e-16,
             "value from max seed"));
+    
+    testHash : () ==> ()
+    testHash() ==
+        (assertEquals(Random`hash([1]), 742938285, "hash([1])");
+        assertEquals(Random`hash([1, 2]), 837795877, "hash([1,2])");
+        assertEquals(Random`hash([1, 2, 3]), 1932503519, "hash([1,2,3])"));
 
 end RandomTest

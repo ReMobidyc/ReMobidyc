@@ -2,40 +2,45 @@ Class {
 	#name : #RMDAnimatRendererPresenter,
 	#superclass : #RMDRendererPresenter,
 	#instVars : [
-		'animatField'
+		'animatLabel'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #api }
+{ #category : #updating }
 RMDAnimatRendererPresenter >> disableAgentFields [
-	animatField disable
+
+	super disableAgentFields.
+	self updateAnimatLabel
 ]
 
-{ #category : #api }
+{ #category : #updating }
 RMDAnimatRendererPresenter >> enableAgentFields [
-	animatField enable
+
+	super enableAgentFields.
+	self updateAnimatLabel
 ]
 
 { #category : #initialization }
 RMDAnimatRendererPresenter >> initializePresenters [
+
 	super initializePresenters.
-	animatField := self newAnimatInput
-		whenLastValidTextChangedDo: [ :animat | 
-			renderer animat: animat.
-			self valueChanged ]
+	animatLabel := self newLabel
+		               label: '';
+		               yourself
 ]
 
 { #category : #accessing }
 RMDAnimatRendererPresenter >> rendererChanged [
+
 	super rendererChanged.
-	self updateAnimatField
+	self updateAnimatLabel
 ]
 
 { #category : #updating }
-RMDAnimatRendererPresenter >> updateAnimatField [
+RMDAnimatRendererPresenter >> updateAnimatLabel [
 
-	animatField
-		text: renderer animat;
-		disable
+	animatLabel label: (agentFieldEnabled
+			 ifTrue: [ renderer animat ]
+			 ifFalse: [ '' ])
 ]

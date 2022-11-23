@@ -1,0 +1,517 @@
+module ASTTest
+imports
+    from UnitTesting
+        operations
+            assertEquals renamed assertEquals;
+            assertApproxEquals renamed assertApproxEquals;,
+    from AST all,
+    from Unit all
+exports all
+definitions
+values
+     placeholder1 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder1");
+     placeholder2 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder2");
+     placeholder3 : AST`Placeholder =
+        mk_AST`Placeholder("placeholder3");
+     replacement1 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var1");
+     replacement2 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var2");
+     replacement3 : AST`UtilityVariable =
+        mk_AST`UtilityVariable("var3");
+     replacementMap : AST`ReplacementMap =
+        {placeholder1 |-> replacement1, placeholder2 |-> replacement2,
+        placeholder3 |-> replacement3};
+     expression1 : AST`Expression = mk_AST`Literal(1, Unit`nodimension);
+     expression2 : AST`Expression = mk_AST`Literal(2, Unit`nodimension);
+     expression3 : AST`Expression = mk_AST`Literal(3, Unit`nodimension);
+     condition1 : AST`Condition =
+        mk_AST`Equality([expression1, expression1]);
+     condition2 : AST`Condition =
+        mk_AST`Equality([expression2, expression2]);
+     condition3 : AST`Condition =
+        mk_AST`Equality([expression3, expression3]);
+
+operations
+    testSizeOfAgent_World : () ==> ()
+    testSizeOfAgent_World() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`WorldDefinition([])),
+            0,
+            "size of the empty world.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`WorldDefinition(
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+            3,
+            "size of World with 3 attributes is 3."));
+    
+    testSizeOfAgent_Patch : () ==> ()
+    testSizeOfAgent_Patch() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`PatchDefinition([])),
+            0,
+            "size of the empty patch.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`PatchDefinition(
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+            3,
+            "size of Patch with 3 attributes is 3."));
+    
+    testSizeOfAgent_Animat : () ==> ()
+    testSizeOfAgent_Animat() ==
+        (assertEquals(
+            AST`sizeOfAgent(mk_AST`AnimatDefinition("Stage", "Species", [])),
+            2,
+            "size of the empty animat is 2 including x and y.");
+        assertEquals(
+            AST`sizeOfAgent(
+                mk_AST`AnimatDefinition(
+                    "Stage",
+                    "Species",
+                    [mk_AST`AttributeDeclaration("heading", Unit`degree),
+                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s))])),
+            4,
+            "size of Animat with 2 attributes is 4 including x and y."));
+    
+    testReplaceExpression_Placeholder : () ==> ()
+    testReplaceExpression_Placeholder() ==
+        (assertEquals(
+            AST`replaceExpression(placeholder1, replacementMap),
+            replacement1,
+            "the placeholder1 -> var1");
+        let free = mk_AST`Placeholder("free")
+        in
+            assertEquals(
+                AST`replaceExpression(free, replacementMap),
+                free,
+                "the free -> the free"));
+    
+    testReplaceExpression_Literal : () ==> ()
+    testReplaceExpression_Literal() ==
+        let literal = mk_AST`Literal(1, Unit`nodimension)
+        in
+            assertEquals(AST`replaceExpression(literal, replacementMap), literal, "1 -> 1");
+    
+    testReplaceExpression_UtilityVariable : () ==> ()
+    testReplaceExpression_UtilityVariable() ==
+        let utilityVariable = mk_AST`UtilityVariable("var")
+        in
+            assertEquals(
+                AST`replaceExpression(utilityVariable, replacementMap),
+                utilityVariable,
+                "var -> var");
+    
+    testReplaceExpression_AttributeVariable : () ==> ()
+    testReplaceExpression_AttributeVariable() ==
+        let attributeVariable = mk_AST`AttributeVariable(nil, "var")
+        in
+            assertEquals(
+                AST`replaceExpression(attributeVariable, replacementMap),
+                attributeVariable,
+                "my var -> my var");
+    
+    testReplaceExpression_NewAttributeVariable : () ==> ()
+    testReplaceExpression_NewAttributeVariable() ==
+        let newAttributeVariable = mk_AST`NewAttributeVariable("var")
+        in
+            assertEquals(
+                AST`replaceExpression(newAttributeVariable, replacementMap),
+                newAttributeVariable,
+                "new var -> new var");
+    
+    testReplaceExpression_GuardedChoices : () ==> ()
+    testReplaceExpression_GuardedChoices() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`GuardedChoices(
+                    [mk_(condition1, placeholder1), mk_(placeholder2, expression2)],
+                    placeholder3),
+                {placeholder1 |-> replacement1, placeholder2 |-> condition2,
+                placeholder3 |-> replacement3}),
+            mk_AST`GuardedChoices(
+                [mk_(condition1, replacement1), mk_(condition2, expression2)],
+                replacement3),
+            "the placeholder1 if 1=1, 2 if the placeholder2, the placeholder3 -> var1 if 1 = 1, 2 if 2=2, var3");
+    
+    testReplaceExpression_Apply : () ==> ()
+    testReplaceExpression_Apply() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Apply("f", [expression1, placeholder1]), replacementMap),
+            mk_AST`Apply("f", [expression1, replacement1]),
+            "f(1, the placeholder1) -> f(1, var1)");
+    
+    testReplaceExpression_Addition : () ==> ()
+    testReplaceExpression_Addition() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Addition(placeholder1, expression1), replacementMap),
+            mk_AST`Addition(replacement1, expression1),
+            "the placeholder1 + 1 = var1 + 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Addition(expression1, replacement1), replacementMap),
+            mk_AST`Addition(expression1, replacement1),
+            "1 + the placeholder1 = 1 + var1"));
+    
+    testReplaceExpression_Subtraction : () ==> ()
+    testReplaceExpression_Subtraction() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Subtraction(placeholder1, expression1), replacementMap),
+            mk_AST`Subtraction(replacement1, expression1),
+            "the placeholder1 - 1 = var1 - 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Subtraction(expression1, replacement1), replacementMap),
+            mk_AST`Subtraction(expression1, replacement1),
+            "1 - the placeholder1 = 1 - var1"));
+    
+    testReplaceExpression_Product : () ==> ()
+    testReplaceExpression_Product() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Product(placeholder1, expression1), replacementMap),
+            mk_AST`Product(replacement1, expression1),
+            "the placeholder1 * 1 = var1 * 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Product(expression1, replacement1), replacementMap),
+            mk_AST`Product(expression1, replacement1),
+            "1 * the placeholder1 = 1 * var1"));
+    
+    testReplaceExpression_Fraction : () ==> ()
+    testReplaceExpression_Fraction() ==
+        (assertEquals(
+            AST`replaceExpression(
+                mk_AST`Fraction(placeholder1, expression1), replacementMap),
+            mk_AST`Fraction(replacement1, expression1),
+            "the placeholder1 / 1 = var1 / 1");
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Fraction(expression1, replacement1), replacementMap),
+            mk_AST`Fraction(expression1, replacement1),
+            "1 / the placeholder1 = 1 / var1"));
+    
+    testReplaceExpression_Power : () ==> ()
+    testReplaceExpression_Power() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`Power(placeholder1, 2), replacementMap),
+            mk_AST`Power(replacement1, 2),
+            "the placeholder1 ^ 2 = var1 ^ 2");
+    
+    testReplaceExpression_Minus : () ==> ()
+    testReplaceExpression_Minus() ==
+        assertEquals(
+            AST`replaceExpression(mk_AST`Minus(placeholder1), replacementMap),
+            mk_AST`Minus(replacement1),
+            "- the placeholder1 = - var1");
+    
+    testReplaceExpression_UniformDistribution : () ==> ()
+    testReplaceExpression_UniformDistribution() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`UniformDistribution(placeholder1, placeholder2),
+                replacementMap),
+            mk_AST`UniformDistribution(replacement1, replacement2),
+            "uniform the placeholder1 to the placeholder2 -> uniform var1 to var2");
+    
+    testReplaceExpression_UniformDistributionX : () ==> ()
+    testReplaceExpression_UniformDistributionX() ==
+        assertEquals(
+            AST`replaceExpression(AST`uniformDistributionX, replacementMap),
+            AST`uniformDistributionX,
+            "uniformX -> uniformX");
+    
+    testReplaceExpression_UniformDistributionY : () ==> ()
+    testReplaceExpression_UniformDistributionY() ==
+        assertEquals(
+            AST`replaceExpression(AST`uniformDistributionY, replacementMap),
+            AST`uniformDistributionY,
+            "uniformY -> uniformY");
+    
+    testReplaceExpression_NormalDistribution : () ==> ()
+    testReplaceExpression_NormalDistribution() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`NormalDistribution(placeholder1, placeholder2),
+                replacementMap),
+            mk_AST`NormalDistribution(replacement1, replacement2),
+            "normal the placeholder1 sigma the placeholder2 -> normal var1 sigma var2");
+    
+    testReplaceExpression_GammaDistribution : () ==> ()
+    testReplaceExpression_GammaDistribution() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`GammaDistribution(placeholder1, placeholder2),
+                replacementMap),
+            mk_AST`GammaDistribution(replacement1, replacement2),
+            "gamma the placeholder1 scale the placeholder2 -> gamma var1 scale var2");
+    
+    testReplaceExpression_LogLogisticDistribution : () ==> ()
+    testReplaceExpression_LogLogisticDistribution() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`LogLogisticDistribution(placeholder1, placeholder2),
+                replacementMap),
+            mk_AST`LogLogisticDistribution(replacement1, replacement2),
+            "loglogistic the placeholder1 shape the placeholder2 -> loglogistic var1 shape var2");
+    
+    testReplaceExpression_AgentDirective : () ==> ()
+    testReplaceExpression_AgentDirective() ==
+        let
+            directive = mk_AST`AgentDirective(AST`distanceDirective, "prey")
+        in
+            assertEquals(
+                AST`replaceExpression(directive, replacementMap),
+                directive,
+                "distance prey -> distance prey");
+    
+    testReplaceExpression_PatchDirective : () ==> ()
+    testReplaceExpression_PatchDirective() ==
+        let
+            directive =
+                mk_AST`PatchDirective(AST`directionOfGradientDirective, "sugar")
+        in
+            assertEquals(
+                AST`replaceExpression(directive, replacementMap),
+                directive,
+                "direction neighbor's  sugar -> direction neighbor's sugar");
+    
+    testReplaceExpression_DeUnitCasting : () ==> ()
+    testReplaceExpression_DeUnitCasting() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`DeUnitCasting(Unit`m, placeholder1), replacementMap),
+            mk_AST`DeUnitCasting(Unit`m, replacement1),
+            "(m) the placeholder1 -> (m)var1");
+    
+    testReplaceExpression_EnUnitCasting : () ==> ()
+    testReplaceExpression_EnUnitCasting() ==
+        assertEquals(
+            AST`replaceExpression(
+                mk_AST`EnUnitCasting(placeholder1, Unit`m), replacementMap),
+            mk_AST`EnUnitCasting(replacement1, Unit`m),
+            "the placeholder1[m] -> var1[m]");
+    
+    testReplaceCondition_Equality : () ==> ()
+    testReplaceCondition_Equality() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`Equality([placeholder1, placeholder2]), replacementMap),
+            mk_AST`Equality([replacement1, replacement2]),
+            "the placeholder1 = the placeholder2 -> var1 = var2");
+    
+    testReplaceCondition_GreaterOrEqual : () ==> ()
+    testReplaceCondition_GreaterOrEqual() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`GreaterOrEqual([placeholder1, placeholder2]), replacementMap),
+            mk_AST`GreaterOrEqual([replacement1, replacement2]),
+            "the placeholder1 >= the placeholder2 -> var1 >= var2");
+    
+    testReplaceCondition_GreaterThan : () ==> ()
+    testReplaceCondition_GreaterThan() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`GreaterThan([placeholder1, placeholder2]), replacementMap),
+            mk_AST`GreaterThan([replacement1, replacement2]),
+            "the placeholder1 > the placeholder2 -> var1 > var2");
+    
+    testReplaceCondition_LessOrEqual : () ==> ()
+    testReplaceCondition_LessOrEqual() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`LessOrEqual([placeholder1, placeholder2]), replacementMap),
+            mk_AST`LessOrEqual([replacement1, replacement2]),
+            "the placeholder1 <= the placeholder2 -> var1 <= var2");
+    
+    testReplaceCondition_LessThan : () ==> ()
+    testReplaceCondition_LessThan() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`LessThan([placeholder1, placeholder2]), replacementMap),
+            mk_AST`LessThan([replacement1, replacement2]),
+            "the placeholder1 < the placeholder2 -> var1 < var2");
+    
+    testReplaceCondition_NotEqual : () ==> ()
+    testReplaceCondition_NotEqual() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`NotEqual(placeholder1, placeholder2), replacementMap),
+            mk_AST`NotEqual(replacement1, replacement2),
+            "the placeholder1 /= the placeholder2 -> var1 /= var2");
+    
+    testReplaceCondition_Negation : () ==> ()
+    testReplaceCondition_Negation() ==
+        (assertEquals(
+            AST`replaceCondition(
+                mk_AST`Negation(placeholder1), {placeholder1 |-> condition1}),
+            mk_AST`Negation(condition1),
+            "not the placeholder1  -> not 1 = 1");
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`Negation(mk_AST`Equality([placeholder1, placeholder2])),
+                replacementMap),
+            mk_AST`Negation(mk_AST`Equality([replacement1, replacement2])),
+            "not the placeholder1 = the placeholder2 -> not var1 = var2"));
+    
+    testReplaceCondition_Conjunction : () ==> ()
+    testReplaceCondition_Conjunction() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`Conjunction([placeholder1, placeholder2]),
+                {placeholder1 |-> condition1, placeholder2 |-> condition2}),
+            mk_AST`Conjunction([condition1, condition2]),
+            "the placeholder1 and the placeholder2 -> 1=1 and 2=2");
+    
+    testReplaceCondition_Disjunction : () ==> ()
+    testReplaceCondition_Disjunction() ==
+        assertEquals(
+            AST`replaceCondition(
+                mk_AST`Disjunction([placeholder1, placeholder2]),
+                {placeholder1 |-> condition1, placeholder2 |-> condition2}),
+            mk_AST`Disjunction([condition1, condition2]),
+            "the placeholder1 or the placeholder2 -> 1=1 or 2=2");
+    
+    testReplaceLifeDirective_DieDirective : () ==> ()
+    testReplaceLifeDirective_DieDirective() ==
+        assertEquals(
+            AST`replaceLifeDirective(AST`dieDirective, replacementMap),
+            AST`dieDirective,
+            "die -> die");
+    
+    testReplaceLifeDirective_KillDirective : () ==> ()
+    testReplaceLifeDirective_KillDirective() ==
+        assertEquals(
+            AST`replaceLifeDirective(AST`killDirective, replacementMap),
+            AST`killDirective,
+            "kill -> kill");
+    
+    testReplaceLifeDirective_NewDirective : () ==> ()
+    testReplaceLifeDirective_NewDirective() ==
+        assertEquals(
+            AST`replaceLifeDirective(
+                mk_AST`NewDirective("Foo", placeholder1), replacementMap),
+            mk_AST`NewDirective("Foo", replacement1),
+            "new Foo the placeholder1 -> new Foo var1");
+    
+    testReplaceLifeDirective_StageDirective : () ==> ()
+    testReplaceLifeDirective_StageDirective() ==
+        assertEquals(
+            AST`replaceLifeDirective(
+                mk_AST`StageDirective("Foo"), replacementMap),
+            mk_AST`StageDirective("Foo"),
+            "stage Foo -> stage Foo");
+    
+    testReplaceLifeDirective_NewDirectivePlaceholder : () ==> ()
+    testReplaceLifeDirective_NewDirectivePlaceholder() ==
+        let
+            newDirective =
+                mk_AST`NewDirective("Foo", mk_AST`Literal(1, Unit`nodimension))
+        in
+            assertEquals(
+                AST`replaceLifeDirective(
+                    AST`newDirectivePlaceholder,
+                    {AST`newDirectivePlaceholder |-> newDirective}),
+                newDirective,
+                "new - -> new Foo 1");
+    
+    testReplaceLifeDirective_StageDirectivePlaceholder : () ==> ()
+    testReplaceLifeDirective_StageDirectivePlaceholder() ==
+        let stageDirective = mk_AST`StageDirective("Foo")
+        in
+            assertEquals(
+                AST`replaceLifeDirective(
+                    AST`stageDirectivePlaceholder,
+                    {AST`stageDirectivePlaceholder |-> stageDirective}),
+                stageDirective,
+                "stage - -> stage Foo");
+    
+    testReplaceAttributeDefinition_AttributeVariable : () ==> ()
+    testReplaceAttributeDefinition_AttributeVariable() ==
+        assertEquals(
+            AST`replaceAttributeDefinition(
+                mk_AST`AttributeDefinition(mk_AST`AssignableAttributeVariable(placeholder1), placeholder2),
+                {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
+                placeholder2 |-> replacement2}),
+            mk_AST`AttributeDefinition(
+                mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                replacement2),
+            "the placeholder1' = the placeholder2 -> my attr1' = var2");
+    
+    testReplaceAttributeDefinition_DeltaAttributeVariable : () ==> ()
+    testReplaceAttributeDefinition_DeltaAttributeVariable() ==
+        assertEquals(
+            AST`replaceAttributeDefinition(
+                mk_AST`AttributeDefinition(
+                    mk_AST`AssignableDeltaAttributeVariable(placeholder1), placeholder2),
+                {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
+                placeholder2 |-> replacement2}),
+            mk_AST`AttributeDefinition(
+                mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                replacement2),
+            "the delta placeholder1' = the placeholder2 -> my delta attr1' = var2");
+    
+    testReplaceAttributeDefinition_DifferentialAttributeVariable : () ==> ()
+    testReplaceAttributeDefinition_DifferentialAttributeVariable() ==
+        assertEquals(
+            AST`replaceAttributeDefinition(
+                mk_AST`AttributeDefinition(
+                    mk_AST`AssignableDifferentialAttributeVariable(placeholder1),
+                    placeholder2),
+                {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
+                placeholder2 |-> replacement2}),
+            mk_AST`AttributeDefinition(
+                mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                replacement2),
+            "the d/dt  placeholder1' = the placeholder2 -> my d/dt attr1' = var2");
+    
+    testReplaceActionDefinition : () ==> ()
+    testReplaceActionDefinition() ==
+        assertEquals(
+            AST`replaceActionDefinition(
+                mk_AST`ActionDefinition(
+                    "action1",
+                    nil,
+                    mk_AST`Placeholder("placeholder1"),
+                    [AST`newDirectivePlaceholder],
+                    [mk_AST`AttributeDefinition(
+                        mk_AST`AssignableAttributeVariable(mk_AST`Placeholder("placeholder2")),
+                        mk_AST`Placeholder("placeholder3"))],
+                    [mk_AST`UtilityDefinition("utility", mk_AST`Placeholder("placeholder4"))]),
+                {mk_AST`Placeholder("placeholder1")
+                |-> mk_AST`Equality(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)]),
+                mk_AST`Placeholder("placeholder2")
+                |-> mk_AST`AttributeVariable(nil, "replacement2"),
+                AST`newDirectivePlaceholder
+                |-> mk_AST`NewDirective("Stage1", mk_AST`Literal(1, Unit`nodimension)),
+                mk_AST`Placeholder("placeholder3")
+                |-> mk_AST`UtilityVariable("replacement3"),
+                mk_AST`Placeholder("placeholder4")
+                |-> mk_AST`UtilityVariable("replacement4")}),
+            mk_AST`ActionDefinition(
+                "action1",
+                nil,
+                mk_AST`Equality(
+                    [mk_AST`Literal(1, Unit`nodimension),
+                    mk_AST`Literal(1, Unit`nodimension)]),
+                [mk_AST`NewDirective("Stage1", mk_AST`Literal(1, Unit`nodimension))],
+                [mk_AST`AttributeDefinition(
+                    mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "replacement2")),
+                    mk_AST`UtilityVariable("replacement3"))],
+                [mk_AST`UtilityDefinition("utility", mk_AST`UtilityVariable("replacement4"))]),
+            "to action1 is when the placeholder1 with new - the placeholder2' = the placeholder3 where utility = the replacement4 -> ");
+
+end ASTTest

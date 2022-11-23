@@ -12,6 +12,25 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #accessing }
+RMDFishmanMooreRandomGenerator >> factor [
+
+	^ 742938285
+]
+
+{ #category : #initialization }
+RMDFishmanMooreRandomGenerator >> hash: anArrayOfInteger [
+
+	| hash |
+	anArrayOfInteger ifEmpty: [ ^ 1 ].
+	hash := anArrayOfInteger first.
+	2 to: anArrayOfInteger size do: [ :i | 
+		| x |
+		x := anArrayOfInteger at: i.
+		hash := hash + x * self factor \\ self modulo ].
+	^ hash * self factor \\ self modulo
+]
+
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> initialize [
 	super initialize.
@@ -28,9 +47,15 @@ RMDFishmanMooreRandomGenerator >> initializeWithAll: anArrayOfInteger [
 ]
 
 { #category : #accessing }
+RMDFishmanMooreRandomGenerator >> modulo [
+
+	^ 2147483647
+]
+
+{ #category : #accessing }
 RMDFishmanMooreRandomGenerator >> next [
 
-	^ self nextSeed - 1 / 2147483646.0
+	^ (self nextSeed - 1) asFloat / (self modulo - 1) asFloat
 ]
 
 { #category : #accessing }
@@ -41,12 +66,14 @@ RMDFishmanMooreRandomGenerator >> nextInt: anInteger [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> nextSeed [
 
-	^ seed := 742938285 * seed \\ 2147483647
+	^ seed := self factor * seed \\ self modulo
 ]
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> peek [
-	^ 742938285 * seed \\ 2147483647 / 2147483647.0
+
+	^ (self factor * seed \\ self modulo - 1) asFloat
+	  / (self modulo - 1) asFloat
 ]
 
 { #category : #accessing }
@@ -57,5 +84,7 @@ RMDFishmanMooreRandomGenerator >> seed [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> seed: anInteger [
 
-	seed := anInteger asInteger abs + 1 \\ 2147483647
+	seed := anInteger asInteger.
+	seed <= 0 ifTrue: [ 
+		^ self error: 'random seed must be a non-zero natural number.' ]
 ]

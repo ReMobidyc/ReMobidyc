@@ -1,5 +1,6 @@
 module Interpreter
 imports
+    from Context all,
     from AST all,
     from Unit all,
     from Memory all,
@@ -14,52 +15,132 @@ imports
             atan renamed atan;
 exports all
 definitions
-types
-     SimulationModel ::
-        simulationDefinition : AST`SimulationDefinition
-        animatDefinitions : AST`SimulationDefinition
-        worldDefinition : AST`WorldDefinition
-        patchDefinition : AST`PatchDefinition
-        actionDefinitions : AST`ActionDefinition
-        taskDefinitions : map AST`Identifier to AST`TaskDefinition;
-     Context = ActionContext;
-     ActionContext ::
-        attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
-        utilities : map AST`Identifier to real
-        utilityDefinitions : map AST`Identifier to AST`Expression
-        action : AST`ActionDefinition
-        random : Random`RandomGenerator;
-
 values
-     AGENT_NEW = "new";
-     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
+state Interpreter of
+    globalSeed : nat1
+init s == s = mk_Interpreter(1)
+end
+
 operations
-    eval : AST`Expression ==> real
-    eval(expr) ==
+    evalWorldInitializer : AST`WorldInitializer ==> ()
+    evalWorldInitializer(worldInitializer) ==
+        let worldDefinition = Context`getWorldDefinition()
+        in
+            (Memory`allocateWorld(AST`sizeOfAgent(worldDefinition));
+            let world = Memory`getWorld()
+            in
+                (Context`setupInitializationContext(worldDefinition, world, Random`hash([globalSeed, world]));
+                for attributeInitializer in worldInitializer.attributeInitializers
+                do evalAttributeInitializer(attributeInitializer)));
+    
+    evalPatchInitializer : AST`PatchInitializer ==> ()
+    evalPatchInitializer(patchInitializer) ==
+        let
+            patchDefinition = Context`getPatchDefinition(),
+            xDivisions = patchInitializer.xDivisions,
+            yDivisions = patchInitializer.yDivisions
+        in
+            (Memory`allocatePatches(xDivisions, yDivisions, AST`sizeOfAgent(patchDefinition));
+            for x = 0 to  xDivisions - 1
+            do
+                for y = 0 to  yDivisions - 1
+                do
+                    let patch = Memory`getPatch(x, y)
+                    in
+                        (Context`setupInitializationContext(patchDefinition, patch, Random`hash([globalSeed, patch]));
+                        for attributeInitializer in patchInitializer.attributeInitializers
+                        do evalAttributeInitializer(attributeInitializer)));
+    
+    evalAnimatInitializer : AST`AnimatInitializer ==> ()
+    evalAnimatInitializer(animatInitializer) ==
+        let
+            animatName = animatInitializer.animat,
+            animatDefinition = Context`getAnimatDefinition(animatName)
+        in
+            for i = 1 to  animatInitializer.population
+            do
+                let
+                    animat =
+                        Memory`allocateAnimat(
+                            animatName, AST`sizeOfAgent(animatDefinition))
+                in
+                    (Context`setupInitializationContext(animatDefinition, animat, Random`hash([globalSeed, animat]));
+                    writeVariable(nil, "x", uniform(Context`worldWest(), Context`worldEast()));
+                    writeVariable(nil, "y", uniform(Context`worldSouth(), Context`worldNorth()));
+                    for attributeInitializer
+                    in animatInitializer.attributeInitializers
+                    do evalAttributeInitializer(attributeInitializer));
+    
+    evalAttributeInitializer : AST`AttributeInitializer ==> ()
+    evalAttributeInitializer(attributeInitializer) ==
+        writeVariable(
+            nil,
+            attributeInitializer.identifier,
+            evalExpression(attributeInitializer.expression));
+    
+    evalActionDefinition : AST`ActionDefinition ==> ()
+    evalActionDefinition(actionDefinition) ==
+        for attributeDefinition in actionDefinition.attributeDefinitions
+        do evalAttributeDefinition(attributeDefinition);
+    
+    evalAttributeDefinition : AST`AttributeDefinition ==> ()
+    evalAttributeDefinition(attributeDefinition) ==
+        let value = evalExpression(attributeDefinition.expression)
+        in
+            cases attributeDefinition.variable:
+                mk_AST`AssignableAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeVariable(agent, variable, value),
+                mk_AST`AssignableDeltaAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeDeltaVariable(agent, variable, value),
+                mk_AST`AssignableDifferentialAttributeVariable(
+                    mk_AST`AttributeVariable(agent, variable)) ->
+                    writeDeltaVariable(agent, variable, value  * deltaTime()),
+                others -> exit Context`UNRESOLVED_REFERENCE
+                end;
+    
+    evalExpression : AST`Expression ==> real
+    evalExpression(expr) ==
         return cases expr:
-                mk_AST`UtilityVariable(identifier) -> readUtility(identifier),
+                mk_AST`UtilityVariable(identifier) ->
+                    let val = Context`readUtility(identifier)
+                    in
+                        (if
+                                val <> nil
+                            then
+                                val
+                            else
+                                evalExpression(Context`getUtilityDefinition(identifier))),
                 mk_AST`AttributeVariable(agent, identifier) ->
-                    readVariable(agent, identifier),
+                    Memory`read(Context`getAttributeAddress(agent, identifier)),
                 mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
-                mk_AST`Addition(expr1, expr2) -> eval(expr1) + eval(expr2),
-                mk_AST`Subtraction(expr1, expr2) -> eval(expr1) - eval(expr2),
-                mk_AST`Product(expr1, expr2) -> eval(expr1)  * eval(expr2),
-                mk_AST`Fraction(expr1, expr2) -> eval(expr1) / eval(expr2),
-                mk_AST`Power(expr, order) -> pow(eval(expr), order),
-                mk_AST`Minus(expr) -> -eval(expr),
-                mk_AST`DeUnitCasting(unit, expr) -> Unit`fromSI(unit, eval(expr)),
-                mk_AST`EnUnitCasting(expr, unit) -> Unit`toSI(unit, eval(expr)),
+                mk_AST`Addition(expr1, expr2) ->
+                    evalExpression(expr1) + evalExpression(expr2),
+                mk_AST`Subtraction(expr1, expr2) ->
+                    evalExpression(expr1) - evalExpression(expr2),
+                mk_AST`Product(expr1, expr2) ->
+                    evalExpression(expr1)  * evalExpression(expr2),
+                mk_AST`Fraction(expr1, expr2) ->
+                    evalExpression(expr1) / evalExpression(expr2),
+                mk_AST`Power(expr, order) -> pow(evalExpression(expr), order),
+                mk_AST`Minus(expr) -> -evalExpression(expr),
+                mk_AST`DeUnitCasting(unit, expr) ->
+                    Unit`fromSI(unit, evalExpression(expr)),
+                mk_AST`EnUnitCasting(expr, unit) ->
+                    Unit`toSI(unit, evalExpression(expr)),
                 mk_AST`UniformDistribution(expr1, expr2) ->
-                    uniform(eval(expr1), eval(expr2)),
+                    uniform(evalExpression(expr1), evalExpression(expr2)),
                 mk_AST`NormalDistribution(mean, sigma) ->
-                    normal(eval(mean), eval(sigma)),
+                    normal(evalExpression(mean), evalExpression(sigma)),
                 mk_AST`GammaDistribution(shape, scale) ->
-                    gamma(eval(shape), eval(scale)),
+                    gamma(evalExpression(shape), evalExpression(scale)),
                 mk_AST`LogLogisticDistribution(scale, shape) ->
-                    logLogistic(eval(scale), eval(shape)),
-                mk_AST`Apply(func, args) -> apply(func, [eval(x) | x in seq args]),
+                    logLogistic(evalExpression(scale), evalExpression(shape)),
+                mk_AST`Apply(func, args) ->
+                    apply(func, [evalExpression(x) | x in seq args]),
                 mk_AST`AgentDirective(directive, agent) ->
                     cases directive:
                         <direction> -> directionOfAgent(agent),
@@ -73,101 +154,65 @@ operations
                         end,
                 mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
                     cases guardsAndExpressions:
-                        [] -> eval(defaultExpression),
+                        [] -> evalExpression(defaultExpression),
                         [mk_(guard, expr)]^rest ->
                             if
-                                evalCond(guard)
+                                evalCondition(guard)
                             then
-                                eval(guard)
+                                evalExpression(guard)
                             else
-                                eval(mk_AST`GuardedChoices(rest, defaultExpression))
+                                evalExpression(mk_AST`GuardedChoices(rest, defaultExpression))
                         end,
                 others -> undefined
                 end;
     
-    evalCond : AST`Condition ==> bool
-    evalCond(cond) ==
+    evalCondition : AST`Condition ==> bool
+    evalCondition(cond) ==
         return cases cond:
-                mk_AST`Equality(expr1, expr2) -> eval(expr1) = eval(expr2),
-                mk_AST`GreaterOrEqual(expr1, expr2) -> eval(expr1) >= eval(expr2),
-                mk_AST`GreaterThan(expr1, expr2) -> eval(expr1) > eval(expr2),
-                mk_AST`LessOrEqual(expr1, expr2) -> eval(expr1) <= eval(expr2),
-                mk_AST`LessThan(expr1, expr2) -> eval(expr1) < eval(expr2),
-                mk_AST`NotEqual(expr1, expr2) -> eval(expr1) <> eval(expr2),
-                mk_AST`Negation(cond) -> not evalCond(cond),
-                mk_AST`Conjunction(cond1, cond2) ->
-                    evalCond(cond1) and evalCond(cond2),
-                mk_AST`Disjunction(cond1, cond2) ->
-                    evalCond(cond1) or evalCond(cond2)
+                mk_AST`Equality(exprs) ->
+                    card {evalExpression(expr) | expr in seq exprs} = 1,
+                mk_AST`GreaterOrEqual(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        evalExpression(exprs(i)) >= evalExpression(exprs(i + 1)),
+                mk_AST`GreaterThan(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        evalExpression(exprs(i)) > evalExpression(exprs(i + 1)),
+                mk_AST`LessOrEqual(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        evalExpression(exprs(i)) <= evalExpression(exprs(i + 1)),
+                mk_AST`LessThan(exprs) ->
+                    forall i in set {1, ..., len exprs - 1} &
+                        evalExpression(exprs(i)) < evalExpression(exprs(i + 1)),
+                mk_AST`NotEqual(expr1, expr2) ->
+                    evalExpression(expr1) <> evalExpression(expr2),
+                mk_AST`Negation(cond) -> not evalCondition(cond),
+                mk_AST`Conjunction(conds) ->
+                    forall cond in seq conds & evalCondition(cond),
+                mk_AST`Disjunction(conds) ->
+                    exists cond in seq conds & evalCondition(cond)
                 end;
 
-state Interpreter of
-    simulationModel : [SimulationModel]
-    context : [Context]
-init s == s = mk_Interpreter(nil, nil)
-end
-
 operations
-    setupActionContext : AST`ActionDefinition * Memory`Address * [Memory`Address] ==> ()
-    setupActionContext(actionDefinition, subject, object) ==
-        is not yet specified;
-    
-    setContext : Context ==> ()
-    setContext(c) == context := c;
-    
-    readUtility : AST`Identifier ==> real
-    readUtility(identifier) ==
-        if
-            identifier in set dom context.utilities
-        then
-            return context.utilities(identifier)
-        else
-            let val = eval(context.utilityDefinitions(identifier))
-            in
-                (context .utilities(identifier) := val;
-                return val);
-    
     readVariable : [AST`Identifier] * AST`Identifier ==> real
     readVariable(agent, identifier) ==
-        return Memory`read(getAddress(agent, identifier));
+        return Memory`read(Context`getAttributeAddress(agent, identifier));
     
     writeVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeVariable(agent, identifier, data) ==
-        Memory`write(getAddress(agent, identifier), data);
+        Memory`write(Context`getAttributeAddress(agent, identifier), data);
     
     writeDeltaVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeDeltaVariable(agent, identifier, data) ==
-        Memory`writeDelta(getAddress(agent, identifier), data);
-    
-    getAddress : [AST`Identifier] * AST`Identifier ==> Memory`Address
-    getAddress(agent, identifier) ==
-        if
-            agent in set dom context.attributes
-        then
-            let attr = context.attributes(agent)
-            in
-                (if
-                    identifier in set dom attr
-                then
-                    return attr(identifier)
-                else
-                    exit UNRESOLVED_REFERENCE)
-        else
-            exit UNRESOLVED_REFERENCE;
-    
-    random : () ==> real
-    random() ==
-        (context .random := Random`next(context.random);
-        return Random`value(context.random))
-    post  RESULT >= 0 and RESULT <= 1;
+        Memory`writeDelta(Context`getAttributeAddress(agent, identifier), data);
     
     uniform : real * real ==> real
     uniform(sectionFrom, sectionTo) ==
-        return let x = random() in x  * (sectionTo - sectionFrom) + sectionFrom;
+        return let x = Context`nextRandom()
+            in x  * (sectionTo - sectionFrom) + sectionFrom;
     
     normal : real * real ==> real
     normal(mean, sigma) ==
-        return let x1 = random(), x2 = random()
+        return let x1 = Context`nextRandom(), x2 = Context`nextRandom()
             in
                 sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
                 + mean
@@ -175,7 +220,7 @@ operations
     
     logLogistic : real * real ==> real
     logLogistic(scale, shape) ==
-        let p : real = random()
+        let p : real = Context`nextRandom()
         in return scale  * (p / (1 - p)) ** (1 / shape)
     pre  scale > 0 and shape > 0;
     
@@ -190,8 +235,8 @@ operations
                 while true
                 do
                     (dcl u1:real, u2:real;
-                    u1 := random();
-                    u2 := random();
+                    u1 := Context`nextRandom();
+                    u2 := Context`nextRandom();
                     if
                         u1 <= c1
                     then
@@ -209,7 +254,7 @@ operations
                     (dcl z:real := normal(0, 1), v:real, u:real;
                     while c2  * z <= -1.0 do z := normal(0, 1);
                     v := let t = c2  * z + 1.0 in t  * t  * t;
-                    u := random();
+                    u := Context`nextRandom();
                     if u < 1.0 - 0.0331  * z  * z  * z  * z then return c1  * v  * scale;
                     if
                         ln(u) < 0.5  * z  * z + c1  * (1.0 - v + ln(v))
@@ -229,59 +274,40 @@ operations
                 (if
                         ((here >= east and here >= west) and here >= south) and here >= north
                     then
-                        let x = readVariable(nil, "x"), y = readVariable(nil, "y")
+                        let
+                            x = readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                            y = readVariable(nil, Context`Y_ATTRIBUTE_NAME)
                         in
                             theta(
-                                patchLength()  * (floor patchX(x) + 0.5) - x,
-                                patchLength()  * (floor patchY(y) + 0.5) - y)
+                                Context`patchLength()  * (floor Context`normalizeX(x) + 0.5) - x,
+                                Context`patchLength()  * (floor Context`normalizeY(y) + 0.5) - y)
                     else
                         theta(east - west, north - south));
     
     directionOfAgent : AST`Identifier ==> real
     directionOfAgent(agent) ==
         return theta(
-                readVariable(agent, "x") - readVariable(nil, "x"),
-                readVariable(agent, "y") - readVariable(nil, "y"));
+                readVariable(agent, Context`X_ATTRIBUTE_NAME)
+                - readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                readVariable(agent, Context`Y_ATTRIBUTE_NAME)
+                - readVariable(nil, Context`Y_ATTRIBUTE_NAME));
     
     distanceFromAgent : AST`Identifier ==> real
     distanceFromAgent(agent) ==
         return let
-                x = readVariable(agent, "x") - readVariable(nil, "x"),
-                y = readVariable(agent, "y") - readVariable(nil, "y")
+                x =
+                    readVariable(agent, Context`X_ATTRIBUTE_NAME)
+                    - readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                y =
+                    readVariable(agent, Context`Y_ATTRIBUTE_NAME)
+                    - readVariable(nil, Context`Y_ATTRIBUTE_NAME)
             in sqrt(x ** 2 + y ** 2);
     
-    simulationTime : () ==> real
-    simulationTime() == return Memory`getTime()  * deltaTime();
+    pure simulationTime : () ==> real
+    simulationTime() == return Context`simulationTime();
     
-    deltaTime : () ==> real
-    deltaTime() ==
-        return eval(simulationModel.simulationDefinition.timeDefinition.timeStep);
-    
-    patchLength : () ==> real
-    patchLength() ==
-        return eval(simulationModel.simulationDefinition.patchInitializer.size);
-    
-    worldWest : () ==> real
-    worldWest() == return 0;
-    
-    worldEast : () ==> real
-    worldEast() ==
-        return simulationModel.simulationDefinition.patchInitializer.xDivisions
-             * patchLength();
-    
-    worldSouth : () ==> real
-    worldSouth() == return 0;
-    
-    worldNorth : () ==> real
-    worldNorth() ==
-        return simulationModel.simulationDefinition.patchInitializer.yDivisions
-             * patchLength();
-    
-    patchX : real ==> real
-    patchX(x) == return (x - worldWest()) / patchLength();
-    
-    patchY : real ==> real
-    patchY(y) == return (y - worldSouth()) / patchLength();
+    pure deltaTime : () ==> real
+    deltaTime() == return Context`deltaTime();
     
     pure apply : seq1 of char * seq1 of real ==> real
     apply(func, args) ==
