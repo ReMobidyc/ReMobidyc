@@ -284,8 +284,9 @@ RMDActionDefinitionBrowser >> initializePresenters [
 RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Action definition'.
-	aWindowPresenter initialExtent: 400 @ self preferredHeight
+	aWindowPresenter
+		title: self title;
+		initialExtent: 400 @ self preferredHeight
 ]
 
 { #category : #accessing }
@@ -303,7 +304,8 @@ RMDActionDefinitionBrowser >> nodeChanged [
 		unselectAll.
 	utilityDefinitionList
 		items: node utilityDefinitions;
-		unselectAll
+		unselectAll.
+	self updateTitle
 ]
 
 { #category : #accessing }
@@ -358,6 +360,13 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 		  name trim ifEmpty: [ '-' ] ]
 ]
 
+{ #category : #accessing }
+RMDActionDefinitionBrowser >> title [
+
+	^ 'Action definition'
+	  , (node ifNil: [ '' ] ifNotNil: [ :action | ' of ' , action name ])
+]
+
 { #category : #updating }
 RMDActionDefinitionBrowser >> updateAttributeButtons [
 
@@ -365,6 +374,12 @@ RMDActionDefinitionBrowser >> updateAttributeButtons [
 	hasSelection := attributeDefinitionList selectedItem notNil.
 	removeAttributeButton enabled: hasSelection.
 	editAttributeButton enabled: hasSelection
+]
+
+{ #category : #updating }
+RMDActionDefinitionBrowser >> updateTitle [
+
+	self window ifNotNil: [ :w | w title: self title ]
 ]
 
 { #category : #updating }
