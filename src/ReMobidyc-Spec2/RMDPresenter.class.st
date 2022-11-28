@@ -19,6 +19,11 @@ RMDPresenter >> agentNameValidation [
 ]
 
 { #category : #icons }
+RMDPresenter >> downIcon [
+	^ Smalltalk ui icons down
+]
+
+{ #category : #icons }
 RMDPresenter >> editIcon [
 	^ Smalltalk ui icons edit
 ]
@@ -112,4 +117,9 @@ RMDPresenter >> replacementIcon [
 RMDPresenter >> repositoryIcon [
 
 	^ Smalltalk ui icons database
+]
+
+{ #category : #icons }
+RMDPresenter >> upIcon [
+	^ Smalltalk ui icons up
 ]
