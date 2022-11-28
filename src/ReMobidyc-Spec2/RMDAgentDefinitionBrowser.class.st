@@ -4,19 +4,23 @@ Class {
 	#instVars : [
 		'modeler',
 		'animat',
+		'attributeList',
+		'addAttributeButton',
+		'removeAttributeButton',
+		'moveUpAttributeButton',
+		'moveDownAttributeButton',
+		'editAttributeButton',
 		'rendererList',
 		'addRendererButton',
 		'removeRendererButton',
 		'editRendererButton',
 		'sourceText',
-		'addTaskButton',
 		'taskList',
-		'editTaskButton',
+		'addTaskButton',
 		'removeTaskButton',
-		'addAttributeButton',
-		'editAttributeButton',
-		'attributeList',
-		'removeAttributeButton'
+		'moveUpTaskButton',
+		'moveDownTaskButton',
+		'editTaskButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -34,6 +38,8 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #addAttributeButton width: self buttonHeight;
 								     add: #removeAttributeButton width: self buttonHeight;
+								     add: #moveUpAttributeButton width: self buttonHeight;
+								     add: #moveDownAttributeButton width: self buttonHeight;
 								     add: #editAttributeButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
@@ -57,6 +63,8 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 								     add: (SpBoxLayout newHorizontal
 										      add: #addTaskButton width: self buttonHeight;
 										      add: #removeTaskButton width: self buttonHeight;
+										      add: #moveUpTaskButton width: self buttonHeight;
+										      add: #moveDownTaskButton width: self buttonHeight;
 										      add: #editTaskButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -201,10 +209,16 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 whenModelChangedDo: [ 
 			                 attributeList selectItem: nil ];
 		                 whenSelectionChangedDo: [ 
-			                 | selected |
+			                 | selected index |
 			                 selected := attributeList selection selectedItem
 				                             notNil.
+			                 index := attributeList selection selectedIndex.
 			                 removeAttributeButton enabled: selected.
+			                 moveUpAttributeButton enabled:
+					                 (selected and: [ index > 1 ]).
+			                 moveDownAttributeButton enabled:
+					                 (selected and: [ 
+							                  index < attributeList items size ]).
 			                 editAttributeButton enabled: selected ];
 		                 yourself.
 	addAttributeButton := self newButton
@@ -218,6 +232,18 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                         help: 'Remove the selected attribute';
 		                         disable;
 		                         yourself.
+	moveUpAttributeButton := self newButton
+		                         icon: self upIcon;
+		                         action: [ self moveUpAttribute ];
+		                         help: 'Move the selected attribute up';
+		                         disable;
+		                         yourself.
+	moveDownAttributeButton := self newButton
+		                           icon: self downIcon;
+		                           action: [ self moveDownAttribute ];
+		                           help: 'Move the selected attribute down';
+		                           disable;
+		                           yourself.
 	editAttributeButton := self newButton
 		                       icon: self editIcon;
 		                       action: [ self editAttribute ];
@@ -268,9 +294,13 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 						             ifNil: [ '' ] ]);
 		            whenModelChangedDo: [ taskList selectItem: nil ];
 		            whenSelectionChangedDo: [ 
-			            | selected |
+			            | selected index |
 			            selected := taskList selection selectedItem notNil.
+			            index := taskList selection selectedIndex.
 			            removeTaskButton enabled: selected.
+			            moveUpTaskButton enabled: (selected and: [ index > 1 ]).
+			            moveDownTaskButton enabled:
+					            (selected and: [ index < taskList items size ]).
 			            editTaskButton enabled: selected.
 			            self updateSourceText ];
 		            yourself.
@@ -285,6 +315,18 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                    help: 'Remove the selected task';
 		                    disable;
 		                    yourself.
+	moveUpTaskButton := self newButton
+		                         icon: self upIcon;
+		                         action: [ self moveUpTask ];
+		                         help: 'Move the selected task up';
+		                         disable;
+		                         yourself.
+	moveDownTaskButton := self newButton
+		                           icon: self downIcon;
+		                           action: [ self moveDownTask ];
+		                           help: 'Move the selected task down';
+		                           disable;
+		                           yourself.
 	editTaskButton := self newButton
 		                  icon: self editIcon;
 		                  action: [ self editTask ];
@@ -302,6 +344,74 @@ RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: self agentName.
 	aWindowPresenter initialExtent: 800 @ 600
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> moveDownAttribute [
+
+	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
+		self definitionDo: [ :definition | 
+			| attributeDeclarations index |
+			attributeDeclarations := definition attributeDeclarations copy.
+			index := attributeDeclarations
+				         indexOf: attributeNode
+				         ifAbsent: attributeDeclarations size + 1.
+			index <= (attributeDeclarations size - 1) ifTrue: [ 
+				attributeDeclarations
+					at: index
+					put: (attributeDeclarations at: index + 1).
+				attributeDeclarations at: index + 1 put: attributeNode.
+				definition attributeDeclarations: attributeDeclarations.
+				self updateAttributeList.
+				attributeList selectIndex: index + 1 ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> moveDownTask [
+
+	self simulationModel ifNotNil: [ :simulationModel | 
+		| tasks selectionIndex |
+		tasks := taskList items.
+		selectionIndex := taskList selection selectedIndex.
+		(selectionIndex between: 1 and: tasks size - 1) ifTrue: [ 
+			simulationModel
+				swapTasks: (tasks at: selectionIndex)
+				and: (tasks at: selectionIndex + 1).
+			self updateTaskList.
+			taskList selectIndex: selectionIndex + 1 ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> moveUpAttribute [
+
+	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
+		self definitionDo: [ :definition | 
+			| attributeDeclarations index |
+			attributeDeclarations := definition attributeDeclarations copy.
+			index := attributeDeclarations indexOf: attributeNode ifAbsent: 0.
+			index >= 2 ifTrue: [ 
+				attributeDeclarations
+					at: index
+					put: (attributeDeclarations at: index - 1).
+				attributeDeclarations at: index - 1 put: attributeNode.
+				definition attributeDeclarations: attributeDeclarations.
+				self updateAttributeList.
+				attributeList selectIndex: index - 1 ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> moveUpTask [
+
+	self simulationModel ifNotNil: [ :simulationModel | 
+		| tasks selectionIndex |
+		tasks := taskList items.
+		selectionIndex := taskList selection selectedIndex.
+		(selectionIndex between: 2 and: tasks size) ifTrue: [ 
+			simulationModel
+				swapTasks: (tasks at: selectionIndex)
+				and: (tasks at: selectionIndex - 1).
+			self updateTaskList.
+			taskList selectIndex: selectionIndex - 1 ] ]
 ]
 
 { #category : #operations }

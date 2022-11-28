@@ -787,6 +787,20 @@ RMDSimulationModel >> stagesOf: aString [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> swapTasks: aRMDTaskDefinitionNode and: anotherRMDTaskDefinitionNode [
+
+	| index1 index2 |
+	index1 := taskDefinitions
+		          indexOf: aRMDTaskDefinitionNode
+		          ifAbsent: [ ^ nil ].
+	index2 := taskDefinitions
+		          indexOf: anotherRMDTaskDefinitionNode
+		          ifAbsent: [ ^ nil ].
+	taskDefinitions at: index1 put: anotherRMDTaskDefinitionNode.
+	taskDefinitions at: index2 put: aRMDTaskDefinitionNode
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> taskDefinitions [
 	^ Array withAll: taskDefinitions
 ]

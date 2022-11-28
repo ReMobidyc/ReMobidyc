@@ -27,6 +27,9 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 								     add: (SpBoxLayout newHorizontal
 										      add: #addAttributeButton width: self buttonHeight;
 										      add: #removeAttributeButton width: self buttonHeight;
+										      add: #moveUpAttributeButton width: self buttonHeight;
+										      add: #moveDownAttributeButton
+										      width: self buttonHeight;
 										      add: #editAttributeButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -50,6 +53,8 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: (SpBoxLayout newHorizontal
 												       add: #addTaskButton width: self buttonHeight;
 												       add: #removeTaskButton width: self buttonHeight;
+												       add: #moveUpTaskButton width: self buttonHeight;
+												       add: #moveDownTaskButton width: self buttonHeight;
 												       add: #editTaskButton width: self buttonHeight;
 												       yourself)
 										      height: self buttonHeight;
