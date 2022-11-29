@@ -170,9 +170,13 @@ RMDAttributeBindEditor >> updateExpressionFieldType [
 { #category : #accessing }
 RMDAttributeBindEditor >> updatePlaceholderDropList [
 
+	| done |
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].
+	done := Set new: 256.
 	placeholderList items: (Array streamContents: [ :stream | 
 			 actionDefinitionNode placeholderNodesDo: [ :node | 
-				 (exceptVariableNodes includes: node) ifFalse: [ 
-					 stream nextPut: node ] ] ])
+				 ((exceptVariableNodes includes: node) or: [ done includes: node ]) 
+					 ifFalse: [ 
+						 stream nextPut: node.
+						 done add: node ] ] ])
 ]

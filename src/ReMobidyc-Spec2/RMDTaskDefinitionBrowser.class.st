@@ -493,13 +493,17 @@ RMDTaskDefinitionBrowser >> updateActionButtons [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateActionList [
 
-	actionList items: (simulationModel
-			 ifNotNil: [ 
-				 simulationModel actionNames
-					 collect: [ :name | 
-					 simulationModel actionDefinitionAt: name ifAbsent: [  ] ]
-					 thenSelect: #notNil ]
-			 ifNil: [ Array new ])
+	| selection |
+	selection := actionList selectedItem.
+	simulationModel
+		ifNotNil: [ 
+			actionList
+				items: (simulationModel actionNames
+						 collect: [ :name | 
+							 simulationModel actionDefinitionAt: name ifAbsent: [  ] ]
+						 thenSelect: #notNil);
+				selectItem: selection ]
+		ifNil: [ actionList items: Array new ]
 ]
 
 { #category : #updating }

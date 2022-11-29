@@ -9,9 +9,13 @@ Class {
 		'utilityDefinitionList',
 		'addUtilityButton',
 		'removeUtilityButton',
+		'moveUpUtilityButton',
+		'moveDownUtilityButton',
 		'editUtilityButton',
 		'attributeDefinitionList',
 		'addAttributeButton',
+		'moveUpAttributeButton',
+		'moveDownAttributeButton',
 		'editAttributeButton',
 		'removeAttributeButton'
 	],
@@ -57,6 +61,8 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #addAttributeButton expand: false;
 								     add: #removeAttributeButton expand: false;
+								     add: #moveUpAttributeButton expand: false;
+								     add: #moveDownAttributeButton expand: false;
 								     add: #editAttributeButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
@@ -71,6 +77,8 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #addUtilityButton expand: false;
 								     add: #removeUtilityButton expand: false;
+								     add: #moveUpUtilityButton expand: false;
+								     add: #moveDownUtilityButton expand: false;
 								     add: #editUtilityButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
@@ -226,20 +234,34 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                           yourself.
 	addAttributeButton := self newButton
 		                      label: '';
-		                      icon: Smalltalk ui icons add;
+		                      icon: self addIcon;
 		                      action: [ self addAttributeDefinition ];
 		                      help: 'Add a new attribute';
 		                      yourself.
 	removeAttributeButton := self newButton
 		                         label: '';
-		                         icon: Smalltalk ui icons remove;
+		                         icon: self removeIcon;
 		                         action: [ self removeAttributeDefinition ];
 		                         help: 'Remove the selected attribute';
 		                         disable;
 		                         yourself.
+	moveUpAttributeButton := self newButton
+		                         icon: self upIcon;
+		                         action: [ self moveUpAttribute ];
+		                         help:
+			                         'Move the selected attribute definition up';
+		                         disable;
+		                         yourself.
+	moveDownAttributeButton := self newButton
+		                           icon: self downIcon;
+		                           action: [ self moveDownAttribute ];
+		                           help:
+			                           'Move the selected attribute definition down';
+		                           disable;
+		                           yourself.
 	editAttributeButton := self newButton
 		                       label: '';
-		                       icon: Smalltalk ui icons edit;
+		                       icon: self editIcon;
 		                       action: [ self editAttributeDefinition ];
 		                       help:
 			                       'Edit the definition of the selected attribute';
@@ -253,20 +275,34 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                         yourself.
 	addUtilityButton := self newButton
 		                    label: '';
-		                    icon: Smalltalk ui icons add;
+		                    icon: self addIcon;
 		                    action: [ self addUtilityDefinition ];
 		                    help: 'Add a new utility variable';
 		                    yourself.
 	removeUtilityButton := self newButton
 		                       label: '';
-		                       icon: Smalltalk ui icons remove;
+		                       icon: self removeIcon;
 		                       action: [ self removeUtilityDefinition ];
 		                       help: 'Remove the selected utility variable';
 		                       disable;
 		                       yourself.
+	moveUpUtilityButton := self newButton
+		                       icon: self upIcon;
+		                       action: [ self moveUpUtility ];
+		                       help:
+			                       'Move the selected utility definition up';
+		                       disable;
+		                       yourself.
+	moveDownUtilityButton := self newButton
+		                         icon: self downIcon;
+		                         action: [ self moveDownUtility ];
+		                         help:
+			                         'Move the selected utility definition down';
+		                         disable;
+		                         yourself.
 	editUtilityButton := self newButton
 		                     label: '';
-		                     icon: Smalltalk ui icons edit;
+		                     icon: self editIcon;
 		                     action: [ self editUtilityDefinition ];
 		                     help:
 			                     'Edit the definition of the selected utility variable';
@@ -286,7 +322,82 @@ RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self title;
-		initialExtent: 400 @ self preferredHeight
+		initialExtent: 600 @ self preferredHeight
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> moveDownAttribute [
+
+	attributeDefinitionList selection selectedItem ifNotNil: [ 
+		:attributeNode | 
+		| attributeDefinitions index |
+		attributeDefinitions := node attributeDefinitions copy.
+		index := attributeDefinitions
+			         indexOf: attributeNode
+			         ifAbsent: attributeDefinitions size + 1.
+		index <= (attributeDefinitions size - 1) ifTrue: [ 
+			attributeDefinitions
+				at: index
+				put: (attributeDefinitions at: index + 1).
+			attributeDefinitions at: index + 1 put: attributeNode.
+			node attributeDefinitions: attributeDefinitions.
+			self nodeChanged.
+			attributeDefinitionList selectIndex: index + 1 ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> moveDownUtility [
+
+	utilityDefinitionList selection selectedItem ifNotNil: [ :utilityNode | 
+		| utilityDeclarations index |
+		utilityDeclarations := node utilityDefinitions copy.
+		index := utilityDeclarations
+			         indexOf: utilityNode
+			         ifAbsent: utilityDeclarations size + 1.
+		index <= (utilityDeclarations size - 1) ifTrue: [ 
+			utilityDeclarations
+				at: index
+				put: (utilityDeclarations at: index + 1).
+			utilityDeclarations at: index + 1 put: utilityNode.
+			node utilityDefinitions: utilityDeclarations.
+			self nodeChanged.
+			utilityDefinitionList selectIndex: index + 1 ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> moveUpAttribute [
+
+	attributeDefinitionList selection selectedItem ifNotNil: [ 
+		:attributeNode | 
+		| attributeDefinitions index |
+		attributeDefinitions := node attributeDefinitions copy.
+		index := attributeDefinitions indexOf: attributeNode ifAbsent: 0.
+		index >= 2 ifTrue: [ 
+			attributeDefinitions
+				at: index
+				put: (attributeDefinitions at: index - 1).
+			attributeDefinitions at: index - 1 put: attributeNode.
+			node attributeDefinitions: attributeDefinitions.
+			self nodeChanged.
+			attributeDefinitionList selectIndex: index - 1 ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> moveUpUtility [
+
+	utilityDefinitionList selection selectedItem ifNotNil: [ 
+		:utilityNode | 
+		| utilityDefinitions index |
+		utilityDefinitions := node utilityDefinitions copy.
+		index := utilityDefinitions indexOf: utilityNode ifAbsent: 0.
+		index >= 2 ifTrue: [ 
+			utilityDefinitions
+				at: index
+				put: (utilityDefinitions at: index - 1).
+			utilityDefinitions at: index - 1 put: utilityNode.
+			node utilityDefinitions: utilityDefinitions.
+			self nodeChanged.
+			utilityDefinitionList selectIndex: index - 1 ] ]
 ]
 
 { #category : #accessing }
@@ -373,6 +484,11 @@ RMDActionDefinitionBrowser >> updateAttributeButtons [
 	| hasSelection |
 	hasSelection := attributeDefinitionList selectedItem notNil.
 	removeAttributeButton enabled: hasSelection.
+	moveUpAttributeButton enabled: (hasSelection and: [ 
+			 attributeDefinitionList selection selectedIndex >= 2 ]).
+	moveDownAttributeButton enabled: (hasSelection and: [ 
+			 attributeDefinitionList selection selectedIndex
+			 < attributeDefinitionList items size ]).
 	editAttributeButton enabled: hasSelection
 ]
 
@@ -388,5 +504,10 @@ RMDActionDefinitionBrowser >> updateUtilityButtons [
 	| hasSelection |
 	hasSelection := utilityDefinitionList selectedItem notNil.
 	removeUtilityButton enabled: hasSelection.
+	moveUpUtilityButton enabled: (hasSelection and: [ 
+			 utilityDefinitionList selection selectedIndex >= 2 ]).
+	moveDownUtilityButton enabled: (hasSelection and: [ 
+			 utilityDefinitionList selection selectedIndex
+			 < utilityDefinitionList items size ]).
 	editUtilityButton enabled: hasSelection
 ]

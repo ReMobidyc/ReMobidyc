@@ -13,5 +13,5 @@ RMDEnUnitExpressionNode >> typecheckIn: aRMDInterpreter [
 	type := expression typecheckIn: aRMDInterpreter.
 	^ type = RMDType noDimension
 		  ifTrue: [ RMDType unit: unit ]
-		  ifFalse: [ RMDTypeError on: expression with: type ]
+		  ifFalse: [ (RMDTypeError on: expression with: type) signal ]
 ]
