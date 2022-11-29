@@ -172,7 +172,7 @@ RMDUnit class >> initialize [
 		value: #( K 'Kelvin' ).
 	register
 		value: (self newSISymbol: '°C')
-		value: #( '°C' '℃' 'DegreeC' 'Celsius' ).
+		value: #( '°C' '℃' 'DegreeC' 'degreeC' 'Celsius' ).
 	register
 		value: (self newSISymbol: '°F')
 		value: #( 'F' '℉' 'DegreeF' 'Fahrenheit' ).
