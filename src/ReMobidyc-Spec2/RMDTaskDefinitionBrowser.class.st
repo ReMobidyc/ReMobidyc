@@ -151,8 +151,9 @@ RMDTaskDefinitionBrowser >> addAction [
 			self simulationModel ifNotNil: [ :model | 
 				model addActionDefinition: newActionDef.
 				self taskDefinition ifNotNil: #resetAction.
+				self updateActionList.
+				actionList selectItem: newActionDef.
 				self
-					updateActionList;
 					updateActionButtons;
 					updateTemplateText;
 					updateSourceText ] ] ]
@@ -203,8 +204,9 @@ RMDTaskDefinitionBrowser >> editAction [
 						removeActionDefinition: oldActionDef ifAbsent: [  ];
 						addActionDefinition: newActionDef.
 					self taskDefinition ifNotNil: #resetAction.
+					self updateActionList.
+					actionList selectItem: newActionDef.
 					self
-						updateActionList;
 						updateActionButtons;
 						updateTemplateText;
 						updateSourceText ] ] ] ]
