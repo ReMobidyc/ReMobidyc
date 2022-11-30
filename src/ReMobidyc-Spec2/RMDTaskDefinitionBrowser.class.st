@@ -147,14 +147,16 @@ RMDTaskDefinitionBrowser >> addAction [
 	| newActionDef |
 	newActionDef := RMDActionDefinitionNode template.
 	newActionDef asPresenter openDialog okAction: [ 
-		self simulationModel ifNotNil: [ :model | 
-			model addActionDefinition: newActionDef.
-			self taskDefinition ifNotNil: #resetAction.
-			self
-				updateActionList;
-				updateActionButtons;
-				updateTemplateText;
-				updateSourceText ] ]
+		newActionDef identifier ifNotEmpty: [ 
+			self simulationModel ifNotNil: [ :model | 
+				model addActionDefinition: newActionDef.
+				self taskDefinition ifNotNil: #resetAction.
+				self updateActionList.
+				actionList selectItem: newActionDef.
+				self
+					updateActionButtons;
+					updateTemplateText;
+					updateSourceText ] ] ]
 ]
 
 { #category : #operations }
@@ -202,8 +204,9 @@ RMDTaskDefinitionBrowser >> editAction [
 						removeActionDefinition: oldActionDef ifAbsent: [  ];
 						addActionDefinition: newActionDef.
 					self taskDefinition ifNotNil: #resetAction.
+					self updateActionList.
+					actionList selectItem: newActionDef.
 					self
-						updateActionList;
 						updateActionButtons;
 						updateTemplateText;
 						updateSourceText ] ] ] ]
