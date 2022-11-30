@@ -50,8 +50,15 @@ with new -
 
 { #category : #'typical instances' }
 RMDActionDefinitionNode class >> template [
+
 	<script: 'RMDActionDefinitionNode template inspect'>
-	^ 'to verb is.' asRMDActionDefinition
+	^ self
+		  name: ''
+		  object: nil
+		  guard: nil
+		  lifeDirectives: Array new
+		  attributeDefinitions: Array new
+		  utilityDefinitions: Array new
 ]
 
 { #category : #'instance creation' }
