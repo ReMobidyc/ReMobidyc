@@ -166,7 +166,7 @@ RMDTaskDefinitionBrowser >> addReplacement [
 				 actionDefinitionAt: taskDefinition actionIdentifier
 				 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 				| bindEditor |
-				(bindEditor := RMDAttributeBindEditor
+				(bindEditor := RMDReplacementEditor
 					               actionDefinition: actionDefinition
 					               except:
 					               (taskDefinition attributeBinds collect:
@@ -219,7 +219,7 @@ RMDTaskDefinitionBrowser >> editReplacement [
 					 actionDefinitionAt: taskDefinition actionIdentifier
 					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 					| bindEditor |
-					bindEditor := RMDAttributeBindEditor
+					bindEditor := RMDReplacementEditor
 						              actionDefinition: actionDefinition
 						              except: (taskDefinition attributeBinds
 								               select: [ :bind | bind ~= oldBind ]

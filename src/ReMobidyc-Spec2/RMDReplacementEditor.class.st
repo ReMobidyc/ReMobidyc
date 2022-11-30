@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDAttributeBindEditor,
+	#name : #RMDReplacementEditor,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'exceptVariableNodes',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAttributeBindEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
+RMDReplacementEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
 	^ self new
 		actionDefinitionNode: aRMDActionDefinitionNode;
 		exceptVariableNodes: aCollectionOfRMDSyntaxNode;
@@ -20,7 +20,7 @@ RMDAttributeBindEditor class >> actionDefinition: aRMDActionDefinitionNode excep
 ]
 
 { #category : #layout }
-RMDAttributeBindEditor class >> defaultLayout [
+RMDReplacementEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -34,18 +34,18 @@ RMDAttributeBindEditor class >> defaultLayout [
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> actionDefinitionNode [
+RMDReplacementEditor >> actionDefinitionNode [
 	^ actionDefinitionNode
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
+RMDReplacementEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	actionDefinitionNode := aRMDActionDefinitionNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDAttributeBindEditor >> agentDirectiveMenu [
+RMDReplacementEditor >> agentDirectiveMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -71,7 +71,7 @@ RMDAttributeBindEditor >> agentDirectiveMenu [
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> attributeBindNode [
+RMDReplacementEditor >> attributeBindNode [
 
 	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
 		  expressionField syntaxNode ifNotNil: [ :replacement | 
@@ -81,7 +81,7 @@ RMDAttributeBindEditor >> attributeBindNode [
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> attributeBindNode: aRMDAttributeBindNode [
+RMDReplacementEditor >> attributeBindNode: aRMDAttributeBindNode [
 
 	aRMDAttributeBindNode
 		ifNotNil: [ 
@@ -93,18 +93,18 @@ RMDAttributeBindEditor >> attributeBindNode: aRMDAttributeBindNode [
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> exceptVariableNodes [
+RMDReplacementEditor >> exceptVariableNodes [
 	^ exceptVariableNodes 
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
+RMDReplacementEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	exceptVariableNodes := aCollectionOfRMDSyntaxNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDAttributeBindEditor >> expressionFieldMenu [
+RMDReplacementEditor >> expressionFieldMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -117,7 +117,7 @@ RMDAttributeBindEditor >> expressionFieldMenu [
 ]
 
 { #category : #initialization }
-RMDAttributeBindEditor >> initializePresenters [
+RMDReplacementEditor >> initializePresenters [
 
 	super initializePresenters.
 	placeholderList := self newDropList
@@ -138,7 +138,7 @@ RMDAttributeBindEditor >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDAttributeBindEditor >> initializeWindow: aWindowPresenter [
+RMDReplacementEditor >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Bindings for Adaptation'.
 	aWindowPresenter
@@ -146,14 +146,14 @@ RMDAttributeBindEditor >> initializeWindow: aWindowPresenter [
 ]
 
 { #category : #menu }
-RMDAttributeBindEditor >> paste: aString [
+RMDReplacementEditor >> paste: aString [
 
 	Clipboard clipboardText: aString.
 	expressionField withAdapterDo: [ :a | a widget textArea editor paste ]
 ]
 
 { #category : #updating }
-RMDAttributeBindEditor >> updateExpressionFieldType [
+RMDReplacementEditor >> updateExpressionFieldType [
 
 	placeholderList selectedItem
 		ifNotNil: [ :placeholder | 
@@ -163,12 +163,15 @@ RMDAttributeBindEditor >> updateExpressionFieldType [
 				ifFalse: [ 
 					placeholder isStageDirectiveNode
 						ifTrue: [ expressionField beStageDirective ]
-						ifFalse: [ expressionField beExpression ] ] ]
+						ifFalse: [ 
+							(placeholder isConditionPlaceholderIn: actionDefinitionNode)
+								ifTrue: [ expressionField beCondition ]
+								ifFalse: [ expressionField beExpression ] ] ] ]
 		ifNil: [ expressionField disable ]
 ]
 
 { #category : #accessing }
-RMDAttributeBindEditor >> updatePlaceholderDropList [
+RMDReplacementEditor >> updatePlaceholderDropList [
 
 	| done |
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].

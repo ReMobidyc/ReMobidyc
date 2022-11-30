@@ -52,6 +52,12 @@ RMDPlaceholderNode >> identifier: aString [
 ]
 
 { #category : #testing }
+RMDPlaceholderNode >> isConditionPlaceholderIn: aRMDActionDefinitionNode [
+
+	^ aRMDActionDefinitionNode hasConditionPlaceholder: self
+]
+
+{ #category : #testing }
 RMDPlaceholderNode >> isPlaceholderNode [
 
 	^ true
