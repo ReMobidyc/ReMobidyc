@@ -42,6 +42,14 @@ RMDSyntaxNode >> copyReplace: aDictionary [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> hasConditionPlaceholder: aRMDPlaceholder [
+
+	self childrenDo: [ :node | 
+		(node hasConditionPlaceholder: aRMDPlaceholder) ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> hasPlaceholder [
 
 	self nodesDo: [ :node | node isPlaceholderNode ifTrue: [ ^ true ] ].

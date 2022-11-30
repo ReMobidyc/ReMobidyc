@@ -80,6 +80,11 @@ RMDSyntaxNodeTextInputPresenter >> beAgentReference [
 ]
 
 { #category : #api }
+RMDSyntaxNodeTextInputPresenter >> beCondition [
+	self parser: RMDGrammar new condition end
+]
+
+{ #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beExpression [
 	self parser: RMDGrammar new expression end
 ]

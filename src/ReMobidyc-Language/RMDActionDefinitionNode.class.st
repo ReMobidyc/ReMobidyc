@@ -173,6 +173,13 @@ RMDActionDefinitionNode >> guard: aRMDCondition [
 ]
 
 { #category : #testing }
+RMDActionDefinitionNode >> hasConditionPlaceholder: aRMDPlaceholder [
+
+	guard = aRMDPlaceholder ifTrue: [ ^ true ].
+	^ super hasConditionPlaceholder: aRMDPlaceholder
+]
+
+{ #category : #testing }
 RMDActionDefinitionNode >> hasObject [
 	^ object notNil
 ]

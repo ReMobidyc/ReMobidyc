@@ -39,6 +39,14 @@ RMDGuardedChoiceNode >> guardsAndChoices: anArrayOfAssociation [
 	guardsAndChoices := anArrayOfAssociation
 ]
 
+{ #category : #testing }
+RMDGuardedChoiceNode >> hasConditionPlaceholder: aRMDPlaceholder [
+
+	guardsAndChoices do: [ :assoc | 
+		assoc key = aRMDPlaceholder ifTrue: [ ^ true ] ].
+	^ super hasConditionPlaceholder: aRMDPlaceholder
+]
+
 { #category : #comparing }
 RMDGuardedChoiceNode >> hash [
 	^ self class hash bitXor: guardsAndChoices hash
