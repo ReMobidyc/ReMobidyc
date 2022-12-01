@@ -23,10 +23,10 @@ RMDFishmanMooreRandomGenerator >> hash: anArrayOfInteger [
 
 	| hash |
 	anArrayOfInteger ifEmpty: [ ^ 1 ].
-	hash := anArrayOfInteger first.
+	hash := anArrayOfInteger first abs.
 	2 to: anArrayOfInteger size do: [ :i | 
 		| x |
-		x := (anArrayOfInteger at: i) abs + 1.
+		x := (anArrayOfInteger at: i) abs.
 		hash := (x * self factor bitXor: hash) \\ self modulo ].
 	^ hash * self factor \\ self modulo
 ]
@@ -52,7 +52,9 @@ RMDFishmanMooreRandomGenerator >> modulo [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> next [
 
-	^ (self nextSeed - 1) asFloat / (self modulo - 1) asFloat
+	^ self
+		  nextSeed;
+		  value
 ]
 
 { #category : #accessing }
@@ -84,4 +86,10 @@ RMDFishmanMooreRandomGenerator >> seed: anInteger [
 	seed := anInteger asInteger.
 	seed <= 0 ifTrue: [ 
 		^ self error: 'random seed must be a non-zero natural number.' ]
+]
+
+{ #category : #accessing }
+RMDFishmanMooreRandomGenerator >> value [
+
+	^ (self seed - 1) asFloat / (self modulo - 1) asFloat
 ]
