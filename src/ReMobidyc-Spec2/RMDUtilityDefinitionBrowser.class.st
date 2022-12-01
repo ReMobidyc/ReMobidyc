@@ -41,6 +41,18 @@ RMDUtilityDefinitionBrowser >> definitionBodyChanged [
 		node definitionBody: expression ]
 ]
 
+{ #category : #menu }
+RMDUtilityDefinitionBrowser >> definitionBodyFieldMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Templates...';
+						  subMenu: definitionBodyField templateMenu ] ];
+		  yourself
+]
+
 { #category : #private }
 RMDUtilityDefinitionBrowser >> identifierChanged [
 
@@ -64,6 +76,7 @@ RMDUtilityDefinitionBrowser >> initializePresenters [
 		                       beExpression;
 		                       whenLastValidSyntaxNodeChangedDo: [ 
 			                       self definitionBodyChanged ];
+		                       contextMenu: [ self definitionBodyFieldMenu ];
 		                       yourself
 ]
 

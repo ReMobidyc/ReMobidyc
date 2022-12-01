@@ -1,8 +1,8 @@
 Class {
 	#name : #RMDSyntaxNodeTextInputPresenter,
 	#superclass : #SpTextInputFieldPresenter,
-	#traits : 'TRMDPresenter',
-	#classTraits : 'TRMDPresenter classTrait',
+	#traits : 'TRMDPresenter + TRMDTemplateMenu',
+	#classTraits : 'TRMDPresenter classTrait + TRMDTemplateMenu classTrait',
 	#instVars : [
 		'#syntaxNode => ObservableSlot',
 		'#lastValidSyntaxNode => ObservableSlot',
@@ -116,6 +116,12 @@ RMDSyntaxNodeTextInputPresenter >> color: aColor [
 
 	super color: aColor.
 	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
+]
+
+{ #category : #private }
+RMDSyntaxNodeTextInputPresenter >> doTextPaste [
+
+	self adapter pasteText
 ]
 
 { #category : #initialization }

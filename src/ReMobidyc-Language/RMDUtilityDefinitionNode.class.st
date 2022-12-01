@@ -9,7 +9,7 @@ RMDUtilityDefinitionNode class >> template [
 
 	<script: 'RMDUtilityDefinitionNode template inspect'>
 	^ RMDUtilityDefinitionNode
-		  variable: (RMDUtilityVariableNode identifier: 'var')
+		  variable: (RMDUtilityVariableNode identifier: '')
 		  expression: RMDLiteralNode zero
 ]
 

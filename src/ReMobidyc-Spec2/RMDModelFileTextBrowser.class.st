@@ -287,9 +287,14 @@ RMDModelFileTextBrowser >> sourceTextContextMenu [
 		  addGroup: [ :group | 
 			  group addItem: [ :item | 
 					  item
-						  name: 'Accept';
-						  shortcut: $s command;
-						  action: [ self acceptSourceText ] ] ];
+						  name: 'Templates...';
+						  subMenu: sourceText templateMenu ] ];
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+				  item
+					  name: 'Accept';
+					  shortcut: $s command;
+					  action: [ self acceptSourceText ] ] ];
 		  yourself
 ]
 
