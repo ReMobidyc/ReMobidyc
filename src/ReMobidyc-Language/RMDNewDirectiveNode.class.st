@@ -115,9 +115,9 @@ RMDNewDirectiveNode >> quantity [
 ]
 
 { #category : #accessing }
-RMDNewDirectiveNode >> quantity: anInteger [
+RMDNewDirectiveNode >> quantity: aRMDExpression [
 
-	quantity := anInteger
+	quantity := aRMDExpression
 ]
 
 { #category : #rewriting }
