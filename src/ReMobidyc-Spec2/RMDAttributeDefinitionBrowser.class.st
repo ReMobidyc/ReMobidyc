@@ -55,6 +55,18 @@ RMDAttributeDefinitionBrowser >> definitionBodyChanged [
 		node definitionBody: expression ]
 ]
 
+{ #category : #menu }
+RMDAttributeDefinitionBrowser >> definitionBodyFieldMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Templates...';
+						  subMenu: definitionBodyField templateMenu ] ];
+		  yourself
+]
+
 { #category : #private }
 RMDAttributeDefinitionBrowser >> identifierChanged [
 
@@ -94,6 +106,7 @@ RMDAttributeDefinitionBrowser >> initializePresenters [
 		                whenSelectedItemChangedDo: [ self modifierChanged ];
 		                yourself.
 	identifierField := self newSyntaxNodeTextInput
+		                   placeholder: 'attribute';
 		                   parser: RMDGrammar new identifier end;
 		                   whenLastValidSyntaxNodeChangedDo: [ 
 			                   self identifierChanged ];
@@ -102,6 +115,7 @@ RMDAttributeDefinitionBrowser >> initializePresenters [
 		                       beExpression;
 		                       whenLastValidSyntaxNodeChangedDo: [ 
 			                       self definitionBodyChanged ];
+		                       contextMenu: [ self definitionBodyFieldMenu ];
 		                       yourself
 ]
 

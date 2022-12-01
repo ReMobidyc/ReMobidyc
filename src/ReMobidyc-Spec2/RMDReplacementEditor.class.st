@@ -6,7 +6,8 @@ Class {
 		'actionDefinitionNode',
 		'replacementIcon',
 		'expressionField',
-		'placeholderList'
+		'placeholderList',
+		'hasObject'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -110,7 +111,11 @@ RMDReplacementEditor >> expressionFieldMenu [
 	menu := SpMenuPresenter new.
 	menu addItem: [ :item | 
 		item
-			name: 'directive';
+			name: 'templates...';
+			subMenu: expressionField expressionTemplateMenu ].
+	menu addItem: [ :item | 
+		item
+			name: 'directives...';
 			subMenu: self agentDirectiveMenu.
 		item enabled: item subMenu isEnabled ].
 	^ menu

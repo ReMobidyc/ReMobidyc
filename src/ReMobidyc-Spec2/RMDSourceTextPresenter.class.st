@@ -1,8 +1,8 @@
 Class {
 	#name : #RMDSourceTextPresenter,
 	#superclass : #SpTextPresenter,
-	#traits : 'TRMDPresenter',
-	#classTraits : 'TRMDPresenter classTrait',
+	#traits : 'TRMDPresenter + TRMDTemplateMenu',
+	#classTraits : 'TRMDPresenter classTrait + TRMDTemplateMenu classTrait',
 	#instVars : [
 		'#syntaxNode => ObservableSlot',
 		'#lastValidSyntaxNode => ObservableSlot',

@@ -10,7 +10,7 @@ RMDAttributeDefinitionNode class >> template [
 	<script: 'RMDAttributeDefinitionNode template inspect'>
 	^ RMDAttributeDefinitionNode
 		  variable:
-		  (RMDAssignableAttributeVariableNode identifier: 'var' agent: nil)
+		  (RMDAssignableAttributeVariableNode identifier: '' agent: nil)
 		  expression: RMDLiteralNode zero
 ]
 
