@@ -26,8 +26,8 @@ RMDFishmanMooreRandomGenerator >> hash: anArrayOfInteger [
 	hash := anArrayOfInteger first.
 	2 to: anArrayOfInteger size do: [ :i | 
 		| x |
-		x := anArrayOfInteger at: i.
-		hash := hash + x * self factor \\ self modulo ].
+		x := (anArrayOfInteger at: i) abs + 1.
+		hash := (x * self factor bitXor: hash) \\ self modulo ].
 	^ hash * self factor \\ self modulo
 ]
 
@@ -40,10 +40,7 @@ RMDFishmanMooreRandomGenerator >> initialize [
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> initializeWithAll: anArrayOfInteger [
 
-	seed := 1.
-	anArrayOfInteger do: [ :int | 
-		seed := (seed bitXor: int * 29) \\ 2147483647 * 742938285
-		        \\ 2147483647 ]
+	seed := self hash: anArrayOfInteger
 ]
 
 { #category : #accessing }

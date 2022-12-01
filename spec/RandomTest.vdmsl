@@ -45,7 +45,7 @@ operations
     testHash : () ==> ()
     testHash() ==
         (assertEquals(Random`hash([1]), 742938285, "hash([1])");
-        assertEquals(Random`hash([1, 2]), 837795877, "hash([1,2])");
-        assertEquals(Random`hash([1, 2, 3]), 1932503519, "hash([1,2,3])"));
+        assertEquals(Random`hash([1, 2]), 2017296752, "hash([1,2])");
+        assertEquals(Random`hash([1, 2, 3]), 1522674686, "hash([1,2,3])"));
 
 end RandomTest
