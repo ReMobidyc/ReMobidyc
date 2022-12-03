@@ -23,8 +23,10 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter individualsOf: patchDef do: [ :patch | 
 		interpreter
-			withActionContextWithSubject: patch
+			withActionContextWith: RMDActionDefinitionNode template
+			subject: patch
 			definition: patchDef
+			taskHash: 1
 			do: [ 
 				self
 					assert:

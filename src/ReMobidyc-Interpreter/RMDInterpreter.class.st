@@ -613,17 +613,26 @@ RMDInterpreter >> unknownDirectiveError: aString [
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithSubject: anInteger definition: aRMDAnimatDefinitionNode do: aBlock [
+RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 taskHash: hashInteger do: aBlock [
 
 	^ self
-		  withContext: (RMDActionContext
-				   subject: anInteger
-				   definition: aRMDAnimatDefinitionNode)
+		  withContext: ((RMDActionContext
+				    subject: anInteger1
+				    definition: aRMDAnimatDefinitionNode1)
+				   randomSeedWithHash: { 
+						   globalSeed.
+						   memory time.
+						   (memory seedAt: anInteger1).
+						   (memory seedAt: anInteger2).
+						   hashInteger };
+				   action: aRMDActionDefinitionNode;
+				   yourself)
 		  do: [ 
 			  context
 				  world: memory world
 				  definition: simulationModel worldDefinition.
-			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
+			  context object: anInteger2 definition: aRMDAnimatDefinitionNode2.
+			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
 					          patchAtXIndex: ((self patchX: (self
@@ -664,20 +673,24 @@ RMDInterpreter >> withActionContextWithSubject: anInteger definition: aRMDAnimat
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithSubject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 do: aBlock [
+RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger definition: aRMDAnimatDefinitionNode taskHash: anotherInteger do: aBlock [
 
 	^ self
-		  withContext: (RMDActionContext
-				   subject: anInteger1
-				   definition: aRMDAnimatDefinitionNode1)
+		  withContext: ((RMDActionContext
+				    subject: anInteger
+				    definition: aRMDAnimatDefinitionNode)
+				   randomSeedWithHash: { 
+						   globalSeed.
+						   memory time.
+						   (memory seedAt: anInteger).
+						   anotherInteger };
+				   action: aRMDActionDefinitionNode;
+				   yourself)
 		  do: [ 
 			  context
 				  world: memory world
 				  definition: simulationModel worldDefinition.
-			  context
-				  object: anInteger2
-				  definition: aRMDAnimatDefinitionNode2.
-			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
+			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
 					          patchAtXIndex: ((self patchX: (self

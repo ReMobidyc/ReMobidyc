@@ -30,7 +30,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter individualsOf: goatDef do: [ :goat | 
 		interpreter
-			withActionContextWithSubject: goat
+			withObserverContextWithSubject: goat
 			definition: goatDef
 			do: [ 
 				self assert:
