@@ -98,7 +98,7 @@ operations
             animat1 =
                 Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
         in
-            (Context`setupInitializationContext(exampleAnimatA, animat1, 1);
+            (Context`setupInitializationContext(exampleAnimatA, animat1);
             Interpreter`evalAttributeInitializer(mk_AST`AttributeInitializer("age", mk_AST`Literal(0, Unit`s)));
             Memory`tick();
             assertEquals(Memory`read(animat1 + 2), 0.0, "my age = 0.0")));

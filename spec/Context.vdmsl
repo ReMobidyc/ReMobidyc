@@ -18,7 +18,7 @@ state Context of
     utilityDefinitions : map AST`Identifier to AST`Expression
     action : [AST`ActionDefinition]
     random : Random`RandomGenerator
-    randomSeed : nat1
+    globalSeed : nat1
 init s ==
     s
     = mk_Context(
@@ -32,6 +32,9 @@ init s ==
 end
 
 operations
+    setGlobalSeed : nat1 ==> ()
+    setGlobalSeed(newSeed) == globalSeed := newSeed;
+    
     setSimulationModel : AST`SimulationModel ==> ()
     setSimulationModel(model) == simulationModel := model;
     
@@ -60,17 +63,18 @@ operations
     setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
         is not yet specified;
     
-    setupInitializationContext : AST`AgentDefinition * Memory`Address * nat1 ==> ()
-    setupInitializationContext(subjectDefinition, subject, seed) ==
+    setupInitializationContext : AST`AgentDefinition * Memory`Address ==> ()
+    setupInitializationContext(subjectDefinition, subject) ==
         (attributes
             := {nil |-> attributeAddresses(subjectDefinition, subject)};
         utilities := {|->};
         utilityDefinitions := {|->};
-        random := mk_Random`RandomGenerator(seed));
+        random
+            := mk_Random`RandomGenerator(Random`hash([globalSeed, subject])));
     
     setupActionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
     nat1 ==> ()
-    setupActionContextSV(actionDefinition, subjectDefinition, subject, seed) ==
+    setupActionContextSV(actionDefinition, subjectDefinition, subject, taskSeed) ==
         let
             myAttributeAddresses =
                 attributeAddresses(subjectDefinition, subject),
@@ -109,7 +113,8 @@ operations
                 := {attrDef.identifier |-> attrDef.expression
                 | attrDef in seq actionDefinition.utilityDefinitions};
             action := actionDefinition;
-            random := mk_Random`RandomGenerator(seed));
+            random
+                := mk_Random`RandomGenerator(Random`hash([globalSeed, Memory`getTime(), subject, taskSeed])));
     
     pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
     attributeAddresses(agentDefinition, animat) ==

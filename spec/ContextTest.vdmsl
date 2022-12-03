@@ -77,7 +77,7 @@ operations
             animat1 =
                 Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
         in
-            (Context`setupInitializationContext(exampleAnimatA, animat1, 1);
+            (Context`setupInitializationContext(exampleAnimatA, animat1);
             assertEquals(animat1, 3, "the animat1 is allocated at 3");
             assertEquals(
                 Context`getAttributeAddress(nil, "x"),
