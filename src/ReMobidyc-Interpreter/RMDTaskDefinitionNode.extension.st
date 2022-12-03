@@ -14,20 +14,22 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 
-	| subjectAgent objectAgent interactionSpace |
+	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
+	specializedAction := self actionWith: aRMDInterpreter.
+	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
 	subjectAgent := subjectIdentifier = 'Patch'
-		                  ifTrue: [ aRMDInterpreter patchDefinition ]
-		                  ifFalse: [ 
-			                  subjectIdentifier = 'World'
-				                  ifTrue: [ aRMDInterpreter worldDefinition ]
-				                  ifFalse: [ 
-					                  aRMDInterpreter
-						                  animatDefinitionAt: subjectIdentifier
-						                  ifAbsent: [ 
-						                  ^ KeyNotFound signal: subjectIdentifier ] ] ].
+		                ifTrue: [ aRMDInterpreter patchDefinition ]
+		                ifFalse: [ 
+			                subjectIdentifier = 'World'
+				                ifTrue: [ aRMDInterpreter worldDefinition ]
+				                ifFalse: [ 
+					                aRMDInterpreter
+						                animatDefinitionAt: subjectIdentifier
+						                ifAbsent: [ 
+						                ^ KeyNotFound signal: subjectIdentifier ] ] ].
 	objectAgent := aRMDInterpreter
-		                 animatDefinitionAt: objectIdentifier
-		                 ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
+		               animatDefinitionAt: objectIdentifier
+		               ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
 		                    width: aRMDInterpreter north
 		                    height: aRMDInterpreter east
@@ -35,7 +37,7 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
 			withObserverContextWithSubject: objectAnimat
-			agent: objectAgent
+			definition: objectAgent
 			do: [ 
 				| x y |
 				x := aRMDInterpreter
@@ -47,45 +49,42 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 					     agent: nil
 					     ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ].
 				interactionSpace add: objectAnimat x: x y: y ] ].
-	aRMDInterpreter
-		individualsOf: subjectAgent
-		do: [ :subjectAnimat | 
-			| subjectX subjectY |
-			aRMDInterpreter
-				withObserverContextWithSubject: subjectAnimat
-				agent: subjectAgent
-				do: [ 
-					subjectX := aRMDInterpreter
-						            readVariable: 'x'
-						            agent: nil
-						            ifAbsent: [ 
-						            ^ (RMDUnresolvedReferenceError on: self) signal ].
-					subjectY := aRMDInterpreter
-						            readVariable: 'y'
-						            agent: nil
-						            ifAbsent: [ 
-						            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
-			interactionSpace
-				animatsAroundX: subjectX
-				y: subjectY
-				do: [ :objectAnimat | 
-					aRMDInterpreter
-						withActionContextWithIndividual: subjectAnimat
-						agent: subjectAgent
-						object: objectAnimat
-						agent: objectAgent
-						do: [ 
-							aRMDInterpreter
-								setupRandomForIndividual: subjectAnimat
-								and: objectAnimat
-								task: self.
-							(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
+	aRMDInterpreter individualsOf: subjectAgent do: [ :subjectAnimat | 
+		| subjectX subjectY |
+		aRMDInterpreter
+			withObserverContextWithSubject: subjectAnimat
+			definition: subjectAgent
+			do: [ 
+				subjectX := aRMDInterpreter
+					            readVariable: 'x'
+					            agent: nil
+					            ifAbsent: [ 
+					            ^ (RMDUnresolvedReferenceError on: self) signal ].
+				subjectY := aRMDInterpreter
+					            readVariable: 'y'
+					            agent: nil
+					            ifAbsent: [ 
+					            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
+		interactionSpace
+			animatsAroundX: subjectX
+			y: subjectY
+			do: [ :objectAnimat | 
+				aRMDInterpreter
+					withActionContextWith: specializedAction
+					subject: subjectAnimat
+					definition: subjectAgent
+					object: objectAnimat
+					definition: objectAgent
+					taskHash: taskHash
+					do: [ specializedAction evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 
-	| subjectAgent objectAgent interactionSpace |
+	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
+	specializedAction := self actionWith: aRMDInterpreter.
+	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
 	subjectAgent := subjectIdentifier = 'Patch'
 		                ifTrue: [ aRMDInterpreter patchDefinition ]
 		                ifFalse: [ 
@@ -107,7 +106,7 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
 			withObserverContextWithSubject: objectAnimat
-			agent: objectAgent
+			definition: objectAgent
 			do: [ 
 				| x y |
 				x := aRMDInterpreter
@@ -123,7 +122,7 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 		| subjectX subjectY |
 		aRMDInterpreter
 			withObserverContextWithSubject: subjectAnimat
-			agent: subjectAgent
+			definition: subjectAgent
 			do: [ 
 				subjectX := aRMDInterpreter
 					            readVariable: 'x'
@@ -140,16 +139,13 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 			y: subjectY
 			do: [ :objectAnimat | 
 				aRMDInterpreter
-					withActionContextWithIndividual: subjectAnimat
-					agent: subjectAgent
+					withActionContextWith: specializedAction
+					subject: subjectAnimat
+					definition: subjectAgent
 					object: objectAnimat
-					agent: objectAgent
-					do: [ 
-						aRMDInterpreter
-							setupRandomForIndividual: subjectAnimat
-							and: objectAnimat
-							task: self.
-						(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ] ]
+					definition: objectAgent
+					taskHash: taskHash
+					do: [ specializedAction evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -157,21 +153,23 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
 	| agent |
 	agent := subjectIdentifier = 'Patch'
-		           ifTrue: [ aRMDInterpreter patchDefinition ]
-		           ifFalse: [ 
-			           subjectIdentifier = 'World'
-				           ifTrue: [ aRMDInterpreter worldDefinition ]
-				           ifFalse: [ 
-					           aRMDInterpreter
-						           animatDefinitionAt: subjectIdentifier
-						           ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
+		         ifTrue: [ aRMDInterpreter patchDefinition ]
+		         ifFalse: [ 
+			         subjectIdentifier = 'World'
+				         ifTrue: [ aRMDInterpreter worldDefinition ]
+				         ifFalse: [ 
+					         aRMDInterpreter
+						         animatDefinitionAt: subjectIdentifier
+						         ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
 	aRMDInterpreter individualsOf: agent do: [ :animat | 
+		| specializedAction |
+		specializedAction := self actionWith: aRMDInterpreter.
 		aRMDInterpreter
-			withActionContextWithIndividual: animat
-			agent: agent
-			do: [ 
-				aRMDInterpreter setupRandomForIndividual: animat task: self.
-				(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]
+			withActionContextWith: specializedAction
+			subject: animat
+			definition: agent
+			taskHash: (aRMDInterpreter taskDefinitions indexOf: self)
+			do: [ specializedAction evalIn: aRMDInterpreter ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

@@ -8,8 +8,10 @@ RMDNewDirectiveNodeTest >> testEvalIn [
 	self assert: (interpreter numberOfIndivisualsOf: aDef) equals: 1.
 	self assert: (interpreter numberOfIndivisualsOf: bDef) equals: 1.
 	interpreter
-		withActionContextWithIndividual: individual
-		agent: aDef
+		withActionContextWith: RMDActionDefinitionNode template
+		subject: individual
+		definition: aDef
+		taskHash: 1
 		do: [ 
 			(RMDNewDirectiveNode animatIdentifier: 'B' quantity: 2) evalIn:
 				interpreter ].

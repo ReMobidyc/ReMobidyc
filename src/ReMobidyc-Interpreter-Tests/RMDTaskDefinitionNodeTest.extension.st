@@ -58,7 +58,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 	interpreter individualsOf: tankDefinition do: [ :tank | 
 		interpreter
 			withObserverContextWithSubject: tank
-			agent: tankDefinition
+			definition: tankDefinition
 			do: [ 
 				| x y water |
 				x := interpreter
@@ -83,7 +83,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 	interpreter individualsOf: horseDefinition do: [ :horse | 
 		interpreter
 			withObserverContextWithSubject: horse
-			agent: horseDefinition
+			definition: horseDefinition
 			do: [ 
 				waterInHorse := waterInHorse
 				                +
@@ -154,7 +154,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 	interpreter individualsOf: tankDefinition do: [ :tank | 
 		interpreter
 			withObserverContextWithSubject: tank
-			agent: tankDefinition
+			definition: tankDefinition
 			do: [ 
 				| x y water |
 				x := interpreter
@@ -179,7 +179,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 	interpreter individualsOf: horseDefinition do: [ :horse | 
 		interpreter
 			withObserverContextWithSubject: horse
-			agent: horseDefinition
+			definition: horseDefinition
 			do: [ 
 				waterInHorse := waterInHorse
 				                +

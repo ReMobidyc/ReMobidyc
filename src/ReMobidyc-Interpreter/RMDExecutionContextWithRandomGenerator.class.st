@@ -26,7 +26,7 @@ RMDExecutionContextWithRandomGenerator >> random [
 ]
 
 { #category : #accessing }
-RMDExecutionContextWithRandomGenerator >> randomSeedWithAll: anArray [
+RMDExecutionContextWithRandomGenerator >> randomSeedWithHash: anArray [
 
-	randomGenerator initializeWithAll: anArray
+	randomGenerator seedWithHash: anArray
 ]

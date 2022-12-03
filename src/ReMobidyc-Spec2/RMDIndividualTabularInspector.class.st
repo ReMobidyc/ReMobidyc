@@ -37,7 +37,7 @@ RMDIndividualTabularInspector >> createItem [
 		ifNotNil: [ :animatDef | 
 			interpreter
 				withObserverContextWithSubject: currentAgent
-				agent: animatDef
+				definition: animatDef
 				do: [ 
 					animatDef allAttributeDeclarations do: [ :attDecl | 
 						(interpreter

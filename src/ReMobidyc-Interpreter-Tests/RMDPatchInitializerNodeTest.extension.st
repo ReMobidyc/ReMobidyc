@@ -15,7 +15,7 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 	interpreter individualsOf: patchDef do: [ :patch | 
 		interpreter
 			withInitializerContextWithSubject: patch
-			agent: patchDef
+			definition: patchDef
 			do: [ patchInitializer evalIn: interpreter ] ].
 	self assert: interpreter time closeTo: 0.0.
 	grass := 'kcal' asRMDUnit toSI: 1000.
@@ -23,8 +23,10 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter individualsOf: patchDef do: [ :patch | 
 		interpreter
-			withActionContextWithIndividual: patch
-			agent: patchDef
+			withActionContextWith: RMDActionDefinitionNode template
+			subject: patch
+			definition: patchDef
+			taskHash: 1
 			do: [ 
 				self
 					assert:
