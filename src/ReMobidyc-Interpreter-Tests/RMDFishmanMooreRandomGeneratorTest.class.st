@@ -11,8 +11,8 @@ RMDFishmanMooreRandomGeneratorTest >> testHash [
 	random := RMDFishmanMooreRandomGenerator new.
 	random seed: 1.
 	self assert: (random hash: #( 1 )) equals: 742938285.
-	self assert: (random hash: #( 1 2 )) equals: 2017296752.
-	self assert: (random hash: #( 1 2 3 )) equals: 1522674686
+	self assert: (random hash: #( 1 2 )) equals: 495583787.
+	self assert: (random hash: #( 1 2 3 )) equals: 1644498793
 ]
 
 { #category : #tests }

@@ -483,7 +483,7 @@ RMDInterpreter >> setMemory: aRMDMemory [
 { #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
-	context randomSeedWithAll: { 
+	context randomSeedWithHash: { 
 			globalSeed.
 			memory time.
 			(memory seedAt: anInteger1).
@@ -494,7 +494,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 { #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 
-	context randomSeedWithAll: { 
+	context randomSeedWithHash: { 
 			globalSeed.
 			memory time.
 			(memory seedAt: anInteger).
@@ -516,7 +516,7 @@ RMDInterpreter >> setupSimulation [
 				withInitializerContextWithSubject: world
 				agent: simulationModel worldDefinition
 				do: [ 
-					context randomSeedWithAll: { 
+					context randomSeedWithHash: { 
 							globalSeed.
 							memory time.
 							world }.
@@ -526,7 +526,7 @@ RMDInterpreter >> setupSimulation [
 				withInitializerContextWithSubject: patch
 				agent: simulationModel patchDefinition
 				do: [ 
-					context randomSeedWithAll: { 
+					context randomSeedWithHash: { 
 							globalSeed.
 							memory time.
 							patch }.
@@ -545,7 +545,7 @@ RMDInterpreter >> setupSimulation [
 					withInitializerContextWithSubject: animat
 					agent: animatDefinition
 					do: [ 
-						context randomSeedWithAll: { 
+						context randomSeedWithHash: { 
 								globalSeed.
 								memory time.
 								animat }.

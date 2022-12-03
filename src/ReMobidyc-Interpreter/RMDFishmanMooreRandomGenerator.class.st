@@ -21,26 +21,16 @@ RMDFishmanMooreRandomGenerator >> factor [
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> hash: anArrayOfInteger [
 
-	| hash |
 	anArrayOfInteger ifEmpty: [ ^ 1 ].
-	hash := anArrayOfInteger first abs.
-	2 to: anArrayOfInteger size do: [ :i | 
-		| x |
-		x := (anArrayOfInteger at: i) abs.
-		hash := (x * self factor bitXor: hash) \\ self modulo ].
-	^ hash * self factor \\ self modulo
+	^ anArrayOfInteger inject: 0 into: [ :hash :x | 
+		  (hash * self factor bitXor: x * self factor) \\ self modulo ]
 ]
 
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> initialize [
+
 	super initialize.
-	seed := Time millisecondClockValue
-]
-
-{ #category : #initialization }
-RMDFishmanMooreRandomGenerator >> initializeWithAll: anArrayOfInteger [
-
-	seed := self hash: anArrayOfInteger
+	seed := Time millisecondClockValue \\ (self modulo - 1) + 1
 ]
 
 { #category : #accessing }
@@ -86,6 +76,12 @@ RMDFishmanMooreRandomGenerator >> seed: anInteger [
 	seed := anInteger asInteger.
 	seed <= 0 ifTrue: [ 
 		^ self error: 'random seed must be a non-zero natural number.' ]
+]
+
+{ #category : #initialization }
+RMDFishmanMooreRandomGenerator >> seedWithHash: anArrayOfInteger [
+
+	seed := self hash: anArrayOfInteger
 ]
 
 { #category : #accessing }
