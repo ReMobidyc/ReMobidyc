@@ -26,7 +26,7 @@ operations
             (Memory`allocateWorld(AST`sizeOfAgent(worldDefinition));
             let world = Memory`getWorld()
             in
-                (Interpreter`setupInitializationContext(worldDefinition, world);
+                (Interpreter`setupInitializationContext(world, worldDefinition);
                 for attributeInitializer in worldInitializer.attributeInitializers
                 do evalAttributeInitializer(attributeInitializer)));
     
@@ -44,7 +44,7 @@ operations
                 do
                     let patch = Memory`getPatch(x, y)
                     in
-                        (Interpreter`setupInitializationContext(patchDefinition, patch);
+                        (Interpreter`setupInitializationContext(patch, patchDefinition);
                         for attributeInitializer in patchInitializer.attributeInitializers
                         do evalAttributeInitializer(attributeInitializer)));
     
@@ -61,7 +61,7 @@ operations
                         Memory`allocateAnimat(
                             animatName, AST`sizeOfAgent(animatDefinition))
                 in
-                    (Interpreter`setupInitializationContext(animatDefinition, animat);
+                    (Interpreter`setupInitializationContext(animat, animatDefinition);
                     writeVariable(nil, "x", uniform(Interpreter`worldWest(), Interpreter`worldEast()));
                     writeVariable(nil, "y", uniform(Interpreter`worldSouth(), Interpreter`worldNorth()));
                     for attributeInitializer

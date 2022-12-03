@@ -58,13 +58,8 @@ operations
             else
                 exit UNRESOLVED_REFERENCE;
     
-    setupActionContext : AST`AgentDefinition * AST`ActionDefinition * Memory`Address *
-    [Memory`Address] ==> ()
-    setupActionContext(subjectDefinition, actionDefinition, subject, object) ==
-        is not yet specified;
-    
-    setupInitializationContext : AST`AgentDefinition * Memory`Address ==> ()
-    setupInitializationContext(subjectDefinition, subject) ==
+    setupInitializationContext : Memory`Address * AST`AgentDefinition ==> ()
+    setupInitializationContext(subject, subjectDefinition) ==
         (attributes
             := {nil |-> attributeAddresses(subjectDefinition, subject)};
         utilities := {|->};
@@ -72,9 +67,9 @@ operations
         random
             := mk_Random`RandomGenerator(Random`hash([globalSeed, subject])));
     
-    setupActionContextSV : AST`ActionDefinition * AST`AgentDefinition * Memory`Address *
+    setupActionContextSV : AST`ActionDefinition * Memory`Address * AST`AgentDefinition *
     nat1 ==> ()
-    setupActionContextSV(actionDefinition, subjectDefinition, subject, taskSeed) ==
+    setupActionContextSV(actionDefinition, subject, subjectDefinition, taskSeed) ==
         let
             myAttributeAddresses =
                 attributeAddresses(subjectDefinition, subject),

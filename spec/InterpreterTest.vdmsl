@@ -52,7 +52,7 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, animat1, exampleAnimatA, 1);
             assertEquals(animat1, 3, "the animat1 is allocated at 3");
             assertEquals(
                 Interpreter`getAttributeAddress(nil, "x"),
@@ -76,7 +76,7 @@ operations
             animat1 =
                 Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
         in
-            (Interpreter`setupInitializationContext(exampleAnimatA, animat1);
+            (Interpreter`setupInitializationContext(animat1, exampleAnimatA);
             assertEquals(animat1, 3, "the animat1 is allocated at 3");
             assertEquals(
                 Interpreter`getAttributeAddress(nil, "x"),
