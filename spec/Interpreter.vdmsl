@@ -18,11 +18,6 @@ definitions
 values
      NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 
-state Interpreter of
-    globalSeed : nat1
-init s == s = mk_Interpreter(1)
-end
-
 operations
     evalWorldInitializer : AST`WorldInitializer ==> ()
     evalWorldInitializer(worldInitializer) ==
