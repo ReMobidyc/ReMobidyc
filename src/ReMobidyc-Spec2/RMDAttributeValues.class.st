@@ -28,7 +28,7 @@ RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDe
 			ids at: individualIndex put: id.
 			aRMDInterpreter
 				withObserverContextWithSubject: id
-				agent: aRMDAgentDefinitionNode
+				definition: aRMDAgentDefinitionNode
 				do: [ 
 					aRMDAgentDefinitionNode allAttributeDeclarations doWithIndex: [ 
 						:attributeDef 

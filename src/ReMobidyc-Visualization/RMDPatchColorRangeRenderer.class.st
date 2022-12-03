@@ -55,7 +55,7 @@ RMDPatchColorRangeRenderer >> valueForIndividual: anInteger interpreter: aRMDInt
 	patchDef := aRMDInterpreter patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
-		agent: patchDef
+		definition: patchDef
 		do: [ value := expression evalIn: aRMDInterpreter ].
 	^ value - min numeric / (max numeric - min numeric) min: 1.0 max: 0.0
 ]

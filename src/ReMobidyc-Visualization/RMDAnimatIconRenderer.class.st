@@ -56,7 +56,7 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 	aRMDInterpreter individualsOf: animatDefinition do: [ :individual | 
 		aRMDInterpreter
 			withObserverContextWithSubject: individual
-			agent: animatDefinition
+			definition: animatDefinition
 			do: [ 
 				| x y |
 				x := aRMDInterpreter

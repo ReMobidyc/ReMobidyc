@@ -21,7 +21,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	interpreter individualsOf: goatDef do: [ :goat | 
 		interpreter
 			withInitializerContextWithSubject: goat
-			agent: goatDef
+			definition: goatDef
 			do: [ goatInitializer evalIn: interpreter ] ].
 	self assert: interpreter time closeTo: 0.0.
 	minBody := 'kcal' asRMDUnit toSI: 1000.
@@ -30,8 +30,8 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	count := 0.
 	interpreter individualsOf: goatDef do: [ :goat | 
 		interpreter
-			withActionContextWithIndividual: goat
-			agent: goatDef
+			withActionContextWithSubject: goat
+			definition: goatDef
 			do: [ 
 				self assert:
 					((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])

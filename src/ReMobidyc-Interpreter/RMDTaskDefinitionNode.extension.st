@@ -35,7 +35,7 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
 			withObserverContextWithSubject: objectAnimat
-			agent: objectAgent
+			definition: objectAgent
 			do: [ 
 				| x y |
 				x := aRMDInterpreter
@@ -53,7 +53,7 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 			| subjectX subjectY |
 			aRMDInterpreter
 				withObserverContextWithSubject: subjectAnimat
-				agent: subjectAgent
+				definition: subjectAgent
 				do: [ 
 					subjectX := aRMDInterpreter
 						            readVariable: 'x'
@@ -70,10 +70,10 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 				y: subjectY
 				do: [ :objectAnimat | 
 					aRMDInterpreter
-						withActionContextWithIndividual: subjectAnimat
-						agent: subjectAgent
+						withActionContextWithSubject: subjectAnimat
+						definition: subjectAgent
 						object: objectAnimat
-						agent: objectAgent
+						definition: objectAgent
 						do: [ 
 							aRMDInterpreter
 								setupRandomForIndividual: subjectAnimat
@@ -107,7 +107,7 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
 			withObserverContextWithSubject: objectAnimat
-			agent: objectAgent
+			definition: objectAgent
 			do: [ 
 				| x y |
 				x := aRMDInterpreter
@@ -123,7 +123,7 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 		| subjectX subjectY |
 		aRMDInterpreter
 			withObserverContextWithSubject: subjectAnimat
-			agent: subjectAgent
+			definition: subjectAgent
 			do: [ 
 				subjectX := aRMDInterpreter
 					            readVariable: 'x'
@@ -140,10 +140,10 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 			y: subjectY
 			do: [ :objectAnimat | 
 				aRMDInterpreter
-					withActionContextWithIndividual: subjectAnimat
-					agent: subjectAgent
+					withActionContextWithSubject: subjectAnimat
+					definition: subjectAgent
 					object: objectAnimat
-					agent: objectAgent
+					definition: objectAgent
 					do: [ 
 						aRMDInterpreter
 							setupRandomForIndividual: subjectAnimat
@@ -167,8 +167,8 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 						           ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
 	aRMDInterpreter individualsOf: agent do: [ :animat | 
 		aRMDInterpreter
-			withActionContextWithIndividual: animat
-			agent: agent
+			withActionContextWithSubject: animat
+			definition: agent
 			do: [ 
 				aRMDInterpreter setupRandomForIndividual: animat task: self.
 				(self actionWith: aRMDInterpreter) evalIn: aRMDInterpreter ] ]

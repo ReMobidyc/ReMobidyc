@@ -514,23 +514,13 @@ RMDInterpreter >> setupSimulation [
 		memory worldDo: [ :world | 
 			self
 				withInitializerContextWithSubject: world
-				agent: simulationModel worldDefinition
-				do: [ 
-					context randomSeedWithHash: { 
-							globalSeed.
-							memory time.
-							world }.
-					simulationModel worldInitializer evalIn: self ] ].
+				definition: simulationModel worldDefinition
+				do: [ simulationModel worldInitializer evalIn: self ] ].
 		memory patchesDo: [ :patch | 
 			self
 				withInitializerContextWithSubject: patch
-				agent: simulationModel patchDefinition
-				do: [ 
-					context randomSeedWithHash: { 
-							globalSeed.
-							memory time.
-							patch }.
-					simulationModel patchInitializer evalIn: self ] ].
+				definition: simulationModel patchDefinition
+				do: [ simulationModel patchInitializer evalIn: self ] ].
 		simulationModel animatInitializersDo: [ :initializer | 
 			| animatDefinition |
 			animatDefinition := simulationModel
@@ -543,13 +533,8 @@ RMDInterpreter >> setupSimulation [
 
 				self
 					withInitializerContextWithSubject: animat
-					agent: animatDefinition
-					do: [ 
-						context randomSeedWithHash: { 
-								globalSeed.
-								memory time.
-								animat }.
-						initializer evalIn: self ] ] ] ].
+					definition: animatDefinition
+					do: [ initializer evalIn: self ] ] ] ].
 	memory time: 0.
 	self timeChanged
 ]
@@ -628,7 +613,7 @@ RMDInterpreter >> unknownDirectiveError: aString [
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anInteger agent: aRMDAnimatDefinitionNode do: aBlock [
+RMDInterpreter >> withActionContextWithSubject: anInteger definition: aRMDAnimatDefinitionNode do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
@@ -679,7 +664,7 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger agent: aRMDAnimatDe
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withActionContextWithIndividual: anInteger1 agent: aRMDAnimatDefinitionNode1 object: anInteger2 agent: aRMDAnimatDefinitionNode2 do: aBlock [
+RMDInterpreter >> withActionContextWithSubject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 do: aBlock [
 
 	^ self
 		  withContext: (RMDActionContext
@@ -733,17 +718,21 @@ RMDInterpreter >> withActionContextWithIndividual: anInteger1 agent: aRMDAnimatD
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withInitializerContextWithSubject: anInteger agent: aRMDAgentDefinitionNode do: aBlock [
+RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
-		  withContext: (RMDInitializerContext
-				   subject: anInteger
-				   definition: aRMDAgentDefinitionNode)
+		  withContext: ((RMDInitializerContext
+				    subject: anInteger
+				    definition: aRMDAgentDefinitionNode)
+				   randomSeedWithHash: { 
+						   globalSeed.
+						   anInteger };
+				   yourself)
 		  do: aBlock
 ]
 
 { #category : #'context controls' }
-RMDInterpreter >> withObserverContextWithSubject: anInteger agent: aRMDAgentDefinitionNode do: aBlock [
+RMDInterpreter >> withObserverContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
 		  withContext: (RMDObserverContext
