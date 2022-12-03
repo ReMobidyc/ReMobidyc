@@ -5,7 +5,6 @@ imports
             assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
     from Context all,
-    from Interpreter all,
     from AST all,
     from Unit all,
     from Random all,

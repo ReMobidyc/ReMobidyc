@@ -1,4 +1,4 @@
-module Interpreter
+module Evaluation
 imports
     from Context all,
     from AST all,
@@ -375,4 +375,4 @@ functions
                         else
                             3.141592653589793 + th));
 
-end Interpreter
+end Evaluation
