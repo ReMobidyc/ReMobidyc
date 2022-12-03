@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'randomSeed'
+		'globalSeed'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -277,6 +277,17 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #'random numbers' }
+RMDInterpreter >> globalSeed [
+	^ globalSeed
+]
+
+{ #category : #'random numbers' }
+RMDInterpreter >> globalSeed: anInteger [
+
+	globalSeed := anInteger asInteger
+]
+
 { #category : #'space access' }
 RMDInterpreter >> here [
 
@@ -312,7 +323,7 @@ RMDInterpreter >> initialize [
 
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
-	randomSeed := 1
+	globalSeed := 1
 ]
 
 { #category : #'variable access' }
@@ -416,17 +427,6 @@ RMDInterpreter >> random [
 	^ context random
 ]
 
-{ #category : #'random numbers' }
-RMDInterpreter >> randomSeed [
-	^ randomSeed
-]
-
-{ #category : #'random numbers' }
-RMDInterpreter >> randomSeed: anInteger [
-
-	randomSeed := anInteger asInteger
-]
-
 { #category : #'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 	^ (context utilityAt: aString ifAbsent: errorBlock) evalIn: self
@@ -484,7 +484,7 @@ RMDInterpreter >> setMemory: aRMDMemory [
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithAll: { 
-			randomSeed.
+			globalSeed.
 			memory time.
 			(memory seedAt: anInteger1).
 			(memory seedAt: anInteger2).
@@ -495,7 +495,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithAll: { 
-			randomSeed.
+			globalSeed.
 			memory time.
 			(memory seedAt: anInteger).
 			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
@@ -517,7 +517,7 @@ RMDInterpreter >> setupSimulation [
 				agent: simulationModel worldDefinition
 				do: [ 
 					context randomSeedWithAll: { 
-							randomSeed.
+							globalSeed.
 							memory time.
 							world }.
 					simulationModel worldInitializer evalIn: self ] ].
@@ -527,7 +527,7 @@ RMDInterpreter >> setupSimulation [
 				agent: simulationModel patchDefinition
 				do: [ 
 					context randomSeedWithAll: { 
-							randomSeed.
+							globalSeed.
 							memory time.
 							patch }.
 					simulationModel patchInitializer evalIn: self ] ].
@@ -546,7 +546,7 @@ RMDInterpreter >> setupSimulation [
 					agent: animatDefinition
 					do: [ 
 						context randomSeedWithAll: { 
-								randomSeed.
+								globalSeed.
 								memory time.
 								animat }.
 						initializer evalIn: self ] ] ] ].
