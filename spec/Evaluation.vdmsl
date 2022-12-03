@@ -1,6 +1,6 @@
 module Evaluation
 imports
-    from Context all,
+    from Interpreter all,
     from AST all,
     from Unit all,
     from Memory all,
@@ -21,19 +21,19 @@ values
 operations
     evalWorldInitializer : AST`WorldInitializer ==> ()
     evalWorldInitializer(worldInitializer) ==
-        let worldDefinition = Context`getWorldDefinition()
+        let worldDefinition = Interpreter`getWorldDefinition()
         in
             (Memory`allocateWorld(AST`sizeOfAgent(worldDefinition));
             let world = Memory`getWorld()
             in
-                (Context`setupInitializationContext(worldDefinition, world);
+                (Interpreter`setupInitializationContext(worldDefinition, world);
                 for attributeInitializer in worldInitializer.attributeInitializers
                 do evalAttributeInitializer(attributeInitializer)));
     
     evalPatchInitializer : AST`PatchInitializer ==> ()
     evalPatchInitializer(patchInitializer) ==
         let
-            patchDefinition = Context`getPatchDefinition(),
+            patchDefinition = Interpreter`getPatchDefinition(),
             xDivisions = patchInitializer.xDivisions,
             yDivisions = patchInitializer.yDivisions
         in
@@ -44,7 +44,7 @@ operations
                 do
                     let patch = Memory`getPatch(x, y)
                     in
-                        (Context`setupInitializationContext(patchDefinition, patch);
+                        (Interpreter`setupInitializationContext(patchDefinition, patch);
                         for attributeInitializer in patchInitializer.attributeInitializers
                         do evalAttributeInitializer(attributeInitializer)));
     
@@ -52,7 +52,7 @@ operations
     evalAnimatInitializer(animatInitializer) ==
         let
             animatName = animatInitializer.animat,
-            animatDefinition = Context`getAnimatDefinition(animatName)
+            animatDefinition = Interpreter`getAnimatDefinition(animatName)
         in
             for i = 1 to  animatInitializer.population
             do
@@ -61,9 +61,9 @@ operations
                         Memory`allocateAnimat(
                             animatName, AST`sizeOfAgent(animatDefinition))
                 in
-                    (Context`setupInitializationContext(animatDefinition, animat);
-                    writeVariable(nil, "x", uniform(Context`worldWest(), Context`worldEast()));
-                    writeVariable(nil, "y", uniform(Context`worldSouth(), Context`worldNorth()));
+                    (Interpreter`setupInitializationContext(animatDefinition, animat);
+                    writeVariable(nil, "x", uniform(Interpreter`worldWest(), Interpreter`worldEast()));
+                    writeVariable(nil, "y", uniform(Interpreter`worldSouth(), Interpreter`worldNorth()));
                     for attributeInitializer
                     in animatInitializer.attributeInitializers
                     do evalAttributeInitializer(attributeInitializer));
@@ -94,23 +94,23 @@ operations
                 mk_AST`AssignableDifferentialAttributeVariable(
                     mk_AST`AttributeVariable(agent, variable)) ->
                     writeDeltaVariable(agent, variable, value  * deltaTime()),
-                others -> exit Context`UNRESOLVED_REFERENCE
+                others -> exit Interpreter`UNRESOLVED_REFERENCE
                 end;
     
     evalExpression : AST`Expression ==> real
     evalExpression(expr) ==
         return cases expr:
                 mk_AST`UtilityVariable(identifier) ->
-                    let val = Context`readUtility(identifier)
+                    let val = Interpreter`readUtility(identifier)
                     in
                         (if
                                 val <> nil
                             then
                                 val
                             else
-                                evalExpression(Context`getUtilityDefinition(identifier))),
+                                evalExpression(Interpreter`getUtilityDefinition(identifier))),
                 mk_AST`AttributeVariable(agent, identifier) ->
-                    Memory`read(Context`getAttributeAddress(agent, identifier)),
+                    Memory`read(Interpreter`getAttributeAddress(agent, identifier)),
                 mk_AST`Literal(val, unit) -> Unit`toSI(unit, val),
                 mk_AST`Addition(expr1, expr2) ->
                     evalExpression(expr1) + evalExpression(expr2),
@@ -190,24 +190,24 @@ operations
 operations
     readVariable : [AST`Identifier] * AST`Identifier ==> real
     readVariable(agent, identifier) ==
-        return Memory`read(Context`getAttributeAddress(agent, identifier));
+        return Memory`read(Interpreter`getAttributeAddress(agent, identifier));
     
     writeVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeVariable(agent, identifier, data) ==
-        Memory`write(Context`getAttributeAddress(agent, identifier), data);
+        Memory`write(Interpreter`getAttributeAddress(agent, identifier), data);
     
     writeDeltaVariable : [AST`Identifier] * AST`Identifier * real ==> ()
     writeDeltaVariable(agent, identifier, data) ==
-        Memory`writeDelta(Context`getAttributeAddress(agent, identifier), data);
+        Memory`writeDelta(Interpreter`getAttributeAddress(agent, identifier), data);
     
     uniform : real * real ==> real
     uniform(sectionFrom, sectionTo) ==
-        return let x = Context`nextRandom()
+        return let x = Interpreter`nextRandom()
             in x  * (sectionTo - sectionFrom) + sectionFrom;
     
     normal : real * real ==> real
     normal(mean, sigma) ==
-        return let x1 = Context`nextRandom(), x2 = Context`nextRandom()
+        return let x1 = Interpreter`nextRandom(), x2 = Interpreter`nextRandom()
             in
                 sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
                 + mean
@@ -215,7 +215,7 @@ operations
     
     logLogistic : real * real ==> real
     logLogistic(scale, shape) ==
-        let p : real = Context`nextRandom()
+        let p : real = Interpreter`nextRandom()
         in return scale  * (p / (1 - p)) ** (1 / shape)
     pre  scale > 0 and shape > 0;
     
@@ -230,8 +230,8 @@ operations
                 while true
                 do
                     (dcl u1:real, u2:real;
-                    u1 := Context`nextRandom();
-                    u2 := Context`nextRandom();
+                    u1 := Interpreter`nextRandom();
+                    u2 := Interpreter`nextRandom();
                     if
                         u1 <= c1
                     then
@@ -249,7 +249,7 @@ operations
                     (dcl z:real := normal(0, 1), v:real, u:real;
                     while c2  * z <= -1.0 do z := normal(0, 1);
                     v := let t = c2  * z + 1.0 in t  * t  * t;
-                    u := Context`nextRandom();
+                    u := Interpreter`nextRandom();
                     if u < 1.0 - 0.0331  * z  * z  * z  * z then return c1  * v  * scale;
                     if
                         ln(u) < 0.5  * z  * z + c1  * (1.0 - v + ln(v))
@@ -270,39 +270,39 @@ operations
                         ((here >= east and here >= west) and here >= south) and here >= north
                     then
                         let
-                            x = readVariable(nil, Context`X_ATTRIBUTE_NAME),
-                            y = readVariable(nil, Context`Y_ATTRIBUTE_NAME)
+                            x = readVariable(nil, Interpreter`X_ATTRIBUTE_NAME),
+                            y = readVariable(nil, Interpreter`Y_ATTRIBUTE_NAME)
                         in
                             theta(
-                                Context`patchLength()  * (floor Context`normalizeX(x) + 0.5) - x,
-                                Context`patchLength()  * (floor Context`normalizeY(y) + 0.5) - y)
+                                Interpreter`patchLength()  * (floor Interpreter`normalizeX(x) + 0.5) - x,
+                                Interpreter`patchLength()  * (floor Interpreter`normalizeY(y) + 0.5) - y)
                     else
                         theta(east - west, north - south));
     
     directionOfAgent : AST`Identifier ==> real
     directionOfAgent(agent) ==
         return theta(
-                readVariable(agent, Context`X_ATTRIBUTE_NAME)
-                - readVariable(nil, Context`X_ATTRIBUTE_NAME),
-                readVariable(agent, Context`Y_ATTRIBUTE_NAME)
-                - readVariable(nil, Context`Y_ATTRIBUTE_NAME));
+                readVariable(agent, Interpreter`X_ATTRIBUTE_NAME)
+                - readVariable(nil, Interpreter`X_ATTRIBUTE_NAME),
+                readVariable(agent, Interpreter`Y_ATTRIBUTE_NAME)
+                - readVariable(nil, Interpreter`Y_ATTRIBUTE_NAME));
     
     distanceFromAgent : AST`Identifier ==> real
     distanceFromAgent(agent) ==
         return let
                 x =
-                    readVariable(agent, Context`X_ATTRIBUTE_NAME)
-                    - readVariable(nil, Context`X_ATTRIBUTE_NAME),
+                    readVariable(agent, Interpreter`X_ATTRIBUTE_NAME)
+                    - readVariable(nil, Interpreter`X_ATTRIBUTE_NAME),
                 y =
-                    readVariable(agent, Context`Y_ATTRIBUTE_NAME)
-                    - readVariable(nil, Context`Y_ATTRIBUTE_NAME)
+                    readVariable(agent, Interpreter`Y_ATTRIBUTE_NAME)
+                    - readVariable(nil, Interpreter`Y_ATTRIBUTE_NAME)
             in sqrt(x ** 2 + y ** 2);
     
     pure simulationTime : () ==> real
-    simulationTime() == return Context`simulationTime();
+    simulationTime() == return Interpreter`simulationTime();
     
     pure deltaTime : () ==> real
-    deltaTime() == return Context`deltaTime();
+    deltaTime() == return Interpreter`deltaTime();
     
     pure apply : seq1 of char * seq1 of real ==> real
     apply(func, args) ==

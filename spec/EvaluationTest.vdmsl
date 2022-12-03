@@ -6,7 +6,7 @@ imports
             assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
     from Evaluation all,
-    from Context all,
+    from Interpreter all,
     from Memory all,
     from AST all,
     from Unit all,
@@ -55,14 +55,14 @@ values
 operations
     testEvalWorldInitializer : () ==> ()
     testEvalWorldInitializer() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Evaluation`evalWorldInitializer(exampleSimulationModel.simulationDefinition.worldInitializer);
         Memory`tick();
         assertEquals(Memory`read(1), 30.0, "world's temperature"));
     
     testEvalPatchInitializer : () ==> ()
     testEvalPatchInitializer() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Evaluation`evalWorldInitializer(exampleSimulationModel.simulationDefinition.worldInitializer);
         Evaluation`evalPatchInitializer(exampleSimulationModel.simulationDefinition.patchInitializer);
         Memory`tick();
@@ -70,7 +70,7 @@ operations
     
     testEvalAnimatInitializer : () ==> ()
     testEvalAnimatInitializer() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Evaluation`evalWorldInitializer(exampleSimulationModel.simulationDefinition.worldInitializer);
         Evaluation`evalPatchInitializer(exampleSimulationModel.simulationDefinition.patchInitializer);
         Evaluation`evalAnimatInitializer(exampleSimulationModel.simulationDefinition.animatInitializers(1));
@@ -91,21 +91,21 @@ operations
     
     testEvalAttributeInitializer : () ==> ()
     testEvalAttributeInitializer() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
             animat1 =
                 Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
         in
-            (Context`setupInitializationContext(exampleAnimatA, animat1);
+            (Interpreter`setupInitializationContext(exampleAnimatA, animat1);
             Evaluation`evalAttributeInitializer(mk_AST`AttributeInitializer("age", mk_AST`Literal(0, Unit`s)));
             Memory`tick();
             assertEquals(Memory`read(animat1 + 2), 0.0, "my age = 0.0")));
     
     testEvalActionDefinition : () ==> ()
     testEvalActionDefinition() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
@@ -116,7 +116,7 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
             Evaluation`evalActionDefinition(exampleActionAge);
             Memory`tick();
             assertEquals(Memory`read(animat1 + 0), 0.1, "my x = 0.1");
@@ -125,7 +125,7 @@ operations
     
     testEvalAttributeDefinition_AssignableAttributeVariable : () ==> ()
     testEvalAttributeDefinition_AssignableAttributeVariable() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
@@ -136,7 +136,7 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
                     mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
@@ -156,7 +156,7 @@ operations
     
     testEvalAttributeDefinition_AssignableDeltaAttributeVariable : () ==> ()
     testEvalAttributeDefinition_AssignableDeltaAttributeVariable() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
@@ -167,7 +167,7 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
                     mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
@@ -187,7 +187,7 @@ operations
     
     testEvalAttributeDefinition_AssignableDifferentialAttributeVariable : () ==> ()
     testEvalAttributeDefinition_AssignableDifferentialAttributeVariable() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
@@ -198,7 +198,7 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
                     mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
@@ -680,22 +680,18 @@ operations
     
     testEvalExpression_UtilityVariable : () ==> ()
     testEvalExpression_UtilityVariable() ==
-        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        (Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertApproxEquals(
             Evaluation`evalExpression(mk_AST`UtilityVariable("x")),
             1.0,
             1.0e-16,
             "compute and read the utility variable");
-        Context`writeUtility("x", 10);
+        Interpreter`writeUtility("x", 10);
         assertEquals(
             Evaluation`evalExpression(mk_AST`UtilityVariable("x")),
             10,
             "read a cached value of the utility variable"));
 
-/*         Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
-        NotEqual| Negation| Conjunction| Disjunction| Placeholder;
-*/
-    
     testEvalConditionition_Equality : () ==> ()
     testEvalConditionition_Equality() ==
         (assert(

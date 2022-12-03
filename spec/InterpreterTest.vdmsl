@@ -1,10 +1,10 @@
-module ContextTest
+module InterpreterTest
 imports
     from UnitTesting
         operations
             assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
-    from Context all,
+    from Interpreter all,
     from AST all,
     from Unit all,
     from Random all,
@@ -41,7 +41,7 @@ values
 operations
     testSetupActionContextSV : () ==> ()
     testSetupActionContextSV() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
@@ -52,94 +52,94 @@ operations
             Memory`write(animat1 + 1, 0.2);
             Memory`write(animat1 + 2, 0.0);
             Memory`tick();
-            Context`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
+            Interpreter`setupActionContextSV(exampleActionAge, exampleAnimatA, animat1, 1);
             assertEquals(animat1, 3, "the animat1 is allocated at 3");
             assertEquals(
-                Context`getAttributeAddress(nil, "x"),
+                Interpreter`getAttributeAddress(nil, "x"),
                 animat1 + 0,
                 "my x is allocated at the allocated address + 0.");
             assertEquals(
-                Context`getAttributeAddress(nil, "y"),
+                Interpreter`getAttributeAddress(nil, "y"),
                 animat1 + 1,
                 "my y is allocated at the allocated address + 1.");
             assertEquals(
-                Context`getAttributeAddress(nil, "age"),
+                Interpreter`getAttributeAddress(nil, "age"),
                 animat1 + 2,
                 "my age is allocated at the allocated address + 2.")));
     
     testSetupInitializationContext : () ==> ()
     testSetupInitializationContext() ==
-        (Context`setSimulationModel(exampleSimulationModel);
+        (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
         let
             animat1 =
                 Memory`allocateAnimat("AnimatA", AST`sizeOfAgent(exampleAnimatA))
         in
-            (Context`setupInitializationContext(exampleAnimatA, animat1);
+            (Interpreter`setupInitializationContext(exampleAnimatA, animat1);
             assertEquals(animat1, 3, "the animat1 is allocated at 3");
             assertEquals(
-                Context`getAttributeAddress(nil, "x"),
+                Interpreter`getAttributeAddress(nil, "x"),
                 animat1 + 0,
                 "my x is allocated at the allocated address + 0.");
             assertEquals(
-                Context`getAttributeAddress(nil, "y"),
+                Interpreter`getAttributeAddress(nil, "y"),
                 animat1 + 1,
                 "my y is allocated at the allocated address + 1.");
             assertEquals(
-                Context`getAttributeAddress(nil, "age"),
+                Interpreter`getAttributeAddress(nil, "age"),
                 animat1 + 2,
                 "my age is allocated at the allocated address + 2.")));
     
     testAttributeAddresses : () ==> ()
     testAttributeAddresses() ==
         assertEquals(
-            Context`attributeAddresses(exampleAnimatA, 3),
+            Interpreter`attributeAddresses(exampleAnimatA, 3),
             {"x" |-> 3, "y" |-> 4, "age" |-> 5},
             "attributes for animat definition");
     
     testReadUtility : () ==> ()
     testReadUtility() ==
-        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
-        assertEquals(Context`readUtility("x"), nil, "no value is set yet");
-        Context`writeUtility("x", 10);
+        (Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        assertEquals(Interpreter`readUtility("x"), nil, "no value is set yet");
+        Interpreter`writeUtility("x", 10);
         assertEquals(
-            Context`readUtility("x"),
+            Interpreter`readUtility("x"),
             10,
             "read a cached value of the utility variable"));
     
     testWriteUtility : () ==> ()
     testWriteUtility() ==
-        (assertEquals(Context`readUtility("x"), nil, "no value is set yet");
-        Context`writeUtility("x", 10);
+        (assertEquals(Interpreter`readUtility("x"), nil, "no value is set yet");
+        Interpreter`writeUtility("x", 10);
         assertEquals(
-            Context`readUtility("x"),
+            Interpreter`readUtility("x"),
             10,
             "read a cached value of the utility variable"));
     
     testGetUtilityDefinition : () ==> ()
     testGetUtilityDefinition() ==
-        (trap (Context`UNRESOLVED_REFERENCE) with skip
+        (trap (Interpreter`UNRESOLVED_REFERENCE) with skip
         in
-            let d = Context`getUtilityDefinition("x")
+            let d = Interpreter`getUtilityDefinition("x")
             in exit "unresolvable because x is not defined yet";
-        Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertEquals(
-            Context`getUtilityDefinition("x"),
+            Interpreter`getUtilityDefinition("x"),
             mk_AST`Literal(1, Unit`m),
             "x is defined as x = 1[m]"));
     
     testSetUtilityDefinition : () ==> ()
     testSetUtilityDefinition() ==
-        (Context`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
+        (Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertEquals(
-            Context`getUtilityDefinition("x"),
+            Interpreter`getUtilityDefinition("x"),
             mk_AST`Literal(1, Unit`m),
             "x is defined as x = 1[m]");
-        Context`setUtilityDefinition("x", mk_AST`Literal(2, Unit`m));
+        Interpreter`setUtilityDefinition("x", mk_AST`Literal(2, Unit`m));
         assertEquals(
-            Context`getUtilityDefinition("x"),
+            Interpreter`getUtilityDefinition("x"),
             mk_AST`Literal(2, Unit`m),
             "x is defined as x = 2[m]"));
 
-end ContextTest
+end InterpreterTest

@@ -1,4 +1,4 @@
-module Context
+module Interpreter
 imports
     from AST all,
     from Unit all,
@@ -11,7 +11,7 @@ values
      X_ATTRIBUTE_NAME = "x";
      Y_ATTRIBUTE_NAME = "y";
 
-state Context of
+state Interpreter of
     simulationModel : AST`SimulationModel
     attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
     utilities : map AST`Identifier to real
@@ -21,7 +21,7 @@ state Context of
     globalSeed : nat1
 init s ==
     s
-    = mk_Context(
+    = mk_Interpreter(
         AST`emptySimulationModel,
         {|->},
         {|->},
@@ -217,4 +217,4 @@ operations
     pure normalizeY : real ==> real
     normalizeY(y) == return (y - worldSouth()) / patchLength();
 
-end Context
+end Interpreter
