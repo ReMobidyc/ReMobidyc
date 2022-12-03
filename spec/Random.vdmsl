@@ -20,13 +20,13 @@ functions
     hash : seq1 of nat1 -> nat1
     hash(seeds) ==
         let
-            calcSeed : nat1 * seq of nat1 -> nat1
+            calcSeed : nat * seq of nat1 -> nat1
             calcSeed(x, ys) ==
                 cases ys:
-                    [z]^zs -> calcSeed(bitXor(x, z  * factor) mod modulo, zs),
-                    others -> x  * factor mod modulo
+                    [z]^zs -> calcSeed(bitXor(x * factor, z  * factor) mod modulo, zs),
+                    others -> x
                     end
-        in calcSeed(hd seeds, tl seeds);
+        in calcSeed(0, seeds);
     
     bitXor : nat * nat -> nat
     bitXor(x, y) ==
