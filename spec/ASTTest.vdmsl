@@ -44,9 +44,9 @@ operations
         assertEquals(
             AST`sizeOfAgent(
                 mk_AST`WorldDefinition(
-                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
-                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
-                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree, nil),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)])),
             3,
             "size of World with 3 attributes is 3."));
     
@@ -59,9 +59,9 @@ operations
         assertEquals(
             AST`sizeOfAgent(
                 mk_AST`PatchDefinition(
-                    [mk_AST`AttributeDeclaration("temperature", Unit`℃),
-                    mk_AST`AttributeDeclaration("windDirection", Unit`degree),
-                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s))])),
+                    [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
+                    mk_AST`AttributeDeclaration("windDirection", Unit`degree, nil),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)])),
             3,
             "size of Patch with 3 attributes is 3."));
     
@@ -76,8 +76,8 @@ operations
                 mk_AST`AnimatDefinition(
                     "Stage",
                     "Species",
-                    [mk_AST`AttributeDeclaration("heading", Unit`degree),
-                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s))])),
+                    [mk_AST`AttributeDeclaration("heading", Unit`degree, nil),
+                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s), nil)])),
             4,
             "size of Animat with 2 attributes is 4 including x and y."));
     
