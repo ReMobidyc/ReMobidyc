@@ -519,45 +519,11 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 RMDInterpreter >> setupSimulation [
 
 	memory world ifNil: [ 
-		memory
-			initialize;
-			allocateWorld: simulationModel worldDefinition;
-			allocatePatches: simulationModel patchDefinition
-			x: simulationModel patchXDivisions
-			y: simulationModel patchYDivisions.
-		memory worldDo: [ :world | 
-			self
-				withInitializerContextWithSubject: world
-				definition: simulationModel worldDefinition
-				do: [ 
-					simulationModel worldDefinition allAttributeDeclarations do: [ 
-						:attributeDecl | attributeDecl evalIn: self ].
-					simulationModel worldInitializer evalIn: self ] ].
-		memory patchesDo: [ :patch | 
-			self
-				withInitializerContextWithSubject: patch
-				definition: simulationModel patchDefinition
-				do: [ 
-					simulationModel patchDefinition allAttributeDeclarations do: [ 
-						:attributeDecl | attributeDecl evalIn: self ].
-					simulationModel patchInitializer evalIn: self ] ].
+		memory initialize.
+		simulationModel worldInitializer evalIn: self.
+		simulationModel patchInitializer evalIn: self.
 		simulationModel animatInitializersDo: [ :initializer | 
-			| animatDefinition |
-			animatDefinition := simulationModel
-				                    animatDefinitionAt: initializer animat
-				                    ifAbsent: [ 
-				                    ^ KeyNotFound signal: initializer animat ].
-			initializer population timesRepeat: [ 
-				| animat |
-				animat := memory allocateAnimat: animatDefinition.
-
-				self
-					withInitializerContextWithSubject: animat
-					definition: animatDefinition
-					do: [ 
-						animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
-							attributeDecl evalIn: self ].
-						initializer evalIn: self ] ] ] ].
+			initializer evalIn: self ] ].
 	memory time: 0.
 	self timeChanged
 ]
