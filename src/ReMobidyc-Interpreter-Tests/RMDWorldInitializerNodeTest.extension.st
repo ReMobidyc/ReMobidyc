@@ -10,12 +10,8 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	worldInitializer := parser worldInitializer parse: 'World with
 			temperature = -10 [DegreeC]
 			humidity = 0.4 []'.
-	interpreter memory allocateWorld: worldDef.
-	interpreter individualsOf: worldDef do: [ :world | 
-		interpreter
-			withInitializerContextWithSubject: world
-			definition: worldDef
-			do: [ worldInitializer evalIn: interpreter ] ].
+	interpreter simulationModel worldDefinition: worldDef.
+	worldInitializer evalIn: interpreter.
 	count := 0.
 	interpreter individualsOf: worldDef do: [ :world | 
 		interpreter

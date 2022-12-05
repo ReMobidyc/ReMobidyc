@@ -11,12 +11,8 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 		                    '10 x 11 of 2 [m] Patch with
 			grass = 1000 [ kcal ]
 			fertility = 1100 [kcal]'.
-	interpreter memory allocatePatches: patchDef x: 10 y: 11.
-	interpreter individualsOf: patchDef do: [ :patch | 
-		interpreter
-			withInitializerContextWithSubject: patch
-			definition: patchDef
-			do: [ patchInitializer evalIn: interpreter ] ].
+	interpreter simulationModel patchDefinition: patchDef.
+	patchInitializer evalIn: interpreter.
 	self assert: interpreter time closeTo: 0.0.
 	grass := 'kcal' asRMDUnit toSI: 1000.
 	fertility := 'kcal' asRMDUnit toSI: 1100.

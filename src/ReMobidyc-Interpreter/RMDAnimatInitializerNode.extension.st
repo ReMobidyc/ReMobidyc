@@ -19,15 +19,15 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 			do: [ 
 				aRMDInterpreter
 					initializeVariable: 'x'
-					with: [ 
-						RMDUniformDistributionXNode current evalIn: aRMDInterpreter ]
+					with:
+						(RMDUniformDistributionXNode current evalIn: aRMDInterpreter)
 					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ];
 					initializeVariable: 'y'
-					with: [ 
-						RMDUniformDistributionYNode current evalIn: aRMDInterpreter ]
+					with:
+						(RMDUniformDistributionYNode current evalIn: aRMDInterpreter)
 					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ].
-				animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
-					attributeDecl evalIn: self ].
+				animatDefinition allAttributeDeclarations do: [ 
+					:attributeDeclaration | attributeDeclaration evalIn: self ].
 				attributeInitializers do: [ :initializer | 
 					initializer evalIn: aRMDInterpreter ] ] ]
 ]
