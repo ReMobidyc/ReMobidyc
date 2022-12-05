@@ -17,19 +17,19 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 			withInitializerContextWithSubject: individual
 			definition: animatDefinition
 			do: [ 
-				animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
-					attributeDecl evalIn: self ].
-				attributeInitializers do: [ :initializer | 
-					initializer evalIn: aRMDInterpreter ].
 				aRMDInterpreter
-					initializeVariableIfNotInitialized: 'x'
+					initializeVariable: 'x'
 					with: [ 
 						RMDUniformDistributionXNode current evalIn: aRMDInterpreter ]
 					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ];
-					initializeVariableIfNotInitialized: 'y'
+					initializeVariable: 'y'
 					with: [ 
 						RMDUniformDistributionYNode current evalIn: aRMDInterpreter ]
-					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ] ] ]
+					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ].
+				animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
+					attributeDecl evalIn: self ].
+				attributeInitializers do: [ :initializer | 
+					initializer evalIn: aRMDInterpreter ] ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
