@@ -17,12 +17,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 			x = uniform 10[m] to 90[m]
 			body = uniform 1000 [kcal] to 5000 [ kcal ]
 			age = 0 [day]'.
-	10 timesRepeat: [ interpreter memory allocateAnimat: goatDef ].
-	interpreter individualsOf: goatDef do: [ :goat | 
-		interpreter
-			withInitializerContextWithSubject: goat
-			definition: goatDef
-			do: [ goatInitializer evalIn: interpreter ] ].
+	goatInitializer evalIn: interpreter.
 	self assert: interpreter time closeTo: 0.0.
 	minBody := 'kcal' asRMDUnit toSI: 1000.
 	maxBody := 'kcal' asRMDUnit toSI: 5000.

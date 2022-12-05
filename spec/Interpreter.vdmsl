@@ -114,7 +114,7 @@ operations
     pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
     attributeAddresses(agentDefinition, animat) ==
         return let
-                attributes : seq of AST`Identifier =
+                attrs : seq of AST`Identifier =
                     (if
                             is_AST`AnimatDefinition(agentDefinition)
                         then
@@ -124,8 +124,8 @@ operations
                     ^ [decl.identifier
                         | decl in seq agentDefinition.attributeDeclarations]
             in
-                {attributes(offset) |-> animat + offset - 1
-                | offset in set inds attributes};
+                {attrs(offset) |-> animat + offset - 1
+                | offset in set inds attrs};
     
     pure readUtility : AST`Identifier ==> [real]
     readUtility(identifier) ==

@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'identifier',
-		'unit'
+		'unit',
+		'initializerExpression'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -16,11 +17,23 @@ RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit initializerExpression: aRMDExpression [
+
+	^ self new
+		  identifier: aString;
+		  unit: aRMDUnit;
+		  initializerExpression: aRMDExpression;
+		  yourself
+]
+
 { #category : #comparing }
 RMDAttributeDeclarationNode >> = anObject [
-	^ self class = anObject class
-		and: [ identifier = anObject identifier
-				and: [ unit = anObject unit ] ]
+
+	^ self class = anObject class and: [ 
+		  identifier = anObject identifier and: [ 
+			  unit = anObject unit and: [ 
+				  initializerExpression = anObject initializerExpression ] ] ]
 ]
 
 { #category : #converting }
@@ -33,9 +46,17 @@ RMDAttributeDeclarationNode >> childrenDo: aBlock [
 
 ]
 
+{ #category : #testing }
+RMDAttributeDeclarationNode >> hasInitializer [
+
+	^ initializerExpression notNil
+]
+
 { #category : #comparing }
 RMDAttributeDeclarationNode >> hash [
-	^ (self class hash bitXor: identifier hash) bitXor: unit hash
+
+	^ ((self class hash bitXor: identifier hash) bitXor: unit hash) 
+		  bitXor: initializerExpression hash
 ]
 
 { #category : #accessing }
@@ -48,6 +69,18 @@ RMDAttributeDeclarationNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #accessing }
+RMDAttributeDeclarationNode >> initializerExpression [
+
+	^ initializerExpression
+]
+
+{ #category : #accessing }
+RMDAttributeDeclarationNode >> initializerExpression: aRMDExpression [
+
+	initializerExpression := aRMDExpression
+]
+
 { #category : #testing }
 RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 	^ true
@@ -55,20 +88,26 @@ RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 
 { #category : #copying }
 RMDAttributeDeclarationNode >> postCopy [
-	
+
+	initializerExpression := initializerExpression ifNotNil: #copy
 ]
 
 { #category : #printing }
 RMDAttributeDeclarationNode >> printOn: aStream [
+
 	aStream
 		nextPutAll: identifier;
 		nextPutAll: ' ['.
 	unit printOn: aStream.
-	aStream nextPut: $]
+	aStream nextPut: $].
+	initializerExpression ifNotNil: [ 
+		aStream nextPutAll: ' = '.
+		initializerExpression printOn: aStream ]
 ]
 
 { #category : #printing }
 RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream
@@ -76,16 +115,26 @@ RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		nextPutAll: ' ['.
 	unit printOn: aStream.
 	aStream nextPut: $].
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	initializerExpression ifNotNil: [ 
+		aStream nextPutAll: ' = '.
+		initializerExpression
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }
 RMDAttributeDeclarationNode >> replaceChildren: aDictionary [
+
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ].
-	aDictionary at: unit ifPresent: [ :node | unit := node copy ]
+	aDictionary at: unit ifPresent: [ :node | unit := node copy ].
+	initializerExpression ifNotNil: [ 
+		initializerExpression := initializerExpression copyReplace:
+			                         aDictionary ]
 ]
 
 { #category : #accessing }

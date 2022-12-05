@@ -381,11 +381,14 @@ RMDGrammar >> attributeBindNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> attributeDeclaration [
-	^ (identifier , self type)
-		==> [ :pair | 
-			self attributeDeclarationNodeClass
-				identifier: pair first
-				unit: pair second ]
+
+	^ identifier , self type
+	  , ('=' asPParser trimBlanks , expression ==> #second) optional
+	  ==> [ :triple | 
+		  self attributeDeclarationNodeClass
+			  identifier: triple first
+			  unit: triple second
+			  initializerExpression: triple third ]
 ]
 
 { #category : #'class access' }
@@ -410,11 +413,13 @@ RMDGrammar >> attributeDefinitionNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> attributeInitializer [
-	^ (identifier , '=' asPParser trimBlanks , expression)
-		==> [ :triple | 
-			self attributeInitializerNodeClass
-				identifier: triple first
-				expression: triple third ]
+
+	^ identifier
+	  , ('=' asPParser trimBlanks , expression ==> #second) optional
+	  ==> [ :pair | 
+		  self attributeInitializerNodeClass
+			  identifier: pair first
+			  expression: pair second ]
 ]
 
 { #category : #'class access' }

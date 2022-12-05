@@ -26,7 +26,7 @@ types
         attributeDeclarations : seq of AttributeDeclaration;
      AgentDefinition =
         AnimatDefinition| PatchDefinition| WorldDefinition;
-     AttributeDeclaration :: identifier : Identifier unit : Unit;
+     AttributeDeclaration :: identifier : Identifier unit : Unit initializerExpression : [Expression];
      ActionDefinition ::
         identifier : Identifier
         object : [AgentIdentifier]
@@ -84,7 +84,7 @@ types
      WorldInitializer ::
         attributeInitializers : seq of AttributeInitializer;
      AttributeInitializer ::
-        identifier : Identifier expression : Expression;
+        identifier : Identifier expression : [Expression];
      Expression =
         Variable| Literal| Casting| Apply| Arithmetics| Distribution|
         GuardedChoices| Directive| Placeholder;

@@ -60,36 +60,41 @@ RMDAttributeInitializerNode >> isAttributeInitializerNode [
 
 { #category : #copying }
 RMDAttributeInitializerNode >> postCopy [
-	expression := expression copy
+
+	expression := expression ifNotNil: #copy
 ]
 
 { #category : #printing }
 RMDAttributeInitializerNode >> printOn: aStream [
-	aStream
-		nextPutAll: identifier;
-		nextPutAll: ' = '.
-	expression printOn: aStream
+
+	aStream nextPutAll: identifier.
+	expression ifNotNil: [ 
+		aStream nextPutAll: ' = '.
+		expression printOn: aStream ]
 ]
 
 { #category : #printing }
 RMDAttributeInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
-	aStream
-		nextPutAll: identifier;
-		nextPutAll: ' = '.
-	expression
-		printOn: aStream
-		ifIncludedIn: aCollectionOfRMDSyntaxNode
-		addSectionTo: aCollection.
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	aStream nextPutAll: identifier.
+	expression ifNotNil: [ 
+		aStream nextPutAll: ' = '.
+		expression
+			printOn: aStream
+			ifIncludedIn: aCollectionOfRMDSyntaxNode
+			addSectionTo: aCollection ].
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]
 
 { #category : #rewriting }
 RMDAttributeInitializerNode >> replaceChildren: aDictionary [
+
 	aDictionary
 		at: identifier
 		ifPresent: [ :node | identifier := node copy ].
-	expression := expression copyReplace: aDictionary
+	expression ifNotNil: [ 
+		expression := expression copyReplace: aDictionary ]
 ]

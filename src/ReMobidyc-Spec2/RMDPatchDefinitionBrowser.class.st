@@ -21,8 +21,7 @@ RMDPatchDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode anim
 			(initializer attributeInitializers copyWith:
 				 (RMDAttributeInitializerNode
 					  identifier: aRMDAttributeNode identifier
-					  expression:
-					  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ]
+					  expression: nil)) ]
 ]
 
 { #category : #menus }

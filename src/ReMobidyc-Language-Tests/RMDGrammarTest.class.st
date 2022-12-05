@@ -490,11 +490,26 @@ RMDGrammarTest >> testAttributeBind [
 
 { #category : #tests }
 RMDGrammarTest >> testAttributeDeclaration [
+
 	| declaration |
 	declaration := grammar attributeDeclaration parse: 'x [m]'.
 	self assert: declaration isAttributeDeclarationNode.
 	self assert: declaration identifier equals: 'x'.
-	self assert: declaration unit equals: RMDUnit m
+	self assert: declaration unit equals: RMDUnit m.
+	declaration := grammar attributeDeclaration parse:
+		               'x [m] = uniform 0[m] to 100[m]'.
+	self assert: declaration isAttributeDeclarationNode.
+	self assert: declaration identifier equals: 'x'.
+	self assert: declaration unit equals: RMDUnit m.
+	self assert: declaration hasInitializer.
+	self assert:
+		declaration initializerExpression isUniformDistributionNode.
+	self
+		assert: declaration initializerExpression fromExpression
+		equals: (grammar literal parse: '0[m]').
+	self
+		assert: declaration initializerExpression toExpression
+		equals: (grammar literal parse: '100[m]')
 ]
 
 { #category : #tests }

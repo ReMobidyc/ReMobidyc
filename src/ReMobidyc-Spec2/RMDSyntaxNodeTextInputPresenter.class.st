@@ -45,7 +45,7 @@ RMDSyntaxNodeTextInputPresenter class >> on: aParser [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> allowEmpty [
-	parser := parser / '' asPParser end
+	parser := parser optional end
 ]
 
 { #category : #private }

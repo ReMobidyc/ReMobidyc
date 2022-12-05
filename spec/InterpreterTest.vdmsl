@@ -16,7 +16,7 @@ values
      examplePatch : AST`PatchDefinition = mk_AST`PatchDefinition([]);
      exampleAnimatA : AST`AnimatDefinition =
         mk_AST`AnimatDefinition(
-            "AnimatA", "Stage1", [mk_AST`AttributeDeclaration("age", Unit`day)]);
+            "AnimatA", "Stage1", [mk_AST`AttributeDeclaration("age", Unit`day, nil)]);
      exampleActionAge : AST`ActionDefinition =
         mk_AST`ActionDefinition(
             "age",

@@ -27,6 +27,8 @@ operations
             let world = Memory`getWorld()
             in
                 (Interpreter`setupInitializationContext(world, worldDefinition);
+                for attributeDeclaration in worldDefinition.attributeDeclarations
+                do evalAttributeDeclaration(attributeDeclaration);
                 for attributeInitializer in worldInitializer.attributeInitializers
                 do evalAttributeInitializer(attributeInitializer)));
     
@@ -45,6 +47,8 @@ operations
                     let patch = Memory`getPatch(x, y)
                     in
                         (Interpreter`setupInitializationContext(patch, patchDefinition);
+                        for attributeDeclaration in patchDefinition.attributeDeclarations
+                        do evalAttributeDeclaration(attributeDeclaration);
                         for attributeInitializer in patchInitializer.attributeInitializers
                         do evalAttributeInitializer(attributeInitializer)));
     
@@ -62,8 +66,12 @@ operations
                             animatName, AST`sizeOfAgent(animatDefinition))
                 in
                     (Interpreter`setupInitializationContext(animat, animatDefinition);
-                    writeVariable(nil, "x", uniform(Interpreter`worldWest(), Interpreter`worldEast()));
-                    writeVariable(nil, "y", uniform(Interpreter`worldSouth(), Interpreter`worldNorth()));
+                    writeVariable(
+                        nil, "x", uniform(Interpreter`worldWest(), Interpreter`worldEast()));
+                    writeVariable(
+                        nil, "y", uniform(Interpreter`worldSouth(), Interpreter`worldNorth()));
+                    for attributeDeclaration in animatDefinition.attributeDeclarations
+                    do evalAttributeDeclaration(attributeDeclaration);
                     for attributeInitializer
                     in animatInitializer.attributeInitializers
                     do evalAttributeInitializer(attributeInitializer));
@@ -74,6 +82,16 @@ operations
             nil,
             attributeInitializer.identifier,
             evalExpression(attributeInitializer.expression));
+    
+    evalAttributeDeclaration : AST`AttributeDeclaration ==> ()
+    evalAttributeDeclaration(attributeDeclaration) ==
+        if
+            attributeDeclaration.initializerExpression <> nil
+        then
+            writeVariable(
+                nil,
+                attributeDeclaration.identifier,
+                evalExpression(attributeDeclaration.initializerExpression));
     
     evalActionDefinition : AST`ActionDefinition ==> ()
     evalActionDefinition(actionDefinition) ==
@@ -274,8 +292,10 @@ operations
                             y = readVariable(nil, Interpreter`Y_ATTRIBUTE_NAME)
                         in
                             theta(
-                                Interpreter`patchLength()  * (floor Interpreter`normalizeX(x) + 0.5) - x,
-                                Interpreter`patchLength()  * (floor Interpreter`normalizeY(y) + 0.5) - y)
+                                Interpreter`patchLength()  * (floor Interpreter`normalizeX(x) + 0.5)
+                                - x,
+                                Interpreter`patchLength()  * (floor Interpreter`normalizeY(y) + 0.5)
+                                - y)
                     else
                         theta(east - west, north - south));
     

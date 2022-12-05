@@ -143,6 +143,13 @@ RMDInterpreter >> changeStage: animatString [
 			         ifAbsent: [ 0.0 ].
 		memory nextAt: newIndividual + offset put: value.
 		offset := offset + 1 ].
+	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
+		attributeDecl initializerExpression ifNotNil: [ :expr | 
+			self
+				write: (expr evalIn: self)
+				toVariable: attributeDecl identifier
+				agent: newIndividual
+				ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ].
 	memory removeAnimat: context subject.
 	context subject
 		to:
@@ -378,7 +385,14 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 		newIndividuals do: [ :individual | 
 			memory nextAt: individual + offset put: value ].
 		offset := offset + 1 ].
-
+	newIndividuals do: [ :individual | 
+		animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
+			attributeDecl initializerExpression ifNotNil: [ :expr | 
+				self
+					write: (expr evalIn: self)
+					toVariable: attributeDecl identifier
+					agent: individual
+					ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ] ].
 	^ newIndividuals
 ]
 
@@ -505,36 +519,11 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 RMDInterpreter >> setupSimulation [
 
 	memory world ifNil: [ 
-		memory
-			initialize;
-			allocateWorld: simulationModel worldDefinition;
-			allocatePatches: simulationModel patchDefinition
-			x: simulationModel patchXDivisions
-			y: simulationModel patchYDivisions.
-		memory worldDo: [ :world | 
-			self
-				withInitializerContextWithSubject: world
-				definition: simulationModel worldDefinition
-				do: [ simulationModel worldInitializer evalIn: self ] ].
-		memory patchesDo: [ :patch | 
-			self
-				withInitializerContextWithSubject: patch
-				definition: simulationModel patchDefinition
-				do: [ simulationModel patchInitializer evalIn: self ] ].
+		memory initialize.
+		simulationModel worldInitializer evalIn: self.
+		simulationModel patchInitializer evalIn: self.
 		simulationModel animatInitializersDo: [ :initializer | 
-			| animatDefinition |
-			animatDefinition := simulationModel
-				                    animatDefinitionAt: initializer animat
-				                    ifAbsent: [ 
-				                    ^ KeyNotFound signal: initializer animat ].
-			initializer population timesRepeat: [ 
-				| animat |
-				animat := memory allocateAnimat: animatDefinition.
-
-				self
-					withInitializerContextWithSubject: animat
-					definition: animatDefinition
-					do: [ initializer evalIn: self ] ] ] ].
+			initializer evalIn: self ] ].
 	memory time: 0.
 	self timeChanged
 ]
