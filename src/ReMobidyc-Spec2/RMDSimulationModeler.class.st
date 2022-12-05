@@ -124,8 +124,7 @@ RMDSimulationModeler >> addAnimatInitializer [
 									  :attribute | 
 									  RMDAttributeInitializerNode
 										  identifier: attribute identifier
-										  expression:
-										  (RMDLiteralNode literal: '0' unit: attribute unit) ])) ] ] ]
+										  expression: nil ])) ] ] ]
 ]
 
 { #category : #private }
@@ -277,7 +276,7 @@ RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self windowTitle;
-		initialExtent: 800 @ 600
+		initialExtent: 1000 @ 600
 ]
 
 { #category : #accessing }

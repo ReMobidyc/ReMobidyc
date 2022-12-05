@@ -50,7 +50,7 @@ RMDAnimatShapeRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 					y := aRMDInterpreter
 						readVariable: 'y'
 						agent: nil
-						ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+						ifAbsent: [ ^ KeyNotFound signal: 'y' ].
 					self
 						drawIndividual: individual
 						with: aRMDInterpreter

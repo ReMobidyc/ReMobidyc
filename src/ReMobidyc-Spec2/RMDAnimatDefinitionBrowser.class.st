@@ -20,7 +20,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 		  add: (SpPanedLayout newVertical
 				   positionOfSlider: 0.4;
 				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.5;
+						    positionOfSlider: 0.6;
 						    add: (SpBoxLayout newVertical
 								     add: 'Attributes' expand: false;
 								     add: #attributeList;
@@ -105,8 +105,7 @@ RMDAnimatDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode ani
 				(animatInitializer attributeInitializers copyWith:
 					 (RMDAttributeInitializerNode
 						  identifier: aRMDAttributeNode identifier
-						  expression:
-						  (RMDLiteralNode literal: '0' unit: aRMDAttributeNode unit))) ] ]
+						  expression: nil)) ] ]
 ]
 
 { #category : #operations }

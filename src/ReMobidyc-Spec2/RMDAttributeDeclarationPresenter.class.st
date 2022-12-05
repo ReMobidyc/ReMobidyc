@@ -3,75 +3,100 @@ Class {
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
 		'identifierField',
-		'unitField'
+		'unitField',
+		'initializerExpressionField'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
 { #category : #layout }
 RMDAttributeDeclarationPresenter class >> defaultLayout [
+
 	<spec>
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				add: '     ' expand: false;
-				add: #identifierField width: 180;
-				add: ' [' expand: false;
-				add: #unitField width: 50;
-				add: '] ' expand: false;
-				yourself)
-		height: self inputTextHeight
+		  add: (SpBoxLayout newHorizontal
+				   add: '     ' expand: false;
+				   add: #identifierField width: 180;
+				   add: ' [' expand: false;
+				   add: #unitField width: 50;
+				   add: '] = ' expand: false;
+				   add: #initializerExpressionField expand: true;
+				   yourself)
+		  height: self inputTextHeight
 ]
 
 { #category : #initialization }
 RMDAttributeDeclarationPresenter >> initializePresenters [
+
 	super initializePresenters.
 	identifierField := self newTextInput
-		beText;
-		autoAccept: true;
-		placeholder: 'identifier';
-		whenTextChangedDo: [ node
-				ifNotNil: [ node identifier: identifierField text asString trim ] ];
-		yourself.
+		                   beText;
+		                   autoAccept: true;
+		                   placeholder: 'identifier';
+		                   whenTextChangedDo: [ 
+			                   node ifNotNil: [ 
+					                   node identifier:
+							                   identifierField text asString trim ] ];
+		                   yourself.
 	unitField := self newValidatedTextInput
-		placeholder: 'unit';
-		validation: [ :text | 
-			(RMDGrammar new unit optional end parse: text asString trim)
-				isPetit2Failure not ];
-		autoAccept: true;
-		whenLastValidTextChangedDo: [ :text | 
-			node
-				unit:
-					((RMDGrammar new unit optional end parse: text asString trim)
-						ifNil: [ RMDUnit noDimension ]) ];
-		yourself.
-	self
-		focusOrder:
-			{identifierField.
-			unitField} asOrderedCollection
+		             placeholder: 'unit';
+		             validation: [ :text | 
+			             (RMDGrammar new unit optional end parse:
+					              text asString trim) isPetit2Failure not ];
+		             autoAccept: true;
+		             whenLastValidTextChangedDo: [ :text | 
+			             node unit:
+					             ((RMDGrammar new unit optional end parse:
+							               text asString trim) ifNil: [ 
+							              RMDUnit noDimension ]) ];
+		             yourself.
+	initializerExpressionField := self newSyntaxNodeTextInput
+		                              placeholder: 'initial value (optional)';
+		                              beExpression;
+		                              allowEmpty;
+		                              autoAccept: true;
+		                              whenSyntaxNodeChangedDo: [ 
+			                              :newExpression | 
+			                              node initializerExpression:
+					                              newExpression ];
+		                              yourself.
+	self focusOrder: { 
+			identifierField.
+			unitField.
+			initializerExpressionField } asOrderedCollection
 ]
 
 { #category : #initialization }
 RMDAttributeDeclarationPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 400 @ (self class buttonHeight * 3.5)
+	aWindowPresenter initialExtent: 600 @ (self class buttonHeight * 3.5)
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 RMDAttributeDeclarationPresenter >> nodeChanged [
+
 	self
 		updateIdentifier;
-		updateUnit
+		updateUnit;
+		updateInitializerExpressionField
 ]
 
 { #category : #accessing }
 RMDAttributeDeclarationPresenter >> preferredHeight [
+
 	^ self class inputTextHeight
 ]
 
 { #category : #updating }
 RMDAttributeDeclarationPresenter >> updateIdentifier [
 	node ifNotNil: [ identifierField text: node identifier ]
+]
+
+{ #category : #updating }
+RMDAttributeDeclarationPresenter >> updateInitializerExpressionField [
+
+	node ifNotNil: [ 
+		initializerExpressionField syntaxNode: node initializerExpression ]
 ]
 
 { #category : #updating }

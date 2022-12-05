@@ -31,7 +31,7 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.4;
 		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.5;
+				   positionOfSlider: 0.6;
 				   add: (SpBoxLayout newVertical
 						    add: 'Attributes' expand: false;
 						    add: #attributeList;
@@ -194,20 +194,33 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 beSingleSelection;
 		                 beResizable;
 		                 showColumnHeaders;
-		                 addColumn: (SpStringTableColumn
-				                  title: 'name'
-				                  evaluated: [ :item | item identifier ]);
+		                 addColumn: ((SpStringTableColumn
+				                   title: 'name'
+				                   evaluated: [ :item | item identifier ])
+				                  width: 150;
+				                  yourself);
+		                 addColumn:
+			                 ((SpStringTableColumn
+				                   title: 'unit'
+				                   evaluated: [ :item | 
+					                   | unit |
+					                   unit := item unit.
+					                   unit hasDimension
+						                   ifTrue: [ unit printString ]
+						                   ifFalse: [ '' ] ])
+				                  width: 100;
+				                  yourself);
 		                 addColumn:
 			                 (SpStringTableColumn
-				                  title: 'unit'
+				                  title: 'initial value'
 				                  evaluated: [ :item | 
-					                  | unit |
-					                  unit := item unit.
-					                  unit hasDimension
-						                  ifTrue: [ unit printString ]
-						                  ifFalse: [ '' ] ]);
+					                  | expr |
+					                  expr := item initializerExpression.
+					                  expr
+						                  ifNotNil: [ expr printString ]
+						                  ifNil: [ '' ] ]);
 		                 whenModelChangedDo: [ 
-			                 attributeList selectItem: nil ];
+		                 attributeList selectItem: nil ];
 		                 whenSelectionChangedDo: [ 
 			                 | selected index |
 			                 selected := attributeList selection selectedItem
@@ -215,10 +228,10 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			                 index := attributeList selection selectedIndex.
 			                 removeAttributeButton enabled: selected.
 			                 moveUpAttributeButton enabled:
-					                 (selected and: [ index > 1 ]).
+				                 (selected and: [ index > 1 ]).
 			                 moveDownAttributeButton enabled:
-					                 (selected and: [ 
-							                  index < attributeList items size ]).
+				                 (selected and: [ 
+					                  index < attributeList items size ]).
 			                 editAttributeButton enabled: selected ];
 		                 yourself.
 	addAttributeButton := self newButton
@@ -316,17 +329,17 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                    disable;
 		                    yourself.
 	moveUpTaskButton := self newButton
-		                         icon: self upIcon;
-		                         action: [ self moveUpTask ];
-		                         help: 'Move the selected task up';
-		                         disable;
-		                         yourself.
+		                    icon: self upIcon;
+		                    action: [ self moveUpTask ];
+		                    help: 'Move the selected task up';
+		                    disable;
+		                    yourself.
 	moveDownTaskButton := self newButton
-		                           icon: self downIcon;
-		                           action: [ self moveDownTask ];
-		                           help: 'Move the selected task down';
-		                           disable;
-		                           yourself.
+		                      icon: self downIcon;
+		                      action: [ self moveDownTask ];
+		                      help: 'Move the selected task down';
+		                      disable;
+		                      yourself.
 	editTaskButton := self newButton
 		                  icon: self editIcon;
 		                  action: [ self editTask ];

@@ -50,22 +50,26 @@ RMDAttributeInitializerPresenter >> identifierField [
 
 { #category : #initialization }
 RMDAttributeInitializerPresenter >> initializePresenters [
+
 	super initializePresenters.
 	identifierField := self newSyntaxNodeTextInput
-		beIdentifier;
-		autoAccept: true;
-		whenLastValidSyntaxNodeChangedDo: [ node
-				ifNotNil: [ identifierField text asString trim
-						ifNotEmpty: [ :id | node identifier: id ] ] ];
-		yourself.
+		                   beIdentifier;
+		                   autoAccept: true;
+		                   whenLastValidSyntaxNodeChangedDo: [ 
+			                   node ifNotNil: [ 
+					                   identifierField text asString trim 
+						                   ifNotEmpty: [ :id | node identifier: id ] ] ];
+		                   yourself.
 	expressionField := self newSyntaxNodeTextInput
-		beExpression;
-		autoAccept: true;
-		whenLastValidSyntaxNodeChangedDo: [ :expr | node ifNotNil: [ node expression: expr ] ];
-		yourself
+		                   beExpression;
+		                   allowEmpty;
+		                   autoAccept: true;
+		                   whenSyntaxNodeChangedDo: [ :expr | 
+			                   node ifNotNil: [ node expression: expr ] ];
+		                   yourself
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 RMDAttributeInitializerPresenter >> nodeChanged [
 	self
 		updateIdentifierField;
@@ -79,7 +83,9 @@ RMDAttributeInitializerPresenter >> preferredHeight [
 
 { #category : #updating }
 RMDAttributeInitializerPresenter >> updateExpressionField [
-	expressionField text: node expression printString
+
+	expressionField text:
+		(node expression ifNotNil: #printString ifNil: [ '' ])
 ]
 
 { #category : #updating }
