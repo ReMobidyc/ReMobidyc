@@ -35,6 +35,39 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 								     height: self buttonHeight;
 								     yourself);
 						    add: (SpBoxLayout newVertical
+								     add: 'where' expand: false;
+								     add: #utilityList;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addUtilityButton width: self buttonHeight;
+										      add: #removeUtilityButton width: self buttonHeight;
+										      add: #moveUpUtilityButton width: self buttonHeight;
+										      add: #moveDownUtilityButton width: self buttonHeight;
+										      add: #editUtilityButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
+								     yourself);
+						    yourself);
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.75;
+						    add: (SpBoxLayout newVertical
+								     add: 'Tasks' expand: false;
+								     add: (SpPanedLayout newHorizontal
+										      positionOfSlider: 0.3;
+										      add: (SpBoxLayout newVertical
+												       add: #taskList;
+												       add: (SpBoxLayout newHorizontal
+														        add: #addTaskButton width: self buttonHeight;
+														        add: #removeTaskButton width: self buttonHeight;
+														        add: #moveUpTaskButton width: self buttonHeight;
+														        add: #moveDownTaskButton
+														        width: self buttonHeight;
+														        add: #editTaskButton width: self buttonHeight;
+														        yourself)
+												       height: self buttonHeight;
+												       yourself);
+										      add: #sourceText);
+								     yourself);
+						    add: (SpBoxLayout newVertical
 								     add: 'Visualization' expand: false;
 								     add: #rendererList;
 								     add: (SpBoxLayout newHorizontal
@@ -43,25 +76,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      yourself)
 								     height: self buttonHeight;
 								     yourself);
-						    yourself);
-				   add: (SpBoxLayout newVertical
-						    add: 'Tasks' expand: false;
-						    add: (SpPanedLayout newHorizontal
-								     positionOfSlider: 0.4;
-								     add: (SpBoxLayout newVertical
-										      add: #taskList;
-										      add: (SpBoxLayout newHorizontal
-												       add: #addTaskButton width: self buttonHeight;
-												       add: #removeTaskButton width: self buttonHeight;
-												       add: #moveUpTaskButton width: self buttonHeight;
-												       add: #moveDownTaskButton width: self buttonHeight;
-												       add: #editTaskButton width: self buttonHeight;
-												       yourself)
-										      height: self buttonHeight;
-										      yourself);
-								     add: #sourceText);
-						    yourself);
-				   yourself);
+						    yourself) yourself);
 		  yourself
 ]
 

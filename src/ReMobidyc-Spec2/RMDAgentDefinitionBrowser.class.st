@@ -10,6 +10,12 @@ Class {
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
 		'editAttributeButton',
+		'utilityList',
+		'addUtilityButton',
+		'removeUtilityButton',
+		'moveUpUtilityButton',
+		'moveDownUtilityButton',
+		'editUtilityButton',
 		'rendererList',
 		'addRendererButton',
 		'removeRendererButton',
@@ -45,6 +51,38 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
+						    add: 'where' expand: false;
+						    add: #utilityList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #addUtilityButton width: self buttonHeight;
+								     add: #removeUtilityButton width: self buttonHeight;
+								     add: #moveUpUtilityButton width: self buttonHeight;
+								     add: #moveDownUtilityButton width: self buttonHeight;
+								     add: #editUtilityButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
+						    yourself);
+				   yourself);
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.75;
+				   add: (SpBoxLayout newVertical
+						    add: 'Tasks' expand: false;
+						    add: (SpPanedLayout newHorizontal
+								     positionOfSlider: 0.3;
+								     add: (SpBoxLayout newVertical
+										      add: #taskList;
+										      add: (SpBoxLayout newHorizontal
+												       add: #addTaskButton width: self buttonHeight;
+												       add: #removeTaskButton width: self buttonHeight;
+												       add: #moveUpTaskButton width: self buttonHeight;
+												       add: #moveDownTaskButton width: self buttonHeight;
+												       add: #editTaskButton width: self buttonHeight;
+												       yourself)
+										      height: self buttonHeight;
+										      yourself);
+								     add: #sourceText);
+						    yourself);
+				   add: (SpBoxLayout newVertical
 						    add: 'Visualization' expand: false;
 						    add: #rendererList;
 						    add: (SpBoxLayout newHorizontal
@@ -53,25 +91,7 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 								     yourself)
 						    height: self buttonHeight;
 						    yourself);
-				   yourself);
-		  add: (SpBoxLayout newVertical
-				   add: 'Tasks' expand: false;
-				   add: (SpPanedLayout newHorizontal
-						    positionOfSlider: 0.4;
-						    add: (SpBoxLayout newVertical
-								     add: #taskList;
-								     add: (SpBoxLayout newHorizontal
-										      add: #addTaskButton width: self buttonHeight;
-										      add: #removeTaskButton width: self buttonHeight;
-										      add: #moveUpTaskButton width: self buttonHeight;
-										      add: #moveDownTaskButton width: self buttonHeight;
-										      add: #editTaskButton width: self buttonHeight;
-										      yourself)
-								     height: self buttonHeight;
-								     yourself);
-						    add: #sourceText);
-				   yourself);
-		  yourself
+				   yourself) yourself
 ]
 
 { #category : #operations }
@@ -129,6 +149,18 @@ RMDAgentDefinitionBrowser >> addTask [
 			self updateTaskList ] ]
 ]
 
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addUtility [
+
+	| newDefinition |
+	newDefinition := RMDUtilityDefinitionNode template.
+	newDefinition asPresenter openDialog okAction: [ 
+		self definitionDo: [ :definition | 
+			definition utilityDefinitions:
+				(definition utilityDefinitions copyWith: newDefinition).
+			self updateUtilityList ] ]
+]
+
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> agentName [
 	^ self subclassResponsibility
@@ -184,6 +216,22 @@ RMDAgentDefinitionBrowser >> editTask [
 					self updateTaskList.
 					taskList selectItem: taskDefinition.
 					self updateSourceText ] ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> editUtility [
+
+	utilityList selectedItem ifNotNil: [ :oldDefinition | 
+		| newDefinition index |
+		newDefinition := oldDefinition copy.
+		newDefinition asPresenter openDialog okAction: [ 
+			self definitionDo: [ :definition | 
+				definition utilityDefinitions
+					at:
+					(index := definition utilityDefinitions indexOf: oldDefinition)
+					put: newDefinition.
+				self updateUtilityList.
+				utilityList selectIndex: index ] ] ]
 ]
 
 { #category : #initialization }
@@ -264,6 +312,68 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			                       'Edit the definition of the selected attribute';
 		                       disable;
 		                       yourself.
+	utilityList := self newTable
+		               beSingleSelection;
+		               beResizable;
+		               showColumnHeaders;
+		               addColumn: ((SpStringTableColumn
+				                 title: 'name'
+				                 evaluated: [ :item | item variable identifier ])
+				                width: 150;
+				                yourself);
+		               addColumn:
+			               (SpStringTableColumn
+				                title: 'value'
+				                evaluated: [ :item | 
+					                | expr |
+					                expr := item definitionBody.
+					                expr ifNotNil: [ expr printString ] ifNil: [ '' ] ]);
+		               whenModelChangedDo: [ utilityList selectItem: nil ];
+		               whenSelectionChangedDo: [ 
+			               | selected index |
+			               selected := utilityList selection selectedItem
+				                           notNil.
+			               index := utilityList selection selectedIndex.
+			               removeUtilityButton enabled: selected.
+			               moveUpUtilityButton enabled:
+				               (selected and: [ index > 1 ]).
+			               moveDownUtilityButton enabled:
+				               (selected and: [ index < utilityList items size ]).
+			               editUtilityButton enabled: selected ];
+		               yourself.
+	addUtilityButton := self newButton
+		                    icon: self addIcon;
+		                    action: [ self addUtility ];
+		                    help: 'Add a new utility definition';
+		                    yourself.
+	removeUtilityButton := self newButton
+		                       icon: self removeIcon;
+		                       action: [ self removeUtility ];
+		                       help:
+			                       'Remove the selected utility definition';
+		                       disable;
+		                       yourself.
+	moveUpUtilityButton := self newButton
+		                       icon: self upIcon;
+		                       action: [ self moveUpUtility ];
+		                       help:
+			                       'Move the selected utility definition up';
+		                       disable;
+		                       yourself.
+	moveDownUtilityButton := self newButton
+		                         icon: self downIcon;
+		                         action: [ self moveDownUtility ];
+		                         help:
+			                         'Move the selected utility definition down';
+		                         disable;
+		                         yourself.
+	editUtilityButton := self newButton
+		                     icon: self editIcon;
+		                     action: [ self editUtility ];
+		                     help:
+			                     'Edit the definition of the selected utility definition';
+		                     disable;
+		                     yourself.
 	rendererList := self newComponentList
 		                beSingleSelection;
 		                whenModelChangedDo: [ rendererList selectItem: nil ];
@@ -395,6 +505,26 @@ RMDAgentDefinitionBrowser >> moveDownTask [
 ]
 
 { #category : #operations }
+RMDAgentDefinitionBrowser >> moveDownUtility [
+
+	utilityList selection selectedItem ifNotNil: [ :utilityNode | 
+		self definitionDo: [ :definition | 
+			| utilityDeclarations index |
+			utilityDeclarations := definition utilityDefinitions copy.
+			index := utilityDeclarations
+				         indexOf: utilityNode
+				         ifAbsent: utilityDeclarations size + 1.
+			index <= (utilityDeclarations size - 1) ifTrue: [ 
+				utilityDeclarations
+					at: index
+					put: (utilityDeclarations at: index + 1).
+				utilityDeclarations at: index + 1 put: utilityNode.
+				definition utilityDefinitions: utilityDeclarations.
+				self updateUtilityList.
+				utilityList selectIndex: index + 1 ] ] ]
+]
+
+{ #category : #operations }
 RMDAgentDefinitionBrowser >> moveUpAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
@@ -425,6 +555,24 @@ RMDAgentDefinitionBrowser >> moveUpTask [
 				and: (tasks at: selectionIndex - 1).
 			self updateTaskList.
 			taskList selectIndex: selectionIndex - 1 ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> moveUpUtility [
+
+	utilityList selection selectedItem ifNotNil: [ :utilityNode | 
+		self definitionDo: [ :definition | 
+			| utilityDefinitions index |
+			utilityDefinitions := definition utilityDefinitions copy.
+			index := utilityDefinitions indexOf: utilityNode ifAbsent: 0.
+			index >= 2 ifTrue: [ 
+				utilityDefinitions
+					at: index
+					put: (utilityDefinitions at: index - 1).
+				utilityDefinitions at: index - 1 put: utilityNode.
+				definition utilityDefinitions: utilityDefinitions.
+				self updateUtilityList.
+				utilityList selectIndex: index - 1 ] ] ]
 ]
 
 { #category : #operations }
@@ -473,6 +621,18 @@ RMDAgentDefinitionBrowser >> removeTask [
 			removeTaskDefinition: taskDefinition
 			ifAbsent: [ KeyNotFound signal: taskDefinition ].
 		self updateTaskList ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeUtility [
+
+	utilityList selectedItem ifNotNil: [ :oldDefinition | 
+		(UIManager default confirm:
+			 'Sure to remove `' , oldDefinition printString , '''?') ifTrue: [ 
+			self definitionDo: [ :definition | 
+				definition utilityDefinitions:
+					(definition utilityDefinitions copyWithout: oldDefinition).
+				self updateUtilityList ] ] ]
 ]
 
 { #category : #enumerating }
@@ -543,4 +703,11 @@ RMDAgentDefinitionBrowser >> updateTaskList [
 			items: (model taskDefinitions select: [ :behavior | 
 						 behavior subjectIdentifier = self agentName ]);
 			selectItem: selectedBehavior ]
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> updateUtilityList [
+
+	self definitionDo: [ :definition | 
+		utilityList items: definition utilityDefinitions ]
 ]
