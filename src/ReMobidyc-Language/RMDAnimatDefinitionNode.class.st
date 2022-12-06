@@ -24,9 +24,11 @@ RMDAnimatDefinitionNode class >> goat [
 ]
 
 { #category : #'instance creation' }
-RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
-	^ (self attributeDeclarations: anArrayOfRMDAttributeDeclarationNode)
+	^ (self
+		   attributeDeclarations: anArrayOfRMDAttributeDeclarationNode
+		   utilityDefinitions: anArrayOfRMDUtilityDefinitionNode)
 		  identifier: aString;
 		  species: anotherString;
 		  yourself

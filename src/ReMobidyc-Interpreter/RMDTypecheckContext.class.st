@@ -22,8 +22,9 @@ RMDTypecheckContext >> action [
 
 { #category : #accessing }
 RMDTypecheckContext >> action: aRMDActionDefinitionNode [
+
 	action := aRMDActionDefinitionNode.
-	self loadUtilityDefinitions
+	self loadUtilityDefinitions: action utilityDefinitions
 ]
 
 { #category : #initialization }
@@ -35,10 +36,12 @@ RMDTypecheckContext >> initialize [
 ]
 
 { #category : #accessing }
-RMDTypecheckContext >> loadUtilityDefinitions [
-	utilities := Dictionary new: action utilityDefinitions size.
-	action utilityDefinitions
-		do: [ :def | utilities at: def variable identifier put: def ]
+RMDTypecheckContext >> loadUtilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
+	utilities := Dictionary new:
+		             anArrayOfRMDUtilityDefinitionNode size + 10.
+	anArrayOfRMDUtilityDefinitionNode do: [ :def | 
+		utilities at: def variable identifier put: def ]
 ]
 
 { #category : #accessing }

@@ -12,8 +12,9 @@ RMDWorldDefinitionNode class >> createBuiltinAttributes [
 
 { #category : #'typical instances' }
 RMDWorldDefinitionNode class >> empty [
+
 	<script: 'RMDWorldDefinitionNode empty inspect'>
-	^ self attributeDeclarations: {}
+	^ self attributeDeclarations: Array new utilityDefinitions: Array new
 ]
 
 { #category : #testing }

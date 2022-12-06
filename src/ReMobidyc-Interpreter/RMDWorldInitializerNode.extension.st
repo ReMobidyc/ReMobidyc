@@ -10,16 +10,14 @@ RMDWorldInitializerNode >> evalIn: aRMDInterpreter [
 		withInitializerContextWithSubject: world
 		definition: worldDefinition
 		do: [ 
-			worldDefinition allAttributeDeclarations do: [ 
-				:attributeDeclaration | attributeDeclaration evalIn: self ].
-			attributeInitializers do: [ :initializer | 
-				initializer evalIn: aRMDInterpreter ] ]
+			worldDefinition evalIn: aRMDInterpreter.
+			super evalIn: aRMDInterpreter ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDWorldInitializerNode >> typecheckIn: aRMDInterpreter [
+
 	aRMDInterpreter
 		withContext: aRMDInterpreter newTypecheckContextForWorld
-		do: [ attributeInitializers
-				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
+		do: [ super typecheckIn: aRMDInterpreter ]
 ]

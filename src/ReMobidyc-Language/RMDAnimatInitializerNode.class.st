@@ -27,12 +27,15 @@ RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString
 ]
 
 { #category : #'instance creation' }
-RMDAnimatInitializerNode class >> population: anInteger animat: aString attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode [
+RMDAnimatInitializerNode class >> population: anInteger animat: aString attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
 	^ self new
-		population: anInteger;
-		animat: aString;
-		attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode;
-		yourself
+		  population: anInteger;
+		  animat: aString;
+		  attributeInitializers:
+			  anArrayOfRMDSimulationAttributeInitializerNode;
+		  utilityDefinitions: anArrayOfRMDUtilityDefinitionNode;
+		  yourself
 ]
 
 { #category : #'typical instances' }
@@ -104,6 +107,16 @@ RMDAnimatInitializerNode >> printOn: aStream [
 			do: [ :def | 
 				aStream nextPutAll: '    '.
 				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
@@ -130,6 +143,19 @@ RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 				ifIncludedIn: aCollectionOfRMDSyntaxNode
 				addSectionTo: aCollection.
 			aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]

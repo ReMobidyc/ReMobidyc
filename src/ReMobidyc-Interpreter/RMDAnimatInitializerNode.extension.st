@@ -26,16 +26,15 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 					with:
 						(RMDUniformDistributionYNode current evalIn: aRMDInterpreter)
 					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ].
-				animatDefinition allAttributeDeclarations do: [ 
-					:attributeDeclaration | attributeDeclaration evalIn: self ].
-				attributeInitializers do: [ :initializer | 
-					initializer evalIn: aRMDInterpreter ] ] ]
+				animatDefinition evalIn: aRMDInterpreter.
+				super evalIn: aRMDInterpreter ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
+
 	aRMDInterpreter
-		withContext: (aRMDInterpreter newTypecheckContextForAnimat: self animat)
-		do: [ attributeInitializers
-				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
+		withContext:
+		(aRMDInterpreter newTypecheckContextForAnimat: self animat)
+		do: [ super typecheckIn: aRMDInterpreter ]
 ]

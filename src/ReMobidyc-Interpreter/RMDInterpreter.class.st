@@ -143,13 +143,10 @@ RMDInterpreter >> changeStage: animatString [
 			         ifAbsent: [ 0.0 ].
 		memory nextAt: newIndividual + offset put: value.
 		offset := offset + 1 ].
-	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
-		attributeDecl initializerExpression ifNotNil: [ :expr | 
-			self
-				write: (expr evalIn: self)
-				toVariable: attributeDecl identifier
-				agent: newIndividual
-				ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ].
+	self
+		withSubInitializerContextWithSubject: newIndividual
+		definition: animatDefinition
+		do: [ animatDefinition evalIn: self ].
 	memory removeAnimat: context subject.
 	context subject
 		to:
@@ -386,13 +383,10 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 			memory nextAt: individual + offset put: value ].
 		offset := offset + 1 ].
 	newIndividuals do: [ :individual | 
-		animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
-			attributeDecl initializerExpression ifNotNil: [ :expr | 
-				self
-					write: (expr evalIn: self)
-					toVariable: attributeDecl identifier
-					agent: individual
-					ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ] ].
+		self
+			withSubInitializerContextWithSubject: individual
+			definition: animatDefinition
+			do: [ animatDefinition evalIn: self ] ].
 	^ newIndividuals
 ]
 
@@ -740,6 +734,21 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger definition: aRMDAgen
 		  withContext: (RMDObserverContext
 				   subject: anInteger
 				   definition: aRMDAgentDefinitionNode)
+		  do: aBlock
+]
+
+{ #category : #'context controls' }
+RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
+
+	^ self
+		  withSubContext: ((RMDInitializerContext
+				    subject: anInteger
+				    definition: aRMDAgentDefinitionNode)
+				   randomSeedWithHash: { 
+						   globalSeed.
+						   memory time.
+						   (memory seedAt: anInteger) };
+				   yourself)
 		  do: aBlock
 ]
 

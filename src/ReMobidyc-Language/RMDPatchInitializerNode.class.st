@@ -17,6 +17,7 @@ RMDPatchInitializerNode class >> empty [
 		yDivisions: 1
 		length: '1 [m]' asRMDExpression
 		patchAttributeInitializers: Array new
+		utilityDefinitions: Array new
 ]
 
 { #category : #'typical instances' }
@@ -42,13 +43,16 @@ RMDPatchInitializerNode class >> grassInitializer: xDivisions by: yDivisions of:
 ]
 
 { #category : #'instance creation' }
-RMDPatchInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 patchAttributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions [
+RMDPatchInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 patchAttributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions utilityDefinitions: aRMDUtilityDefinitionNode [
+
 	^ self new
-		xDivisions: aRMDExpression1;
-		yDivisions: aRMDExpression2;
-		size: aRMDExpression3;
-		attributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions;
-		yourself
+		  xDivisions: aRMDExpression1;
+		  yDivisions: aRMDExpression2;
+		  size: aRMDExpression3;
+		  attributeInitializers:
+			  anArrayOfRMDSimulationPatchAttributeDefinitions;
+		  utilityDefinitions: aRMDUtilityDefinitionNode;
+		  yourself
 ]
 
 { #category : #comparing }
@@ -63,7 +67,7 @@ RMDPatchInitializerNode >> = anObject [
 RMDPatchInitializerNode >> childrenDo: aBlock [
 
 	length ifNotNil: [ aBlock value: length ].
-	attributeInitializers do: aBlock
+	super childrenDo: aBlock
 ]
 
 { #category : #comparing }
@@ -110,6 +114,16 @@ RMDPatchInitializerNode >> printOn: aStream [
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
@@ -141,6 +155,19 @@ RMDPatchInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
 					printOn: aStream
 					ifIncludedIn: aCollectionOfRMDSyntaxNode
 					addSectionTo: aCollection ]

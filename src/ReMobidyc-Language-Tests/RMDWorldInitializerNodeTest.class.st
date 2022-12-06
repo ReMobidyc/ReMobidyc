@@ -31,6 +31,13 @@ RMDWorldInitializerNodeTest >> testPrintOn [
 	| node copy |
 	node := parser worldInitializer end parse: 'World with
 		x = 1
+		y = z
+		where
+			z = 3'.
+	copy := parser worldInitializer end parse: node printString.
+	self assert: copy equals: node.
+	node := parser worldInitializer end parse: 'World with
+		x = 1
 		y = 2'.
 	copy := parser worldInitializer end parse: node printString.
 	self assert: copy equals: node.

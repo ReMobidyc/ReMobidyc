@@ -57,15 +57,12 @@ RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
 
 { #category : #tests }
 RMDActionContextTest >> testLoadUtilityDefinitions [
-	| parser source |
+
+	| parser sources |
 	parser := RMDGrammar new.
-	source := '
-to test is
-	my delta x'' = two
-where
-	one = 1
-	two = one + 1.' trim.
-	context action: (parser actionDefinition parse: source).
+	sources := #( 'one = 1' 'two = one + 1' ).
+	context loadUtilityDefinitions: (sources collect: [ :source | 
+			 parser utilityDefinition end parse: source ]).
 	self
 		assert: (context utilityAt: 'one' ifAbsent: [ nil ])
 		equals: (parser utilityDefinition parse: 'one = 1').
