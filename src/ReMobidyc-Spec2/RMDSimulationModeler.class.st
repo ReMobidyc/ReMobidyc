@@ -124,7 +124,8 @@ RMDSimulationModeler >> addAnimatInitializer [
 									  :attribute | 
 									  RMDAttributeInitializerNode
 										  identifier: attribute identifier
-										  expression: nil ])) ] ] ]
+										  expression: nil ])
+							 utilityDefinitions: Array new) ] ] ]
 ]
 
 { #category : #private }
@@ -147,7 +148,8 @@ RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 	animatDefinitionNode := RMDAnimatDefinitionNode
 		                        identifier: stageName
 		                        species: speciesName
-		                        attributeDeclarations: Array new.
+		                        attributeDeclarations: Array new
+		                        utilityDefinitions: Array new.
 	simulationModel load: animatDefinitionNode.
 	simulationModel addRenderer:
 		(RMDAnimatDotRenderer on: stageName shapeSize: 7 color: Color yellow).

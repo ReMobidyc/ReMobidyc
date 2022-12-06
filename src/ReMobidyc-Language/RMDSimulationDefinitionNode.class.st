@@ -100,8 +100,9 @@ RMDSimulationDefinitionNode >> printOn: aStream [
 		nextPut: Character cr.
 	timeDefinition printOn: aStream.
 	aStream nextPut: Character cr.
-	worldInitializer printOn: aStream.
-	aStream nextPut: Character cr.
+	worldInitializer ifNotNil: [ 
+		worldInitializer printOn: aStream.
+		aStream nextPut: Character cr ].
 	patchInitializer printOn: aStream.
 	aStream nextPut: Character cr.
 	animatInitializers

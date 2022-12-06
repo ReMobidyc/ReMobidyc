@@ -3,7 +3,6 @@ Class {
 	#superclass : #RMDExecutionContextWithRandomGenerator,
 	#instVars : [
 		'action',
-		'utilities',
 		'location',
 		'object',
 		'objectDefinition',
@@ -20,21 +19,9 @@ RMDActionContext >> action [
 
 { #category : #accessing }
 RMDActionContext >> action: aRMDActionDefinitionNode [
+
 	action := aRMDActionDefinitionNode.
-	self loadUtilityDefinitions
-]
-
-{ #category : #initialization }
-RMDActionContext >> initialize [
-	super initialize.
-	utilities := Dictionary new
-]
-
-{ #category : #'utility access' }
-RMDActionContext >> loadUtilityDefinitions [
-	utilities := Dictionary new: action utilityDefinitions size.
-	action utilityDefinitions
-		do: [ :def | utilities at: def variable identifier put: def ]
+	self loadUtilityDefinitions: action utilityDefinitions
 ]
 
 { #category : #accessing }
@@ -106,16 +93,6 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aS
 { #category : #accessing }
 RMDActionContext >> objectDefinition [
 	^ objectDefinition
-]
-
-{ #category : #'utility access' }
-RMDActionContext >> utilityAt: aString ifAbsent: errorBlock [
-	^ utilities at: aString ifAbsent: errorBlock
-]
-
-{ #category : #'utility access' }
-RMDActionContext >> utilityAt: aString put: aNumber [
-	^ utilities at: aString put: aNumber
 ]
 
 { #category : #accessing }

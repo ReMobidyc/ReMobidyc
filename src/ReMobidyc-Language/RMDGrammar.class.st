@@ -29,9 +29,9 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 RMDGrammar >> actionDefinition [
 
 	^ self actionDefinitionHeaderLine , self whenClause optional
-	  , self withClause optional
+	  , self withDirectiveClause optional
 	  , self actionDefinitionAttributePart optional
-	  , self actionDefinitionUtilityPart optional
+	  , self whereClause optional
 	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
 	  ==> [ :array | 
 		  self actionDefinitionNodeClass
@@ -65,17 +65,6 @@ RMDGrammar >> actionDefinitionHeaderLine [
 { #category : #'class access' }
 RMDGrammar >> actionDefinitionNodeClass [
 	^ RMDActionDefinitionNode 
-]
-
-{ #category : #'parsers-definitions' }
-RMDGrammar >> actionDefinitionUtilityPart [
-
-	^ #newline asPParser trimBlanks , 'where' asPParser trimBlanks
-	  , #newline asPParser trimBlanks
-	  ,
-	  (self utilityDefinition onlySeparatedBy:
-		   #newline asPParser trimBlanks)
-	  , #newline asPParser trimBlanks optional ==> #fourth
 ]
 
 { #category : #'parsers-definitions' }
@@ -169,24 +158,16 @@ RMDGrammar >> allUnits [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> animatAttributePart [
-	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
-		,
-			(self attributeDeclaration
-				onlySeparatedBy: #newline asPParser trimBlanks)
-		, #newline asPParser trimBlanks optional) ==> #third
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> animatDefinition [
 
-	^ self animatHeader , self animatAttributePart optional
-	  , '.' asPParser trimBlanks , #newline asPParser trimBlanks optional
-	  ==> [ :quad | 
-		  self animatDefinitionNodeClass
-			  identifier: quad first first
-			  species: quad first second
-			  attributeDeclarations: (quad second ifNil: [ Array new ]) ]
+	^ self animatHeader , self withAttributeClause optional
+	  , self whereClause optional , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :penta | 
+	  self animatDefinitionNodeClass
+		  identifier: penta first first
+		  species: penta first second
+		  attributeDeclarations: (penta second ifNil: [ Array new ])
+		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -241,11 +222,12 @@ RMDGrammar >> animatInitializer [
 	  , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
 		   , (self attributeInitializer onlySeparatedBy:
 				    #newline asPParser trimBlanks) ==> #third) optional
-	  ==> [ :triple | 
-		  self animatInitializerNodeClass
-			  population: triple first asInteger
-			  animat: triple second
-			  attributeInitializers: (triple third ifNil: [ Array new ]) ]
+	  , self whereClause optional ==> [ :quad | 
+	  self animatInitializerNodeClass
+		  population: quad first asInteger
+		  animat: quad second
+		  attributeInitializers: (quad third ifNil: [ Array new ])
+		  utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -1052,18 +1034,13 @@ RMDGrammar >> patchColorMapRenderer [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> patchDefinition [
-	^ ('Patch' asPParser
-		,
-			((#blank asPParser , 'with' asPParser trimBlanks
-				, #newline asPParser trimBlanks
-				,
-					(self attributeDeclaration
-						onlySeparatedBy: #newline asPParser trimBlanks)
-				, #newline asPParser trimBlanks optional) ==> #fourth) optional
-		, '.' asPParser trimBlanks , #newline asPParser trimBlanks optional)
-		==> [ :pair | 
-			self patchDefinitionNodeClass
-				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
+
+	^ 'Patch' asPParser , self withAttributeClause optional
+	  , self whereClause optional , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :penta | 
+	  self patchDefinitionNodeClass
+		  attributeDeclarations: (penta second ifNil: [ Array new ])
+		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -1078,21 +1055,21 @@ RMDGrammar >> patchDirectiveNodeClass [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> patchInitializer [
-	^ (#digit asPParser plus flatten trimBlanks , 'x' asPParser
-		, #digit asPParser plus flatten trimBlanks
-		, 'of' asPParser trimBlanks , literal , 'Patch' asPParser trimBlanks
-		,
-			(('with' asPParser , #newline asPParser trimBlanks
-				,
-					(self attributeInitializer
-						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #last)
-				optional)
-		==> [ :array | 
-			self patchInitializerNodeClass
-				xDivisions: array first asInteger
-				yDivisions: array third asInteger
-				length: array fifth
-				patchAttributeInitializers: (array seventh ifNil: [ Array new ]) ]
+
+	^ #digit asPParser plus flatten trimBlanks , 'x' asPParser
+	  , #digit asPParser plus flatten trimBlanks
+	  , 'of' asPParser trimBlanks , literal
+	  , 'Patch' asPParser trimBlanks
+	  , ('with' asPParser , #newline asPParser trimBlanks
+		   , (self attributeInitializer onlySeparatedBy:
+				    #newline asPParser trimBlanks) ==> #last) optional
+	  , self whereClause optional ==> [ :array | 
+	  self patchInitializerNodeClass
+		  xDivisions: array first asInteger
+		  yDivisions: array third asInteger
+		  length: array fifth
+		  patchAttributeInitializers: (array seventh ifNil: [ Array new ])
+		  utilityDefinitions: (array eighth ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -1471,7 +1448,27 @@ RMDGrammar >> whenClause [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> withClause [
+RMDGrammar >> whereClause [
+
+	^ #newline asPParser trimBlanks optional
+	  , 'where' asPParser trimBlanks , #newline asPParser trimBlanks
+	  ,
+	  (self utilityDefinition onlySeparatedBy:
+		   #newline asPParser trimBlanks)
+	  , #newline asPParser trimBlanks optional ==> #fourth
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> withAttributeClause [
+	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
+		,
+			(self attributeDeclaration
+				onlySeparatedBy: #newline asPParser trimBlanks)
+		, #newline asPParser trimBlanks optional) ==> #third
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> withDirectiveClause [
 
 	^ #newline asPParser trimBlanks , 'with' asPParser trimBlanks
 	  , (self lifeDirective separatedBy: ',' asPParser trimBlanks)
@@ -1489,18 +1486,13 @@ RMDGrammar >> withinClause [
 
 { #category : #'parsers-definitions' }
 RMDGrammar >> worldDefinition [
-	^ ('World' asPParser
-		,
-			((#blank asPParser plus , 'with' asPParser trimBlanks
-				, #newline asPParser trimBlanks
-				,
-					(self attributeDeclaration
-						onlySeparatedBy: #newline asPParser trimBlanks)) ==> #fourth)
-				optional , '.' asPParser trimBlanks
-		, #newline asPParser trimBlanks optional)
-		==> [ :pair | 
-			self worldDefinitionNodeClass
-				attributeDeclarations: (pair second ifNil: [ Array new ]) ]
+
+	^ 'World' asPParser , self withAttributeClause optional
+	  , self whereClause optional , '.' asPParser trimBlanks
+	  , #newline asPParser trimBlanks optional ==> [ :penta | 
+	  self worldDefinitionNodeClass
+		  attributeDeclarations: (penta second ifNil: [ Array new ])
+		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }
@@ -1511,14 +1503,15 @@ RMDGrammar >> worldDefinitionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> worldInitializer [
 
-	^ ('World' asPParser trimBlanks
-	   , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
-		    , (self attributeInitializer onlySeparatedBy:
-				     #newline asPParser trimBlanks) ==> #third) optional
-	   ==> #second , #newline asPParser trimBlanks optional ==> #first)
-		  optional ==> [ :initializers | 
-	  self worldInitializerNodeClass attributeInitializers:
-		  (initializers ifNil: [ Array new ]) ]
+	^ 'World' asPParser trimBlanks
+	  , ('with' asPParser trimBlanks , #newline asPParser trimBlanks
+		   , (self attributeInitializer onlySeparatedBy:
+				    #newline asPParser trimBlanks) ==> #third) optional
+	  , self whereClause optional
+	  , #newline asPParser trimBlanks optional ==> [ :quad | 
+	  self worldInitializerNodeClass
+		  attributeInitializers: (quad second ifNil: [ Array new ])
+		  utilityDefinitions: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'class access' }

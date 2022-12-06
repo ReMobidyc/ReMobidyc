@@ -5,23 +5,19 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDWorldInitializerNode class >> attributeInitializers: anArrayOfRMDAttributeInitializer [
+RMDWorldInitializerNode class >> attributeInitializers: anArrayOfRMDAttributeInitializer utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
 	^ self new
-		attributeInitializers: anArrayOfRMDAttributeInitializer;
-		yourself
+		  attributeInitializers: anArrayOfRMDAttributeInitializer;
+		  utilityDefinitions: anArrayOfRMDUtilityDefinitionNode;
+		  yourself
 ]
 
 { #category : #'instance creation' }
 RMDWorldInitializerNode class >> empty [
-	<script: 'RMDWorldInitializerNode empty inspect'>
-	^ self attributeInitializers: Array new
-]
 
-{ #category : #'instance creation' }
-RMDWorldInitializerNode class >> withTemperature [
-	<script:
-		'(RMDWorldInitializerNode attributeInitializers: {RMDAttributeInitializerNode identifier: ''temperature'' expression: ''27 [C]'' asRMDExpression}) inspect'>
-	^ self attributeInitializers: Array new
+	<script: 'RMDWorldInitializerNode empty inspect'>
+	^ self attributeInitializers: Array new utilityDefinitions: Array new
 ]
 
 { #category : #testing }
@@ -41,6 +37,16 @@ RMDWorldInitializerNode >> printOn: aStream [
 			do: [ :init | 
 				aStream nextPutAll: '    '.
 				init printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
@@ -60,7 +66,32 @@ RMDWorldInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 				printOn: aStream
 				ifIncludedIn: aCollectionOfRMDSyntaxNode
 				addSectionTo: aCollection ] ].
-	aStream nextPut: $,.
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]

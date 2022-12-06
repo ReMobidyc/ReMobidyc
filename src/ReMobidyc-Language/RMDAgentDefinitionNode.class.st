@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'attributeDeclarations',
-		'attributeOffsets'
+		'attributeOffsets',
+		'utilityDefinitions'
 	],
 	#classInstVars : [
 		'builtinAttributes'
@@ -12,10 +13,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAgentDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode [
+RMDAgentDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
 	^ self new
-		attributeDeclarations: anArrayOfRMDAttributeDeclarationNode;
-		yourself
+		  attributeDeclarations: anArrayOfRMDAttributeDeclarationNode;
+		  utilityDefinitions: anArrayOfRMDUtilityDefinitionNode;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -31,7 +34,8 @@ RMDAgentDefinitionNode class >> createBuiltinAttributes [
 
 { #category : #'instance creation' }
 RMDAgentDefinitionNode class >> empty [
-	^ self attributeDeclarations: #()
+
+	^ self attributeDeclarations: Array new utilityDefinitions: Array new
 ]
 
 { #category : #accessing }
@@ -44,8 +48,10 @@ RMDAgentDefinitionNode class >> flushBuiltinAttributes [
 
 { #category : #comparing }
 RMDAgentDefinitionNode >> = anObject [
-	^ self class = anObject class
-		and: [ attributeDeclarations = anObject attributeDeclarations ]
+
+	^ self class = anObject class and: [ 
+		  attributeDeclarations = anObject attributeDeclarations and: [ 
+			  utilityDefinitions = anObject utilityDefinitions ] ]
 ]
 
 { #category : #accessing }
@@ -128,12 +134,16 @@ RMDAgentDefinitionNode >> builtinAttributes [
 
 { #category : #enumerating }
 RMDAgentDefinitionNode >> childrenDo: aBlock [
-	attributeDeclarations do: aBlock
+
+	attributeDeclarations do: aBlock.
+	utilityDefinitions do: aBlock
 ]
 
 { #category : #comparing }
 RMDAgentDefinitionNode >> hash [
-	^ self class hash bitXor: attributeDeclarations hash
+
+	^ (self class hash bitXor: attributeDeclarations hash) bitXor:
+		  utilityDefinitions hash
 ]
 
 { #category : #testing }
@@ -143,15 +153,20 @@ RMDAgentDefinitionNode >> isAgentDefinitionNode [
 
 { #category : #copying }
 RMDAgentDefinitionNode >> postCopy [
+
 	attributeDeclarations := attributeDeclarations collect: #copy.
-	attributeOffsets := nil
+	attributeOffsets := nil.
+	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
 { #category : #rewriting }
 RMDAgentDefinitionNode >> replaceChildren: aDictionary [
-	attributeDeclarations := attributeDeclarations
-		collect: [ :node | node copyReplace: aDictionary ].
-	attributeOffsets := nil
+
+	attributeDeclarations := attributeDeclarations collect: [ :node | 
+		                         node copyReplace: aDictionary ].
+	attributeOffsets := nil.
+	utilityDefinitions := utilityDefinitions collect: [ :node | 
+		                      node copyReplace: aDictionary ]
 ]
 
 { #category : #accessing }
@@ -165,4 +180,16 @@ RMDAgentDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
 	self attributeUnitsDo: [ :identifier :unit | 
 		aString = identifier ifTrue: [ ^ unit ] ].
 	^ errorBlock value
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionNode >> utilityDefinitions [
+
+	^ utilityDefinitions
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
+	utilityDefinitions := anArrayOfRMDUtilityDefinitionNode
 ]

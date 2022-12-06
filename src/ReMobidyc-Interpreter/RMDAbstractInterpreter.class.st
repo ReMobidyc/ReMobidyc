@@ -193,6 +193,16 @@ RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 				ensure: [ context := originalContext ] ]
 ]
 
+{ #category : #'context controls' }
+RMDAbstractInterpreter >> withSubContext: aRMDContext do: aBlock [
+
+	| originalContext |
+	originalContext := context.
+	self setContext: aRMDContext.
+	^ [ aBlock cull: self cull: context ] ensure: [ 
+		  context := originalContext ]
+]
+
 { #category : #'accessing - definitions' }
 RMDAbstractInterpreter >> worldDefinition [
 	^ simulationModel worldDefinition

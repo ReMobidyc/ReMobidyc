@@ -12,16 +12,14 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 				withInitializerContextWithSubject: patch
 				definition: patchDefinition
 				do: [ 
-					patchDefinition allAttributeDeclarations do: [ :attributeDecl | 
-							attributeDecl evalIn: self ].
-					attributeInitializers do: [ :initializer | 
-							initializer evalIn: aRMDInterpreter ] ] ]
+					patchDefinition evalIn: aRMDInterpreter.
+					super evalIn: aRMDInterpreter ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPatchInitializerNode >> typecheckIn: aRMDInterpreter [
+
 	aRMDInterpreter
 		withContext: aRMDInterpreter newTypecheckContextForPatch
-		do: [ attributeInitializers
-				do: [ :initializer | initializer typecheckIn: aRMDInterpreter ] ]
+		do: [ super typecheckIn: aRMDInterpreter ]
 ]

@@ -2,15 +2,18 @@ Class {
 	#name : #RMDAgentInitializerNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
-		'attributeInitializers'
+		'attributeInitializers',
+		'utilityDefinitions'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #comparing }
 RMDAgentInitializerNode >> = anObject [
-	^ self class = anObject class
-		and: [ attributeInitializers = anObject attributeInitializers ]
+
+	^ self class = anObject class and: [ 
+		  attributeInitializers = anObject attributeInitializers and: [ 
+			  utilityDefinitions = anObject utilityDefinitions ] ]
 ]
 
 { #category : #accessing }
@@ -25,12 +28,16 @@ RMDAgentInitializerNode >> attributeInitializers: anArayOfRMDAttributeInitialize
 
 { #category : #enumerating }
 RMDAgentInitializerNode >> childrenDo: aBlock [
-	attributeInitializers do: aBlock
+
+	attributeInitializers do: aBlock.
+	utilityDefinitions do: aBlock
 ]
 
 { #category : #comparing }
 RMDAgentInitializerNode >> hash [
-	^ attributeInitializers hash
+
+	^ (self class hash bitXor: attributeInitializers hash) bitXor:
+		  utilityDefinitions hash
 ]
 
 { #category : #testing }
@@ -40,11 +47,28 @@ RMDAgentInitializerNode >> isAgentInitializerNode [
 
 { #category : #copying }
 RMDAgentInitializerNode >> postCopy [
-	attributeInitializers := attributeInitializers collect: #copy
+
+	attributeInitializers := attributeInitializers collect: #copy.
+	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
 { #category : #rewriting }
 RMDAgentInitializerNode >> replaceChildren: aDictionary [
-	attributeInitializers := attributeInitializers
-		collect: [ :node | node copyReplace: aDictionary ]
+
+	attributeInitializers := attributeInitializers collect: [ :node | 
+		                         node copyReplace: aDictionary ].
+	utilityDefinitions := utilityDefinitions collect: [ :node | 
+		                      node copyReplace: aDictionary ]
+]
+
+{ #category : #accessing }
+RMDAgentInitializerNode >> utilityDefinitions [
+
+	^ utilityDefinitions
+]
+
+{ #category : #accessing }
+RMDAgentInitializerNode >> utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
+
+	utilityDefinitions := anArrayOfRMDUtilityDefinitionNode
 ]

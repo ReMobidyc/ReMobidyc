@@ -228,14 +228,13 @@ RMDGrammarTest >> testAgentDirective [
 
 { #category : #tests }
 RMDGrammarTest >> testAnimatDefinition [
+
 	| node |
 	node := grammar animatDefinition parse: 'Foo is Animat.'.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'Foo'.
 	self assert: node attributeDeclarations isEmpty.
-	node := grammar animatDefinition
-		parse:
-			'
+	node := grammar animatDefinition parse: '
 Goat is Animat with
 	sugar [kcal].' trim.
 	self assert: node isAnimatDefinitionNode.
@@ -247,11 +246,9 @@ Goat is Animat with
 	self
 		assert: node attributeDeclarations first unit
 		equals: (RMDUnit at: 'kcal').
-	node := grammar animatDefinition
-		parse:
-			'
+	node := grammar animatDefinition parse: '
 BabyGoat is Goat with
-	sugar [kcal]
+	sugar [kcal] = 1000 [kcal]
 	age [day].' trim.
 	self assert: node isAnimatDefinitionNode.
 	self assert: node identifier equals: 'BabyGoat'.
@@ -268,7 +265,33 @@ BabyGoat is Goat with
 		equals: 'age'.
 	self
 		assert: node attributeDeclarations second unit
-		equals: (RMDUnit at: 'day')
+		equals: (RMDUnit at: 'day').
+	node := grammar animatDefinition parse: '
+BabyGoat is Goat with
+	sugar [kcal] = initialSugar
+	age [day] = 0 [day]
+where
+	initialSugar = 1000 [kcal].' trim.
+	self assert: node isAnimatDefinitionNode.
+	self assert: node identifier equals: 'BabyGoat'.
+	self assert: node species equals: 'Goat'.
+	self assert: node attributeDeclarations size equals: 2.
+	self
+		assert: node attributeDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node attributeDeclarations first unit
+		equals: (RMDUnit at: 'kcal').
+	self
+		assert: node attributeDeclarations second identifier
+		equals: 'age'.
+	self
+		assert: node attributeDeclarations second unit
+		equals: (RMDUnit at: 'day').
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 'initialSugar'
 ]
 
 { #category : #tests }
@@ -309,21 +332,32 @@ RMDGrammarTest >> testAnimatIconRenderer [
 
 { #category : #tests }
 RMDGrammarTest >> testAnimatInitializer [
+
 	| node |
 	node := grammar animatInitializer parse: '100 Goat'.
 	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 100.
 	self assert: node animat equals: 'Goat'.
 	self assert: node attributeInitializers size equals: 0.
-	node := grammar animatInitializer
-		parse:
-			'5 Wolf with
+	node := grammar animatInitializer parse: '5 Wolf with
 		energy = 1000[kcal]
 		speed = 50 [km/h]'.
 	self assert: node isAnimatInitializerNode.
 	self assert: node population equals: 5.
 	self assert: node animat equals: 'Wolf'.
-	self assert: node attributeInitializers size equals: 2
+	self assert: node attributeInitializers size equals: 2.
+	node := grammar animatInitializer parse: '10 Wolf with
+		speed = initialSpeed
+		where
+			initialSpeed = 4 [km/h]'.
+	self assert: node isAnimatInitializerNode.
+	self assert: node population equals: 10.
+	self assert: node animat equals: 'Wolf'.
+	self assert: node attributeInitializers size equals: 1.
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 'initialSpeed'
 ]
 
 { #category : #tests }
@@ -1039,14 +1073,13 @@ RMDGrammarTest >> testPatchColorMapRenderer [
 
 { #category : #tests }
 RMDGrammarTest >> testPatchDefinition [
+
 	| node |
 	node := grammar patchDefinition end parse: 'Patch.'.
 	self assert: node isPatchDefinitionNode.
 	self assert: node attributeDeclarations isEmpty.
 	self assert: node equals: RMDPatchDefinitionNode empty.
-	node := grammar patchDefinition end
-		parse:
-			'
+	node := grammar patchDefinition end parse: '
 Patch with
 	sugar [kcal].' trim.
 	self assert: node isPatchDefinitionNode.
@@ -1056,11 +1089,29 @@ Patch with
 		equals: 'sugar'.
 	self
 		assert: node attributeDeclarations first unit
-		equals: RMDUnit kcal
+		equals: RMDUnit kcal.
+	node := grammar patchDefinition end parse: '
+Patch with
+	sugar [kcal] = s
+where
+	s = 100 [kcal].' trim.
+	self assert: node isPatchDefinitionNode.
+	self assert: node attributeDeclarations size equals: 1.
+	self
+		assert: node attributeDeclarations first identifier
+		equals: 'sugar'.
+	self
+		assert: node attributeDeclarations first unit
+		equals: RMDUnit kcal.
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 's'
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testPatchInitializer [
+
 	| node |
 	node := grammar patchInitializer parse: '10x20 of 5[m] Patch'.
 	self assert: node isPatchInitializerNode.
@@ -1070,11 +1121,11 @@ RMDGrammarTest >> testPatchInitializer [
 	self assert: node size unit equals: 'm' asRMDUnit.
 	self assert: node length closeTo: 5.0.
 	self assert: node attributeInitializers isEmpty.
-	node := grammar patchInitializer
-		parse:
-			'15x30 of 4[m^2] Patch with
+	node := grammar patchInitializer parse: '15x30 of 4[m^2] Patch with
 	green = 10000 [kcal]
-	fertility = 12345 [kcal]'.
+	fertility = alpha
+	where
+		alpha = 12345 [kcal]'.
 	self assert: node isPatchInitializerNode.
 	self assert: node xDivisions equals: 15.
 	self assert: node yDivisions equals: 30.
@@ -1087,7 +1138,11 @@ RMDGrammarTest >> testPatchInitializer [
 		equals: 'green'.
 	self
 		assert: node attributeInitializers second identifier
-		equals: 'fertility'
+		equals: 'fertility'.
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 'alpha'
 ]
 
 { #category : #tests }
@@ -1375,16 +1430,53 @@ World with
 	self
 		assert: node attributeDeclarations first identifier
 		equals: 'temperature'.
-	self assert: node attributeDeclarations first unit equals: RMDUnit celsius
+	self assert: node attributeDeclarations first unit equals: RMDUnit celsius.
+	node := grammar worldDefinition end
+		parse:
+			'
+World with
+	temperature [DegreeC] = standardTemp - 10[DegreeC]
+where
+	standardTemp = 27 [DegreeC].' trim.
+	self assert: node isWorldDefinitionNode.
+	self assert: node attributeDeclarations size equals: 1.
+	self
+		assert: node attributeDeclarations first identifier
+		equals: 'temperature'.
+	self assert: node attributeDeclarations first unit equals: RMDUnit celsius.
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 'standardTemp'.
+
 ]
 
 { #category : #tests }
 RMDGrammarTest >> testWorldInitializer [
+
 	| node |
 	node := grammar worldInitializer parse: 'World with
-	temperature = 10 [C]'.
+	temperature = 10 [DegreeC]'.
 	self assert: node isWorldInitializerNode.
 	self assert: node attributeInitializers size equals: 1.
-	self assert: node attributeInitializers first identifier equals: 'temperature'.
-	self assert: node attributeInitializers first expression equals: (grammar literal parse: '10 [C]')
+	self
+		assert: node attributeInitializers first identifier
+		equals: 'temperature'.
+	self assert: node utilityDefinitions size equals: 0.
+	node := grammar worldInitializer parse: 'World with
+	temperature = t + 10 [DegreeC]
+	where
+		t = 10[DegreeC]'.
+	self assert: node isWorldInitializerNode.
+	self assert: node attributeInitializers size equals: 1.
+	self
+		assert: node attributeInitializers first identifier
+		equals: 'temperature'.
+	self assert: node utilityDefinitions size equals: 1.
+	self
+		assert: node utilityDefinitions first variable identifier
+		equals: 't'.
+	self
+		assert: node utilityDefinitions first definitionBody
+		equals: (grammar literal parse: '10 [DegreeC]')
 ]
