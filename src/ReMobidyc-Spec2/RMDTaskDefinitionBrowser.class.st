@@ -98,13 +98,13 @@ RMDTaskDefinitionBrowser >> acceptNearestCheckBox [
 
 { #category : #operations }
 RMDTaskDefinitionBrowser >> acceptObjectIdentifierField [
-	self taskDefinition
-		ifNotNil: [ :task | 
-			| newObjectIdentifier |
-			newObjectIdentifier := objectIdentifierField lastValidSyntaxNode
-				ifEmpty: [ nil ].
-			task objectIdentifier: newObjectIdentifier.
-			self updateSourceText ]
+
+	self taskDefinition ifNotNil: [ :task | 
+		| newObjectIdentifier |
+		newObjectIdentifier := (objectIdentifierField lastValidSyntaxNode 
+			                        ifNil: [ '' ]) ifEmpty: [ nil ].
+		task objectIdentifier: newObjectIdentifier.
+		self updateSourceText ]
 ]
 
 { #category : #operations }

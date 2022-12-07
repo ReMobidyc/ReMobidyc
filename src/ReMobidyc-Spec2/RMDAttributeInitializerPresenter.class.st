@@ -54,7 +54,6 @@ RMDAttributeInitializerPresenter >> initializePresenters [
 	super initializePresenters.
 	identifierField := self newSyntaxNodeTextInput
 		                   beIdentifier;
-		                   autoAccept: true;
 		                   whenLastValidSyntaxNodeChangedDo: [ 
 			                   node ifNotNil: [ 
 					                   identifierField text asString trim 
@@ -63,7 +62,6 @@ RMDAttributeInitializerPresenter >> initializePresenters [
 	expressionField := self newSyntaxNodeTextInput
 		                   beExpression;
 		                   allowEmpty;
-		                   autoAccept: true;
 		                   whenSyntaxNodeChangedDo: [ :expr | 
 			                   node ifNotNil: [ node expression: expr ] ];
 		                   yourself
@@ -91,6 +89,12 @@ RMDAttributeInitializerPresenter >> updateExpressionField [
 { #category : #updating }
 RMDAttributeInitializerPresenter >> updateIdentifierField [
 	identifierField text: node identifier
+]
+
+{ #category : #'api-events' }
+RMDAttributeInitializerPresenter >> whenExpressionSubmitDo: aBlock [
+
+	expressionField whenSubmitDo: aBlock
 ]
 
 { #category : #'api-events' }

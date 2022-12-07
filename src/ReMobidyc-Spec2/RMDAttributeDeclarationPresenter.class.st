@@ -31,7 +31,6 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 	super initializePresenters.
 	identifierField := self newTextInput
 		                   beText;
-		                   autoAccept: true;
 		                   placeholder: 'identifier';
 		                   whenTextChangedDo: [ 
 			                   node ifNotNil: [ 
@@ -43,7 +42,6 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 		             validation: [ :text | 
 			             (RMDGrammar new unit optional end parse:
 					              text asString trim) isPetit2Failure not ];
-		             autoAccept: true;
 		             whenLastValidTextChangedDo: [ :text | 
 			             node unit:
 					             ((RMDGrammar new unit optional end parse:
@@ -54,7 +52,6 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 		                              placeholder: 'initial value (optional)';
 		                              beExpression;
 		                              allowEmpty;
-		                              autoAccept: true;
 		                              whenSyntaxNodeChangedDo: [ 
 			                              :newExpression | 
 			                              node initializerExpression:
@@ -109,4 +106,10 @@ RMDAttributeDeclarationPresenter >> updateUnit [
 					(unit hasDimension
 						ifTrue: [ unit printString ]
 						ifFalse: [ '' ]) ]
+]
+
+{ #category : #enumerating }
+RMDAttributeDeclarationPresenter >> whenInitializerExpressionSubmitDo: aBlock [
+
+	initializerExpressionField whenSubmitDo: aBlock
 ]

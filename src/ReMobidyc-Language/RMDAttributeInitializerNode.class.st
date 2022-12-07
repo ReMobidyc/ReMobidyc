@@ -25,7 +25,8 @@ RMDAttributeInitializerNode >> = anObject [
 
 { #category : #enumerating }
 RMDAttributeInitializerNode >> childrenDo: aBlock [
-	aBlock value: expression
+
+	expression ifNotNil: [ aBlock value: expression ]
 ]
 
 { #category : #accessing }

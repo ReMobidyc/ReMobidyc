@@ -26,13 +26,7 @@ RMDWorldInitializerPresenter >> newLayout [
 		             height: self class inputTextHeight;
 		             yourself.
 
-	node ifNotNil: [ 
-		node attributeInitializers do: [ :initializer | 
-			newLayout
-				add: (initializer asPresenter
-						 disableIdentifier;
-						 yourself)
-				expand: false ] ].
+	self attributesAndUtilitiesToNewLayout: newLayout.
 	^ newLayout
 ]
 

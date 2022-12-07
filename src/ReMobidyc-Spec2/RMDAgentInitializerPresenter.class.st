@@ -13,6 +13,30 @@ RMDAgentInitializerPresenter class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #layouting }
+RMDAgentInitializerPresenter >> attributesAndUtilitiesToNewLayout: newLayout [
+
+	node ifNotNil: [ 
+		node complementUtilityDefinitions.
+		node attributeInitializers do: [ :initializer | 
+			newLayout
+				add: (initializer asPresenter
+						 whenExpressionSubmitDo: [ :txt | self updateLayout ];
+						 disableIdentifier;
+						 yourself)
+				height: self class buttonHeight ].
+		node utilityDefinitions ifNotEmpty: [ :utils | 
+			newLayout add: 'where' expand: false.
+			utils do: [ :util | 
+				newLayout
+					add: (util asPresenter
+							 whenExpressionSubmitDo: [ :txt | self updateLayout ];
+							 disableIdentifier;
+							 yourself)
+					height: self class buttonHeight ] ] ].
+	^ newLayout
+]
+
 { #category : #initialization }
 RMDAgentInitializerPresenter >> initializePresenters [
 	super initializePresenters.
@@ -23,7 +47,7 @@ RMDAgentInitializerPresenter >> initializePresenters [
 						update: #color: with: {Color white};
 						update: #borderColor: with: {Color darkGray};
 						update: #borderWidth: with: {1} ].
-			self updateAttributeInitializersList ]
+			self updateLayout ]
 ]
 
 { #category : #layouting }
@@ -32,13 +56,18 @@ RMDAgentInitializerPresenter >> newLayout [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 RMDAgentInitializerPresenter >> nodeChanged [
-	self updateAttributeInitializersList
+	self updateLayout
 ]
 
 { #category : #updating }
-RMDAgentInitializerPresenter >> updateAttributeInitializersList [
+RMDAgentInitializerPresenter >> updateLayout [
 
-	self layout: self newLayout
+	self layout: self newLayout.
+	self withWidgetDo: [ :w | 
+		w
+			update: #color: with: { Color white };
+			update: #borderColor: with: { Color darkGray };
+			update: #borderWidth: with: { 1 } ]
 ]

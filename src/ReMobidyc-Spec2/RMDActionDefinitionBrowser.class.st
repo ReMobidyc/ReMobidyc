@@ -104,7 +104,7 @@ RMDActionDefinitionBrowser >> addUtilityDefinition [
 
 	| newDefinition |
 	newDefinition := RMDUtilityDefinitionNode template.
-	newDefinition asPresenter openDialogWithSpec okAction: [ 
+	newDefinition asPresenter openDialog okAction: [ 
 		node utilityDefinitions:
 			(node utilityDefinitions copyWith: newDefinition).
 		self nodeChanged ]
