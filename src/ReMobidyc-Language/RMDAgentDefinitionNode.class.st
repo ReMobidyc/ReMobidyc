@@ -139,6 +139,38 @@ RMDAgentDefinitionNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
+{ #category : #accessing }
+RMDAgentDefinitionNode >> complementUtilityDefinitions [
+
+	| boundUtils freeUtils |
+	boundUtils := (utilityDefinitions collect: [ :util | 
+		               util variable identifier ]) asSet.
+	freeUtils := OrderedCollection new.
+	attributeDeclarations do: [ :attributeDecl | 
+		attributeDecl nodesSuchThat: #isUtilityVariableNode do: [ :util | 
+			| identifier |
+			identifier := util identifier.
+			((boundUtils includes: identifier) or: [ 
+				 freeUtils includes: identifier ]) ifFalse: [ 
+				freeUtils add: identifier ] ] ].
+	utilityDefinitions do: [ :utilityDefinition | 
+		utilityDefinition
+			nodesSuchThat: #isUtilityVariableNode
+			do: [ :util | 
+				| identifier |
+				identifier := util identifier.
+				((boundUtils includes: identifier) or: [ 
+					 freeUtils includes: identifier ]) ifFalse: [ 
+					freeUtils add: identifier ] ] ].
+	utilityDefinitions := utilityDefinitions
+	                      , (freeUtils collect: [ :identifier | 
+			                       RMDUtilityDefinitionNode
+				                       variable:
+				                       (RMDUtilityVariableNode identifier:
+					                        identifier)
+				                       expression: RMDLiteralNode zero ])
+]
+
 { #category : #comparing }
 RMDAgentDefinitionNode >> hash [
 

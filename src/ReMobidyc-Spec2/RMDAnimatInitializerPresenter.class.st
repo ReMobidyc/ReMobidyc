@@ -63,7 +63,7 @@ RMDAnimatInitializerPresenter >> initializePresenters [
 		               yourself.
 	removeButton := self newButton
 		                label: '';
-		                icon: Smalltalk ui icons remove;
+		                icon: self removeIcon;
 		                color: Color white;
 		                borderWidth: 0;
 		                action: [ removeButtonAction cull: node ];
@@ -87,16 +87,9 @@ RMDAnimatInitializerPresenter >> newLayout [
 				              yourself)
 		             height: self class inputTextHeight;
 		             yourself.
-
-	node ifNotNil: [ 
-		node attributeInitializers do: [ :initializer | 
-			newLayout
-				add: (initializer asPresenter
-						 disableIdentifier;
-						 yourself)
-				expand: false ].
-		newLayout add:
-			(SpBoxLayout newHorizontal add: removeButton width: 30) ].
+	self attributesAndUtilitiesToNewLayout: newLayout.
+	newLayout add:
+		(SpBoxLayout newHorizontal add: removeButton width: 30).
 	^ newLayout
 ]
 

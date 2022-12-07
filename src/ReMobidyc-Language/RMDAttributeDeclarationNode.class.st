@@ -44,6 +44,8 @@ RMDAttributeDeclarationNode >> asPresenter [
 { #category : #enumerating }
 RMDAttributeDeclarationNode >> childrenDo: aBlock [
 
+	initializerExpression ifNotNil: [ 
+		aBlock value: initializerExpression ]
 ]
 
 { #category : #testing }

@@ -656,8 +656,11 @@ RMDAgentDefinitionBrowser >> simulationModel [
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateAttributeList [
-	self
-		definitionDo: [ :definition | attributeList items: definition attributeDeclarations ]
+
+	self definitionDo: [ :definition | 
+		attributeList items: definition attributeDeclarations.
+		definition complementUtilityDefinitions ].
+	self updateUtilityList
 ]
 
 { #category : #updating }

@@ -16,7 +16,9 @@ RMDUtilityDefinitionNode class >> template [
 { #category : #converting }
 RMDUtilityDefinitionNode >> asPresenter [
 
-	^ RMDUtilityDefinitionBrowser on: self
+	"^ RMDUtilityDefinitionBrowser on: self"
+
+	^ RMDUtilityDefinitionPresenter on: self
 ]
 
 { #category : #testing }

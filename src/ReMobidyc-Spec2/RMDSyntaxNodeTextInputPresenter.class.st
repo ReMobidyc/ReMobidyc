@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'#syntaxNode => ObservableSlot',
 		'#lastValidSyntaxNode => ObservableSlot',
-		'#parser'
+		'#parser',
+		'#submitActions'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -128,7 +129,13 @@ RMDSyntaxNodeTextInputPresenter >> doTextPaste [
 RMDSyntaxNodeTextInputPresenter >> initialize [
 
 	super initialize.
-	self whenSubmitDo: [ :t | self prettyPrint ]
+	submitActions := OrderedCollection with: [ :t | self prettyPrint ].
+	self
+		bindKeyCombination: SpAcceptChangesCommand defaultShortcutKey
+			| Character cr asKeyCombination
+		toAction: [ 
+			submitActions do: [ :submitAction | 
+				submitAction cull: self syntaxNode cull: self text ] ]
 ]
 
 { #category : #api }
@@ -189,6 +196,12 @@ RMDSyntaxNodeTextInputPresenter >> text: aString [
 { #category : #'api-events' }
 RMDSyntaxNodeTextInputPresenter >> whenLastValidSyntaxNodeChangedDo: aBlock [
 	self property: #lastValidSyntaxNode whenChangedDo: aBlock
+]
+
+{ #category : #'api-events' }
+RMDSyntaxNodeTextInputPresenter >> whenSubmitDo: aBlock [
+
+	submitActions add: aBlock
 ]
 
 { #category : #'api-events' }
