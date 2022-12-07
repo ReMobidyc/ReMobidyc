@@ -38,7 +38,7 @@ operations
     testSizeOfAgent_World : () ==> ()
     testSizeOfAgent_World() ==
         (assertEquals(
-            AST`sizeOfAgent(mk_AST`WorldDefinition([])),
+            AST`sizeOfAgent(mk_AST`WorldDefinition([], [])),
             0,
             "size of the empty world.");
         assertEquals(
@@ -46,14 +46,15 @@ operations
                 mk_AST`WorldDefinition(
                     [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
                     mk_AST`AttributeDeclaration("windDirection", Unit`degree, nil),
-                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)])),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)],
+                    [])),
             3,
             "size of World with 3 attributes is 3."));
     
     testSizeOfAgent_Patch : () ==> ()
     testSizeOfAgent_Patch() ==
         (assertEquals(
-            AST`sizeOfAgent(mk_AST`PatchDefinition([])),
+            AST`sizeOfAgent(mk_AST`PatchDefinition([], [])),
             0,
             "size of the empty patch.");
         assertEquals(
@@ -61,14 +62,15 @@ operations
                 mk_AST`PatchDefinition(
                     [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
                     mk_AST`AttributeDeclaration("windDirection", Unit`degree, nil),
-                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)])),
+                    mk_AST`AttributeDeclaration("windSpeed", Unit`fraction(Unit`m, Unit`s), nil)],
+                    [])),
             3,
             "size of Patch with 3 attributes is 3."));
     
     testSizeOfAgent_Animat : () ==> ()
     testSizeOfAgent_Animat() ==
         (assertEquals(
-            AST`sizeOfAgent(mk_AST`AnimatDefinition("Stage", "Species", [])),
+            AST`sizeOfAgent(mk_AST`AnimatDefinition("Stage", "Species", [], [])),
             2,
             "size of the empty animat is 2 including x and y.");
         assertEquals(
@@ -77,7 +79,7 @@ operations
                     "Stage",
                     "Species",
                     [mk_AST`AttributeDeclaration("heading", Unit`degree, nil),
-                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s), nil)])),
+                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s), nil)], [])),
             4,
             "size of Animat with 2 attributes is 4 including x and y."));
     

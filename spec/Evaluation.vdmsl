@@ -27,8 +27,10 @@ operations
             let world = Memory`getWorld()
             in
                 (Interpreter`setupInitializationContext(world, worldDefinition);
+                Interpreter`loadUtilityDefinitions(worldDefinition.utilityDefinitions);
                 for attributeDeclaration in worldDefinition.attributeDeclarations
                 do evalAttributeDeclaration(attributeDeclaration);
+                Interpreter`loadUtilityDefinitions(worldInitializer.utilityDefinitions);
                 for attributeInitializer in worldInitializer.attributeInitializers
                 do evalAttributeInitializer(attributeInitializer)));
     
@@ -47,8 +49,10 @@ operations
                     let patch = Memory`getPatch(x, y)
                     in
                         (Interpreter`setupInitializationContext(patch, patchDefinition);
+                        Interpreter`loadUtilityDefinitions(patchDefinition.utilityDefinitions);
                         for attributeDeclaration in patchDefinition.attributeDeclarations
                         do evalAttributeDeclaration(attributeDeclaration);
+                        Interpreter`loadUtilityDefinitions(patchInitializer.utilityDefinitions);
                         for attributeInitializer in patchInitializer.attributeInitializers
                         do evalAttributeInitializer(attributeInitializer)));
     
@@ -70,8 +74,10 @@ operations
                         nil, "x", uniform(Interpreter`worldWest(), Interpreter`worldEast()));
                     writeVariable(
                         nil, "y", uniform(Interpreter`worldSouth(), Interpreter`worldNorth()));
+                    Interpreter`loadUtilityDefinitions(animatDefinition.utilityDefinitions);
                     for attributeDeclaration in animatDefinition.attributeDeclarations
                     do evalAttributeDeclaration(attributeDeclaration);
+                    Interpreter`loadUtilityDefinitions(animatInitializer.utilityDefinitions);
                     for attributeInitializer
                     in animatInitializer.attributeInitializers
                     do evalAttributeInitializer(attributeInitializer));
