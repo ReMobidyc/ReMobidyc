@@ -19,12 +19,15 @@ types
      AnimatDefinition ::
         identifier : AgentIdentifier
         species : AgentIdentifier
-        attributeDeclarations : seq of AttributeDeclaration;
+        attributeDeclarations : seq of AttributeDeclaration
+        utilityDefinitions : seq of UtilityDefinition;
      PatchDefinition ::
-        attributeDeclarations : seq of AttributeDeclaration;
+        attributeDeclarations : seq of AttributeDeclaration
+        utilityDefinitions : seq of UtilityDefinition;
      WorldDefinition ::
-        attributeDeclarations : seq of AttributeDeclaration;
-     AgentDefinition =
+        attributeDeclarations : seq of AttributeDeclaration
+        utilityDefinitions : seq of UtilityDefinition;
+     AgentDefinition = 
         AnimatDefinition| PatchDefinition| WorldDefinition;
      AttributeDeclaration :: identifier : Identifier unit : Unit initializerExpression : [Expression];
      ActionDefinition ::
@@ -75,14 +78,17 @@ types
      AnimatInitializer ::
         animat : AgentIdentifier
         population : nat1
-        attributeInitializers : seq of AttributeInitializer;
+        attributeInitializers : seq of AttributeInitializer
+        utilityDefinitions : seq of UtilityDefinition;
      PatchInitializer ::
         xDivisions : nat1
         yDivisions : nat1
         size : Literal
-        attributeInitializers : seq of AttributeInitializer;
+        attributeInitializers : seq of AttributeInitializer
+        utilityDefinitions : seq of UtilityDefinition;
      WorldInitializer ::
-        attributeInitializers : seq of AttributeInitializer;
+        attributeInitializers : seq of AttributeInitializer
+        utilityDefinitions : seq of UtilityDefinition;
      AttributeInitializer ::
         identifier : Identifier expression : [Expression];
      Expression =
@@ -181,13 +187,13 @@ values
      emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
         mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
      emptyWorldDefinition : AST`WorldDefinition =
-        mk_AST`WorldDefinition([]);
+        mk_AST`WorldDefinition([], []);
      emptyPatchDefinition : AST`PatchDefinition =
-        mk_AST`PatchDefinition([]);
+        mk_AST`PatchDefinition([], []);
      emptyWorldInitializer : AST`WorldInitializer =
-        mk_AST`WorldInitializer([]);
+        mk_AST`WorldInitializer([], []);
      emptyPatchInitializer : AST`PatchInitializer =
-        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), []);
+        mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), [], []);
      AGENT_NEW = "new";
 
 types
