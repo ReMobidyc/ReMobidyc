@@ -112,12 +112,7 @@ RMDReplacementEditor >> expressionFieldMenu [
 	menu addItem: [ :item | 
 		item
 			name: 'templates...';
-			subMenu: expressionField expressionTemplateMenu ].
-	menu addItem: [ :item | 
-		item
-			name: 'directives...';
-			subMenu: self agentDirectiveMenu.
-		item enabled: item subMenu isEnabled ].
+			subMenu: expressionField templateMenu ].
 	^ menu
 ]
 

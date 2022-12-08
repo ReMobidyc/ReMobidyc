@@ -62,8 +62,15 @@ RMDAttributeInitializerPresenter >> initializePresenters [
 	expressionField := self newSyntaxNodeTextInput
 		                   beExpression;
 		                   allowEmpty;
+		                   contextMenu: [ 
+			                   | menu |
+			                   menu := self newMenu.
+			                   menu addItem: [ :item | 
+					                   item
+						                   name: 'Template...';
+						                   subMenu: expressionField templateMenu ] ];
 		                   whenSyntaxNodeChangedDo: [ :expr | 
-			                   node ifNotNil: [ node expression: expr ] ];
+		                   node ifNotNil: [ node expression: expr ] ];
 		                   yourself
 ]
 

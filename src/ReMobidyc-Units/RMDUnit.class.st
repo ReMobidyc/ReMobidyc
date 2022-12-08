@@ -209,8 +209,11 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: 'L' scale: 1.0e-3 siUnit: m3)
 		value: #( l ℓ litre liter ).
 	register
-		value: (self newSymbol: 'dL' scale: 1.0e-6 siUnit: m3)
-		value: #( dl dℓ mL mℓ '㎖' ).
+		value: (self newSymbol: 'dL' scale: 1.0e-4 siUnit: m3)
+		value: #( dl dℓ).
+	register
+		value: (self newSymbol: 'mL' scale: 1.0e-6 siUnit: m3)
+		value: #( mℓ '㎖' ).
 	register
 		value: (self newSymbol: 'µL' scale: 1.0e-9 siUnit: m3)
 		value: #( µl µℓ ).

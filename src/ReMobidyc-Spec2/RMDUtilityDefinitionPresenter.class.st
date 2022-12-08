@@ -75,7 +75,7 @@ RMDUtilityDefinitionPresenter >> initializePresenters [
 	expressionField := self newSyntaxNodeTextInput
 		                   beExpression;
 		                   allowEmpty;
-		                   contextMenu: [ self definitionBodyFieldMenu ];
+		                   contextMenu: [ expressionField templateMenu ];
 		                   whenSyntaxNodeChangedDo: [ :expr | 
 			                   node ifNotNil: [ node definitionBody: expr ] ];
 		                   yourself
