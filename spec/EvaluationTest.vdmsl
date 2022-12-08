@@ -15,12 +15,18 @@ exports all
 definitions
 values
      exampleWorld : AST`WorldDefinition =
-        mk_AST`WorldDefinition([mk_AST`AttributeDeclaration("temperature", Unit`℃, nil)]);
+        mk_AST`WorldDefinition(
+            [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
+            mk_AST`AttributeDeclaration("humidity", Unit`nodimension, mk_AST`UtilityVariable("h"))],
+            [mk_AST`UtilityDefinition("h", mk_AST`Literal(0.75, Unit`nodimension))]);
      examplePatch : AST`PatchDefinition =
-        mk_AST`PatchDefinition([mk_AST`AttributeDeclaration("depth", Unit`m, nil)]);
+        mk_AST`PatchDefinition([mk_AST`AttributeDeclaration("depth", Unit`m, nil)], []);
      exampleAnimatA : AST`AnimatDefinition =
         mk_AST`AnimatDefinition(
-            "AnimatA", "Stage1", [mk_AST`AttributeDeclaration("age", Unit`day, nil)]);
+            "AnimatA",
+            "Stage1",
+            [mk_AST`AttributeDeclaration("age", Unit`day, nil)],
+            []);
      exampleActionAge : AST`ActionDefinition =
         mk_AST`ActionDefinition(
             "age",
@@ -36,16 +42,19 @@ values
             mk_AST`SimulationDefinition(
                 mk_AST`SimulationTimeDefinition(mk_AST`Literal(10, Unit`s), mk_AST`Literal(0.1, Unit`s)),
                 mk_AST`WorldInitializer(
-                    [mk_AST`AttributeInitializer("temperature", mk_AST`Literal(30, Unit`℃))]),
+                    [mk_AST`AttributeInitializer("temperature", mk_AST`UtilityVariable("t"))],
+                    [mk_AST`UtilityDefinition("t", mk_AST`Literal(30, Unit`℃))]),
                 mk_AST`PatchInitializer(
                     10,
                     10,
                     mk_AST`Literal(0.1, Unit`m),
-                    [mk_AST`AttributeInitializer("depth", mk_AST`Literal(10, Unit`m))]),
+                    [mk_AST`AttributeInitializer("depth", mk_AST`Literal(10, Unit`m))],
+                    []),
                 [mk_AST`AnimatInitializer(
                     "AnimatA",
                     3,
-                    [mk_AST`AttributeInitializer("age", mk_AST`Literal(0, Unit`s))])]),
+                    [mk_AST`AttributeInitializer("age", mk_AST`Literal(0, Unit`s))],
+                    [])]),
             {"AnimatA" |-> exampleAnimatA},
             exampleWorld,
             examplePatch,
@@ -58,7 +67,8 @@ operations
         (Interpreter`setSimulationModel(exampleSimulationModel);
         Evaluation`evalWorldInitializer(exampleSimulationModel.simulationDefinition.worldInitializer);
         Memory`tick();
-        assertEquals(Memory`read(1), 30.0, "world's temperature"));
+        assertEquals(Memory`read(1), 30.0, "world's temperature");
+        assertEquals(Memory`read(2), 0.75, "world's humidity"));
     
     testEvalPatchInitializer : () ==> ()
     testEvalPatchInitializer() ==
@@ -691,7 +701,7 @@ operations
             Evaluation`evalExpression(mk_AST`UtilityVariable("x")),
             10,
             "read a cached value of the utility variable"));
-
+    
     testEvalConditionition_Equality : () ==> ()
     testEvalConditionition_Equality() ==
         (assert(

@@ -62,8 +62,7 @@ operations
     setupInitializationContext(subject, subjectDefinition) ==
         (attributes
             := {nil |-> attributeAddresses(subjectDefinition, subject)};
-        utilities := {|->};
-        utilityDefinitions := {|->};
+        loadUtilityDefinitions([]);
         random
             := mk_Random`RandomGenerator(Random`hash([globalSeed, subject])));
     
@@ -103,14 +102,18 @@ operations
                 |-> attributeAddresses(
                     simulationModel.patchDefinition,
                     Memory`getPatch(normalizedX + 1, normalizedY))};
-            utilities := {|->};
-            utilityDefinitions
-                := {attrDef.identifier |-> attrDef.expression
-                | attrDef in seq actionDefinition.utilityDefinitions};
+            loadUtilityDefinitions(actionDefinition.utilityDefinitions);
             action := actionDefinition;
             random
                 := mk_Random`RandomGenerator(Random`hash([globalSeed, Memory`getTime(), subject, taskSeed])));
     
+    loadUtilityDefinitions: seq of AST`UtilityDefinition ==> ()
+    loadUtilityDefinitions(newUtilityDefinitions) ==
+        (utilities := {|->};
+        utilityDefinitions
+            := {utilDef.identifier |-> utilDef.expression
+            | utilDef in seq newUtilityDefinitions});
+
     pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
     attributeAddresses(agentDefinition, animat) ==
         return let
