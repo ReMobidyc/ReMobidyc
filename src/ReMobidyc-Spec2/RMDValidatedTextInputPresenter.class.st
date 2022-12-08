@@ -1,8 +1,8 @@
 Class {
 	#name : #RMDValidatedTextInputPresenter,
 	#superclass : #SpTextInputFieldPresenter,
-	#traits : 'TRMDPresenter',
-	#classTraits : 'TRMDPresenter classTrait',
+	#traits : 'TRMDPresenter + TRMDTemplateMenu',
+	#classTraits : 'TRMDPresenter classTrait + TRMDTemplateMenu classTrait',
 	#instVars : [
 		'#validation => ObservableSlot',
 		'#lastValidText => ObservableSlot',

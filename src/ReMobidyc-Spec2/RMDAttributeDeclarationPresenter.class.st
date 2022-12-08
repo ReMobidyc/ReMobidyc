@@ -42,20 +42,36 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 		             validation: [ :text | 
 			             (RMDGrammar new unit optional end parse:
 					              text asString trim) isPetit2Failure not ];
+		             contextMenu: [ 
+			             | menu |
+			             menu := self newMenu.
+			             menu addItem: [ :item | 
+					             item
+						             name: 'Template...';
+						             subMenu: unitField unitTemplateMenu ] ];
 		             whenLastValidTextChangedDo: [ :text | 
 			             node unit:
-					             ((RMDGrammar new unit optional end parse:
-							               text asString trim) ifNil: [ 
-							              RMDUnit noDimension ]) ];
+				             ((RMDGrammar new unit optional end parse:
+					               text asString trim) ifNil: [ RMDUnit noDimension ]) ];
 		             yourself.
 	initializerExpressionField := self newSyntaxNodeTextInput
-		                              placeholder: 'initial value (optional)';
+		                              placeholder:
+			                              'initial value (optional)';
 		                              beExpression;
 		                              allowEmpty;
+		                              contextMenu: [ 
+			                              | menu |
+			                              menu := self newMenu.
+			                              menu addItem: [ :item | 
+					                              item
+						                              name: 'Template...';
+						                              subMenu:
+							                              initializerExpressionField
+								                              templateMenu ] ];
 		                              whenSyntaxNodeChangedDo: [ 
-			                              :newExpression | 
-			                              node initializerExpression:
-					                              newExpression ];
+		                              :newExpression | 
+		                              node initializerExpression:
+			                              newExpression ];
 		                              yourself.
 	self focusOrder: { 
 			identifierField.
