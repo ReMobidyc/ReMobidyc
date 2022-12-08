@@ -162,7 +162,7 @@ The coherent derived unit is Watt [W] ([kg • m^2 / s^3]).
 | `μW` | `㎼`| 10^-6 [W] |
 | `nW` | `㎻`| 10^-9 [W] |
 | `pW` | `㎺`| 10^-12 [W] |
-| `PS` | ``| 735.5 [W] |
+| `PS` | | 735.5 [W] |
 | `HP` | `BHP` `㏋`| 745 [W] |
 
 ## Probability
