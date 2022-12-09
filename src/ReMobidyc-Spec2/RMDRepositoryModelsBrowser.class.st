@@ -25,7 +25,9 @@ RMDRepositoryModelsBrowser >> addItem [
 
 	(UIManager default request: 'Enter a new name of the model') 
 		ifNotNil: [ :newItem | 
-		itemList items: (itemList items copyWith: newItem) ]
+		itemList items: (itemList items copyWith: newItem).
+		itemList selectItem: newItem.
+		isForSave ifTrue: [ self performOK ] ]
 ]
 
 { #category : #operations }

@@ -28,7 +28,9 @@ RMDRepositoryActionsBrowser >> addItem [
 			| newItem |
 			newItem := name.
 			(newItem endsWith: '.rmd') ifFalse: [ newItem := newItem , '.rmd' ].
-			itemList items: (itemList items copyWith: newItem) ]
+			itemList items: (itemList items copyWith: newItem).
+			itemList selectItem: newItem.
+			isForSave ifTrue: [ self performOK ] ]
 ]
 
 { #category : #accessing }
