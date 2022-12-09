@@ -281,6 +281,13 @@ RMDAbstractRepositoryBrowser >> newItemList [
 	^ self subclassResponsibility
 ]
 
+{ #category : #private }
+RMDAbstractRepositoryBrowser >> performOK [
+
+	self withWindowDo: [ :window | 
+		window buttons ifNotEmpty: [ :buttons | buttons first click ] ]
+]
+
 { #category : #operations }
 RMDAbstractRepositoryBrowser >> removeItem [
 
