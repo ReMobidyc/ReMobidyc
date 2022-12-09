@@ -103,7 +103,8 @@ The coherent derived unit is cubic meter [m^3].
 |`hL` | `hl` `hℓ` | 10^-1 [m^3] |
 | `daL` | `dal` `daℓ` | 10^-2 [m^3] |
 | `L` | `l` `ℓ` `litre` `liter` | 10^-3 [m^3] |
-| `dL` | `dl` `dℓ` `mL` `mℓ` `㎖` | 10^-6 [m^3] |
+| `dL` | `dl` `dℓ` | 10^-4 [m^3] |
+| `mL` | `mℓ` `㎖`  | 10^-6 [m^3] |
 | `µL` | `µl` `µℓ` | 10^-9 [m^3] |
 
 ## Force
@@ -161,10 +162,8 @@ The coherent derived unit is Watt [W] ([kg • m^2 / s^3]).
 | `μW` | `㎼`| 10^-6 [W] |
 | `nW` | `㎻`| 10^-9 [W] |
 | `pW` | `㎺`| 10^-12 [W] |
-| `PS` | ``| 735.5 [W] |
+| `PS` | | 735.5 [W] |
 | `HP` | `BHP` `㏋`| 745 [W] |
-| `` | ``| 10^ [W] |
-| `` | ``| 10^ [W] |
 
 ## Probability
 Although there is no unit for probability, we define the following for convenience.
