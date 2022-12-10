@@ -247,11 +247,14 @@ RMDTaskDefinitionBrowser >> editReplacement [
 { #category : #operations }
 RMDTaskDefinitionBrowser >> importAction [
 
-	RMDRepositoryActionsBrowser openToLoadDo: [ :newAction | 
+	RMDRepositoryActionsBrowser openToLoadDo: [ :action | 
 		self simulationModel ifNotNil: [ :model | 
-			model load: newAction copy.
+			| newAction |
+			newAction := action copy.
+			model load: newAction.
+			self updateActionList.
+			actionList selectItem: newAction.
 			self
-				updateActionList;
 				updateActionButtons;
 				updateTemplateText;
 				updateSourceText ] ]
