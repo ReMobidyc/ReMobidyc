@@ -519,7 +519,16 @@ RMDGrammarTest >> testAttributeBind [
 	self assert: node placeholder identifier equals: 'energy'.
 	self
 		assert: node replacement
-		equals: (grammar expression parse: '10 [m]')
+		equals: (grammar expression parse: '10 [m]').
+	node := grammar attributeBind parse:
+		        'the condition -> my sugar = 0 [kcal]'.
+	self deny: node isPetit2Failure.
+	self assert: node isAttributeBindNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'condition'.
+	self
+		assert: node replacement
+		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
 ]
 
 { #category : #tests }
