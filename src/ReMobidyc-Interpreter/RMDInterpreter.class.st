@@ -724,7 +724,11 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 						   globalSeed.
 						   anInteger };
 				   yourself)
-		  do: aBlock
+		  do: [ 
+			  context
+				  world: memory world
+				  definition: simulationModel worldDefinition.
+			  aBlock value ]
 ]
 
 { #category : #'context controls' }
