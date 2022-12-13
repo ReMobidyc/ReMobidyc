@@ -88,6 +88,16 @@ RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDAttributeDeclarationNode >> nameWithUnit [
+
+	^ String streamContents: [ :stream | 
+		  identifier ifNotNil: [ stream nextPutAll: identifier ].
+		  stream nextPutAll: ' ['.
+		  unit ifNotNil: [ unit printOn: stream ].
+		  stream nextPutAll: ']' ]
+]
+
 { #category : #copying }
 RMDAttributeDeclarationNode >> postCopy [
 

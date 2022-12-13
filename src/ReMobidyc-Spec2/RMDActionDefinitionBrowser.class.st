@@ -49,7 +49,7 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: #directivesButton height: self inputTextHeight;
 						    yourself)
-				   width: 150;
+				   expand: true;
 				   yourself)
 		  expand: false
 		  fill: true
@@ -144,9 +144,14 @@ RMDActionDefinitionBrowser >> editDirectives [
 				              (node lifeDirectives contains: [ :directive | 
 					               directive isNewDirectiveNode ]).
 				              [ 
+				              | animat quantity |
+				              animat := self
+					                        requestAnimatIdentifierForNewDirective.
+				              quantity := animat ~= '-' ifTrue: [ 
+					                          self requestQuantityForNewDirective ].
 				              RMDNewDirectiveNode new
-					              animatIdentifier:
-						              self requestAnimatIdentifierForNewDirective;
+					              animatIdentifier: animat;
+					              quantity: quantity;
 					              yourself ] }
 		              with: { 
 				              'stage'.
@@ -469,6 +474,29 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 				    ifNotNil: [ :directive | directive animatIdentifier ]
 				    ifNil: [ '-' ])) ifNotNil: [ :name | 
 		  name trim ifEmpty: [ '-' ] ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> requestQuantityForNewDirective [
+
+	| parser |
+	parser := RMDGrammar new expression end.
+
+	^ ((UIManager default
+		    request: 'Quantity of new borns'
+		    initialAnswer: ((node lifeDirectives
+				      detect: [ :directive | directive isNewDirectiveNode ]
+				      ifNone: [ nil ])
+				     ifNotNil: [ :directive | 
+					     directive quantity ifNil: [ '1' ] ifNotNil: #printString ]
+				     ifNil: [ '1' ])) ifNil: [ '1' ]) trim
+		  ifEmpty: [ parser parse: '1' ]
+		  ifNotEmpty: [ :expr | 
+			  | n |
+			  n := parser parse: expr.
+			  n isPetit2Failure
+				  ifTrue: [ parser parse: '1' ]
+				  ifFalse: [ n ] ]
 ]
 
 { #category : #accessing }
