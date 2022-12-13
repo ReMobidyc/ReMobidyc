@@ -763,10 +763,21 @@ RMDGrammar >> fractionString [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> gammaDistribution [
-	^ ('gamma' asPParser trimBlanks , self expr5
-		, 'scale' asPParser trimBlanks , self expr5)
-		==>
-			[ :quad | self gammaDistributionNodeClass shape: quad second scale: quad fourth ]
+
+	^ 'gamma' asPParser trimBlanks , self expr5
+	  , 'scale' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	  self gammaDistributionNodeClass
+		  shape: quad second
+		  scale: quad fourth ] / ('gamma' asPParser trimBlanks , self expr5
+	   , 'rate' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	   self gammaDistributionNodeClass
+		   shape: quad second
+		   rate: quad fourth ])
+	  / ('gamma' asPParser trimBlanks , self expr5
+		   , 'mean' asPParser trimBlanks , self expr5 ==> [ :quad | 
+		   self gammaDistributionNodeClass
+			   shape: quad second
+			   mean: quad fourth ])
 ]
 
 { #category : #'class access' }

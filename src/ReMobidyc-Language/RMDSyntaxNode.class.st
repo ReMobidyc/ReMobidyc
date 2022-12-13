@@ -220,6 +220,21 @@ RMDSyntaxNode >> isGammaDistributionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isGammaMeanDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isGammaRateDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isGammaScaleDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isGreaterOrEqualNode [
 	^ false
 ]

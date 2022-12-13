@@ -439,19 +439,26 @@ TRMDTemplateMenu >> randomDistributions [
 						   , String cr , 'Note: The units of m and σ must agree.'
 					   sourceText: 'normal _mean_ sigma _sigma');
 			  nextPut: (RMDSourceTemplate
-					   name: 'gamma distribution'
-					   description: 'Usage: gamma α scale β' , String cr
+					   name: 'gamma distribution with rate'
+					   description: 'Usage: gamma α rate β' , String cr
 						   ,
-							   'a directive to generate a random number in the gamma distribution with shape=α, scale=β'
-						   , String cr , 'Note: α and β must have no unit.'
-					   sourceText: 'gamma _shape_ scale _scale_');
+							   'a directive to generate a random number in the gamma distribution with shape=α, rate=β'
+						   , String cr , 'Note: α and β must be positive and have no unit.'
+					   sourceText: 'gamma _shape_ rate _rate_');
+			  nextPut: (RMDSourceTemplate
+					   name: 'gamma distribution with scale'
+					   description: 'Usage: gamma k scale θ' , String cr
+						   ,
+							   'a directive to generate a random number in the gamma distribution with shape=k, scale=θ'
+						   , String cr , 'Note: k and θ must be positive and have no unit.'
+					   sourceText: 'gamma _shape_ scale _scale_*_mean_');
 			  nextPut: (RMDSourceTemplate
 					   name: 'gamma distribution with mean'
-					   description: 'Usage: gamma α scale β*mean' , String cr
+					   description: 'Usage: gamma α mean m' , String cr
 						   ,
-							   'a directive to generate a random number in the gamma distribution with shape=α, scale=β*mean'
-						   , String cr , 'Note: α and β must have no unit.'
-					   sourceText: 'gamma _shape_ scale _scale_*_mean_');
+							   'a directive to generate a random number in the gamma distribution with shape=α, rate=1/α*mean'
+						   , String cr , 'Note: α and m must be positive and have no unit.'
+					   sourceText: 'gamma _shape_ mean _mean_');
 			  nextPut: (RMDSourceTemplate
 					   name: 'log-logistic distribution'
 					   description: 'Usage: loglogistic α shape β' , String cr
