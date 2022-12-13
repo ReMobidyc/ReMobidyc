@@ -4,7 +4,7 @@ Extension { #name : #RMDGammaScaleDistributionNode }
 RMDGammaScaleDistributionNode >> evalIn: aRMDInterpreter [
 
 	^ (super evalIn: aRMDInterpreter)
-	  / (scaleExpression evalIn: aRMDInterpreter)
+	  * (scaleExpression evalIn: aRMDInterpreter)
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
