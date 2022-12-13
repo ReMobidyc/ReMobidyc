@@ -54,7 +54,7 @@ RMDTabularInspector >> updateTable [
 											  ifFalse: [ index ] ]).
 						 attributeValues attributesDo: [ :attributeDef :values :stats | 
 								 stream nextPut: (SpStringTableColumn
-											  title: attributeDef printString
+											  title: attributeDef nameWithUnit
 											  evaluated: [ :index | 
 												  (index isInteger
 													   ifTrue: [ values at: index ifAbsent: [ nil ] ]
