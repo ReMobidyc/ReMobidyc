@@ -753,7 +753,11 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 						   memory time.
 						   (memory seedAt: anInteger) };
 				   yourself)
-		  do: aBlock
+		  do: [ 
+			  context
+				  world: memory world
+				  definition: simulationModel worldDefinition.
+			  aBlock value ]
 ]
 
 { #category : #'space access' }
