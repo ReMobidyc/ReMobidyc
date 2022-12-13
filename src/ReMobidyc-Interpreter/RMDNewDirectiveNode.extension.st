@@ -8,7 +8,7 @@ RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 
 	aRMDInterpreter newIndividual: animatIdentifier quantity: (quantity
 			 ifNil: [ 1 ]
-			 ifNotNil: [ (quantity evalIn: aRMDInterpreter) rounded ])
+			 ifNotNil: [ (quantity evalIn: aRMDInterpreter) floor ])
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
