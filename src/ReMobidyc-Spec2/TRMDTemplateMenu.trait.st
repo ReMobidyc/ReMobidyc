@@ -469,6 +469,28 @@ TRMDTemplateMenu >> randomDistributions [
 ]
 
 { #category : #'templates-expressions' }
+TRMDTemplateMenu >> roundings [
+
+	^ Array streamContents: [ :stream | 
+		  stream
+			  nextPut: (RMDSourceTemplate
+					   name: 'round'
+					   description: 'Usage: round(expression)' , String cr
+						   , 'the expression rounded to integer'
+					   sourceText: 'round(_expression_)');
+			  nextPut: (RMDSourceTemplate
+					   name: 'floor'
+					   description: 'Usage: floor(expression)' , String cr
+						   , 'the expression rounded down to integer'
+					   sourceText: 'floor(_expression_)');
+			  nextPut: (RMDSourceTemplate
+					   name: 'ceiling'
+					   description: 'Usage: ceiling(expression)' , String cr
+						   , 'the expression rounded up to integer'
+					   sourceText: 'ceiling(_expression_)') ]
+]
+
+{ #category : #'templates-expressions' }
 TRMDTemplateMenu >> simulationTimes [
 
 	^ Array streamContents: [ :stream | 

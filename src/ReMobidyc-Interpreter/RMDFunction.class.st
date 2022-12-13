@@ -25,7 +25,15 @@ RMDFunction class >> at: aString [
 	aString = 'sin' ifTrue: [ ^ self sin ].
 	aString = 'sum' ifTrue: [ ^ self sum ].
 	aString = 'positive' ifTrue: [ ^ self positive ].
+	aString = 'round' ifTrue: [ ^self round ].
+	aString = 'floor' ifTrue: [ ^self floor ].
+	aString = 'ceiling' ifTrue: [ ^self ceiling ].
 	^ KeyNotFound signal: aString
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> ceiling [
+	^ RMDCeilingFunction new
 ]
 
 { #category : #'typical instances' }
@@ -36,6 +44,11 @@ RMDFunction class >> cos [
 { #category : #'typical instances' }
 RMDFunction class >> exp [
 	^ RMDExpFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> floor [
+	^ RMDFloorFunction new
 ]
 
 { #category : #'typical instances' }
@@ -66,6 +79,11 @@ RMDFunction class >> positive [
 { #category : #'typical instances' }
 RMDFunction class >> power [
 	^ RMDPowerFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> round [
+	^ RMDRoundFunction new
 ]
 
 { #category : #'typical instances' }

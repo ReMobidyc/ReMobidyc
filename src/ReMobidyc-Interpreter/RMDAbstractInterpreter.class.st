@@ -25,7 +25,10 @@ RMDAbstractInterpreter class >> standardLibrary [
 		  ('sin' -> RMDFunction sin).
 		  ('cos' -> RMDFunction cos).
 		  ('abs' -> RMDFunction abs).
-		  ('positive' -> RMDFunction positive) } asDictionary
+		  ('positive' -> RMDFunction positive).
+		  ('round' -> RMDFunction round).
+		  ('floor' -> RMDFunction floor).
+		  ('celing' -> RMDFunction ceiling) } asDictionary
 ]
 
 { #category : #'accessing - definitions' }
