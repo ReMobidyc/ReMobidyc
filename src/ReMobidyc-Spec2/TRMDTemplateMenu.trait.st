@@ -432,6 +432,13 @@ TRMDTemplateMenu >> randomDistributions [
 						   , String cr , 'Note: The units of s and e must agree.'
 					   sourceText: 'uniform _s_ to _e_');
 			  nextPut: (RMDSourceTemplate
+					   name: 'uniform integer distribution'
+					   description: 'Usage: uniform_integer s to e' , String cr
+						   ,
+							   'a directive to generate a random integer in the uniform distribution between x and y'
+						   , String cr , 'Note: The units of s and e must agree.'
+					   sourceText: 'uniform_integer _s_ to _e_');
+			  nextPut: (RMDSourceTemplate
 					   name: 'normal distribution'
 					   description: 'Usage: normal m sigma σ' , String cr
 						   ,
@@ -466,6 +473,28 @@ TRMDTemplateMenu >> randomDistributions [
 							   'a directive to generate a random number in the log-logistic distribution with scale=α, shape=β'
 						   , String cr , 'Note: α and β must have no unit.'
 					   sourceText: 'loglogistic _scale_ shape _shape_') ]
+]
+
+{ #category : #'templates-expressions' }
+TRMDTemplateMenu >> roundings [
+
+	^ Array streamContents: [ :stream | 
+		  stream
+			  nextPut: (RMDSourceTemplate
+					   name: 'round'
+					   description: 'Usage: round(expression)' , String cr
+						   , 'the expression rounded to integer'
+					   sourceText: 'round(_expression_)');
+			  nextPut: (RMDSourceTemplate
+					   name: 'floor'
+					   description: 'Usage: floor(expression)' , String cr
+						   , 'the expression rounded down to integer'
+					   sourceText: 'floor(_expression_)');
+			  nextPut: (RMDSourceTemplate
+					   name: 'ceiling'
+					   description: 'Usage: ceiling(expression)' , String cr
+						   , 'the expression rounded up to integer'
+					   sourceText: 'ceiling(_expression_)') ]
 ]
 
 { #category : #'templates-expressions' }

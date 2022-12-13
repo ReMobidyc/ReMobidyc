@@ -102,6 +102,9 @@ The attributes of the object can be accessed in the following ways.
 | cosine | `cos(`_expr_`)` | the cosine of _expr_ where the _expr_ must be an angle <br> the _expr_ must be an angle, such as radians and degrees |
 | absolute value | `abs(`_expr_`)` | the value without the sign |
 | positive | `positive(`_expr_`)` | the value if positive, otherwise `0` |
+| round | `round(`_expr_`)` | the rounded value |
+| floor | `floor(`_expr_`)` | the rounded-down value |
+| ceiling | `ceiling(`_expr_`)` | the rounded-up value |
 | maximum | `max(`_expr1_, _expr2_, ..., _exprn_`)` | the most value among arguments <br> all _expr_ must have the same dimension |
 | minimum | `min(`_expr1_, _expr2_, ..., _exprn_`)` | the least value among arguments <br> all _expr_ must have the same dimension |
 | average(mean) | `mean(`_expr1_, _expr2_, ..., _exprn_`)` | the mean value of arguments <br> all _expr_ must have the same dimension |
@@ -110,6 +113,7 @@ The attributes of the object can be accessed in the following ways.
 | name | syntax | description |
 | -----|------- | ----------- |
 | uniform distribution | `uniform` _expr1_ `to` _expr2_ | a random number from the uniform distribtion in [_expr1_, _expr2_] <br> _expr1_ and _expr2_ must have the same dimension |
+| uniform integer distribution | `uniform_integer` _expr1_ `to` _expr2_ | a random integer from the uniform distribtion in [_expr1_, _expr2_] <br> _expr1_ and _expr2_ must have the same dimension |
 | normal distribution | `normal` _expr1_ `sigma` _expr2_ | a random number from the normal distribtion with the mean=_expr1_ and sigma=_expr2_ <br> _expr1_ and _expr2_ must have the same dimension |
 | gamma distribution | `gamma` _expr1_ `scale` _expr2_ | a random number from the gamma distribution with the shape=_expr1_ and scale=_expr2_ <br> _expr2_ must be non-dimensional |
 | log-logistic (or Fisk) distribution | `loglogistic` _expr1_ `shape` _expr2_ <br> `fisk` _expr1_ `shape` _expr2_| a random number from the log-logistic distribution with the scale=_expr1_ and shape=_expr2_ <br> _expr2_ must be non-dimensional |

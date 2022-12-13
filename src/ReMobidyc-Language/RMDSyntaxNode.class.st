@@ -383,6 +383,11 @@ RMDSyntaxNode >> isUniformDistributionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isUniformIntegerDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isUtilityDefinitionNode [
 	^ false
 ]
