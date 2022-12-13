@@ -912,14 +912,29 @@ RMDGrammarTest >> testExpression [
 RMDGrammarTest >> testGammaDistribution [
 
 	| node |
-	node := grammar expression parse:
-		        'gamma 2.0[] scale 1[]'.
-	self assert: node isGammaDistributionNode.
+	node := grammar expression parse: 'gamma 2.0[] scale 1[]'.
+	self assert: node isGammaScaleDistributionNode.
 	self
 		assert: node shapeExpression
 		equals: (grammar expression parse: '2.0[]').
 	self
 		assert: node scaleExpression
+		equals: (grammar expression parse: '1[]').
+	node := grammar expression parse: 'gamma 2.0[] rate 1[]'.
+	self assert: node isGammaRateDistributionNode.
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node rateExpression
+		equals: (grammar expression parse: '1[]').
+	node := grammar expression parse: 'gamma 2.0[] mean 1[]'.
+	self assert: node isGammaMeanDistributionNode.
+	self
+		assert: node shapeExpression
+		equals: (grammar expression parse: '2.0[]').
+	self
+		assert: node meanExpression
 		equals: (grammar expression parse: '1[]')
 ]
 

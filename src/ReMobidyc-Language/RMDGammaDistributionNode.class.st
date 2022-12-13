@@ -2,26 +2,61 @@ Class {
 	#name : #RMDGammaDistributionNode,
 	#superclass : #RMDRandomNode,
 	#instVars : [
-		'scaleExpression',
 		'shapeExpression'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #'instance creation' }
+RMDGammaDistributionNode class >> shape: aRMDExpressionNode mean: anotherRMDExpressionNode [
+
+	^ self withMeanClass new
+		  shapeExpression: aRMDExpressionNode;
+		  meanExpression: anotherRMDExpressionNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDGammaDistributionNode class >> shape: aRMDExpressionNode rate: anotherRMDExpressionNode [
+
+	^ self withRateClass new
+		  shapeExpression: aRMDExpressionNode;
+		  rateExpression: anotherRMDExpressionNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
 RMDGammaDistributionNode class >> shape: aRMDExpressionNode scale: anotherRMDExpressionNode [
 
-	^ self new
+	^ self withScaleClass new
 		  shapeExpression: aRMDExpressionNode;
 		  scaleExpression: anotherRMDExpressionNode;
 		  yourself
 ]
 
+{ #category : #'class access' }
+RMDGammaDistributionNode class >> withMeanClass [
+
+	^ RMDGammaMeanDistributionNode
+]
+
+{ #category : #'class access' }
+RMDGammaDistributionNode class >> withRateClass [
+
+	^ RMDGammaRateDistributionNode
+]
+
+{ #category : #'class access' }
+RMDGammaDistributionNode class >> withScaleClass [
+
+	^ RMDGammaScaleDistributionNode
+]
+
 { #category : #comparing }
 RMDGammaDistributionNode >> = anObject [
-	^ self class = anObject class
-		and: [ shapeExpression = anObject shapeExpression
-				and: [ scaleExpression = anObject scaleExpression ] ]
+
+	^ self class = anObject class and: [ 
+		  shapeExpression = anObject shapeExpression ]
 ]
 
 { #category : #private }
@@ -65,9 +100,7 @@ RMDGammaDistributionNode >> MarsagliaTsang: aNumber in: aRMDInterpreter [
 { #category : #enumerating }
 RMDGammaDistributionNode >> childrenDo: aBlock [
 
-	aBlock
-		value: shapeExpression;
-		value: scaleExpression
+	aBlock value: shapeExpression
 ]
 
 { #category : #accessing }
@@ -80,7 +113,8 @@ RMDGammaDistributionNode >> gamma: aNumber in: aRMDInterpreter [
 
 { #category : #comparing }
 RMDGammaDistributionNode >> hash [
-	^ (self class hash bitXor: shapeExpression hash) bitXor: scaleExpression hash
+
+	^ self class hash bitXor: shapeExpression hash
 ]
 
 { #category : #testing }
@@ -98,8 +132,7 @@ RMDGammaDistributionNode >> normalIn: aRMDInterpreter [
 { #category : #copying }
 RMDGammaDistributionNode >> postCopy [
 
-	shapeExpression := shapeExpression copy.
-	scaleExpression := scaleExpression copy
+	shapeExpression := shapeExpression copy
 ]
 
 { #category : #accessing }
@@ -107,50 +140,10 @@ RMDGammaDistributionNode >> precedence [
 	^ 10
 ]
 
-{ #category : #printing }
-RMDGammaDistributionNode >> printOn: aStream [
-	aStream nextPutAll: 'gamma '.
-	shapeExpression printOn: aStream.
-	aStream nextPutAll: ' scale '.
-	scaleExpression printOn: aStream
-]
-
-{ #category : #printing }
-RMDGammaDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
-
-	| start |
-	start := aStream position + 1.
-	aStream nextPutAll: 'gamma '.
-	shapeExpression
-		printOn: aStream
-		ifIncludedIn: aCollectionOfRMDSyntaxNode
-		addSectionTo: aCollection.
-	aStream nextPutAll: ' scale '.
-	scaleExpression
-		printOn: aStream
-		ifIncludedIn: aCollectionOfRMDSyntaxNode
-		addSectionTo: aCollection.
-	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
-		aCollection add: (start to: aStream position) ]
-]
-
 { #category : #rewriting }
 RMDGammaDistributionNode >> replaceChildren: aDictionary [
 
-	shapeExpression := shapeExpression copyReplace: aDictionary.
-	scaleExpression := scaleExpression copyReplace: aDictionary
-]
-
-{ #category : #accessing }
-RMDGammaDistributionNode >> scaleExpression [
-
-	^ scaleExpression
-]
-
-{ #category : #accessing }
-RMDGammaDistributionNode >> scaleExpression: aRMDExpressionNode [
-
-	scaleExpression := aRMDExpressionNode
+	shapeExpression := shapeExpression copyReplace: aDictionary
 ]
 
 { #category : #accessing }
