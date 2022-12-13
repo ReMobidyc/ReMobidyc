@@ -432,6 +432,13 @@ TRMDTemplateMenu >> randomDistributions [
 						   , String cr , 'Note: The units of s and e must agree.'
 					   sourceText: 'uniform _s_ to _e_');
 			  nextPut: (RMDSourceTemplate
+					   name: 'uniform integer distribution'
+					   description: 'Usage: uniform_integer s to e' , String cr
+						   ,
+							   'a directive to generate a random integer in the uniform distribution between x and y'
+						   , String cr , 'Note: The units of s and e must agree.'
+					   sourceText: 'uniform_integer _s_ to _e_');
+			  nextPut: (RMDSourceTemplate
 					   name: 'normal distribution'
 					   description: 'Usage: normal m sigma σ' , String cr
 						   ,
