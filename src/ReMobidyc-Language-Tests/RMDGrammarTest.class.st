@@ -1319,6 +1319,15 @@ RMDGrammarTest >> testUniformDistribution [
 		equals: (grammar expression parse: '-10[cm]+5[m]').
 	self
 		assert: node toExpression
+		equals: (grammar expression parse: '2[cm]').
+	node := grammar uniformDistribution parse:
+		        'uniform_integer -10[cm]+5[m] to 2[m]'.
+	self assert: node isUniformIntegerDistributionNode.
+	self
+		assert: node fromExpression
+		equals: (grammar expression parse: '-10[cm]+5[m]').
+	self
+		assert: node toExpression
 		equals: (grammar expression parse: '2[cm]')
 ]
 

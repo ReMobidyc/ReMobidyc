@@ -1351,11 +1351,22 @@ RMDGrammar >> uniformDistribution [
 	^ 'uniform' asPParser trimBlanks , self expr5
 	  , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
 	  self uniformDistributionNodeClass from: quad second to: quad fourth ]
+	  / ('uniform_integer' asPParser trimBlanks , self expr5
+		   , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
+		   self uniformIntegerDistributionNodeClass
+			   from: quad second
+			   to: quad fourth ])
 ]
 
 { #category : #'class access' }
 RMDGrammar >> uniformDistributionNodeClass [
 	^ RMDUniformDistributionNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> uniformIntegerDistributionNodeClass [
+
+	^ RMDUniformIntegerDistributionNode
 ]
 
 { #category : #'parsers-units' }
