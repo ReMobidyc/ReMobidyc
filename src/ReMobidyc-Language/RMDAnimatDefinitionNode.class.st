@@ -89,6 +89,16 @@ RMDAnimatDefinitionNode >> printOn: aStream [
 				aStream nextPutAll: '    '.
 				def printOn: aStream ]
 			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
 
@@ -106,6 +116,19 @@ RMDAnimatDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 			nextPutAll: ' with';
 			nextPut: Character cr.
 		attributeDeclarations
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
 			do: [ :def | 
 				aStream nextPutAll: '    '.
 				def

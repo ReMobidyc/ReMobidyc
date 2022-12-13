@@ -31,37 +31,62 @@ RMDPatchDefinitionNode >> isPatchDefinitionNode [
 
 { #category : #printing }
 RMDPatchDefinitionNode >> printOn: aStream [
+
 	aStream nextPutAll: 'Patch'.
-	attributeDeclarations
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			attributeDeclarations
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def printOn: aStream ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	attributeDeclarations ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		attributeDeclarations
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def printOn: aStream ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $.
 ]
 
 { #category : #printing }
 RMDPatchDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+
 	| start |
 	start := aStream position + 1.
 	aStream nextPutAll: 'Patch'.
-	attributeDeclarations
-		ifNotEmpty: [ aStream
-				nextPutAll: ' with';
-				nextPut: Character cr.
-			attributeDeclarations
-				do: [ :def | 
-					aStream nextPutAll: '    '.
-					def
-						printOn: aStream
-						ifIncludedIn: aCollectionOfRMDSyntaxNode
-						addSectionTo: aCollection ]
-				separatedBy: [ aStream nextPut: Character cr ] ].
+	attributeDeclarations ifNotEmpty: [ 
+		aStream
+			nextPutAll: ' with';
+			nextPut: Character cr.
+		attributeDeclarations
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
+	utilityDefinitions ifNotEmpty: [ 
+		aStream
+			nextPut: Character cr;
+			nextPutAll: 'where';
+			nextPut: Character cr.
+		utilityDefinitions
+			do: [ :def | 
+				aStream nextPutAll: '    '.
+				def
+					printOn: aStream
+					ifIncludedIn: aCollectionOfRMDSyntaxNode
+					addSectionTo: aCollection ]
+			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $..
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+		aCollection add: (start to: aStream position) ]
 ]

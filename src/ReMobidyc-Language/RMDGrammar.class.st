@@ -346,14 +346,16 @@ RMDGrammar >> assignableVariable [
 { #category : #'parsers-definitions' }
 RMDGrammar >> attributeBind [
 
-	^ self placeholder , '->' asPParser trimBlanks , expression
+	^ self placeholder , '->' asPParser trimBlanks
+	  , (condition / expression)
 	  /
 	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
-	  / (self stageDirective , '->' asPParser trimBlanks , self stageDirective)
-	  ==> [ :triple | 
-		  self attributeBindNodeClass
-			  placeholder: triple first
-			  replacement: triple third ]
+	  /
+	  (self stageDirective , '->' asPParser trimBlanks
+	   , self stageDirective) ==> [ :triple | 
+	  self attributeBindNodeClass
+		  placeholder: triple first
+		  replacement: triple third ]
 ]
 
 { #category : #'class access' }
