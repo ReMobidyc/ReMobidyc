@@ -72,11 +72,7 @@ RMDRepositoryModelsBrowser >> newItemList [
 		  beSingleSelection;
 		  beResizable;
 		  showColumnHeaders;
-		  addColumn: (SpStringTableColumn evaluated: [ :item | 
-					   | text |
-					   text := item asText.
-					   (self getModel: item) ifNil: [ text makeAllColor: Color red ].
-					   text ]);
+		  addColumn: (SpStringTableColumn evaluated: #asText);
 		  yourself
 ]
 
@@ -126,5 +122,5 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 					description := description , '
 with a result' asText ].
 				descriptionText text: description ] ]
-		ifNil: [ descriptionText text: '' ]
+		ifNil: [ descriptionText text: 'invalid model' ]
 ]
