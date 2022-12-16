@@ -24,7 +24,7 @@ RMDCeilingFunctionTest >> testValue [
 { #category : #tests }
 RMDCeilingFunctionTest >> testValueValue [
 
-	self should: [ ceiling value: 1.0 value: 1.0 ] raise: Error
+	self should: [ ceiling value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -32,7 +32,7 @@ RMDCeilingFunctionTest >> testValueValueValue [
 
 	self
 		should: [ ceiling value: 1.0 value: 1.0 value: 1.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -45,5 +45,5 @@ RMDCeilingFunctionTest >> testValueValueValueValue [
 				value: 1.0
 				value: 1.0
 				value: 1.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

@@ -559,10 +559,10 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 			[ simulationModel typecheck: taskDefinitionNode ]
 				on: RMDTypeError
 				do: [ :ex | 
-					highlights add: ex ast.
+					highlights add: ex node.
 					ex resume: ex unit ] ]
 				on: RMDUnresolvedReferenceError
-				do: [ :ex | highlights add: ex ast ].
+				do: [ :ex | highlights add: ex node ].
 			sourceText highlights: highlights.
 			sourceText text: ([ 
 				 (taskDefinitionNode actionWith: simulationModel) printString

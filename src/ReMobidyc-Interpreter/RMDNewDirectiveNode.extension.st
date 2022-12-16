@@ -15,12 +15,18 @@ RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	animatIdentifier ifNil: [ 
-		^ (RMDUnresolvedReferenceError on: self) signal ].
+		^ RMDUnresolvedPlaceholderError signal: self ].
 	quantity ifNotNil: [ 
 		[ 
 		(quantity typecheckIn: aRMDInterpreter) unify:
 			RMDUnitType noDimension ]
 			on: RMDTypeUnificationError
-			do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ] ].
+			do: [ :ex | 
+				ex resignalAs: (RMDTypeError
+						 on: self
+						 subnode: quantity
+						 type: ex type1
+						 subnode: self
+						 type: ex type2) ] ].
 	aRMDInterpreter newIndividual: animatIdentifier
 ]

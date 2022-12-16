@@ -20,10 +20,16 @@ RMDAttributeDefinitionNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
-	| variableType bodyType |
-	variableType := variable typecheckIn: aRMDInterpreter.
-	bodyType := definitionBody typecheckIn: aRMDInterpreter.
-	variableType = bodyType
-		ifFalse: [ ^ (RMDTypeError on: self with: bodyType) signal ].
-	^ variableType
+
+	^ [ 
+	  (definitionBody typecheckIn: aRMDInterpreter) unify:
+		  (variable typecheckIn: aRMDInterpreter) ]
+		  on: RMDTypeUnificationError
+		  do: [ :ex | 
+			  ex resignalAs: (RMDTypeError
+					   on: self
+					   subnode: definitionBody
+					   type: ex type1
+					   subnode: variable
+					   type: ex type2) ]
 ]

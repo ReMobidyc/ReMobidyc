@@ -21,21 +21,27 @@ RMDSinFunctionTest >> testValue [
 
 { #category : #tests }
 RMDSinFunctionTest >> testValueValue [
-	self should: [ sin value: 0.0 value: 0.0 ] raise: Error
+
+	self should: [ sin value: 0.0 value: 0.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDSinFunctionTest >> testValueValueValue [
-	self should: [ sin value: 0.0 value: 0.0 value: 0.0 ] raise: Error
+
+	self
+		should: [ sin value: 0.0 value: 0.0 value: 0.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDSinFunctionTest >> testValueValueValueValue [
+
 	self
-		should: [ sin
+		should: [ 
+			sin
 				value: 0.0
 				value: 0.0
 				value: 0.0
 				value: 0.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

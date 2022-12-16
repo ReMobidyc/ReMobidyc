@@ -33,13 +33,19 @@ RMDUnitType >> printOn: aStream [
 
 { #category : #'type checking' }
 RMDUnitType >> unify: aRMDType [
-	^ aRMDType unifyWithUnitType: self
+
+	^ [ aRMDType unifyWithUnitType: self ]
+		  on: RMDTypeUnificationError
+		  do: [ :ex | 
+			  ^ (RMDTypeUnificationError type1: ex type2 type2: ex type1)
+				    signal ]
 ]
 
 { #category : #'type checking' }
 RMDUnitType >> unifyWithUnitType: aRMDType [
-	unit = aRMDType unit
-		ifFalse: [ ^ (RMDTypeUnificationError on: aRMDType and: self) signal ].
+
+	unit = aRMDType unit ifFalse: [ 
+		^ (RMDTypeUnificationError on: self and: aRMDType) signal ].
 	^ self
 ]
 

@@ -4,11 +4,20 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #accessing }
+RMDSquareRootFunction >> expectedNumArgs [
+
+	^ 1
+]
+
 { #category : #'type checking' }
 RMDSquareRootFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
-		^ (RMDTypeError on: self with: anArrayOfRMDExpression) signal ].
+		^ RMDNumArgsError
+			  signal: self
+			  actual: anArrayOfRMDExpression size
+			  expected: 1 ].
 	^ RMDType unit:
 		  (anArrayOfRMDExpression first typecheckIn: aRMDInterpreter) unit
 		  ** (1 / 2)

@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDSyntaxError,
-	#superclass : #Error,
+	#superclass : #RMDError,
 	#instVars : [
 		'failure'
 	],
@@ -8,11 +8,25 @@ Class {
 }
 
 { #category : #signalling }
-RMDSyntaxError class >> signal: aPetit2Failure [
+RMDSyntaxError class >> failure: aPetit2Failure [
 
 	^ self new
 		  failure: aPetit2Failure;
-		  signal: aPetit2Failure printString
+		  yourself
+]
+
+{ #category : #signalling }
+RMDSyntaxError class >> signal: aPetit2Failure [
+
+	^ (self failure: aPetit2Failure) signal: aPetit2Failure printString
+]
+
+{ #category : #private }
+RMDSyntaxError >> composeMessageText [
+
+	^ String streamContents: [ :stream | 
+		  stream nextPutAll: 'Syntax error: '.
+		  failure printOn: stream ]
 ]
 
 { #category : #accessing }

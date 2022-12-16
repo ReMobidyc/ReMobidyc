@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #evaluating }
+RMDMinFunction >> expectedNumArgs [
+
+	^ nil
+]
+
 { #category : #'type checking' }
 RMDMinFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
 	| type |

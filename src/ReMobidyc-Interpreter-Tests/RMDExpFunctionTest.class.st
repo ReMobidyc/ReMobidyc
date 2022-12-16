@@ -23,12 +23,16 @@ RMDExpFunctionTest >> testValue [
 
 { #category : #tests }
 RMDExpFunctionTest >> testValueValue [
-	self should: [exp value: 0.0 value: 0.0] raise: Error
+
+	self should: [ exp value: 0.0 value: 0.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDExpFunctionTest >> testValueValueValue [
-	self should: [exp value: 0.0 value: 0.0 value: 0.0] raise: Error
+
+	self
+		should: [ exp value: 0.0 value: 0.0 value: 0.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -41,5 +45,5 @@ RMDExpFunctionTest >> testValueValueValueValue [
 				value: 0.0
 				value: 0.0
 				value: 0.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

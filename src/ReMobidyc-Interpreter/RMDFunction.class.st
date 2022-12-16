@@ -31,6 +31,28 @@ RMDFunction class >> at: aString [
 	^ KeyNotFound signal: aString
 ]
 
+{ #category : #'instance creation' }
+RMDFunction class >> at: aString ifAbsent: errorBlock [
+
+	aString = 'abs' ifTrue: [ ^ self abs ].
+	aString = 'cos' ifTrue: [ ^ self cos ].
+	aString = 'exp' ifTrue: [ ^ self exp ].
+	aString = 'log' ifTrue: [ ^ self ln ].
+	aString = 'ln' ifTrue: [ ^ self ln ].
+	aString = 'max' ifTrue: [ ^ self max ].
+	aString = 'mean' ifTrue: [ ^ self mean ].
+	aString = 'min' ifTrue: [ ^ self min ].
+	aString = 'power' ifTrue: [ ^ self power ].
+	aString = 'sqrt' ifTrue: [ ^ self sqrt ].
+	aString = 'sin' ifTrue: [ ^ self sin ].
+	aString = 'sum' ifTrue: [ ^ self sum ].
+	aString = 'positive' ifTrue: [ ^ self positive ].
+	aString = 'round' ifTrue: [ ^ self round ].
+	aString = 'floor' ifTrue: [ ^ self floor ].
+	aString = 'ceiling' ifTrue: [ ^ self ceiling ].
+	^ errorBlock cull: aString
+]
+
 { #category : #'typical instances' }
 RMDFunction class >> ceiling [
 	^ RMDCeilingFunction new
@@ -101,9 +123,21 @@ RMDFunction class >> sum [
 	^ RMDSumFunction new
 ]
 
+{ #category : #accessing }
+RMDFunction >> expectedNumArgs [
+
+	^ self subclassResponsibility
+]
+
 { #category : #private }
 RMDFunction >> numArgsError [
 	^ RMDNumArgsError signal
+]
+
+{ #category : #private }
+RMDFunction >> numArgsError: actual expected: expected [
+
+	^ RMDNumArgsError signal: self actual: actual expected: expected
 ]
 
 { #category : #'type checking' }
@@ -113,22 +147,25 @@ RMDFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterprete
 
 { #category : #accessing }
 RMDFunction >> value: aNumber [
-	^ self numArgsError
+
+	^ self numArgsError: 1 expected: self expectedNumArgs
 ]
 
 { #category : #accessing }
 RMDFunction >> value: aNumber1 value: aNumber2 [
-	^ self numArgsError
+	^ self numArgsError: 2 expected: self expectedNumArgs
 ]
 
 { #category : #accessing }
 RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
-	^ self numArgsError
+
+	^ self numArgsError: 3 expected: self expectedNumArgs
 ]
 
 { #category : #accessing }
 RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
-	^ self numArgsError
+
+	^ self numArgsError: 4 expected: self expectedNumArgs
 ]
 
 { #category : #accessing }
@@ -150,5 +187,5 @@ RMDFunction >> valueWithArguments: anArrayOfNumber [
 				value: anArrayOfNumber second
 				value: anArrayOfNumber third
 				value: anArrayOfNumber fourth ].
-	^ self numArgsError
+	^ self numArgsError: arity expected: self expectedNumArgs
 ]

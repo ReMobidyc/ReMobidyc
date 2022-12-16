@@ -21,15 +21,26 @@ RMDPositiveFunctionTest >> testValue [
 
 { #category : #tests }
 RMDPositiveFunctionTest >> testValueValue [
-	self should: [ positive value: 1.0 value: 1.0 ] raise: Error
+	self should: [ positive value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDPositiveFunctionTest >> testValueValueValue [
-	self should: [ positive value: 1.0 value: 1.0 value: 1.0] raise: Error
+
+	self
+		should: [ positive value: 1.0 value: 1.0 value: 1.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDPositiveFunctionTest >> testValueValueValueValue [
-	self should: [ positive value: 1.0 value: 1.0 value: 1.0 value: 1.0] raise: Error
+
+	self
+		should: [ 
+			positive
+				value: 1.0
+				value: 1.0
+				value: 1.0
+				value: 1.0 ]
+		raise: RMDNumArgsError
 ]

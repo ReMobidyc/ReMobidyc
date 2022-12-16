@@ -19,8 +19,19 @@ RMDLogLogisticDistributionNode >> typecheckIn: aRMDInterpreter [
 		RMDType noDimension ]
 		on: RMDTypeUnificationError
 		do: [ :ex | 
-			ex resignalAs: (RMDTypeError on: shapeExpression with: ex type1) ].
+			ex resignalAs: (RMDTypeError
+					 on: self
+					 subnode: shapeExpression
+					 type: ex type1
+					 subnode: self
+					 type: ex type2) ].
 	^ [ scaleExpression typecheckIn: aRMDInterpreter ]
 		  on: RMDTypeUnificationError
-		  do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
+		  do: [ :ex | 
+			  ex resignalAs: (RMDTypeError
+					   on: self
+					   subnode: scaleExpression
+					   type: ex type1
+					   subnode: self
+					   type: ex type2) ]
 ]

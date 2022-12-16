@@ -15,7 +15,7 @@ RMDPowerFunctionTest >> setUp [
 { #category : #initialization }
 RMDPowerFunctionTest >> testValue [
 
-	self should: [ power value: 1.0 ] raise: Error
+	self should: [ power value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #initialization }
@@ -28,7 +28,10 @@ RMDPowerFunctionTest >> testValueValue [
 
 { #category : #tests }
 RMDPowerFunctionTest >> testValueValueValue [
-	self should: [power value: 0.0 value: 0.0 value: 0.0] raise: Error
+
+	self
+		should: [ power value: 0.0 value: 0.0 value: 0.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -41,5 +44,5 @@ RMDPowerFunctionTest >> testValueValueValueValue [
 				value: 0.0
 				value: 0.0
 				value: 0.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

@@ -1,0 +1,165 @@
+Class {
+	#name : #RMDTypeError,
+	#superclass : #RMDError,
+	#instVars : [
+		'ast',
+		'unit',
+		'node',
+		'type1',
+		'type2',
+		'subnode1',
+		'subnode2'
+	],
+	#category : #'ReMobidyc-Interpreter'
+}
+
+{ #category : #'instance creation' }
+RMDTypeError class >> on: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
+
+	^ self new
+		  node: aRMDSyntaxNode1;
+		  subnode1: aRMDSyntaxNode2;
+		  type1: aRMDType2;
+		  subnode2: aRMDSyntaxNode3;
+		  type2: aRMDType3;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDTypeError class >> on: aRMDSyntaxNode with: aRMDUnit [
+	^ self new
+		ast: aRMDSyntaxNode;
+		unit: aRMDUnit;
+		messageText: aRMDSyntaxNode printString , ' [' , aRMDUnit printString , ']';
+		yourself
+]
+
+{ #category : #'instance creation' }
+RMDTypeError class >> signal: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
+
+	^ (self
+		   on: aRMDSyntaxNode1
+		   subnode: aRMDSyntaxNode2
+		   type: aRMDType2
+		   subnode: aRMDSyntaxNode3
+		   type: aRMDType3) signal
+]
+
+{ #category : #accessing }
+RMDTypeError >> ast [
+	^ ast
+]
+
+{ #category : #accessing }
+RMDTypeError >> ast: aRMDSyntaxNode [
+	ast := aRMDSyntaxNode
+]
+
+{ #category : #private }
+RMDTypeError >> composeMessageText [
+
+	^ String streamContents: [ :stream | 
+		  stream nextPutAll: 'Type error in "'.
+		  node printOn: stream.
+		  stream nextPutAll: '" : type of '.
+		  subnode1 printOn: stream.
+		  stream nextPutAll: ' is '.
+		  type1 printOn: stream.
+		  node == subnode2
+			  ifTrue: [ 
+				  stream nextPutAll: ' but should be '.
+				  type2 printOn: stream ]
+			  ifFalse: [ 
+				  stream nextPutAll: ' while the type of '.
+				  subnode2 printOn: stream.
+				  stream nextPutAll: ' is '.
+				  type2 printOn: stream ].
+		  stream nextPutAll: '.' ]
+]
+
+{ #category : #accessing }
+RMDTypeError >> node [
+
+	^ node
+]
+
+{ #category : #accessing }
+RMDTypeError >> node: aRMDSyntaxNode [
+
+	node := aRMDSyntaxNode
+]
+
+{ #category : #signalling }
+RMDTypeError >> signal [
+
+	self messageText: (String streamContents: [ :stream | 
+			 stream nextPutAll: 'Type error in "'.
+			 node printOn: stream.
+			 stream nextPutAll: '": "'.
+			 subnode1 printOn: stream.
+			 stream nextPutAll: '" is '.
+			 type1 printOn: stream.
+			 stream nextPutAll: ', while "'.
+			 subnode2 printOn: stream.
+			 stream nextPutAll: '" is '.
+			 type2 printOn: stream ]).
+	^ super signal
+]
+
+{ #category : #accessing }
+RMDTypeError >> subnode1 [
+
+	^ subnode1
+]
+
+{ #category : #accessing }
+RMDTypeError >> subnode1: aRMDSyntaxNode [
+
+	subnode1 := aRMDSyntaxNode
+]
+
+{ #category : #accessing }
+RMDTypeError >> subnode2 [
+
+	^ subnode2
+]
+
+{ #category : #accessing }
+RMDTypeError >> subnode2: aRMDSyntaxNode [
+
+	subnode2 := aRMDSyntaxNode
+]
+
+{ #category : #accessing }
+RMDTypeError >> type1 [
+
+	^ type1
+]
+
+{ #category : #accessing }
+RMDTypeError >> type1: aRMDType [
+
+	type1 := aRMDType
+]
+
+{ #category : #accessing }
+RMDTypeError >> type2 [
+
+	^ type2
+]
+
+{ #category : #accessing }
+RMDTypeError >> type2: aRMDType [
+
+	type2 := aRMDType
+]
+
+{ #category : #accessing }
+RMDTypeError >> unit [
+	^ unit
+]
+
+{ #category : #accessing }
+RMDTypeError >> unit: aRMDUnit [
+	unit := aRMDUnit
+]

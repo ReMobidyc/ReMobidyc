@@ -2,17 +2,18 @@ Extension { #name : #RMDBinaryRelationNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDBinaryRelationNode >> typecheckIn: aRMDInterpreter [
+
 	| type |
-	type := nil.
-	expressions
-		do: [ :expression | 
-			| t |
-			t := expression typecheckIn: aRMDInterpreter.
-			t
-				ifNil: [ ^ (RMDTypeError on: self with: t) signal ]
-				ifNotNil: [ type
-						ifNil: [ type := t ]
-						ifNotNil: [ type = t
-								ifFalse: [ ^ (RMDTypeError on: self with: t) signal ] ] ] ].
-	^ type
+	type := RMDType any.
+	expressions do: [ :expression | 
+		[ type := (expression typecheckIn: aRMDInterpreter) unify: type ]
+			on: RMDTypeUnificationError
+			do: [ :ex | 
+				ex resignalAs: (RMDTypeError
+						 on: self
+						 subnode: expression
+						 type: ex type1
+						 subnode: expressions first
+						 type: ex type2) ] ].
+	^ nil
 ]

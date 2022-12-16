@@ -21,12 +21,15 @@ RMDCosFunctionTest >> testValue [
 
 { #category : #tests }
 RMDCosFunctionTest >> testValueValue [
-	self should: [cos value: 0.0 value: 0.0] raise: Error
+	self should: [cos value: 0.0 value: 0.0] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDCosFunctionTest >> testValueValueValue [
-	self should: [cos value: 0.0 value: 0.0 value: 0.0] raise: Error
+
+	self
+		should: [ cos value: 0.0 value: 0.0 value: 0.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -37,5 +40,5 @@ RMDCosFunctionTest >> testValueValueValueValue [
 				value: 0.0
 				value: 0.0
 				value: 0.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

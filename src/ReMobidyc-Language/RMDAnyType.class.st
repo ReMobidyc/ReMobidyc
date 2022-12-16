@@ -14,6 +14,12 @@ RMDAnyType >> hash [
 	^ self class hash
 ]
 
+{ #category : #printing }
+RMDAnyType >> printOn: aStream [
+
+	aStream nextPutAll: '[*]'
+]
+
 { #category : #'type checking' }
 RMDAnyType >> unify: aRMDType [
 	^ aRMDType

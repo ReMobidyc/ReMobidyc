@@ -3,11 +3,11 @@ Extension { #name : #RMDPlaceholderNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPlaceholderNode >> evalIn: aRMDInterpreter [
 
-	^ (RMDUnresolvedReferenceError on: self) signal
+	^ RMDUnresolvedPlaceholderError signal: self
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPlaceholderNode >> typecheckIn: aRMDInterpreter [
 
-	^ (RMDUnresolvedReferenceError on: self) signal
+	^ RMDUnresolvedPlaceholderError signal: self
 ]
