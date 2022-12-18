@@ -70,6 +70,14 @@ RMDSourceTextPresenter >> initialize [
 	super initialize.
 	highlightColor := Color red darker.
 	highlights := Array new.
+	self whenBuiltDo: [ 
+		self withAdapterDo: [ :a | 
+			a widgetDo: [ :w | 
+				| t |
+				t := w textArea.
+				t beForReMobidyc.
+				t withDecoratorNamed: #shoutStyler.
+				w shoutStyler styler: (RMDSourcePresenterStyler for: self) ] ] ].
 	self whenSubmitDo: [ :t | self prettyPrint ]
 ]
 

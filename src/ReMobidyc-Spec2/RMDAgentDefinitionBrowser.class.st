@@ -686,10 +686,10 @@ RMDAgentDefinitionBrowser >> updateSourceText [
 				[ model typecheck: taskDefinition ]
 					on: RMDTypeError
 					do: [ :ex | 
-						highlights add: ex ast.
-						ex resume: ex unit ] ]
+						highlights add: ex node.
+						ex resume: ex type2 ] ]
 					on: RMDUnresolvedReferenceError
-					do: [ :ex | highlights add: ex ast ].
+					do: [ :ex | highlights add: ex node ].
 				sourceText highlights: highlights.
 				sourceText text:
 					(taskDefinition actionWith: model) printString asText ]
