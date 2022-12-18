@@ -7,6 +7,16 @@ Class {
 	#category : #'ReMobidyc-Interpreter-Tests'
 }
 
+{ #category : #running }
+RMDTypecheckerTest >> setUp [
+
+	super setUp.
+	simulationModel := RMDSimulationModel new.
+	simulationModel load:
+		(String cr join: #( 'World with' '	temperature [DegreeC].' ))
+			asRMDWorldDefinition
+]
+
 { #category : #tests }
 RMDTypecheckerTest >> testTypecheckSubject [
 
