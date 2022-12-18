@@ -562,7 +562,9 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 					highlights add: ex node.
 					ex resume: ex type2 ] ]
 				on: RMDUnresolvedReferenceError
-				do: [ :ex | highlights add: ex node ].
+				do: [ :ex | 
+					highlights add: ex node.
+					ex resume: RMDType any ].
 			sourceText highlights: highlights.
 			sourceText text: ([ 
 				 (taskDefinitionNode actionWith: simulationModel) printString
