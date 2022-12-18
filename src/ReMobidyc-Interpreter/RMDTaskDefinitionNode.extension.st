@@ -151,7 +151,22 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
-	aRMDInterpreter
-		withContext: (aRMDInterpreter newTypecheckContextForTask: self)
-		do: [ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
+
+	self hasObject
+		ifTrue: [ 
+			aRMDInterpreter
+				withSubjectDefinition: (aRMDInterpreter
+						 animatDefinitionAt: subjectIdentifier
+						 ifAbsent: [ RMDUndefinedAnimatError signal: subjectIdentifier ])
+				object: objectIdentifier
+				definition: (aRMDInterpreter
+						 animatDefinitionAt: objectIdentifier
+						 ifAbsent: [ nil ])
+				do: [ 
+				(self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ] ]
+		ifFalse: [ 
+			aRMDInterpreter
+				withSubject: subjectIdentifier
+				do: [ 
+				(self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ] ]
 ]

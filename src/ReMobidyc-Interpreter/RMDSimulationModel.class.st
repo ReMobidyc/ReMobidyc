@@ -822,7 +822,7 @@ RMDSimulationModel >> tasksDo: aBlock [
 
 { #category : #'type checking' }
 RMDSimulationModel >> typecheck [
-	self typechecker typecheck
+	self typechecker typecheckAll
 ]
 
 { #category : #'type checking' }

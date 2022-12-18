@@ -56,13 +56,26 @@ RMDTypecheckContext >> newDefinition: aRMDAnimatDefinitionNode [
 ]
 
 { #category : #accessing }
+RMDTypecheckContext >> object: aString [
+
+	objectDefinition ifNotNil: [ 
+		| dict |
+		dict := Dictionary new.
+		objectDefinition attributeUnitsDo: [ :identifier :unit | 
+			dict at: identifier put: (RMDType unit: unit) ].
+		attributes at: aString uncapitalized put: dict ]
+]
+
+{ #category : #accessing }
 RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
+
 	| dict |
 	objectDefinition := aRMDAnimatDefinitionNode.
-	dict := Dictionary new.
-	objectDefinition
-		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	attributes at: aString uncapitalized put: dict
+	objectDefinition ifNotNil: [ 
+		dict := Dictionary new.
+		objectDefinition attributeUnitsDo: [ :identifier :unit | 
+			dict at: identifier put: (RMDType unit: unit) ].
+		attributes at: aString uncapitalized put: dict ]
 ]
 
 { #category : #accessing }

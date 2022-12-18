@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #'code-critics' }
+ManifestReMobidycSpec class >> ruleBadMessageRule2V1FalsePositive [
+	^ #(#(#(#RGClassDefinition #(#RMDSourcePresenterStyler)) #'2022-12-18T16:18:05.497507+09:00') #(#(#RGClassDefinition #(#RMDHighlightingSyntaxNodeTextInputPresenter)) #'2022-12-18T18:15:56.956264+09:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestReMobidycSpec class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePositive [
 	^ #(#(#(#RGPackageDefinition #(#'ReMobidyc-Spec2')) #'2022-12-15T16:09:18.614898+09:00') )
 ]

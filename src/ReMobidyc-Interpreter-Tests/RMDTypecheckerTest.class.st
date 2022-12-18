@@ -18,42 +18,52 @@ RMDTypecheckerTest >> setUp [
 ]
 
 { #category : #tests }
-RMDTypecheckerTest >> testTypecheckSubject [
+RMDTypecheckerTest >> testTypecheck [
 
 	self
 		assert: (simulationModel typechecker
-				 typecheck: 'world''s temperature + 30 [DegreeC]' asRMDExpression
-				 subject: simulationModel worldDefinition)
+				 withSubjectDefinition:
+				 simulationModel worldDefinition
+				 do: [ :typechecker | 
+					 typechecker typecheck:
+						 'world''s temperature + 30 [DegreeC]' asRMDExpression ])
 		equals: (RMDType unit: (RMDUnit at: 'DegreeC')).
 	self
 		should: [ 
 			simulationModel typechecker
-				typecheck: 'world''s temperature + 10 [s]' asRMDExpression
-				subject: simulationModel worldDefinition ]
+				withSubjectDefinition:
+				simulationModel worldDefinition
+				do: [ :typechecker | 
+					typechecker typecheck:
+						'world''s temperature + 10 [s]' asRMDExpression ] ]
 		raise: RMDTypeError.
 	self
 		should: [ 
 			simulationModel typechecker
-				typecheck:
-				'world''s temperature + the temp_offset' asRMDExpression
-				subject: simulationModel worldDefinition ]
+				withSubjectDefinition:
+				simulationModel worldDefinition
+				do: [ :typechecker | 
+					typechecker typecheck:
+						'world''s temperature + the temp_offset' asRMDExpression ] ]
 		raise: RMDUnresolvedPlaceholderError
 ]
 
 { #category : #tests }
-RMDTypecheckerTest >> testWeakTypecheckSubject [
+RMDTypecheckerTest >> testWeakTypecheck [
 
 	| expr |
 	expr := 'world''s temperature + the temp_offset' asRMDExpression.
 	self
 		should: [ 
 			simulationModel typechecker
-				typecheck: expr
-				subject: simulationModel worldDefinition ]
+				withSubjectDefinition:
+				simulationModel worldDefinition
+				do: [ :typechecker | typechecker typecheck: expr ] ]
 		raise: RMDUnresolvedPlaceholderError.
 	self
 		assert: (simulationModel typechecker
-				 weakTypecheck: expr
-				 subject: simulationModel worldDefinition)
+				 withSubjectDefinition:
+				 simulationModel worldDefinition
+				 do: [ :typechecker | typechecker weakTypecheck: expr ])
 		equals: (RMDType unit: (RMDUnit at: 'DegreeC'))
 ]

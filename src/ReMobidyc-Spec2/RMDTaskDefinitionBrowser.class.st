@@ -617,7 +617,23 @@ RMDTaskDefinitionBrowser >> updateTemplateText [
 
 	self actionDefinition
 		ifNotNil: [ :actionDefinition | 
-		templateText syntaxNode: actionDefinition ]
+			| highlights |
+			highlights := Set new: 10.
+			simulationModel typechecker
+				withSubject: taskDefinitionNode subjectIdentifier
+				do: [ :typechecker | 
+					[ 
+					[ actionDefinition weakTypecheckIn: typechecker ]
+						on: RMDTypeError
+						do: [ :ex | 
+							highlights add: ex node.
+							ex resume: ex type2 ] ]
+						on: RMDUnresolvedReferenceError
+						do: [ :ex | 
+							highlights add: ex node.
+							ex resume: RMDType any ] ].
+			templateText highlights: highlights.
+			templateText text: actionDefinition printString ]
 		ifNil: [ templateText text: '' ]
 ]
 

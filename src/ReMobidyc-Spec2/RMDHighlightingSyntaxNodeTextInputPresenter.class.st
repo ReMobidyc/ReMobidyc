@@ -9,25 +9,28 @@ Class {
 }
 
 { #category : #private }
-RMDHighlightingSyntaxNodeTextInputPresenter >> highlightedTextFrom: aRMDSyntaxNode [
+RMDHighlightingSyntaxNodeTextInputPresenter >> highlightedText [
+
 	| sections newText |
 	sections := OrderedCollection new: 10.
-	newText := (String
-		streamContents: [ :stream | 
-			aRMDSyntaxNode
-				printOn: stream
-				ifIncludedIn: highlights asSet
-				addSectionTo: sections ]) asText.
-	sections
-		do:
-			[ :section | newText makeColor: highlightColor from: section first to: section last ].
+	newText := (String streamContents: [ :stream | 
+		            syntaxNode
+			            printOn: stream
+			            ifIncludedIn: highlights asSet
+			            addSectionTo: sections ]) asText.
+	sections do: [ :section | 
+		newText
+			makeColor: highlightColor
+			from: section first
+			to: section last ].
 	^ newText
 ]
 
 { #category : #api }
 RMDHighlightingSyntaxNodeTextInputPresenter >> highlights: aCollectionOfRMDSyntaxNode [
+
 	highlights := aCollectionOfRMDSyntaxNode.
-	syntaxNode ifNotNil: [ text := self highlightedTextFrom: syntaxNode ]
+	syntaxNode ifNotNil: [ text := self highlightedText ]
 ]
 
 { #category : #initialization }
@@ -48,5 +51,5 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 				ifFalse: [ self beOk ].
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	text := self highlightedTextFrom: aRMDSyntaxNode
+	text := self highlightedText
 ]
