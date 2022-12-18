@@ -9,18 +9,20 @@ Class {
 }
 
 { #category : #private }
-RMDHighlightingSyntaxNodeTextInputPresenter >> highlightedTextFrom: aRMDSyntaxNode [
+RMDHighlightingSyntaxNodeTextInputPresenter >> highlightedText [
+
 	| sections newText |
 	sections := OrderedCollection new: 10.
-	newText := (String
-		streamContents: [ :stream | 
-			aRMDSyntaxNode
-				printOn: stream
-				ifIncludedIn: highlights asSet
-				addSectionTo: sections ]) asText.
-	sections
-		do:
-			[ :section | newText makeColor: highlightColor from: section first to: section last ].
+	newText := (String streamContents: [ :stream | 
+		            syntaxNode
+			            printOn: stream
+			            ifIncludedIn: highlights asSet
+			            addSectionTo: sections ]) asText.
+	sections do: [ :section | 
+		newText
+			makeColor: highlightColor
+			from: section first
+			to: section last ].
 	^ newText
 ]
 
