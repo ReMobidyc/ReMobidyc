@@ -560,7 +560,7 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 				on: RMDTypeError
 				do: [ :ex | 
 					highlights add: ex node.
-					ex resume: ex unit ] ]
+					ex resume: ex type2 ] ]
 				on: RMDUnresolvedReferenceError
 				do: [ :ex | highlights add: ex node ].
 			sourceText highlights: highlights.
