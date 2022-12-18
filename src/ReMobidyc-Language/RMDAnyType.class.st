@@ -4,6 +4,24 @@ Class {
 	#category : #'ReMobidyc-Language-Type'
 }
 
+{ #category : #arithmetics }
+RMDAnyType >> * aRMDType [
+
+	^ self
+]
+
+{ #category : #arithmetics }
+RMDAnyType >> ** aNumber [
+
+	^ self
+]
+
+{ #category : #arithmetics }
+RMDAnyType >> / aRMDType [
+
+	^ self
+]
+
 { #category : #comparing }
 RMDAnyType >> = anObject [
 	^ self class = anObject class
@@ -14,6 +32,12 @@ RMDAnyType >> hash [
 	^ self class hash
 ]
 
+{ #category : #testing }
+RMDAnyType >> isAny [
+
+	^ true
+]
+
 { #category : #printing }
 RMDAnyType >> printOn: aStream [
 
@@ -22,10 +46,5 @@ RMDAnyType >> printOn: aStream [
 
 { #category : #'type checking' }
 RMDAnyType >> unify: aRMDType [
-	^ aRMDType
-]
-
-{ #category : #'type checking' }
-RMDAnyType >> unifyWithUnitType: aRMDType [
 	^ aRMDType
 ]

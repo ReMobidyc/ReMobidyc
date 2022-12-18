@@ -14,6 +14,26 @@ RMDUnitType class >> unit: aRMDUnit [
 		yourself
 ]
 
+{ #category : #arithmetics }
+RMDUnitType >> * aRMDType [
+
+	aRMDType isAny ifTrue: [ ^ aRMDType ].
+	^ RMDType unit: unit * aRMDType unit
+]
+
+{ #category : #arithmetics }
+RMDUnitType >> ** aNumber [
+
+	^ RMDType unit: unit ** aNumber
+]
+
+{ #category : #arithmetics }
+RMDUnitType >> / aRMDType [
+
+	aRMDType isAny ifTrue: [ ^ aRMDType ].
+	^ RMDType unit: unit / aRMDType unit
+]
+
 { #category : #comparing }
 RMDUnitType >> = anObject [
 	^ self class = anObject class and: [ unit = anObject unit ]
@@ -34,19 +54,8 @@ RMDUnitType >> printOn: aStream [
 { #category : #'type checking' }
 RMDUnitType >> unify: aRMDType [
 
-	^ [ aRMDType unifyWithUnitType: self ]
-		  on: RMDTypeUnificationError
-		  do: [ :ex | 
-			  ^ (RMDTypeUnificationError type1: ex type2 type2: ex type1)
-				    signal ]
-]
-
-{ #category : #'type checking' }
-RMDUnitType >> unifyWithUnitType: aRMDType [
-
-	unit = aRMDType unit ifFalse: [ 
-		^ (RMDTypeUnificationError on: self and: aRMDType) signal ].
-	^ self
+	(aRMDType isAny or: [ unit = aRMDType unit ]) ifTrue: [ ^ self ].
+	^ (RMDTypeUnificationError on: self and: aRMDType) signal
 ]
 
 { #category : #accessing }

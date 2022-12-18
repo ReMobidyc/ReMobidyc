@@ -7,6 +7,6 @@ RMDPowerNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPowerNode >> typecheckIn: aRMDInterpreter [
-	^ RMDType
-		unit: (expression typecheckIn: aRMDInterpreter) unit ** order
+
+	^ (expression typecheckIn: aRMDInterpreter) ** order
 ]

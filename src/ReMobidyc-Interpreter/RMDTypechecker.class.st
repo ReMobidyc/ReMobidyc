@@ -47,20 +47,25 @@ RMDTypechecker >> newTypecheckContext [
 ]
 
 { #category : #'type checking' }
-RMDTypechecker >> newTypecheckContextForAnimat: aString [
+RMDTypechecker >> newTypecheckContextForAgentDefinition: aRMDAgentDefinition [
 
 	^ self newTypecheckContext
-		  subjectDefinition: (self
-				   animatDefinitionAt: aString
-				   ifAbsent: [ ^ RMDUndefinedAnimatError signal: aString ]);
+		  subjectDefinition: aRMDAgentDefinition;
 		  yourself
 ]
 
 { #category : #'type checking' }
+RMDTypechecker >> newTypecheckContextForAnimat: aString [
+
+	^ self newTypecheckContextForAgentDefinition: (self
+			   animatDefinitionAt: aString
+			   ifAbsent: [ ^ RMDUndefinedAnimatError signal: aString ])
+]
+
+{ #category : #'type checking' }
 RMDTypechecker >> newTypecheckContextForPatch [
-	^ self newTypecheckContext 
-		subjectDefinition: self patchDefinition;
-		yourself
+
+	^ self newTypecheckContextForAgentDefinition: self patchDefinition
 ]
 
 { #category : #'type checking' }
@@ -88,9 +93,8 @@ RMDTypechecker >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
 
 { #category : #'type checking' }
 RMDTypechecker >> newTypecheckContextForWorld [
-	^ self newTypecheckContext 
-		subjectDefinition: self worldDefinition;
-		yourself
+
+	^ self newTypecheckContextForAgentDefinition: self worldDefinition
 ]
 
 { #category : #'type checking' }
@@ -141,6 +145,15 @@ RMDTypechecker >> typecheck [
 ]
 
 { #category : #'type checking' }
+RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aRMDAgentDefinition [
+
+	^ self
+		  withContext:
+		  (self newTypecheckContextForAgentDefinition: aRMDAgentDefinition)
+		  do: [ aRMDSyntaxNode typecheckIn: self ]
+]
+
+{ #category : #'type checking' }
 RMDTypechecker >> typecheckInitializers [
 	self
 		withContext: self newTypecheckContextForWorld
@@ -169,4 +182,24 @@ RMDTypechecker >> typecheckTasks [
 			self
 				withContext: (self newTypecheckContextForTask: taskDefinition)
 				do: [ taskDefinition typecheckIn: self ] ]
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> weakTypecheck: aRMDSyntaxNode agentDefinition: aRMDAgentDefinition [
+
+	^ self
+		  withContext:
+		  (self newTypecheckContextForAgentDefinition: aRMDAgentDefinition)
+		  do: [ 
+			  [ aRMDSyntaxNode typecheckIn: self ]
+				  on: RMDUnresolvedPlaceholderError
+				  do: [ :ex | ex resume: RMDType any ] ]
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: aRMDAgentDefinition [
+
+	^ [ self typecheck: aRMDSyntaxNode subject: aRMDAgentDefinition ]
+		  on: RMDUnresolvedPlaceholderError
+		  do: [ :ex | ex resume: RMDType any ]
 ]

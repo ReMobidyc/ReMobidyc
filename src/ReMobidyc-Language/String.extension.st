@@ -72,3 +72,13 @@ String >> asRMDUnit [
 			  ifTrue: [ RMDSyntaxError signal: node ]
 			  ifFalse: [ node ] ]
 ]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> asRMDWorldDefinition [
+
+	| node |
+	node := RMDGrammar new worldDefinition end parse: self trim.
+	^ node isPetit2Failure
+		  ifTrue: [ RMDSyntaxError signal: node ]
+		  ifFalse: [ node ]
+]
