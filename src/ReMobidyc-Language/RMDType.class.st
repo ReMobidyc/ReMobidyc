@@ -44,12 +44,31 @@ RMDType class >> unitTypeClass [
 	^ RMDUnitType
 ]
 
-{ #category : #'type checking' }
-RMDType >> unify: aRMDType [
+{ #category : #arithmetics }
+RMDType >> * aRMDType [
+
 	^ self subclassResponsibility
 ]
 
+{ #category : #arithmetics }
+RMDType >> ** aNumber [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #arithmetics }
+RMDType >> / aRMDType [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+RMDType >> isAny [
+
+	^ false
+]
+
 { #category : #'type checking' }
-RMDType >> unifyWithUnitType: aRMDType [
+RMDType >> unify: aRMDType [
 	^ self subclassResponsibility
 ]

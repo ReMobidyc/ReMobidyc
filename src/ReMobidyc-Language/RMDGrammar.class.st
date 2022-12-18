@@ -1335,9 +1335,10 @@ RMDGrammar >> timeUnits [
 
 { #category : #'parsers-units' }
 RMDGrammar >> type [
-	^ ($[ asPParser trimBlanks , self unit optional
-		, $] asPParser trimBlanks)
-		==> [ :triple | triple second ifNil: [ RMDUnit noDimension ] ]
+
+	^ $[ asPParser trimBlanks , self unit optional
+	  , $] asPParser trimBlanks
+	  ==> [ :triple | triple second ifNil: [ RMDUnit noDimension ] ]
 ]
 
 { #category : #'class access' }
