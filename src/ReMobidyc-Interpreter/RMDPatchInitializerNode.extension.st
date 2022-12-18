@@ -20,6 +20,6 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 RMDPatchInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter
-		withContext: aRMDInterpreter newTypecheckContextForPatch
+		withSubjectDefinition: aRMDInterpreter patch
 		do: [ super typecheckIn: aRMDInterpreter ]
 ]

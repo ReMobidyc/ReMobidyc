@@ -30,8 +30,6 @@ RMDSourcePresenterStyler >> presenter: aPresenter [
 { #category : #private }
 RMDSourcePresenterStyler >> privateStyle: aText [
 
-	(presenter respondsTo: #text) ifFalse: [ ^ aText ].
-	(presenter respondsTo: #highlightedTextFrom:) ifFalse: [ ^ aText ].
-	(presenter respondsTo: #syntaxNode) ifFalse: [ ^ aText ].
-	^ text := presenter highlightedTextFrom: presenter syntaxNode
+	(presenter respondsTo: #highlightedText) ifFalse: [ ^ aText ].
+	^ text := presenter highlightedText
 ]

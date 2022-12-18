@@ -35,6 +35,6 @@ RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter
 		withContext:
-		(aRMDInterpreter newTypecheckContextForAnimat: self animat)
+		(aRMDInterpreter newTypecheckingContextWithSubject: self animat)
 		do: [ super typecheckIn: aRMDInterpreter ]
 ]

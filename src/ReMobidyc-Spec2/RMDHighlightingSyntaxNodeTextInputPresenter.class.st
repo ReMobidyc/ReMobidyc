@@ -26,8 +26,9 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> highlightedTextFrom: aRMDSyntaxNo
 
 { #category : #api }
 RMDHighlightingSyntaxNodeTextInputPresenter >> highlights: aCollectionOfRMDSyntaxNode [
+
 	highlights := aCollectionOfRMDSyntaxNode.
-	syntaxNode ifNotNil: [ text := self highlightedTextFrom: syntaxNode ]
+	syntaxNode ifNotNil: [ text := self highlightedText ]
 ]
 
 { #category : #initialization }
@@ -48,5 +49,5 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 				ifFalse: [ self beOk ].
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
-	text := self highlightedTextFrom: aRMDSyntaxNode
+	text := self highlightedText
 ]

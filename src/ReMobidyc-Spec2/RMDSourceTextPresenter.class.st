@@ -37,19 +37,22 @@ RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
 ]
 
-{ #category : #private }
-RMDSourceTextPresenter >> highlightedTextFrom: aRMDSyntaxNode [
+{ #category : #api }
+RMDSourceTextPresenter >> highlightedText [
+
 	| sections newText |
 	sections := OrderedCollection new: 10.
-	newText := (String
-		streamContents: [ :stream | 
-			aRMDSyntaxNode
-				printOn: stream
-				ifIncludedIn: highlights asSet
-				addSectionTo: sections ]) asText.
-	sections
-		do:
-			[ :section | newText makeColor: highlightColor from: section first to: section last ].
+	newText := (String streamContents: [ :stream | 
+		            syntaxNode ifNotNil: [ 
+			            syntaxNode
+				            printOn: stream
+				            ifIncludedIn: highlights asSet
+				            addSectionTo: sections ] ]) asText.
+	sections do: [ :section | 
+		newText
+			makeColor: highlightColor
+			from: section first
+			to: section last ].
 	^ newText
 ]
 
@@ -60,8 +63,9 @@ RMDSourceTextPresenter >> highlights [
 
 { #category : #api }
 RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
+
 	highlights := aCollectionOfRMDSyntaxNode.
-	syntaxNode ifNotNil: [ text := self highlightedTextFrom: syntaxNode ]
+	syntaxNode ifNotNil: [ text := syntaxNode printString ]
 ]
 
 { #category : #initialization }
@@ -114,7 +118,7 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 	self basicSyntaxNode: aRMDSyntaxNode.
 	self text: (aRMDSyntaxNode isString
 			 ifTrue: [ aRMDSyntaxNode ]
-			 ifFalse: [ self highlightedTextFrom: aRMDSyntaxNode ])
+			 ifFalse: [ aRMDSyntaxNode printString ])
 ]
 
 { #category : #api }
