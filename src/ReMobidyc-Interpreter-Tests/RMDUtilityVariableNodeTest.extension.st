@@ -2,6 +2,7 @@ Extension { #name : #RMDUtilityVariableNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDUtilityVariableNodeTest >> testEvalIn [
+
 	interpreter context
 		utilityAt: 'foo' put: 2.0;
 		utilityAt: 'bar' put: 3.0.
@@ -13,5 +14,5 @@ RMDUtilityVariableNodeTest >> testEvalIn [
 		closeTo: 3.0.
 	self
 		should: [ (parser expression parse: 'nothing') evalIn: interpreter ]
-		raise: KeyNotFound
+		raise: RMDUndefinedUtilityError
 ]

@@ -22,12 +22,16 @@ RMDRoundFunctionTest >> testValue [
 
 { #category : #tests }
 RMDRoundFunctionTest >> testValueValue [
-	self should: [ round value: 1.0 value: 1.0 ] raise: Error
+
+	self should: [ round value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDRoundFunctionTest >> testValueValueValue [
-	self should: [ round value: 1.0 value: 1.0 value: 1.0 ] raise: Error
+
+	self
+		should: [ round value: 1.0 value: 1.0 value: 1.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -40,5 +44,5 @@ RMDRoundFunctionTest >> testValueValueValueValue [
 				value: 1.0
 				value: 1.0
 				value: 1.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

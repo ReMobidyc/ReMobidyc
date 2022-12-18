@@ -11,10 +11,8 @@ Class {
 
 { #category : #'instance creation' }
 RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit [
-	^ self new
-		identifier: aString;
-		unit: aRMDUnit;
-		yourself
+
+	^ self identifier: aString unit: aRMDUnit initializerExpression: nil
 ]
 
 { #category : #'instance creation' }

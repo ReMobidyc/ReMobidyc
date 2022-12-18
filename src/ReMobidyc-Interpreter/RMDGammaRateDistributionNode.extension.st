@@ -11,7 +11,15 @@ RMDGammaRateDistributionNode >> evalIn: aRMDInterpreter [
 RMDGammaRateDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	super typecheckIn: aRMDInterpreter.
-	^ [ rateExpression typecheckIn: aRMDInterpreter ]
+	^ [ 
+	  (rateExpression typecheckIn: aRMDInterpreter) unify:
+		  RMDType noDimension ]
 		  on: RMDTypeUnificationError
-		  do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
+		  do: [ :ex | 
+			  ex resignalAs: (RMDTypeError
+					   on: self
+					   subnode: rateExpression
+					   type: ex type1
+					   subnode: self
+					   type: ex type2) ]
 ]

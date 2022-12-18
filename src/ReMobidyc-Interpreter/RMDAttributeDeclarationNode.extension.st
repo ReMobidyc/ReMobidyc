@@ -13,7 +13,19 @@ RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDeclarationNode >> typecheckIn: aRMDInterpreter [
 
-	^ [ unit unify: (initializerExpression typecheckIn: aRMDInterpreter) ]
-		  on: RMDTypeUnificationError
-		  do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
+	| type |
+	type := RMDType unit: unit.
+	initializerExpression ifNotNil: [ 
+		[ 
+		type := (initializerExpression typecheckIn: aRMDInterpreter) unify:
+			        unit ]
+			on: RMDTypeUnificationError
+			do: [ :ex | 
+				ex resignalAs: (RMDTypeError
+						 on: self
+						 subnode: initializerExpression
+						 type: ex type1
+						 subnode: self
+						 type: ex type2) ] ].
+	^ type
 ]

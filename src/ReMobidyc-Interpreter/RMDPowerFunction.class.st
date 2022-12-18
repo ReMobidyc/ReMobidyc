@@ -4,16 +4,42 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #accessing }
+RMDPowerFunction >> expectedNumArgs [
+
+	^ 2
+]
+
 { #category : #'type checking' }
 RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
 
-	| argType1 argType2 |
 	anArrayOfRMDExpression size = 2 ifFalse: [ 
-		^ (RMDTypeError on: self with: anArrayOfRMDExpression) signal ].
-	argType1 := anArrayOfRMDExpression first typecheckIn: aRMDInterpreter.
-	argType1 unify: RMDType noDimension.
-	argType2 := anArrayOfRMDExpression first typecheckIn: aRMDInterpreter.
-	argType2 unify: RMDType noDimension.
+		^ RMDNumArgsError
+			  signal: self
+			  actual: anArrayOfRMDExpression size
+			  expected: 2 ].
+	[ 
+	(anArrayOfRMDExpression first typecheckIn: aRMDInterpreter) unify:
+		RMDType noDimension ]
+		on: RMDTypeUnificationError
+		do: [ :ex | 
+			ex resignalAs: (RMDTypeError
+					 on: self
+					 subnode: anArrayOfRMDExpression first
+					 type: ex type1
+					 subnode: self
+					 type: ex type2) ].
+	[ 
+	(anArrayOfRMDExpression second typecheckIn: aRMDInterpreter) unify:
+		RMDType noDimension ]
+		on: RMDTypeUnificationError
+		do: [ :ex | 
+			ex resignalAs: (RMDTypeError
+					 on: self
+					 subnode: anArrayOfRMDExpression second
+					 type: ex type1
+					 subnode: self
+					 type: ex type2) ].
 	^ RMDType noDimension
 ]
 

@@ -13,7 +13,15 @@ RMDGammaMeanDistributionNode >> evalIn: aRMDInterpreter [
 RMDGammaMeanDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	super typecheckIn: aRMDInterpreter.
-	^ [ meanExpression typecheckIn: aRMDInterpreter ]
+	^ [ 
+	  (meanExpression typecheckIn: aRMDInterpreter) unify:
+		  RMDType noDimension ]
 		  on: RMDTypeUnificationError
-		  do: [ :ex | ex resignalAs: (RMDTypeError on: self with: ex type1) ]
+		  do: [ :ex | 
+			  ex resignalAs: (RMDTypeError
+					   on: self
+					   subnode: meanExpression
+					   type: ex type1
+					   subnode: self
+					   type: ex type2) ]
 ]

@@ -21,12 +21,13 @@ RMDAbsFunctionTest >> testValue [
 
 { #category : #tests }
 RMDAbsFunctionTest >> testValueValue [
-	self should: [ abs value: 1.0 value: 1.0 ] raise: Error
+
+	self should: [ abs value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDAbsFunctionTest >> testValueValueValue [
-	self should: [ abs value: 1.0 value: 1.0 value: 0.0 ] raise: Error
+	self should: [ abs value: 1.0 value: 1.0 value: 0.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -37,5 +38,5 @@ RMDAbsFunctionTest >> testValueValueValueValue [
 				value: 1.0
 				value: 0.0
 				value: 0.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

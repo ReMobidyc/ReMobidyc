@@ -51,7 +51,8 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 		                    ifTrue: [ 
 			                    aRMDInterpreter
 				                    animatDefinitionAt: animat
-				                    ifAbsent: [ ^ KeyNotFound signal: animat ] ]
+				                    ifAbsent: [ 
+				                    ^ RMDUndefinedAnimatError signal: animat ] ]
 		                    ifFalse: [ animat ].
 	aRMDInterpreter individualsOf: animatDefinition do: [ :individual | 
 		aRMDInterpreter
@@ -59,14 +60,8 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 			definition: animatDefinition
 			do: [ 
 				| x y |
-				x := aRMDInterpreter
-					     readVariable: 'x'
-					     agent: nil
-					     ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-				y := aRMDInterpreter
-					     readVariable: 'y'
-					     agent: nil
-					     ifAbsent: [ ^ KeyNotFound signal: 'x' ].
+				x := aRMDInterpreter my: 'x'.
+				y := aRMDInterpreter my: 'y'.
 				aCanvas paintImage: form at: (self
 						 pointFromX: x
 						 y: y

@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #accessing }
+RMDMaxFunction >> expectedNumArgs [
+
+	^ nil
+]
+
 { #category : #'type checking' }
 RMDMaxFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
 	| type |

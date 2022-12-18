@@ -619,7 +619,7 @@ RMDAgentDefinitionBrowser >> removeTask [
 	taskList selection selectedItem ifNotNil: [ :taskDefinition | 
 		self simulationModel
 			removeTaskDefinition: taskDefinition
-			ifAbsent: [ KeyNotFound signal: taskDefinition ].
+			ifAbsent: [  ].
 		self updateTaskList ]
 ]
 

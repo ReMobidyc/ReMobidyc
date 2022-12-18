@@ -23,13 +23,15 @@ RMDFloorFunctionTest >> testValue [
 { #category : #tests }
 RMDFloorFunctionTest >> testValueValue [
 
-	self should: [ floor value: 1.0 value: 1.0 ] raise: Error
+	self should: [ floor value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
 { #category : #tests }
 RMDFloorFunctionTest >> testValueValueValue [
 
-	self should: [ floor value: 1.0 value: 1.0 value: 1.0 ] raise: Error
+	self
+		should: [ floor value: 1.0 value: 1.0 value: 1.0 ]
+		raise: RMDNumArgsError
 ]
 
 { #category : #tests }
@@ -42,5 +44,5 @@ RMDFloorFunctionTest >> testValueValueValueValue [
 				value: 1.0
 				value: 1.0
 				value: 1.0 ]
-		raise: Error
+		raise: RMDNumArgsError
 ]

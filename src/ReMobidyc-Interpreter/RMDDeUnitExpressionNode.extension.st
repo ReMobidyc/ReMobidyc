@@ -9,9 +9,15 @@ RMDDeUnitExpressionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDDeUnitExpressionNode >> typecheckIn: aRMDInterpreter [
 
-	| type |
-	type := expression typecheckIn: aRMDInterpreter.
-	^ type = (RMDType unit: unit)
-		  ifTrue: [ RMDType noDimension ]
-		  ifFalse: [ (RMDTypeError on: expression with: type) signal ]
+	[ 
+	(expression typecheckIn: aRMDInterpreter) unify: (RMDType unit: unit) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | 
+			ex resignalAs: (RMDTypeError
+					 on: self
+					 subnode: expression
+					 type: ex type1
+					 subnode: self
+					 type: ex type2) ].
+	^ RMDType noDimension
 ]

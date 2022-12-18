@@ -2,11 +2,13 @@ Extension { #name : #RMDAssignableDifferentialAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
+
 	^ aRMDInterpreter
-		write: aNumber
-		toDifferential: self identifier
-		agent: self agent
-		ifAbsent: [ KeyNotFound signal ]
+		  write: aNumber
+		  toDifferential: self identifier
+		  agent: self agent
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -16,7 +18,8 @@ RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber toNewIndividua
 		  write: aNumber
 		  toDifferential: self identifier
 		  agent: anInteger
-		  ifAbsent: [ KeyNotFound signal ]
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
