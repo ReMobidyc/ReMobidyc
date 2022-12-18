@@ -24,6 +24,7 @@ RMDVariableNodeTest >> testAssignIn [
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDVariableNodeTest >> testEvalIn [
+
 	interpreter context setMemoryAddressFor: 'x' agent: 'foo' to: 1.
 	interpreter memory
 		nextAt: 1 put: 2;
@@ -33,8 +34,8 @@ RMDVariableNodeTest >> testEvalIn [
 		closeTo: 2.0.
 	self
 		should: [ (parser expression parse: 'my x') evalIn: interpreter ]
-		raise: KeyNotFound.
+		raise: RMDUndefinedAttributeError.
 	self
 		should: [ (parser expression parse: 'foo''s y') evalIn: interpreter ]
-		raise: KeyNotFound
+		raise: RMDUndefinedAttributeError
 ]

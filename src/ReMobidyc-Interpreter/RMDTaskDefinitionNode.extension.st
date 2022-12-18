@@ -26,10 +26,12 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 					                aRMDInterpreter
 						                animatDefinitionAt: subjectIdentifier
 						                ifAbsent: [ 
-						                ^ KeyNotFound signal: subjectIdentifier ] ] ].
+						                ^ RMDUndefinedAnimatError signal:
+							                  subjectIdentifier ] ] ].
 	objectAgent := aRMDInterpreter
 		               animatDefinitionAt: objectIdentifier
-		               ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
+		               ifAbsent: [ 
+		               ^ RMDUndefinedAnimatError signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
 		                    width: aRMDInterpreter north
 		                    height: aRMDInterpreter east
@@ -40,14 +42,8 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 			definition: objectAgent
 			do: [ 
 				| x y |
-				x := aRMDInterpreter
-					     readVariable: 'x'
-					     agent: nil
-					     ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ].
-				y := aRMDInterpreter
-					     readVariable: 'y'
-					     agent: nil
-					     ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ].
+				x := aRMDInterpreter my: 'x'.
+				y := aRMDInterpreter my: 'y'.
 				interactionSpace add: objectAnimat x: x y: y ] ].
 	aRMDInterpreter individualsOf: subjectAgent do: [ :subjectAnimat | 
 		| subjectX subjectY |
@@ -55,16 +51,8 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 			withObserverContextWithSubject: subjectAnimat
 			definition: subjectAgent
 			do: [ 
-				subjectX := aRMDInterpreter
-					            readVariable: 'x'
-					            agent: nil
-					            ifAbsent: [ 
-					            ^ (RMDUnresolvedReferenceError on: self) signal ].
-				subjectY := aRMDInterpreter
-					            readVariable: 'y'
-					            agent: nil
-					            ifAbsent: [ 
-					            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
+				subjectX := aRMDInterpreter my: 'x'.
+				subjectY := aRMDInterpreter my: 'y' ].
 		interactionSpace
 			animatsAroundX: subjectX
 			y: subjectY
@@ -94,10 +82,12 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 					                aRMDInterpreter
 						                animatDefinitionAt: subjectIdentifier
 						                ifAbsent: [ 
-						                ^ KeyNotFound signal: subjectIdentifier ] ] ].
+						                ^ RMDUndefinedAnimatError signal:
+							                  subjectIdentifier ] ] ].
 	objectAgent := aRMDInterpreter
 		               animatDefinitionAt: objectIdentifier
-		               ifAbsent: [ ^ KeyNotFound signal: objectIdentifier ].
+		               ifAbsent: [ 
+		               ^ RMDUndefinedAnimatError signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
 		                    width: aRMDInterpreter north
 		                    height: aRMDInterpreter east
@@ -109,14 +99,8 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 			definition: objectAgent
 			do: [ 
 				| x y |
-				x := aRMDInterpreter
-					     readVariable: 'x'
-					     agent: nil
-					     ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ].
-				y := aRMDInterpreter
-					     readVariable: 'y'
-					     agent: nil
-					     ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ].
+				x := aRMDInterpreter my: 'x'.
+				y := aRMDInterpreter my: 'y'.
 				interactionSpace add: objectAnimat x: x y: y ] ].
 	aRMDInterpreter individualsOf: subjectAgent do: [ :subjectAnimat | 
 		| subjectX subjectY |
@@ -124,16 +108,8 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 			withObserverContextWithSubject: subjectAnimat
 			definition: subjectAgent
 			do: [ 
-				subjectX := aRMDInterpreter
-					            readVariable: 'x'
-					            agent: nil
-					            ifAbsent: [ 
-					            ^ (RMDUnresolvedReferenceError on: self) signal ].
-				subjectY := aRMDInterpreter
-					            readVariable: 'y'
-					            agent: nil
-					            ifAbsent: [ 
-					            ^ (RMDUnresolvedReferenceError on: self) signal ] ].
+				subjectX := aRMDInterpreter my: 'x'.
+				subjectY := aRMDInterpreter my: 'y' ].
 		interactionSpace
 			nearestAnimatAroundX: subjectX
 			y: subjectY
@@ -160,7 +136,8 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 				         ifFalse: [ 
 					         aRMDInterpreter
 						         animatDefinitionAt: subjectIdentifier
-						         ifAbsent: [ ^ KeyNotFound signal: subjectIdentifier ] ] ].
+						         ifAbsent: [ 
+						         ^ RMDUndefinedAnimatError signal: subjectIdentifier ] ] ].
 	aRMDInterpreter individualsOf: agent do: [ :animat | 
 		| specializedAction |
 		specializedAction := self actionWith: aRMDInterpreter.

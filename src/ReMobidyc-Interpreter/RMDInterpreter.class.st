@@ -88,31 +88,39 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
+{ #category : #'variable access' }
+RMDInterpreter >> agent: agentNameOrNil s: aString [
+
+	^ self readVariable: aString agent: agentNameOrNil ifAbsent: [ 
+		  RMDUndefinedAttributeError signal:
+			  (RMDAttributeVariableNode
+				   identifier: aString
+				   agent: agentNameOrNil) ]
+]
+
 { #category : #simulating }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
-	simulationModel
-		animatDefinitionsDo: [ :animatDef | 
-			| xOffset yOffset |
-			xOffset := animatDef
-				attributeOffsetAt: 'x'
-				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-			yOffset := animatDef
-				attributeOffsetAt: 'y'
-				ifAbsent: [ ^ KeyNotFound signal: 'y' ].
-			memory
-				animatsOf: animatDef identifier
-				do: [ :individual | 
-					| x y |
-					x := memory at: individual + xOffset ifAbsent: [ nil ].
-					x < simulationModel west
-						ifTrue: [ memory at: individual + xOffset put: simulationModel west ].
-					x > simulationModel east
-						ifTrue: [ memory at: individual + xOffset put: simulationModel east ].
-					y := memory at: individual + yOffset ifAbsent: [ nil ].
-					y < simulationModel south
-						ifTrue: [ memory at: individual + yOffset put: simulationModel south ].
-					y > simulationModel north
-						ifTrue: [ memory at: individual + yOffset put: simulationModel north ] ] ]
+
+	simulationModel animatDefinitionsDo: [ :animatDef | 
+		| xOffset yOffset |
+		xOffset := animatDef attributeOffsetAt: 'x' ifAbsent: [ 
+			           ^ RMDUndefinedAttributeError signal:
+				             (RMDAttributeVariableNode identifier: 'x' agent: nil) ].
+		yOffset := animatDef attributeOffsetAt: 'y' ifAbsent: [ 
+			           ^ RMDUndefinedAttributeError signal:
+				             (RMDAttributeVariableNode identifier: 'y' agent: nil) ].
+		memory animatsOf: animatDef identifier do: [ :individual | 
+			| x y |
+			x := memory at: individual + xOffset ifAbsent: [ nil ].
+			x < simulationModel west ifTrue: [ 
+				memory at: individual + xOffset put: simulationModel west ].
+			x > simulationModel east ifTrue: [ 
+				memory at: individual + xOffset put: simulationModel east ].
+			y := memory at: individual + yOffset ifAbsent: [ nil ].
+			y < simulationModel south ifTrue: [ 
+				memory at: individual + yOffset put: simulationModel south ].
+			y > simulationModel north ifTrue: [ 
+				memory at: individual + yOffset put: simulationModel north ] ] ]
 ]
 
 { #category : #directives }
@@ -126,7 +134,8 @@ RMDInterpreter >> changeStage: animatString [
 	| animatDefinition newIndividual offset |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
-		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+		                    ifAbsent: [ 
+		                    ^ RMDUndefinedAnimatError signal: animatString ].
 	newIndividual := memory
 		                 stageAnimat: animatDefinition
 		                 with: context subject.
@@ -158,24 +167,13 @@ RMDInterpreter >> changeStage: animatString [
 
 { #category : #directives }
 RMDInterpreter >> direction: aString [
+
 	| x1 y1 x2 y2 |
-	x1 := self
-		readVariable: 'x'
-		agent: nil
-		ifAbsent: [ ^ KeyNotFound signal ].
-	y1 := self
-		readVariable: 'y'
-		agent: nil
-		ifAbsent: [ ^ KeyNotFound signal ].
-	x2 := self
-		readVariable: 'x'
-		agent: aString
-		ifAbsent: [ ^ KeyNotFound signal ].
-	y2 := self
-		readVariable: 'y'
-		agent: aString
-		ifAbsent: [ ^ KeyNotFound signal ].
-	^ ((x2 - x1) @ (y2 - y1)) theta
+	x1 := self my: 'x'.
+	y1 := self my: 'y'.
+	x2 := self agent: aString s: 'x'.
+	y2 := self agent: aString s: 'y'.
+	^ (x2 - x1 @ (y2 - y1)) theta
 ]
 
 { #category : #directives }
@@ -212,23 +210,12 @@ RMDInterpreter >> directive: aString object: anotherString [
 
 { #category : #directives }
 RMDInterpreter >> distance: aString [
+
 	| x1 y1 x2 y2 |
-	x1 := self
-		readVariable: 'x'
-		agent: nil
-		ifAbsent: [ ^ KeyNotFound signal ].
-	y1 := self
-		readVariable: 'y'
-		agent: nil
-		ifAbsent: [ ^ KeyNotFound signal ].
-	x2 := self
-		readVariable: 'x'
-		agent: aString
-		ifAbsent: [ ^ KeyNotFound signal ].
-	y2 := self
-		readVariable: 'y'
-		agent: aString
-		ifAbsent: [ ^ KeyNotFound signal ].
+	x1 := self my: 'x'.
+	y1 := self my: 'y'.
+	x2 := self agent: aString s: 'x'.
+	y2 := self agent: aString s: 'y'.
 	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
 ]
 
@@ -357,13 +344,22 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
+{ #category : #'variable access' }
+RMDInterpreter >> my: aString [
+
+	^ self readVariable: aString agent: nil ifAbsent: [ 
+		  RMDUndefinedAttributeError signal:
+			  (RMDAttributeVariableNode identifier: aString agent: nil) ]
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 
 	| animatDefinition newIndividuals offset |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
-		                    ifAbsent: [ ^ KeyNotFound signal: animatString ].
+		                    ifAbsent: [ 
+		                    ^ RMDUndefinedAnimatError signal: animatString ].
 	newIndividuals := (1 to: anInteger) collect: [ :i | 
 		                  | id |
 		                  id := memory
@@ -453,24 +449,22 @@ RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBloc
 
 { #category : #simulating }
 RMDInterpreter >> removeOutOfBoundsAnimats [
-	simulationModel
-		animatDefinitionsDo: [ :animatDef | 
-			| xOffset yOffset |
-			xOffset := animatDef
-				attributeOffsetAt: 'x'
-				ifAbsent: [ ^ KeyNotFound signal: 'x' ].
-			yOffset := animatDef
-				attributeOffsetAt: 'y'
-				ifAbsent: [ ^ KeyNotFound signal: 'y' ].
-			memory
-				animatsOf: animatDef identifier
-				do: [ :individual | 
-					| x y |
-					x := memory at: individual + xOffset ifAbsent: [ nil ].
-					y := memory at: individual + yOffset ifAbsent: [ nil ].
-					((x between: simulationModel west and: simulationModel east)
-						and: [ y between: simulationModel south and: simulationModel north ])
-						ifFalse: [ self terminate: individual animat: animatDef ] ] ]
+
+	simulationModel animatDefinitionsDo: [ :animatDef | 
+		| xOffset yOffset |
+		xOffset := animatDef attributeOffsetAt: 'x' ifAbsent: [ 
+			           ^ RMDUndefinedAttributeError signal:
+				             (RMDAttributeVariableNode identifier: 'x' agent: nil) ].
+		yOffset := animatDef attributeOffsetAt: 'y' ifAbsent: [ 
+			           ^ RMDUndefinedAttributeError signal:
+				             (RMDAttributeVariableNode identifier: 'y' agent: nil) ].
+		memory animatsOf: animatDef identifier do: [ :individual | 
+			| x y |
+			x := memory at: individual + xOffset ifAbsent: [ nil ].
+			y := memory at: individual + yOffset ifAbsent: [ nil ].
+			((x between: simulationModel west and: simulationModel east) and: [ 
+				 y between: simulationModel south and: simulationModel north ]) 
+				ifFalse: [ self terminate: individual animat: animatDef ] ] ]
 ]
 
 { #category : #'accessing - repository' }
@@ -618,16 +612,13 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
-					          patchAtXIndex: ((self patchX: (self
-								             readVariable: 'x'
-								             agent: nil
-								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
-						           + 1 min: simulationModel patchXDivisions max: 1)
-					          yIndex: ((self patchY: (self
-								             readVariable: 'y'
-								             agent: nil
-								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
-						           + 1 min: simulationModel patchYDivisions max: 1).
+					          patchAtXIndex:
+						          ((self patchX: (self my: 'x')) floor + 1
+							           min: simulationModel patchXDivisions
+							           max: 1)
+					          yIndex: ((self patchY: (self my: 'y')) floor + 1
+							           min: simulationModel patchYDivisions
+							           max: 1).
 				  context
 					  location: here
 					  definition: simulationModel patchDefinition
@@ -676,16 +667,13 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
 				  | here |
 				  here := memory
-					          patchAtXIndex: ((self patchX: (self
-								             readVariable: 'x'
-								             agent: nil
-								             ifAbsent: [ ^ KeyNotFound signal: 'x' ])) floor
-						           + 1 min: simulationModel patchXDivisions max: 1)
-					          yIndex: ((self patchY: (self
-								             readVariable: 'y'
-								             agent: nil
-								             ifAbsent: [ ^ KeyNotFound signal: 'y' ])) floor
-						           + 1 min: simulationModel patchYDivisions max: 1).
+					          patchAtXIndex:
+						          ((self patchX: (self my: 'x')) floor + 1
+							           min: simulationModel patchXDivisions
+							           max: 1)
+					          yIndex: ((self patchY: (self my: 'y')) floor + 1
+							           min: simulationModel patchYDivisions
+							           max: 1).
 				  context
 					  location: here
 					  definition: simulationModel patchDefinition

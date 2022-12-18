@@ -2,11 +2,13 @@ Extension { #name : #RMDAssignableDeltaAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDeltaAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
+
 	^ aRMDInterpreter
-		write: aNumber
-		toDelta: self identifier
-		agent: self agent
-		ifAbsent: [ KeyNotFound signal ]
+		  write: aNumber
+		  toDelta: self identifier
+		  agent: self agent
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -16,7 +18,8 @@ RMDAssignableDeltaAttributeVariableNode >> assign: aNumber toNewIndividual: anIn
 		  write: aNumber
 		  toDelta: self identifier
 		  agent: anInteger
-		  ifAbsent: [ KeyNotFound signal ]
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

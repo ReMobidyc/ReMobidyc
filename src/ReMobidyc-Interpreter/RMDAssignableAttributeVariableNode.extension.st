@@ -7,7 +7,8 @@ RMDAssignableAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 		  write: aNumber
 		  toVariable: self identifier
 		  agent: self agent
-		  ifAbsent: [ KeyNotFound signal ]
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -17,7 +18,8 @@ RMDAssignableAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger
 		  write: aNumber
 		  toVariable: self identifier
 		  agent: anInteger
-		  ifAbsent: [ KeyNotFound signal ]
+		  ifAbsent: [ 
+		  RMDUndefinedAttributeError signal: attributeVariable ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

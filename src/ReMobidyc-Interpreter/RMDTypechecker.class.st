@@ -48,12 +48,12 @@ RMDTypechecker >> newTypecheckContext [
 
 { #category : #'type checking' }
 RMDTypechecker >> newTypecheckContextForAnimat: aString [
+
 	^ self newTypecheckContext
-		subjectDefinition:
-			(self
-				animatDefinitionAt: aString
-				ifAbsent: [ ^ KeyNotFound signal: aString ]);
-		yourself
+		  subjectDefinition: (self
+				   animatDefinitionAt: aString
+				   ifAbsent: [ ^ RMDUndefinedAnimatError signal: aString ]);
+		  yourself
 ]
 
 { #category : #'type checking' }

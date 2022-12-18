@@ -2,8 +2,6 @@ Class {
 	#name : #RMDTypeError,
 	#superclass : #RMDError,
 	#instVars : [
-		'ast',
-		'unit',
 		'node',
 		'type1',
 		'type2',
@@ -26,15 +24,6 @@ RMDTypeError class >> on: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDTyp
 ]
 
 { #category : #'instance creation' }
-RMDTypeError class >> on: aRMDSyntaxNode with: aRMDUnit [
-	^ self new
-		ast: aRMDSyntaxNode;
-		unit: aRMDUnit;
-		messageText: aRMDSyntaxNode printString , ' [' , aRMDUnit printString , ']';
-		yourself
-]
-
-{ #category : #'instance creation' }
 RMDTypeError class >> signal: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
 
 	^ (self
@@ -43,16 +32,6 @@ RMDTypeError class >> signal: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRM
 		   type: aRMDType2
 		   subnode: aRMDSyntaxNode3
 		   type: aRMDType3) signal
-]
-
-{ #category : #accessing }
-RMDTypeError >> ast [
-	^ ast
-]
-
-{ #category : #accessing }
-RMDTypeError >> ast: aRMDSyntaxNode [
-	ast := aRMDSyntaxNode
 ]
 
 { #category : #private }
@@ -87,23 +66,6 @@ RMDTypeError >> node [
 RMDTypeError >> node: aRMDSyntaxNode [
 
 	node := aRMDSyntaxNode
-]
-
-{ #category : #signalling }
-RMDTypeError >> signal [
-
-	self messageText: (String streamContents: [ :stream | 
-			 stream nextPutAll: 'Type error in "'.
-			 node printOn: stream.
-			 stream nextPutAll: '": "'.
-			 subnode1 printOn: stream.
-			 stream nextPutAll: '" is '.
-			 type1 printOn: stream.
-			 stream nextPutAll: ', while "'.
-			 subnode2 printOn: stream.
-			 stream nextPutAll: '" is '.
-			 type2 printOn: stream ]).
-	^ super signal
 ]
 
 { #category : #accessing }
@@ -152,14 +114,4 @@ RMDTypeError >> type2 [
 RMDTypeError >> type2: aRMDType [
 
 	type2 := aRMDType
-]
-
-{ #category : #accessing }
-RMDTypeError >> unit [
-	^ unit
-]
-
-{ #category : #accessing }
-RMDTypeError >> unit: aRMDUnit [
-	unit := aRMDUnit
 ]

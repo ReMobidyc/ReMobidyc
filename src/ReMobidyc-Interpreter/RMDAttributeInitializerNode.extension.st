@@ -8,9 +8,8 @@ RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 			initializeVariable: identifier
 			with: (expression evalIn: aRMDInterpreter)
 			ifAbsent: [ 
-				^ RMDUnresolvedAttributeDefinitionError
-					  signal: self
-					  identifier: identifier ] ]
+				^ RMDUndefinedAttributeError signal:
+					  (RMDAttributeVariableNode identifier: identifier agent: nil) ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -21,9 +20,10 @@ RMDAttributeInitializerNode >> typecheckIn: aRMDInterpreter [
 		        typeOfVariable: identifier
 		        agent: nil
 		        ifAbsent: [ 
-			        ^ RMDUnresolvedAttributeDefinitionError
-				          signal: self
-				          identifier: identifier ].
+			        ^ RMDUndefinedAttributeError signal:
+				          (RMDAttributeVariableNode
+					           identifier: identifier
+					           agent: nil) ].
 	^ expression
 		  ifNotNil: [ 
 			  [ (expression typecheckIn: aRMDInterpreter) unify: type ]
