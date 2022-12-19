@@ -2,7 +2,8 @@ Class {
 	#name : #RMDSyntaxNodePresenter,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'node'
+		'node',
+		'simulationModel'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -26,6 +27,22 @@ RMDSyntaxNodePresenter >> isAfterNodeChanged [
 	^ false
 ]
 
+{ #category : #widgets }
+RMDSyntaxNodePresenter >> newHighlightingSyntaxNodeTextInput [
+
+	^ super newHighlightingSyntaxNodeTextInput
+		  simulationModelBlock: [ self simulationModel ];
+		  yourself
+]
+
+{ #category : #widgets }
+RMDSyntaxNodePresenter >> newSourceWith: aPP2Node [
+
+	^ (super newSourceWith: aPP2Node)
+		  simulationModelBlock: [ self simulationModel ];
+		  yourself
+]
+
 { #category : #accessing }
 RMDSyntaxNodePresenter >> node [
 	^ node
@@ -45,4 +62,24 @@ RMDSyntaxNodePresenter >> nodeChanged [
 { #category : #accessing }
 RMDSyntaxNodePresenter >> preferredHeight [
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RMDSyntaxNodePresenter >> simulationModel [
+
+	^ simulationModel
+]
+
+{ #category : #accessing }
+RMDSyntaxNodePresenter >> simulationModel: aRMDSimulationModel [
+
+	simulationModel := aRMDSimulationModel
+]
+
+{ #category : #accessing }
+RMDSyntaxNodePresenter >> typechecker [
+
+	^ simulationModel
+		  ifNotNil: [ simulationModel typechecker ]
+		  ifNil: [ RMDTypechecker new ]
 ]

@@ -11,11 +11,11 @@ RMDSquareRootFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDSquareRootFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDSquareRootFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
 		^ RMDNumArgsError
-			  signal: self
+			  signal: aRMDApplyNode
 			  actual: anArrayOfRMDExpression size
 			  expected: 1 ].
 	^ RMDType unit:

@@ -11,12 +11,12 @@ RMDMaxFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDMaxFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDMaxFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
+
 	| type |
 	type := RMDType any.
-	anArrayOfRMDExpression
-		do:
-			[ :expression | type := type unify: (expression typecheckIn: aRMDInterpreter) ].
+	anArrayOfRMDExpression do: [ :expression | 
+		type := type unify: (expression typecheckIn: aRMDInterpreter) ].
 	^ type
 ]
 

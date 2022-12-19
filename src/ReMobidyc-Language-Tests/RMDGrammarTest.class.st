@@ -806,7 +806,10 @@ RMDGrammarTest >> testExpr1 [
 		equals: (grammar expression end parse: 'x').
 	self assert: expr1 unit equals: RMDUnit m.
 	expr1 := grammar expression end parse: '(m)x[m]'.
-	self assert: expr1 isPetit2Failure
+	self assert: expr1 isPetit2Failure.
+	expr1 := grammar expr1 parse: '_expr_'.
+	self assert: expr1 isUtilityVariableNode.
+	self assert: expr1 identifier equals: '_expr_'
 ]
 
 { #category : #tests }
@@ -1030,6 +1033,22 @@ RMDGrammarTest >> testLogLogisticDistribution [
 	self
 		assert: node shapeExpression
 		equals: (grammar expression parse: '1[]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testMetaVariable [
+
+	| variable |
+	variable := grammar metaVariable parse: '_expr_'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isUtilityVariableNode.
+	self assert: variable identifier equals: '_expr_'.
+	variable := grammar metaVariable parse: '_'.
+	self deny: variable isPetit2Failure.
+	self assert: variable isUtilityVariableNode.
+	self assert: variable identifier equals: '_'.
+	variable := grammar metaVariable parse: 'foo_'.
+	self assert: variable isPetit2Failure
 ]
 
 { #category : #tests }
@@ -1413,6 +1432,8 @@ RMDGrammarTest >> testUtilityVariable [
 	self assert: variable isUtilityVariableNode.
 	self assert: variable identifier equals: 'foo'.
 	variable := grammar utilityVariable parse: 'Foo'.
+	self assert: variable isPetit2Failure.
+	variable := grammar utilityVariable parse: '_foo_'.
 	self assert: variable isPetit2Failure
 ]
 

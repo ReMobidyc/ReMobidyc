@@ -8,7 +8,10 @@ Class {
 		'#lastValidSyntaxNode => ObservableSlot',
 		'#highlights => ObservableSlot',
 		'#highlightColor => ObservableSlot',
-		'#parser'
+		'#parser',
+		'#simulationModelBlock',
+		'#subjectBlock',
+		'#objectBlock'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -37,35 +40,42 @@ RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
 ]
 
+{ #category : #accessing }
+RMDSourceTextPresenter >> highlightColor [
+
+	^ highlightColor
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> highlightColor: aColor [
+
+	highlightColor := aColor
+]
+
 { #category : #api }
 RMDSourceTextPresenter >> highlightedText [
 
-	| sections newText |
-	sections := OrderedCollection new: 10.
-	newText := (String streamContents: [ :stream | 
-		            syntaxNode ifNotNil: [ 
-			            syntaxNode
-				            printOn: stream
-				            ifIncludedIn: highlights asSet
-				            addSectionTo: sections ] ]) asText.
+	| nodes sections newText |
+	nodes := Set new: highlights size + 5.
+	sections := OrderedCollection new: highlights size + 5.
+	highlights do: [ :highlight | 
+		highlight isInterval
+			ifTrue: [ sections add: highlight ]
+			ifFalse: [ nodes add: highlight ] ].
+	newText := syntaxNode
+		           ifNotNil: [ 
+			           (String streamContents: [ :stream | 
+				            syntaxNode
+					            printOn: stream
+					            ifIncludedIn: nodes
+					            addSectionTo: sections ]) asText ]
+		           ifNil: [ text asText ].
 	sections do: [ :section | 
 		newText
 			makeColor: highlightColor
 			from: section first
 			to: section last ].
 	^ newText
-]
-
-{ #category : #api }
-RMDSourceTextPresenter >> highlights [
-	^ highlights
-]
-
-{ #category : #api }
-RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
-
-	highlights := aCollectionOfRMDSyntaxNode.
-	syntaxNode ifNotNil: [ text := syntaxNode printString ]
 ]
 
 { #category : #initialization }
@@ -81,13 +91,26 @@ RMDSourceTextPresenter >> initialize [
 				t := w textArea.
 				t beForReMobidyc.
 				t withDecoratorNamed: #shoutStyler.
-				w shoutStyler styler: (RMDSourcePresenterStyler for: self) ] ] ].
+				w shoutStyler styler: (RMDSourcePresenterStyler for: self).
+				w setText: self highlightedText ] ] ].
 	self whenSubmitDo: [ :t | self prettyPrint ]
 ]
 
 { #category : #api }
 RMDSourceTextPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> object [
+
+	^ objectBlock ifNotNil: #value
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> objectBlock: aBlock [
+
+	objectBlock := aBlock
 ]
 
 { #category : #api }
@@ -104,6 +127,29 @@ RMDSourceTextPresenter >> parser: aPP2Node [
 RMDSourceTextPresenter >> prettyPrint [
 
 	self syntaxNode: self lastValidSyntaxNode
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> simulationModel [
+	^ simulationModelBlock value
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> simulationModelBlock: aBlock [
+
+	simulationModelBlock := aBlock
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> subject [
+
+	^ subjectBlock ifNotNil: #value
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> subjectBlock: aBlock [
+
+	subjectBlock := aBlock
 ]
 
 { #category : #api }
@@ -124,24 +170,50 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 { #category : #api }
 RMDSourceTextPresenter >> text: aString [
 
-	| aText |
-	aText := aString asText.
 	parser ifNil: [ syntaxNode := nil ] ifNotNil: [ 
 		| node |
-		node := parser end parse: aText asString.
+		node := parser end parse: aString.
 		node isPetit2Failure
 			ifTrue: [ 
-				| node2 |
-				node2 := parser parse: aString asString.
-				node2 isPetit2Failure ifTrue: [ node := node2 ].
-				aText
-					makeColor: Color red
-					from: (node position max: 1)
-					to: aString size.
 				self beError.
 				syntaxNode := nil ]
 			ifFalse: [ self basicSyntaxNode: node ] ].
-	^ super text: aText
+	self updateHighlights: aString.
+	^ super text: aString
+]
+
+{ #category : #accessing }
+RMDSourceTextPresenter >> typechecker [
+
+	^ self simulationModel
+		  ifNotNil: #typechecker
+		  ifNil: [ RMDTypechecker new ]
+]
+
+{ #category : #private }
+RMDSourceTextPresenter >> updateHighlights: aString [
+
+	| errorNodes |
+	errorNodes := OrderedCollection new: 10.
+	syntaxNode
+		ifNotNil: [ 
+			[ 
+			[ self typechecker typecheck: syntaxNode subject: self subject object: self object]
+				on: RMDTypeError
+				do: [ :ex | 
+					errorNodes add: ex node.
+					ex resume: ex type2 ] ]
+				on: RMDUnresolvedReferenceError
+				do: [ :ex | 
+					errorNodes add: ex node.
+					ex resume: RMDType any ] ]
+		ifNil: [ 
+			parser ifNotNil: [ 
+				| node |
+				node := parser end parse: aString.
+				node isPetit2Failure ifTrue: [ 
+					errorNodes add: ((node position max: 1) to: aString size) ] ] ].
+	highlights := errorNodes
 ]
 
 { #category : #'api-events' }

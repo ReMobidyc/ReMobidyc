@@ -2,6 +2,7 @@ Class {
 	#name : #RMDAttributeDefinitionBrowser,
 	#superclass : #RMDSyntaxNodePresenter,
 	#instVars : [
+		'subjectAgent',
 		'objectAgent',
 		'agentList',
 		'modifierList',
@@ -111,7 +112,7 @@ RMDAttributeDefinitionBrowser >> initializePresenters [
 		                   whenLastValidSyntaxNodeChangedDo: [ 
 			                   self identifierChanged ];
 		                   yourself.
-	definitionBodyField := self newSyntaxNodeTextInput
+	definitionBodyField := self newHighlightingSyntaxNodeTextInput
 		                       beExpression;
 		                       whenLastValidSyntaxNodeChangedDo: [ 
 			                       self definitionBodyChanged ];
@@ -136,6 +137,15 @@ RMDAttributeDefinitionBrowser >> modifierChanged [
 
 	self selectedAssignableVariableNode ifNotNil: [ :v | 
 		node variable: v ]
+]
+
+{ #category : #widgets }
+RMDAttributeDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
+
+	^ super newHighlightingSyntaxNodeTextInput
+		  subjectBlock: [ subjectAgent ];
+		  objectBlock: [ objectAgent ];
+		  yourself
 ]
 
 { #category : #accessing }
@@ -172,7 +182,8 @@ RMDAttributeDefinitionBrowser >> possibleAgents [
 	^ Array streamContents: [ :stream | 
 		  stream nextPut: 'my' -> #my.
 		  objectAgent ifNotNil: [ 
-			  stream nextPut: objectAgent , '''s' -> objectAgent ].
+			  stream nextPut:
+				  objectAgent uncapitalized , '''s' -> objectAgent uncapitalized ].
 		  stream
 			  nextPut: 'here''s' -> 'here';
 			  nextPut: 'the' -> #the;
@@ -211,4 +222,15 @@ RMDAttributeDefinitionBrowser >> selectedIdentifier [
 RMDAttributeDefinitionBrowser >> selectedModifierBlock [
 
 	^ modifierList selectedItem ifNotNil: #value
+]
+
+{ #category : #accessing }
+RMDAttributeDefinitionBrowser >> subjectAgent [
+	^ subjectAgent
+]
+
+{ #category : #accessing }
+RMDAttributeDefinitionBrowser >> subjectAgent: aString [
+
+	subjectAgent := aString
 ]

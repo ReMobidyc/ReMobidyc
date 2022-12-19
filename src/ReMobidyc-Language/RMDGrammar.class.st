@@ -650,7 +650,7 @@ RMDGrammar >> expr1 [
 	  , (literal / ('-' asPParser trimBlanks optional
 		    , (self parenExpression / self agentDirective / self apply
 			     / self attributeVariable / self placeholder
-			     / self utilityVariable) ==> [ :pair | 
+			     / self utilityVariable / self metaVariable) ==> [ :pair | 
 		    pair first
 			    ifNil: [ pair second ]
 			    ifNotNil: [ self unaryMinusNodeClass expression: pair second ] ]))
@@ -896,6 +896,15 @@ RMDGrammar >> logLogisticDistribution [
 RMDGrammar >> logLogisticDistributionNodeClass [
 
 	^ RMDLogLogisticDistributionNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> metaVariable [
+
+	^ ('_' asPParser
+	   , (#letter asPParser / #digit asPParser / $_ asPParser) star)
+		  flatten
+	  ==> [ :str | self utilityVariableNodeClass identifier: str ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1349,14 +1358,15 @@ RMDGrammar >> unaryMinusNodeClass [
 { #category : #'parsers-expressions' }
 RMDGrammar >> uniformDistribution [
 
-	^ 'uniform' asPParser trimBlanks , self expr5
+	^ 'uniform_integer' asPParser trimBlanks , self expr5
 	  , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
-	  self uniformDistributionNodeClass from: quad second to: quad fourth ]
-	  / ('uniform_integer' asPParser trimBlanks , self expr5
-		   , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
-		   self uniformIntegerDistributionNodeClass
-			   from: quad second
-			   to: quad fourth ])
+	  self uniformIntegerDistributionNodeClass
+		  from: quad second
+		  to: quad fourth ] / ('uniform' asPParser trimBlanks , self expr5
+	   , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	   self uniformDistributionNodeClass
+		   from: quad second
+		   to: quad fourth ])
 ]
 
 { #category : #'class access' }
@@ -1422,13 +1432,13 @@ RMDGrammar >> unitTerm [
 RMDGrammar >> utilityDefinition [
 	^ (self utilityVariable , '=' asPParser trimBlanks , guardedChoice)
 		==> [ :triple | 
-			self utilityDefinitionNode
+			self utilityDefinitionNodeClass
 				variable: triple first
 				expression: triple third ]
 ]
 
 { #category : #'class access' }
-RMDGrammar >> utilityDefinitionNode [
+RMDGrammar >> utilityDefinitionNodeClass [
 	^ RMDUtilityDefinitionNode
 ]
 

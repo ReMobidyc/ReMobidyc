@@ -187,10 +187,10 @@ RMDSyntaxNodeTextInputPresenter >> text: aString [
 				  to: aString size.
 			  self beError.
 			  syntaxNode := nil.
-			  super text: newText ]
+			  text := newText ]
 		  ifFalse: [ 
 			  self basicSyntaxNode: node.
-			  super text: aString ]
+			  text := aString ]
 ]
 
 { #category : #'api-events' }

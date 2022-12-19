@@ -17,7 +17,6 @@ RMDWorldInitializerNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDWorldInitializerNode >> typecheckIn: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  withSubjectDefinition: aRMDInterpreter world
-		  do: [ super typecheckIn: aRMDInterpreter ]
+	aRMDInterpreter context subjectDefinition: aRMDInterpreter world.
+	^ super typecheckIn: aRMDInterpreter
 ]

@@ -27,6 +27,15 @@ RMDTaskDefinitionPresenter >> initializePresenters [
 				ifNil: [ node := newNode ] ]
 ]
 
+{ #category : #widgets }
+RMDTaskDefinitionPresenter >> newSourceWith: aPP2Node [
+
+	^ (super newSourceWith: aPP2Node)
+		  subjectBlock: [ node ifNotNil: #subjectIdentifier ];
+		  objectBlock: [ node ifNotNil: #objectIdentifier ];
+		  yourself
+]
+
 { #category : #accessing }
 RMDTaskDefinitionPresenter >> nodeChanged [
 	self updateSource

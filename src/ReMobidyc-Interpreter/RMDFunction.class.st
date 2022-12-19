@@ -141,7 +141,7 @@ RMDFunction >> numArgsError: actual expected: expected [
 ]
 
 { #category : #'type checking' }
-RMDFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 	^ self subclassResponsibility
 ]
 
