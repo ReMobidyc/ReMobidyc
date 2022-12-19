@@ -13,6 +13,11 @@ ManifestReMobidycInterpreter class >> ruleAssignmentInIfTrueRuleV1FalsePositive 
 ]
 
 { #category : #'code-critics' }
+ManifestReMobidycInterpreter class >> ruleLiteralArrayContainsSuspiciousTrueFalseOrNilRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#'ManifestReMobidycInterpreter class' #ruleAssignmentInIfTrueRuleV1FalsePositive #true)) #'2022-12-19T15:38:44.129268+09:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestReMobidycInterpreter class >> ruleUtilityMethodsRuleV1FalsePositive [
 	^ #(#(#(#RGPackageDefinition #(#'ReMobidyc-Interpreter')) #'2022-12-19T15:27:22.804397+09:00') )
 ]

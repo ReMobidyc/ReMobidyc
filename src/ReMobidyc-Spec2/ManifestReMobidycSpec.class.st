@@ -28,6 +28,16 @@ ManifestReMobidycSpec class >> ruleExcessiveVariablesRuleV1FalsePositive [
 ]
 
 { #category : #'code-critics' }
+ManifestReMobidycSpec class >> ruleLiteralArrayContainsSuspiciousTrueFalseOrNilRuleV1FalsePositive [
+	^ #(#(#(#RGMetaclassDefinition #(#'ManifestReMobidycSpec class' #ManifestReMobidycSpec)) #'2022-12-19T15:39:29.840783+09:00') )
+]
+
+{ #category : #'code-critics' }
+ManifestReMobidycSpec class >> ruleLongMethodsRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#RMDTaskDefinitionBrowser #initializePresenters #false)) #'2022-12-19T15:29:05.020046+09:00') #(#(#RGMethodDefinition #(#RMDActionDefinitionBrowser #initializePresenters #false)) #'2022-12-19T15:38:59.782751+09:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestReMobidycSpec class >> ruleRBGlobalVariablesUsageV1FalsePositive [
 	^ #(#(#(#RGPackageDefinition #(#'ReMobidyc-Spec2')) #'2020-07-11T16:59:54.685905+09:00') )
 ]
