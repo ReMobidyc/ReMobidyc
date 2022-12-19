@@ -109,12 +109,14 @@ RMDTypecheckContext >> subjectDefinition [
 
 { #category : #accessing }
 RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
-	| dict |
-	subjectDefinition := aRMDAgentDefinitionNode.
-	dict := Dictionary new.
-	subjectDefinition
-		attributeUnitsDo: [ :identifier :unit | dict at: identifier put: (RMDType unit: unit) ].
-	attributes at: nil put: dict
+
+	aRMDAgentDefinitionNode ifNotNil: [ 
+		| dict |
+		subjectDefinition := aRMDAgentDefinitionNode.
+		dict := Dictionary new.
+		subjectDefinition attributeUnitsDo: [ :identifier :unit | 
+			dict at: identifier put: (RMDType unit: unit) ].
+		attributes at: nil put: dict ]
 ]
 
 { #category : #accessing }

@@ -54,7 +54,7 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 				             ((RMDGrammar new unit optional end parse:
 					               text asString trim) ifNil: [ RMDUnit noDimension ]) ];
 		             yourself.
-	initializerExpressionField := self newSyntaxNodeTextInput
+	initializerExpressionField := self newHighlightingSyntaxNodeTextInput
 		                              placeholder:
 			                              'initial value (optional)';
 		                              beExpression;

@@ -50,7 +50,7 @@ RMDApplyNode >> function: aString [
 
 { #category : #comparing }
 RMDApplyNode >> hash [
-	^ function hash bitXor: arguments hash
+	^ (self class hash bitXor: function hash) bitXor: arguments hash
 ]
 
 { #category : #testing }

@@ -11,11 +11,11 @@ RMDCosFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDCosFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDCosFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
 		^ RMDNumArgsError
-			  signal: self
+			  signal: aRMDApplyNode
 			  actual: anArrayOfRMDExpression size
 			  expected: 1 ].
 	[ 
@@ -24,10 +24,10 @@ RMDCosFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpr
 		on: RMDTypeUnificationError
 		do: [ :ex | 
 			ex resignalAs: (RMDTypeError
-					 on: self
+					 on: aRMDApplyNode
 					 subnode: anArrayOfRMDExpression first
 					 type: ex type1
-					 subnode: self
+					 subnode: aRMDApplyNode
 					 type: ex type2) ].
 	^ RMDType noDimension
 ]

@@ -11,11 +11,11 @@ RMDPowerFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 2 ifFalse: [ 
 		^ RMDNumArgsError
-			  signal: self
+			  signal: aRMDApplyNode
 			  actual: anArrayOfRMDExpression size
 			  expected: 2 ].
 	[ 
@@ -24,10 +24,10 @@ RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInter
 		on: RMDTypeUnificationError
 		do: [ :ex | 
 			ex resignalAs: (RMDTypeError
-					 on: self
+					 on: aRMDApplyNode
 					 subnode: anArrayOfRMDExpression first
 					 type: ex type1
-					 subnode: self
+					 subnode: aRMDApplyNode
 					 type: ex type2) ].
 	[ 
 	(anArrayOfRMDExpression second typecheckIn: aRMDInterpreter) unify:
@@ -35,10 +35,10 @@ RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInter
 		on: RMDTypeUnificationError
 		do: [ :ex | 
 			ex resignalAs: (RMDTypeError
-					 on: self
+					 on: aRMDApplyNode
 					 subnode: anArrayOfRMDExpression second
 					 type: ex type1
-					 subnode: self
+					 subnode: aRMDApplyNode
 					 type: ex type2) ].
 	^ RMDType noDimension
 ]

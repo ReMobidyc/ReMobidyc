@@ -38,53 +38,6 @@ RMDTypechecker >> newIndividual: animatString [
 	^ animatString
 ]
 
-{ #category : #'type checking' }
-RMDTypechecker >> newTypecheckContextForTask: aRMDTaskDefinitionNode [
-
-	| newContext |
-	newContext := self newTypecheckingContextWithSubject:
-		              aRMDTaskDefinitionNode subjectIdentifier.
-	aRMDTaskDefinitionNode hasObject ifTrue: [ 
-		| object |
-		object := aRMDTaskDefinitionNode objectIdentifier.
-		newContext object: object definition: (self
-				 animatDefinitionAt: object
-				 ifAbsent: [ 
-				 ^ RMDUndefinedAnimatError signal: aRMDTaskDefinitionNode ]) ].
-	newContext action: (aRMDTaskDefinitionNode actionWith: self).
-	^ newContext
-]
-
-{ #category : #private }
-RMDTypechecker >> newTypecheckContextWithSubjectDefinition: aRMDAgentDefinition [
-
-	^ self newTypecheckingContext
-		  subjectDefinition: aRMDAgentDefinition;
-		  yourself
-]
-
-{ #category : #private }
-RMDTypechecker >> newTypecheckingContext [
-	^ RMDTypecheckContext new
-		patchDefinition: self patchDefinition;
-		worldDefinition: self worldDefinition;
-		yourself
-]
-
-{ #category : #private }
-RMDTypechecker >> newTypecheckingContextWithSubject: aString [
-
-	^ self newTypecheckContextWithSubjectDefinition: (aString = 'World'
-			   ifTrue: [ simulationModel worldDefinition ]
-			   ifFalse: [ 
-				   aString = 'Patch'
-					   ifTrue: [ simulationModel patchDefinition ]
-					   ifFalse: [ 
-						   simulationModel
-							   animatDefinitionAt: aString
-							   ifAbsent: [ ^ RMDUndefinedAnimatError signal: aString ] ] ])
-]
-
 { #category : #directives }
 RMDTypechecker >> typeOfDirective: aString [
 	aString = 'directionOfGradient'
@@ -128,7 +81,22 @@ RMDTypechecker >> typeUtilityVariable: aString as: aRMDType [
 { #category : #'type checking' }
 RMDTypechecker >> typecheck: aRMDSyntaxNode [
 
-	^ aRMDSyntaxNode typecheckIn: self
+	^ self typecheck: aRMDSyntaxNode subject: nil object: nil
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString [
+
+	^ self typecheck: aRMDSyntaxNode subject: aString object: nil
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherString [
+
+	^ self
+		  withSubject: aString
+		  object: anotherString
+		  do: [ aRMDSyntaxNode typecheckIn: self ]
 ]
 
 { #category : #'type checking' }
@@ -142,57 +110,70 @@ RMDTypechecker >> typecheckAll [
 RMDTypechecker >> typecheckInitializers [
 
 	self
-		withSubjectDefinition: simulationModel worldDefinition
-		do: [ simulationModel worldInitializer typecheckIn: self ].
+		typecheck: simulationModel worldInitializer
+		subject: simulationModel worldDefinition.
 	self
-		withSubjectDefinition: simulationModel patchDefinition
-		do: [ simulationModel patchInitializer typecheckIn: self ].
+		typecheck: simulationModel patchInitializer
+		subject: simulationModel patchDefinition.
 	simulationModel animatInitializersDo: [ :animatInitializer | 
-		self
-			withSubject: animatInitializer animat
-			do: [ animatInitializer typecheckIn: self ] ]
+		self typecheck: animatInitializer subject: animatInitializer animat ]
 ]
 
 { #category : #'type checking' }
 RMDTypechecker >> typecheckTasks [
 
 	simulationModel taskDefinitionsDo: [ :taskDefinition | 
-		taskDefinition typecheckIn: self ]
+		self
+			typecheck: taskDefinition
+			subject: taskDefinition subjectIdentifier
+			object: taskDefinition objectIdentifier ]
 ]
 
 { #category : #'type checking' }
 RMDTypechecker >> weakTypecheck: aRMDSyntaxNode [
 
-	^ [ self typecheck: aRMDSyntaxNode ]
+	^ self weakTypecheck: aRMDSyntaxNode subject: nil object: nil
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: subject [
+
+	^ self weakTypecheck: aRMDSyntaxNode subject: subject object: nil
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: subject object: object [
+
+	^ [ self typecheck: aRMDSyntaxNode subject: subject object: object ]
 		  on: RMDUnresolvedPlaceholderError
 		  do: [ :ex | ex resume: RMDType any ]
 ]
 
 { #category : #'context controls' }
-RMDTypechecker >> withSubject: aString do: aBlock [
+RMDTypechecker >> withSubject: subject object: object do: aBlock [
 
+	| subjectDefinition objectIdentifier objectDefinition |
+	subject isString
+		ifTrue: [ 
+			subjectDefinition := self
+				                     agentDefinitionAt: subject
+				                     ifAbsent: [ nil ] ]
+		ifFalse: [ subjectDefinition := subject ].
+	object isString
+		ifTrue: [ 
+			objectDefinition := self
+				                    agentDefinitionAt: object
+				                    ifAbsent: [ nil ].
+			objectIdentifier := object ]
+		ifFalse: [ 
+			objectDefinition := object.
+			objectIdentifier := object ifNotNil: #identifier ].
 	^ self
-		  withContext: (self newTypecheckingContextWithSubject: aString)
-		  do: aBlock
-]
-
-{ #category : #'context controls' }
-RMDTypechecker >> withSubjectDefinition: aRMDAgentDefinitionNode do: aBlock [
-
-	^ self
-		  withContext:
-		  (self newTypecheckContextWithSubjectDefinition:
-			   aRMDAgentDefinitionNode)
-		  do: aBlock
-]
-
-{ #category : #'context controls' }
-RMDTypechecker >> withSubjectDefinition: aRMDAgentDefinitionNode object: aString definition: aRMDAnimatDefinitionNode do: aBlock [
-
-	^ self
-		  withContext: ((self newTypecheckContextWithSubjectDefinition:
-					    aRMDAgentDefinitionNode)
-				   object: aString definition: aRMDAnimatDefinitionNode;
+		  withContext: (RMDTypecheckContext new
+				   patchDefinition: self patchDefinition;
+				   worldDefinition: self worldDefinition;
+				   subjectDefinition: subjectDefinition;
+				   object: objectIdentifier definition: objectDefinition;
 				   yourself)
 		  do: aBlock
 ]

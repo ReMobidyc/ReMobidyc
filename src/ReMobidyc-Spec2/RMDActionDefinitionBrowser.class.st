@@ -17,7 +17,8 @@ Class {
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
 		'editAttributeButton',
-		'removeAttributeButton'
+		'removeAttributeButton',
+		'subjectAgent'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -93,7 +94,11 @@ RMDActionDefinitionBrowser >> addAttributeDefinition [
 
 	| newDefinition |
 	newDefinition := RMDAttributeDefinitionNode template.
-	newDefinition asPresenter openDialog okAction: [ 
+	(newDefinition asPresenter
+		 simulationModel: self simulationModel;
+		 subjectAgent: subjectAgent;
+		 objectAgent: node objectIdentifier;
+		 yourself) openDialog okAction: [ 
 		node attributeDefinitions:
 			(node attributeDefinitions copyWith: newDefinition).
 		self nodeChanged ]
@@ -116,7 +121,11 @@ RMDActionDefinitionBrowser >> editAttributeDefinition [
 	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
 		| newDefinition index |
 		newDefinition := oldDefinition copy.
-		newDefinition asPresenter openDialog okAction: [ 
+		(newDefinition asPresenter
+			 simulationModel: self simulationModel;
+			 subjectAgent: subjectAgent;
+			 objectAgent: node object;
+			 yourself) openDialog okAction: [ 
 			node attributeDefinitions
 				at: (index := node attributeDefinitions indexOf: oldDefinition)
 				put: newDefinition.
@@ -207,7 +216,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                   whenLastValidSyntaxNodeChangedDo: [ :identifier | 
 			                   node identifier: identifier ];
 		                   yourself.
-	objectField := self newSyntaxNodeTextInput
+	objectField := self newHighlightingSyntaxNodeTextInput
 		               parser:
 			               RMDGrammar new agentIdentifier optional trimBlanks
 				               end;
@@ -216,11 +225,11 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		               whenLastValidSyntaxNodeChangedDo: [ :animat | 
 			               node object: animat ];
 		               yourself.
-	guardField := self newSyntaxNodeTextInput
+	guardField := self newHighlightingSyntaxNodeTextInput
 		              parser:
 			              RMDGrammar new condition optional trimBlanks end;
 		              placeholder: 'guard condition';
-		              autoAccept: true;
+		              autoAccept: false;
 		              whenLastValidSyntaxNodeChangedDo: [ :guard | 
 			              node guard: guard ];
 		              yourself.
@@ -497,6 +506,18 @@ RMDActionDefinitionBrowser >> requestQuantityForNewDirective [
 			  n isPetit2Failure
 				  ifTrue: [ parser parse: '1' ]
 				  ifFalse: [ n ] ]
+]
+
+{ #category : #accessing }
+RMDActionDefinitionBrowser >> subjectAgent [
+
+	^ subjectAgent
+]
+
+{ #category : #accessing }
+RMDActionDefinitionBrowser >> subjectAgent: aString [
+
+	subjectAgent := aString
 ]
 
 { #category : #accessing }

@@ -17,5 +17,8 @@ RMDApplyNode >> typecheckIn: aRMDInterpreter [
 	func := RMDFunction
 		        at: function
 		        ifAbsent: [ ^ RMDUndefinedFunctionError signal: self ].
-	^ func typecheckWithArguments: arguments in: aRMDInterpreter
+	^ func
+		  typecheckWithArguments: arguments
+		  for: self
+		  in: aRMDInterpreter
 ]

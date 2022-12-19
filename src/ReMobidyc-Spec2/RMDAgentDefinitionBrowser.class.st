@@ -575,6 +575,25 @@ RMDAgentDefinitionBrowser >> moveUpUtility [
 				utilityList selectIndex: index - 1 ] ] ]
 ]
 
+{ #category : #widgets }
+RMDAgentDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
+
+	^ super newHighlightingSyntaxNodeTextInput
+		  simulationModelBlock: [ self simulationModel ];
+		  yourself
+]
+
+{ #category : #widgets }
+RMDAgentDefinitionBrowser >> newSourceWith: aPP2Node [
+
+	^ (super newSourceWith: aPP2Node)
+		  simulationModelBlock: [ self simulationModel ];
+		  subjectBlock: [ self agentName ];
+		  objectBlock: [ 
+			  taskList selection selectedItem ifNotNil: #objectIdentifier ];
+		  yourself
+]
+
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
@@ -680,17 +699,6 @@ RMDAgentDefinitionBrowser >> updateSourceText [
 	self simulationModel ifNotNil: [ :model | 
 		taskList selection selectedItem
 			ifNotNil: [ :taskDefinition | 
-				| highlights |
-				highlights := Set new: 10.
-				[ 
-				[ model typecheck: taskDefinition ]
-					on: RMDTypeError
-					do: [ :ex | 
-						highlights add: ex node.
-						ex resume: ex type2 ] ]
-					on: RMDUnresolvedReferenceError
-					do: [ :ex | highlights add: ex node ].
-				sourceText highlights: highlights.
 				sourceText text:
 					(taskDefinition actionWith: model) printString asText ]
 			ifNil: [ sourceText text: '' ] ]

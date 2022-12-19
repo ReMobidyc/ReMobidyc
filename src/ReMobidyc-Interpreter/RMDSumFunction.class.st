@@ -11,12 +11,12 @@ RMDSumFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDSumFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDSumFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
+
 	| type |
 	type := RMDType any.
-	anArrayOfRMDExpression
-		do:
-			[ :expression | type := type unify: (expression typecheckIn: aRMDInterpreter) ].
+	anArrayOfRMDExpression do: [ :expression | 
+		type := type unify: (expression typecheckIn: aRMDInterpreter) ].
 	^ type
 ]
 

@@ -50,6 +50,14 @@ RMDAbstractInterpreter >> addActionDefinition: aRMDActionDefinitionNode [
 ]
 
 { #category : #'accessing - definitions' }
+RMDAbstractInterpreter >> agentDefinitionAt: aString ifAbsent: errorBlock [
+
+	aString = 'World' ifTrue: [ ^ self worldDefinition ].
+	aString = 'Patch' ifTrue: [ ^ self patchDefinition ].
+	^ self animatDefinitionAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
 RMDAbstractInterpreter >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ simulationModel
 		ifNil: errorBlock

@@ -11,11 +11,11 @@ RMDAbsFunction >> expectedNumArgs [
 ]
 
 { #category : #'type checking' }
-RMDAbsFunction >> typecheckWithArguments: anArrayOfRMDExpression in: aRMDInterpreter [
+RMDAbsFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
 		^ RMDNumArgsError
-			  signal: self
+			  signal: aRMDApplyNode
 			  actual: anArrayOfRMDExpression size
 			  expected: 1 ].
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter

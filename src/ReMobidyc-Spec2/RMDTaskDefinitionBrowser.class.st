@@ -146,7 +146,10 @@ RMDTaskDefinitionBrowser >> addAction [
 
 	| newActionDef |
 	newActionDef := RMDActionDefinitionNode template.
-	newActionDef asPresenter openDialog okAction: [ 
+	(newActionDef asPresenter
+		 simulationModel: simulationModel;
+		 subjectAgent: (taskDefinitionNode ifNotNil: #subjectIdentifier);
+		 yourself) openDialog okAction: [ 
 		newActionDef identifier ifNotEmpty: [ 
 			self simulationModel ifNotNil: [ :model | 
 				model addActionDefinition: newActionDef.
@@ -197,7 +200,10 @@ RMDTaskDefinitionBrowser >> editAction [
 	self actionDefinition ifNotNil: [ :oldActionDef | 
 		| newActionDef |
 		newActionDef := oldActionDef copy.
-		newActionDef asPresenter openDialog okAction: [ 
+		(newActionDef asPresenter
+			 simulationModel: self simulationModel;
+			 subjectAgent: (taskDefinitionNode ifNotNil: #subjectIdentifier);
+			 yourself) openDialog okAction: [ 
 			self actionDefinition ifNotNil: [ :actionDefinition | 
 				self simulationModel ifNotNil: [ :model | 
 					model
@@ -315,7 +321,6 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
 		                enabled: false;
 		                editable: false;
-		                highlights: Array new;
 		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
 		                       beIdentifier;
@@ -333,9 +338,10 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                         whenLastValidSyntaxNodeChangedDo: [ 
 			                         self acceptObjectIdentifierField ];
 		                         yourself.
-	rangeField := self newSyntaxNodeTextInput
+	rangeField := self newHighlightingSyntaxNodeTextInput
 		              beLiteral;
 		              allowEmpty;
+		              expectedType: RMDType m;
 		              whenLastValidSyntaxNodeChangedDo: [ 
 			              self acceptRangeField ];
 		              yourself.
@@ -412,6 +418,24 @@ RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter initialExtent: 900 @ 600
 ]
 
+{ #category : #widgets }
+RMDTaskDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
+
+	^ super newHighlightingSyntaxNodeTextInput
+		  simulationModelBlock: [ self simulationModel ];
+		  yourself
+]
+
+{ #category : #widgets }
+RMDTaskDefinitionBrowser >> newSourceWith: aPP2Node [
+
+	^ (super newSourceWith: aPP2Node)
+		  simulationModelBlock: [ self simulationModel ];
+		  subjectBlock: [ taskDefinitionNode ifNotNil: #subjectIdentifier ];
+		  objectBlock: [ taskDefinitionNode ifNotNil: #objectIdentifier ];
+		  yourself
+]
+
 { #category : #operations }
 RMDTaskDefinitionBrowser >> removeAction [
 
@@ -449,8 +473,11 @@ RMDTaskDefinitionBrowser >> simulationModel [
 
 { #category : #accessing }
 RMDTaskDefinitionBrowser >> simulationModel: aRMDSimulationModel [
+
 	simulationModel := aRMDSimulationModel.
-	self updateActionList
+	self updateActionList.
+	templateText text ifNotEmpty: [ self updateTemplateText ].
+	sourceText text ifNotEmpty: [ self updateSourceText ]
 ]
 
 { #category : #accessing }
@@ -553,23 +580,10 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 
 	simulationModel ifNotNil: [ 
 		self taskDefinition ifNotNil: [ :taskDefinition | 
-			| highlights |
-			highlights := Set new: 10.
-			[ 
-			[ simulationModel typecheck: taskDefinitionNode ]
-				on: RMDTypeError
-				do: [ :ex | 
-					highlights add: ex node.
-					ex resume: ex type2 ] ]
-				on: RMDUnresolvedReferenceError
-				do: [ :ex | 
-					highlights add: ex node.
-					ex resume: RMDType any ].
-			sourceText highlights: highlights.
 			sourceText text: ([ 
 				 (taskDefinitionNode actionWith: simulationModel) printString
 					 asText ]
-					 on: RMDUnresolvedReferenceError
+					 on: RMDUndefinedAnimatError
 					 do: [ :ex | String new ]) ] ]
 ]
 
@@ -617,23 +631,7 @@ RMDTaskDefinitionBrowser >> updateTemplateText [
 
 	self actionDefinition
 		ifNotNil: [ :actionDefinition | 
-			| highlights |
-			highlights := Set new: 10.
-			simulationModel typechecker
-				withSubject: taskDefinitionNode subjectIdentifier
-				do: [ :typechecker | 
-					[ 
-					[ actionDefinition weakTypecheckIn: typechecker ]
-						on: RMDTypeError
-						do: [ :ex | 
-							highlights add: ex node.
-							ex resume: ex type2 ] ]
-						on: RMDUnresolvedReferenceError
-						do: [ :ex | 
-							highlights add: ex node.
-							ex resume: RMDType any ] ].
-			templateText highlights: highlights.
-			templateText text: actionDefinition printString ]
+			templateText text: actionDefinition printString asText ]
 		ifNil: [ templateText text: '' ]
 ]
 
