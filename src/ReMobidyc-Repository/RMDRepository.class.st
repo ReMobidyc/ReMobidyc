@@ -4,7 +4,7 @@ Class {
 	#category : #'ReMobidyc-Repository'
 }
 
-{ #category : #'accessing-models' }
+{ #category : #'accessing-actions' }
 RMDRepository >> actionFileNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]
@@ -93,6 +93,11 @@ RMDRepository >> isModifiable [
 
 { #category : #'accessing-models' }
 RMDRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+	^ self subclassResponsibility 
+]
+
+{ #category : #'accessing-models' }
+RMDRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]
 

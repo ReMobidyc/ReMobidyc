@@ -171,6 +171,15 @@ RMDLocalFileRepository >> modelFileNamed: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing-models' }
+RMDLocalFileRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
+
+	^ RMDSimulationModel
+		  importMetadata:
+		  (self modelFileNamed: aString ifAbsent: [ ^ errorBlock value ])
+		  ifError: errorBlock
+]
+
+{ #category : #'accessing-models' }
 RMDLocalFileRepository >> modelNamed: aString ifAbsent: errorBlock [
 
 	^ RMDSimulationModel

@@ -2,6 +2,7 @@ Class {
 	#name : #RMDSimulationModel,
 	#superclass : #Object,
 	#instVars : [
+		'metadata',
 		'simulationDefinition',
 		'animatDefinitions',
 		'worldDefinition',
@@ -98,6 +99,16 @@ RMDSimulationModel class >> iconsDirectoryName [
 ]
 
 { #category : #importing }
+RMDSimulationModel class >> importMetadata: aFileReference ifError: errorBlock [
+
+	^ [ 
+	  aFileReference / self metadataFileName readStreamDo: [ :stream | 
+		  RMDMetadata fromJsonString: stream contents ] ]
+		  on: FileException
+		  do: [ :ex | errorBlock value ]
+]
+
+{ #category : #importing }
 RMDSimulationModel class >> importModel [
 
 	<script: 'RMDSimulationModel importModel open'>
@@ -119,6 +130,12 @@ RMDSimulationModel class >> importModel: aFileReference ifError: errorBlock [
 		  yourself ]
 		on: FileException , RMDSyntaxError
 		do: [ :ex | ^ errorBlock value ]
+]
+
+{ #category : #accessing }
+RMDSimulationModel class >> metadataFileName [
+
+	^ 'metadata.json'
 ]
 
 { #category : #accessing }
@@ -277,6 +294,18 @@ RMDSimulationModel >> animatNames [
 	^ animatDefinitions keys asArray
 ]
 
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> author [
+
+	^ metadata author
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> author: aString [
+
+	metadata author: aString
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> copyAnimat: aString to: anotherString [
 
@@ -297,9 +326,32 @@ RMDSimulationModel >> copyAnimat: aString to: anotherString [
 				(renderer copy renameAnimat: aString to: anotherString) ] ]
 ]
 
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> date [
+	^ metadata date
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> date: aDateString [
+
+	metadata description: aDateString
+]
+
 { #category : #'accessing - time' }
 RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> description [
+
+	^ metadata description
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> description: aString [
+
+	metadata description: aString
 ]
 
 { #category : #'accessing - time' }
@@ -344,6 +396,13 @@ RMDSimulationModel >> exportIcons: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> exportMetadata: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		metadata printJsonOn: stream ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportModel [
 
 	(UIManager default
@@ -361,6 +420,7 @@ RMDSimulationModel >> exportModel: aFileReference [
 		ensureCreateDirectory;
 		ensureDeleteAllChildren.
 	self
+		exportMetadata: aFileReference / self class metadataFileName;
 		exportSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		exportAgents: aFileReference / self class agentsFileName;
@@ -471,6 +531,21 @@ RMDSimulationModel >> importIcons: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> importMetadata: aFileReference [
+
+	aFileReference exists
+		ifTrue: [ 
+			aFileReference readStreamDo: [ :stream | 
+				metadata readFromJsonString: stream contents ] ]
+		ifFalse: [ 
+			metadata
+				name: aFileReference parent basename;
+				author: metadata defaultAuthor;
+				description: metadata defaultDescription;
+				date: DateAndTime now ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> importModel [
 
 	(UIManager default
@@ -490,6 +565,7 @@ RMDSimulationModel >> importModel: aFileReference [
 
 	self resetDefinitions.
 	self
+		importMetadata: aFileReference / self class metadataFileName;
 		importSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		importAgents: aFileReference / self class agentsFileName;
@@ -561,6 +637,7 @@ RMDSimulationModel >> importVisualization: aFileReference [
 RMDSimulationModel >> initialize [
 
 	super initialize.
+	metadata := RMDMetadata new.
 	self resetDefinitions
 ]
 
@@ -579,6 +656,23 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isSimulationDefinitionNode
 		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> metadata [
+
+	^ metadata
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> name [
+	^ metadata name
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> name: aString [
+
+	metadata name: aString
 ]
 
 { #category : #'accessing - cells' }
@@ -734,6 +828,7 @@ RMDSimulationModel >> repositoryName [
 { #category : #initialization }
 RMDSimulationModel >> resetDefinitions [
 
+	metadata := RMDMetadata new.
 	simulationDefinition := RMDSimulationDefinitionNode empty.
 	patchDefinition := RMDPatchDefinitionNode empty.
 	worldDefinition := RMDWorldDefinitionNode empty.
