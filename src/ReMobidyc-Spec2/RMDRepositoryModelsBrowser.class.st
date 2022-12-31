@@ -102,25 +102,8 @@ RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 { #category : #updating }
 RMDRepositoryModelsBrowser >> updateDescriptionText [
 
-	self item
-		ifNotNil: [ :item | 
-			(self getModel: item) ifNotNil: [ :model | 
-				| animatDefs description |
-				animatDefs := OrderedDictionary new.
-				model animatDefinitions do: [ :animatDef | 
-					(animatDefs
-						 at: animatDef species
-						 ifAbsentPut: [ OrderedCollection new ]) add:
-						animatDef identifier ].
-				description := 'Animats: ' asText allBold
-				               ,
-					               (', ' join:
-						                (animatDefs keys collect: [ :species | 
-							                 species , ' ('
-							                 , (', ' join: (animatDefs at: species)) , ')' ])).
-				(self file / 'memory') isDirectory ifTrue: [ 
-					description := description , '
-with a result' asText ].
-				descriptionText text: description ] ]
-		ifNil: [ descriptionText text: 'invalid model' ]
+	^ self repository ifNotNil: [ :repo | 
+		  self item ifNotNil: [ :item | 
+			  descriptionText text:
+				  (repo modelMetadataNamed: item ifAbsent: [ '' ]) asText ] ]
 ]

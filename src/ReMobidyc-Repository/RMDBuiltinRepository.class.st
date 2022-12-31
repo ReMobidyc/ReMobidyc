@@ -22,7 +22,7 @@ RMDBuiltinRepository class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
-{ #category : #'accessing-models' }
+{ #category : #'accessing-actions' }
 RMDBuiltinRepository >> actionFileNamed: aString ifAbsent: errorBlock [
 
 	^ errorBlock value
@@ -117,6 +117,11 @@ RMDBuiltinRepository >> lose [
 
 { #category : #'accessing-models' }
 RMDBuiltinRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+	^ errorBlock value
+]
+
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 

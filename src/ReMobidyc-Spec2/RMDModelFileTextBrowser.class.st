@@ -174,7 +174,7 @@ RMDModelFileTextBrowser >> initializePresenters [
 		                   state: false;
 		                   yourself.
 	fileList := self newList
-		            display: [ :ref | ref basenameWithoutExtension: 'rmd' ];
+		            display: [ :ref | ref basenameWithoutExtension ];
 		            displayIcon: [ :ref | 
 			            (editingTexts includesKey: ref) ifTrue: [ 
 					            self editIcon ] ];
@@ -196,6 +196,12 @@ RMDModelFileTextBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter
 		title: self windowTitle;
 		initialExtent: 800 @ 600
+]
+
+{ #category : #parsers }
+RMDModelFileTextBrowser >> jsonParser [
+
+	^ nil
 ]
 
 { #category : #accessing }
@@ -324,15 +330,14 @@ RMDModelFileTextBrowser >> updateEditingText [
 { #category : #updating }
 RMDModelFileTextBrowser >> updateFileList [
 
-	(modelFileReference isNil or: [ modelFileReference isDirectory not]) 
+	(modelFileReference isNil or: [ modelFileReference isDirectory not ]) 
 		ifTrue: [ 
 			fileList items: #(  ).
 			^ self ].
 	fileList items:
-		(#( 'actions' 'agents' 'simulation' 'tasks' 'visualization' ) 
-			 collect: [ :basename | 
-				 (modelFileReference / basename withExtension: 'rmd')
-					 ensureCreateFile ])
+		(#( 'metadata.json' 'actions.rmd' 'agents.rmd' 'simulation.rmd'
+		    'tasks.rmd' 'visualization.rmd' ) collect: [ :basename | 
+			 (modelFileReference / basename) ensureCreateFile ])
 ]
 
 { #category : #updating }
@@ -340,6 +345,9 @@ RMDModelFileTextBrowser >> updateParser [
 
 	fileList selectedItem ifNotNil: [ :ref | 
 		| basename |
+		ref basename = 'metadata.json' ifTrue: [ 
+			sourceText parser: self jsonParser.
+			^ self ].
 		basename := ref basenameWithoutExtension: 'rmd'.
 		basename = 'actions' ifTrue: [ 
 			sourceText parser: self actionsFileParser.

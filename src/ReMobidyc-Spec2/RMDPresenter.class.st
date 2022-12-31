@@ -82,6 +82,11 @@ RMDPresenter >> newHighlightingSyntaxNodeTextInput [
 ]
 
 { #category : #widgets }
+RMDPresenter >> newMetadata [
+	^ self instantiate: RMDMetadataPresenter
+]
+
+{ #category : #widgets }
 RMDPresenter >> newNumberInput [
 	^ self instantiate: RMDNumberInputPresenter
 ]

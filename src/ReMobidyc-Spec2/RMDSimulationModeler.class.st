@@ -8,7 +8,8 @@ Class {
 		'runOnFileButton',
 		'simulationDefinitionPresenter',
 		'menuBar',
-		'modelFileReference'
+		'modelFileReference',
+		'metadataPresenter'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -250,6 +251,7 @@ RMDSimulationModeler >> initializePresenters [
 						           name: 'File';
 						           subMenu: self fileMenu ] ];
 		           yourself.
+	metadataPresenter := self newMetadata.
 	views := self newNotebook
 		         whenSelectedPageChangedDo: [ 
 			         simulationDefinitionPresenter ifNotNil: #nodeChanged ];
@@ -403,10 +405,14 @@ RMDSimulationModeler >> renameStage: aString to: anotherString [
 
 { #category : #private }
 RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
+
 	simulationModel := aRMDSimulationModel.
-	simulationDefinitionPresenter
-		ifNotNil: [ simulationDefinitionPresenter
-				node: (simulationModel ifNotNil: #simulationDefinition) ].
+	metadataPresenter ifNotNil: [ 
+		simulationModel ifNotNil: [ 
+			metadataPresenter metadata: simulationModel metadata ] ].
+	simulationDefinitionPresenter ifNotNil: [ 
+		simulationDefinitionPresenter node:
+			(simulationModel ifNotNil: #simulationDefinition) ].
 	self updatePages
 ]
 
@@ -429,6 +435,10 @@ RMDSimulationModeler >> updatePages [
 	selection := views selectedPageIndex.
 	views pages: (Array streamContents: [ :stream | 
 			 stream
+				 nextPut:
+					 (SpNotebookPage
+						  title: 'Metadata'
+						  provider: [ metadataPresenter ]);
 				 nextPut:
 					 (SpNotebookPage title: 'Simulation Conditions' provider: [ 
 							  RMDScrollPresenter with:
@@ -478,7 +488,10 @@ RMDSimulationModeler >> updateWindowTitle [
 { #category : #private }
 RMDSimulationModeler >> windowTitle [
 
-	^ 'Modeler' , (modelFileReference
-		   ifNil: [ '' ]
-		   ifNotNil: [ ' @ ' , modelFileReference basename ])
+	^ 'Modeler' , ((simulationModel ifNotNil: #name ifNil: '')
+		   ifNotEmpty: [ :name | ' @ ' , name ]
+		   ifEmpty: [ 
+			   modelFileReference
+				   ifNil: [ '' ]
+				   ifNotNil: [ ' @ ' , modelFileReference basename ] ])
 ]
