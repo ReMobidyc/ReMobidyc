@@ -14,24 +14,32 @@ Class {
 { #category : #layout }
 RMDMetadataPresenter class >> defaultLayout [
 
-	^ SpBoxLayout newVertical
-		  add: (SpGridLayout new
-				   columnHomogeneous: false;
-				   rowHomogeneous: false;
-				   column: 1 expand: false;
-				   column: 2 expand: true;
-				   row: 1 expand: false;
-				   row: 2 expand: false;
-				   row: 3 expand: false;
-				   add: 'model name' at: 1 @ 1 span: 1 @ 1;
-				   add: #nameField at: 2 @ 1 span: 1 @ 1;
-				   add: 'author' at: 1 @ 2 span: 1 @ 1;
-				   add: #authorField at: 2 @ 2 span: 1 @ 1;
-				   add: 'date' at: 1 @ 3 span: 1 @ 1;
-				   add: #dateField at: 2 @ 3 span: 1 @ 1;
-				   yourself);
-		  add: 'description' expand: false;
-		  add: #descriptionText expand: true;
+	^ SpBoxLayout newHorizontal
+		  add: (SpBoxLayout newVertical
+				   add:
+					   (SpBoxLayout newHorizontal add: 'model name' expand: false)
+				   height: self inputTextHeight;
+				   add: (SpBoxLayout newHorizontal add: 'author' expand: false)
+				   height: self inputTextHeight;
+				   add: (SpBoxLayout newHorizontal add: 'date' expand: false)
+				   height: self inputTextHeight;
+				   add:
+					   (SpBoxLayout newHorizontal add: 'description' expand: false)
+				   height: self inputTextHeight;
+				   yourself)
+		  expand: false;
+		  add: (SpBoxLayout newVertical
+				   add: (SpBoxLayout newHorizontal add: #nameField expand: true)
+				   height: self inputTextHeight;
+				   add: (SpBoxLayout newHorizontal add: #authorField expand: true)
+				   height: self inputTextHeight;
+				   add: (SpBoxLayout newHorizontal add: #dateField expand: true)
+				   height: self inputTextHeight;
+				   add:
+					   (SpBoxLayout newHorizontal add: #descriptionText expand: true)
+				   expand: true;
+				   yourself)
+		  expand: true;
 		  yourself
 ]
 
