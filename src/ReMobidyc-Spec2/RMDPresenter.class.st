@@ -7,6 +7,12 @@ Class {
 }
 
 { #category : #icons }
+RMDPresenter >> acceptIcon [
+
+	^ Smalltalk ui icons iconNamed: #smallOk
+]
+
+{ #category : #icons }
 RMDPresenter >> addIcon [
 	^ Smalltalk ui icons add
 ]
@@ -127,4 +133,10 @@ RMDPresenter >> repositoryIcon [
 { #category : #icons }
 RMDPresenter >> upIcon [
 	^ Smalltalk ui icons up
+]
+
+{ #category : #icons }
+RMDPresenter >> updateIcon [
+
+	^ Smalltalk ui icons iconNamed: #smallUpdate
 ]
