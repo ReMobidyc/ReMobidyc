@@ -568,6 +568,13 @@ TRMDTemplateMenu >> temperatures [
 					   sourceText: '°F') ]
 ]
 
+{ #category : #accessing }
+TRMDTemplateMenu >> templateDirectory [
+
+	^ (FileLocator documents / 'ReMobidyc' / 'templates')
+		  ensureCreateDirectory
+]
+
 { #category : #menu }
 TRMDTemplateMenu >> templateMenu [
 
@@ -581,6 +588,10 @@ TRMDTemplateMenu >> templateMenu [
 			        item
 				        name: 'Units...';
 				        subMenu: self unitTemplateMenu ];
+		        addItem: [ :item | 
+			        item
+				        name: 'User-defined...';
+				        subMenu: self userDefinedTemplateMenu ];
 		        yourself.
 	^ menu
 ]
@@ -682,6 +693,29 @@ TRMDTemplateMenu >> unitTemplateMenu [
 				assoc value do: [ :sourceTemplate | 
 					sourceTemplate addToMenu: submenu for: self ].
 				item subMenu: submenu ] ] ].
+	^ menu
+]
+
+{ #category : #menu }
+TRMDTemplateMenu >> userDefinedTemplateMenu [
+
+	| menu |
+	menu := SpMenuPresenter new.
+	menu addGroup: [ :group | 
+		(self templateDirectory filesMatching: '*.json') do: [ :fileRef | 
+			| submenu |
+			group addItem: [ :item | 
+				item name: (fileRef basenameWithoutExtension: 'json').
+				submenu := SpMenuPresenter new.
+				fileRef readStreamDo: [ :stream | 
+					([ STONJSON fromStream: stream ]
+						 on: Error
+						 do: [ :ex | #(  ) ]) do: [ :dict | 
+						| sourceTemplate |
+						sourceTemplate := RMDSourceTemplate fromJsonObject: dict.
+						sourceTemplate addToMenu: submenu for: self ] ].
+				item subMenu: submenu ] ] ].
+
 	^ menu
 ]
 

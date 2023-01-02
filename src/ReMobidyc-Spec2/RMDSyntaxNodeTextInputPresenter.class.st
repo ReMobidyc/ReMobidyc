@@ -91,6 +91,12 @@ RMDSyntaxNodeTextInputPresenter >> beExpression [
 ]
 
 { #category : #api }
+RMDSyntaxNodeTextInputPresenter >> beFreeText [
+
+	self parser: nil
+]
+
+{ #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beIdentifier [
 	self parser: RMDGrammar new identifier end
 ]
@@ -175,7 +181,7 @@ RMDSyntaxNodeTextInputPresenter >> text: aString [
 
 	| newText node |
 	newText := aString asText.
-	node := parser end parse: aString asString.
+	node := parser ifNotNil: [ parser end parse: aString asString ].
 	^ node isPetit2Failure
 		  ifTrue: [ 
 			  | node2 |

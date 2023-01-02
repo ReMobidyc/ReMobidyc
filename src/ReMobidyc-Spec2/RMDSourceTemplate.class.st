@@ -10,13 +10,54 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDSourceTemplate class >> fromJsonObject: aDictionaryOrArray [
+
+	^ self
+		  name: (aDictionaryOrArray at: 'name' ifAbsent: [ 'N/A' ])
+		  description:
+		  (aDictionaryOrArray at: 'description' ifAbsent: [ '' ])
+		  sourceText: (aDictionaryOrArray at: 'sourceText' ifAbsent: [ '' ])
+]
+
+{ #category : #'instance creation' }
+RMDSourceTemplate class >> fromJsonStream: aString [
+
+	^ self fromJsonObject: ([ STONJSON fromStream: aString ]
+			   on: Error
+			   do: [ :ex | Array new ])
+]
+
+{ #category : #'instance creation' }
+RMDSourceTemplate class >> fromJsonString: aString [
+
+	^ self fromJsonObject: ([ STONJSON fromString: aString ]
+			   on: Error
+			   do: [ :ex | Array new ])
+]
+
+{ #category : #'instance creation' }
 RMDSourceTemplate class >> name: nameString description: descriptionString sourceText: sourceTextString [
 
-	^ self new
+	^ self basicNew
 		  name: nameString;
 		  description: descriptionString;
 		  sourceText: sourceTextString;
 		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDSourceTemplate class >> new [
+
+	^ self name: '' description: '' sourceText: ''
+]
+
+{ #category : #comparing }
+RMDSourceTemplate >> = anObject [
+
+	^ self class = anObject class and: [ 
+		  name = anObject name and: [ 
+			  description = anObject description and: [ 
+				  sourceText = anObject sourceText ] ] ]
 ]
 
 { #category : #menu }
@@ -31,6 +72,16 @@ RMDSourceTemplate >> addToMenu: aSpMenuPresenter for: aSpAbstractTextPresenter [
 				aSpAbstractTextPresenter doTextPaste ] ]
 ]
 
+{ #category : #converting }
+RMDSourceTemplate >> asJsonObject [
+
+	^ OrderedDictionary new
+		  at: 'name' put: name;
+		  at: 'sourceText' put: sourceText;
+		  at: 'description' put: description;
+		  yourself
+]
+
 { #category : #accessing }
 RMDSourceTemplate >> description [
 
@@ -41,6 +92,13 @@ RMDSourceTemplate >> description [
 RMDSourceTemplate >> description: aString [
 
 	description := aString
+]
+
+{ #category : #comparing }
+RMDSourceTemplate >> hash [
+
+	^ ((self class hash bitXor: name hash) bitXor: description hash) 
+		  bitXor: sourceText hash
 ]
 
 { #category : #accessing }
