@@ -34,7 +34,8 @@ values
             nil,
             [],
             [mk_AST`AttributeDefinition(
-                mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "age")),
+                mk_AST`AttributeVariable(nil, "age"),
+                <assign>,
                 mk_AST`UtilityVariable("dt"))],
             [mk_AST`UtilityDefinition("dt", mk_AST`AgentDirective(<delta_time>, nil))]);
      exampleSimulationModel : AST`SimulationModel =
@@ -133,8 +134,8 @@ operations
             assertEquals(Memory`read(animat1 + 1), 0.2, "my y = 0.2");
             assertEquals(Memory`read(animat1 + 2), 0.1, "my age = 0.1")));
     
-    testEvalAttributeDefinition_AssignableAttributeVariable : () ==> ()
-    testEvalAttributeDefinition_AssignableAttributeVariable() ==
+    testEvalAttributeDefinition_assign : () ==> ()
+    testEvalAttributeDefinition_assign() ==
         (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
@@ -149,23 +150,26 @@ operations
             Interpreter`setupActionContextSV(exampleActionAge, animat1, exampleAnimatA, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
+                    mk_AST`AttributeVariable(nil, "x"),
+                    <assign>,
                     mk_AST`Literal(1, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "y")),
+                    mk_AST`AttributeVariable(nil, "y"),
+                    <assign>,
                     mk_AST`Literal(2, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "age")),
+                    mk_AST`AttributeVariable(nil, "age"),
+                    <assign>,
                     mk_AST`Literal(0, Unit`s)));
             Memory`tick();
             assertEquals(Memory`read(animat1 + 0), 1.0, "my x = 1.0");
             assertEquals(Memory`read(animat1 + 1), 2.0, "my y = 2.0");
             assertEquals(Memory`read(animat1 + 2), 0.0, "my age = 0")));
     
-    testEvalAttributeDefinition_AssignableDeltaAttributeVariable : () ==> ()
-    testEvalAttributeDefinition_AssignableDeltaAttributeVariable() ==
+    testEvalAttributeDefinition_delta : () ==> ()
+    testEvalAttributeDefinition_delta() ==
         (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
@@ -180,23 +184,26 @@ operations
             Interpreter`setupActionContextSV(exampleActionAge, animat1, exampleAnimatA, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
+                    mk_AST`AttributeVariable(nil, "x"),
+                    <delta>,
                     mk_AST`Literal(1, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "y")),
+                    mk_AST`AttributeVariable(nil, "y"),
+                    <delta>,
                     mk_AST`Literal(2, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "age")),
+                    mk_AST`AttributeVariable(nil, "age"),
+                    <delta>,
                     mk_AST`Literal(0, Unit`s)));
             Memory`tick();
             assertEquals(Memory`read(animat1 + 0), 1.1, "my x = 1.1");
             assertEquals(Memory`read(animat1 + 1), 2.2, "my y = 2.2");
             assertEquals(Memory`read(animat1 + 2), 0.0, "my age = 0")));
     
-    testEvalAttributeDefinition_AssignableDifferentialAttributeVariable : () ==> ()
-    testEvalAttributeDefinition_AssignableDifferentialAttributeVariable() ==
+    testEvalAttributeDefinition_differential : () ==> ()
+    testEvalAttributeDefinition_differential() ==
         (Interpreter`setSimulationModel(exampleSimulationModel);
         Memory`allocateWorld(0);
         Memory`allocatePatches(1, 1, 0);
@@ -211,15 +218,18 @@ operations
             Interpreter`setupActionContextSV(exampleActionAge, animat1, exampleAnimatA, 1);
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "x")),
+                    mk_AST`AttributeVariable(nil, "x"),
+                    <differential>,
                     mk_AST`Literal(1, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "y")),
+                    mk_AST`AttributeVariable(nil, "y"),
+                    <differential>,
                     mk_AST`Literal(2, Unit`m)));
             Evaluation`evalAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "age")),
+                    mk_AST`AttributeVariable(nil, "age"),
+                    <differential>,
                     mk_AST`Literal(0, Unit`s)));
             Memory`tick();
             assertEquals(Memory`read(animat1 + 0), 0.2, "my x = 1.1");

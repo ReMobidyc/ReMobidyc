@@ -443,11 +443,12 @@ operations
     testReplaceAttributeDefinition_AttributeVariable() ==
         assertEquals(
             AST`replaceAttributeDefinition(
-                mk_AST`AttributeDefinition(mk_AST`AssignableAttributeVariable(placeholder1), placeholder2),
+                mk_AST`AttributeDefinition(placeholder1, <assign>, placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
             mk_AST`AttributeDefinition(
-                mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                mk_AST`AttributeVariable(nil, "attr1"),
+                <assign>,
                 replacement2),
             "the placeholder1' = the placeholder2 -> my attr1' = var2");
     
@@ -455,12 +456,12 @@ operations
     testReplaceAttributeDefinition_DeltaAttributeVariable() ==
         assertEquals(
             AST`replaceAttributeDefinition(
-                mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDeltaAttributeVariable(placeholder1), placeholder2),
+                mk_AST`AttributeDefinition(placeholder1, <delta>, placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
             mk_AST`AttributeDefinition(
-                mk_AST`AssignableDeltaAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                mk_AST`AttributeVariable(nil, "attr1"),
+                <delta>,
                 replacement2),
             "the delta placeholder1' = the placeholder2 -> my delta attr1' = var2");
     
@@ -469,12 +470,14 @@ operations
         assertEquals(
             AST`replaceAttributeDefinition(
                 mk_AST`AttributeDefinition(
-                    mk_AST`AssignableDifferentialAttributeVariable(placeholder1),
+                    placeholder1,
+                    <differential>,
                     placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
             mk_AST`AttributeDefinition(
-                mk_AST`AssignableDifferentialAttributeVariable(mk_AST`AttributeVariable(nil, "attr1")),
+                mk_AST`AttributeVariable(nil, "attr1"),
+                <differential>,
                 replacement2),
             "the d/dt  placeholder1' = the placeholder2 -> my d/dt attr1' = var2");
     
@@ -488,7 +491,8 @@ operations
                     mk_AST`Placeholder("placeholder1"),
                     [AST`newDirectivePlaceholder],
                     [mk_AST`AttributeDefinition(
-                        mk_AST`AssignableAttributeVariable(mk_AST`Placeholder("placeholder2")),
+                        mk_AST`Placeholder("placeholder2"),
+                        <assign>,
                         mk_AST`Placeholder("placeholder3"))],
                     [mk_AST`UtilityDefinition("utility", mk_AST`Placeholder("placeholder4"))]),
                 {mk_AST`Placeholder("placeholder1")
@@ -511,7 +515,8 @@ operations
                     mk_AST`Literal(1, Unit`nodimension)]),
                 [mk_AST`NewDirective("Stage1", mk_AST`Literal(1, Unit`nodimension))],
                 [mk_AST`AttributeDefinition(
-                    mk_AST`AssignableAttributeVariable(mk_AST`AttributeVariable(nil, "replacement2")),
+                    mk_AST`AttributeVariable(nil, "replacement2"),
+                    <assign>,
                     mk_AST`UtilityVariable("replacement3"))],
                 [mk_AST`UtilityDefinition("utility", mk_AST`UtilityVariable("replacement4"))]),
             "to action1 is when the placeholder1 with new - the placeholder2' = the placeholder3 where utility = the replacement4 -> ");

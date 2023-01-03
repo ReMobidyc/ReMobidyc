@@ -106,19 +106,15 @@ operations
     
     evalAttributeDefinition : AST`AttributeDefinition ==> ()
     evalAttributeDefinition(attributeDefinition) ==
-        let value = evalExpression(attributeDefinition.expression)
+        let 
+            value = evalExpression(attributeDefinition.expression),
+            agent = attributeDefinition.variable.agent,
+            identifier = attributeDefinition.variable.identifier
         in
-            cases attributeDefinition.variable:
-                mk_AST`AssignableAttributeVariable(
-                    mk_AST`AttributeVariable(agent, variable)) ->
-                    writeVariable(agent, variable, value),
-                mk_AST`AssignableDeltaAttributeVariable(
-                    mk_AST`AttributeVariable(agent, variable)) ->
-                    writeDeltaVariable(agent, variable, value),
-                mk_AST`AssignableDifferentialAttributeVariable(
-                    mk_AST`AttributeVariable(agent, variable)) ->
-                    writeDeltaVariable(agent, variable, value  * deltaTime()),
-                others -> exit Interpreter`UNRESOLVED_REFERENCE
+            cases attributeDefinition.decorator:
+                <assign> -> writeVariable(agent, identifier, value),
+                <delta> -> writeDeltaVariable(agent, identifier, value),
+                <differential> -> writeDeltaVariable(agent, identifier, value  * deltaTime())
                 end;
     
     evalExpression : AST`Expression ==> real
