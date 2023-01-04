@@ -35,9 +35,6 @@ functions
     
     sqrt : real -> real
     sqrt(a) == is not yet specified;
-    
-    --pi_f : () +> real
-    --pi_f() == is not yet specified;
 
 operations
     srand : int ==> ()
@@ -65,9 +62,5 @@ functions
     
     fac : nat -> nat1
     fac(a) == is not yet specified;
-
---values
-     --pi = pi_f();
-     --euler = exp(1);
 
 end MATH
