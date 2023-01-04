@@ -15,11 +15,17 @@ RMDAgentDirectiveNode class >> directive: aString agent: anotherString [
 		yourself
 ]
 
+{ #category : #testing }
+RMDAgentDirectiveNode class >> isAbstract [
+
+	^ true
+]
+
 { #category : #comparing }
 RMDAgentDirectiveNode >> = anObject [
-	^ self class = anObject class
-		and: [ agentIdentifier = anObject agentIdentifier
-				and: [ directive = anObject directive ] ]
+
+	^ self class = anObject class and: [ 
+		  agentIdentifier = anObject agentIdentifier ]
 ]
 
 { #category : #accessing }
@@ -39,7 +45,7 @@ RMDAgentDirectiveNode >> childrenDo: aBlock [
 
 { #category : #comparing }
 RMDAgentDirectiveNode >> hash [
-	^ super hash bitXor: agentIdentifier hash
+	^ self class hash bitXor: agentIdentifier hash
 ]
 
 { #category : #testing }
@@ -52,44 +58,6 @@ RMDAgentDirectiveNode >> postCopy [
 	
 ]
 
-{ #category : #printing }
-RMDAgentDirectiveNode >> printOn: aStream [
-	directive = 'delta time'
-		ifTrue: [ aStream nextPutAll: 'Δtime'.
-			^ self ].
-	directive = 'directionOfGradient'
-		ifTrue: [ aStream
-				nextPutAll: 'direction grad ';
-				nextPutAll: agentIdentifier.
-			^ self ].
-	aStream nextPutAll: directive.
-	agentIdentifier
-		ifNotNil: [ aStream
-				nextPut: Character space;
-				nextPutAll: agentIdentifier ]
-]
-
-{ #category : #printing }
-RMDAgentDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
-	| start |
-	start := aStream position + 1.
-	directive = 'delta time'
-		ifTrue: [ aStream nextPutAll: 'Δtime'.
-			^ self ].
-	directive = 'directionOfGradient'
-		ifTrue: [ aStream
-				nextPutAll: 'direction grad ';
-				nextPutAll: agentIdentifier.
-			^ self ].
-	aStream nextPutAll: directive.
-	agentIdentifier
-		ifNotNil: [ aStream
-				nextPut: Character space;
-				nextPutAll: agentIdentifier ].
-	(aCollectionOfRMDSyntaxNode includes: self)
-		ifTrue: [ aCollection add: (start to: aStream position) ]
-]
-
 { #category : #rewriting }
 RMDAgentDirectiveNode >> renameAnimat: aString to: anotherString [
 
@@ -99,7 +67,6 @@ RMDAgentDirectiveNode >> renameAnimat: aString to: anotherString [
 
 { #category : #rewriting }
 RMDAgentDirectiveNode >> replaceChildren: aDictionary [
-	super replaceChildren: aDictionary.
 	aDictionary
 		at: agentIdentifier
 		ifPresent: [ :node | agentIdentifier := node copy ]

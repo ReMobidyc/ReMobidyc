@@ -184,12 +184,35 @@ RMDSyntaxNode >> isDeUnitExpressionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDeltaTimeDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDirectionDirectiveNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDirectionOfGradientDirectiveNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDisjunctionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDistanceDirectiveNode [
+
 	^ false
 ]
 
@@ -341,6 +364,11 @@ RMDSyntaxNode >> isSimulationDefinitionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isSimulationDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSimulationFileNode [
 
 	^ false
@@ -369,6 +397,11 @@ RMDSyntaxNode >> isTaskDefinitionNode [
 { #category : #testing }
 RMDSyntaxNode >> isTasksFileNode [
 
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isTimeDirectiveNode [
 	^ false
 ]
 

@@ -210,16 +210,13 @@ Ant is Animat with
 RMDGrammarTest >> testAgentDirective [
 	| node |
 	node := grammar agentDirective parse: 'distance foo'.
-	self assert: node isAgentDirectiveNode.
-	self assert: node directive equals: 'distance'.
+	self assert: node isDistanceDirectiveNode.
 	self assert: node agentIdentifier equals: 'foo'.
 	node := grammar agentDirective parse: 'direction foo'.
-	self assert: node isAgentDirectiveNode.
-	self assert: node directive equals: 'direction'.
+	self assert: node isDirectionDirectiveNode.
 	self assert: node agentIdentifier equals: 'foo'.
 	node := grammar agentDirective parse: 'direction neighbor''s foo'.
-	self assert: node isPatchDirectiveNode.
-	self assert: node directive equals: 'direction'.
+	self assert: node isDirectionOfGradientDirectiveNode.
 	self assert: node patchAttributeVariable agent equals: 'here'.
 	self assert: node patchAttributeVariable identifier equals: 'foo'.
 	node := grammar agentDirective parse: 'foo bar'.
@@ -769,8 +766,7 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 expression identifier equals: 'x'.
 	self assert: expr1 expression agent equals: 'foo'.
 	expr1 := grammar agentDirective parse: 'distance foo'.
-	self assert: expr1 isAgentDirectiveNode.
-	self assert: expr1 directive equals: 'distance'.
+	self assert: expr1 isDistanceDirectiveNode.
 	self assert: expr1 agentIdentifier equals: 'foo'.
 	expr1 := grammar uniformDistribution parse: 'uniform -10[cm] to 2[m]'.
 	self assert: expr1 isUniformDistributionNode.

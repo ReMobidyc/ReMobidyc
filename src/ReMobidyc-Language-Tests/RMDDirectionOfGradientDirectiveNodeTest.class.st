@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDCellDirectiveNodeTest,
+	#name : #RMDDirectionOfGradientDirectiveNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDCellDirectiveNodeTest >> testPrintOn [
+RMDDirectionOfGradientDirectiveNodeTest >> testPrintOn [
 
 	| node copy |
 	node := parser expression end parse: 'direction neighbor''s x'.

@@ -165,60 +165,6 @@ RMDInterpreter >> changeStage: animatString [
 	^ newIndividual
 ]
 
-{ #category : #directives }
-RMDInterpreter >> direction: aString [
-
-	| x1 y1 x2 y2 |
-	x1 := self my: 'x'.
-	y1 := self my: 'y'.
-	x2 := self agent: aString s: 'x'.
-	y2 := self agent: aString s: 'y'.
-	^ (x2 - x1 @ (y2 - y1)) theta
-]
-
-{ #category : #directives }
-RMDInterpreter >> directionOfGradient: aString [
-	| here west east south north vector |
-	here := self readVariable: aString agent: 'here' ifAbsent: [ 0 ].
-	east := self readVariable: aString agent: 'east' ifAbsent: [ here ].
-	west := self readVariable: aString agent: 'west' ifAbsent: [ here ].
-	south := self readVariable: aString agent: 'south' ifAbsent: [ here ].
-	north := self readVariable: aString agent: 'north' ifAbsent: [ here ].
-	vector := (east - west) @ (north - south).
-	(east <= here
-		and: [ west <= here and: [ south <= here and: [ north <= here ] ] ])
-		ifTrue: [ | x y patchX patchY |
-			x := self readVariable: 'x' agent: nil ifAbsent: [ 0.0 ].
-			y := self readVariable: 'y' agent: nil ifAbsent: [ 0.0 ].
-			patchX := self patchLength * ((self patchX: x) floor + 0.5).
-			patchY := self patchLength * ((self patchY: y) floor + 0.5).
-			vector := (patchX - x) @ (patchY - y) ].
-	^ vector theta
-]
-
-{ #category : #directives }
-RMDInterpreter >> directive: aString object: anotherString [
-
-	aString = 'directionOfGradient' ifTrue: [ 
-		^ self directionOfGradient: anotherString ].
-	aString = 'direction' ifTrue: [ ^ self direction: anotherString ].
-	aString = 'distance' ifTrue: [ ^ self distance: anotherString ].
-	aString = 'time' ifTrue: [ ^ self time ].
-	aString = 'delta time' ifTrue: [ ^ self deltaTime ].
-	^ self unknownDirectiveError: aString
-]
-
-{ #category : #directives }
-RMDInterpreter >> distance: aString [
-
-	| x1 y1 x2 y2 |
-	x1 := self my: 'x'.
-	y1 := self my: 'y'.
-	x2 := self agent: aString s: 'x'.
-	y2 := self agent: aString s: 'y'.
-	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
-]
-
 { #category : #timing }
 RMDInterpreter >> duration [
 	^ simulationModel duration
@@ -406,14 +352,6 @@ RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
 	^ memory patchAtXIndex: anInteger yIndex: anotherInteger
 ]
 
-{ #category : #directives }
-RMDInterpreter >> patchDirective: aString variable: aRMDAttributeVariableNode [
-
-	aString = 'direction' ifTrue: [ 
-		^ self directionOfGradient: aRMDAttributeVariableNode identifier ].
-	^ self unknownDirectiveError: aString
-]
-
 { #category : #'space access' }
 RMDInterpreter >> patchesDo: aBlock [
 
@@ -581,12 +519,6 @@ RMDInterpreter >> time: aNumber [
 { #category : #simulating }
 RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
-]
-
-{ #category : #directives }
-RMDInterpreter >> unknownDirectiveError: aString [
-
-	^ self error: 'Unknown directive: ' , aString
 ]
 
 { #category : #'context controls' }

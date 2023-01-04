@@ -104,11 +104,6 @@ RMDGrammar >> agentDirective [
 	  / self directionDirective / self timeDirective
 ]
 
-{ #category : #'class access' }
-RMDGrammar >> agentDirectiveNodeClass [
-	^ RMDAgentDirectiveNode
-]
-
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentIdentifier [
 	^ (#letter asPParser
@@ -575,6 +570,11 @@ RMDGrammar >> delta [
 	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> deltaTimeDirectiveNodeClass [
+	^ RMDDeltaTimeDirectiveNode
+]
+
 { #category : #'parsers-directives' }
 RMDGrammar >> dieDirective [
 
@@ -602,18 +602,27 @@ RMDGrammar >> differential2 [
 RMDGrammar >> directionDirective [
 	^ ('direction' asPParser trimBlanks , identifier)
 		==>
-			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+			[ :pair | self directionDirectiveNodeClass agent: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> directionDirectiveNodeClass [
+	^ RMDDirectionDirectiveNode
 ]
 
 { #category : #'parsers-directives' }
 RMDGrammar >> directionOfGradientDirective [
-	^ ('direction' asPParser trimLeft , #blank asPParser plus
-		, ('neighbor''s' asPParser / 'neighbour''s' asPParser) trim
-		, identifier)
-		==> [ :pair | 
-			self patchDirectiveNodeClass
-				directive: 'direction'
-				identifier: pair fourth ]
+
+	^ 'direction' asPParser trimLeft , #blank asPParser plus
+	  , ('neighbor''s' asPParser / 'neighbour''s' asPParser) trim
+	  , identifier ==> [ :pair | 
+	  self directionOfGradientDirectiveNodeClass variable:
+		  (RMDAttributeVariableNode identifier: pair fourth agent: 'here') ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> directionOfGradientDirectiveNodeClass [
+	^ RMDDirectionOfGradientDirectiveNode
 ]
 
 { #category : #'class access' }
@@ -625,7 +634,12 @@ RMDGrammar >> disjunctionNodeClass [
 RMDGrammar >> distanceDirective [
 	^ ('distance' asPParser trimBlanks , identifier)
 		==>
-			[ :pair | self agentDirectiveNodeClass directive: pair first agent: pair second ]
+			[ :pair | self distanceDirectiveNodeClass agent: pair second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> distanceDirectiveNodeClass [
+	^ RMDDistanceDirectiveNode
 ]
 
 { #category : #'class access' }
@@ -1070,11 +1084,6 @@ RMDGrammar >> patchDefinitionNodeClass [
 	^ RMDPatchDefinitionNode
 ]
 
-{ #category : #'class access' }
-RMDGrammar >> patchDirectiveNodeClass [
-	^ RMDPatchDirectiveNode
-]
-
 { #category : #'parsers-definitions' }
 RMDGrammar >> patchInitializer [
 
@@ -1326,11 +1335,16 @@ RMDGrammar >> the [
 
 { #category : #'parsers-directives' }
 RMDGrammar >> timeDirective [
-	^ (self delta optional , 'time' asPParser trimBlanks)
-		==> [ :pair | 
-			self agentDirectiveNodeClass
-				directive: (pair first ifNil: [ 'time' ] ifNotNil: [ 'delta time' ])
-				agent: nil ]
+
+	^ self delta optional , 'time' asPParser trimBlanks ==> [ :pair | 
+	  pair first
+		  ifNil: [ self timeDirectiveNodeClass new ]
+		  ifNotNil: [ self deltaTimeDirectiveNodeClass new ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> timeDirectiveNodeClass [
+	^ RMDTimeDirectiveNode
 ]
 
 { #category : #units }

@@ -51,8 +51,10 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 	[ 
 	[ 
 	[ 
-	expectedType unify:
-		(self typechecker typecheck: aRMDSyntaxNode subject: self subject object: self object) ]
+	expectedType unify: (self typechecker
+			 typecheck: aRMDSyntaxNode
+			 subject: self subject
+			 object: self object) ]
 		on: RMDTypeUnificationError
 		do: [ :ex | errorNodes add: aRMDSyntaxNode ] ]
 		on: RMDTypeError
@@ -65,10 +67,11 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 			ex resume: RMDType any ].
 	sections := OrderedCollection new: errorNodes size.
 	newText := (String streamContents: [ :stream | 
-		            syntaxNode
-			            printOn: stream
-			            ifIncludedIn: errorNodes
-			            addSectionTo: sections ]) asText.
+		            aRMDSyntaxNode ifNotNil: [ 
+			            aRMDSyntaxNode
+				            printOn: stream
+				            ifIncludedIn: errorNodes
+				            addSectionTo: sections ] ]) asText.
 	sections do: [ :section | 
 		newText
 			makeColor: highlightColor

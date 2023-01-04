@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDAgentDirectiveNodeTest,
+	#name : #RMDDirectionDirectiveNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDAgentDirectiveNodeTest >> testCopyReplace [
+RMDDirectionDirectiveNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'direction target'.
 	replacement := Dictionary new
@@ -18,7 +18,7 @@ RMDAgentDirectiveNodeTest >> testCopyReplace [
 ]
 
 { #category : #tests }
-RMDAgentDirectiveNodeTest >> testPrintOn [
+RMDDirectionDirectiveNodeTest >> testPrintOn [
 
 	| node copy |
 	node := parser expression end parse: 'direction target'.
