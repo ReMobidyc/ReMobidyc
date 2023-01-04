@@ -2,12 +2,10 @@ module InterpreterTest
 imports
     from UnitTesting
         operations
-            assertEquals renamed assertEquals;
-            assertApproxEquals renamed assertApproxEquals;,
+            assertEquals renamed assertEquals;,
     from Interpreter all,
     from AST all,
     from Unit all,
-    from Random all,
     from Memory all
 exports all
 definitions
@@ -121,7 +119,7 @@ operations
     testGetUtilityDefinition() ==
         (trap (Interpreter`UNRESOLVED_REFERENCE) with skip
         in
-            let d = Interpreter`getUtilityDefinition("x")
+            let - = Interpreter`getUtilityDefinition("x")
             in exit "unresolvable because x is not defined yet";
         Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
         assertEquals(

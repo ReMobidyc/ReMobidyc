@@ -2,9 +2,7 @@ module MemoryTest
 imports
     from UnitTesting
         operations
-            assert renamed assert;
-            assertEquals renamed assertEquals;
-            assertApproxEquals renamed assertApproxEquals;,
+            assertEquals renamed assertEquals,
     from Memory all
 exports all
 definitions

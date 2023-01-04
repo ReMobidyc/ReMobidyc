@@ -37,6 +37,10 @@ functions
                 elseif y1 = 0
                     then x1  * 2 + z
                 else
-                    bitXor(x1, y1)  * 2 + z);
+                    bitXor(x1, y1)  * 2 + z)
+    measure m_bitXor;
+
+    m_bitXor : nat * nat -> nat
+    m_bitXor(x, -) == x;
 
 end Random

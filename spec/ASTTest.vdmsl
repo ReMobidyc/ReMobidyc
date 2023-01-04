@@ -2,8 +2,7 @@ module ASTTest
 imports
     from UnitTesting
         operations
-            assertEquals renamed assertEquals;
-            assertApproxEquals renamed assertApproxEquals;,
+            assertEquals renamed assertEquals,
     from AST all,
     from Unit all
 exports all
