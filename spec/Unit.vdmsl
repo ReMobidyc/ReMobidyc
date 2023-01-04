@@ -151,8 +151,8 @@ functions
     mul(mk_Unit`Unit(bases1, scale1), mk_Unit`Unit(bases2, scale2)) ==
         let
             addBases : seq of (SIBaseUnit * int) * SIBaseUnit * int -> seq of (SIBaseUnit * int)
-            addBases(bases1, base2, order2) ==
-                cases bases1:
+            addBases(bs1, base2, order2) ==
+                cases bs1:
                     [] -> [mk_(base2, order2)],
                     [mk_(b1, o1)]^rest1 ->
                         if
@@ -163,10 +163,10 @@ functions
                             [mk_(b1, o1)] ^ addBases(rest1, base2, order2)
                     end,
             mergeBases : seq of (SIBaseUnit * int) * seq of (SIBaseUnit * int) -> seq of (SIBaseUnit * int)
-            mergeBases(bases1, bases2) ==
-                cases bases2:
-                    [] -> bases1,
-                    [mk_(b2, o2)]^rest2 -> mergeBases(addBases(bases1, b2, o2), rest2)
+            mergeBases(bs1, bs2) ==
+                cases bs2:
+                    [] -> bs1,
+                    [mk_(b2, o2)]^rest2 -> mergeBases(addBases(bs1, b2, o2), rest2)
                     end
         in mk_Unit`Unit(mergeBases(bases1, bases2), scale1  * scale2);
     

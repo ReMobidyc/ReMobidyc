@@ -60,17 +60,9 @@ types
      NewDirectivePlaceholder = <new>;
      StageDirectivePlaceholder = <stage>;
      AttributeDefinition ::
-        variable : AssignableVariable expression : Expression;
+        variable : AttributeVariable|Placeholder decorator:Decorator expression : Expression;
+     Decorator = <assign> | <delta> | <differential>;
      UtilityDefinition :: identifier : Identifier expression : Expression;
-     AssignableVariable =
-        AssignableAttributeVariable| AssignableDeltaAttributeVariable|
-        AssignableDifferentialAttributeVariable;
-     AssignableAttributeVariable ::
-        attributeVariable : AttributeVariable| Placeholder;
-     AssignableDeltaAttributeVariable ::
-        attributeVariable : AttributeVariable| Placeholder;
-     AssignableDifferentialAttributeVariable ::
-        attributeVariable : AttributeVariable| Placeholder;
      AttributeBind ::
         placeholder : Placeholder| DirectivePlaceholder
         replacement : Expression;
@@ -100,7 +92,7 @@ types
      NewAttributeVariable :: identifier : Identifier;
      UtilityVariable :: identifier : Identifier;
      Literal :: val : real unit : Unit;
-     GuardedChoices :: seq1 of (Condition * Expression) Expression;
+     GuardedChoices :: seq of (Condition * Expression) Expression;
      Apply :: function : Identifier arguments : seq1 of Expression;
      Arithmetics =
         Addition| Subtraction| Product| Fraction| Power| Minus;
@@ -199,10 +191,6 @@ values
 types
      ReplacementMap =
         map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
-     ReplacementAST =
-        Placeholder| DirectivePlaceholder| NewDirective| StageDirective|
-        ActionDefinition| Expression| Condition| AttributeDefinition|
-        UtilityDefinition| AssignableVariable;
 
 functions
     sizeOfAgent : AST`AgentDefinition -> nat
@@ -242,19 +230,16 @@ functions
     replaceAttributeDefinition : AST`AttributeDefinition * ReplacementMap -> AST`AttributeDefinition
     replaceAttributeDefinition(attributeDefinition, replacement) ==
         let
-            attributeVariable = attributeDefinition.variable.attributeVariable,
-            variable =
-                mu(attributeDefinition.variable,
-                    attributeVariable
-                    |-> if
-                        attributeVariable in set dom replacement
-                    then
-                        replacement(attributeVariable)
-                    else
-                        attributeVariable)
+            attributeVariable = attributeDefinition.variable
         in
             mk_AttributeDefinition(
-                variable,
+                if
+                    attributeVariable in set dom replacement
+                then
+                    replacement(attributeVariable)
+                else
+                    attributeVariable,
+                attributeDefinition.decorator,
                 replaceExpression(attributeDefinition.expression, replacement));
     
     replaceUtilityDefinition : AST`UtilityDefinition * ReplacementMap -> AST`UtilityDefinition

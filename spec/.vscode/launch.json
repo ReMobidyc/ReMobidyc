@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Lens config: Launch EvaluationTest`testEvalExpression_GuardedChoices",
+            "type": "vdm",
+            "request": "launch",
+            "noDebug": true,
+            "defaultName": "EvaluationTest",
+            "command": "p testEvalExpression_GuardedChoices()"
+        }
+    ]
+}

@@ -2,7 +2,6 @@ module UnitTest
 imports
     from UnitTesting
         operations
-            assertEquals renamed assertEquals;
             assertApproxEquals renamed assertApproxEquals;,
     from Unit all
 exports all
