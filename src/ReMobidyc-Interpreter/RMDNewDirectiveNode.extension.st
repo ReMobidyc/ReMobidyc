@@ -14,6 +14,7 @@ RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 
+	| animatDefinition |
 	animatIdentifier ifNil: [ 
 		^ RMDUnresolvedPlaceholderError signal: self ].
 	quantity ifNotNil: [ 
@@ -28,5 +29,15 @@ RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 						 type: ex type1
 						 subnode: self
 						 type: ex type2) ] ].
+	animatDefinition := aRMDInterpreter
+		                    animatDefinitionAt: animatIdentifier
+		                    ifAbsent: [ 
+		                    ^ RMDUndefinedAnimatError on: animatIdentifier ].
+	animatDefinition species = aRMDInterpreter context subjectDefinition species 
+		ifFalse: [ 
+			^ RMDSpeciesError
+				  on: self
+				  animatDefinition1: aRMDInterpreter subjectDefinition
+				  animatDefinition2: animatDefinition ].
 	aRMDInterpreter newIndividual: animatIdentifier
 ]

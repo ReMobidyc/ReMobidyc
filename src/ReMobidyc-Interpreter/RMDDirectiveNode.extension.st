@@ -1,9 +1,17 @@
 Extension { #name : #RMDDirectiveNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDDirectiveNode >> typecheckIn: aRMDInterpreter [
+RMDDirectiveNode >> typecheck: aRMDAttributeVariableNode with: aRMDType in: aRMDInterpreter [
 
-	[ ^ aRMDInterpreter typeOfDirective: directive ]
-		on: KeyNotFound
-		do: [ :ex | ex resignalAs: (RMDUndefinedDirectiveError on: self) ]
+	^ [ 
+	  (aRMDAttributeVariableNode typecheckIn: aRMDInterpreter) unify:
+		  aRMDType ]
+		  on: RMDTypeUnificationError
+		  do: [ :ex | 
+			  ex resignalAs: (RMDTypeError
+					   on: self
+					   subnode: aRMDAttributeVariableNode
+					   type: ex type1
+					   subnode: self
+					   type: ex type2) ]
 ]

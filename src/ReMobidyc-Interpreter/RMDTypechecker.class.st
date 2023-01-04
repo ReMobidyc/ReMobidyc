@@ -38,23 +38,6 @@ RMDTypechecker >> newIndividual: animatString [
 	^ animatString
 ]
 
-{ #category : #directives }
-RMDTypechecker >> typeOfDirective: aString [
-	aString = 'directionOfGradient'
-		ifTrue: [ ^ RMDType rad ].
-	aString = 'direction'
-		ifTrue: [ ^ RMDType rad ].
-	aString = 'distance'
-		ifTrue: [ ^ RMDType m ].
-	aString = 'time'
-		ifTrue: [ ^ RMDType s ].
-	aString = 'delta time'
-		ifTrue: [ ^ RMDType s ].
-	aString = 'terminate'
-		ifTrue: [ ^ RMDType noDimension ].
-	^ KeyNotFound signal: aString
-]
-
 { #category : #'variable access' }
 RMDTypechecker >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
 

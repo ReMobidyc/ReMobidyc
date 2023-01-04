@@ -203,7 +203,7 @@ RMDSourceTextPresenter >> updateHighlights: aString [
 				do: [ :ex | 
 					errorNodes add: ex node.
 					ex resume: ex type2 ] ]
-				on: RMDUnresolvedReferenceError
+				on: RMDError
 				do: [ :ex | 
 					errorNodes add: ex node.
 					ex resume: RMDType any ] ]

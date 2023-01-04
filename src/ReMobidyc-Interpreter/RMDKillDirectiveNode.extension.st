@@ -9,5 +9,9 @@ RMDKillDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDKillDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	aRMDInterpreter context objectDefinition notNil
+	aRMDInterpreter context objectDefinition
+		ifNil: [ ^ RMDUndefinedObjectError signal: self ]
+		ifNotNil: [ :object | 
+			object isAnimatDefinitionNode ifFalse: [ 
+				^ RMDUndefinedObjectError signal: self ] ]
 ]
