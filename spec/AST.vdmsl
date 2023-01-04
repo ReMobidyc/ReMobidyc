@@ -92,7 +92,7 @@ types
      NewAttributeVariable :: identifier : Identifier;
      UtilityVariable :: identifier : Identifier;
      Literal :: val : real unit : Unit;
-     GuardedChoices :: seq1 of (Condition * Expression) Expression;
+     GuardedChoices :: seq of (Condition * Expression) Expression;
      Apply :: function : Identifier arguments : seq1 of Expression;
      Arithmetics =
         Addition| Subtraction| Product| Fraction| Power| Minus;

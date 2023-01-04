@@ -9,8 +9,7 @@ imports
     from Interpreter all,
     from Memory all,
     from AST all,
-    from Unit all,
-    from Random all
+    from Unit all
 exports all
 definitions
 values
@@ -61,6 +60,10 @@ values
             examplePatch,
             {"age" |-> exampleActionAge},
             []);
+    ONE = mk_AST`Literal(1, Unit`nodimension);
+    TWO = mk_AST`Literal(2, Unit`nodimension);
+    THREE = mk_AST`Literal(3, Unit`nodimension);
+    FOUR = mk_AST`Literal(4, Unit`nodimension);
 
 operations
     testEvalWorldInitializer : () ==> ()
@@ -697,7 +700,31 @@ operations
             10,
             1.0e-16,
             "sum(1, 2, 3, 4) = 10"));
-    
+    testEvalExpression_GuardedChoices: () ==> ()
+    testEvalExpression_GuardedChoices() ==
+        (assertEquals(
+            Evaluation`evalExpression(mk_AST`GuardedChoices(
+                [mk_(mk_AST`Equality([TWO, TWO]), ONE), 
+                mk_(mk_AST`Equality([ONE, THREE]), TWO)], 
+                THREE)),
+            1,
+            "the first choice");
+        assertEquals(
+            Evaluation`evalExpression(mk_AST`GuardedChoices(
+                [mk_(mk_AST`Equality([ONE, TWO]), ONE), 
+                mk_(mk_AST`Equality([ONE, ONE]), TWO)], 
+                THREE)),
+            2,
+            "the second choice");
+        assertEquals(
+            Evaluation`evalExpression(mk_AST`GuardedChoices(
+                [mk_(mk_AST`Equality([TWO, THREE]), ONE), 
+                mk_(mk_AST`Equality([ONE, THREE]), TWO)], 
+                THREE)),
+            3,
+            "the default choice"));
+
+
     testEvalExpression_UtilityVariable : () ==> ()
     testEvalExpression_UtilityVariable() ==
         (Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));

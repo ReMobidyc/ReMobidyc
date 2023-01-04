@@ -170,11 +170,11 @@ operations
                 mk_AST`GuardedChoices(guardsAndExpressions, defaultExpression) ->
                     cases guardsAndExpressions:
                         [] -> evalExpression(defaultExpression),
-                        [mk_(guard, expr)]^rest ->
+                        [mk_(guard, expr1)]^rest ->
                             if
                                 evalCondition(guard)
                             then
-                                evalExpression(guard)
+                                evalExpression(expr1)
                             else
                                 evalExpression(mk_AST`GuardedChoices(rest, defaultExpression))
                         end,
