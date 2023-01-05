@@ -137,15 +137,22 @@ RMDRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-icons' }
-RMDRepository >> renameIconNamed: aString to: anotherString ifAbsent: errorBlock [
+{ #category : #'accessing-actions' }
+RMDRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
-	| form |
-	form := self iconNamed: aString ifAbsent: [ ^ errorBlock value ].
-	self addIcon: form named: anotherString.
-	(self iconNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
-		self removeIconNamed: aString ifAbsent: [ ^ errorBlock value ] ].
-	^ form
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-icons' }
+RMDRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-models' }
+RMDRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

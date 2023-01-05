@@ -10,6 +10,7 @@ Class {
 		'descriptionText',
 		'newItemButton',
 		'removeItemButton',
+		'editItemButton',
 		'isForSave'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
@@ -34,12 +35,19 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #newItemButton width: self buttonHeight;
 								     add: #removeItemButton width: self buttonHeight;
+								     add: #editItemButton width: self buttonHeight;
 								     yourself)
 						    expand: false;
 						    yourself);
 				   add: #descriptionText;
 				   yourself);
 		  yourself
+]
+
+{ #category : #testing }
+RMDAbstractRepositoryBrowser class >> isAbstract [
+
+	^ true
 ]
 
 { #category : #utilities }
@@ -141,6 +149,12 @@ RMDAbstractRepositoryBrowser >> disableOk [
 ]
 
 { #category : #operations }
+RMDAbstractRepositoryBrowser >> editItem [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #operations }
 RMDAbstractRepositoryBrowser >> editRepository [
 
 	^ self notYetImplemented
@@ -227,6 +241,13 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 		                    action: [ self removeItem ];
 		                    help:
 			                    'Remove the selected item from the repository';
+		                    disable;
+		                    yourself.
+	editItemButton := self newButton
+		                    icon: self editIcon;
+		                    action: [ self editItem ];
+		                    help:
+			                    'Rename the selected item from the repository';
 		                    disable;
 		                    yourself.
 	descriptionText := self newText
@@ -335,10 +356,12 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 			repo isModifiable
 				ifTrue: [ 
 					newItemButton enabled: isForSave = true.
-					removeItemButton enabled: self item notNil ]
+					removeItemButton enabled: self item notNil.
+					editItemButton enabled: self item notNil ]
 				ifFalse: [ 
 					newItemButton disable.
-					removeItemButton disable ] ].
+					removeItemButton disable.
+					editItemButton disable ] ].
 	self item ifNotNil: [ self enableOk ] ifNil: [ self disableOk ]
 ]
 
