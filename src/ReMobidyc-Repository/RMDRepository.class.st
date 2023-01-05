@@ -5,8 +5,9 @@ Class {
 }
 
 { #category : #'accessing-actions' }
-RMDRepository >> actionFileNamed: aString ifAbsent: errorBlock [
-	^ self subclassResponsibility 
+RMDRepository >> actionFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-actions' }
@@ -92,7 +93,7 @@ RMDRepository >> isModifiable [
 ]
 
 { #category : #'accessing-models' }
-RMDRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+RMDRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ self subclassResponsibility 
 ]
 
