@@ -167,6 +167,24 @@ RMDBuiltinRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 	^ self shouldNotImplement
 ]
 
+{ #category : #'accessing-actions' }
+RMDBuiltinRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ absentBlock value
+]
+
+{ #category : #'accessing-icons' }
+RMDBuiltinRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ absentBlock value
+]
+
+{ #category : #'accessing-models' }
+RMDBuiltinRepository >> renameModel: aString to: anotherString ifAbsent: errorBlock [
+
+	^ errorBlock value
+]
+
 { #category : #accessing }
 RMDBuiltinRepository >> repositoryName [
 	^ 'Built-in'

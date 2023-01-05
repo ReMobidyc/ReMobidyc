@@ -31,6 +31,29 @@ RMDRepositoryModelsBrowser >> addItem [
 ]
 
 { #category : #operations }
+RMDRepositoryModelsBrowser >> editItem [
+
+	self repository ifNotNil: [ :repo | 
+		self item ifNotNil: [ :item | 
+			(UIManager default
+				 request: 'Rename ' , item , ' to'
+				 initialAnswer: item) ifNotNil: [ :n | 
+				n trim ifNotEmpty: [ :newName | 
+					repo
+						renameModel: item
+						ifAbsent: [ 
+							UIManager default
+								alert: item , ' does not exist.'
+								title: 'Rename action' ]
+						to: newName
+						ifPresent: [ 
+							UIManager default
+								alert: newName , ' already exists.'
+								title: 'Rename action' ].
+					self updateItemList ] ] ] ]
+]
+
+{ #category : #operations }
 RMDRepositoryModelsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 

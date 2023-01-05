@@ -32,6 +32,29 @@ RMDRepositoryIconsBrowser >> addItem [
 				itemList selectItem: name ] ]
 ]
 
+{ #category : #operations }
+RMDRepositoryIconsBrowser >> editItem [
+
+	self repository ifNotNil: [ :repo | 
+		self item ifNotNil: [ :item | 
+			(UIManager default
+				 request: 'Rename ' , item , ' to'
+				 initialAnswer: item) ifNotNil: [ :n | 
+				n trim ifNotEmpty: [ :newName | 
+					repo
+						renameIcon: item
+						ifAbsent: [ 
+							UIManager default
+								alert: item , ' does not exist.'
+								title: 'Rename icon' ]
+						to: newName
+						ifPresent: [ 
+							UIManager default
+								alert: newName , ' already exists.'
+								title: 'Rename icon' ].
+					self updateItemList ] ] ] ]
+]
+
 { #category : #accessing }
 RMDRepositoryIconsBrowser >> file [
 

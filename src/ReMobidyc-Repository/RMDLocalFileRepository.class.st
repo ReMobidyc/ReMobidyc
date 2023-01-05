@@ -249,6 +249,45 @@ RMDLocalFileRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 	ref ensureDeleteAll
 ]
 
+{ #category : #'accessing-actions' }
+RMDLocalFileRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	| fileRef |
+	aString = anotherString ifTrue: [ ^ self ].
+	fileRef := self
+		           actionFileNamed: aString
+		           ifAbsent: [ ^ absentBlock value ].
+	(self actionFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
+		^ presentBlock value ].
+	fileRef renameTo: anotherString , '.rmd'
+]
+
+{ #category : #'accessing-icons' }
+RMDLocalFileRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	| fileRef |
+	aString = anotherString ifTrue: [ ^ self ].
+	fileRef := self
+		           iconFileNamed: aString
+		           ifAbsent: [ ^ absentBlock value ].
+	(self iconFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
+		^ presentBlock value ].
+	fileRef renameTo: anotherString , '.png'
+]
+
+{ #category : #'accessing-models' }
+RMDLocalFileRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	| fileRef |
+	aString = anotherString ifTrue: [ ^ self ].
+	fileRef := self
+		           modelFileNamed: aString
+		           ifAbsent: [ ^ absentBlock value ].
+	(self modelFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
+		^ presentBlock value ].
+	fileRef renameTo: anotherString
+]
+
 { #category : #accessing }
 RMDLocalFileRepository >> repositoryName [
 
