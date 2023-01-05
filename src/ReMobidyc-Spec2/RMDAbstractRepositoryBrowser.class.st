@@ -26,6 +26,7 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 				   add: (SpBoxLayout newHorizontal
 						    add: #addRepositoryButton width: self buttonHeight;
 						    add: #removeRepositoryButton width: self buttonHeight;
+						    add: #editRepositoryButton width: self buttonHeight;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -167,7 +168,8 @@ RMDAbstractRepositoryBrowser >> editItem [
 { #category : #operations }
 RMDAbstractRepositoryBrowser >> editRepository [
 
-	^ self notYetImplemented
+	self repository ifNotNil: #edit.
+	repositoryList refresh
 ]
 
 { #category : #private }
@@ -306,7 +308,7 @@ RMDAbstractRepositoryBrowser >> load [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : #widgets }
 RMDAbstractRepositoryBrowser >> newItemList [
 
 	^ self subclassResponsibility
@@ -359,10 +361,12 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 	self repository
 		ifNil: [ 
 			removeRepositoryButton disable.
+			editRepositoryButton disable.
 			newItemButton disable.
-			removeItemButton disable ]
+			editItemButton disable ]
 		ifNotNil: [ :repo | 
 			removeRepositoryButton enable.
+			editRepositoryButton enable.
 			repo isModifiable
 				ifTrue: [ 
 					newItemButton enabled: isForSave = true.

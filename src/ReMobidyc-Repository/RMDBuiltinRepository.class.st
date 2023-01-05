@@ -186,6 +186,12 @@ RMDBuiltinRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherStr
 ]
 
 { #category : #'accessing-models' }
+RMDBuiltinRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ absentBlock value
+]
+
+{ #category : #'accessing-models' }
 RMDBuiltinRepository >> renameModel: aString to: anotherString ifAbsent: errorBlock [
 
 	^ errorBlock value
