@@ -1,21 +1,12 @@
 Class {
 	#name : #RMDLocalFileRepository,
-	#superclass : #RMDRepository,
+	#superclass : #RMDAbstractFileRepository,
 	#instVars : [
 		'directory',
-		'name',
 		'modifiable'
 	],
 	#category : #'ReMobidyc-Repository'
 }
-
-{ #category : #'class access' }
-RMDLocalFileRepository class >> classFor: aFileReference [
-
-	^ (aFileReference / '.git') isDirectory
-		  ifTrue: [ RMDLocalGitRepository ]
-		  ifFalse: [ RMDLocalFileRepository ]
-]
 
 { #category : #'instance creation' }
 RMDLocalFileRepository class >> default [
@@ -27,68 +18,16 @@ RMDLocalFileRepository class >> default [
 { #category : #'instance creation' }
 RMDLocalFileRepository class >> on: aFileReference name: aString [
 
-	^ (self classFor: aFileReference) new
+	^ self new
 		  directory: aFileReference;
 		  name: aString;
 		  yourself
 ]
 
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> actionFileNamed: aString ifAbsent: errorBlock [
+{ #category : #privatee }
+RMDLocalFileRepository >> basicDirectory [
 
-	| ref |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
-	^ ref
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> actionNamed: aString ifAbsent: errorBlock [
-
-	| ref action |
-	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock ].
-	action := RMDGrammar new actionDefinition end parse: ref contents.
-	action isPetit2Failure ifTrue: [ ^ errorBlock value ].
-	^ action
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> actionNames [
-
-	^ (self actionsDirectory filesMatching: '*.rmd') collect: #basename
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> actionsDirectory [
-
-	^ (self directory / 'actions') ensureCreateDirectory
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> addAction: aRMDActionDefinitionNode named: aString [
-
-	| ref |
-	ref := self actionsDirectory / aString withExtension: 'rmd'.
-	ref ensureDelete writeStreamDo: [ :stream | 
-		aRMDActionDefinitionNode printOn: stream ]
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> addIcon: aForm named: aString [
-
-	PNGReadWriter
-		putForm: aForm
-		onFileNamed:
-		(self iconsDirectory / aString withExtension: 'png') ensureDelete
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> addModel: aRMDSimulationModel named: aString [
-
-	| ref |
-	ref := self modelsDirectory / aString.
-	ref isFile ifTrue: [ ref ensureDelete ].
-	^ aRMDSimulationModel exportModel: ref
+	^ directory
 ]
 
 { #category : #accessing }
@@ -118,35 +57,7 @@ RMDLocalFileRepository >> directory: aFileReference [
 { #category : #accessing }
 RMDLocalFileRepository >> icon [
 
-	^ Smalltalk ui icons open
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> iconFileNamed: aString ifAbsent: errorBlock [
-
-	| ref |
-	ref := self iconsDirectory / aString withExtension: 'png'.
-	ref isFile ifFalse: [ ^ errorBlock value ].
-	^ ref
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> iconNamed: aString ifAbsent: errorBlock [
-
-	^ PNGReadWriter formFromFileNamed:
-		  (self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ])
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> iconNames [
-
-	^ (self iconsDirectory filesMatching: '*.png') collect: #basename
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> iconsDirectory [
-
-	^ (self directory / 'icons') ensureCreateDirectory
+	^ Smalltalk ui icons iconNamed: #open
 ]
 
 { #category : #initialization }
@@ -161,46 +72,6 @@ RMDLocalFileRepository >> isModifiable [
 	^ modifiable = true
 ]
 
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> modelFileNamed: aString ifAbsent: errorBlock [
-
-	| ref |
-	ref := self modelsDirectory / aString.
-	ref isDirectory ifFalse: [ ^ errorBlock value ].
-	^ ref
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
-
-	^ RMDSimulationModel
-		  importMetadata:
-		  (self modelFileNamed: aString ifAbsent: [ ^ errorBlock value ])
-		  ifError: errorBlock
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> modelNamed: aString ifAbsent: errorBlock [
-
-	^ RMDSimulationModel
-		  importModel:
-		  (self modelFileNamed: aString ifAbsent: [ ^ errorBlock value ])
-		  ifError: errorBlock
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> modelNames [
-
-	^ self modelsDirectory directoryNames reject: [ :dirname | 
-		  dirname isEmpty or: [ dirname first = $. ] ]
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> modelsDirectory [
-
-	^ (self directory / 'models') ensureCreateDirectory
-]
-
 { #category : #accessing }
 RMDLocalFileRepository >> modifiable [
 
@@ -211,85 +82,4 @@ RMDLocalFileRepository >> modifiable [
 RMDLocalFileRepository >> modifiable: aBoolean [
 
 	modifiable := aBoolean
-]
-
-{ #category : #accessing }
-RMDLocalFileRepository >> name [
-	^ name
-]
-
-{ #category : #accessing }
-RMDLocalFileRepository >> name: aString [
-
-	name := aString
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
-
-	| ref |
-	ref := self actionFileNamed: aString ifAbsent: [ ^ errorBlock value ].
-	ref ensureDelete
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> removeIconNamed: aString ifAbsent: errorBlock [
-
-	| ref |
-	ref := self iconFileNamed: aString ifAbsent: [ ^ errorBlock value ].
-	ref ensureDelete
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> removeModelNamed: aString ifAbsent: errorBlock [
-
-	| ref |
-	ref := self modelsDirectory / aString.
-	ref isDirectory ifFalse: [ ^ errorBlock value ].
-	ref ensureDeleteAll
-]
-
-{ #category : #'accessing-actions' }
-RMDLocalFileRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
-
-	| fileRef |
-	aString = anotherString ifTrue: [ ^ self ].
-	fileRef := self
-		           actionFileNamed: aString
-		           ifAbsent: [ ^ absentBlock value ].
-	(self actionFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
-		^ presentBlock value ].
-	fileRef renameTo: anotherString , '.rmd'
-]
-
-{ #category : #'accessing-icons' }
-RMDLocalFileRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
-
-	| fileRef |
-	aString = anotherString ifTrue: [ ^ self ].
-	fileRef := self
-		           iconFileNamed: aString
-		           ifAbsent: [ ^ absentBlock value ].
-	(self iconFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
-		^ presentBlock value ].
-	fileRef renameTo: anotherString , '.png'
-]
-
-{ #category : #'accessing-models' }
-RMDLocalFileRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
-
-	| fileRef |
-	aString = anotherString ifTrue: [ ^ self ].
-	fileRef := self
-		           modelFileNamed: aString
-		           ifAbsent: [ ^ absentBlock value ].
-	(self modelFileNamed: anotherString ifAbsent: [ nil ]) ifNotNil: [ 
-		^ presentBlock value ].
-	fileRef renameTo: anotherString
-]
-
-{ #category : #accessing }
-RMDLocalFileRepository >> repositoryName [
-
-	^ name
 ]

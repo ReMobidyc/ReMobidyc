@@ -58,7 +58,7 @@ RMDRepositoryModelsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 
 		  self item ifNotNil: [ :item | 
-			  repo modelFileNamed: item ifAbsent: [ nil ] ] ]
+			  repo modelFileNamed: item ifPresent: #yourself ifAbsent: [ nil ] ] ]
 ]
 
 { #category : #private }

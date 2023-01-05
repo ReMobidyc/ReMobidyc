@@ -88,9 +88,19 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 ]
 
 { #category : #operations }
-RMDAbstractRepositoryBrowser >> addGit [
+RMDAbstractRepositoryBrowser >> addIcebergRepository [
 
-	^ self notYetImplemented
+	| repos |
+	repos := IceRepository repositories collect: #name.
+	(UIManager default
+		 chooseFrom: repos
+		 title: 'Select an Iceberg repository') ifNotNil: [ :index | 
+		(repos at: index ifAbsent: [ nil ]) ifNotNil: [ :repo | 
+			(UIManager default request: 'Repository Name' initialAnswer: repo) 
+				ifNotNil: [ :name | 
+					self repositoryDirectory add:
+						(RMDIcebergRepository on: repo name: name).
+					self updateRepositoryList ] ] ]
 ]
 
 { #category : #operations }
@@ -135,9 +145,9 @@ RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 						  action: [ self addLocalDirectory ] ];
 				  addItem: [ :item | 
 					  item
-						  name: 'Git';
-						  icon: Smalltalk ui icons git;
-						  action: [ self addGit ] ] ];
+						  name: 'Iceberg';
+						  icon: RMDIcebergRepository icon;
+						  action: [ self addIcebergRepository ] ] ];
 		  yourself
 ]
 

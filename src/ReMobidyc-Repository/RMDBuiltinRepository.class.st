@@ -29,6 +29,12 @@ RMDBuiltinRepository >> actionFileNamed: aString ifAbsent: errorBlock [
 ]
 
 { #category : #'accessing-actions' }
+RMDBuiltinRepository >> actionFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
+
+	^ errorBlock value
+]
+
+{ #category : #'accessing-actions' }
 RMDBuiltinRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ (self actionNames includes: aString)
 		ifTrue: [ self perform: aString asSymbol ]
@@ -116,7 +122,7 @@ RMDBuiltinRepository >> lose [
 ]
 
 { #category : #'accessing-models' }
-RMDBuiltinRepository >> modelFileNamed: aString ifAbsent: errorBlock [
+RMDBuiltinRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
