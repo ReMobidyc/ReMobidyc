@@ -39,7 +39,7 @@ RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 			patchY := aRMDInterpreter patchLength
 			          * ((aRMDInterpreter patchY: y) floor + 0.5).
 			vector := patchX - x @ (patchY - y) ].
-	^ vector theta
+	^ vector theta ifNanOrInfinite: [ RMDNotComputableError signal: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

@@ -1,8 +1,7 @@
 Class {
 	#name : #RMDSpeciesError,
-	#superclass : #RMDError,
+	#superclass : #RMDSemanticError,
 	#instVars : [
-		'node',
 		'animatDefinition1',
 		'animatDefinition2'
 	],
@@ -12,8 +11,7 @@ Class {
 { #category : #'instance creation' }
 RMDSpeciesError class >> on: aRMDSyntaxNode animatDefinition1: aRMDAnimatDefintionNode animatDefinition2: anotherRMDAnimatDefinitionNode [
 
-	^ self new
-		  node: aRMDSyntaxNode;
+	^ (self on: aRMDSyntaxNode)
 		  animatDefinition1: aRMDAnimatDefintionNode;
 		  animatDefinition2: anotherRMDAnimatDefinitionNode;
 		  yourself
@@ -57,16 +55,4 @@ RMDSpeciesError >> composeMessageText [
 			  nextPutAll: ' (';
 			  nextPutAll: animatDefinition2 species;
 			  nextPutAll: ')' ]
-]
-
-{ #category : #accessing }
-RMDSpeciesError >> node [
-
-	^ node
-]
-
-{ #category : #accessing }
-RMDSpeciesError >> node: aRMDSyntaxNode [
-
-	node := aRMDSyntaxNode
 ]

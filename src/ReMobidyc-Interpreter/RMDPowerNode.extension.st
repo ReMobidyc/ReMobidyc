@@ -2,7 +2,9 @@ Extension { #name : #RMDPowerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPowerNode >> evalIn: aRMDInterpreter [
-	^ (expression evalIn: aRMDInterpreter) ** order
+
+	^ (expression evalIn: aRMDInterpreter) ** order ifNanOrInfinite: [ 
+		  RMDNotComputableError signal: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
