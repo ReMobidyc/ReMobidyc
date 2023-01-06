@@ -22,6 +22,12 @@ RMDWorldDefinitionNode >> isWorldDefinitionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDWorldDefinitionNode >> name [
+
+	^ 'World'
+]
+
 { #category : #printing }
 RMDWorldDefinitionNode >> printOn: aStream [
 

@@ -73,6 +73,12 @@ RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> name [
+
+	^ identifier
+]
+
 { #category : #printing }
 RMDAnimatDefinitionNode >> printOn: aStream [
 
