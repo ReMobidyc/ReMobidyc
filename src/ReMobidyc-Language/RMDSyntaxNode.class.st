@@ -22,6 +22,28 @@ RMDSyntaxNode >> asString [
 	^ self printString
 ]
 
+{ #category : #converting }
+RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
+
+	| sections nodes newText |
+	sections := OrderedCollection new:
+		            aCollectionOfIntervalOrRMDSyntaxNode size + 10.
+	nodes := IdentitySet new:
+		         aCollectionOfIntervalOrRMDSyntaxNode size + 1.
+	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight | 
+		highlight isInterval
+			ifTrue: [ sections add: highlight ]
+			ifFalse: [ nodes add: highlight ] ].
+	newText := (String streamContents: [ :stream | 
+		            self
+			            printOn: stream
+			            ifIncludedIn: nodes
+			            addSectionTo: sections ]) asText.
+	sections do: [ :section | 
+		newText makeColor: Color red from: section first to: section last ].
+	^ newText
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
 	self

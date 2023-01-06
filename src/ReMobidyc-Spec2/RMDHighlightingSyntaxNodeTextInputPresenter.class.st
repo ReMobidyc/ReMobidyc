@@ -46,7 +46,7 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> objectBlock: aBlock [
 { #category : #private }
 RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 
-	| errorNodes sections newText |
+	| errorNodes |
 	errorNodes := OrderedCollection new: 10.
 	[ 
 	[ 
@@ -65,19 +65,9 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 		do: [ :ex | 
 			errorNodes add: ex node.
 			ex resume: RMDType any ].
-	sections := OrderedCollection new: errorNodes size.
-	newText := (String streamContents: [ :stream | 
-		            aRMDSyntaxNode ifNotNil: [ 
-			            aRMDSyntaxNode
-				            printOn: stream
-				            ifIncludedIn: errorNodes
-				            addSectionTo: sections ] ]) asText.
-	sections do: [ :section | 
-		newText
-			makeColor: highlightColor
-			from: section first
-			to: section last ].
-	^ newText
+	^ aRMDSyntaxNode
+		  ifNotNil: [ aRMDSyntaxNode asTextWithHighlights: errorNodes ]
+		  ifNil: [ Text new ]
 ]
 
 { #category : #accessing }
