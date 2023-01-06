@@ -8,7 +8,8 @@ RMDDistanceDirectiveNode >> evalIn: aRMDInterpreter [
 	y1 := aRMDInterpreter my: 'y'.
 	x2 := aRMDInterpreter agent: agentIdentifier s: 'x'.
 	y2 := aRMDInterpreter agent: agentIdentifier s: 'y'.
-	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt
+	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt ifNanOrInfinite: [ 
+		  RMDNotComputableError on: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

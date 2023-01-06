@@ -1,8 +1,7 @@
 Class {
 	#name : #RMDTypeError,
-	#superclass : #RMDError,
+	#superclass : #RMDSemanticError,
 	#instVars : [
-		'node',
 		'type1',
 		'type2',
 		'subnode1',
@@ -14,8 +13,7 @@ Class {
 { #category : #'instance creation' }
 RMDTypeError class >> on: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
 
-	^ self new
-		  node: aRMDSyntaxNode1;
+	^ (self on: aRMDSyntaxNode1)
 		  subnode1: aRMDSyntaxNode2;
 		  type1: aRMDType2;
 		  subnode2: aRMDSyntaxNode3;
@@ -54,18 +52,6 @@ RMDTypeError >> composeMessageText [
 				  stream nextPutAll: ' is '.
 				  type2 printOn: stream ].
 		  stream nextPutAll: '.' ]
-]
-
-{ #category : #accessing }
-RMDTypeError >> node [
-
-	^ node
-]
-
-{ #category : #accessing }
-RMDTypeError >> node: aRMDSyntaxNode [
-
-	node := aRMDSyntaxNode
 ]
 
 { #category : #accessing }

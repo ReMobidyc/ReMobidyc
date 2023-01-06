@@ -1,8 +1,7 @@
 Class {
 	#name : #RMDNumArgsError,
-	#superclass : #RMDError,
+	#superclass : #RMDSemanticError,
 	#instVars : [
-		'node',
 		'expectedNumArgs',
 		'actualNumArgs'
 	],
@@ -12,8 +11,7 @@ Class {
 { #category : #'instance creation' }
 RMDNumArgsError class >> on: aRMDSyntaxNode actual: anInteger expected: anotherInteger [
 
-	^ self new
-		  node: aRMDSyntaxNode;
+	^ (self on: aRMDSyntaxNode)
 		  actual: anInteger;
 		  expected: anotherInteger;
 		  yourself
@@ -63,16 +61,4 @@ RMDNumArgsError >> expected [
 RMDNumArgsError >> expected: anInteger [
 
 	expectedNumArgs := anInteger
-]
-
-{ #category : #accessing }
-RMDNumArgsError >> node [
-
-	^ node
-]
-
-{ #category : #accessing }
-RMDNumArgsError >> node: aRMDSyntaxNode [
-
-	node := aRMDSyntaxNode
 ]

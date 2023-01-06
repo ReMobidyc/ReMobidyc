@@ -3,7 +3,8 @@ Extension { #name : #RMDEnUnitExpressionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDEnUnitExpressionNode >> evalIn: aRMDInterpreter [
 
-	^ unit toSI: (expression evalIn: aRMDInterpreter)
+	^ (unit toSI: (expression evalIn: aRMDInterpreter)) ifNanOrInfinite: [ 
+		  RMDNotComputableError on: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

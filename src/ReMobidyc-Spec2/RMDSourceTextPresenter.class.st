@@ -55,27 +55,9 @@ RMDSourceTextPresenter >> highlightColor: aColor [
 { #category : #api }
 RMDSourceTextPresenter >> highlightedText [
 
-	| nodes sections newText |
-	nodes := Set new: highlights size + 5.
-	sections := OrderedCollection new: highlights size + 5.
-	highlights do: [ :highlight | 
-		highlight isInterval
-			ifTrue: [ sections add: highlight ]
-			ifFalse: [ nodes add: highlight ] ].
-	newText := syntaxNode
-		           ifNotNil: [ 
-			           (String streamContents: [ :stream | 
-				            syntaxNode
-					            printOn: stream
-					            ifIncludedIn: nodes
-					            addSectionTo: sections ]) asText ]
-		           ifNil: [ text asText ].
-	sections do: [ :section | 
-		newText
-			makeColor: highlightColor
-			from: section first
-			to: section last ].
-	^ newText
+	^ syntaxNode
+		  ifNotNil: [ syntaxNode asTextWithHighlights: highlights ]
+		  ifNil: [ Text new ]
 ]
 
 { #category : #initialization }
