@@ -7,5 +7,5 @@ Class {
 { #category : #private }
 RMDNotComputableError >> composeMessageText [
 
-	^ 'Infinity occured: ' , node printString
+	^ node printString, ' is not computable.'
 ]

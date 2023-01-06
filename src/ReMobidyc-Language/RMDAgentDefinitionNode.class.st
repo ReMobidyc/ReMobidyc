@@ -183,6 +183,12 @@ RMDAgentDefinitionNode >> isAgentDefinitionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDAgentDefinitionNode >> name [
+
+	^ self subclassResponsibility
+]
+
 { #category : #copying }
 RMDAgentDefinitionNode >> postCopy [
 

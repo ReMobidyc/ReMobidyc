@@ -8,6 +8,7 @@ Class {
 		'#lastValidSyntaxNode => ObservableSlot',
 		'#highlights => ObservableSlot',
 		'#highlightColor => ObservableSlot',
+		'#autoTypecheckingEnabled => ObservableSlot',
 		'#parser',
 		'#simulationModelBlock',
 		'#subjectBlock',
@@ -28,6 +29,18 @@ RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
 	self text: aRMDSyntaxNode printString
 ]
 
+{ #category : #api }
+RMDSourceTextPresenter >> autoTypecheckingEnabled [
+
+	^ autoTypecheckingEnabled
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> autoTypecheckingEnabled: aBoolean [
+
+	autoTypecheckingEnabled := aBoolean ~= false
+]
+
 { #category : #private }
 RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
@@ -38,6 +51,16 @@ RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 			lastValidSyntaxNode := aRMDSyntaxNode ]
 		ifFalse: [ self beError ].
 
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> disableAutoTypechecking [
+	self autoTypecheckingEnabled: false
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> enableAutoTypechecking [
+	self autoTypecheckingEnabled: true
 ]
 
 { #category : #accessing }
@@ -60,10 +83,21 @@ RMDSourceTextPresenter >> highlightedText [
 		  ifNil: [ Text new ]
 ]
 
+{ #category : #api }
+RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
+
+	| t |
+	highlights := aCollectionOfRMDSyntaxNode.
+	t := text.
+	text := ''.
+	super text: t
+]
+
 { #category : #initialization }
 RMDSourceTextPresenter >> initialize [
 
 	super initialize.
+	autoTypecheckingEnabled := true.
 	highlightColor := Color red darker.
 	highlights := Array new.
 	self whenBuiltDo: [ 
@@ -144,14 +178,16 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
 	self basicSyntaxNode: aRMDSyntaxNode.
-	self text: (aRMDSyntaxNode isString
-			 ifTrue: [ aRMDSyntaxNode ]
-			 ifFalse: [ aRMDSyntaxNode printString ])
+	self text: (aRMDSyntaxNode ifNil: [ '' ] ifNotNil: [ 
+			 aRMDSyntaxNode isString
+				 ifTrue: [ aRMDSyntaxNode ]
+				 ifFalse: [ aRMDSyntaxNode printString ] ])
 ]
 
 { #category : #api }
 RMDSourceTextPresenter >> text: aString [
 
+	text = aString ifTrue: [ ^ self ].
 	parser ifNil: [ syntaxNode := nil ] ifNotNil: [ 
 		| node |
 		node := parser end parse: aString.
@@ -160,7 +196,7 @@ RMDSourceTextPresenter >> text: aString [
 				self beError.
 				syntaxNode := nil ]
 			ifFalse: [ self basicSyntaxNode: node ] ].
-	self updateHighlights: aString.
+	autoTypecheckingEnabled ifTrue: [ self updateHighlights: aString ].
 	^ super text: aString
 ]
 
@@ -196,6 +232,11 @@ RMDSourceTextPresenter >> updateHighlights: aString [
 				node isPetit2Failure ifTrue: [ 
 					errorNodes add: ((node position max: 1) to: aString size) ] ] ].
 	highlights := errorNodes
+]
+
+{ #category : #'api-events' }
+RMDSourceTextPresenter >> whenAutoTypecheckingEnabledChangedDo: aBlock [
+	self property: #autoTypecheckingEnabled whenChangedDo: aBlock
 ]
 
 { #category : #'api-events' }

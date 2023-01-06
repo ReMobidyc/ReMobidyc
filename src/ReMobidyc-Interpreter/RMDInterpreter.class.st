@@ -371,7 +371,14 @@ RMDInterpreter >> random [
 
 { #category : #'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
-	^ (context utilityAt: aString ifAbsent: errorBlock) evalIn: self
+
+	| numberOrExpression |
+	numberOrExpression := context utilityAt: aString ifAbsent: errorBlock.
+
+	^ numberOrExpression isNumber
+		  ifTrue: [ numberOrExpression ]
+		  ifFalse: [ 
+		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
 ]
 
 { #category : #'variable access' }

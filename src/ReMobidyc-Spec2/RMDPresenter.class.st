@@ -98,9 +98,9 @@ RMDPresenter >> newNumberInput [
 ]
 
 { #category : #widgets }
-RMDPresenter >> newSourceWith: aPP2Node [
+RMDPresenter >> newSourceWith: aParser [
 	^ (self instantiate: RMDSourceTextPresenter)
-		parser: aPP2Node;
+		parser: aParser;
 		yourself
 ]
 

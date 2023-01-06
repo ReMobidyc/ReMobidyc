@@ -29,6 +29,12 @@ RMDPatchDefinitionNode >> isPatchDefinitionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDPatchDefinitionNode >> name [
+
+	^ 'Patch'
+]
+
 { #category : #printing }
 RMDPatchDefinitionNode >> printOn: aStream [
 

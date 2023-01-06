@@ -231,7 +231,12 @@ RMDObservatory >> initializePresenters [
 					              runButton state ifFalse: [ 
 							              (time / duration - timeSlider value) abs > 1.0e-8 
 								              ifTrue: [ 
-									              interpreter time: timeSlider value * duration ] ] ] ];
+									              [ 
+									              interpreter time: timeSlider value * duration ]
+										              on: RMDSemanticError
+										              do: [ :ex | 
+											              (RMDDebugger on: interpreter exception: ex)
+												              open ] ] ] ] ];
 		              yourself.
 	runButton := self newButton
 		             label: 'run';
@@ -245,7 +250,13 @@ RMDObservatory >> initializePresenters [
 					                        timeSlider enabled: false.
 					                        [ self runState == true ] whileTrue: [ 
 							                        interpreter ifNotNil: [ 
-									                        interpreter stepSimulation ifFalse: [ 
+									                        ([ interpreter stepSimulation ]
+										                         on: RMDSemanticError
+										                         do: [ :ex | 
+											                         (RMDDebugger
+												                          on: interpreter
+												                          exception: ex) open.
+											                         false ]) ifFalse: [ 
 											                        self runState: false ].
 									                        0 milliSecond wait ] ].
 					                        process := nil.
@@ -346,7 +357,10 @@ RMDObservatory >> recordAPNG [
 		 chooseForSaveFileReference: 'export animation PNG'
 		 extensions: #( 'png' )
 		 path: FileLocator desktop absolutePath) ifNotNil: [ :ref | 
-		interpreter ifNotNil: [ interpreter exportAPNG: ref ] ]
+		interpreter ifNotNil: [ 
+			[ interpreter exportAPNG: ref ]
+				on: RMDSemanticError
+				do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ] ] ]
 ]
 
 { #category : #accessing }
@@ -417,10 +431,13 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 
 { #category : #api }
 RMDObservatory >> stepSimulation [
+
 	self runState: false.
-	[ process isNil or: [ process isTerminated ] ]
-		whileFalse: [ 1 milliSecond wait ].
-	interpreter stepSimulation
+	[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
+		1 milliSecond wait ].
+	[ interpreter stepSimulation ]
+		on: RMDSemanticError
+		do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ]
 ]
 
 { #category : #updating }

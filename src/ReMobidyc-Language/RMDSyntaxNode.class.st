@@ -28,7 +28,7 @@ RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
 	| sections nodes newText |
 	sections := OrderedCollection new:
 		            aCollectionOfIntervalOrRMDSyntaxNode size + 10.
-	nodes := IdentitySet new:
+	nodes := Set new:
 		         aCollectionOfIntervalOrRMDSyntaxNode size + 1.
 	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight | 
 		highlight isInterval
