@@ -40,7 +40,7 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 			  | repo |
 			  UIManager default
 				  informUser:
-				  'Importing repository from the official ReMobidyc repository'
+				  'Cloning repository from the official re:mobidyc repository'
 				  during: [ 
 					  repo := IceRepositoryCreator new
 						          repository: nil;
