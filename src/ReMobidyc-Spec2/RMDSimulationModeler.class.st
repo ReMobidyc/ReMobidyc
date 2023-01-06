@@ -77,26 +77,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 						parent: #Examples;
 						label: 'goat and wolf';
 						action: [ RMDSimulationModeler goatAndWolf open ];
-						help: 'A simple simulation of plants, herbivore, and carnivore.' ].
-			(aBuilder item: #ReMobidycSystem)
-				parent: 'ReMobidyc';
-				order: 100;
-				label: 'System';
-				with: [ 
-					(aBuilder item: #Upgrade)
-						parent: #ReMobidycSystem;
-						label: 'Upgrade from the official repository';
-						action: [ 
-							EpMonitor disableDuring: [ 
-									Metacello new
-										onConflictUseLoaded;
-										onWarningLog;
-										repository: 'github://ReMobidyc/ReMobidyc:main/';
-										baseline: 'ReMobidyc';
-										get;
-										load ] ];
-						help:
-						'Upgrade the re:mobidyc from the official github repository.' ] ]
+						help: 'A simple simulation of plants, herbivore, and carnivore.' ] ]
 ]
 
 { #category : #examples }

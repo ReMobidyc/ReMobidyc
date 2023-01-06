@@ -31,6 +31,63 @@ BaselineOfReMobidyc class >> deploy [
 			[ Smalltalk garbageCollect ]
 ]
 
+{ #category : #utilities }
+BaselineOfReMobidyc class >> ensureIcebergRepository [
+
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'ReMobidyc' ]
+		  ifNone: [ 
+			  | repo |
+			  UIManager default
+				  informUser:
+				  'Importing repository from the official ReMobidyc repository'
+				  during: [ 
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/ReMobidyc/ReMobidyc.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+							          / 'ReMobidyc';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : #menus }
+BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #ReMobidycSystem)
+		parent: 'ReMobidyc';
+		order: 100;
+		label: 'System';
+		with: [ 
+			(aBuilder item: #Upgrade)
+				parent: #ReMobidycSystem;
+				label: 'Upgrade from the official repository';
+				action: [ self updateFromOfficialRepository ];
+				help:
+					'Upgrade the re:mobidyc from the official github repository.' ]
+]
+
+{ #category : #utilities }
+BaselineOfReMobidyc class >> updateFromOfficialRepository [
+
+	<script: 'BaselineOfReMobidyc updateFromOfficialRepository'>
+	| repository |
+	repository := self ensureIcebergRepository.
+	repository pull.
+	Metacello new
+		repository: 'gitlocal://' , (repository location / 'src') fullName;
+		baseline: 'ReMobidyc';
+		onConflictUseIncoming;
+		onWarningLog;
+		load: #(  )
+]
+
 { #category : #baselines }
 BaselineOfReMobidyc >> baselineOf: spec [
 
