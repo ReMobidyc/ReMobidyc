@@ -55,6 +55,12 @@ RMDIcebergRepository >> icon [
 ]
 
 { #category : #testing }
+RMDIcebergRepository >> isIcebergRepository [
+
+	^ true
+]
+
+{ #category : #testing }
 RMDIcebergRepository >> isModifiable [
 
 	^ true

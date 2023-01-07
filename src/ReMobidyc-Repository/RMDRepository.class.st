@@ -87,6 +87,12 @@ RMDRepository >> ifNotModifiable: aBlock [
 ]
 
 { #category : #testing }
+RMDRepository >> isIcebergRepository [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDRepository >> isModifiable [
 
 	^ self subclassResponsibility
