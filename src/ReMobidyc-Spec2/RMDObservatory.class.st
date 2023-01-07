@@ -244,7 +244,7 @@ RMDObservatory >> initializePresenters [
 											              interpreter time: timeSlider value * duration ]
 												              on: RMDSemanticError
 												              do: [ :ex | 
-													              (RMDDebugger on: interpreter exception: ex)
+													              (RMDActionDebugger on: interpreter exception: ex)
 														              open ] ] ] ] ] ];
 		              yourself.
 	runButton := self newButton
@@ -356,7 +356,7 @@ RMDObservatory >> recordAPNG [
 		interpreter ifNotNil: [ 
 			[ interpreter exportAPNG: ref ]
 				on: RMDSemanticError
-				do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ] ] ]
+				do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ] ]
 ]
 
 { #category : #accessing }
@@ -382,7 +382,7 @@ RMDObservatory >> runSimulation [
 				           ([ interpreter stepSimulation ]
 					            on: RMDSemanticError
 					            do: [ :ex | 
-						            (RMDDebugger on: interpreter exception: ex) open.
+						            (RMDActionDebugger on: interpreter exception: ex) open.
 						            false ]) ifFalse: [ self runState: false ].
 				           0 milliSecond wait ] ].
 		           process := nil.
@@ -457,7 +457,7 @@ RMDObservatory >> stepSimulation [
 			1 milliSecond wait ].
 		[ interpreter stepSimulation ]
 			on: RMDSemanticError
-			do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ] ]
+			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }

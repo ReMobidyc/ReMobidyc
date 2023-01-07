@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDDebugger,
+	#name : #RMDActionDebugger,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #specs }
-RMDDebugger class >> defaultLayout [
+RMDActionDebugger class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -37,7 +37,7 @@ RMDDebugger class >> defaultLayout [
 ]
 
 { #category : #'instance creation' }
-RMDDebugger class >> on: aRMDInterpreter exception: aRMDSemanticError [
+RMDActionDebugger class >> on: aRMDInterpreter exception: aRMDSemanticError [
 
 	^ self new
 		  interpreter: aRMDInterpreter;
@@ -46,7 +46,7 @@ RMDDebugger class >> on: aRMDInterpreter exception: aRMDSemanticError [
 ]
 
 { #category : #updating }
-RMDDebugger >> contextChanged [
+RMDActionDebugger >> contextChanged [
 
 	self
 		updateSubjectLabel;
@@ -57,20 +57,20 @@ RMDDebugger >> contextChanged [
 ]
 
 { #category : #accessing }
-RMDDebugger >> exception [
+RMDActionDebugger >> exception [
 
 	^ exception
 ]
 
 { #category : #accessing }
-RMDDebugger >> exception: aRMDSemanticError [
+RMDActionDebugger >> exception: aRMDSemanticError [
 
 	exception := aRMDSemanticError.
 	self exceptionChanged
 ]
 
 { #category : #updating }
-RMDDebugger >> exceptionChanged [
+RMDActionDebugger >> exceptionChanged [
 
 	self
 		updateExceptionLabel;
@@ -78,7 +78,7 @@ RMDDebugger >> exceptionChanged [
 ]
 
 { #category : #initialization }
-RMDDebugger >> initializePresenters [
+RMDActionDebugger >> initializePresenters [
 
 	sourceText := (self newSourceWith:
 			               RMDGrammar new actionDefinition end)
@@ -113,20 +113,20 @@ RMDDebugger >> initializePresenters [
 ]
 
 { #category : #accessing }
-RMDDebugger >> interpreter [
+RMDActionDebugger >> interpreter [
 
 	^ interpreter
 ]
 
 { #category : #accessing }
-RMDDebugger >> interpreter: aRMDInterpreter [
+RMDActionDebugger >> interpreter: aRMDInterpreter [
 
 	interpreter := aRMDInterpreter.
 	self interpreterChanged
 ]
 
 { #category : #updating }
-RMDDebugger >> interpreterChanged [
+RMDActionDebugger >> interpreterChanged [
 
 	self
 		updateSubjectLabel;
@@ -137,7 +137,7 @@ RMDDebugger >> interpreterChanged [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateActionLabel [
+RMDActionDebugger >> updateActionLabel [
 
 	actionLabel ifNotNil: [ 
 		actionLabel label: (interpreter
@@ -147,7 +147,7 @@ RMDDebugger >> updateActionLabel [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateExceptionLabel [
+RMDActionDebugger >> updateExceptionLabel [
 
 	exceptionLabel ifNotNil: [ 
 		exceptionLabel label:
@@ -157,7 +157,7 @@ RMDDebugger >> updateExceptionLabel [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateObjectLabel [
+RMDActionDebugger >> updateObjectLabel [
 
 	objectLabel ifNotNil: [ 
 		objectLabel label: (interpreter
@@ -171,7 +171,7 @@ RMDDebugger >> updateObjectLabel [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateSourceText [
+RMDActionDebugger >> updateSourceText [
 
 	sourceText ifNotNil: [ 
 		sourceText
@@ -181,7 +181,7 @@ RMDDebugger >> updateSourceText [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateSubjectLabel [
+RMDActionDebugger >> updateSubjectLabel [
 
 	subjectLabel ifNotNil: [ 
 		subjectLabel label: (interpreter
@@ -195,7 +195,7 @@ RMDDebugger >> updateSubjectLabel [
 ]
 
 { #category : #updating }
-RMDDebugger >> updateVariableList [
+RMDActionDebugger >> updateVariableList [
 
 	variableList items: (Array streamContents: [ :stream | 
 			 interpreter ifNotNil: [ 
