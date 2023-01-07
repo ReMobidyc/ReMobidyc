@@ -31,6 +31,11 @@ RMDSimulationModel class >> agentsFileName [
 RMDSimulationModel class >> goatAndWolf [
 
 	^ self new
+		  name: 'Goat and Wolf';
+		  author: 'Tomohiro Oda';
+		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
+		  description:
+			  'A simple demo that wolves chase and eat goats in a grass field.';
 		  load: RMDWorldDefinitionNode empty;
 		  load: RMDPatchDefinitionNode grassField;
 		  load: RMDAnimatDefinitionNode goat;
@@ -148,6 +153,11 @@ RMDSimulationModel class >> simulationDefinitionFileName [
 RMDSimulationModel class >> sugarScape [
 
 	^ self new
+		  name: 'Sugarscape';
+		  author: 'Tomohiro Oda';
+		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
+		  description:
+			  'A simple demo that goat moves around to eat grasses on the field.';
 		  load: RMDWorldDefinitionNode empty;
 		  load: RMDPatchDefinitionNode grassField;
 		  load: RMDAnimatDefinitionNode goat;
