@@ -63,5 +63,6 @@ RMDIcebergRepository >> isIcebergRepository [
 { #category : #testing }
 RMDIcebergRepository >> isModifiable [
 
-	^ true
+	self directoryDo: [ :directory | ^ true ].
+	^ false
 ]

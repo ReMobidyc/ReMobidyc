@@ -29,19 +29,19 @@ RMDRepository >> actions [
 ]
 
 { #category : #'accessing-actions' }
-RMDRepository >> addAction: aRMDActionDefinitionNode named: aString [
+RMDRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: aBlock [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-icons' }
-RMDRepository >> addIcon: aForm named: aString [
+RMDRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #'accessing-models' }
-RMDRepository >> addModel: aRMDSimulationModel named: aString [
+RMDRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
 	^ self subclassResponsibility
 ]

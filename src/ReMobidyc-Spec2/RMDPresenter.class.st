@@ -34,6 +34,12 @@ RMDPresenter >> editIcon [
 	^ Smalltalk ui icons edit
 ]
 
+{ #category : #icons }
+RMDPresenter >> exportIcon [
+
+	^ Smalltalk ui icons iconNamed: #smallExport
+]
+
 { #category : #initialization }
 RMDPresenter >> initializePresenters [
 	self

@@ -11,6 +11,7 @@ Class {
 		'newItemButton',
 		'removeItemButton',
 		'editItemButton',
+		'exportItemButton',
 		'isForSave'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
@@ -37,6 +38,7 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 								     add: #newItemButton width: self buttonHeight;
 								     add: #removeItemButton width: self buttonHeight;
 								     add: #editItemButton width: self buttonHeight;
+								     add: #exportItemButton width: self buttonHeight;
 								     yourself)
 						    expand: false;
 						    yourself);
@@ -189,6 +191,12 @@ RMDAbstractRepositoryBrowser >> enableOk [
 		window buttons ifNotEmpty: [ :buttons | buttons first enable ] ]
 ]
 
+{ #category : #operations }
+RMDAbstractRepositoryBrowser >> exportItem [
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDAbstractRepositoryBrowser >> file [
 
@@ -270,6 +278,13 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 		                    action: [ self editItem ];
 		                    help:
 			                    'Rename the selected item from the repository';
+		                    disable;
+		                    yourself.
+	exportItemButton := self newButton
+		                    icon: self exportIcon;
+		                    action: [ self exportItem ];
+		                    help:
+			                    'Export the selected item to another repository';
 		                    disable;
 		                    yourself.
 	descriptionText := self newText
@@ -397,7 +412,13 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 					newItemButton disable.
 					removeItemButton disable.
 					editItemButton disable ] ].
-	self item ifNotNil: [ self enableOk ] ifNil: [ self disableOk ]
+	self item
+		ifNotNil: [ 
+			exportItemButton enable.
+			self enableOk ]
+		ifNil: [ 
+			exportItemButton disable.
+			self disableOk ]
 ]
 
 { #category : #updating }
