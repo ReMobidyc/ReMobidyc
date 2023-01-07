@@ -55,33 +55,35 @@ RMDAbstractFileRepository >> actionsDirectoryDo: aBlock [
 ]
 
 { #category : #'accessing-actions' }
-RMDAbstractFileRepository >> addAction: aRMDActionDefinitionNode named: aString [
+RMDAbstractFileRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: aBlock [
 
 	self actionsDirectoryDo: [ :actionsDirectory | 
 		| ref |
 		ref := actionsDirectory / aString withExtension: 'rmd'.
+		ref exists ifTrue: [ aBlock cull: ref ].
 		ref ensureDelete writeStreamDo: [ :stream | 
 			aRMDActionDefinitionNode printOn: stream ] ]
 ]
 
 { #category : #'accessing-icons' }
-RMDAbstractFileRepository >> addIcon: aForm named: aString [
+RMDAbstractFileRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
 	self iconsDirectoryDo: [ :iconsDirectory | 
-		PNGReadWriter
-			putForm: aForm
-			onFileNamed:
-			(iconsDirectory / aString withExtension: 'png') ensureDelete ]
+		| ref |
+		ref := iconsDirectory / aString withExtension: 'png'.
+		ref exists ifTrue: [ aBlock ifNotNil: [ aBlock cull: ref ] ].
+		PNGReadWriter putForm: aForm onFileNamed: ref ensureDelete ]
 ]
 
 { #category : #'accessing-models' }
-RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString [
+RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
 		| ref |
 		ref := modelsDirectory / aString.
-		ref isFile ifTrue: [ ref ensureDelete ].
-		^ aRMDSimulationModel exportModel: ref ]
+		ref exists ifTrue: [ 
+			presentBlock ifNotNil: [ presentBlock cull: ref ] ].
+		^ aRMDSimulationModel exportModel: ref ensureDeleteAll ]
 ]
 
 { #category : #privatee }

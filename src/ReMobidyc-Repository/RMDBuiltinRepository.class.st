@@ -54,19 +54,19 @@ RMDBuiltinRepository >> actions [
 ]
 
 { #category : #'accessing-actions' }
-RMDBuiltinRepository >> addAction: aRMDActionDefinitionNode named: aString [
+RMDBuiltinRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: aBlock [
 
-	
+	^ self shouldNotImplement
 ]
 
 { #category : #'accessing-icons' }
-RMDBuiltinRepository >> addIcon: aForm named: aString [
+RMDBuiltinRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
 ]
 
 { #category : #'accessing-models' }
-RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString [
+RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
 ]

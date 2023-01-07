@@ -69,7 +69,9 @@ RMDLocalFileRepository >> initialize [
 { #category : #testing }
 RMDLocalFileRepository >> isModifiable [
 
-	^ modifiable = true
+	modifiable = true ifFalse: [ ^ false ].
+	self directoryDo: [ :dir | ^ true ].
+	^ false
 ]
 
 { #category : #accessing }
