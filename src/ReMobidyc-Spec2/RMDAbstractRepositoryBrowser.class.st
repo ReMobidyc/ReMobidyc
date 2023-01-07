@@ -92,7 +92,10 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 RMDAbstractRepositoryBrowser >> addIcebergRepository [
 
 	| repos |
-	repos := IceRepository repositories collect: #name.
+	repos := IceRepository repositories
+		         select: [ :repo | self isValidNewRepository: repo ]
+		         thenCollect: #name.
+	repos ifEmpty: [ ^ UIManager default alert: 'No re:mobidyc repository on Iceberg.' ].
 	(UIManager default
 		 chooseFrom: repos
 		 title: 'Select an Iceberg repository') ifNotNil: [ :index | 
@@ -148,7 +151,14 @@ RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 					  item
 						  name: 'Iceberg';
 						  icon: RMDIcebergRepository icon;
-						  action: [ self addIcebergRepository ] ] ];
+						  action: [ self addIcebergRepository ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'Import Iceberg';
+						  icon: RMDIcebergRepository icon;
+						  action: [ 
+							  (Smalltalk at: #IceTipRepositoriesBrowser) new openDialog 
+								  okAction: [ [self addIcebergRepository] fork ] ] ] ];
 		  yourself
 ]
 
@@ -290,6 +300,15 @@ RMDAbstractRepositoryBrowser >> isForSave: aBoolean [
 	self updateButtons
 ]
 
+{ #category : #private }
+RMDAbstractRepositoryBrowser >> isValidNewRepository: anIceRepository [
+
+	^ anIceRepository isReMobidycRepository and: [ 
+		  (RMDRepositoryDirectory current repositories contains: [ :repo | 
+			   repo isIcebergRepository and: [ 
+				   repo icebergRepository = anIceRepository ] ]) not ]
+]
+
 { #category : #accessing }
 RMDAbstractRepositoryBrowser >> item [
 
@@ -331,8 +350,10 @@ RMDAbstractRepositoryBrowser >> removeItem [
 RMDAbstractRepositoryBrowser >> removeRepository [
 
 	self repository ifNotNil: [ :repository | 
-		self repositoryDirectory remove: repository.
-		self updateRepositoryList ]
+		(UIManager default confirm: 'Remove ' , repository name , '?') 
+			ifTrue: [ 
+				self repositoryDirectory remove: repository.
+				self updateRepositoryList ] ]
 ]
 
 { #category : #accessing }
