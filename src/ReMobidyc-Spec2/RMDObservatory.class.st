@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'modelName',
 		'interpreter',
+		'validated',
 		'views',
 		'runButton',
 		'process',
@@ -215,6 +216,13 @@ RMDObservatory >> informServer [
 ]
 
 { #category : #initialization }
+RMDObservatory >> initialize [
+
+	super initialize.
+	validated := false
+]
+
+{ #category : #initialization }
 RMDObservatory >> initializePresenters [
 
 	super initializePresenters.
@@ -228,15 +236,16 @@ RMDObservatory >> initializePresenters [
 		              value: 0;
 		              whenValueChangedDo: [ 
 			              interpreter ifNotNil: [ 
-					              runButton state ifFalse: [ 
-							              (time / duration - timeSlider value) abs > 1.0e-8 
-								              ifTrue: [ 
-									              [ 
-									              interpreter time: timeSlider value * duration ]
-										              on: RMDSemanticError
-										              do: [ :ex | 
-											              (RMDDebugger on: interpreter exception: ex)
-												              open ] ] ] ] ];
+					              self isValidated ifTrue: [ 
+							              runButton state ifFalse: [ 
+									              (time / duration - timeSlider value) abs
+									              > 1.0e-8 ifTrue: [ 
+											              [ 
+											              interpreter time: timeSlider value * duration ]
+												              on: RMDSemanticError
+												              do: [ :ex | 
+													              (RMDActionDebugger on: interpreter exception: ex)
+														              open ] ] ] ] ] ];
 		              yourself.
 	runButton := self newButton
 		             label: 'run';
@@ -244,25 +253,7 @@ RMDObservatory >> initializePresenters [
 		             help: 'Run the simulation to the end';
 		             state: false;
 		             whenStateChangedDo: [ :state | 
-			             state == true ifTrue: [ 
-					             process := [ 
-					                        stepButton enabled: false.
-					                        timeSlider enabled: false.
-					                        [ self runState == true ] whileTrue: [ 
-							                        interpreter ifNotNil: [ 
-									                        ([ interpreter stepSimulation ]
-										                         on: RMDSemanticError
-										                         do: [ :ex | 
-											                         (RMDDebugger
-												                          on: interpreter
-												                          exception: ex) open.
-											                         false ]) ifFalse: [ 
-											                        self runState: false ].
-									                        0 milliSecond wait ] ].
-					                        process := nil.
-					                        stepButton enabled: true.
-					                        timeSlider enabled: true ] forkAt:
-							                        Processor userBackgroundPriority ] ];
+			             state == true ifTrue: [ self runSimulation ] ];
 		             yourself.
 	stepButton := self newButton
 		              label: 'step';
@@ -287,6 +278,11 @@ RMDObservatory >> initializeWindow: aWindowPresenter [
 	aWindowPresenter
 		title: self windowTitle;
 		initialExtent: 1100 @ 600
+]
+
+{ #category : #testing }
+RMDObservatory >> isValidated [
+	^ validated = true
 ]
 
 { #category : #accessing }
@@ -360,7 +356,7 @@ RMDObservatory >> recordAPNG [
 		interpreter ifNotNil: [ 
 			[ interpreter exportAPNG: ref ]
 				on: RMDSemanticError
-				do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ] ] ]
+				do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ] ]
 ]
 
 { #category : #accessing }
@@ -370,7 +366,29 @@ RMDObservatory >> requestModelName [
 
 { #category : #api }
 RMDObservatory >> resetSimulation [
-	interpreter setupSimulation
+
+	self isValidated ifTrue: [ interpreter setupSimulation ]
+]
+
+{ #category : #api }
+RMDObservatory >> runSimulation [
+
+	self isValidated ifTrue: [ 
+		process := [ 
+		           stepButton enabled: false.
+		           timeSlider enabled: false.
+		           [ self runState == true ] whileTrue: [ 
+			           interpreter ifNotNil: [ 
+				           ([ interpreter stepSimulation ]
+					            on: RMDSemanticError
+					            do: [ :ex | 
+						            (RMDActionDebugger on: interpreter exception: ex) open.
+						            false ]) ifFalse: [ self runState: false ].
+				           0 milliSecond wait ] ].
+		           process := nil.
+		           stepButton enabled: true.
+		           timeSlider enabled: true ] forkAt:
+			           Processor userBackgroundPriority ]
 ]
 
 { #category : #api }
@@ -393,6 +411,7 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
+	self typecheck.
 	visualizer := RMDVisualizer new.
 	interpreter simulationModel renderersDo: [ :renderer | 
 		visualizer addRenderer: renderer ].
@@ -432,12 +451,13 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 { #category : #api }
 RMDObservatory >> stepSimulation [
 
-	self runState: false.
-	[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
-		1 milliSecond wait ].
-	[ interpreter stepSimulation ]
-		on: RMDSemanticError
-		do: [ :ex | (RMDDebugger on: interpreter exception: ex) open ]
+	self isValidated ifTrue: [ 
+		self runState: false.
+		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
+			1 milliSecond wait ].
+		[ interpreter stepSimulation ]
+			on: RMDSemanticError
+			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
@@ -456,6 +476,21 @@ RMDObservatory >> timeSeriesInspector [
 { #category : #api }
 RMDObservatory >> toggleRunPauseSimulation [
 	self runState: self runState not
+]
+
+{ #category : #api }
+RMDObservatory >> typecheck [
+
+	[ 
+	interpreter simulationModel typecheck.
+	^ validated := true ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			runButton disable.
+			stepButton disable.
+			timeSlider disable.
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ validated := false ]
 ]
 
 { #category : #updating }
@@ -490,6 +525,9 @@ RMDObservatory >> windowTitle [
 
 	^ 'Observatory'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (self isValidated
+			   ifTrue: [ '' ]
+			   ifFalse: [ ' (INVALID MODEL)' ])
 ]
 
 { #category : #private }
