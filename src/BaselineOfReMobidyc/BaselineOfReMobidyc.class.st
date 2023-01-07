@@ -85,7 +85,8 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 		baseline: 'ReMobidyc';
 		onConflictUseIncoming;
 		onWarningLog;
-		load: #(  )
+		load: #(  ).
+	Smalltalk snapshot: true andQuit: false
 ]
 
 { #category : #baselines }
