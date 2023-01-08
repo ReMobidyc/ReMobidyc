@@ -32,7 +32,7 @@ RMDSimulationModel class >> goatAndWolf [
 
 	^ self new
 		  name: 'Goat and Wolf';
-		  author: 'Tomohiro Oda';
+		  authors: {'Tomohiro Oda'};
 		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
 		  description:
 			  'A simple demo that wolves chase and eat goats in a grass field.';
@@ -154,7 +154,7 @@ RMDSimulationModel class >> sugarScape [
 
 	^ self new
 		  name: 'Sugarscape';
-		  author: 'Tomohiro Oda';
+		  authors: {'Tomohiro Oda'};
 		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
 		  description:
 			  'A simple demo that goat moves around to eat grasses on the field.';
@@ -305,15 +305,15 @@ RMDSimulationModel >> animatNames [
 ]
 
 { #category : #'accessing - metadata' }
-RMDSimulationModel >> author [
+RMDSimulationModel >> authors [
 
-	^ metadata author
+	^ metadata authors
 ]
 
 { #category : #'accessing - metadata' }
-RMDSimulationModel >> author: aString [
+RMDSimulationModel >> authors: anArrayOfString [
 
-	metadata author: aString
+	metadata authors: anArrayOfString
 ]
 
 { #category : #'accessing - definitions' }
@@ -550,7 +550,7 @@ RMDSimulationModel >> importMetadata: aFileReference [
 		ifFalse: [ 
 			metadata
 				name: aFileReference parent basename;
-				author: metadata defaultAuthor;
+				authors: metadata defaultAuthors;
 				description: metadata defaultDescription;
 				date: DateAndTime now ]
 ]
@@ -940,6 +940,14 @@ RMDSimulationModel >> typechecker [
 	^ RMDTypechecker new
 		simulationModel: self;
 		yourself
+]
+
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> updateMetadata [
+
+	metadata
+		ensureCurrentAuthor;
+		updateDate
 ]
 
 { #category : #'accessing - cells' }

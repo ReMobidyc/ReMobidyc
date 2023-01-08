@@ -3,12 +3,28 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'author',
+		'authors',
 		'date',
 		'description'
 	],
+	#classVars : [
+		'CurrentAuthor'
+	],
 	#category : #'ReMobidyc-Repository'
 }
+
+{ #category : #accessing }
+RMDMetadata class >> currentAuthor [
+
+	[ CurrentAuthor isNil ] whileTrue: [ self renewCurrentAuthor ].
+	^ CurrentAuthor
+]
+
+{ #category : #accessing }
+RMDMetadata class >> flushCurrentAuthor [
+
+	CurrentAuthor := nil
+]
 
 { #category : #'instance creation' }
 RMDMetadata class >> fromJsonObject: aDictionary [
@@ -28,12 +44,44 @@ RMDMetadata class >> fromJsonString: aString [
 	^ self fromJsonObject: (STONJSON fromString: aString)
 ]
 
+{ #category : #accessing }
+RMDMetadata class >> guessUserName [
+
+	(OSEnvironment current at: 'USER' ifAbsent: [ nil ]) ifNotNil: [ :n | 
+		^ n ].
+	(OSEnvironment current at: 'USERNAME' ifAbsent: [ nil ]) ifNotNil: [ 
+		:n | ^ n ].
+	^ 'Anonymous'
+]
+
+{ #category : #menus }
+RMDMetadata class >> remobidycMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #Upgrade)
+		parent: #ReMobidycSystem;
+		order: 10;
+		label: 'Forget current user';
+		action: [ self flushCurrentAuthor ];
+		help: 'Forget the current user''s name as an author of models'
+]
+
+{ #category : #accessing }
+RMDMetadata class >> renewCurrentAuthor [
+
+	(UIManager default
+		 request: 'Your name?'
+		 initialAnswer: self guessUserName) ifNotNil: [ :n | 
+		n trim ifNotEmpty: [ :author | CurrentAuthor := author ] ].
+	^ CurrentAuthor
+]
+
 { #category : #converting }
 RMDMetadata >> asJsonObject [
 
 	^ Dictionary new
 		  at: self nameField put: name;
-		  at: self authorField put: author;
+		  at: self authorsField put: authors;
 		  at: self dateField put: (date ifNotNil: #asString);
 		  at: self descriptionField put: description;
 		  yourself
@@ -51,8 +99,8 @@ RMDMetadata >> asText [
 	^ name asText allBold , (String streamContents: [ :stream | 
 		   stream
 			   cr;
-			   nextPutAll: 'author: ';
-			   nextPutAll: author;
+			   nextPutAll: 'authors: ';
+			   nextPutAll: (', ' join: authors);
 			   cr;
 			   nextPutAll: 'date: ';
 			   nextPutAll: self dateString;
@@ -62,21 +110,21 @@ RMDMetadata >> asText [
 ]
 
 { #category : #accessing }
-RMDMetadata >> author [
+RMDMetadata >> authors [
 
-	^ author
+	^ authors
 ]
 
 { #category : #accessing }
-RMDMetadata >> author: aString [
+RMDMetadata >> authors: aString [
 
-	author := aString
+	authors := aString
 ]
 
 { #category : #accessing }
-RMDMetadata >> authorField [
+RMDMetadata >> authorsField [
 
-	^ 'author'
+	^ 'authors'
 ]
 
 { #category : #accessing }
@@ -143,8 +191,9 @@ RMDMetadata >> dateString [
 ]
 
 { #category : #defaults }
-RMDMetadata >> defaultAuthor [
-	^ ''
+RMDMetadata >> defaultAuthors [
+
+	^ {  }
 ]
 
 { #category : #defaults }
@@ -181,12 +230,26 @@ RMDMetadata >> descriptionField [
 	^ 'description'
 ]
 
+{ #category : #operations }
+RMDMetadata >> ensureAuthor: aString [
+
+	aString trim ifNotEmpty: [ :author | 
+		(authors includes: author) ifFalse: [ 
+			authors := authors , { author } ] ]
+]
+
+{ #category : #operations }
+RMDMetadata >> ensureCurrentAuthor [
+
+	^ self ensureAuthor: self class currentAuthor
+]
+
 { #category : #initialization }
 RMDMetadata >> initialize [
 
 	super initialize.
 	name := self defaultName.
-	author := self defaultAuthor.
+	authors := self defaultAuthors.
 	date := self defaultDate.
 	description := self defaultDescription
 ]
@@ -219,10 +282,11 @@ RMDMetadata >> printJsonOn: aStream [
 RMDMetadata >> printOn: aStream [
 
 	aStream nextPutAll: name.
-	author ifNotEmpty: [ 
-		aStream
-			nextPutAll: ' by ';
-			nextPutAll: author ]
+	authors ifNotEmpty: [ 
+		aStream nextPutAll: ' by '.
+		authors
+			do: [ :author | aStream nextPutAll: author ]
+			separatedBy: [ aStream nextPutAll: ', ' ] ]
 ]
 
 { #category : #converting }
@@ -232,13 +296,15 @@ RMDMetadata >> readFromJsonObject: aDictionary [
 	self
 		name:
 			(aDictionary at: self nameField ifAbsent: [ self defaultName ]);
-		author:
-			(aDictionary at: self authorField ifAbsent: [ self defaultAuthor ]);
+		authors:
+			(aDictionary
+				 at: self authorsField
+				 ifAbsent: [ self defaultAuthors ]);
 		date:
-			(aDictionary at: self dateField ifAbsent: [ self defaultAuthor ]);
+			(aDictionary at: self dateField ifAbsent: [ self defaultDate ]);
 		description: (aDictionary
 				 at: self descriptionField
-				 ifAbsent: [ self defaultAuthor ])
+				 ifAbsent: [ self defaultDescription ])
 ]
 
 { #category : #converting }

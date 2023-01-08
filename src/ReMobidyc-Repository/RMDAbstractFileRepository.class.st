@@ -78,22 +78,11 @@ RMDAbstractFileRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 { #category : #'accessing-models' }
 RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
-	^ self
-		  addModel: aRMDSimulationModel
-		  named: aString
-		  updateMetadata: true
-		  ifPresent: presentBlock
-]
-
-{ #category : #'accessing-models' }
-RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString updateMetadata: aBoolean ifPresent: presentBlock [
-
 	self modelsDirectoryDo: [ :modelsDirectory | 
 		| ref |
 		ref := modelsDirectory / aString.
 		ref exists ifTrue: [ 
 			presentBlock ifNotNil: [ presentBlock cull: ref ] ].
-		aBoolean = false ifFalse: [ aRMDSimulationModel metadata updateDate ].
 		^ aRMDSimulationModel exportModel: ref ensureDeleteAll ]
 ]
 

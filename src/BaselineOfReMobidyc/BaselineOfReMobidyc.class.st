@@ -6,16 +6,16 @@ Class {
 
 { #category : #utilities }
 BaselineOfReMobidyc class >> deploy [
+
 	<script>
+	RMDMetadata flushCurrentAuthor.
 	GraphicFontSettings setFontsToStyleNamed: #small.
-	Smalltalk cleanUp: true except: {} confirming: false.
-	MCRepositoryGroup
-		allSubInstancesDo:
-			[ :group | group repositories do: [ :repo | group removeRepository: repo ] ].
+	Smalltalk cleanUp: true except: {  } confirming: false.
+	MCRepositoryGroup allSubInstancesDo: [ :group | 
+		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current
-		in:
-			[ :store | store allCredentials do: [ :each | each removeFrom: store ] ].
+	IceCredentialStore current in: [ :store | 
+		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	Deprecation
 		raiseWarning: false;
@@ -26,9 +26,7 @@ BaselineOfReMobidyc class >> deploy [
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
-	5
-		timesRepeat:
-			[ Smalltalk garbageCollect ]
+	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
 { #category : #utilities }
@@ -67,6 +65,7 @@ BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 		with: [ 
 			(aBuilder item: #Upgrade)
 				parent: #ReMobidycSystem;
+				order: 100;
 				label: 'Upgrade from the official repository';
 				action: [ self updateFromOfficialRepository ];
 				help:

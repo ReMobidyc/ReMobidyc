@@ -1,9 +1,6 @@
 Class {
 	#name : #RMDRepositoryModelsBrowser,
 	#superclass : #RMDAbstractRepositoryBrowser,
-	#instVars : [
-		'updateMetadataOnWrite'
-	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
@@ -85,8 +82,7 @@ RMDRepositoryModelsBrowser >> getModel: aString [
 { #category : #accessing }
 RMDRepositoryModelsBrowser >> initialize [
 
-	super initialize.
-	updateMetadataOnWrite := true
+	super initialize
 ]
 
 { #category : #initialization }
@@ -141,11 +137,7 @@ RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 				   UIManager default confirm:
 					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
 				  ifTrue: [ 
-					  repo
-						  addModel: aRMDSimulationModel
-						  named: item
-						  updateMetadata: updateMetadataOnWrite
-						  ifPresent: [  ] ] ] ]
+				  repo addModel: aRMDSimulationModel named: item ifPresent: [  ] ] ] ]
 ]
 
 { #category : #updating }
@@ -155,10 +147,4 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 		  self item ifNotNil: [ :item | 
 			  descriptionText text:
 				  (repo modelMetadataNamed: item ifAbsent: [ '' ]) asText ] ]
-]
-
-{ #category : #accessing }
-RMDRepositoryModelsBrowser >> updateMetadataOnWrite: aBoolean [
-
-	updateMetadataOnWrite := aBoolean ~= false
 ]

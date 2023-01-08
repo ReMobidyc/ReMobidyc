@@ -122,16 +122,22 @@ RMDModelFileTextBrowser >> fileMenu [
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save';
-					  enabled: [modelFileReference notNil and: [editingTexts notEmpty]];
-					  action: [ self simulationModel exportModel: modelFileReference ] ].
+					  enabled: [ 
+						  modelFileReference notNil and: [ editingTexts notEmpty ] ];
+					  action: [ 
+						  self simulationModel
+							  updateMetadata;
+							  exportModel: modelFileReference ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save As...';
 					  action: [ 
 						  RMDRepositoryModelsBrowser
-							  openForSave: self simulationModel
+							  openForSave: (self simulationModel
+									   updateMetadata;
+									   yourself)
 							  do: [ :model :repBrowser | 
-								  self modelFileReference: repBrowser file ] ] ] ];
+							  self modelFileReference: repBrowser file ] ] ] ];
 		  yourself
 ]
 
@@ -352,7 +358,9 @@ RMDModelFileTextBrowser >> updateMetadata [
 		            RMDMetadata fromJsonStream: readStream ] ]
 		            on: Error
 		            do: [ :ex | ^ nil ].
-	metadata updateDate.
+	metadata
+		ensureCurrentAuthor;
+		updateDate.
 	[ 
 	metadataRef ensureDelete lfWriteStreamDo: [ :stream | 
 		metadata printJsonOn: stream ] ]

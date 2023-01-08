@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'metadata',
 		'nameField',
-		'authorField',
 		'dateField',
-		'descriptionText'
+		'descriptionText',
+		'authorsField'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -31,7 +31,7 @@ RMDMetadataPresenter class >> defaultLayout [
 		  add: (SpBoxLayout newVertical
 				   add: (SpBoxLayout newHorizontal add: #nameField expand: true)
 				   height: self inputTextHeight;
-				   add: (SpBoxLayout newHorizontal add: #authorField expand: true)
+				   add: (SpBoxLayout newHorizontal add: #authorsField expand: true)
 				   height: self inputTextHeight;
 				   add: (SpBoxLayout newHorizontal add: #dateField expand: true)
 				   height: self inputTextHeight;
@@ -63,14 +63,14 @@ RMDMetadataPresenter >> initializePresenters [
 						             date: DateAndTime now.
 					             self metadataChanged ] ];
 		             yourself.
-	authorField := self newTextInput
-		               whenTextChangedDo: [ :text | 
-			               metadata ifNotNil: [ 
-					               metadata
-						               author: text;
-						               date: DateAndTime now.
-					               self metadataChanged ] ];
-		               yourself.
+	authorsField := self newTextInput
+		                whenTextChangedDo: [ :text | 
+			                metadata ifNotNil: [ 
+					                metadata
+						                authors: ((text substrings: ',') collect: #trim);
+						                date: DateAndTime now.
+					                self metadataChanged ] ];
+		                yourself.
 
 	dateField := self newTextInput
 		             disable;
@@ -102,7 +102,7 @@ RMDMetadataPresenter >> metadataChanged [
 
 	metadata ifNotNil: [ 
 		nameField text: metadata name.
-		authorField text: metadata author.
+		authorsField text: (', ' join: metadata authors).
 		dateField text: metadata dateString.
 		descriptionText text: metadata description ]
 ]
