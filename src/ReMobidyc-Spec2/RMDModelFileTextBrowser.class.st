@@ -42,7 +42,7 @@ RMDModelFileTextBrowser class >> openFromRepository [
 
 	<script: 'RMDModelFileTextBrowser openFromRepository'>
 	| browser |
-	browser := RMDRepositoryModelsBrowser new forSave.
+	browser := RMDRepositoryModelsBrowser new forLoad.
 	browser openDialog okAction: [ (self on: browser file) open ]
 ]
 

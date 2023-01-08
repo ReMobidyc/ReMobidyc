@@ -82,6 +82,27 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject ifAccepted: aBlock [
 ]
 
 { #category : #utilities }
+RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString [
+
+	| browser |
+	browser := self new forSave.
+	browser openDialog
+		title: aString;
+		okAction: [ browser save: anObject ]
+]
+
+{ #category : #utilities }
+RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString updateMetadataOnWrite: aBoolean [
+
+	| browser |
+	browser := self new forSave.
+	browser updateMetadataOnWrite: aBoolean.
+	browser openDialog
+		title: aString;
+		okAction: [ browser save: anObject ]
+]
+
+{ #category : #utilities }
 RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
@@ -194,7 +215,11 @@ RMDAbstractRepositoryBrowser >> enableOk [
 { #category : #operations }
 RMDAbstractRepositoryBrowser >> exportItem [
 
-	^ self subclassResponsibility
+	self load ifNotNil: [ :item | 
+		self class
+			openForSave: item
+			title: 'Export ' , self item , 'to...'
+			updateMetadataOnWrite: false ]
 ]
 
 { #category : #accessing }
@@ -217,6 +242,7 @@ RMDAbstractRepositoryBrowser >> forSave [
 
 { #category : #initialization }
 RMDAbstractRepositoryBrowser >> initialize [
+
 	super initialize.
 	isForSave := false
 ]
@@ -405,7 +431,7 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 			editRepositoryButton enable.
 			repo isModifiable
 				ifTrue: [ 
-					newItemButton enabled: isForSave = true.
+					newItemButton enabled: true.
 					removeItemButton enabled: self item notNil.
 					editItemButton enabled: self item notNil ]
 				ifFalse: [ 
@@ -431,6 +457,12 @@ RMDAbstractRepositoryBrowser >> updateDescriptionText [
 RMDAbstractRepositoryBrowser >> updateItemList [
 
 	itemList items: self itemsInRepository
+]
+
+{ #category : #accessing }
+RMDAbstractRepositoryBrowser >> updateMetadataOnWrite: aBoolean [
+
+	
 ]
 
 { #category : #updating }
