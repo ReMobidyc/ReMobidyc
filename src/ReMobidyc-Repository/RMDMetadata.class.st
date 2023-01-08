@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'author',
+		'authors',
 		'date',
 		'description'
 	],
@@ -33,7 +33,7 @@ RMDMetadata >> asJsonObject [
 
 	^ Dictionary new
 		  at: self nameField put: name;
-		  at: self authorField put: author;
+		  at: self authorsField put: authors;
 		  at: self dateField put: (date ifNotNil: #asString);
 		  at: self descriptionField put: description;
 		  yourself
@@ -51,8 +51,8 @@ RMDMetadata >> asText [
 	^ name asText allBold , (String streamContents: [ :stream | 
 		   stream
 			   cr;
-			   nextPutAll: 'author: ';
-			   nextPutAll: author;
+			   nextPutAll: 'authors: ';
+			   nextPutAll: (', ' join: authors);
 			   cr;
 			   nextPutAll: 'date: ';
 			   nextPutAll: self dateString;
@@ -62,21 +62,21 @@ RMDMetadata >> asText [
 ]
 
 { #category : #accessing }
-RMDMetadata >> author [
+RMDMetadata >> authors [
 
-	^ author
+	^ authors
 ]
 
 { #category : #accessing }
-RMDMetadata >> author: aString [
+RMDMetadata >> authors: aString [
 
-	author := aString
+	authors := aString
 ]
 
 { #category : #accessing }
-RMDMetadata >> authorField [
+RMDMetadata >> authorsField [
 
-	^ 'author'
+	^ 'authors'
 ]
 
 { #category : #accessing }
@@ -143,8 +143,9 @@ RMDMetadata >> dateString [
 ]
 
 { #category : #defaults }
-RMDMetadata >> defaultAuthor [
-	^ ''
+RMDMetadata >> defaultAuthors [
+
+	^ {  }
 ]
 
 { #category : #defaults }
@@ -186,7 +187,7 @@ RMDMetadata >> initialize [
 
 	super initialize.
 	name := self defaultName.
-	author := self defaultAuthor.
+	authors := self defaultAuthors.
 	date := self defaultDate.
 	description := self defaultDescription
 ]
@@ -219,10 +220,11 @@ RMDMetadata >> printJsonOn: aStream [
 RMDMetadata >> printOn: aStream [
 
 	aStream nextPutAll: name.
-	author ifNotEmpty: [ 
-		aStream
-			nextPutAll: ' by ';
-			nextPutAll: author ]
+	authors ifNotEmpty: [ 
+		aStream nextPutAll: ' by '.
+		authors
+			do: [ :author | aStream nextPutAll: author ]
+			separatedBy: [ aStream nextPutAll: ', ' ] ]
 ]
 
 { #category : #converting }
@@ -232,13 +234,15 @@ RMDMetadata >> readFromJsonObject: aDictionary [
 	self
 		name:
 			(aDictionary at: self nameField ifAbsent: [ self defaultName ]);
-		author:
-			(aDictionary at: self authorField ifAbsent: [ self defaultAuthor ]);
+		authors:
+			(aDictionary
+				 at: self authorsField
+				 ifAbsent: [ self defaultAuthors ]);
 		date:
-			(aDictionary at: self dateField ifAbsent: [ self defaultAuthor ]);
+			(aDictionary at: self dateField ifAbsent: [ self defaultDate ]);
 		description: (aDictionary
 				 at: self descriptionField
-				 ifAbsent: [ self defaultAuthor ])
+				 ifAbsent: [ self defaultDescription ])
 ]
 
 { #category : #converting }
