@@ -28,6 +28,16 @@ RMDRepositoryActionsBrowser >> addItem [
 			| newItem |
 			newItem := name.
 			(newItem endsWith: '.rmd') ifFalse: [ newItem := newItem , '.rmd' ].
+			self repository
+				ifNotNil: [ :repository | 
+					repository
+						addAction:
+						(RMDActionDefinitionNode name: (newItem withoutSuffix: '.rmd'))
+						named: newItem
+						ifPresent: [ 
+							(UIManager default confirm:
+								 newItem , ' already exists. Overwrite?') ifFalse: [ ^ self ] ] ]
+				ifNil: [ ^ self ].
 			itemList items: (itemList items copyWith: newItem).
 			itemList selectItem: newItem.
 			isForSave ifTrue: [ self performOK ] ]
@@ -54,24 +64,6 @@ RMDRepositoryActionsBrowser >> editItem [
 								alert: newName , ' already exists.'
 								title: 'Rename action' ].
 					self updateItemList ] ] ] ]
-]
-
-{ #category : #operations }
-RMDRepositoryActionsBrowser >> exportItem [
-
-	self item ifNotNil: [ :item | 
-		(self repository actionNamed: item ifAbsent: [ nil ]) ifNotNil: [ 
-			:action | 
-			| repos |
-			repos := (RMDRepositoryDirectory current repositories select:
-				          #isModifiable) copyWithout: self repository.
-			(UIManager default
-				 chooseFrom: (repos collect: #name)
-				 title: 'Export to') ifNotNil: [ :index | 
-				(repos at: index ifAbsent: [ nil ]) ifNotNil: [ :repo | 
-					repo addAction: action named: item ifPresent: [ 
-						(UIManager default confirm: item , ' already exists. Overwrite?') 
-							ifFalse: [ ^ self ] ] ] ] ] ]
 ]
 
 { #category : #accessing }

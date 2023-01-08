@@ -1,6 +1,9 @@
 Class {
 	#name : #RMDRepositoryModelsBrowser,
 	#superclass : #RMDAbstractRepositoryBrowser,
+	#instVars : [
+		'updateMetadataOnWrite'
+	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
@@ -25,9 +28,20 @@ RMDRepositoryModelsBrowser >> addItem [
 
 	(UIManager default request: 'Enter a new name of the model') 
 		ifNotNil: [ :newItem | 
-		itemList items: (itemList items copyWith: newItem).
-		itemList selectItem: newItem.
-		isForSave ifTrue: [ self performOK ] ]
+			itemList items: (itemList items copyWith: newItem).
+			isForSave ifTrue: [ 
+				itemList selectItem: newItem.
+				^ self performOK ].
+			self repository
+				ifNotNil: [ :repository | 
+					repository
+						addModel: RMDSimulationModel new
+						named: newItem
+						ifPresent: [ 
+							(UIManager default confirm:
+								 newItem , ' already exists. Overwrite?') ifFalse: [ ^ self ] ].
+					itemList selectItem: newItem ]
+				ifNil: [ ^ self ] ]
 ]
 
 { #category : #operations }
@@ -54,24 +68,6 @@ RMDRepositoryModelsBrowser >> editItem [
 ]
 
 { #category : #operations }
-RMDRepositoryModelsBrowser >> exportItem [
-
-	self item ifNotNil: [ :item | 
-		(self repository modelNamed: item ifAbsent: [ nil ]) ifNotNil: [ 
-			:model | 
-			| repos |
-			repos := (RMDRepositoryDirectory current repositories select:
-				          #isModifiable) copyWithout: self repository.
-			(UIManager default
-				 chooseFrom: (repos collect: #name)
-				 title: 'Export to') ifNotNil: [ :index | 
-				(repos at: index ifAbsent: [ nil ]) ifNotNil: [ :repo | 
-					repo addModel: model named: item ifPresent: [ 
-						(UIManager default confirm: item , ' already exists. Overwrite?') 
-							ifFalse: [ ^ self ] ] ] ] ] ]
-]
-
-{ #category : #operations }
 RMDRepositoryModelsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -84,6 +80,13 @@ RMDRepositoryModelsBrowser >> getModel: aString [
 
 	^ self repository ifNotNil: [ :repo | 
 		  repo modelNamed: aString ifAbsent: [ nil ] ]
+]
+
+{ #category : #accessing }
+RMDRepositoryModelsBrowser >> initialize [
+
+	super initialize.
+	updateMetadataOnWrite := true
 ]
 
 { #category : #initialization }
@@ -138,7 +141,11 @@ RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 				   UIManager default confirm:
 					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
 				  ifTrue: [ 
-				  repo addModel: aRMDSimulationModel named: item ifPresent: [  ] ] ] ]
+					  repo
+						  addModel: aRMDSimulationModel
+						  named: item
+						  updateMetadata: updateMetadataOnWrite
+						  ifPresent: [  ] ] ] ]
 ]
 
 { #category : #updating }
@@ -148,4 +155,10 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 		  self item ifNotNil: [ :item | 
 			  descriptionText text:
 				  (repo modelMetadataNamed: item ifAbsent: [ '' ]) asText ] ]
+]
+
+{ #category : #accessing }
+RMDRepositoryModelsBrowser >> updateMetadataOnWrite: aBoolean [
+
+	updateMetadataOnWrite := aBoolean ~= false
 ]

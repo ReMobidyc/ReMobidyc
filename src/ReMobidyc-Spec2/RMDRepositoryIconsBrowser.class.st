@@ -57,24 +57,6 @@ RMDRepositoryIconsBrowser >> editItem [
 					self updateItemList ] ] ] ]
 ]
 
-{ #category : #operations }
-RMDRepositoryIconsBrowser >> exportItem [
-
-	self item ifNotNil: [ :item | 
-		(self repository iconNamed: item ifAbsent: [ nil ]) ifNotNil: [ 
-			:icon | 
-			| repos |
-			repos := (RMDRepositoryDirectory current repositories select:
-				          #isModifiable) copyWithout: self repository.
-			(UIManager default
-				 chooseFrom: (repos collect: #name)
-				 title: 'Export to') ifNotNil: [ :index | 
-				(repos at: index ifAbsent: [ nil ]) ifNotNil: [ :repo | 
-					repo addIcon: icon named: item ifPresent: [ 
-						(UIManager default confirm: item , ' already exists. Overwrite?') 
-							ifFalse: [ ^ self ] ] ] ] ] ]
-]
-
 { #category : #accessing }
 RMDRepositoryIconsBrowser >> file [
 

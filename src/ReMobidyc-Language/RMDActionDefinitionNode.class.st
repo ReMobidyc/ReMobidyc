@@ -13,6 +13,19 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDActionDefinitionNode class >> name: aString [
+
+	<script: '(RMDActionDefinitionNode name: ''verb'') inspect'>
+	^ self
+		  name: aString
+		  object: nil
+		  guard: nil
+		  lifeDirectives: Array new
+		  attributeDefinitions: Array new
+		  utilityDefinitions: Array new
+]
+
+{ #category : #'instance creation' }
 RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective attributeDefinitions: anArrayOfRMDAttributeDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 
 	^ self new

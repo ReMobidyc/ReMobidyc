@@ -236,3 +236,9 @@ RMDMetadata >> readFromJsonString: aString [
 			 on: Error
 			 do: [ :ex | nil ])
 ]
+
+{ #category : #operations }
+RMDMetadata >> updateDate [
+
+	date := DateAndTime now
+]
