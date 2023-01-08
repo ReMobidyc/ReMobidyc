@@ -209,11 +209,16 @@ RMDSimulationModeler >> fileMenu [
 				  item
 					  name: 'Save';
 					  enabled: [ modelFileReference notNil ];
-					  action: [ simulationModel exportModel: modelFileReference ] ].
+					  action: [ 
+						  simulationModel metadata updateDate.
+						  metadataPresenter metadataChanged.
+						  simulationModel exportModel: modelFileReference ] ].
 			  group addItem: [ :item | 
 				  item
 					  name: 'Save As...';
 					  action: [ 
+						  simulationModel metadata updateDate.
+						  metadataPresenter metadataChanged.
 						  RMDRepositoryModelsBrowser
 							  openForSave: simulationModel
 							  do: [ :model :repBrowser | 

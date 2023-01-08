@@ -58,14 +58,14 @@ RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 		help: 'Open a text-based browser on a local repository'
 ]
 
-{ #category : #updating }
+{ #category : #operations }
 RMDModelFileTextBrowser >> acceptSourceText [
 
 	fileList selectedItem ifNotNil: [ :ref | 
 		self acceptSourceTextAt: ref ]
 ]
 
-{ #category : #updating }
+{ #category : #operations }
 RMDModelFileTextBrowser >> acceptSourceTextAt: fileReference [
 
 	editingTexts at: fileReference ifPresent: [ :text | 
@@ -75,7 +75,8 @@ RMDModelFileTextBrowser >> acceptSourceTextAt: fileReference [
 		editingTexts removeKey: fileReference ifAbsent: [  ].
 		fileList
 			items: fileList items;
-			selectItem: fileReference ]
+			selectItem: fileReference ].
+	self updateMetadata
 ]
 
 { #category : #parsers }
@@ -271,6 +272,7 @@ RMDModelFileTextBrowser >> saveAll [
 
 	editingTexts keysAndValuesDo: [ :ref :text | 
 		ref writeStreamDo: [ :stream | stream nextPutAll: text asString ] ].
+	self updateMetadata.
 	editingTexts removeAll
 ]
 
@@ -338,6 +340,25 @@ RMDModelFileTextBrowser >> updateFileList [
 		(#( 'metadata.json' 'actions.rmd' 'agents.rmd' 'simulation.rmd'
 		    'tasks.rmd' 'visualization.rmd' ) collect: [ :basename | 
 			 (modelFileReference / basename) ensureCreateFile ])
+]
+
+{ #category : #operations }
+RMDModelFileTextBrowser >> updateMetadata [
+
+	| metadataRef metadata |
+	metadataRef := modelFileReference / 'metadata.json'.
+	metadata := [ 
+	            metadataRef readStreamDo: [ :readStream | 
+		            RMDMetadata fromJsonStream: readStream ] ]
+		            on: Error
+		            do: [ :ex | ^ nil ].
+	metadata updateDate.
+	[ 
+	metadataRef ensureDelete lfWriteStreamDo: [ :stream | 
+		metadata printJsonOn: stream ] ]
+		on: Error
+		do: [ :ex | ^ nil ].
+	fileList selectedItem = metadataRef ifTrue: [ self updateSourceText ]
 ]
 
 { #category : #updating }
