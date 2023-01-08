@@ -7,8 +7,24 @@ Class {
 		'date',
 		'description'
 	],
+	#classVars : [
+		'CurrentAuthor'
+	],
 	#category : #'ReMobidyc-Repository'
 }
+
+{ #category : #accessing }
+RMDMetadata class >> currentAuthor [
+
+	[ CurrentAuthor isNil ] whileTrue: [ self renewCurrentAuthor ].
+	^ CurrentAuthor
+]
+
+{ #category : #accessing }
+RMDMetadata class >> flushCurrentAuthor [
+
+	CurrentAuthor := nil
+]
 
 { #category : #'instance creation' }
 RMDMetadata class >> fromJsonObject: aDictionary [
@@ -26,6 +42,38 @@ RMDMetadata class >> fromJsonStream: aStream [
 RMDMetadata class >> fromJsonString: aString [
 
 	^ self fromJsonObject: (STONJSON fromString: aString)
+]
+
+{ #category : #accessing }
+RMDMetadata class >> guessUserName [
+
+	(OSEnvironment current at: 'USER' ifAbsent: [ nil ]) ifNotNil: [ :n | 
+		^ n ].
+	(OSEnvironment current at: 'USERNAME' ifAbsent: [ nil ]) ifNotNil: [ 
+		:n | ^ n ].
+	^ 'Anonymous'
+]
+
+{ #category : #menus }
+RMDMetadata class >> remobidycMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #Upgrade)
+		parent: #ReMobidycSystem;
+		order: 10;
+		label: 'Forget current user';
+		action: [ self flushCurrentAuthor ];
+		help: 'Forget the current user''s name as an author of models'
+]
+
+{ #category : #accessing }
+RMDMetadata class >> renewCurrentAuthor [
+
+	(UIManager default
+		 request: 'Your name?'
+		 initialAnswer: self guessUserName) ifNotNil: [ :n | 
+		n trim ifNotEmpty: [ :author | CurrentAuthor := author ] ].
+	^ CurrentAuthor
 ]
 
 { #category : #converting }
@@ -180,6 +228,20 @@ RMDMetadata >> description: aString [
 RMDMetadata >> descriptionField [
 
 	^ 'description'
+]
+
+{ #category : #operations }
+RMDMetadata >> ensureAuthor: aString [
+
+	aString trim ifNotEmpty: [ :author | 
+		(authors includes: author) ifFalse: [ 
+			authors := authors , { author } ] ]
+]
+
+{ #category : #operations }
+RMDMetadata >> ensureCurrentAuthor [
+
+	^ self ensureAuthor: self class currentAuthor
 ]
 
 { #category : #initialization }

@@ -942,6 +942,14 @@ RMDSimulationModel >> typechecker [
 		yourself
 ]
 
+{ #category : #'accessing - metadata' }
+RMDSimulationModel >> updateMetadata [
+
+	metadata
+		ensureCurrentAuthor;
+		updateDate
+]
+
 { #category : #'accessing - cells' }
 RMDSimulationModel >> west [
 	^ 0.0
