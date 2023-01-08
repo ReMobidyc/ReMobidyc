@@ -92,17 +92,6 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString [
 ]
 
 { #category : #utilities }
-RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString updateMetadataOnWrite: aBoolean [
-
-	| browser |
-	browser := self new forSave.
-	browser updateMetadataOnWrite: aBoolean.
-	browser openDialog
-		title: aString;
-		okAction: [ browser save: anObject ]
-]
-
-{ #category : #utilities }
 RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
@@ -216,10 +205,7 @@ RMDAbstractRepositoryBrowser >> enableOk [
 RMDAbstractRepositoryBrowser >> exportItem [
 
 	self load ifNotNil: [ :item | 
-		self class
-			openForSave: item
-			title: 'Export ' , self item , 'to...'
-			updateMetadataOnWrite: false ]
+		self class openForSave: item title: 'Export ' , self item , 'to...' ]
 ]
 
 { #category : #accessing }
@@ -457,12 +443,6 @@ RMDAbstractRepositoryBrowser >> updateDescriptionText [
 RMDAbstractRepositoryBrowser >> updateItemList [
 
 	itemList items: self itemsInRepository
-]
-
-{ #category : #accessing }
-RMDAbstractRepositoryBrowser >> updateMetadataOnWrite: aBoolean [
-
-	
 ]
 
 { #category : #updating }
