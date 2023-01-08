@@ -11,9 +11,21 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDMetadata class >> fromJsonObject: aDictionary [
+
+	^ self new readFromJsonObject: aDictionary
+]
+
+{ #category : #'instance creation' }
+RMDMetadata class >> fromJsonStream: aStream [
+
+	^ self fromJsonObject: (STONJSON fromStream: aStream)
+]
+
+{ #category : #'instance creation' }
 RMDMetadata class >> fromJsonString: aString [
 
-	^ self new readFromJsonString: aString
+	^ self fromJsonObject: (STONJSON fromString: aString)
 ]
 
 { #category : #converting }
