@@ -22,6 +22,12 @@ RMDIcebergRepository class >> on: aString name: anotherString [
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+RMDIcebergRepository class >> standardModels [
+
+	^ self on: 'StandardModels' name: 'Standard Models'
+]
+
 { #category : #accessing }
 RMDIcebergRepository >> basicDirectory [
 

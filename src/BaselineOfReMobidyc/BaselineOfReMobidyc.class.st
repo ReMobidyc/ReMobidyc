@@ -9,6 +9,7 @@ BaselineOfReMobidyc class >> deploy [
 
 	<script>
 	RMDMetadata flushCurrentAuthor.
+	RMDRepositoryDirectory flushCurrent.
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	Smalltalk cleanUp: true except: {  } confirming: false.
 	MCRepositoryGroup allSubInstancesDo: [ :group | 
@@ -162,6 +163,31 @@ BaselineOfReMobidyc >> installLogos [
 ]
 
 { #category : #scripts }
+BaselineOfReMobidyc >> installStandardRepository [
+
+	<script: 'BaselineOfReMobidyc new installStandardRepository'>
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'StandardModels' ]
+		  ifNone: [ 
+			  | repo |
+			  UIManager default
+				  informUser: 'Cloning the official re:mobidyc standard models'
+				  during: [ 
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/ReMobidyc/StandardModels.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+							          / 'StandardModels';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : #scripts }
 BaselineOfReMobidyc >> logoDirectoryPath [
 	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
 		ensureCreateDirectory
@@ -177,5 +203,6 @@ BaselineOfReMobidyc >> postLoad [
 	PolymorphSystemSettings desktopLogoFileName:
 		(self logoDirectoryPath / 'default.png') fullName.
 	PolymorphSystemSettings desktopColor:
-		(Color cyan mixed: 0.02 with: Color white)
+		(Color cyan mixed: 0.02 with: Color white).
+	self installStandardRepository
 ]

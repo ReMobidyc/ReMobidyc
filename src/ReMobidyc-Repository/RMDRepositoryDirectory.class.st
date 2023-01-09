@@ -16,6 +16,12 @@ RMDRepositoryDirectory class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
+{ #category : #'sole instance' }
+RMDRepositoryDirectory class >> flushCurrent [
+
+	current := nil
+]
+
 { #category : #'adding-removing' }
 RMDRepositoryDirectory >> add: aRMDRepository [
 	(repositories includes: aRMDRepository)
@@ -29,6 +35,7 @@ RMDRepositoryDirectory >> initialize [
 	super initialize.
 	repositories := OrderedCollection
 		                with: RMDBuiltinRepository new
+		                with: RMDIcebergRepository standardModels
 		                with: RMDLocalFileRepository default
 ]
 
