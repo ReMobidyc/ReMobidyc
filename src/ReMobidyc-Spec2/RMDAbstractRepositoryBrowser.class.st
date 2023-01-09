@@ -346,9 +346,8 @@ RMDAbstractRepositoryBrowser >> isValidGitLocalForNewRepository: aFileReference 
 	^ ((aFileReference / 'models') exists or: [ 
 		   (aFileReference / 'actions') exists or: [ 
 			   (aFileReference / 'icons') exists ] ]) and: [ 
-		  (RMDRepositoryDirectory current repositories contains: [ :repo | 
-			   repo isIcebergRepository and: [ 
-				   repo icebergRepository location = aFileReference ] ]) not ]
+		  (IceRepository repositories contains: [ :iceRepogitory | 
+			   iceRepogitory location = aFileReference ]) not ]
 ]
 
 { #category : #private }
