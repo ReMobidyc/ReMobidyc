@@ -22,6 +22,33 @@ RMDIcebergRepository class >> on: aString name: anotherString [
 		  yourself
 ]
 
+{ #category : #'instance creation' }
+RMDIcebergRepository class >> onLocalGit: aFileReference name: anotherString [
+
+	^ self new
+		  icebergRepositoryName:
+			  (self reactivateExistingLocal: aFileReference) name;
+		  name: anotherString;
+		  yourself
+]
+
+{ #category : #utilities }
+RMDIcebergRepository class >> reactivateExistingLocal: aFileReference [
+
+	^ (IceRepositoryCreator new
+		   repository: nil;
+		   location: aFileReference;
+		   createRepository)
+		  register;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDIcebergRepository class >> standardModels [
+
+	^ self on: 'StandardModels' name: 'Standard Models'
+]
+
 { #category : #accessing }
 RMDIcebergRepository >> basicDirectory [
 

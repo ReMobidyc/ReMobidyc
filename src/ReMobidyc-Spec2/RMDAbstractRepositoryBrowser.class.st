@@ -104,18 +104,31 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 RMDAbstractRepositoryBrowser >> addIcebergRepository [
 
 	| repos |
-	repos := IceRepository repositories
-		         select: [ :repo | self isValidNewRepository: repo ]
-		         thenCollect: #name.
-	repos ifEmpty: [ ^ UIManager default alert: 'No re:mobidyc repository on Iceberg.' ].
+	repos := (IceRepository repositories
+		          select: [ :repo | self isValidNewRepository: repo ]
+		          thenCollect: #name) asOrderedCollection.
+	(FileLocator localDirectory / 'iceberg') directories do: [ :ownerRef | 
+		ownerRef directories do: [ :repoRef | 
+			(self isValidGitLocalForNewRepository: repoRef) ifTrue: [ 
+				repos add: '(' , ownerRef basename , '/' , repoRef basename , ')' ] ] ].
+	repos ifEmpty: [ 
+		^ UIManager default alert: 'No re:mobidyc repository on Iceberg.' ].
 	(UIManager default
 		 chooseFrom: repos
 		 title: 'Select an Iceberg repository') ifNotNil: [ :index | 
 		(repos at: index ifAbsent: [ nil ]) ifNotNil: [ :repo | 
 			(UIManager default request: 'Repository Name' initialAnswer: repo) 
 				ifNotNil: [ :name | 
-					self repositoryDirectory add:
-						(RMDIcebergRepository on: repo name: name).
+					self repositoryDirectory add: (repo first = $(
+							 ifTrue: [ 
+								 | pair o r |
+								 pair := repo substrings: '/'.
+								 o := pair first copyWithoutFirst.
+								 r := pair second copyWithout: $).
+								 RMDIcebergRepository
+									 onLocalGit: FileLocator localDirectory / 'iceberg' / o / r
+									 name: name ]
+							 ifFalse: [ RMDIcebergRepository on: repo name: name ]).
 					self updateRepositoryList ] ] ]
 ]
 
@@ -325,6 +338,17 @@ RMDAbstractRepositoryBrowser >> isForSave: aBoolean [
 
 	isForSave := aBoolean = true.
 	self updateButtons
+]
+
+{ #category : #private }
+RMDAbstractRepositoryBrowser >> isValidGitLocalForNewRepository: aFileReference [
+
+	^ ((aFileReference / 'models') exists or: [ 
+		   (aFileReference / 'actions') exists or: [ 
+			   (aFileReference / 'icons') exists ] ]) and: [ 
+		  (RMDRepositoryDirectory current repositories contains: [ :repo | 
+			   repo isIcebergRepository and: [ 
+				   repo icebergRepository location = aFileReference ] ]) not ]
 ]
 
 { #category : #private }
