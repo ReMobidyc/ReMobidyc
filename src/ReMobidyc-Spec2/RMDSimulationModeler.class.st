@@ -237,7 +237,9 @@ RMDSimulationModeler >> initializePresenters [
 						           name: 'File';
 						           subMenu: self fileMenu ] ];
 		           yourself.
-	metadataPresenter := self newMetadata.
+	metadataPresenter := self newMetadata
+		                     whenNameChangedDo: [ self updateWindowTitle ];
+		                     yourself.
 	views := self newNotebook
 		         whenSelectedPageChangedDo: [ 
 			         simulationDefinitionPresenter ifNotNil: #nodeChanged ];
