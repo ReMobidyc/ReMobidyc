@@ -17,6 +17,12 @@ RMDAgentInitializerNode >> = anObject [
 ]
 
 { #category : #accessing }
+RMDAgentInitializerNode >> agentName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDAgentInitializerNode >> attributeInitializers [
 	^ attributeInitializers
 ]

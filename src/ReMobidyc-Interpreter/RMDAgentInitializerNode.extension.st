@@ -13,5 +13,10 @@ RMDAgentInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	utilityDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ].
 	attributeInitializers do: [ :initializer | 
-		initializer typecheckIn: aRMDInterpreter ]
+		[ initializer typecheckIn: aRMDInterpreter ]
+			on: RMDTypeError
+			do: [ :ex | 
+				ex
+					signalAsTypeErrorInAgentInitializer: self
+					attributeInitializer: initializer ] ]
 ]

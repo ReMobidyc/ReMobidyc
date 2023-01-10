@@ -83,8 +83,24 @@ RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherStri
 ]
 
 { #category : #'type checking' }
-RMDTypechecker >> typecheckAll [
+RMDTypechecker >> typecheckAgentDefinitions [
+
 	self
+		typecheck: simulationModel worldDefinition
+		subject: simulationModel worldDefinition.
+	self
+		typecheck: simulationModel patchDefinition
+		subject: simulationModel patchDefinition.
+
+	simulationModel animatDefinitionsDo: [ :animatDefinition | 
+		self typecheck: animatDefinition subject: animatDefinition agentName ]
+]
+
+{ #category : #'type checking' }
+RMDTypechecker >> typecheckAll [
+
+	self
+		typecheckAgentDefinitions;
 		typecheckInitializers;
 		typecheckTasks
 ]

@@ -55,6 +55,12 @@ RMDAgentDefinitionNode >> = anObject [
 ]
 
 { #category : #accessing }
+RMDAgentDefinitionNode >> agentName [
+
+	^ self name
+]
+
+{ #category : #accessing }
 RMDAgentDefinitionNode >> allAttributeDeclarations [
 	^ (self builtinAttributes
 		collect:

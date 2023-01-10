@@ -292,11 +292,13 @@ RMDSimulationModeler >> openObservatory [
 		               simulationModel: simulationModel;
 		               yourself.
 	interpreter setupSimulation.
-	^ (RMDObservatory interpreter: interpreter)
-		  modelName:
-			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
-		  open;
-		  yourself
+	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
+		  :observatory | 
+		  observatory
+			  modelName:
+				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
+			  open;
+			  yourself ]
 ]
 
 { #category : #operations }
@@ -335,10 +337,12 @@ RMDSimulationModeler >> openObservatoryOnFile: aFileReference [
 		               simulationModel: simulationModel;
 		               yourself.
 	interpreter setupSimulation.
-	^ (RMDObservatory interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
+	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
+		  :observatory | 
+		  observatory
+			  modelName: aFileReference basename;
+			  open;
+			  yourself ]
 ]
 
 { #category : #private }

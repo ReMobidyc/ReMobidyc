@@ -20,6 +20,12 @@ RMDWorldInitializerNode class >> empty [
 	^ self attributeInitializers: Array new utilityDefinitions: Array new
 ]
 
+{ #category : #accessing }
+RMDWorldInitializerNode >> agentName [
+
+	^ 'World'
+]
+
 { #category : #testing }
 RMDWorldInitializerNode >> isWorldInitializerNode [
 	^ true
