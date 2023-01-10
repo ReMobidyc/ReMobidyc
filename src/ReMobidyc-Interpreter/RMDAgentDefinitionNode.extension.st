@@ -27,5 +27,10 @@ RMDAgentDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	utilityDefinitions do: [ :def | def typecheckIn: aRMDInterpreter ].
 	attributeDeclarations do: [ :attributeDecl | 
-		attributeDecl typecheckIn: aRMDInterpreter ]
+		[ attributeDecl typecheckIn: aRMDInterpreter ]
+			on: RMDTypeError
+			do: [ :ex | 
+				ex
+					signalAsTypeErrorInAgentDefinition: self
+					attributeDeclaration: attributeDecl ] ]
 ]

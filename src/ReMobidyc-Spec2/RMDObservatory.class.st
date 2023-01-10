@@ -208,6 +208,12 @@ RMDObservatory >> forceKill [
 	process ifNotNil: #terminate
 ]
 
+{ #category : #controlling }
+RMDObservatory >> ifValidated: aBlock [
+
+	^ validated = true ifTrue: [ aBlock cull: self ]
+]
+
 { #category : #updating }
 RMDObservatory >> informServer [
 	(lastServerUpdate isNil

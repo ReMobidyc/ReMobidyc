@@ -154,5 +154,5 @@ RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	[ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
 		on: RMDTypeError
-		do: [ :ex | ex resignalAsTaskTypeErrorIn: self ]
+		do: [ :ex | ex signalAsTaskTypeErrorInTaskDefinition: self ]
 ]

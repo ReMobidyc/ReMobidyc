@@ -18,7 +18,7 @@ RMDAttributeDeclarationNode >> typecheckIn: aRMDInterpreter [
 	initializerExpression ifNotNil: [ 
 		[ 
 		type := (initializerExpression typecheckIn: aRMDInterpreter) unify:
-			        unit ]
+			        type ]
 			on: RMDTypeUnificationError
 			do: [ :ex | 
 				ex resignalAs: (RMDTypeError

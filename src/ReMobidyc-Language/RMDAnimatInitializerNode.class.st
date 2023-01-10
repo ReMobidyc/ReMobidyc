@@ -63,6 +63,12 @@ RMDAnimatInitializerNode >> = anObject [
 ]
 
 { #category : #accessing }
+RMDAnimatInitializerNode >> agentName [
+
+	^ self animat
+]
+
+{ #category : #accessing }
 RMDAnimatInitializerNode >> animat [
 	^ animat
 ]

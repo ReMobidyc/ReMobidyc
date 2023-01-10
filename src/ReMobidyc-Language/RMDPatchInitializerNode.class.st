@@ -63,6 +63,12 @@ RMDPatchInitializerNode >> = anObject [
 					[ yDivisions = anObject yDivisions and: [ size = anObject size ] ] ]
 ]
 
+{ #category : #accessing }
+RMDPatchInitializerNode >> agentName [
+
+	^ 'Patch'
+]
+
 { #category : #enumerating }
 RMDPatchInitializerNode >> childrenDo: aBlock [
 
