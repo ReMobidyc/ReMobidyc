@@ -392,6 +392,22 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		aCollection add: (start to: aStream position) ]
 ]
 
+{ #category : #printing }
+RMDTaskDefinitionNode >> printShortOn: aStream [
+
+	aStream
+		nextPutAll: subjectIdentifier;
+		space;
+		nextPutAll: verbIdentifier.
+	objectIdentifier ifNotNil: [ 
+		aStream space.
+		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
+		aStream
+			nextPutAll: objectIdentifier;
+			nextPutAll: ' within '.
+		range printOn: aStream ]
+]
+
 { #category : #accessing }
 RMDTaskDefinitionNode >> range [
 	^ range

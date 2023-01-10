@@ -54,6 +54,19 @@ RMDTypeError >> composeMessageText [
 		  stream nextPutAll: '.' ]
 ]
 
+{ #category : #controlling }
+RMDTypeError >> resignalAsTaskTypeErrorIn: aRMDTaskDefinitionNode [
+
+	^ ((RMDTaskTypeError
+		    on: node
+		    subnode: subnode1
+		    type: type1
+		    subnode: subnode2
+		    type: type2)
+		   taskDefinitionNode: aRMDTaskDefinitionNode;
+		   yourself) signal
+]
+
 { #category : #accessing }
 RMDTypeError >> subnode1 [
 

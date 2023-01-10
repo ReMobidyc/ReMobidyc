@@ -152,5 +152,7 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 
-	(self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter
+	[ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
+		on: RMDTypeError
+		do: [ :ex | ex resignalAsTaskTypeErrorIn: self ]
 ]
