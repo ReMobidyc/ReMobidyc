@@ -24,5 +24,5 @@ RMDProductNode >> operator [
 
 { #category : #accessing }
 RMDProductNode >> precedence [
-	^ 3
+	^ 4
 ]

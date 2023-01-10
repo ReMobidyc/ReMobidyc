@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDFractionNode,
-	#superclass : #RMDNonAssociativeApplicationNode,
+	#superclass : #RMDLeftAssociativeApplicationNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 

@@ -682,8 +682,11 @@ RMDGrammar >> expr1 [
 			  triple third
 				  ifNil: [ 
 				  self deUnitExpressionNode expression: expr unit: deUnit ]
-				  ifNotNil: [ :enunit | 
-				  PP2Failure message: 'ambiguous unit conversion' ] ] ]
+				  ifNotNil: [ :enUnit | 
+					  self deUnitExpressionNode
+						  expression:
+						  (self enUnitExpressionNode expression: expr unit: enUnit)
+						  unit: deUnit ] ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -697,31 +700,19 @@ RMDGrammar >> expr2 [
 ]
 
 { #category : #'parsers-expressions' }
-RMDGrammar >> expr3 [
-	^ (self expr2 separatedBy: $* asPParser trimBlanks)
-		==> [ :array | 
-			(3 to: array size by: 2)
-				inject: array first
-				into: [ :product :index | 
-					self productNodeClass
-						expression: product
-						expression: (array at: index) ] ]
-]
-
-{ #category : #'parsers-expressions' }
 RMDGrammar >> expr4 [
-	| expr3 |
-	expr3 := self expr3.
-	^ (expr3
-		,
-			((#newline asPParser trimBlanks optional , $/ asPParser trimBlanks
-				, expr3) ==> #third) optional)
-		==> [ :pair | 
-			pair second
-				ifNil: [ pair first ]
-				ifNotNil: [ self fractionNodeClass
-						expression: pair first
-						expression: pair second ] ]
+	^ (self expr2 separatedBy: ($* asPParser / $/ asPParser) trimBlanks)
+		==> [ :array | 
+			(2 to: array size by: 2)
+				inject: array first
+				into: [ :total :index | 
+					| op |
+					op := array at: index.
+					(op = $*
+						ifTrue: [ self productNodeClass ]
+						ifFalse: [ self fractionNodeClass ])
+						expression: total
+						expression: (array at: index + 1) ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -761,18 +752,6 @@ RMDGrammar >> externalVariableNodeClass [
 { #category : #'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
-]
-
-{ #category : #'parsers-atoms' }
-RMDGrammar >> fractionString [
-
-	^ self decimalString / self pi
-	  ,
-		  ($/ asPParser trimBlanks flatten , (self decimalString / self pi))
-			  optional ==> [ :pair | 
-	  pair first , (pair second
-		   ifNotNil: [ :pair2 | pair2 first , pair2 second ]
-		   ifNil: [ '' ]) ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -884,7 +863,7 @@ RMDGrammar >> lifeDirective [
 { #category : #'parsers-atoms' }
 RMDGrammar >> literal [
 
-	^ self fractionString , self type optional ==> [ :pair | 
+	^ self numberString , self type optional ==> [ :pair | 
 	  self literalNodeClass
 		  literal: pair first
 		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
@@ -985,6 +964,12 @@ RMDGrammar >> normalDistribution [
 RMDGrammar >> normalDistributionNodeClass [
 
 	^ RMDNormalDistributionNode
+]
+
+{ #category : #'parsers-atoms' }
+RMDGrammar >> numberString [
+
+	^ self decimalString / self pi
 ]
 
 { #category : #'parsers-expressions' }

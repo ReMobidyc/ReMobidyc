@@ -12,6 +12,6 @@ RMDLiteralNodeTest >> testEvalIn [
 	self assert: (literal evalIn: interpreter) closeTo: 2.
 	literal := parser literal parse: '2[cm]'.
 	self assert: (literal evalIn: interpreter) closeTo: 0.02.
-	literal := parser literal parse: '450.0/-4.5 [m]'.
-	self assert: (literal evalIn: interpreter) closeTo: -100.0
+	literal := parser literal parse: '450.0 [m]'.
+	self assert: (literal evalIn: interpreter) closeTo: 450.0
 ]

@@ -661,7 +661,9 @@ RMDGrammarTest >> testCastingExpression [
 		equals: (grammar expression end parse: 'x').
 	self assert: node unit equals: RMDUnit m.
 	node := grammar expression end parse: '(m)x[m]'.
-	self assert: node isPetit2Failure
+	self assert: node isDeUnitExpressionNode.
+	self assert: node expression isEnUnitExpressionNode.
+	self assert: node expression expression isUtilityVariableNode
 ]
 
 { #category : #tests }
@@ -802,7 +804,8 @@ RMDGrammarTest >> testExpr1 [
 		equals: (grammar expression end parse: 'x').
 	self assert: expr1 unit equals: RMDUnit m.
 	expr1 := grammar expression end parse: '(m)x[m]'.
-	self assert: expr1 isPetit2Failure.
+	self assert: expr1 isDeUnitExpressionNode.
+	self assert: expr1 expression isEnUnitExpressionNode.
 	expr1 := grammar expr1 parse: '_expr_'.
 	self assert: expr1 isUtilityVariableNode.
 	self assert: expr1 identifier equals: '_expr_'
@@ -822,29 +825,8 @@ RMDGrammarTest >> testExpr2 [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testExpr3 [
-	| expr3 |
-	expr3 := grammar expr3 parse: 'x'.
-	self assert: expr3 isUtilityVariableNode.
-	self assert: expr3 identifier equals: 'x'.
-	expr3 := grammar expr3 parse: 'x * y * z'.
-	self assert: expr3 isProductNode.
-	self assert: expr3 expression1 isProductNode.
-	self assert: expr3 expression1 expression1 identifier equals: 'x'.
-	self assert: expr3 expression1 expression2 identifier equals: 'y'.
-	self assert: expr3 expression2 identifier equals: 'z'.
-	expr3 := grammar expr3 end parse: 'x * y^2'.
-	self assert: expr3 isProductNode.
-	self assert: expr3 expression1 isUtilityVariableNode.
-	self assert: expr3 expression1 identifier equals: 'x'.
-	self assert: expr3 expression2 isPowerNode.
-	self assert: expr3 expression2 expression isUtilityVariableNode.
-	self assert: expr3 expression2 expression identifier equals: 'y'.
-	self assert: expr3 expression2 order equals: 2
-]
-
-{ #category : #tests }
 RMDGrammarTest >> testExpr4 [
+
 	| expr4 |
 	expr4 := grammar expr4 parse: 'x / y'.
 	self assert: expr4 isFractionNode.
@@ -855,9 +837,26 @@ RMDGrammarTest >> testExpr4 [
 	self assert: expr4 expression1 isProductNode.
 	self assert: expr4 expression2 identifier equals: 'z'.
 	expr4 := grammar expr4 parse: 'x / y * z'.
-	self assert: expr4 isFractionNode.
+	self assert: expr4 isProductNode.
+	self assert: expr4 expression1 isFractionNode.
+	self assert: expr4 expression2 identifier equals: 'z'.
+	expr4 := grammar expr4 parse: 'x'.
+	self assert: expr4 isUtilityVariableNode.
+	self assert: expr4 identifier equals: 'x'.
+	expr4 := grammar expr4 parse: 'x * y * z'.
+	self assert: expr4 isProductNode.
+	self assert: expr4 expression1 isProductNode.
+	self assert: expr4 expression1 expression1 identifier equals: 'x'.
+	self assert: expr4 expression1 expression2 identifier equals: 'y'.
+	self assert: expr4 expression2 identifier equals: 'z'.
+	expr4 := grammar expr4 end parse: 'x * y^2'.
+	self assert: expr4 isProductNode.
+	self assert: expr4 expression1 isUtilityVariableNode.
 	self assert: expr4 expression1 identifier equals: 'x'.
-	self assert: expr4 expression2 isProductNode
+	self assert: expr4 expression2 isPowerNode.
+	self assert: expr4 expression2 expression isUtilityVariableNode.
+	self assert: expr4 expression2 expression identifier equals: 'y'.
+	self assert: expr4 expression2 order equals: 2
 ]
 
 { #category : #tests }
@@ -1001,10 +1000,10 @@ RMDGrammarTest >> testLiteral [
 	self assert: literal literal equals: '3'.
 	self assert: literal unit equals: (grammar type parse: '[m]').
 	self assert: literal numeric closeTo: 3.
-	literal := grammar literal parse: '-pi/2[rad]'.
-	self assert: literal literal equals: '-π/2'.
+	literal := grammar literal parse: '-pi[rad]'.
+	self assert: literal literal equals: '-π'.
 	self assert: literal unit equals: (grammar type parse: '[rad]').
-	self assert: literal numeric closeTo: Float pi / -2.0.
+	self assert: literal numeric closeTo: Float pi negated.
 	
 	
 ]

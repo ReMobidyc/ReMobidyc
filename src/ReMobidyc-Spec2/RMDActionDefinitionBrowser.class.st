@@ -97,7 +97,7 @@ RMDActionDefinitionBrowser >> addAttributeDefinition [
 	(newDefinition asPresenter
 		 simulationModel: self simulationModel;
 		 subjectAgent: subjectAgent;
-		 objectAgent: node objectIdentifier;
+		 objectAgent: node object;
 		 yourself) openDialog okAction: [ 
 		node attributeDefinitions:
 			(node attributeDefinitions copyWith: newDefinition).
