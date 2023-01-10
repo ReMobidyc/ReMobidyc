@@ -106,3 +106,9 @@ RMDMetadataPresenter >> metadataChanged [
 		dateField text: metadata dateString.
 		descriptionText text: metadata description ]
 ]
+
+{ #category : #enumerating }
+RMDMetadataPresenter >> whenNameChangedDo: aBlock [
+
+	nameField whenTextChangedDo: aBlock
+]
