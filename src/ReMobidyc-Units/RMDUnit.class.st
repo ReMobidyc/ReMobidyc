@@ -38,6 +38,12 @@ RMDUnit class >> day [
 ]
 
 { #category : #constants }
+RMDUnit class >> degreeday [
+
+	^ self celsius * self day
+]
+
+{ #category : #constants }
 RMDUnit class >> fahrenheit [
 
 	^ self at: 'DegreeF'
@@ -210,7 +216,7 @@ RMDUnit class >> initialize [
 		value: #( l ℓ litre liter ).
 	register
 		value: (self newSymbol: 'dL' scale: 1.0e-4 siUnit: m3)
-		value: #( dl dℓ).
+		value: #( dl dℓ ).
 	register
 		value: (self newSymbol: 'mL' scale: 1.0e-6 siUnit: m3)
 		value: #( mℓ '㎖' ).
@@ -336,7 +342,8 @@ RMDUnit class >> initialize [
 		value: (self newSymbol: '%' scale: 1.0e-2 siUnit: self noDimension)
 		value: #( 'percent' ).
 	"amount of substance"
-	register value: (self newSISymbol: 'mol') value: #( '㏖' )
+	register value: (self newSISymbol: 'mol') value: #( '㏖' ).
+	KnownUnits at: 'degreeday' put: self celsius * self day
 ]
 
 { #category : #constants }
