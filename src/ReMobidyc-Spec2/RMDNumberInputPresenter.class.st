@@ -39,9 +39,11 @@ RMDNumberInputPresenter >> number [
 
 { #category : #api }
 RMDNumberInputPresenter >> number: aNumber [
-	number := self isInteger
-		ifTrue: [ aNumber asInteger ]
-		ifFalse: [ aNumber asFloat ].
+
+	number := aNumber ifNil: [ 0 ] ifNotNil: [ 
+		          self isInteger
+			          ifTrue: [ aNumber asInteger ]
+			          ifFalse: [ aNumber asFloat ] ].
 	lastValidNumber := number.
 	self beOk.
 	text := number printString
