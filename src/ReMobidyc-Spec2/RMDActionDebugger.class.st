@@ -175,8 +175,9 @@ RMDActionDebugger >> updateSourceText [
 
 	sourceText ifNotNil: [ 
 		sourceText
-			highlights:
-				(exception ifNil: [ #(  ) ] ifNotNil: [ { exception node } ]);
+			highlights: (exception
+					 ifNil: [ #(  ) ]
+					 ifNotNil: [ { exception originalSemanticError node } ]);
 			syntaxNode: interpreter context action ]
 ]
 
@@ -199,6 +200,35 @@ RMDActionDebugger >> updateVariableList [
 
 	variableList items: (Array streamContents: [ :stream | 
 			 interpreter ifNotNil: [ 
+				 interpreter context subjectDefinition ifNotNil: [ :subjectDef | 
+					 subjectDef attributeDeclarations do: [ :attributeDecl | 
+						 stream nextPut:
+							 'my ' , attributeDecl identifier -> (interpreter
+								  readVariable: attributeDecl identifier
+								  agent: nil
+								  ifAbsent: [ 'N/A' ]) ] ].
+				 interpreter context objectDefinition ifNotNil: [ :objectDef | 
+					 objectDef attributeDeclarations do: [ :attributeDecl | 
+						 stream nextPut:
+							 objectDef agentName uncapitalized , '''s '
+							 , attributeDecl identifier -> (interpreter
+								  readVariable: attributeDecl identifier
+								  agent: objectDef agentName uncapitalized
+								  ifAbsent: [ 'N/A' ]) ] ].
+				 interpreter simulationModel patchDefinition ifNotNil: [ :patchDef | 
+					 patchDef attributeDeclarations do: [ :attributeDecl | 
+						 stream nextPut:
+							 'here''s ' , attributeDecl identifier -> (interpreter
+								  readVariable: attributeDecl identifier
+								  agent: 'here'
+								  ifAbsent: [ 'N/A' ]) ] ].
+				 interpreter simulationModel worldDefinition ifNotNil: [ :worldDef | 
+					 worldDef attributeDeclarations do: [ :attributeDecl | 
+						 stream nextPut:
+							 'world''s ' , attributeDecl identifier -> (interpreter
+								  readVariable: attributeDecl identifier
+								  agent: 'world'
+								  ifAbsent: [ 'N/A' ]) ] ].
 				 interpreter context action ifNotNil: [ :action | 
 					 action utilityDefinitions do: [ :utilityDef | 
 						 | utilityName utilityValue |

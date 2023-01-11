@@ -503,6 +503,12 @@ RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSe
 	^ self subclassResponsibility
 ]
 
+{ #category : #printing }
+RMDSyntaxNode >> printShortOn: aStream [
+
+	self printOn: aStream
+]
+
 { #category : #rewriting }
 RMDSyntaxNode >> renameAnimat: aString to: anotherString [
 

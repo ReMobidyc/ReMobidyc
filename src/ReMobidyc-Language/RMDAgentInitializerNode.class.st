@@ -92,6 +92,14 @@ RMDAgentInitializerNode >> postCopy [
 	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
+{ #category : #printing }
+RMDAgentInitializerNode >> printShortOn: aStream [
+
+	aStream
+		nextPutAll: 'Initial setup of ';
+		nextPutAll: self agentName
+]
+
 { #category : #rewriting }
 RMDAgentInitializerNode >> replaceChildren: aDictionary [
 

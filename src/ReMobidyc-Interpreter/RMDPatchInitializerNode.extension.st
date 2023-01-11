@@ -20,6 +20,7 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 RMDPatchInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context subjectDefinition:
-		aRMDInterpreter patchDefinition.
+		aRMDInterpreter patchDefinition;
+		loadUtilityDefinitions: utilityDefinitions.
 	^ super typecheckIn: aRMDInterpreter
 ]

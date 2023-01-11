@@ -36,3 +36,16 @@ RMDSemanticError >> node: aRMDSyntaxNode [
 
 	node := aRMDSyntaxNode
 ]
+
+{ #category : #accessing }
+RMDSemanticError >> originalSemanticError [
+
+	^ self
+]
+
+{ #category : #signalling }
+RMDSemanticError >> signalWithScope: aRMDSyntax [
+
+	self resume:
+		(RMDScopedSemanticError signal: aRMDSyntax exception: self)
+]

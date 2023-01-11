@@ -6,7 +6,9 @@ RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 	expression ifNotNil: [ 
 		aRMDInterpreter
 			initializeVariable: identifier
-			with: (expression evalIn: aRMDInterpreter)
+			with: ([ expression evalIn: aRMDInterpreter ]
+					 on: RMDSemanticError
+					 do: [ :ex | ex signalWithScope: self ])
 			ifAbsent: [ 
 				^ RMDUndefinedAttributeError signal:
 					  (RMDAttributeVariableNode identifier: identifier agent: nil) ] ]
@@ -26,7 +28,10 @@ RMDAttributeInitializerNode >> typecheckIn: aRMDInterpreter [
 					           agent: nil) ].
 	^ expression
 		  ifNotNil: [ 
-			  [ (expression typecheckIn: aRMDInterpreter) unify: type ]
+			  [ 
+			  ([ expression typecheckIn: aRMDInterpreter ]
+				   on: RMDSemanticError
+				   do: [ :ex | ex signalWithScope: self ]) unify: type ]
 				  on: RMDTypeUnificationError
 				  do: [ :ex | 
 					  ex resignalAs: (RMDTypeError
