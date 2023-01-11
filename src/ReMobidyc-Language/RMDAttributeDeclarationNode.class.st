@@ -135,6 +135,14 @@ RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		aCollection add: (start to: aStream position) ]
 ]
 
+{ #category : #printing }
+RMDAttributeDeclarationNode >> printShortOn: aStream [
+
+	aStream
+		nextPutAll: 'Attribute definition of ';
+		nextPutAll: self identifier
+]
+
 { #category : #rewriting }
 RMDAttributeDeclarationNode >> replaceChildren: aDictionary [
 

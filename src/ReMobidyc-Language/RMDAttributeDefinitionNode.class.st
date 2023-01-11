@@ -61,3 +61,10 @@ RMDAttributeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyn
 	(aCollectionOfRMDSyntaxNode includes: self)
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
+
+{ #category : #printing }
+RMDAttributeDefinitionNode >> printShortOn: aStream [
+
+	super printShortOn: aStream.
+	aStream nextPut: $'
+]

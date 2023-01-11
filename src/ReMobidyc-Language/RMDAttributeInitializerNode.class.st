@@ -90,6 +90,14 @@ RMDAttributeInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		aCollection add: (start to: aStream position) ]
 ]
 
+{ #category : #printing }
+RMDAttributeInitializerNode >> printShortOn: aStream [
+
+	aStream
+		nextPutAll: 'Attribute initializer of ';
+		nextPutAll: self identifier
+]
+
 { #category : #rewriting }
 RMDAttributeInitializerNode >> replaceChildren: aDictionary [
 

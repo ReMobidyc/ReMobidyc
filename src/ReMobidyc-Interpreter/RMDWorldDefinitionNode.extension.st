@@ -3,6 +3,8 @@ Extension { #name : #RMDWorldDefinitionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDWorldDefinitionNode >> typecheckIn: aRMDInterpreter [
 
-	aRMDInterpreter context subjectDefinition: aRMDInterpreter worldDefinition.
+	aRMDInterpreter context
+		subjectDefinition: aRMDInterpreter worldDefinition;
+		loadUtilityDefinitions: utilityDefinitions.
 	^ super typecheckIn: aRMDInterpreter
 ]

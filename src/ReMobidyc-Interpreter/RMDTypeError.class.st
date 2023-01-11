@@ -37,7 +37,7 @@ RMDTypeError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
 		  stream nextPutAll: 'Type error in "'.
-		  node printOn: stream.
+		  node printShortOn: stream.
 		  stream nextPutAll: '" : type of '.
 		  subnode1 printOn: stream.
 		  stream nextPutAll: ' is '.
@@ -52,47 +52,6 @@ RMDTypeError >> composeMessageText [
 				  stream nextPutAll: ' is '.
 				  type2 printOn: stream ].
 		  stream nextPutAll: '.' ]
-]
-
-{ #category : #controlling }
-RMDTypeError >> signalAsTaskTypeErrorInTaskDefinition: aRMDTaskDefinitionNode [
-
-	^ self resume: ((RMDTaskTypeError
-			    on: node
-			    subnode: subnode1
-			    type: type1
-			    subnode: subnode2
-			    type: type2)
-			   taskDefinitionNode: aRMDTaskDefinitionNode;
-			   yourself) signal
-]
-
-{ #category : #controlling }
-RMDTypeError >> signalAsTypeErrorInAgentDefinition: aRMDAgentDefinitionNode attributeDeclaration: aRMDAttributeDeclarationNode [
-
-	^ self resume: ((RMDAttributeDeclarationTypeError
-			    on: node
-			    subnode: subnode1
-			    type: type1
-			    subnode: subnode2
-			    type: type2)
-			   agentDefinitionNode: aRMDAgentDefinitionNode;
-			   attributeDeclarationNode: aRMDAttributeDeclarationNode;
-			   yourself) signal
-]
-
-{ #category : #controlling }
-RMDTypeError >> signalAsTypeErrorInAgentInitializer: aRMDAgentInitializerNode attributeInitializer: aRMDAttributeInitializerNode [
-
-	^ self resume: ((RMDAttributeInitializerTypeError
-			    on: node
-			    subnode: subnode1
-			    type: type1
-			    subnode: subnode2
-			    type: type2)
-			   agentInitializerNode: aRMDAgentInitializerNode;
-			   attributeInitializerNode: aRMDAttributeInitializerNode;
-			   yourself) signal
 ]
 
 { #category : #accessing }

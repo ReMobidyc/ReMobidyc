@@ -1,0 +1,50 @@
+Class {
+	#name : #RMDScopedSemanticError,
+	#superclass : #RMDSemanticError,
+	#instVars : [
+		'exception'
+	],
+	#category : #'ReMobidyc-Interpreter'
+}
+
+{ #category : #'instance creation' }
+RMDScopedSemanticError class >> on: aRMDSyntaxNode exception: aRMDSemanticException [
+
+	^ (super on: aRMDSyntaxNode)
+		  exception: aRMDSemanticException;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDScopedSemanticError class >> signal: aRMDSyntaxNode exception: aRMDSemanticException [
+
+	^ (self on: aRMDSyntaxNode exception: aRMDSemanticException) signal
+]
+
+{ #category : #private }
+RMDScopedSemanticError >> composeMessageText [
+
+	^ String streamContents: [ :stream | 
+		  stream nextPutAll: 'Type error in '.
+		  node printShortOn: stream.
+		  stream
+			  nextPutAll: ' : ';
+			  nextPutAll: exception messageText ]
+]
+
+{ #category : #accessing }
+RMDScopedSemanticError >> exception [
+
+	^ exception
+]
+
+{ #category : #accessing }
+RMDScopedSemanticError >> exception: aRMDSemanticError [
+
+	exception := aRMDSemanticError
+]
+
+{ #category : #accessing }
+RMDScopedSemanticError >> originalSemanticError [
+	^ exception originalSemanticError
+]

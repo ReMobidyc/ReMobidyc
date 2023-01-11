@@ -203,6 +203,12 @@ RMDAgentDefinitionNode >> postCopy [
 	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
+{ #category : #printing }
+RMDAgentDefinitionNode >> printShortOn: aStream [
+
+	aStream nextPutAll: self agentName
+]
+
 { #category : #rewriting }
 RMDAgentDefinitionNode >> replaceChildren: aDictionary [
 

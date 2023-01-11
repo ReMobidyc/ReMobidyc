@@ -6,8 +6,10 @@ RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 	initializerExpression ifNotNil: [ 
 		aRMDInterpreter
 			initializeVariable: identifier
-			with: (initializerExpression evalIn: aRMDInterpreter)
-			ifAbsent: [ ^ (RMDUnresolvedReferenceError on: self) signal ] ]
+			with: ([ initializerExpression evalIn: aRMDInterpreter ]
+					 on: RMDSemanticError
+					 do: [ :ex | ex signalWithScope: self ])
+			ifAbsent: [ ^ RMDUnresolvedReferenceError signal: self ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -17,8 +19,9 @@ RMDAttributeDeclarationNode >> typecheckIn: aRMDInterpreter [
 	type := RMDType unit: unit.
 	initializerExpression ifNotNil: [ 
 		[ 
-		type := (initializerExpression typecheckIn: aRMDInterpreter) unify:
-			        type ]
+		type := ([ initializerExpression typecheckIn: aRMDInterpreter ]
+			         on: RMDSemanticError
+			         do: [ :ex | ex signalWithScope: self ]) unify: type ]
 			on: RMDTypeUnificationError
 			do: [ :ex | 
 				ex resignalAs: (RMDTypeError

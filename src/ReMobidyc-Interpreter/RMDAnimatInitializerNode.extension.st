@@ -33,8 +33,10 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
 
-	aRMDInterpreter context subjectDefinition: (aRMDInterpreter
-			 animatDefinitionAt: self animat
-			 ifAbsent: [ RMDUndefinedAnimatError signal: self animat ]).
+	aRMDInterpreter context
+		subjectDefinition: (aRMDInterpreter
+				 animatDefinitionAt: self animat
+				 ifAbsent: [ RMDUndefinedAnimatError signal: self animat ]);
+		loadUtilityDefinitions: utilityDefinitions.
 	^ super typecheckIn: aRMDInterpreter
 ]

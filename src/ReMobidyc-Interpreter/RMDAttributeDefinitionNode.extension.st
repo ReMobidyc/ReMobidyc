@@ -3,6 +3,7 @@ Extension { #name : #RMDAttributeDefinitionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDefinitionNode >> evalIn: aRMDInterpreter [
 
+	[ 
 	variable attributeVariable isNewAttributeVariableNode
 		ifTrue: [ 
 			| value |
@@ -15,15 +16,21 @@ RMDAttributeDefinitionNode >> evalIn: aRMDInterpreter [
 		ifFalse: [ 
 			^ variable
 				  assign: (definitionBody evalIn: aRMDInterpreter)
-				  in: aRMDInterpreter ]
+				  in: aRMDInterpreter ] ]
+		on: RMDSemanticError
+		do: [ :ex | ex signalWithScope: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	^ [ 
-	  (definitionBody typecheckIn: aRMDInterpreter) unify:
-		  (variable typecheckIn: aRMDInterpreter) ]
+	  ([ definitionBody typecheckIn: aRMDInterpreter ]
+		   on: RMDSemanticError
+		   do: [ :ex | ex signalWithScope: self ]) unify:
+		  ([ variable typecheckIn: aRMDInterpreter ]
+			   on: RMDSemanticError
+			   do: [ :ex | ex signalWithScope: self ]) ]
 		  on: RMDTypeUnificationError
 		  do: [ :ex | 
 			  ex resignalAs: (RMDTypeError

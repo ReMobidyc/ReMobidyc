@@ -3,12 +3,15 @@ Extension { #name : #RMDTaskDefinitionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 
+	[ 
 	self hasObject
 		ifTrue: [ 
 			nearest
 				ifTrue: [ self evalWithNearestObjectsIn: aRMDInterpreter ]
 				ifFalse: [ self evalWithAllObjectsIn: aRMDInterpreter ] ]
-		ifFalse: [ self evalWithoutObjectIn: aRMDInterpreter ]
+		ifFalse: [ self evalWithoutObjectIn: aRMDInterpreter ] ]
+		on: RMDSemanticError
+		do: [ :ex | ex signalWithScope: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
@@ -153,6 +156,6 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	[ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
-		on: RMDTypeError
-		do: [ :ex | ex signalAsTaskTypeErrorInTaskDefinition: self ]
+		on: RMDSemanticError
+		do: [ :ex | ex signalWithScope: self ]
 ]

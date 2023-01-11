@@ -56,6 +56,13 @@ RMDDefinitionNode >> postCopy [
 	definitionBody := definitionBody copy
 ]
 
+{ #category : #printing }
+RMDDefinitionNode >> printShortOn: aStream [
+
+	aStream nextPutAll: 'Definition of '.
+	self variable printOn: aStream
+]
+
 { #category : #rewriting }
 RMDDefinitionNode >> replaceChildren: aDictionary [
 	variable := variable copyReplace: aDictionary.

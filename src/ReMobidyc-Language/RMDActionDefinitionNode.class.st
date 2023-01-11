@@ -369,6 +369,18 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		aCollection add: (start to: aStream position) ]
 ]
 
+{ #category : #printing }
+RMDActionDefinitionNode >> printShortOn: aStream [
+
+	aStream
+		nextPutAll: 'to ';
+		nextPutAll: identifier.
+	object ifNotNil: [ 
+		aStream
+			nextPut: Character space;
+			nextPutAll: object ]
+]
+
 { #category : #rewriting }
 RMDActionDefinitionNode >> renameAnimat: aString to: anotherString [
 
