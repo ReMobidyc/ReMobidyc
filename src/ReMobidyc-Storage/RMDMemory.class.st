@@ -121,7 +121,9 @@ RMDMemory >> commitOuts [
 		individuals asArray do: [ :individual | 
 			(outs includes: individual) ifTrue: [ 
 				individuals remove: individual ifAbsent: [  ].
-				seeds removeKey: individual ifAbsent: [  ] ] ] ].
+				seeds removeKey: individual ifAbsent: [  ].
+				stageLinks removeKey: individual ifAbsent: [  ].
+				reproductionLinks removeKey: individual ifAbsent: [  ] ] ] ].
 	outs removeAll
 ]
 
@@ -325,7 +327,19 @@ RMDMemory >> readAnimatsForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDMemory >> readReproductionLinksForTime: anInteger [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
 RMDMemory >> readSeedsForTime: anInteger [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> readStageLinksForTime: anInteger [
+
 	^ self subclassResponsibility
 ]
 
@@ -413,7 +427,9 @@ RMDMemory >> sunrise [
 	nextValues := values copy.
 	nextDeltas := Dictionary new.
 	animats := self readAnimatsForTime: time.
-	seeds := self readSeedsForTime: time
+	seeds := self readSeedsForTime: time.
+	stageLinks := self readStageLinksForTime: time.
+	reproductionLinks := self readReproductionLinksForTime: time
 ]
 
 { #category : #timing }
@@ -437,6 +453,8 @@ RMDMemory >> sunset [
 		self writeValues: values forTime: time.
 		self writeValues: nextValues forTime: time + 1.
 		self writeSeeds: seeds forTime: time.
+		self writeReproductionLinks: reproductionLinks forTime: time.
+		self writeStageLinks: stageLinks forTime: time.
 		self commitIns ]
 ]
 
@@ -489,7 +507,19 @@ RMDMemory >> writeAnimats: aDictionary forTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
 RMDMemory >> writeSeeds: aDictionary forTime: anInteger [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> writeStageLinks: aDictionary forTime: anInteger [
+
 	^ self subclassResponsibility
 ]
 

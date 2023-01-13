@@ -3,6 +3,7 @@ Class {
 	#superclass : #RMDTimeSeriesInspector,
 	#instVars : [
 		'#animat => ObservableSlot',
+		'#populationLabel',
 		'#populationPresenter',
 		'#populationTimeSeries'
 	],
@@ -15,7 +16,7 @@ RMDAnimatTimeSeriesInspector class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
 				   hAlignCenter;
-				   add: 'Population')
+				   add: #populationLabel)
 		  expand: false;
 		  add: #populationPresenter height: self chartHeight;
 		  add: (SpBoxLayout newHorizontal
@@ -129,6 +130,9 @@ RMDAnimatTimeSeriesInspector >> chartWithPopulation [
 RMDAnimatTimeSeriesInspector >> initializePresenters [
 
 	super initializePresenters.
+	populationLabel := self newLabel
+		                   label: 'population: ';
+		                   yourself.
 	populationTimeSeries := Dictionary new.
 	populationPresenter := self newImage
 		                       autoScale: false;
@@ -140,7 +144,7 @@ RMDAnimatTimeSeriesInspector >> newLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: 'Population';
+				   add: populationLabel;
 				   add: self spawnPopulationButton expand: false)
 		  expand: false;
 		  add: populationPresenter height: self chartHeight;
@@ -177,6 +181,24 @@ RMDAnimatTimeSeriesInspector >> updateImage [
 		at: nil
 		ifPresent: [ :presenter | 
 		presenter image: populationPresenter image ]
+]
+
+{ #category : #updating }
+RMDAnimatTimeSeriesInspector >> updateObservation [
+
+	self updatePopulationLabel.
+	super updateObservation
+]
+
+{ #category : #updating }
+RMDAnimatTimeSeriesInspector >> updatePopulationLabel [
+
+	populationLabel ifNotNil: [ 
+		populationLabel label: 'Population: '
+			, ((interpreter animatDefinitionAt: animat ifAbsent: [ nil ])
+					 ifNotNil: [ :animatDef | 
+						 (interpreter numberOfIndivisualsOf: animatDef) printString ]
+					 ifNil: [ '?' ]) ]
 ]
 
 { #category : #updating }
