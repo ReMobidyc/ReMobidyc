@@ -388,7 +388,8 @@ RMDObservatory >> runSimulation [
 				           ([ interpreter stepSimulation ]
 					            on: RMDSemanticError
 					            do: [ :ex | 
-						            (RMDActionDebugger on: interpreter exception: ex) open.
+						            (RMDActionDebugger on: interpreter exception: ex)
+							            open.
 						            false ]) ifFalse: [ self runState: false ].
 				           0 milliSecond wait ] ].
 		           process := nil.

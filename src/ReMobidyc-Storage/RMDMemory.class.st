@@ -120,7 +120,8 @@ RMDMemory >> commitOuts [
 	animats keysAndValuesDo: [ :animatName :individuals | 
 		individuals asArray do: [ :individual | 
 			(outs includes: individual) ifTrue: [ 
-				individuals remove: individual ifAbsent: [  ] ] ] ].
+				individuals remove: individual ifAbsent: [  ].
+				seeds removeKey: individual ifAbsent: [  ] ] ] ].
 	outs removeAll
 ]
 
