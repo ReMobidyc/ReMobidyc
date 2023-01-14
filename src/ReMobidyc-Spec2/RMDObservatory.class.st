@@ -388,7 +388,8 @@ RMDObservatory >> runSimulation [
 				           ([ interpreter stepSimulation ]
 					            on: RMDSemanticError
 					            do: [ :ex | 
-						            (RMDActionDebugger on: interpreter exception: ex) open.
+						            (RMDActionDebugger on: interpreter exception: ex)
+							            open.
 						            false ]) ifFalse: [ self runState: false ].
 				           0 milliSecond wait ] ].
 		           process := nil.
@@ -461,7 +462,7 @@ RMDObservatory >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[ interpreter stepSimulation ]
+		[ TimeProfiler spyOn: [interpreter stepSimulation] ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
@@ -501,23 +502,23 @@ RMDObservatory >> typecheck [
 
 { #category : #updating }
 RMDObservatory >> updateTimeLabel [
-	interpreter
-		ifNotNil: [ time := interpreter time.
-			timeLabel
-				label:
-					(String
-						streamContents: [ :stream | 
-							4 timesRepeat: [ stream space ].
-							interpreter simulationModel simulationDefinition timeDefinition
-								printOn: stream.
-							stream nextPutAll: ' - now '.
-							(interpreter simulationDefinition timeDefinition duration unit
-								fromSI: time) printOn: stream showingDecimalPlaces: 3.
-							stream nextPutAll: ' [ '.
-							interpreter simulationDefinition timeDefinition duration unit
-								printOn: stream.
-							stream nextPutAll: ' ]' ]).
-			timeSlider value: time / duration ]
+
+	interpreter ifNotNil: [ 
+		time := interpreter time.
+		timeLabel label: (String streamContents: [ :stream | 
+				 4 timesRepeat: [ stream space ].
+				 interpreter simulationModel simulationDefinition timeDefinition 
+					 printOn: stream.
+				 stream nextPutAll: ' - now '.
+				 (interpreter simulationDefinition timeDefinition duration unit 
+					  fromSI: time) printOn: stream showingDecimalPlaces: 3.
+				 stream nextPutAll: ' [ '.
+				 interpreter simulationDefinition timeDefinition duration unit 
+					 printOn: stream.
+				 stream nextPutAll: ' ], '.
+				 interpreter ticks printOn: stream.
+				 stream nextPutAll: ' steps.' ]).
+		timeSlider value: time / duration ]
 ]
 
 { #category : #private }

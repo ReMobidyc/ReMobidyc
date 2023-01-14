@@ -503,6 +503,12 @@ RMDInterpreter >> tick [
 ]
 
 { #category : #timing }
+RMDInterpreter >> ticks [
+
+	^ memory time
+]
+
+{ #category : #timing }
 RMDInterpreter >> time [ 
 	^ memory time * self deltaTime
 ]
