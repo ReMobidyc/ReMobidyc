@@ -127,6 +127,50 @@ RMDPresenter >> newValidatedTextInput [
 ]
 
 { #category : #icons }
+RMDPresenter >> pullIcon [
+
+	| icebergIcon downIcon icon canvas |
+	icebergIcon := Smalltalk ui icons iconNamed:
+		               #komitterSmalltalkhubRemote.
+	downIcon := Smalltalk ui icons iconNamed: #down.
+	icon := Form
+		        extent: icebergIcon width + downIcon width - 3
+			        @ (icebergIcon height max: downIcon height)
+		        depth: 32.
+	canvas := icon getCanvas.
+	canvas
+		fillColor: Color transparent;
+		paintImage: icebergIcon
+		at: 0 @ (icon height - icebergIcon height // 2);
+		translucentImage: downIcon
+		at: icebergIcon width - 3 @ (icon height - downIcon height // 2);
+		flush.
+	^ icon
+]
+
+{ #category : #icons }
+RMDPresenter >> pushIcon [
+
+	| icebergIcon upIcon icon canvas |
+	icebergIcon := Smalltalk ui icons iconNamed:
+		               #komitterSmalltalkhubRemote.
+	upIcon := Smalltalk ui icons iconNamed: #up.
+	icon := Form
+		        extent: icebergIcon width + upIcon width - 3
+			        @ (icebergIcon height max: upIcon height)
+		        depth: 32.
+	canvas := icon getCanvas.
+	canvas
+		fillColor: Color transparent;
+		paintImage: icebergIcon
+		at: 0 @ (icon height - icebergIcon height // 2);
+		translucentImage: upIcon
+		at: icebergIcon width - 3 @ (icon height - upIcon height // 2);
+		flush.
+	^ icon
+]
+
+{ #category : #icons }
 RMDPresenter >> removeIcon [
 	^ Smalltalk ui icons remove
 ]
@@ -151,4 +195,9 @@ RMDPresenter >> upIcon [
 RMDPresenter >> updateIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallUpdate
+]
+
+{ #category : #icons }
+RMDPresenter >> versionsIcon [
+	^ Smalltalk ui icons iconNamed: #smallProfile
 ]
