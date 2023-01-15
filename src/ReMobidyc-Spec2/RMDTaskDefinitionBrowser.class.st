@@ -320,7 +320,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                    yourself.
 	templateText := (self newSourceWith: RMDGrammar new actionDefinition)
 		                enabled: false;
-		                editable: false;
+		                beNotEditable;
 		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
 		                       beIdentifier;
@@ -404,7 +404,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                         yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
 		              enabled: false;
-		              editable: false;
+		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself.
 	self updateActionList

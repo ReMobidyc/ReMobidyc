@@ -40,6 +40,12 @@ RMDPresenter >> exportIcon [
 	^ Smalltalk ui icons iconNamed: #smallExport
 ]
 
+{ #category : #icons }
+RMDPresenter >> icebergIcon [
+
+	^ Smalltalk ui icons iconNamed: #komitterSmalltalkhubRemote
+]
+
 { #category : #initialization }
 RMDPresenter >> initializePresenters [
 	self
