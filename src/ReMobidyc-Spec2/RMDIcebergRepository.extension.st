@@ -12,10 +12,10 @@ RMDIcebergRepository >> editMenu [
 						  action: [ self rename ] ];
 				  addItem: [ :item | 
 					  item
-						  name: 'open Iceberg';
+						  name: 'open Repository';
 						  icon: RMDIcebergRepository icon;
 						  action: [ 
 							  self icebergRepository ifNotNil: [ :repo | 
-									  (IceTipRepositoryBrowser onRepository: repo) open ] ] ] ];
+									  (RMDIcebergRepositoryBrowser on: repo) open ] ] ] ];
 		  yourself
 ]

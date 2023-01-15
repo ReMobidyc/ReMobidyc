@@ -457,7 +457,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                  disable;
 		                  yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
-		              enabled: false;
+		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself
 ]

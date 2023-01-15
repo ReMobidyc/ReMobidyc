@@ -55,7 +55,7 @@ RMDIcebergRepository >> basicDirectory [
 	^ self icebergRepository ifNotNil: #location
 ]
 
-{ #category : #'repository urls' }
+{ #category : #accessing }
 RMDIcebergRepository >> icebergRepository [
 
 	^ IceRepository repositories
