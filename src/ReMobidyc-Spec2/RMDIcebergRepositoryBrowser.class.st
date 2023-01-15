@@ -5,6 +5,7 @@ Class {
 		'icebergRepository',
 		'incomingCommitList',
 		'incomingChangeList',
+		'refreshButton',
 		'pullButton',
 		'commitAndPushButton',
 		'localChangeList',
@@ -18,19 +19,27 @@ RMDIcebergRepositoryBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
 		  positionOfSlider: 0.2;
-		  add: #incomingCommitList;
+		  add: (SpBoxLayout newVertical
+				   add: 'From upstream' expand: false;
+				   add: #incomingCommitList;
+				   yourself);
 		  add: (SpPanedLayout newVertical
-				   positionOfSlider: 0.4;
+				   positionOfSlider: 0.5;
 				   add: (SpBoxLayout newVertical
+						    add: 'Incoming chnanges' expand: false;
 						    add: #incomingChangeList;
 						    add: (SpBoxLayout newHorizontal
+								     add: #refreshButton expand: false;
 								     add: #pullButton expand: false;
 								     add: #commitAndPushButton expand: false;
 								     add: #checkoutButton expand: false;
 								     yourself)
 						    height: self buttonHeight;
 						    yourself);
-				   add: #localChangeList)
+				   add: (SpBoxLayout newVertical
+						    add: 'Local changes' expand: false;
+						    add: #localChangeList;
+						    yourself))
 ]
 
 { #category : #'instance creation' }
@@ -132,7 +141,8 @@ RMDIcebergRepositoryBrowser >> icebergRepositoryChanged [
 		updateIncomingCommitList;
 		updateLocalChangeList;
 		updatePullButton;
-		updateCommitAndPushButton
+		updateCommitAndPushButton;
+		updateCheckoutButton
 ]
 
 { #category : #accessing }
@@ -158,13 +168,15 @@ RMDIcebergRepositoryBrowser >> incomingAdditions: aRemoteCommit [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (incoming / kind) isDirectory ifTrue: [ 
 					  (incoming / kind) children do: [ :incomingRef | 
-						  | basename localRef |
+						  | basename |
 						  basename := incomingRef basename.
-						  localRef := local / kind / basename.
-						  localRef exists ifFalse: [ 
-							  changes nextPut: (RelativePath withAll: { 
-										   kind.
-										   basename }) ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | localRef |
+							  localRef := local / kind / basename.
+							  localRef exists ifFalse: [ 
+								  changes nextPut: (RelativePath withAll: { 
+											   kind.
+											   basename }) ] ] ] ] ] ] ]
 ]
 
 { #category : #'git-enumerating' }
@@ -189,13 +201,15 @@ RMDIcebergRepositoryBrowser >> incomingDeletions: aRemoteCommit [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (local / kind) isDirectory ifTrue: [ 
 					  (local / kind) children do: [ :localRef | 
-						  | basename incomingRef |
+						  | basename |
 						  basename := localRef basename.
-						  incomingRef := incoming / kind / basename.
-						  incomingRef exists ifFalse: [ 
-							  changes nextPut: (RelativePath withAll: { 
-										   kind.
-										   basename }) ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | incomingRef |
+							  incomingRef := incoming / kind / basename.
+							  incomingRef exists ifFalse: [ 
+								  changes nextPut: (RelativePath withAll: { 
+											   kind.
+											   basename }) ] ] ] ] ] ] ]
 ]
 
 { #category : #'git-conflicts' }
@@ -230,16 +244,18 @@ RMDIcebergRepositoryBrowser >> incomingModifications: aRemoteCommit [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (local / kind) isDirectory ifTrue: [ 
 					  (local / kind) children do: [ :localRef | 
-						  | basename incomingRef |
+						  | basename |
 						  basename := localRef basename.
-						  incomingRef := incoming / kind / basename.
-						  incomingRef exists ifTrue: [ 
-							  | path |
-							  path := RelativePath withAll: { 
-									          kind.
-									          basename }.
-							  (changedPaths includes: path) ifTrue: [ 
-								  changes nextPut: path ] ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | incomingRef |
+							  incomingRef := incoming / kind / basename.
+							  incomingRef exists ifTrue: [ 
+								  | path |
+								  path := RelativePath withAll: { 
+										          kind.
+										          basename }.
+								  (changedPaths includes: path) ifTrue: [ 
+									  changes nextPut: path ] ] ] ] ] ] ] ]
 ]
 
 { #category : #initialization }
@@ -280,14 +296,19 @@ RMDIcebergRepositoryBrowser >> initializePresenters [
 				                       evaluated: [ :assoc | 
 					                       '/' join: assoc key segments ]);
 		                      yourself.
+	refreshButton := self newButton
+		                 disable;
+		                 icon: self updateIcon;
+		                 action: [ self icebergRepositoryChanged ];
+		                 yourself.
 	pullButton := self newButton
 		              disable;
-		              label: 'Pull';
+		              icon: self pullIcon;
 		              action: [ self pull ];
 		              yourself.
 	commitAndPushButton := self newButton
 		                       disable;
-		                       label: 'Commit & Push';
+		                       icon: self pushIcon;
 		                       action: [ self commitAndPush ];
 		                       yourself.
 	localChangeList := self newTable
@@ -304,7 +325,9 @@ RMDIcebergRepositoryBrowser >> initializePresenters [
 		                   yourself.
 	checkoutButton := self newButton
 		                  disable;
-		                  label: 'Revert'
+		                  icon: self versionsIcon;
+		                  action: [ self openCommits ];
+		                  yourself
 ]
 
 { #category : #initialization }
@@ -328,13 +351,15 @@ RMDIcebergRepositoryBrowser >> localAdditions [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (local / kind) isDirectory ifTrue: [ 
 					  (local / kind) children do: [ :localRef | 
-						  | basename headRef |
+						  | basename |
 						  basename := localRef basename.
-						  headRef := head / kind / basename.
-						  headRef exists ifFalse: [ 
-							  changes nextPut: (RelativePath withAll: { 
-										   kind.
-										   basename }) ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | headRef |
+							  headRef := head / kind / basename.
+							  headRef exists ifFalse: [ 
+								  changes nextPut: (RelativePath withAll: { 
+											   kind.
+											   basename }) ] ] ] ] ] ] ]
 ]
 
 { #category : #'git-enumerating' }
@@ -355,13 +380,15 @@ RMDIcebergRepositoryBrowser >> localDeletions [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (head / kind) isDirectory ifTrue: [ 
 					  (head / kind) children do: [ :headRef | 
-						  | basename localRef |
+						  | basename |
 						  basename := headRef basename.
-						  localRef := local / kind / basename.
-						  localRef exists ifFalse: [ 
-							  changes nextPut: (RelativePath withAll: { 
-										   kind.
-										   basename }) ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | localRef |
+							  localRef := local / kind / basename.
+							  localRef exists ifFalse: [ 
+								  changes nextPut: (RelativePath withAll: { 
+											   kind.
+											   basename }) ] ] ] ] ] ] ]
 ]
 
 { #category : #'git-conflicts' }
@@ -375,14 +402,20 @@ RMDIcebergRepositoryBrowser >> localModifications [
 			  #( 'models' 'actions' 'icons' ) do: [ :kind | 
 				  (local / kind) isDirectory ifTrue: [ 
 					  (local / kind) children do: [ :localRef | 
-						  | basename headRef |
+						  | basename |
 						  basename := localRef basename.
-						  headRef := head / kind / basename.
-						  headRef exists ifTrue: [ 
-							  localRef creationTime > headRef creationTime ifTrue: [ 
-								  changes nextPut: (RelativePath withAll: { 
-											   kind.
-											   basename }) ] ] ] ] ] ] ]
+						  basename first ~= $. ifTrue: [ 
+							  | headRef |
+							  headRef := head / kind / basename.
+							  headRef exists ifTrue: [ 
+								  localRef creationTime > headRef creationTime ifTrue: [ 
+									  changes nextPut: (RelativePath withAll: { 
+												   kind.
+												   basename }) ] ] ] ] ] ] ] ]
+]
+
+{ #category : #operations }
+RMDIcebergRepositoryBrowser >> openCommits [
 ]
 
 { #category : #operations }
@@ -408,9 +441,14 @@ RMDIcebergRepositoryBrowser >> remoteCommitsDo: aBlock [
 ]
 
 { #category : #updating }
+RMDIcebergRepositoryBrowser >> updateCheckoutButton [
+]
+
+{ #category : #updating }
 RMDIcebergRepositoryBrowser >> updateCommitAndPushButton [
 
-	commitAndPushButton enabled: self hasIncomingCommits not
+	commitAndPushButton enabled:
+		(self hasIncomingCommits not and: [ localChangeList items notEmpty ])
 ]
 
 { #category : #updating }
