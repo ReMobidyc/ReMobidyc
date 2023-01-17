@@ -10,7 +10,7 @@ RMDApplyNode >> evalIn: aRMDInterpreter [
 		   valueWithArguments:
 		   (arguments collect: [ :arg | arg evalIn: aRMDInterpreter ])) 
 		  ifNanOrInfinite: [ RMDNotComputableError signal: self ] ]
-		  on: ZeroDivide
+		  on: ZeroDivide, ArithmeticError
 		  do: [ :ex | ex resignalAs: (RMDNotComputableError on: self) ]
 ]
 

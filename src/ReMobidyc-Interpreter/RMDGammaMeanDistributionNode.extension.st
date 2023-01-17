@@ -6,7 +6,7 @@ RMDGammaMeanDistributionNode >> evalIn: aRMDInterpreter [
 	| shape mean |
 	shape := shapeExpression evalIn: aRMDInterpreter.
 	mean := meanExpression evalIn: aRMDInterpreter.
-	^ (self gamma: shape / mean in: aRMDInterpreter) * mean
+	^ (self gamma: shape in: aRMDInterpreter) * mean / shape
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

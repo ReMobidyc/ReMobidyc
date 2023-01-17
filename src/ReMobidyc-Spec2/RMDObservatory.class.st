@@ -383,7 +383,11 @@ RMDObservatory >> runSimulation [
 		process := [ 
 		           stepButton enabled: false.
 		           timeSlider enabled: false.
-		           [ self runState == true ] whileTrue: [ 
+		           [ 
+		           self runState == true and: [ 
+			           self adapter notNil and: [ 
+				           self adapter widget notNil and: [ 
+					           self adapter widget world notNil ] ] ] ] whileTrue: [ 
 			           interpreter ifNotNil: [ 
 				           ([ interpreter stepSimulation ]
 					            on: RMDSemanticError
