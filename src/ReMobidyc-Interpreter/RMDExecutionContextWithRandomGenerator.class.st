@@ -49,5 +49,6 @@ RMDExecutionContextWithRandomGenerator >> utilityAt: aString ifAbsent: errorBloc
 
 { #category : #'utility access' }
 RMDExecutionContextWithRandomGenerator >> utilityAt: aString put: aNumber [
+
 	^ utilities at: aString put: aNumber
 ]
