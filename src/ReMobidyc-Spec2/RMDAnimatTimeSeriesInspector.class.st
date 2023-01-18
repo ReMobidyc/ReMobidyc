@@ -76,8 +76,8 @@ RMDAnimatTimeSeriesInspector >> chartWithPopulation [
 		          interpreter simulationDefinition timeDefinition duration
 			          numeric.
 		yScale := chartHeight / (max - min).
-		minString := 'min = ', min printString.
-		maxString := 'max = ', max printString.
+		minString := 'min = ' , min printString.
+		maxString := 'max = ' , max printString.
 		canvas
 			drawString: minString
 			at: 0 @ (chartHeight - fontHeight)
@@ -105,7 +105,18 @@ RMDAnimatTimeSeriesInspector >> chartWithPopulation [
 				to: (time2 * xScale) rounded
 					@ (chartHeight - (value2 - min * yScale) rounded)
 				width: 1
-				color: Color black ] ].
+				color: Color black ].
+		showsMean state ifTrue: [ 
+			(populationTimeSeries at: times last ifAbsent: [ nil ]) ifNotNil: [ 
+				:mean | 
+				canvas
+					drawString: (mean printShowingDecimalPlaces: 1)
+					at: times last * xScale
+						@
+						(chartHeight - (mean - min * yScale) rounded
+						 - (font height // 2))
+					font: font
+					color: Color gray ] ] ].
 	canvas
 		drawString: '0'
 		at: 0 @ chartHeight

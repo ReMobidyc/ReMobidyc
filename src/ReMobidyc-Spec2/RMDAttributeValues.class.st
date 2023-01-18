@@ -36,7 +36,7 @@ RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDe
 						put: (attributeDef unit fromSI: (aRMDInterpreter
 									  readVariable: attributeDef identifier
 									  agent: nil
-									  ifAbsent: [ nil ])) ] ].
+									  ifAbsent: [ 0.0 ])) ] ].
 		individualIndex := individualIndex + 1 ].
 	attributeStats := attributeValues collect: [ :values | 
 		                  | stats |
