@@ -20,7 +20,7 @@ RMDExecutionContext class >> subject: anInteger definition: aRMDAgentDefinitionN
 RMDExecutionContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
 	^ (attributeDict
 		at: agentReference
-		ifAbsentPut: [ ^ errorBlock value ])
+		ifAbsent: [ ^ errorBlock value ])
 		at: aString
 		ifAbsent: errorBlock
 ]

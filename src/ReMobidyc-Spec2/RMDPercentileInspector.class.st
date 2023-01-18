@@ -214,7 +214,7 @@ RMDPercentileInspector >> chartWith: attributeDef values: vals stats: stats [
 RMDPercentileInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self expandedIcon;
 		  action: [ 
 			  visibleAttributes remove: attributeDef identifier ifAbsent: [  ].
@@ -227,7 +227,7 @@ RMDPercentileInspector >> collapseButtonFor: attributeDef [
 RMDPercentileInspector >> expandButtonFor: attributeDef [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;

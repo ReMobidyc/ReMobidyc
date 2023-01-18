@@ -394,12 +394,12 @@ RMDObservatory >> runSimulation [
 					            do: [ :ex | 
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
-						            false ]) ifFalse: [ self runState: false ].
-				           0 milliSecond wait ] ].
+						            false ]) ifFalse: [ self runState: false ]
+				           "0 milliSecond wait" ] ].
 		           process := nil.
 		           stepButton enabled: true.
-		           timeSlider enabled: true ] forkAt:
-			           Processor userBackgroundPriority ]
+		           timeSlider enabled: interpreter memory isRewindable ] 
+			           forkAt: Processor userBackgroundPriority ]
 ]
 
 { #category : #api }
@@ -426,6 +426,7 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 	visualizer := RMDVisualizer new.
 	interpreter simulationModel renderersDo: [ :renderer | 
 		visualizer addRenderer: renderer ].
+	timeSlider enabled: interpreter memory isRewindable.
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #timeChanged

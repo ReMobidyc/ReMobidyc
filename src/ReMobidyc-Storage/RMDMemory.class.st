@@ -123,8 +123,17 @@ RMDMemory >> commitOuts [
 				individuals remove: individual ifAbsent: [  ].
 				seeds removeKey: individual ifAbsent: [  ].
 				stageLinks removeKey: individual ifAbsent: [  ].
-				reproductionLinks removeKey: individual ifAbsent: [  ] ] ] ].
-	outs removeAll
+				reproductionLinks removeKey: individual ifAbsent: [  ] ] ].
+		individuals size * 10 < individuals capacity ifTrue: [ 
+			individuals compact ] ].
+	outs size * 10 < outs capacity
+		ifTrue: [ outs := Set new: outs size * 4 // 3 + 2 ]
+		ifFalse: [ outs removeAll ].
+	seeds size * 10 < seeds capacity ifTrue: [ seeds compact ].
+	stageLinks size * 10 < stageLinks capacity ifTrue: [ 
+		stageLinks compact ].
+	reproductionLinks size * 10 < reproductionLinks capacity ifTrue: [ 
+		reproductionLinks compact ]
 ]
 
 { #category : #'accessing-individuals' }
@@ -138,6 +147,8 @@ RMDMemory >> fastSunrise [
 
 	old2Values := oldValues.
 	oldValues := values.
+	nextValues size * 10 < nextValues capacity ifTrue: [ 
+		nextValues compact ].
 	values := nextValues copy.
 	nextDeltas := Dictionary new
 ]
@@ -202,6 +213,12 @@ RMDMemory >> initialize [
 	seeds := Dictionary new.
 	ins := Dictionary new.
 	outs := Set new: 1024
+]
+
+{ #category : #testing }
+RMDMemory >> isRewindable [
+
+	^ true
 ]
 
 { #category : #accessing }

@@ -192,7 +192,7 @@ RMDTimeSeriesInspector >> chartWith: attributeDefinition timeSeries: aDictionary
 RMDTimeSeriesInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self expandedIcon;
 		  action: [ 
 			  visibleAttributes remove: attributeDef identifier ifAbsent: [  ].
@@ -205,7 +205,7 @@ RMDTimeSeriesInspector >> collapseButtonFor: attributeDef [
 RMDTimeSeriesInspector >> expandButtonFor: attributeDef [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;

@@ -8,7 +8,8 @@ Class {
 		'#sourceText',
 		'#modelFileReference => ObservableSlot',
 		'#editingTexts',
-		'#menuBar'
+		'#menuBar',
+		'#runOnDryMemoryButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -19,6 +20,7 @@ RMDModelFileTextBrowser class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
 		  add: (SpBoxLayout newHorizontal
+				   add: #runOnDryMemoryButton;
 				   add: #runOnMemoryButton;
 				   add: #runOnFileButton)
 		  height: self buttonHeight;
@@ -175,6 +177,13 @@ RMDModelFileTextBrowser >> initializePresenters [
 		                     action: [ self openObservatory ];
 		                     state: false;
 		                     yourself.
+	runOnDryMemoryButton := self newButton
+		                        label: 'Dry-run';
+		                        action: [ self openObservatoryOnDryMemory ];
+		                        help:
+			                        'Open an Observatory window for dry-run';
+		                        state: false;
+		                        yourself.
 	runOnFileButton := self newButton
 		                   label: 'Run & Record';
 		                   action: [ self openObservatoryOnFile ];
@@ -241,6 +250,25 @@ RMDModelFileTextBrowser >> openObservatory [
 			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
 		  open;
 		  yourself
+]
+
+{ #category : #operations }
+RMDModelFileTextBrowser >> openObservatoryOnDryMemory [
+
+	| interpreter |
+	interpreter := RMDInterpreter new
+		               setMemory: RMDDryMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel: self simulationModel;
+		               yourself.
+	interpreter setupSimulation.
+	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
+		  :observatory | 
+		  observatory
+			  modelName:
+				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
+			  open;
+			  yourself ]
 ]
 
 { #category : #operations }

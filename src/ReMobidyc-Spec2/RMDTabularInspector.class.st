@@ -60,5 +60,5 @@ RMDTabularInspector >> updateTable [
 													   ifTrue: [ values at: index ifAbsent: [ nil ] ]
 													   ifFalse: [ stats at: index ifAbsent: [ nil ] ]) 
 													  ifNotNil: [ :v | v printShowingDecimalPlaces: 2 ] ]) ] ]);
-			items: #( min max mean sd ) , (1 to: attributeValues numberOfValues) ]
+			items: #( min #'min*' max #'max*' mean #'mean*' sd ) , (1 to: attributeValues numberOfValues) ]
 ]
