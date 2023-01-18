@@ -9,7 +9,8 @@ Class {
 		'simulationDefinitionPresenter',
 		'menuBar',
 		'modelFileReference',
-		'metadataPresenter'
+		'metadataPresenter',
+		'runOnDryMemoryButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -20,6 +21,7 @@ RMDSimulationModeler class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
 		  add: (SpBoxLayout newHorizontal
+				   add: #runOnDryMemoryButton;
 				   add: #runOnMemoryButton;
 				   add: #runOnFileButton)
 		  height: self buttonHeight;
@@ -246,6 +248,13 @@ RMDSimulationModeler >> initializePresenters [
 		         whenPageRemovedDo: [ :page | 
 			         self removeSpeciesNamed: page title ];
 		         yourself.
+	runOnDryMemoryButton := self newButton
+		                        label: 'Dry-run';
+		                        action: [ self openObservatoryOnDryMemory ];
+		                        help:
+			                        'Open an Observatory window for dry-run';
+		                        state: false;
+		                        yourself.
 	runOnMemoryButton := self newButton
 		                     label: 'Run';
 		                     action: [ self openObservatory ];
@@ -290,6 +299,25 @@ RMDSimulationModeler >> openObservatory [
 	| interpreter |
 	interpreter := RMDInterpreter new
 		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               simulationModel: simulationModel;
+		               yourself.
+	interpreter setupSimulation.
+	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
+		  :observatory | 
+		  observatory
+			  modelName:
+				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
+			  open;
+			  yourself ]
+]
+
+{ #category : #operations }
+RMDSimulationModeler >> openObservatoryOnDryMemory [
+
+	| interpreter |
+	interpreter := RMDInterpreter new
+		               setMemory: RMDDryMemory new;
 		               setContext: RMDActionContext new;
 		               simulationModel: simulationModel;
 		               yourself.
