@@ -15,49 +15,53 @@ RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDe
 
 	| attributeDeclarations attributeValues ids individualIndex attributeStats |
 	attributeDeclarations := aRMDAgentDefinitionNode
-		                        allAttributeDeclarations.
+		                         allAttributeDeclarations.
 	ids := Array new:
 		       (aRMDInterpreter numberOfIndivisualsOf:
 			        aRMDAgentDefinitionNode).
 	attributeValues := (1 to: attributeDeclarations size) collect: [ :i | 
-		                  Array new: ids size ].
+		                   Array new: ids size ].
 	individualIndex := 1.
-	aRMDInterpreter
-		individualsOf: aRMDAgentDefinitionNode
-		do: [ :id | 
-			ids at: individualIndex put: id.
-			aRMDInterpreter
-				withObserverContextWithSubject: id
-				definition: aRMDAgentDefinitionNode
-				do: [ 
-					aRMDAgentDefinitionNode allAttributeDeclarations doWithIndex: [ 
-						:attributeDef 
-						:attributeIndex | 
-						(attributeValues at: attributeIndex)
-							at: individualIndex
-							put: (attributeDef unit fromSI: (aRMDInterpreter
-										  readVariable: attributeDef identifier
-										  agent: nil
-										  ifAbsent: [ nil ])) ] ].
-			individualIndex := individualIndex + 1 ].
+	aRMDInterpreter individualsOf: aRMDAgentDefinitionNode do: [ :id | 
+		ids at: individualIndex put: id.
+		aRMDInterpreter
+			withObserverContextWithSubject: id
+			definition: aRMDAgentDefinitionNode
+			do: [ 
+				aRMDAgentDefinitionNode allAttributeDeclarations doWithIndex: [ 
+					:attributeDef 
+					:attributeIndex | 
+					(attributeValues at: attributeIndex)
+						at: individualIndex
+						put: (attributeDef unit fromSI: (aRMDInterpreter
+									  readVariable: attributeDef identifier
+									  agent: nil
+									  ifAbsent: [ nil ])) ] ].
+		individualIndex := individualIndex + 1 ].
 	attributeStats := attributeValues collect: [ :values | 
-		                 | stats |
-		                 stats := Dictionary new.
-		                 values ifNotEmpty: [ 
-			                 | total size mean |
-			                 total := values sum.
-			                 size := values size.
-			                 stats at: #total put: total.
-			                 stats at: #min put: values min.
-			                 stats at: #max put: values max.
-			                 stats
-				                 at: #mean
-				                 put: (mean := total asFloat / size asFloat).
-			                 stats at: #sd put: (values
-					                  inject: 0.0
-					                  into: [ :sd :value | 
-					                  (value - mean) squared / size + sd ]) sqrt ].
-		                 stats ].
+		                  | stats |
+		                  stats := Dictionary new.
+		                  values ifNotEmpty: [ 
+			                  | total size mean |
+			                  total := values sum.
+			                  size := values size.
+			                  stats at: #total put: total.
+			                  stats at: #min put: values min.
+
+			                  stats at: #max put: values max.
+			                  stats
+				                  at: #mean
+				                  put: (mean := total asFloat / size asFloat).
+			                  stats at: #sd put: (values
+					                   inject: 0.0
+					                   into: [ :sd :value | 
+					                   (value - mean) squared / size + sd ]) sqrt.
+			                  (values reject: #isZero) ifNotEmpty: [ :nonZeros | 
+				                  stats
+					                  at: #'min*' put: nonZeros min;
+					                  at: #'max*' put: nonZeros max;
+					                  at: #'mean*' put: total / nonZeros size ] ].
+		                  stats ].
 	^ self new
 		  setAttributeDeclarations: attributeDeclarations
 		  ids: ids

@@ -395,7 +395,7 @@ RMDObservatory >> runSimulation [
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
 						            false ]) ifFalse: [ self runState: false ].
-				           0 milliSecond wait ] ].
+				           "0 milliSecond wait" ] ].
 		           process := nil.
 		           stepButton enabled: true.
 		           timeSlider enabled: true ] forkAt:
@@ -466,7 +466,7 @@ RMDObservatory >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[interpreter stepSimulation]
+		[ TimeProfiler spyOn: [interpreter stepSimulation] ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]

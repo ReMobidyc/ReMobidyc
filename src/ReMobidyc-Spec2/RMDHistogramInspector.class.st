@@ -113,7 +113,7 @@ RMDHistogramInspector >> chartWith: attributeDef values: values min: min max: ma
 RMDHistogramInspector >> collapseButtonFor: attributeDef [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self expandedIcon;
 		  action: [ 
 			  visibleAttributes
@@ -128,7 +128,7 @@ RMDHistogramInspector >> collapseButtonFor: attributeDef [
 RMDHistogramInspector >> expandButtonFor: attributeDef values: values [
 
 	^ self newButton
-		  label: attributeDef printString;
+		  label: attributeDef nameWithUnit;
 		  icon: self collapsedIcon;
 		  borderWidth: 0;
 		  borderColor: Color transparent;
