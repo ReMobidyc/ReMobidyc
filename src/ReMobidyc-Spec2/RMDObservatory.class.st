@@ -467,7 +467,7 @@ RMDObservatory >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[ TimeProfiler spyOn: [interpreter stepSimulation] ]
+		[interpreter stepSimulation]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
