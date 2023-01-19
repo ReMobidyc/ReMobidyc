@@ -232,6 +232,12 @@ RMDMemory >> latestTime: anInteger [
 ]
 
 { #category : #accessing }
+RMDMemory >> name [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDMemory >> nextAt: anInteger [
 	^ self nextAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
 ]

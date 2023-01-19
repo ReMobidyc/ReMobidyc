@@ -146,6 +146,12 @@ RMDFileMemory >> latestTime: anInteger [
 ]
 
 { #category : #accessing }
+RMDFileMemory >> name [
+
+	^ 'on ' , basePath pathString
+]
+
+{ #category : #accessing }
 RMDFileMemory >> nextAvailableSlot: anInteger [
 	| oldSlot |
 	oldSlot := self nextAvailableSlot.
