@@ -78,6 +78,12 @@ RMDOnMemory >> initialize [
 	reproductionLinksStorage := Array new: 1024
 ]
 
+{ #category : #accessing }
+RMDOnMemory >> name [
+
+	^ 'on memory'
+]
+
 { #category : #'accessing-storage' }
 RMDOnMemory >> readAnimatsForTime: anInteger [
 

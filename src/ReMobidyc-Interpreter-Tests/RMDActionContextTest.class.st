@@ -79,7 +79,7 @@ RMDActionContextTest >> testLocationDefinitionAgent [
 	patch := parser patchDefinition end parse: '
 Patch with
 	grass [kcal].' trim.
-	context location: 10 definition: patch agent: 'here'.
+	context location: 10 definition: patch.
 	self
 		assert:
 		(context

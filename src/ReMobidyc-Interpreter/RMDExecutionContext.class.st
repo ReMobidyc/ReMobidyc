@@ -46,14 +46,13 @@ RMDExecutionContext >> subject [
 { #category : #accessing }
 RMDExecutionContext >> subject: anInteger definition: aRMDAgentDefinitionNode [
 
-	| dict |
-	dict := Dictionary new:
-		        aRMDAgentDefinitionNode totalNumberOfAttributes + 2.
-	aRMDAgentDefinitionNode attributeOffsetsDo: [ :identifier :offset | 
-		dict at: identifier put: anInteger + offset ].
-	attributeDict at: nil put: dict.
+	attributeDict
+		at: nil
+		put: (aRMDAgentDefinitionNode attributeOffsets copy
+				 associationsDo: [ :assoc | assoc value: anInteger + assoc value ];
+				 yourself).
 	aRMDAgentDefinitionNode isPatchDefinitionNode ifTrue: [ 
-		attributeDict at: 'here' put: dict ].
+		attributeDict at: 'here' put: (attributeDict at: nil) ].
 	subject := anInteger.
 	subjectDefinition := aRMDAgentDefinitionNode
 ]

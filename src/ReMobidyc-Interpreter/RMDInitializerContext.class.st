@@ -12,3 +12,9 @@ RMDInitializerContext >> world: anInteger definition: aRMDWorldDefinition [
 		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	attributeDict at: 'world' put: dict
 ]
+
+{ #category : #accessing }
+RMDInitializerContext >> worldAttributeDict: aDictionary [
+
+	attributeDict at: 'world' put: aDictionary
+]

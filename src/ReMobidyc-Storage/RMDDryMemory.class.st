@@ -10,6 +10,12 @@ RMDDryMemory >> isRewindable [
 	^ false
 ]
 
+{ #category : #accessing }
+RMDDryMemory >> name [
+
+	^ 'no storage'
+]
+
 { #category : #'accessing-storage' }
 RMDDryMemory >> readAnimatsForTime: anInteger [
 

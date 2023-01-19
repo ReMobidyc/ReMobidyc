@@ -11,6 +11,7 @@ Class {
 		'visualizer',
 		'stepButton',
 		'timeLabel',
+		'fpsLabel',
 		'timeSlider',
 		'time',
 		'duration',
@@ -29,9 +30,12 @@ RMDObservatory class >> defaultLayout [
 				   add: #stepButton expand: false;
 				   add: #runButton expand: false;
 				   add: (SpBoxLayout newVertical
-						    add: #timeLabel;
+						    add: (SpBoxLayout newHorizontal
+								     add: #timeLabel expand: false;
+								     add: #fpsLabel expand: false;
+								     yourself);
 						    add:
-							    (SpBoxLayout newHorizontal add: #timeSlider expand: true)
+						    (SpBoxLayout newHorizontal add: #timeSlider expand: true)
 						    expand: false;
 						    yourself)
 				   expand: true;
@@ -236,6 +240,9 @@ RMDObservatory >> initializePresenters [
 	timeLabel := self newLabel
 		             label: '0';
 		             yourself.
+	fpsLabel := self newLabel
+		            label: '';
+		            yourself.
 	timeSlider := self newSlider
 		              min: 0;
 		              max: 1;
@@ -250,8 +257,9 @@ RMDObservatory >> initializePresenters [
 											              interpreter time: timeSlider value * duration ]
 												              on: RMDSemanticError
 												              do: [ :ex | 
-													              (RMDActionDebugger on: interpreter exception: ex)
-														              open ] ] ] ] ] ];
+													              (RMDActionDebugger
+														               on: interpreter
+														               exception: ex) open ] ] ] ] ] ];
 		              yourself.
 	runButton := self newButton
 		             label: 'run';
@@ -381,25 +389,37 @@ RMDObservatory >> runSimulation [
 
 	self isValidated ifTrue: [ 
 		process := [ 
+		           | t |
 		           stepButton enabled: false.
 		           timeSlider enabled: false.
+		           t := DateAndTime now.
 		           [ 
 		           self runState == true and: [ 
 			           self adapter notNil and: [ 
 				           self adapter widget notNil and: [ 
 					           self adapter widget world notNil ] ] ] ] whileTrue: [ 
 			           interpreter ifNotNil: [ 
-				           ([ interpreter stepSimulation ]
+				           ([ 
+				            | t0 msec result |
+				            result := interpreter stepSimulation.
+				            t0 := DateAndTime now.
+				            msec := (t0 - t) asMilliSeconds.
+				            msec > 1.0 ifTrue: [ 
+					            fpsLabel label:
+						            ' (' , (1000.0 / msec printShowingDecimalPlaces: 3)
+						            , ' fps)' ].
+				            t := t0.
+				            result ]
 					            on: RMDSemanticError
 					            do: [ :ex | 
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
-						            false ]) ifFalse: [ self runState: false ]
-				           "0 milliSecond wait" ] ].
+						            false ]) ifFalse: [ self runState: false ] ] ].
+		           fpsLabel label: ''.
 		           process := nil.
 		           stepButton enabled: true.
 		           timeSlider enabled: interpreter memory isRewindable ] 
-			           forkAt: Processor userBackgroundPriority ]
+			           forkAt: Processor userSchedulingPriority ]
 ]
 
 { #category : #api }
@@ -539,7 +559,12 @@ RMDObservatory >> windowTitle [
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 	  , (self isValidated
 			   ifTrue: [ '' ]
-			   ifFalse: [ ' (INVALID MODEL)' ])
+			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
+		   ifNotNil: [ 
+			   interpreter memory
+				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
+				   ifNil: [ '' ] ]
+		   ifNil: [ '' ])
 ]
 
 { #category : #private }

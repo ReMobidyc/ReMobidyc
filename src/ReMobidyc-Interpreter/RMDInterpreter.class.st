@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'globalSeed'
+		'globalSeed',
+		'worldAttributeDict'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -537,113 +538,65 @@ RMDInterpreter >> timeChanged [
 { #category : #'context controls' }
 RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 taskHash: hashInteger do: aBlock [
 
-	^ self
-		  withContext: ((RMDActionContext
-				    subject: anInteger1
-				    definition: aRMDAnimatDefinitionNode1)
-				   randomSeedWithHash: { 
-						   globalSeed.
-						   memory time.
-						   (memory seedAt: anInteger1).
-						   (memory seedAt: anInteger2).
-						   hashInteger };
-				   action: aRMDActionDefinitionNode;
-				   yourself)
-		  do: [ 
-			  context
-				  world: memory world
-				  definition: simulationModel worldDefinition.
-			  context object: anInteger2 definition: aRMDAnimatDefinitionNode2.
-			  aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
-				  | here |
-				  here := memory
-					          patchAtXIndex:
-						          ((self patchX: (self my: 'x')) floor + 1
-							           min: simulationModel patchXDivisions
-							           max: 1)
-					          yIndex: ((self patchY: (self my: 'y')) floor + 1
-							           min: simulationModel patchYDivisions
-							           max: 1).
-				  context
-					  location: here
-					  definition: simulationModel patchDefinition
-					  agent: 'here'.
-				  memory eastOf: here do: [ :east | 
-					  context
-						  location: east
-						  definition: simulationModel patchDefinition
-						  agent: 'east' ].
-				  memory westOf: here do: [ :west | 
-					  context
-						  location: west
-						  definition: simulationModel patchDefinition
-						  agent: 'west' ].
-				  memory southOf: here do: [ :south | 
-					  context
-						  location: south
-						  definition: simulationModel patchDefinition
-						  agent: 'south' ].
-				  memory northOf: here do: [ :north | 
-					  context
-						  location: north
-						  definition: simulationModel patchDefinition
-						  agent: 'north' ] ].
-			  aBlock cull: self cull: context ]
+	| newContext |
+	newContext := (RMDActionContext
+		               subject: anInteger1
+		               definition: aRMDAnimatDefinitionNode1)
+		              space: memory;
+		              randomSeedWithHash: { 
+				              globalSeed.
+				              memory time.
+				              (memory seedAt: anInteger1).
+				              (memory seedAt: anInteger2).
+				              hashInteger };
+		              action: aRMDActionDefinitionNode;
+		              worldAttributeDict: self worldAttributeDict;
+		              object: anInteger2
+		              definition: aRMDAnimatDefinitionNode2;
+		              yourself.
+	aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
+		newContext
+			location: [ 
+				memory
+					patchAtXIndex: ((self patchX: (self my: 'x')) floor + 1
+							 min: simulationModel patchXDivisions
+							 max: 1)
+					yIndex: ((self patchY: (self my: 'y')) floor + 1
+							 min: simulationModel patchYDivisions
+							 max: 1) ]
+			definition: simulationModel patchDefinition ].
+	^ self withContext: newContext do: aBlock
 ]
 
 { #category : #'context controls' }
 RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger definition: aRMDAnimatDefinitionNode taskHash: anotherInteger do: aBlock [
 
-	^ self
-		  withContext: ((RMDActionContext
-				    subject: anInteger
-				    definition: aRMDAnimatDefinitionNode)
-				   randomSeedWithHash: { 
-						   globalSeed.
-						   memory time.
-						   (memory seedAt: anInteger).
-						   anotherInteger };
-				   action: aRMDActionDefinitionNode;
-				   yourself)
-		  do: [ 
-			  context
-				  world: memory world
-				  definition: simulationModel worldDefinition.
-			  aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
-				  | here |
-				  here := memory
-					          patchAtXIndex:
-						          ((self patchX: (self my: 'x')) floor + 1
-							           min: simulationModel patchXDivisions
-							           max: 1)
-					          yIndex: ((self patchY: (self my: 'y')) floor + 1
-							           min: simulationModel patchYDivisions
-							           max: 1).
-				  context
-					  location: here
-					  definition: simulationModel patchDefinition
-					  agent: 'here'.
-				  memory eastOf: here do: [ :east | 
-					  context
-						  location: east
-						  definition: simulationModel patchDefinition
-						  agent: 'east' ].
-				  memory westOf: here do: [ :west | 
-					  context
-						  location: west
-						  definition: simulationModel patchDefinition
-						  agent: 'west' ].
-				  memory southOf: here do: [ :south | 
-					  context
-						  location: south
-						  definition: simulationModel patchDefinition
-						  agent: 'south' ].
-				  memory northOf: here do: [ :north | 
-					  context
-						  location: north
-						  definition: simulationModel patchDefinition
-						  agent: 'north' ] ].
-			  aBlock cull: self cull: context ]
+	| newContext |
+	newContext := (RMDActionContext
+		               subject: anInteger
+		               definition: aRMDAnimatDefinitionNode)
+		              space: memory;
+		              randomSeedWithHash: { 
+				              globalSeed.
+				              memory time.
+				              (memory seedAt: anInteger).
+				              anotherInteger };
+		              action: aRMDActionDefinitionNode;
+		              yourself.
+	newContext worldAttributeDict: self worldAttributeDict.
+	aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
+		newContext
+			location: [ 
+				memory
+					patchAtXIndex: ((self patchX: (self my: 'x')) floor + 1
+							 min: simulationModel patchXDivisions
+							 max: 1)
+					yIndex: ((self patchY: (self my: 'y')) floor + 1
+							 min: simulationModel patchYDivisions
+							 max: 1) ]
+			definition: simulationModel patchDefinition ].
+
+	^ self withContext: newContext do: aBlock
 ]
 
 { #category : #'context controls' }
@@ -656,12 +609,9 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 				   randomSeedWithHash: { 
 						   globalSeed.
 						   anInteger };
+				   worldAttributeDict: self worldAttributeDict;
 				   yourself)
-		  do: [ 
-			  context
-				  world: memory world
-				  definition: simulationModel worldDefinition.
-			  aBlock value ]
+		  do: aBlock
 ]
 
 { #category : #'context controls' }
@@ -685,18 +635,28 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 						   globalSeed.
 						   memory time.
 						   (memory seedAt: anInteger) };
+				   worldAttributeDict: self worldAttributeDict;
 				   yourself)
-		  do: [ 
-			  context
-				  world: memory world
-				  definition: simulationModel worldDefinition.
-			  aBlock value ]
+		  do: aBlock
 ]
 
 { #category : #'space access' }
 RMDInterpreter >> world [
 
 	^ memory world
+]
+
+{ #category : #private }
+RMDInterpreter >> worldAttributeDict [
+
+	^ worldAttributeDict ifNil: [ 
+		  | def baseAddress dict |
+		  def := simulationModel worldDefinition.
+		  baseAddress := memory world.
+		  dict := Dictionary new: def totalNumberOfAttributes + 2.
+		  def attributeOffsets keysAndValuesDo: [ :ident :offset | 
+			  dict at: ident put: baseAddress + offset ].
+		  worldAttributeDict := dict ]
 ]
 
 { #category : #'variable access' }
