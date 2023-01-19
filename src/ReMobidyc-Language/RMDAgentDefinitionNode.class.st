@@ -195,6 +195,12 @@ RMDAgentDefinitionNode >> name [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+RMDAgentDefinitionNode >> offsetAt: aString ifAbsent: errorBlock [
+
+	^ self attributeOffsets at: aString ifAbsent: errorBlock
+]
+
 { #category : #copying }
 RMDAgentDefinitionNode >> postCopy [
 

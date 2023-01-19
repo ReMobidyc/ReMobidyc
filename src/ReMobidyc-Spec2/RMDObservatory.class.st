@@ -394,12 +394,11 @@ RMDObservatory >> runSimulation [
 					            do: [ :ex | 
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
-						            false ]) ifFalse: [ self runState: false ]
-				           "0 milliSecond wait" ] ].
+						            false ]) ifFalse: [ self runState: false ] ] ].
 		           process := nil.
 		           stepButton enabled: true.
 		           timeSlider enabled: interpreter memory isRewindable ] 
-			           forkAt: Processor userBackgroundPriority ]
+			           forkAt: Processor userSchedulingPriority  ]
 ]
 
 { #category : #api }

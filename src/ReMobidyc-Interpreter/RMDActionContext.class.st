@@ -3,11 +3,14 @@ Class {
 	#superclass : #RMDExecutionContextWithRandomGenerator,
 	#instVars : [
 		'action',
-		'location',
 		'object',
 		'objectDefinition',
 		'newDefinition',
-		'newIndividuals'
+		'newIndividuals',
+		'locationBlock',
+		'patchDefinition',
+		'location',
+		'space'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -24,20 +27,67 @@ RMDActionContext >> action: aRMDActionDefinitionNode [
 	self loadUtilityDefinitions: action utilityDefinitions
 ]
 
-{ #category : #accessing }
-RMDActionContext >> location [
-	^ location
+{ #category : #'memory access' }
+RMDActionContext >> attributeDictFor: aString [
+
+	aString = 'here' ifTrue: [ 
+		^ self createPatchAttributeDict: self location ].
+	aString = 'east' ifTrue: [ 
+		space
+			eastOf: self location
+			do: [ :east | ^ self createPatchAttributeDict: east ] ].
+	aString = 'west' ifTrue: [ 
+		space
+			westOf: self location
+			do: [ :west | ^ self createPatchAttributeDict: west ].
+		^ Dictionary new ].
+	aString = 'south' ifTrue: [ 
+		space
+			southOf: self location
+			do: [ :south | ^ self createPatchAttributeDict: south ] ].
+	aString = 'north' ifTrue: [ 
+		space
+			northOf: self location
+			do: [ :north | ^ self createPatchAttributeDict: north ] ].
+	^ Dictionary new
+]
+
+{ #category : #'memory access' }
+RMDActionContext >> createPatchAttributeDict: anInteger [
+
+	^ patchDefinition attributeOffsets copy associationsDo: [ :assoc | 
+		  assoc value: anInteger + assoc value ]
+]
+
+{ #category : #'memory access' }
+RMDActionContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
+
+	^ (attributeDict
+		   at: agentReference
+		   ifAbsentPut: [ self attributeDictFor: agentReference ])
+		  at: aString
+		  ifAbsent: errorBlock
 ]
 
 { #category : #accessing }
-RMDActionContext >> location: anInteger definition: aRMDPatchDefinition agent: aString [
+RMDActionContext >> location [
 
-	| dict |
-	dict := Dictionary new.
-	aRMDPatchDefinition attributeOffsetsDo: [ :identifier :offset | 
-		dict at: identifier put: anInteger + offset ].
-	attributeDict at: aString put: dict.
-	location := anInteger
+	^ location ifNil: [ location := locationBlock value ]
+]
+
+{ #category : #accessing }
+RMDActionContext >> location: anInteger agent: aString [
+
+	attributeDict at: aString put: [ 
+		patchDefinition attributeOffsets copy do: [ :assoc | 
+			assoc value: anInteger + assoc value ] ]
+]
+
+{ #category : #accessing }
+RMDActionContext >> location: anIntegerOrBlock definition: aRMDPatchDefinition [
+
+	patchDefinition := aRMDPatchDefinition.
+	locationBlock := anIntegerOrBlock
 ]
 
 { #category : #accessing }
@@ -96,10 +146,27 @@ RMDActionContext >> objectDefinition [
 ]
 
 { #category : #accessing }
+RMDActionContext >> space [
+	^ space
+]
+
+{ #category : #accessing }
+RMDActionContext >> space: aRMDMemory [
+
+	space := aRMDMemory
+]
+
+{ #category : #accessing }
 RMDActionContext >> world: anInteger definition: aRMDWorldDefinition [
 	| dict |
 	dict := Dictionary new.
 	aRMDWorldDefinition
 		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
 	attributeDict at: 'world' put: dict
+]
+
+{ #category : #accessing }
+RMDActionContext >> worldAttributeDict: aDictionary [
+
+	attributeDict at: 'world' put: aDictionary
 ]
