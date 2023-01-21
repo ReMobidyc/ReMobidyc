@@ -61,18 +61,9 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 			definition: tankDefinition
 			do: [ 
 				| x y water |
-				x := interpreter
-					     readVariable: 'x'
-					     agent: nil
-					     ifAbsent: [ self fail ].
-				y := interpreter
-					     readVariable: 'y'
-					     agent: nil
-					     ifAbsent: [ self fail ].
-				water := interpreter
-					         readVariable: 'water'
-					         agent: nil
-					         ifAbsent: [ self fail ].
+				x := interpreter my: 'x'.
+				y := interpreter my: 'y'.
+				water := interpreter my: 'water'.
 				self
 					assert: water < 9.5
 					equals: (x - 5) squared + (y - 5) squared < 1. "water reduced" "within 1m from the horse"
@@ -84,13 +75,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 		interpreter
 			withObserverContextWithSubject: horse
 			definition: horseDefinition
-			do: [ 
-				waterInHorse := waterInHorse
-				                +
-				                (interpreter
-					                 readVariable: 'water'
-					                 agent: nil
-					                 ifAbsent: [ 0.0 ]) ] ].
+			do: [ waterInHorse := waterInHorse + (interpreter my: 'water') ] ].
 	self assert: waterInHorse closeTo: 2.0. "the horse drunk 2kg of water."
 
 	^ interpreter
@@ -157,18 +142,9 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 			definition: tankDefinition
 			do: [ 
 				| x y water |
-				x := interpreter
-					     readVariable: 'x'
-					     agent: nil
-					     ifAbsent: [ self fail ].
-				y := interpreter
-					     readVariable: 'y'
-					     agent: nil
-					     ifAbsent: [ self fail ].
-				water := interpreter
-					         readVariable: 'water'
-					         agent: nil
-					         ifAbsent: [ self fail ].
+				x := interpreter my: 'x'.
+				y := interpreter my: 'y'.
+				water := interpreter my: 'water'.
 				self
 					assert: water < 9.5
 					equals: ((x closeTo: 5.0) and: [ y closeTo: 4.8 ]). "the tank at 5@4.8 is drunk."
@@ -180,13 +156,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 		interpreter
 			withObserverContextWithSubject: horse
 			definition: horseDefinition
-			do: [ 
-				waterInHorse := waterInHorse
-				                +
-				                (interpreter
-					                 readVariable: 'water'
-					                 agent: nil
-					                 ifAbsent: [ 0.0 ]) ] ].
+			do: [ waterInHorse := waterInHorse + (interpreter my: 'water') ] ].
 	self assert: waterInHorse closeTo: 1.0. "the horse drunk 1kg of water."
 
 	^ interpreter

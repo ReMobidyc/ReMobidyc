@@ -89,16 +89,6 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
-{ #category : #'variable access' }
-RMDInterpreter >> agent: agentNameOrNil s: aString [
-
-	^ self readVariable: aString agent: agentNameOrNil ifAbsent: [ 
-		  RMDUndefinedAttributeError signal:
-			  (RMDAttributeVariableNode
-				   identifier: aString
-				   agent: agentNameOrNil) ]
-]
-
 { #category : #simulating }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
 
@@ -147,10 +137,7 @@ RMDInterpreter >> changeStage: animatString [
 	offset := 0.
 	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
 		| value |
-		value := self
-			         readVariable: attributeDecl identifier
-			         agent: nil
-			         ifAbsent: [ 0.0 ].
+		value := self my: attributeDecl identifier ifAbsent: [ 0.0 ].
 		memory nextAt: newIndividual + offset put: value.
 		offset := offset + 1 ].
 	self
@@ -169,6 +156,21 @@ RMDInterpreter >> changeStage: animatString [
 { #category : #timing }
 RMDInterpreter >> duration [
 	^ simulationModel duration
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> easts: aString ifAbsent: errorBlock [
+
+	memory eastOf: context location do: [ :id | 
+		^ memory
+			  at:
+				  id + (context locationDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+			  ifAbsent: [ 
+				  RMDAddressError signal:
+					  (RMDAttributeVariableNode identifier: aString agent: nil) ] ].
+	^ errorBlock value
 ]
 
 { #category : #exporting }
@@ -229,16 +231,27 @@ RMDInterpreter >> globalSeed: anInteger [
 { #category : #'space access' }
 RMDInterpreter >> here [
 
-	| x y patchX patchY |
-	x := self readVariable: 'x' agent: nil ifAbsent: [ ^ nil ].
-	y := self readVariable: 'y' agent: nil ifAbsent: [ ^ nil ].
-	patchX := (self patchX: x) floor + 1
+	| patchX patchY |
+	patchX := (self patchX: (self my: 'x')) floor + 1
 		          min: 1
 		          max: simulationModel patchXDivisions.
-	patchY := (self patchY: y) floor + 1
+	patchY := (self patchY: (self my: 'y')) floor + 1
 		          min: 1
 		          max: simulationModel patchYDivisions.
 	^ memory patchAtXIndex: patchX yIndex: patchY
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> heres: aString [
+
+	^ memory
+		  at: context location
+			  + (context locationDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+		  ifAbsent: [ 
+			  RMDAddressError signal:
+				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
 { #category : #'animat operations' }
@@ -264,28 +277,6 @@ RMDInterpreter >> initialize [
 	globalSeed := 1
 ]
 
-{ #category : #'variable access' }
-RMDInterpreter >> initializeVariable: aString with: aNumber ifAbsent: errorBlock [
-	^ memory
-		at:
-			(context
-				getMemoryAddressFor: aString
-				agent: nil
-				ifAbsent: [ ^ errorBlock value ])
-		put: aNumber
-]
-
-{ #category : #'variable access' }
-RMDInterpreter >> initializeVariableIfNotInitialized: aString with: aBlock ifAbsent: errorBlock [
-	^ memory
-		at:
-			(context
-				getMemoryAddressFor: aString
-				agent: nil
-				ifAbsent: [ ^ errorBlock value ])
-		ifAbsentPut: aBlock
-]
-
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
@@ -294,9 +285,24 @@ RMDInterpreter >> memory [
 { #category : #'variable access' }
 RMDInterpreter >> my: aString [
 
-	^ self readVariable: aString agent: nil ifAbsent: [ 
-		  RMDUndefinedAttributeError signal:
-			  (RMDAttributeVariableNode identifier: aString agent: nil) ]
+	^ memory
+		  at: context subject
+			  + (context subjectDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+		  ifAbsent: [ 
+			  RMDAddressError signal:
+				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> my: aString ifAbsent: errorBlock [
+
+	^ memory
+		  at: context subject + (context subjectDefinition
+				   offsetAt: aString
+				   ifAbsent: [ ^ errorBlock value ])
+		  ifAbsent: errorBlock
 ]
 
 { #category : #'animat operations' }
@@ -318,10 +324,7 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 	offset := 0.
 	animatDefinition allAttributeDeclarations do: [ :attributeDecl | 
 		| value |
-		value := self
-			         readVariable: attributeDecl identifier
-			         agent: nil
-			         ifAbsent: [ 0.0 ].
+		value := self my: attributeDecl identifier ifAbsent: [0.0].
 		newIndividuals do: [ :individual | 
 			memory nextAt: individual + offset put: value ].
 		offset := offset + 1 ].
@@ -339,6 +342,21 @@ RMDInterpreter >> nextSeed [
 	^ context nextSeed
 ]
 
+{ #category : #'variable access' }
+RMDInterpreter >> norths: aString ifAbsent: errorBlock [
+
+	memory northOf: context location do: [ :id | 
+		^ memory
+			  at:
+				  id + (context locationDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+			  ifAbsent: [ 
+				  RMDAddressError signal:
+					  (RMDAttributeVariableNode identifier: aString agent: nil) ] ].
+	^ errorBlock value
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> numberOfIndivisualsOf: aRMDAgentDefinitionNode [
 
@@ -346,6 +364,19 @@ RMDInterpreter >> numberOfIndivisualsOf: aRMDAgentDefinitionNode [
 	aRMDAgentDefinitionNode isPatchDefinitionNode ifTrue: [ 
 		^ memory xPatches * memory yPatches ].
 	^ memory numberOfAnimats: aRMDAgentDefinitionNode identifier
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> objects: aString [
+
+	^ memory
+		  at: context object
+			  + (context objectDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+		  ifAbsent: [ 
+			  RMDAddressError signal:
+				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
 { #category : #'space access' }
@@ -371,6 +402,12 @@ RMDInterpreter >> random [
 ]
 
 { #category : #'variable access' }
+RMDInterpreter >> read: anInteger ifAbsent: errorBlock [
+
+	^ memory at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 
 	| numberOrExpression |
@@ -380,17 +417,6 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 		  ifTrue: [ numberOrExpression ]
 		  ifFalse: [ 
 		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
-]
-
-{ #category : #'variable access' }
-RMDInterpreter >> readVariable: aString agent: anotherString ifAbsent: errorBlock [
-
-	^ memory
-		  at: (context
-				   getMemoryAddressFor: aString
-				   agent: anotherString
-				   ifAbsent: [ ^ errorBlock value ])
-		  ifAbsent: errorBlock
 ]
 
 { #category : #simulating }
@@ -460,6 +486,21 @@ RMDInterpreter >> setupSimulation [
 			initializer evalIn: self ] ].
 	memory time: 0.
 	self timeChanged
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> souths: aString ifAbsent: errorBlock [
+
+	memory southOf: context location do: [ :id | 
+		^ memory
+			  at:
+				  id + (context locationDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+			  ifAbsent: [ 
+				  RMDAddressError signal:
+					  (RMDAttributeVariableNode identifier: aString agent: nil) ] ].
+	^ errorBlock value
 ]
 
 { #category : #'accessing - libraries' }
@@ -535,6 +576,21 @@ RMDInterpreter >> timeChanged [
 	self announcer announce: (RMDTimeChanged time: self time)
 ]
 
+{ #category : #'variable access' }
+RMDInterpreter >> wests: aString ifAbsent: errorBlock [
+
+	memory westOf: context location do: [ :id | 
+		^ memory
+			  at:
+				  id + (context locationDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+			  ifAbsent: [ 
+				  RMDAddressError signal:
+					  (RMDAttributeVariableNode identifier: aString agent: nil) ] ].
+	^ errorBlock value
+]
+
 { #category : #'context controls' }
 RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 taskHash: hashInteger do: aBlock [
 
@@ -550,20 +606,16 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 				              (memory seedAt: anInteger2).
 				              hashInteger };
 		              action: aRMDActionDefinitionNode;
-		              worldAttributeDict: self worldAttributeDict;
 		              object: anInteger2
 		              definition: aRMDAnimatDefinitionNode2;
 		              yourself.
 	aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
 		newContext
-			location: [ 
-				memory
-					patchAtXIndex: ((self patchX: (self my: 'x')) floor + 1
-							 min: simulationModel patchXDivisions
-							 max: 1)
-					yIndex: ((self patchY: (self my: 'y')) floor + 1
-							 min: simulationModel patchYDivisions
-							 max: 1) ]
+			location: [ self here ]
+			definition: simulationModel patchDefinition ].
+	aRMDAnimatDefinitionNode1 isPatchDefinitionNode ifTrue: [ 
+		newContext
+			location: anInteger1
 			definition: simulationModel patchDefinition ].
 	^ self withContext: newContext do: aBlock
 ]
@@ -583,7 +635,6 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 				              anotherInteger };
 		              action: aRMDActionDefinitionNode;
 		              yourself.
-	newContext worldAttributeDict: self worldAttributeDict.
 	aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
 		newContext
 			location: [ 
@@ -595,7 +646,10 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 							 min: simulationModel patchYDivisions
 							 max: 1) ]
 			definition: simulationModel patchDefinition ].
-
+	aRMDAnimatDefinitionNode isPatchDefinitionNode ifTrue: [ 
+		newContext
+			location: anInteger
+			definition: simulationModel patchDefinition ].
 	^ self withContext: newContext do: aBlock
 ]
 
@@ -609,7 +663,6 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 				   randomSeedWithHash: { 
 						   globalSeed.
 						   anInteger };
-				   worldAttributeDict: self worldAttributeDict;
 				   yourself)
 		  do: aBlock
 ]
@@ -635,7 +688,6 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 						   globalSeed.
 						   memory time.
 						   (memory seedAt: anInteger) };
-				   worldAttributeDict: self worldAttributeDict;
 				   yourself)
 		  do: aBlock
 ]
@@ -660,27 +712,22 @@ RMDInterpreter >> worldAttributeDict [
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> write: aNumber toDelta: aString agent: anotherString ifAbsent: errorBlock [
+RMDInterpreter >> worlds: aString [
 
-	memory
-		nextDeltaAt: (context
-				 getMemoryAddressFor: aString
-				 agent: anotherString
-				 ifAbsent: [ ^ errorBlock value ])
-		add: aNumber.
-	^ aNumber
+	^ memory
+		  at: context world
+			  + (context worldDefinition offsetAt: aString ifAbsent: [ 
+					   RMDUndefinedAttributeError signal:
+						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
+		  ifAbsent: [ 
+			  RMDAddressError signal:
+				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> write: aNumber toDifferential: aString agent: anotherString ifAbsent: errorBlock [
+RMDInterpreter >> write: aFloat to: anInteger [
 
-	memory
-		nextDeltaAt: (context
-				 getMemoryAddressFor: aString
-				 agent: anotherString
-				 ifAbsent: [ ^ errorBlock value ])
-		add: aNumber * self deltaTime.
-	^ aNumber
+	^ memory at: anInteger put: aFloat
 ]
 
 { #category : #'variable access' }
@@ -690,12 +737,15 @@ RMDInterpreter >> write: aNumber toUtility: aString [
 ]
 
 { #category : #'variable access' }
-RMDInterpreter >> write: aNumber toVariable: aString agent: anotherString ifAbsent: errorBlock [
+RMDInterpreter >> writeDelta: aFloat to: anInteger [
 
-	^ memory
-		  nextAt: (context
-				   getMemoryAddressFor: aString
-				   agent: anotherString
-				   ifAbsent: [ ^ errorBlock value ])
-		  put: aNumber
+	memory nextDeltaAt: anInteger add: aFloat.
+	^ aFloat
+]
+
+{ #category : #'variable access' }
+RMDInterpreter >> writeNext: aFloat to: anInteger [
+
+	memory nextAt: anInteger put: aFloat.
+	^ aFloat
 ]

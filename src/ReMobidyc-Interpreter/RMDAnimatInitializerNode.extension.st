@@ -9,23 +9,26 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 		                    ifAbsent: [ 
 		                    ^ (RMDUnresolvedReferenceError on: self) signal ].
 	self population timesRepeat: [ 
-		| individual |
+		| individual xOffset yOffset |
 		individual := aRMDInterpreter memory allocateAnimat:
 			              animatDefinition.
-
+		xOffset := animatDefinition
+			           offsetAt: 'x'
+			           ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ].
+		yOffset := animatDefinition
+			           offsetAt: 'y'
+			           ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ].
 		aRMDInterpreter
 			withInitializerContextWithSubject: individual
 			definition: animatDefinition
 			do: [ 
 				aRMDInterpreter
-					initializeVariable: 'x'
-					with:
+					write:
 						(RMDUniformDistributionXNode current evalIn: aRMDInterpreter)
-					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ];
-					initializeVariable: 'y'
-					with:
+					to: individual + xOffset;
+					write:
 						(RMDUniformDistributionYNode current evalIn: aRMDInterpreter)
-					ifAbsent: [ ^ RMDUnresolvedReferenceError on: self ].
+					to: individual + yOffset.
 				animatDefinition evalIn: aRMDInterpreter.
 				super evalIn: aRMDInterpreter ] ]
 ]

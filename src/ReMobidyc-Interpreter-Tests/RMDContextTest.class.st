@@ -15,39 +15,6 @@ RMDContextTest >> setUp [
 ]
 
 { #category : #tests }
-RMDContextTest >> testGetMemoryAddressForAgentIfAbsent [
-	| animatDef |
-	animatDef := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar [kcal].' trim.
-	context subject: 100 definition: animatDef.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef attributeOffsets at: 'x') + 100.
-	self
-		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef attributeOffsets at: 'sugar') + 100
-]
-
-{ #category : #tests }
-RMDContextTest >> testSetMemoryAddressForAgentTo [
-	context setMemoryAddressFor: 'x' agent: nil to: 1.
-	context setMemoryAddressFor: 'y' agent: nil to: 2.
-	context setMemoryAddressFor: 'x' agent: 'goat' to: 3.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: 1.
-	self
-		assert: (context getMemoryAddressFor: 'y' agent: nil ifAbsent: [ nil ])
-		equals: 2.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: 'goat' ifAbsent: [ nil ])
-		equals: 3
-]
-
-{ #category : #tests }
 RMDContextTest >> testSubject [
 	| animatDef |
 	animatDef := parser animatDefinition
@@ -57,22 +24,4 @@ Foo is Animat with
 	sugar [kcal].' trim.
 	context subject: 100 definition: animatDef.
 	self assert: context subject equals: 100
-]
-
-{ #category : #tests }
-RMDContextTest >> testSubjectDefinition [
-	| animatDef |
-	animatDef := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar [kcal].' trim.
-	context subject: 100 definition: animatDef.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef attributeOffsets at: 'x') + 100.
-	self
-		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animatDef attributeOffsets at: 'sugar') + 100.
-	self assert: context subjectDefinition equals: animatDef
 ]

@@ -6,8 +6,8 @@ RMDDistanceDirectiveNode >> evalIn: aRMDInterpreter [
 	| x1 y1 x2 y2 |
 	x1 := aRMDInterpreter my: 'x'.
 	y1 := aRMDInterpreter my: 'y'.
-	x2 := aRMDInterpreter agent: agentIdentifier s: 'x'.
-	y2 := aRMDInterpreter agent: agentIdentifier s: 'y'.
+	x2 := aRMDInterpreter objects: 'x'.
+	y2 := aRMDInterpreter objects: 'y'.
 	^ ((x1 - x2) squared + (y1 - y2) squared) sqrt ifNanOrInfinite: [ 
 		  RMDNotComputableError on: self ]
 ]

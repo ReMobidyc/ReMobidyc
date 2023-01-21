@@ -12,6 +12,11 @@ RMDAbstractVariableNode >> = anObject [
 	^ self class = anObject class and: [ identifier = anObject identifier ]
 ]
 
+{ #category : #accessing }
+RMDAbstractVariableNode >> agent [
+	^ nil
+]
+
 { #category : #comparing }
 RMDAbstractVariableNode >> hash [
 	^ self class hash bitXor: identifier hash

@@ -2,21 +2,25 @@ Extension { #name : #RMDActionDefinitionNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDActionDefinitionNodeTest >> testEvalIn [
-	| script |
-	script := RMDGrammar new actionDefinition
-		parse:
-			'to metabolize is
-    my delta energy'' = basal_metabolism * -1
+
+	| agent script |
+	agent := RMDGrammar new agentDefinition end parse: 'World with
+	energy [kcal].'.
+	script := RMDGrammar new actionDefinition parse: 'to metabolize is
+    my delta energy'' = -basal_metabolism * 0.5 [day]
 where
     basal_metabolism = 1500 [kcal/day].'.
-	interpreter context action: script.
-	interpreter context setMemoryAddressFor: 'energy' agent: nil to: 1.
 	interpreter memory
 		nextAt: 1 put: 100;
 		tick.
-	script evalIn: interpreter.
+	interpreter
+		withActionContextWith: script
+		subject: 1
+		definition: agent
+		taskHash: 1
+		do: [ script evalIn: interpreter ].
 	interpreter memory tick.
 	self
-		assert: (interpreter readVariable: 'energy' agent: nil ifAbsent: [ nil ])
-		closeTo: 100 - ('kcal' asRMDUnit / 'day' asRMDUnit toSI: 1500)
+		assert: (interpreter memory at: 1 ifAbsent: [ self fail ])
+		closeTo: 100 - ('kcal' asRMDUnit toSI: 1500 * 0.5)
 ]

@@ -21,19 +21,9 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 			taskHash: 1
 			do: [ 
 				self
-					assert:
-					(interpreter
-						 readVariable: 'temperature'
-						 agent: nil
-						 ifAbsent: [ nil ])
+					assert: (interpreter my: 'temperature')
 					closeTo: (RMDUnit celsius toSI: -10).
-				self
-					assert:
-					(interpreter
-						 readVariable: 'humidity'
-						 agent: nil
-						 ifAbsent: [ nil ])
-					closeTo: 0.4.
+				self assert: (interpreter my: 'humidity') closeTo: 0.4.
 				self assert: interpreter time closeTo: 0.0.
 				count := count + 1 ] ].
 	self assert: count equals: 1

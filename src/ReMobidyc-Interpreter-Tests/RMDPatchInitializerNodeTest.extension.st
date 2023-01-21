@@ -24,17 +24,8 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 			definition: patchDef
 			taskHash: 1
 			do: [ 
-				self
-					assert:
-					(interpreter readVariable: 'grass' agent: nil ifAbsent: [ nil ])
-					equals: grass.
-				self
-					assert:
-					(interpreter
-						 readVariable: 'fertility'
-						 agent: nil
-						 ifAbsent: [ nil ])
-					equals: fertility.
+				self assert: (interpreter my: 'grass') equals: grass.
+				self assert: (interpreter my: 'fertility') equals: fertility.
 				count := count + 1 ] ].
 	self assert: count equals: 10 * 11
 ]
