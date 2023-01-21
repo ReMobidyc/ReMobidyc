@@ -295,6 +295,12 @@ RMDSyntaxNode >> isGuardedChoiceNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isHereAttributeVariableNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isKillDirectiveNode [
 	^ false
 ]
@@ -321,6 +327,12 @@ RMDSyntaxNode >> isLiteralNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isLogLogisticDistributionNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isMyAttributeVariableNode [
+
 	^ false
 ]
 
@@ -454,6 +466,12 @@ RMDSyntaxNode >> isUtilityVariableNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isVisualizationFileNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isWorldAttributeVariableNode [
 
 	^ false
 ]

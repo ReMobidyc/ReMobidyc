@@ -196,12 +196,12 @@ RMDAbstractInterpreter >> west [
 
 { #category : #'context controls' }
 RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
-	^ contextSemaphore
-		critical: [ | originalContext |
-			originalContext := context.
-			self setContext: aRMDContext.
-			[ aBlock cull: self cull: context ]
-				ensure: [ context := originalContext ] ]
+
+	^ contextSemaphore critical: [ 
+		  | originalContext |
+		  originalContext := context.
+		  self setContext: aRMDContext.
+		  aBlock ensure: [ context := originalContext ] ]
 ]
 
 { #category : #'context controls' }

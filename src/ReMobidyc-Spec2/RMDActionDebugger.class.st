@@ -202,33 +202,22 @@ RMDActionDebugger >> updateVariableList [
 			 interpreter ifNotNil: [ 
 				 interpreter context subjectDefinition ifNotNil: [ :subjectDef | 
 					 subjectDef attributeDeclarations do: [ :attributeDecl | 
-						 stream nextPut:
-							 'my ' , attributeDecl identifier -> (interpreter
-								  readVariable: attributeDecl identifier
-								  agent: nil
-								  ifAbsent: [ 'N/A' ]) ] ].
+						 stream nextPut: 'my ' , attributeDecl identifier
+							 -> (interpreter my: attributeDecl identifier) ] ].
 				 interpreter context objectDefinition ifNotNil: [ :objectDef | 
 					 objectDef attributeDeclarations do: [ :attributeDecl | 
 						 stream nextPut:
 							 objectDef agentName uncapitalized , '''s '
-							 , attributeDecl identifier -> (interpreter
-								  readVariable: attributeDecl identifier
-								  agent: objectDef agentName uncapitalized
-								  ifAbsent: [ 'N/A' ]) ] ].
+							 , attributeDecl identifier
+							 -> (interpreter objects: attributeDecl identifier) ] ].
 				 interpreter simulationModel patchDefinition ifNotNil: [ :patchDef | 
 					 patchDef attributeDeclarations do: [ :attributeDecl | 
-						 stream nextPut:
-							 'here''s ' , attributeDecl identifier -> (interpreter
-								  readVariable: attributeDecl identifier
-								  agent: 'here'
-								  ifAbsent: [ 'N/A' ]) ] ].
+						 stream nextPut: 'here''s ' , attributeDecl identifier
+							 -> (interpreter heres: attributeDecl identifier) ] ].
 				 interpreter simulationModel worldDefinition ifNotNil: [ :worldDef | 
 					 worldDef attributeDeclarations do: [ :attributeDecl | 
-						 stream nextPut:
-							 'world''s ' , attributeDecl identifier -> (interpreter
-								  readVariable: attributeDecl identifier
-								  agent: 'world'
-								  ifAbsent: [ 'N/A' ]) ] ].
+						 stream nextPut: 'world''s ' , attributeDecl identifier
+							 -> (interpreter worlds: attributeDecl identifier) ] ].
 				 interpreter context action ifNotNil: [ :action | 
 					 action utilityDefinitions do: [ :utilityDef | 
 						 | utilityName utilityValue |

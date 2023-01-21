@@ -5,11 +5,13 @@ RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 
 	initializerExpression ifNotNil: [ 
 		aRMDInterpreter
-			initializeVariable: identifier
-			with: ([ initializerExpression evalIn: aRMDInterpreter ]
+			write: ([ initializerExpression evalIn: aRMDInterpreter ]
 					 on: RMDSemanticError
 					 do: [ :ex | ex signalWithScope: self ])
-			ifAbsent: [ ^ RMDUnresolvedReferenceError signal: self ] ]
+			to: aRMDInterpreter context subject
+				+ (aRMDInterpreter context subjectDefinition
+						 offsetAt: identifier
+						 ifAbsent: [ ^ RMDUnresolvedReferenceError signal: self ]) ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

@@ -7,33 +7,18 @@ RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 	patchAttributeVariable isPlaceholderNode ifTrue: [ 
 		^ RMDUnresolvedPlaceholderError signal: patchAttributeVariable ].
 	attribute := patchAttributeVariable identifier.
-	here := aRMDInterpreter
-		        readVariable: attribute
-		        agent: 'here'
-		        ifAbsent: [ 0 ].
-	east := aRMDInterpreter
-		        readVariable: attribute
-		        agent: 'east'
-		        ifAbsent: [ here ].
-	west := aRMDInterpreter
-		        readVariable: attribute
-		        agent: 'west'
-		        ifAbsent: [ here ].
-	south := aRMDInterpreter
-		         readVariable: attribute
-		         agent: 'south'
-		         ifAbsent: [ here ].
-	north := aRMDInterpreter
-		         readVariable: attribute
-		         agent: 'north'
-		         ifAbsent: [ here ].
+	here := aRMDInterpreter heres: attribute.
+	east := aRMDInterpreter easts: attribute ifAbsent: [ here ].
+	west := aRMDInterpreter wests: attribute ifAbsent: [ here ].
+	south := aRMDInterpreter souths: attribute ifAbsent: [ here ].
+	north := aRMDInterpreter norths: attribute ifAbsent: [ here ].
 	vector := east - west @ (north - south).
 	(east <= here and: [ 
 		 west <= here and: [ south <= here and: [ north <= here ] ] ]) 
 		ifTrue: [ 
 			| x y patchX patchY |
-			x := aRMDInterpreter readVariable: 'x' agent: nil ifAbsent: [ 0.0 ].
-			y := aRMDInterpreter readVariable: 'y' agent: nil ifAbsent: [ 0.0 ].
+			x := aRMDInterpreter my: 'x'.
+			y := aRMDInterpreter my: 'y'.
 			patchX := aRMDInterpreter patchLength
 			          * ((aRMDInterpreter patchX: x) floor + 0.5).
 			patchY := aRMDInterpreter patchLength

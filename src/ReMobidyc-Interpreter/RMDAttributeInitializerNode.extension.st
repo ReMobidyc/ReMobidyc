@@ -1,17 +1,28 @@
 Extension { #name : #RMDAttributeInitializerNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
+RMDAttributeInitializerNode >> addressIn: aRMDInterpreter [
+
+	^ aRMDInterpreter context subject + (self offsetIn: aRMDInterpreter)
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 
 	expression ifNotNil: [ 
 		aRMDInterpreter
-			initializeVariable: identifier
-			with: ([ expression evalIn: aRMDInterpreter ]
+			write: ([ expression evalIn: aRMDInterpreter ]
 					 on: RMDSemanticError
 					 do: [ :ex | ex signalWithScope: self ])
-			ifAbsent: [ 
-				^ RMDUndefinedAttributeError signal:
-					  (RMDAttributeVariableNode identifier: identifier agent: nil) ] ]
+			to: (self addressIn: aRMDInterpreter) ]
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDAttributeInitializerNode >> offsetIn: aRMDInterpreter [
+
+	^ aRMDInterpreter context subjectDefinition
+		  offsetAt: identifier
+		  ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

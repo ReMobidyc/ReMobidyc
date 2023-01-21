@@ -3,23 +3,19 @@ Extension { #name : #RMDAssignableAttributeVariableNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  write: aNumber
-		  toVariable: self identifier
-		  agent: self agent
-		  ifAbsent: [ 
-		  RMDUndefinedAttributeError signal: attributeVariable ]
+	aRMDInterpreter
+		writeNext: aNumber
+		to: (attributeVariable addressIn: aRMDInterpreter).
+	^ aNumber
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  write: aNumber
-		  toVariable: self identifier
-		  agent: anInteger
-		  ifAbsent: [ 
-		  RMDUndefinedAttributeError signal: attributeVariable ]
+	aRMDInterpreter
+		writeNext: aNumber
+		to: anInteger + (attributeVariable offsetIn: aRMDInterpreter).
+	^ aNumber
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

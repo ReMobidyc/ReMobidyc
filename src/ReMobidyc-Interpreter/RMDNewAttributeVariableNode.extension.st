@@ -1,16 +1,20 @@
 Extension { #name : #RMDNewAttributeVariableNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewAttributeVariableNode >> evalIn: aRMDInterpreter [
+RMDNewAttributeVariableNode >> agentAddressIn: aRMDInterpreter [
 
 	^ RMDUndefinedAttributeError signal: self
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDNewAttributeVariableNode >> typecheckIn: aRMDInterpreter [
+RMDNewAttributeVariableNode >> agentDefinitionIn: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  typeOfVariable: identifier
-		  agent: self agent
-		  ifAbsent: [ RMDUndefinedAttributeError signal: self ]
+	^ aRMDInterpreter context newDefinition ifNil: [ 
+		  RMDUndefinedAnimatError signal: self ]
+]
+
+{ #category : #'*ReMobidyc-Interpreter' }
+RMDNewAttributeVariableNode >> evalIn: aRMDInterpreter [
+
+	^ RMDUndefinedAttributeError signal: self
 ]

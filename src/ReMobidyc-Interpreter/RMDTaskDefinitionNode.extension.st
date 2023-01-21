@@ -116,15 +116,14 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
-	| agent taskHash |
+	| agent taskHash specializedAction |
 	agent := aRMDInterpreter
 		         agentDefinitionAt: subjectIdentifier
 		         ifAbsent: [ 
 		         ^ RMDUndefinedAnimatError signal: subjectIdentifier ].
 	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
+	specializedAction := self actionWith: aRMDInterpreter.
 	aRMDInterpreter individualsOf: agent do: [ :animat | 
-		| specializedAction |
-		specializedAction := self actionWith: aRMDInterpreter.
 		aRMDInterpreter
 			withActionContextWith: specializedAction
 			subject: animat

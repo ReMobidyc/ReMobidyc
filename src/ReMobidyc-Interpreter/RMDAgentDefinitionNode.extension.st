@@ -7,24 +7,27 @@ RMDAgentDefinitionNode >> evalIn: aRMDInterpreter [
 	aRMDInterpreter context loadUtilityDefinitions: utilityDefinitions.
 	aRMDInterpreter memory time > 0
 		ifTrue: [ 
+			| address |
+			address := aRMDInterpreter context subject.
+			self allAttributeDeclarations do: [ :attributeDecl | 
+				attributeDecl initializerExpression ifNotNil: [ :expr | 
+					aRMDInterpreter
+						writeNext: ([ expr evalIn: aRMDInterpreter ]
+								 on: RMDSemanticError
+								 do: [ :ex | ex signalWithScope: expr ])
+						to: address ].
+				address := address + 1 ] ]
+		ifFalse: [ 
+			| address |
+			address := aRMDInterpreter context subject.
 			self allAttributeDeclarations do: [ :attributeDecl | 
 				attributeDecl initializerExpression ifNotNil: [ :expr | 
 					aRMDInterpreter
 						write: ([ expr evalIn: aRMDInterpreter ]
 								 on: RMDSemanticError
 								 do: [ :ex | ex signalWithScope: expr ])
-						toVariable: attributeDecl identifier
-						agent: nil
-						ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ] ]
-		ifFalse: [ 
-			self allAttributeDeclarations do: [ :attributeDecl | 
-				attributeDecl initializerExpression ifNotNil: [ :expr | 
-					aRMDInterpreter
-						initializeVariable: attributeDecl identifier
-						with: ([ expr evalIn: aRMDInterpreter ]
-								 on: RMDSemanticError
-								 do: [ :ex | ex signalWithScope: expr ])
-						ifAbsent: [ RMDUnresolvedReferenceError signal ] ] ] ] ]
+						to: address ].
+				address := address + 1 ] ] ]
 		on: RMDSemanticError
 		do: [ :ex | ex signalWithScope: self ]
 ]

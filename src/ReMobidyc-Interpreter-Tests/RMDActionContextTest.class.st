@@ -32,30 +32,6 @@ where
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testGetMemoryAddressForAgentIfAbsent [
-	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
-	context setMemoryAddressFor: 'y' agent: nil to: 2.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: 'Foo' ifAbsent: [ nil ])
-		equals: 1.
-	self
-		assert: (context getMemoryAddressFor: 'y' agent: nil ifAbsent: [ nil ])
-		equals: 2.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: nil.
-	self
-		assert: (context getMemoryAddressFor: 'y' agent: 'Foo' ifAbsent: [ nil ])
-		equals: nil.
-	self
-		assert: (context getMemoryAddressFor: 'y' agent: 'Bar' ifAbsent: [ nil ])
-		equals: nil.
-	self
-		assert: (context getMemoryAddressFor: 'bar' agent: 'Foo' ifAbsent: [ nil ])
-		equals: nil
-]
-
-{ #category : #tests }
 RMDActionContextTest >> testLoadUtilityDefinitions [
 
 	| parser sources |
@@ -69,24 +45,6 @@ RMDActionContextTest >> testLoadUtilityDefinitions [
 	self
 		assert: (context utilityAt: 'two' ifAbsent: [ nil ])
 		equals: (parser utilityDefinition parse: 'two = one + 1')
-]
-
-{ #category : #tests }
-RMDActionContextTest >> testLocationDefinitionAgent [
-
-	| parser patch |
-	parser := RMDGrammar new.
-	patch := parser patchDefinition end parse: '
-Patch with
-	grass [kcal].' trim.
-	context location: 10 definition: patch.
-	self
-		assert:
-		(context
-			 getMemoryAddressFor: 'grass'
-			 agent: 'here'
-			 ifAbsent: [ nil ])
-		equals: (patch attributeOffsets at: 'grass') + 10
 ]
 
 { #category : #tests }
@@ -115,67 +73,6 @@ Bar is Animat with
 ]
 
 { #category : #tests }
-RMDActionContextTest >> testObjectDefinitionAgent [
-	| parser foo bar eat |
-	parser := RMDGrammar new.
-	foo := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar [kcal].' trim.
-	bar := parser animatDefinition
-		parse:
-			'
-Bar is Animat with
-	salt [g].' trim.
-	eat := parser actionDefinition end
-		parse:
-			'to eat Food is
-	my delta sugar'' = bar''s salt.'.
-	context
-		subject: 10 definition: foo;
-		action: eat;
-		object: 20 definition: bar.
-	self
-		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (foo attributeOffsets at: 'sugar') + 10.
-	self
-		assert: (context getMemoryAddressFor: 'salt' agent: 'bar' ifAbsent: [ nil ])
-		equals: (bar attributeOffsets at: 'salt') + 20.
-	self assert: context objectDefinition equals: bar
-]
-
-{ #category : #tests }
-RMDActionContextTest >> testSetMemoryAddressForAgentTo [
-	context setMemoryAddressFor: 'x' agent: 'Foo' to: 1.
-	context setMemoryAddressFor: 'y' agent: nil to: 2.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: 'Foo' ifAbsent: [ nil ])
-		equals: 1.
-	self
-		assert: (context getMemoryAddressFor: 'y' agent: nil ifAbsent: [ nil ])
-		equals: 2
-]
-
-{ #category : #tests }
-RMDActionContextTest >> testSubjectDefinition [
-	| parser animat |
-	parser := RMDGrammar new.
-	animat := parser animatDefinition
-		parse:
-			'
-Foo is Animat with
-	sugar [kcal].' trim.
-	context subject: 1 definition: animat.
-	self
-		assert: (context getMemoryAddressFor: 'x' agent: nil ifAbsent: [ nil ])
-		equals: (animat attributeOffsets at: 'x') + 1.
-	self
-		assert: (context getMemoryAddressFor: 'sugar' agent: nil ifAbsent: [ nil ])
-		equals: (animat attributeOffsets at: 'sugar') + 1
-]
-
-{ #category : #tests }
 RMDActionContextTest >> testUtilityAtIfAbsent [
 	context utilityAt: 'foo' put: 1.
 	context utilityAt: 'bar' put: 2.
@@ -190,23 +87,4 @@ RMDActionContextTest >> testUtilityAtPut [
 	context utilityAt: 'bar' put: 2.
 	self assert: (context utilityAt: 'foo' ifAbsent: [ nil ]) equals: 1.
 	self assert: (context utilityAt: 'bar' ifAbsent: [ nil ]) equals: 2
-]
-
-{ #category : #tests }
-RMDActionContextTest >> testWorldDefinition [
-	| parser world |
-	parser := RMDGrammar new.
-	world := parser worldDefinition
-		parse:
-			'
-World with
-	temperature [DegreeC].' trim.
-	context world: 1 definition: world.
-	self
-		assert:
-			(context
-				getMemoryAddressFor: 'temperature'
-				agent: 'world'
-				ifAbsent: [ nil ])
-		equals: (world attributeOffsets at: 'temperature') + 1
 ]

@@ -80,29 +80,6 @@ where
 ]
 
 { #category : #tests }
-RMDInterpreterTest >> testReadVariableAgentIfAbsent [
-	interpreter context
-		setMemoryAddressFor: 'x' agent: 'foo' to: 1;
-		setMemoryAddressFor: 'x' agent: 'bar' to: 2.
-	interpreter memory
-		nextAt: 1 put: 3;
-		nextAt: 2 put: 4;
-		tick.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'foo' ifAbsent: [ nil ])
-		equals: 3.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'bar' ifAbsent: [ nil ])
-		equals: 4.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'buzz' ifAbsent: [ nil ])
-		equals: nil.
-	self
-		assert: (interpreter readVariable: 'y' agent: 'foo' ifAbsent: [ nil ])
-		equals: nil
-]
-
-{ #category : #tests }
 RMDInterpreterTest >> testSetUpSimulation [
 	| parser memory kcal celsius |
 	parser := RMDGrammar new.
@@ -155,70 +132,6 @@ RMDInterpreterTest >> testSetUpSimulation [
 ]
 
 { #category : #tests }
-RMDInterpreterTest >> testWriteToDeltaAgentIfAbsent [
-	interpreter context
-		setMemoryAddressFor: 'x' agent: 'foo' to: 1;
-		setMemoryAddressFor: 'x' agent: 'bar' to: 2.
-	interpreter memory
-		nextAt: 1 put: 3;
-		nextAt: 2 put: 4;
-		tick.
-	interpreter
-		write: 5.0
-			toDelta: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ];
-		write: 6.0
-			toDelta: 'x'
-			agent: 'bar'
-			ifAbsent: [ nil ];
-		write: 7.0
-			toDelta: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ].
-	interpreter memory tick.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'foo' ifAbsent: [ nil ])
-		closeTo: 3 + 5.0 + 7.0.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'bar' ifAbsent: [ nil ])
-		closeTo: 4 + 6.0
-]
-
-{ #category : #tests }
-RMDInterpreterTest >> testWriteToDifferentialAgentIfAbsent [
-	| dt |
-	interpreter context
-		setMemoryAddressFor: 'x' agent: 'foo' to: 1;
-		setMemoryAddressFor: 'x' agent: 'bar' to: 2.
-	interpreter memory
-		nextAt: 1 put: 3;
-		nextAt: 2 put: 4;
-		tick.
-	dt := interpreter deltaTime.
-	interpreter
-		write: 5.0
-			toDifferential: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ];
-		write: 6.0
-			toDifferential: 'x'
-			agent: 'bar'
-			ifAbsent: [ nil ];
-		write: 7.0
-			toDifferential: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ].
-	interpreter memory tick.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'foo' ifAbsent: [ nil ])
-		closeTo: 3 + (5.0 * dt) + (7.0 * dt).
-	self
-		assert: (interpreter readVariable: 'x' agent: 'bar' ifAbsent: [ nil ])
-		closeTo: 4 + (6.0 * dt)
-]
-
-{ #category : #tests }
 RMDInterpreterTest >> testWriteToUtility [
 	interpreter
 		write: 1.0 toUtility: 'foo';
@@ -231,35 +144,4 @@ RMDInterpreterTest >> testWriteToUtility [
 		closeTo: 2.0.
 	self
 		assert: (interpreter readUtility: 'nothing' ifAbsent: [ nil ]) isNil
-]
-
-{ #category : #tests }
-RMDInterpreterTest >> testWriteToVariableAgentIfAbsent [
-	interpreter context
-		setMemoryAddressFor: 'x' agent: 'foo' to: 1;
-		setMemoryAddressFor: 'x' agent: 'bar' to: 2.
-	interpreter memory
-		nextAt: 1 put: 3;
-		nextAt: 2 put: 4;
-		tick.
-	interpreter
-		write: 5.0
-			toVariable: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ];
-		write: 6.0
-			toVariable: 'x'
-			agent: 'bar'
-			ifAbsent: [ nil ];
-		write: 7.0
-			toVariable: 'x'
-			agent: 'foo'
-			ifAbsent: [ nil ].
-	interpreter memory tick.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'foo' ifAbsent: [ nil ])
-		closeTo: 7.0.
-	self
-		assert: (interpreter readVariable: 'x' agent: 'bar' ifAbsent: [ nil ])
-		closeTo: 6.0
 ]

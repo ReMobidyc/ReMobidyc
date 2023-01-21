@@ -29,13 +29,8 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 			definition: goatDef
 			do: [ 
 				self assert:
-					((interpreter readVariable: 'body' agent: nil ifAbsent: [ nil ])
-						 between: minBody
-						 and: maxBody).
-				self
-					assert:
-					(interpreter readVariable: 'age' agent: nil ifAbsent: [ nil ])
-					closeTo: age.
+					((interpreter my: 'body') between: minBody and: maxBody).
+				self assert: (interpreter my: 'age') closeTo: age.
 				count := count + 1 ] ].
 	self assert: count equals: 10
 ]

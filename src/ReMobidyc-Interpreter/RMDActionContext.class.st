@@ -59,28 +59,10 @@ RMDActionContext >> createPatchAttributeDict: anInteger [
 		  assoc value: anInteger + assoc value ]
 ]
 
-{ #category : #'memory access' }
-RMDActionContext >> getMemoryAddressFor: aString agent: agentReference ifAbsent: errorBlock [
-
-	^ (attributeDict
-		   at: agentReference
-		   ifAbsentPut: [ self attributeDictFor: agentReference ])
-		  at: aString
-		  ifAbsent: errorBlock
-]
-
 { #category : #accessing }
 RMDActionContext >> location [
 
 	^ location ifNil: [ location := locationBlock value ]
-]
-
-{ #category : #accessing }
-RMDActionContext >> location: anInteger agent: aString [
-
-	attributeDict at: aString put: [ 
-		patchDefinition attributeOffsets copy do: [ :assoc | 
-			assoc value: anInteger + assoc value ] ]
 ]
 
 { #category : #accessing }
@@ -91,14 +73,20 @@ RMDActionContext >> location: anIntegerOrBlock definition: aRMDPatchDefinition [
 ]
 
 { #category : #accessing }
+RMDActionContext >> locationDefinition [
+
+	^ patchDefinition
+]
+
+{ #category : #accessing }
+RMDActionContext >> newDefinition [
+
+	^ newDefinition
+]
+
+{ #category : #accessing }
 RMDActionContext >> newIndividuals: anArrayOfInteger definition: aRMDAnimatDefinition [
 
-	anArrayOfInteger do: [ :individual | 
-		| dict |
-		dict := Dictionary new.
-		aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
-			dict at: identifier put: individual + offset ].
-		attributeDict at: individual put: dict ].
 	newIndividuals := anArrayOfInteger.
 	newDefinition := aRMDAnimatDefinition
 ]
@@ -117,25 +105,6 @@ RMDActionContext >> object [
 { #category : #accessing }
 RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 
-	| dict |
-	dict := Dictionary new.
-	aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
-		dict at: identifier put: anInteger + offset ].
-	attributeDict
-		at: aRMDAnimatDefinition identifier uncapitalized
-		put: dict.
-	object := anInteger.
-	objectDefinition := aRMDAnimatDefinition
-]
-
-{ #category : #accessing }
-RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition agent: aString [
-
-	| dict |
-	dict := Dictionary new.
-	aRMDAnimatDefinition attributeOffsetsDo: [ :identifier :offset | 
-		dict at: identifier put: anInteger + offset ].
-	attributeDict at: aString put: dict.
 	object := anInteger.
 	objectDefinition := aRMDAnimatDefinition
 ]
@@ -154,19 +123,4 @@ RMDActionContext >> space [
 RMDActionContext >> space: aRMDMemory [
 
 	space := aRMDMemory
-]
-
-{ #category : #accessing }
-RMDActionContext >> world: anInteger definition: aRMDWorldDefinition [
-	| dict |
-	dict := Dictionary new.
-	aRMDWorldDefinition
-		attributeOffsetsDo: [ :identifier :offset | dict at: identifier put: anInteger + offset ].
-	attributeDict at: 'world' put: dict
-]
-
-{ #category : #accessing }
-RMDActionContext >> worldAttributeDict: aDictionary [
-
-	attributeDict at: 'world' put: aDictionary
 ]

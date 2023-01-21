@@ -419,7 +419,7 @@ RMDObservatory >> runSimulation [
 		           process := nil.
 		           stepButton enabled: true.
 		           timeSlider enabled: interpreter memory isRewindable ] 
-			           forkAt: Processor userSchedulingPriority ]
+			           forkAt: Processor userBackgroundPriority ]
 ]
 
 { #category : #api }
@@ -487,7 +487,7 @@ RMDObservatory >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[interpreter stepSimulation]
+		[ interpreter stepSimulation ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
@@ -580,7 +580,8 @@ RMDObservatory >> worldInspector [
 		  addPage: (self newNotebookPage
 				   presenterProvider: [ 
 					   RMDScrollPresenter with: (RMDWorldPercentileInspector new
-								    interpreter: interpreter updateObservation;
+								    interpreter: interpreter;
+								    updateObservation;
 								    yourself) ];
 				   whenRetrievedDo: [ :content | 
 				   content presenter updateObservation ];

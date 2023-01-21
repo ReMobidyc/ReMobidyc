@@ -40,10 +40,7 @@ RMDIndividualTabularInspector >> createItem [
 				definition: animatDef
 				do: [ 
 					animatDef allAttributeDeclarations do: [ :attDecl | 
-						(interpreter
-							 readVariable: attDecl identifier
-							 agent: nil
-							 ifAbsent: [ nil ]) ifNotNil: [ :val | 
+						(interpreter my: attDecl identifier) ifNotNil: [ :val | 
 							item
 								at: attDecl printString
 								put: ((attDecl unit fromSI: val) printShowingDecimalPlaces: 2) ] ] ] ].

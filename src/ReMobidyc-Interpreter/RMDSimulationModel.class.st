@@ -87,7 +87,7 @@ RMDSimulationModel class >> goatAndWolf [
 		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		  addRenderer: (RMDPatchColorAlphaRenderer
 				   color: Color green
-				   alpha: 'here''s grass' asRMDExpression
+				   alpha: 'my grass' asRMDExpression
 				   between: '0[kcal]' asRMDExpression
 				   and: '1000000[kcal]' asRMDExpression);
 		  addRenderer:
@@ -197,7 +197,7 @@ RMDSimulationModel class >> sugarScape [
 		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
 		  addRenderer: (RMDPatchColorAlphaRenderer
 				   color: Color green
-				   alpha: 'here''s grass' asRMDExpression
+				   alpha: 'my grass' asRMDExpression
 				   between: '0[kcal]' asRMDExpression
 				   and: '1000000[kcal]' asRMDExpression);
 		  addRenderer:
