@@ -76,7 +76,7 @@ RMDLiteralNode >> numericFrom: aString [
 			sign := 1.
 			decimal := aString trim ].
 	^ sign * (decimal first isDigit
-		   ifTrue: [ decimal asNumber ]
+		   ifTrue: [ decimal asNumber asFloat ]
 		   ifFalse: [ 
 			   decimal = 'π'
 				   ifTrue: [ Float pi ]

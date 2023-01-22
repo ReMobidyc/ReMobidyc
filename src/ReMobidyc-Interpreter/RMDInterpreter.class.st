@@ -698,19 +698,6 @@ RMDInterpreter >> world [
 	^ memory world
 ]
 
-{ #category : #private }
-RMDInterpreter >> worldAttributeDict [
-
-	^ worldAttributeDict ifNil: [ 
-		  | def baseAddress dict |
-		  def := simulationModel worldDefinition.
-		  baseAddress := memory world.
-		  dict := Dictionary new: def totalNumberOfAttributes + 2.
-		  def attributeOffsets keysAndValuesDo: [ :ident :offset | 
-			  dict at: ident put: baseAddress + offset ].
-		  worldAttributeDict := dict ]
-]
-
 { #category : #'variable access' }
 RMDInterpreter >> worlds: aString [
 
