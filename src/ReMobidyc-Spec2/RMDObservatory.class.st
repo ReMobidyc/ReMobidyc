@@ -16,7 +16,8 @@ Class {
 		'time',
 		'duration',
 		'lastServerUpdate',
-		'recordAnimatedPngButton'
+		'recordAnimatedPngButton',
+		'resetButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -27,6 +28,7 @@ RMDObservatory class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
 				   vAlignCenter;
+				   add: #resetButton expand: false;
 				   add: #stepButton expand: false;
 				   add: #runButton expand: false;
 				   add: (SpBoxLayout newVertical
@@ -296,8 +298,14 @@ RMDObservatory >> initializePresenters [
 														               on: interpreter
 														               exception: ex) open ] ] ] ] ] ];
 		              yourself.
+	resetButton := self newButton
+		             icon: self resetIcon;
+		             action: [ self resetSimulation ];
+		             help: 'Reset the simulation';
+		             state: false;
+		             yourself.
 	runButton := self newButton
-		             label: 'run';
+		             icon: self runIcon;
 		             action: [ self runState: self runState not ];
 		             help: 'Run the simulation to the end';
 		             state: false;
@@ -305,7 +313,7 @@ RMDObservatory >> initializePresenters [
 			             state == true ifTrue: [ self runSimulation ] ];
 		             yourself.
 	stepButton := self newButton
-		              label: 'step';
+		              icon: self stepIcon;
 		              action: [ self stepSimulation ];
 		              help: 'Run the simulation just one step forward';
 		              enabled: true;
@@ -425,6 +433,7 @@ RMDObservatory >> runSimulation [
 	self isValidated ifTrue: [ 
 		process := [ 
 		           | t |
+		           resetButton enabled: false.
 		           stepButton enabled: false.
 		           timeSlider enabled: false.
 		           t := DateAndTime now.
@@ -452,6 +461,7 @@ RMDObservatory >> runSimulation [
 						            false ]) ifFalse: [ self runState: false ] ] ].
 		           fpsLabel label: ''.
 		           process := nil.
+		           resetButton enabled: true.
 		           stepButton enabled: true.
 		           timeSlider enabled: interpreter memory isRewindable ] 
 			           forkAt: Processor userBackgroundPriority ]
@@ -554,6 +564,7 @@ RMDObservatory >> typecheck [
 		on: RMDSemanticError
 		do: [ :ex | 
 			runButton disable.
+			resetButton disable.
 			stepButton disable.
 			timeSlider disable.
 			UIManager default alert: ex messageText title: 'Invalid Model'.

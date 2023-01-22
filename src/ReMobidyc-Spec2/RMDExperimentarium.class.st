@@ -294,7 +294,7 @@ RMDExperimentarium >> initializePresenters [
 														               exception: ex) open ] ] ] ] ] ];
 		              yourself.
 	runButton := self newButton
-		             label: 'run';
+		             icon: self runIcon;
 		             action: [ self runState: self runState not ];
 		             help: 'Run the simulation to the end';
 		             state: false;
@@ -302,7 +302,7 @@ RMDExperimentarium >> initializePresenters [
 			             state == true ifTrue: [ self runSimulation ] ];
 		             yourself.
 	stepButton := self newButton
-		              label: 'step';
+		              icon: self stepIcon;
 		              action: [ self stepSimulation ];
 		              help: 'Run the simulation just one step forward';
 		              enabled: true;
