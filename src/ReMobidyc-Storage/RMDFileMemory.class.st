@@ -281,23 +281,22 @@ RMDFileMemory >> readStageLinksForTime: anInteger [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
+
 	| ref |
 	ref := (self directoryForTime: anInteger) / self valuesFileBasename.
-	ref exists
-		ifFalse: [ ^ Dictionary new ].
-	ref
-		readStreamDo: [ :csvStream | 
-			| vals |
-			vals := Dictionary new.
-			[ [ csvStream atEnd not and: [ csvStream peek isSeparator ] ]
-				whileTrue: [ csvStream next ].
-			csvStream atEnd ]
-				whileFalse: [ | id value |
-					id := (csvStream upTo: $,) asInteger.
-					[ csvStream peek isSeparator ] whileTrue: [ csvStream next ].
-					value := (csvStream upTo: Character lf) asNumber.
-					vals at: id put: value ].
-			^ vals ]
+	ref exists ifFalse: [ ^ Dictionary new ].
+	ref binaryReadStreamDo: [ :binStream | 
+		| vals |
+		vals := Dictionary new.
+		[ binStream atEnd ] whileFalse: [ 
+			| id value |
+			id := binStream uint32.
+			value := ((BoxedFloat64 basicNew: 2)
+				          basicAt: 1 put: binStream uint32;
+				          basicAt: 2 put: binStream uint32;
+				          yourself) * 1.0.
+			vals at: id put: value ].
+		^ vals ]
 ]
 
 { #category : #allocating }
@@ -373,7 +372,7 @@ RMDFileMemory >> sunset [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> valuesFileBasename [
-	^ 'values.csv'
+	^ 'values.raw'
 ]
 
 { #category : #'accessing-storage' }
@@ -478,16 +477,16 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
+
 	((self directoryForTime: anInteger) ensureCreateDirectory
-		/ self valuesFileBasename)
+	 / self valuesFileBasename)
 		ensureDelete;
-		writeStreamDo: [ :csvStream | 
-			aDictionary
-				keysAndValuesDo: [ :id :value | 
-					id storeOn: csvStream.
-					csvStream nextPut: $,.
-					value storeOn: csvStream.
-					csvStream lf ] ]
+		binaryWriteStreamDo: [ :binStream | 
+			aDictionary keysAndValuesDo: [ :id :value | 
+					binStream
+						uint32: id;
+						uint32: (value basicAt: 1);
+						uint32: (value basicAt: 2) ] ]
 ]
 
 { #category : #'accessing-individuals' }
