@@ -244,7 +244,6 @@ RMDModelFileTextBrowser >> openObservatory [
 		               setContext: RMDActionContext new;
 		               simulationModel: self simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
 		  modelName:
 			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
@@ -261,7 +260,6 @@ RMDModelFileTextBrowser >> openObservatoryOnDryMemory [
 		               setContext: RMDActionContext new;
 		               simulationModel: self simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
 		  :observatory | 
 		  observatory
@@ -294,7 +292,6 @@ RMDModelFileTextBrowser >> openObservatoryOnFile [
 		               setContext: RMDActionContext new;
 		               simulationModel: self simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter)
 		  modelName: modelFileReference basename;
 		  open;

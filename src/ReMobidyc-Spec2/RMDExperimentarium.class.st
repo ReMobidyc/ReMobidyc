@@ -71,7 +71,6 @@ RMDExperimentarium class >> openOnDryRunOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -111,7 +110,6 @@ RMDExperimentarium class >> openOnFileOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -138,7 +136,6 @@ RMDExperimentarium class >> openOnMemoryOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -468,8 +465,8 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 		            timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.
 	self
-		updateTimeLabel;
-		resetSimulation
+		resetSimulation;
+		updateTimeLabel
 ]
 
 { #category : #api }

@@ -72,7 +72,6 @@ RMDObservatory class >> openOnDryRunOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -112,7 +111,6 @@ RMDObservatory class >> openOnFileOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -139,7 +137,6 @@ RMDObservatory class >> openOnMemoryOn: aFileReference [
 				                importModel: aFileReference
 				                ifError: [ ^ nil ]);
 		               yourself.
-	interpreter setupSimulation.
 	^ (self interpreter: interpreter)
 		  modelName: aFileReference basename;
 		  open;
@@ -514,8 +511,8 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 		            timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.
 	self
-		updateTimeLabel;
-		resetSimulation
+		resetSimulation;
+		updateTimeLabel
 ]
 
 { #category : #api }

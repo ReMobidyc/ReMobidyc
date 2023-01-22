@@ -302,7 +302,6 @@ RMDSimulationModeler >> openObservatory [
 		               setContext: RMDActionContext new;
 		               simulationModel: simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
 		  :observatory | 
 		  observatory
@@ -321,7 +320,6 @@ RMDSimulationModeler >> openObservatoryOnDryMemory [
 		               setContext: RMDActionContext new;
 		               simulationModel: simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
 		  :observatory | 
 		  observatory
@@ -366,7 +364,6 @@ RMDSimulationModeler >> openObservatoryOnFile: aFileReference [
 		               setContext: RMDActionContext new;
 		               simulationModel: simulationModel;
 		               yourself.
-	interpreter setupSimulation.
 	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
 		  :observatory | 
 		  observatory
