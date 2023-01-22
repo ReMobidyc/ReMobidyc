@@ -1,12 +1,12 @@
 Class {
-	#name : #RMDObservatory,
+	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'modelName',
 		'interpreter',
 		'validated',
-		'views',
 		'runButton',
+		'populationInspector',
 		'process',
 		'visualizer',
 		'stepButton',
@@ -15,14 +15,13 @@ Class {
 		'timeSlider',
 		'time',
 		'duration',
-		'lastServerUpdate',
-		'recordAnimatedPngButton'
+		'lastServerUpdate'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
 
 { #category : #layout }
-RMDObservatory class >> defaultLayout [
+RMDExperimentarium class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -39,29 +38,29 @@ RMDObservatory class >> defaultLayout [
 						    expand: false;
 						    yourself)
 				   expand: true;
-				   add: #recordAnimatedPngButton width: 32;
 				   yourself)
 		  height: self buttonHeight + 4;
-		  add: #views yourself
+		  add: #populationInspector;
+		  yourself
 ]
 
 { #category : #'instance creation' }
-RMDObservatory class >> interpreter: aRMDInterpreter [
+RMDExperimentarium class >> interpreter: aRMDInterpreter [
 	^ self new
 		setInterpreter: aRMDInterpreter;
 		yourself
 ]
 
 { #category : #utilities }
-RMDObservatory class >> openOnDryRunFromUser [
+RMDExperimentarium class >> openOnDryRunFromUser [
 
-	<script: 'RMDObservatory openOnDryRunFromUser'>
+	<script: 'RMDExperimentarium openOnDryRunFromUser'>
 	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
 		self openOnDryRunOn: repBrowser file ]
 ]
 
 { #category : #'instance creation' }
-RMDObservatory class >> openOnDryRunOn: aFileReference [
+RMDExperimentarium class >> openOnDryRunOn: aFileReference [
 
 	| interpreter |
 	interpreter := RMDInterpreter new
@@ -80,15 +79,15 @@ RMDObservatory class >> openOnDryRunOn: aFileReference [
 ]
 
 { #category : #utilities }
-RMDObservatory class >> openOnFileFromUser [
+RMDExperimentarium class >> openOnFileFromUser [
 
-	<script: 'RMDObservatory openOnFileFromUser'>
+	<script: 'RMDExperimentarium openOnFileFromUser'>
 	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
 		self openOnFileOn: repBrowser file ]
 ]
 
 { #category : #'instance creation' }
-RMDObservatory class >> openOnFileOn: aFileReference [
+RMDExperimentarium class >> openOnFileOn: aFileReference [
 
 	| memoryRef interpreter |
 	memoryRef := aFileReference / 'memory'.
@@ -120,15 +119,15 @@ RMDObservatory class >> openOnFileOn: aFileReference [
 ]
 
 { #category : #utilities }
-RMDObservatory class >> openOnMemoryFromUser [
+RMDExperimentarium class >> openOnMemoryFromUser [
 
-	<script: 'RMDObservatory openOnMemoryFromUser'>
+	<script: 'RMDExperimentarium openOnMemoryFromUser'>
 	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
 		self openOnMemoryOn: repBrowser file ]
 ]
 
 { #category : #'instance creation' }
-RMDObservatory class >> openOnMemoryOn: aFileReference [
+RMDExperimentarium class >> openOnMemoryOn: aFileReference [
 
 	| interpreter |
 	interpreter := RMDInterpreter new
@@ -147,43 +146,42 @@ RMDObservatory class >> openOnMemoryOn: aFileReference [
 ]
 
 { #category : #menus }
-RMDObservatory class >> remobidycMenuOn: aBuilder [
+RMDExperimentarium class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
-	(aBuilder item: #ReMobidycObservatory)
+	(aBuilder item: #Experimentarium)
 		parent: 'ReMobidyc';
-		order: 10;
-		label: 'Observatory';
+		order: 9;
+		label: 'Experimentarium';
 		with: [ 
-			(aBuilder item: #ObservatoryOnDryRun)
-				parent: 'ReMobidycObservatory';
-				order: 10;
+			(aBuilder item: #ExperimentariumOnDryRun)
+				parent: 'Experimentarium';
+				order: 1;
 				label: 'Dry-run';
-				action: [ RMDObservatory openOnDryRunFromUser ];
-				help: 'Dry-run and visualize a model'.
+				action: [ RMDExperimentarium openOnDryRunFromUser ];
+				help: 'Dry-run a model for quick testing'.
 			(aBuilder item: #ObservatoryOnMemory)
-				parent: 'ReMobidycObservatory';
-				order: 10;
+				parent: 'Experimentarium';
+				order: 2;
 				label: 'On memory';
 				action: [ RMDObservatory openOnMemoryFromUser ];
-				help: 'Run and visualize a model on memory (for small scale data collection)'.
+				help: 'Run a model on memory (for small scale data collection)'.
 			(aBuilder item: #ObservatoryOnFile)
-				parent: 'ReMobidycObservatory';
-				order: 11;
+				parent: 'Experimentarium';
+				order: 3;
 				label: 'On file';
 				action: [ RMDObservatory openOnFileFromUser ];
-				help:
-					'Run and visualize a model recorded on files' ]
+				help: 'Run a model and record the simulation results into files' ]
 ]
 
 { #category : #examples }
-RMDObservatory class >> sugarScape [
-	<script: 'RMDObservatory sugarScape openWithSpec'>
+RMDExperimentarium class >> sugarScape [
+	<script: 'RMDExperimentarium sugarScape openWithSpec'>
 	^ self interpreter: RMDInterpreter sugarScape
 ]
 
 { #category : #private }
-RMDObservatory >> animatInspector: aString [
+RMDExperimentarium >> animatInspector: aString [
 
 	^ self newNotebook
 		  addPage: (self newNotebookPage
@@ -234,7 +232,7 @@ RMDObservatory >> animatInspector: aString [
 ]
 
 { #category : #updating }
-RMDObservatory >> basicInformServer [
+RMDExperimentarium >> basicInformServer [
 
 	lastServerUpdate := DateAndTime now.
 	Smalltalk at: #RMDClient ifPresent: [ :clientClass | 
@@ -245,36 +243,35 @@ RMDObservatory >> basicInformServer [
 ]
 
 { #category : #api }
-RMDObservatory >> forceKill [
+RMDExperimentarium >> forceKill [
 	self runState: false.
 	process ifNotNil: #terminate
 ]
 
 { #category : #controlling }
-RMDObservatory >> ifValidated: aBlock [
+RMDExperimentarium >> ifValidated: aBlock [
 
 	^ validated = true ifTrue: [ aBlock cull: self ]
 ]
 
 { #category : #updating }
-RMDObservatory >> informServer [
+RMDExperimentarium >> informServer [
 	(lastServerUpdate isNil
 		or: [ DateAndTime now - lastServerUpdate >= self serverUpdateInterval ])
 		ifTrue: [ self basicInformServer ]
 ]
 
 { #category : #initialization }
-RMDObservatory >> initialize [
+RMDExperimentarium >> initialize [
 
 	super initialize.
 	validated := false
 ]
 
 { #category : #initialization }
-RMDObservatory >> initializePresenters [
+RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
-	views := self newNotebook.
 	timeLabel := self newLabel
 		             label: '0';
 		             yourself.
@@ -313,44 +310,37 @@ RMDObservatory >> initializePresenters [
 		              help: 'Run the simulation just one step forward';
 		              enabled: true;
 		              yourself.
-	recordAnimatedPngButton := self newButton
-		                           icon: Smalltalk ui icons smallScreenshot;
-		                           action: [ self recordAPNG ];
-		                           help:
-			                           'Create an animated PNG file (warning: this takes a loooong time!)';
-		                           enabled: true;
-		                           yourself.
-	self whenDisplayDo: [ (views pageAt: 1) activePresenter updateImage ]
+	populationInspector := self instantiate: RMDPopulationInspector
 ]
 
 { #category : #initialization }
-RMDObservatory >> initializeWindow: aWindowPresenter [
+RMDExperimentarium >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self windowTitle;
-		initialExtent: 1100 @ 600
+		initialExtent: 700 @ 400
 ]
 
 { #category : #testing }
-RMDObservatory >> isValidated [
+RMDExperimentarium >> isValidated [
 	^ validated = true
 ]
 
 { #category : #accessing }
-RMDObservatory >> modelName [
+RMDExperimentarium >> modelName [
 	^ modelName ifNil: [ modelName := self requestModelName ]
 ]
 
 { #category : #accessing }
-RMDObservatory >> modelName: aString [
+RMDExperimentarium >> modelName: aString [
 
 	modelName := aString.
 	self updateWindowTitle
 ]
 
 { #category : #private }
-RMDObservatory >> patchInspector [
+RMDExperimentarium >> patchInspector [
 
 	^ self newNotebook
 		  addPage: (self newNotebookPage
@@ -394,36 +384,23 @@ RMDObservatory >> patchInspector [
 ]
 
 { #category : #api }
-RMDObservatory >> progress [
+RMDExperimentarium >> progress [
 	^ time / duration
 ]
 
-{ #category : #api }
-RMDObservatory >> recordAPNG [
-
-	(UIManager default
-		 chooseForSaveFileReference: 'export animation PNG'
-		 extensions: #( 'png' )
-		 path: FileLocator desktop absolutePath) ifNotNil: [ :ref | 
-		interpreter ifNotNil: [ 
-			[ interpreter exportAPNG: ref ]
-				on: RMDSemanticError
-				do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ] ]
-]
-
 { #category : #accessing }
-RMDObservatory >> requestModelName [
+RMDExperimentarium >> requestModelName [
 	^ UIManager default request: 'model name' initialAnswer: 're:mobidyc'
 ]
 
 { #category : #api }
-RMDObservatory >> resetSimulation [
+RMDExperimentarium >> resetSimulation [
 
 	self isValidated ifTrue: [ interpreter setupSimulation ]
 ]
 
 { #category : #api }
-RMDObservatory >> runSimulation [
+RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
 		process := [ 
@@ -461,55 +438,32 @@ RMDObservatory >> runSimulation [
 ]
 
 { #category : #api }
-RMDObservatory >> runState [
+RMDExperimentarium >> runState [
 	^ runButton state == true
 ]
 
 { #category : #api }
-RMDObservatory >> runState: aBoolean [
+RMDExperimentarium >> runState: aBoolean [
 	runButton state: aBoolean = true
 ]
 
 { #category : #accessing }
-RMDObservatory >> serverUpdateInterval [
+RMDExperimentarium >> serverUpdateInterval [
 	^ 10 seconds
 ]
 
 { #category : #initialization }
-RMDObservatory >> setInterpreter: aRMDInterpreter [
+RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
 	self typecheck.
-	visualizer := RMDVisualizer new.
-	interpreter simulationModel renderersDo: [ :renderer | 
-		visualizer addRenderer: renderer ].
+	populationInspector interpreter: interpreter.
 	timeSlider enabled: interpreter memory isRewindable.
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #timeChanged
 		to: self.
-	views pages: (Array streamContents: [ :stream | 
-			 stream nextPut: (self newNotebookPage
-					  presenterProvider: [ 
-						  visualizer asPresenter
-							  interpreter: interpreter;
-							  updateImage;
-							  yourself ];
-					  whenRetrievedDo: [ :content | content updateImage ];
-					  title: 'Map').
-			 interpreter worldDefinition allAttributeDeclarations ifNotEmpty: [ 
-				 stream nextPut: (self newNotebookPage
-						  presenterProvider: [ self worldInspector ];
-						  title: 'World') ].
-			 interpreter patchDefinition allAttributeDeclarations ifNotEmpty: [ 
-				 stream nextPut: (self newNotebookPage
-						  presenterProvider: [ self patchInspector ];
-						  title: 'Patch') ].
-			 interpreter animatNames do: [ :animat | 
-				 stream nextPut: (self newNotebookPage
-						  presenterProvider: [ self animatInspector: animat ];
-						  title: animat) ] ]).
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.
@@ -519,37 +473,37 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 ]
 
 { #category : #api }
-RMDObservatory >> stepSimulation [
+RMDExperimentarium >> stepSimulation [
 
 	self isValidated ifTrue: [ 
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[ interpreter stepSimulation ]
+		[interpreter stepSimulation ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
-RMDObservatory >> timeChanged [
+RMDExperimentarium >> timeChanged [
 	self
 		informServer;
 		updateTimeLabel
 ]
 
 { #category : #private }
-RMDObservatory >> timeSeriesInspector [
+RMDExperimentarium >> timeSeriesInspector [
 
 	^ RMDTimeSeriesInspector new interpreter: interpreter
 ]
 
 { #category : #api }
-RMDObservatory >> toggleRunPauseSimulation [
+RMDExperimentarium >> toggleRunPauseSimulation [
 	self runState: self runState not
 ]
 
 { #category : #api }
-RMDObservatory >> typecheck [
+RMDExperimentarium >> typecheck [
 
 	[ 
 	interpreter simulationModel typecheck.
@@ -564,7 +518,7 @@ RMDObservatory >> typecheck [
 ]
 
 { #category : #updating }
-RMDObservatory >> updateTimeLabel [
+RMDExperimentarium >> updateTimeLabel [
 
 	interpreter ifNotNil: [ 
 		time := interpreter time.
@@ -585,13 +539,13 @@ RMDObservatory >> updateTimeLabel [
 ]
 
 { #category : #private }
-RMDObservatory >> updateWindowTitle [
+RMDExperimentarium >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self windowTitle ]
 ]
 
 { #category : #private }
-RMDObservatory >> windowTitle [
+RMDExperimentarium >> windowTitle [
 
 	^ 'Observatory'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
@@ -606,7 +560,7 @@ RMDObservatory >> windowTitle [
 ]
 
 { #category : #private }
-RMDObservatory >> worldInspector [
+RMDExperimentarium >> worldInspector [
 
 	^ self newNotebook
 		  addPage: (self newNotebookPage
