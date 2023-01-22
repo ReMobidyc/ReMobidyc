@@ -122,7 +122,10 @@ RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
 { #category : #accessing }
 RMDTypecheckContext >> typeAt: aString ifAbsentPut: errorBlock [
 
-	^ utilityTypes at: aString ifAbsentPut: errorBlock
+	^ self
+		  checkRecursion: aString
+		  do: [ utilityTypes at: aString ifAbsentPut: errorBlock ]
+		  onRecursion: [ RMDRecursionError signal: subjectDefinition ]
 ]
 
 { #category : #accessing }
