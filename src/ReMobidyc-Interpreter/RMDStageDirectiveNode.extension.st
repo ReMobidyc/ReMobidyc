@@ -20,7 +20,7 @@ RMDStageDirectiveNode >> typecheckIn: aRMDInterpreter [
 	= aRMDInterpreter context subjectDefinition species ifFalse: [ 
 		^ RMDSpeciesError
 			  on: self
-			  animatDefinition1: aRMDInterpreter subjectDefinition
+			  animatDefinition1: aRMDInterpreter context subjectDefinition
 			  animatDefinition2: animatDefinition ].
 	aRMDInterpreter changeStage: animatIdentifier
 ]
