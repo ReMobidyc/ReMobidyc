@@ -10,7 +10,8 @@ Class {
 		'renderers',
 		'taskDefinitions',
 		'patchDefinition',
-		'icons'
+		'icons',
+		'runId'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -648,6 +649,7 @@ RMDSimulationModel >> initialize [
 
 	super initialize.
 	metadata := RMDMetadata new.
+	runId := 'run'.
 	self resetDefinitions
 ]
 
@@ -666,7 +668,7 @@ RMDSimulationModel >> interpreterOnFile [
 
 	| memory |
 	memory := RMDFileMemory for: self.
-	self exportModel: memory basePath.
+	self exportModel: memory modelPath.
 	^ RMDInterpreter new
 		  setMemory: memory;
 		  setContext: RMDActionContext new;
@@ -883,6 +885,18 @@ RMDSimulationModel >> resetDefinitions [
 	taskDefinitions := OrderedCollection new.
 	renderers := OrderedCollection new.
 	icons := Dictionary new
+]
+
+{ #category : #accessing }
+RMDSimulationModel >> runId [
+
+	^ runId
+]
+
+{ #category : #accessing }
+RMDSimulationModel >> runId: aString [
+
+	runId := aString
 ]
 
 { #category : #'accessing - definitions' }

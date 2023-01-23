@@ -8,7 +8,8 @@ Class {
 		'spaceDirty',
 		'allocationDirty',
 		'stageLinksDirty',
-		'reproductionLinksDirty'
+		'reproductionLinksDirty',
+		'modelPath'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -23,13 +24,15 @@ RMDFileMemory class >> defaultRunsDirectory [
 { #category : #'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel [
 
-	| fileRef |
+	| modelPath basePath |
 	[ 
-	fileRef := self defaultRunsDirectory
-	           / ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
-		            , DateAndTime now printString).
-	fileRef exists ] whileTrue: [ 100 milliSecond wait ].
-	^ self on: fileRef
+	modelPath := self defaultRunsDirectory
+	            /
+		            ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
+		             , DateAndTime now printString).
+	basePath := modelPath / aRMDSimulationModel runId.
+	basePath exists ] whileTrue: [ 100 milliSecond wait ].
+	^ (self on: basePath) modelPath: modelPath
 ]
 
 { #category : #'instance creation' }
@@ -162,6 +165,18 @@ RMDFileMemory >> latestTime: anInteger [
 	super latestTime: anInteger.
 	oldLatestTime = latestTime
 		ifFalse: [ allocationDirty := true ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> modelPath [
+
+	^ modelPath ifNil: [ self basePath ]
+]
+
+{ #category : #'accessing-storage' }
+RMDFileMemory >> modelPath: aFileReference [
+
+	modelPath := aFileReference
 ]
 
 { #category : #accessing }
