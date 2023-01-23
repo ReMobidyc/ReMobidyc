@@ -651,6 +651,50 @@ RMDSimulationModel >> initialize [
 	self resetDefinitions
 ]
 
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterForDryRun [
+
+	^ RMDInterpreter new
+		  setMemory: RMDDryMemory new;
+		  setContext: RMDActionContext new;
+		  simulationModel: self;
+		  yourself
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterOnFile [
+
+	| memory |
+	memory := RMDFileMemory for: self.
+	self exportModel: memory basePath.
+	^ RMDInterpreter new
+		  setMemory: memory;
+		  setContext: RMDActionContext new;
+		  simulationModel: self;
+		  yourself
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterOnFile: aFileReference [
+
+	self exportModel: aFileReference.
+	^ RMDInterpreter new
+		  setMemory: (RMDFileMemory on: aFileReference);
+		  setContext: RMDActionContext new;
+		  simulationModel: self;
+		  yourself
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterOnMemory [
+
+	^ RMDInterpreter new
+		  setMemory: RMDOnMemory new;
+		  setContext: RMDActionContext new;
+		  simulationModel: self;
+		  yourself
+]
+
 { #category : #accessing }
 RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isWorldDefinitionNode
@@ -688,14 +732,6 @@ RMDSimulationModel >> name: aString [
 { #category : #'accessing - cells' }
 RMDSimulationModel >> north [
 	^ self patchLength * self patchYDivisions
-]
-
-{ #category : #'user interface' }
-RMDSimulationModel >> open [
-
-	^ (RMDSimulationModeler on: self)
-		  openWithSpec;
-		  yourself
 ]
 
 { #category : #'accessing - definitions' }

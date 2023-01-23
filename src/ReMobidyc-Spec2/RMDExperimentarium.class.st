@@ -326,7 +326,10 @@ RMDExperimentarium >> isValidated [
 
 { #category : #accessing }
 RMDExperimentarium >> modelName [
-	^ modelName ifNil: [ modelName := self requestModelName ]
+
+	^ interpreter
+		  ifNotNil: [ interpreter simulationModel name ]
+		  ifNil: [ 'noname' ]
 ]
 
 { #category : #accessing }
@@ -383,11 +386,6 @@ RMDExperimentarium >> patchInspector [
 { #category : #api }
 RMDExperimentarium >> progress [
 	^ time / duration
-]
-
-{ #category : #accessing }
-RMDExperimentarium >> requestModelName [
-	^ UIManager default request: 'model name' initialAnswer: 're:mobidyc'
 ]
 
 { #category : #api }
@@ -544,7 +542,7 @@ RMDExperimentarium >> updateWindowTitle [
 { #category : #private }
 RMDExperimentarium >> windowTitle [
 
-	^ 'Observatory'
+	^ 'Experimentarium'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 	  , (self isValidated
 			   ifTrue: [ '' ]

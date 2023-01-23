@@ -13,6 +13,25 @@ Class {
 	#category : #'ReMobidyc-Storage'
 }
 
+{ #category : #accessing }
+RMDFileMemory class >> defaultRunsDirectory [
+
+	^ (FileLocator documents / 'ReMobidyc' / 'runs')
+		  ensureCreateDirectory
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> for: aRMDSimulationModel [
+
+	| fileRef |
+	[ 
+	fileRef := self defaultRunsDirectory
+	           / ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
+		            , DateAndTime now printString).
+	fileRef exists ] whileTrue: [ 100 milliSecond wait ].
+	^ self on: fileRef
+]
+
 { #category : #'instance creation' }
 RMDFileMemory class >> on: aFileReference [
 	^ self new

@@ -35,6 +35,12 @@ RMDPresenter >> editIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> experimentariumIcon [
+
+	^ Smalltalk ui icons iconNamed: #smallProfile
+]
+
+{ #category : #icons }
 RMDPresenter >> exportIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallExport
@@ -56,6 +62,12 @@ RMDPresenter >> initializePresenters [
 				allMorphsDo: [ :m | 
 					(m respondsTo: #font:)
 						ifTrue: [ m font: font ] ] ]
+]
+
+{ #category : #icons }
+RMDPresenter >> modelerIcon [
+
+	^Smalltalk ui icons iconNamed: #window
 ]
 
 { #category : #widgets }
