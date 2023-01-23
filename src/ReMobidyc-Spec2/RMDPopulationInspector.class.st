@@ -244,5 +244,7 @@ RMDPopulationInspector >> updateTableItems [
 					 stream nextPut: species.
 					 model animatDefinitionsDo: [ :animat | 
 						 animat species = species ifTrue: [ 
-							 stream nextPut: self stagePrefix , animat name ] ] ] ]) ]
+							 stream nextPut: self stagePrefix , animat name ] ] ] ]).
+		populationTable items ifNotEmpty: [ 
+			populationTable selectIndex: 1 ] ]
 ]
