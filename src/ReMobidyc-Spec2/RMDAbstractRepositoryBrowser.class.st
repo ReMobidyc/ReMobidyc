@@ -191,7 +191,8 @@ RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 RMDAbstractRepositoryBrowser >> disableOk [
 
 	self withWindowDo: [ :window | 
-		window buttons ifNotEmpty: [ :buttons | buttons first disable ] ]
+		window isDialog ifTrue: [ 
+			window buttons ifNotEmpty: [ :buttons | buttons first disable ] ] ]
 ]
 
 { #category : #operations }
@@ -211,7 +212,8 @@ RMDAbstractRepositoryBrowser >> editRepository [
 RMDAbstractRepositoryBrowser >> enableOk [
 
 	self withWindowDo: [ :window | 
-		window buttons ifNotEmpty: [ :buttons | buttons first enable ] ]
+		window isDialog ifTrue: [ 
+			window buttons ifNotEmpty: [ :buttons | buttons first enable ] ] ]
 ]
 
 { #category : #operations }

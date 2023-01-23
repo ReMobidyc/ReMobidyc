@@ -344,7 +344,10 @@ RMDObservatory >> isValidated [
 
 { #category : #accessing }
 RMDObservatory >> modelName [
-	^ modelName ifNil: [ modelName := self requestModelName ]
+
+	^ interpreter
+		  ifNotNil: [ interpreter simulationModel name ]
+		  ifNil: [ 'noname' ]
 ]
 
 { #category : #accessing }
@@ -414,11 +417,6 @@ RMDObservatory >> recordAPNG [
 			[ interpreter exportAPNG: ref ]
 				on: RMDSemanticError
 				do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ] ]
-]
-
-{ #category : #accessing }
-RMDObservatory >> requestModelName [
-	^ UIManager default request: 'model name' initialAnswer: 're:mobidyc'
 ]
 
 { #category : #api }

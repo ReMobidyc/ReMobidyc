@@ -296,80 +296,19 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 { #category : #operations }
 RMDSimulationModeler >> openObservatory [
 
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDOnMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel: simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
-		  :observatory | 
-		  observatory
-			  modelName:
-				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
-			  open;
-			  yourself ]
+	^ simulationModel interpreterOnMemory openInObservatory
 ]
 
 { #category : #operations }
 RMDSimulationModeler >> openObservatoryOnDryMemory [
 
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDDryMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel: simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
-		  :observatory | 
-		  observatory
-			  modelName:
-				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
-			  open;
-			  yourself ]
+	simulationModel interpreterForDryRun openInObservatory
 ]
 
 { #category : #operations }
 RMDSimulationModeler >> openObservatoryOnFile [
 
-	modelFileReference
-		ifNotNil: [ 
-			simulationModel exportModel: modelFileReference.
-			self openObservatoryOnFile: modelFileReference ]
-		ifNil: [ 
-			RMDRepositoryModelsBrowser
-				openForSave: simulationModel
-				ifAccepted: [ :ref | self openObservatoryOnFile: ref ] ]
-]
-
-{ #category : #operations }
-RMDSimulationModeler >> openObservatoryOnFile: aFileReference [
-
-	| memoryRef interpreter |
-	memoryRef := aFileReference / 'memory'.
-	memoryRef isDirectory ifTrue: [ 
-		(UIManager default
-			 confirm:
-			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
-			 label: 'Simulation result exists'
-			 trueChoice: 'Erase & Open'
-			 falseChoice: 'Open'
-			 cancelChoice: 'Cancel'
-			 default: false)
-			ifNil: [ ^ self ]
-			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
-	interpreter := RMDInterpreter new
-		               setMemory:
-			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
-		               setContext: RMDActionContext new;
-		               simulationModel: simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
-		  :observatory | 
-		  observatory
-			  modelName: aFileReference basename;
-			  open;
-			  yourself ]
+	simulationModel interpreterOnFile openInObservatory
 ]
 
 { #category : #private }
