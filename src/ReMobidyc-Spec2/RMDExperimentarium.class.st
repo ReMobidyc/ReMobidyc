@@ -12,10 +12,11 @@ Class {
 		'stepButton',
 		'timeLabel',
 		'fpsLabel',
-		'timeSlider',
 		'time',
 		'duration',
-		'lastServerUpdate'
+		'lastServerUpdate',
+		'timeProgressBar',
+		'lastUpdateTime'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -34,12 +35,12 @@ RMDExperimentarium class >> defaultLayout [
 								     add: #fpsLabel expand: false;
 								     yourself);
 						    add:
-						    (SpBoxLayout newHorizontal add: #timeSlider expand: true)
+						    (SpBoxLayout newHorizontal add: #timeProgressBar expand: true)
 						    expand: false;
 						    yourself)
 				   expand: true;
 				   yourself)
-		  height: self buttonHeight + 4;
+		  height: self buttonHeight * 2;
 		  add: #populationInspector;
 		  yourself
 ]
@@ -275,24 +276,9 @@ RMDExperimentarium >> initializePresenters [
 	fpsLabel := self newLabel
 		            label: '';
 		            yourself.
-	timeSlider := self newSlider
-		              min: 0;
-		              max: 1;
-		              value: 0;
-		              whenValueChangedDo: [ 
-			              interpreter ifNotNil: [ 
-					              self isValidated ifTrue: [ 
-							              runButton state ifFalse: [ 
-									              (time / duration - timeSlider value) abs
-									              > 1.0e-8 ifTrue: [ 
-											              [ 
-											              interpreter time: timeSlider value * duration ]
-												              on: RMDSemanticError
-												              do: [ :ex | 
-													              (RMDActionDebugger
-														               on: interpreter
-														               exception: ex) open ] ] ] ] ] ];
-		              yourself.
+	timeProgressBar := self newProgressBar
+		                   fixedAt: 0.0;
+		                   yourself.
 	runButton := self newButton
 		             icon: self runIcon;
 		             action: [ self runState: self runState not ];
@@ -401,7 +387,6 @@ RMDExperimentarium >> runSimulation [
 		process := [ 
 		           | t |
 		           stepButton enabled: false.
-		           timeSlider enabled: false.
 		           t := DateAndTime now.
 		           [ 
 		           self runState == true and: [ 
@@ -425,11 +410,11 @@ RMDExperimentarium >> runSimulation [
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
 						            false ]) ifFalse: [ self runState: false ] ] ].
+		           self updateTimeLabel.
 		           fpsLabel label: ''.
 		           process := nil.
-		           stepButton enabled: true.
-		           timeSlider enabled: interpreter memory isRewindable ] 
-			           forkAt: Processor userBackgroundPriority ]
+		           stepButton enabled: true ] forkAt:
+			           Processor userBackgroundPriority ]
 ]
 
 { #category : #api }
@@ -454,14 +439,12 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 	interpreter := aRMDInterpreter.
 	self typecheck.
 	populationInspector interpreter: interpreter.
-	timeSlider enabled: interpreter memory isRewindable.
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #timeChanged
 		to: self.
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
-	timeSlider quantum: interpreter deltaTime / interpreter duration.
 	self
 		resetSimulation;
 		updateTimeLabel
@@ -474,16 +457,23 @@ RMDExperimentarium >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[interpreter stepSimulation ]
+		[ 
+		interpreter stepSimulation.
+		self updateTimeLabel ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
 RMDExperimentarium >> timeChanged [
-	self
-		informServer;
-		updateTimeLabel
+
+	| now |
+	self informServer.
+	now := DateAndTime now.
+	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
+		ifTrue: [ 
+			lastUpdateTime := now.
+			self updateTimeLabel ]
 ]
 
 { #category : #private }
@@ -507,7 +497,6 @@ RMDExperimentarium >> typecheck [
 		do: [ :ex | 
 			runButton disable.
 			stepButton disable.
-			timeSlider disable.
 			UIManager default alert: ex messageText title: 'Invalid Model'.
 			^ validated := false ]
 ]
@@ -530,7 +519,7 @@ RMDExperimentarium >> updateTimeLabel [
 				 stream nextPutAll: ' ], '.
 				 interpreter ticks printOn: stream.
 				 stream nextPutAll: ' steps.' ]).
-		timeSlider value: time / duration ]
+		timeProgressBar fixedAt: time / duration ]
 ]
 
 { #category : #private }
