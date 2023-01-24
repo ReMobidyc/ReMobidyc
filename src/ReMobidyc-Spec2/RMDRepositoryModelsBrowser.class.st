@@ -85,12 +85,6 @@ RMDRepositoryModelsBrowser >> initialize [
 	super initialize
 ]
 
-{ #category : #initialization }
-RMDRepositoryModelsBrowser >> initializeWindow: aWindowPresenter [
-	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Models'
-]
-
 { #category : #accessing }
 RMDRepositoryModelsBrowser >> itemsInRepository [
 
@@ -138,6 +132,11 @@ RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
 				  ifTrue: [ 
 				  repo addModel: aRMDSimulationModel named: item ifPresent: [  ] ] ] ]
+]
+
+{ #category : #initialization }
+RMDRepositoryModelsBrowser >> title [
+	^ 'Models'
 ]
 
 { #category : #updating }

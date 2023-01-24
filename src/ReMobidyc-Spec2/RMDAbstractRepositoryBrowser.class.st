@@ -326,7 +326,6 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 RMDAbstractRepositoryBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Repository Browser'.
 	aWindowPresenter initialExtent: 800 @ 400
 ]
 
@@ -426,6 +425,12 @@ RMDAbstractRepositoryBrowser >> repositoryDirectory [
 RMDAbstractRepositoryBrowser >> save: anObject [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RMDAbstractRepositoryBrowser >> title [
+
+	^ 'Repository Browser'
 ]
 
 { #category : #updating }

@@ -186,6 +186,11 @@ RMDLauncher >> openInObservatoryOnMemory [
 		model interpreterOnMemory openInObservatory ]
 ]
 
+{ #category : #initialization }
+RMDLauncher >> title [
+	^ 'Launcher'
+]
+
 { #category : #updating }
 RMDLauncher >> updateButtons [
 
