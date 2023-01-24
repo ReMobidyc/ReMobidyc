@@ -664,6 +664,18 @@ RMDSimulationModel >> interpreterForDryRun [
 ]
 
 { #category : #interpreting }
+RMDSimulationModel >> interpreterOnExistingFile: basePath modelPath: modelPath [
+
+	| memory |
+	memory := RMDFileMemory on: basePath modelPath: modelPath.
+	^ RMDInterpreter new
+		  setMemory: memory;
+		  setContext: RMDActionContext new;
+		  simulationModel: self;
+		  yourself
+]
+
+{ #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile [
 
 	| memory |
@@ -677,11 +689,13 @@ RMDSimulationModel >> interpreterOnFile [
 ]
 
 { #category : #interpreting }
-RMDSimulationModel >> interpreterOnFile: aFileReference [
+RMDSimulationModel >> interpreterOnFile: basePath modelPath: modelPath [
 
-	self exportModel: aFileReference.
+	| memory |
+	memory := RMDFileMemory on: basePath modelPath: modelPath.
+	self exportModel: memory modelPath.
 	^ RMDInterpreter new
-		  setMemory: (RMDFileMemory on: aFileReference);
+		  setMemory: memory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
 		  yourself

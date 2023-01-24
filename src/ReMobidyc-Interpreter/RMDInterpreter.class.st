@@ -209,6 +209,13 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 			writer close ] ] ] ensure: [ self time: oldTime ]
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> fastForward [
+
+	memory time: memory latestTime.
+	self timeChanged
+]
+
 { #category : #'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries

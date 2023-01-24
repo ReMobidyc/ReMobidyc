@@ -241,6 +241,12 @@ RMDAbstractRepositoryBrowser >> forSave [
 	self isForSave: true
 ]
 
+{ #category : #private }
+RMDAbstractRepositoryBrowser >> getRepositories [
+
+	^ self repositoryDirectory repositories
+]
+
 { #category : #initialization }
 RMDAbstractRepositoryBrowser >> initialize [
 
@@ -452,7 +458,7 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 					editItemButton enabled: self item notNil ]
 				ifFalse: [ 
 					newItemButton disable.
-					removeItemButton disable.
+					removeItemButton enabled: repo isRunsRepository.
 					editItemButton disable ] ].
 	self item
 		ifNotNil: [ 
@@ -482,7 +488,7 @@ RMDAbstractRepositoryBrowser >> updateRepositoryList [
 	repository := self repository.
 	repositoryList
 		unselectAll;
-		items: self repositoryDirectory repositories.
+		items: self getRepositories.
 	(repositoryList items includes: repository) ifTrue: [ 
 		repositoryList selectItem: repository ]
 ]

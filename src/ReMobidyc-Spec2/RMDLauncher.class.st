@@ -59,6 +59,12 @@ RMDLauncher class >> remobidycMenuOn: aBuilder [
 		help: 'Open a model launcher'
 ]
 
+{ #category : #private }
+RMDLauncher >> getRepositories [
+
+	^ super getRepositories copyWith: RMDRunsRepository current
+]
+
 { #category : #initialization }
 RMDLauncher >> initializePresenters [
 
@@ -88,7 +94,9 @@ RMDLauncher >> initializePresenters [
 { #category : #operations }
 RMDLauncher >> openInExperimentarium [
 
-	self openInExperimentariumMenu openWithSpecAtPointer
+	self repository isRunsRepository
+		ifTrue: [ self openInExperimentariumOnFile ]
+		ifFalse: [ self openInExperimentariumMenu openWithSpecAtPointer ]
 ]
 
 { #category : #operations }
@@ -123,7 +131,12 @@ RMDLauncher >> openInExperimentariumMenu [
 RMDLauncher >> openInExperimentariumOnFile [
 
 	self load ifNotNil: [ :model | 
-		model interpreterOnFile openInExperimentarium ]
+		self repository isRunsRepository
+			ifTrue: [ 
+				(model
+					 interpreterOnExistingFile: self file / 'run'
+					 modelPath: self file) openInExperimentarium ]
+			ifFalse: [ model interpreterOnFile openInExperimentarium ] ]
 ]
 
 { #category : #operations }
@@ -135,13 +148,19 @@ RMDLauncher >> openInExperimentariumOnMemory [
 
 { #category : #operations }
 RMDLauncher >> openInModeler [
-	self load ifNotNil: #openInModeler 
+
+	self load ifNotNil: [ :model | 
+		self repository isRunsRepository
+			ifTrue: [ model openInModeler ]
+			ifFalse: [ model openInModeler modelFileReference: self file ] ]
 ]
 
 { #category : #operations }
 RMDLauncher >> openInObservatory [
 
-	self openInObservatoryMenu openWithSpecAtPointer
+	self repository isRunsRepository
+		ifTrue: [ self openInObservatoryOnFile ]
+		ifFalse: [ self openInObservatoryMenu openWithSpecAtPointer ]
 ]
 
 { #category : #operations }
@@ -176,7 +195,11 @@ RMDLauncher >> openInObservatoryMenu [
 RMDLauncher >> openInObservatoryOnFile [
 
 	self load ifNotNil: [ :model | 
-		model interpreterOnFile openInObservatory ]
+		self repository isRunsRepository
+			ifTrue: [ 
+				(model interpreterOnExistingFile: self file / 'run' modelPath: self file)
+					openInObservatory ]
+			ifFalse: [ model interpreterOnFile openInObservatory ] ]
 ]
 
 { #category : #operations }

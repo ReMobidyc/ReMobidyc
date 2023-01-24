@@ -205,6 +205,15 @@ RMDExperimentarium >> modelName: aString [
 	self updateWindowTitle
 ]
 
+{ #category : #'instance creation' }
+RMDExperimentarium >> open [
+
+	'Launching an experimentarium'
+		displayProgressFrom: 0
+		to: 1
+		during: [ ^ super open ]
+]
+
 { #category : #private }
 RMDExperimentarium >> patchInspector [
 
@@ -325,9 +334,9 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 		to: self.
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
-	self
-		resetSimulation;
-		updateTimeLabel
+	self resetSimulation.
+	interpreter fastForward.
+	self updateTimeLabel
 ]
 
 { #category : #api }

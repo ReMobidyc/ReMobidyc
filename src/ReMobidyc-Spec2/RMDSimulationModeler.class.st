@@ -289,6 +289,12 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 	self updateWindowTitle
 ]
 
+{ #category : #'instance creation' }
+RMDSimulationModeler >> open [
+
+	Cursor wait showWhile: [ ^ super open ]
+]
+
 { #category : #operations }
 RMDSimulationModeler >> openInExperimentarium [
 
