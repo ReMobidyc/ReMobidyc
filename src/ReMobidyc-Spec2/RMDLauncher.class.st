@@ -3,7 +3,8 @@ Class {
 	#superclass : #RMDRepositoryModelsBrowser,
 	#instVars : [
 		'modelerButton',
-		'experimentariumButton'
+		'experimentariumButton',
+		'observatoryButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -38,6 +39,7 @@ RMDLauncher class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #modelerButton width: self buttonHeight;
 								     add: #experimentariumButton width: self buttonHeight;
+								     add: #observatoryButton width: self buttonHeight;
 								     yourself)
 						    expand: false;
 						    yourself);
@@ -71,6 +73,13 @@ RMDLauncher >> initializePresenters [
 		                         action: [ self openInExperimentarium ];
 		                         help:
 			                         'Run the model in an experimentarium.';
+		                         disable;
+		                         yourself.
+	observatoryButton := self newButton
+		                         icon: self observatoryIcon;
+		                         action: [ self openInObservatory ];
+		                         help:
+			                         'Run the model in an observatory.';
 		                         disable;
 		                         yourself.
 	super initializePresenters
@@ -129,6 +138,54 @@ RMDLauncher >> openInModeler [
 	self load ifNotNil: #openInModeler 
 ]
 
+{ #category : #operations }
+RMDLauncher >> openInObservatory [
+
+	self openInObservatoryMenu openWithSpecAtPointer
+]
+
+{ #category : #operations }
+RMDLauncher >> openInObservatoryForDryRun [
+
+	self load ifNotNil: [ :model | 
+		model interpreterForDryRun openInObservatory ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openInObservatoryMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Dry-run';
+						  action: [ self openInObservatoryForDryRun ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On memory';
+						  action: [ self openInObservatoryOnMemory ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On file';
+						  action: [ self openInObservatoryOnFile ] ] ];
+		  yourself
+]
+
+{ #category : #operations }
+RMDLauncher >> openInObservatoryOnFile [
+
+	self load ifNotNil: [ :model | 
+		model interpreterOnFile openInObservatory ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openInObservatoryOnMemory [
+
+	self load ifNotNil: [ :model | 
+		model interpreterOnMemory openInObservatory ]
+]
+
 { #category : #updating }
 RMDLauncher >> updateButtons [
 
@@ -136,8 +193,10 @@ RMDLauncher >> updateButtons [
 	self item
 		ifNotNil: [ 
 			modelerButton enable.
-			experimentariumButton enable ]
+			experimentariumButton enable.
+			observatoryButton enable ]
 		ifNil: [ 
 			modelerButton disable.
-			experimentariumButton disable ]
+			experimentariumButton disable.
+			observatoryButton disable ]
 ]

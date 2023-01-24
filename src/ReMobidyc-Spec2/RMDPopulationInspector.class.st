@@ -46,7 +46,7 @@ RMDPopulationInspector >> initializePresenters [
 
 	super initializePresenters.
 	populationTable := self newTable
-		                   disable;
+		                   beResizable;
 		                   addColumn:
 			                   (SpStringTableColumn
 				                    title: 'name'
