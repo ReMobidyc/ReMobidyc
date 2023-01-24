@@ -31,7 +31,7 @@ RMDPresenter >> downIcon [
 
 { #category : #icons }
 RMDPresenter >> editIcon [
-	^ Smalltalk ui icons edit
+	^ Smalltalk ui icons iconNamed: #edit
 ]
 
 { #category : #icons }
@@ -67,7 +67,7 @@ RMDPresenter >> initializePresenters [
 { #category : #icons }
 RMDPresenter >> modelerIcon [
 
-	^Smalltalk ui icons iconNamed: #window
+	^Smalltalk ui icons iconNamed: #edit
 ]
 
 { #category : #widgets }
@@ -136,6 +136,41 @@ RMDPresenter >> newSyntaxNodeTextInput [
 { #category : #widgets }
 RMDPresenter >> newValidatedTextInput [
 	^ self instantiate: RMDValidatedTextInputPresenter
+]
+
+{ #category : #icons }
+RMDPresenter >> observatoryIcon [
+
+	| form |
+	form := Form extent: 16 @ 16 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawPolygon: { 
+				(4 @ 2).
+				(0 @ 8).
+				(16 @ 8).
+				(12 @ 2) }
+		color: Color darkGray
+		borderWidth: 0
+		borderColor: Color black;
+		fillOval: (0 @ 6 corner: 8 @ 14)
+		color: (Color cyan mixed: 0.5 with: Color white)
+		borderWidth: 1
+		borderColor: Color darkGray;
+		fillOval: (8 @ 6 corner: 16 @ 14)
+		color: (Color cyan mixed: 0.5 with: Color white)
+		borderWidth: 1
+		borderColor: Color darkGray;
+		line: 8 @ 4
+		to: 8 @ 10
+		width: 1
+		color: Color lightGray;
+		fillOval: (7 @ 4 corner: 9 @ 6)
+		color: Color cyan
+		borderWidth: 0
+		borderColor: Color lightGray;
+		flush.
+	^ form
 ]
 
 { #category : #icons }
@@ -237,6 +272,12 @@ RMDPresenter >> runIcon [
 		borderWidth: 0
 		borderColor: Color darkGray.
 	^ form
+]
+
+{ #category : #icons }
+RMDPresenter >> saveIcon [
+
+	^ (Smalltalk ui icons iconNamed: #smallSave) scaledToSize: 24 @ 24
 ]
 
 { #category : #icons }

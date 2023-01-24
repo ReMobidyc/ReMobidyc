@@ -357,6 +357,12 @@ RMDObservatory >> modelName: aString [
 	self updateWindowTitle
 ]
 
+{ #category : #showing }
+RMDObservatory >> open [
+
+	Cursor wait showWhile: [ ^ super open ]
+]
+
 { #category : #private }
 RMDObservatory >> patchInspector [
 
@@ -518,9 +524,9 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
 	timeSlider quantum: interpreter deltaTime / interpreter duration.
-	self
-		resetSimulation;
-		updateTimeLabel
+	self resetSimulation.
+	interpreter fastForward.
+	self updateTimeLabel
 ]
 
 { #category : #api }

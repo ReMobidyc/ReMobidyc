@@ -12,10 +12,11 @@ Class {
 		'stepButton',
 		'timeLabel',
 		'fpsLabel',
-		'timeSlider',
 		'time',
 		'duration',
-		'lastServerUpdate'
+		'lastServerUpdate',
+		'timeProgressBar',
+		'lastUpdateTime'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -34,12 +35,12 @@ RMDExperimentarium class >> defaultLayout [
 								     add: #fpsLabel expand: false;
 								     yourself);
 						    add:
-						    (SpBoxLayout newHorizontal add: #timeSlider expand: true)
+						    (SpBoxLayout newHorizontal add: #timeProgressBar expand: true)
 						    expand: false;
 						    yourself)
 				   expand: true;
 				   yourself)
-		  height: self buttonHeight + 4;
+		  height: self buttonHeight * 2;
 		  add: #populationInspector;
 		  yourself
 ]
@@ -51,129 +52,9 @@ RMDExperimentarium class >> interpreter: aRMDInterpreter [
 		yourself
 ]
 
-{ #category : #utilities }
-RMDExperimentarium class >> openOnDryRunFromUser [
-
-	<script: 'RMDExperimentarium openOnDryRunFromUser'>
-	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
-		self openOnDryRunOn: repBrowser file ]
-]
-
-{ #category : #'instance creation' }
-RMDExperimentarium class >> openOnDryRunOn: aFileReference [
-
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDDryMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
-]
-
-{ #category : #utilities }
-RMDExperimentarium class >> openOnFileFromUser [
-
-	<script: 'RMDExperimentarium openOnFileFromUser'>
-	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
-		self openOnFileOn: repBrowser file ]
-]
-
-{ #category : #'instance creation' }
-RMDExperimentarium class >> openOnFileOn: aFileReference [
-
-	| memoryRef interpreter |
-	memoryRef := aFileReference / 'memory'.
-	memoryRef isDirectory ifTrue: [ 
-		(UIManager default
-			 confirm:
-			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
-			 label: 'Simulation result exists'
-			 trueChoice: 'Erase & Open'
-			 falseChoice: 'Open'
-			 cancelChoice: 'Cancel'
-			 default: false)
-			ifNil: [ ^ self ]
-			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
-	interpreter := RMDInterpreter new
-		               setMemory:
-			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
-]
-
-{ #category : #utilities }
-RMDExperimentarium class >> openOnMemoryFromUser [
-
-	<script: 'RMDExperimentarium openOnMemoryFromUser'>
-	RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
-		self openOnMemoryOn: repBrowser file ]
-]
-
-{ #category : #'instance creation' }
-RMDExperimentarium class >> openOnMemoryOn: aFileReference [
-
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDOnMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
-]
-
-{ #category : #menus }
-RMDExperimentarium class >> remobidycMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #Experimentarium)
-		parent: 'ReMobidyc';
-		order: 9;
-		label: 'Experimentarium';
-		with: [ 
-			(aBuilder item: #ExperimentariumOnDryRun)
-				parent: 'Experimentarium';
-				order: 1;
-				label: 'Dry-run';
-				action: [ RMDExperimentarium openOnDryRunFromUser ];
-				help: 'Dry-run a model for quick testing'.
-			(aBuilder item: #ObservatoryOnMemory)
-				parent: 'Experimentarium';
-				order: 2;
-				label: 'On memory';
-				action: [ RMDObservatory openOnMemoryFromUser ];
-				help: 'Run a model on memory (for small scale data collection)'.
-			(aBuilder item: #ObservatoryOnFile)
-				parent: 'Experimentarium';
-				order: 3;
-				label: 'On file';
-				action: [ RMDObservatory openOnFileFromUser ];
-				help: 'Run a model and record the simulation results into files' ]
-]
-
 { #category : #examples }
 RMDExperimentarium class >> sugarScape [
-	<script: 'RMDExperimentarium sugarScape openWithSpec'>
+	<script: 'RMDExperimentarium sugarScape open'>
 	^ self interpreter: RMDInterpreter sugarScape
 ]
 
@@ -275,24 +156,9 @@ RMDExperimentarium >> initializePresenters [
 	fpsLabel := self newLabel
 		            label: '';
 		            yourself.
-	timeSlider := self newSlider
-		              min: 0;
-		              max: 1;
-		              value: 0;
-		              whenValueChangedDo: [ 
-			              interpreter ifNotNil: [ 
-					              self isValidated ifTrue: [ 
-							              runButton state ifFalse: [ 
-									              (time / duration - timeSlider value) abs
-									              > 1.0e-8 ifTrue: [ 
-											              [ 
-											              interpreter time: timeSlider value * duration ]
-												              on: RMDSemanticError
-												              do: [ :ex | 
-													              (RMDActionDebugger
-														               on: interpreter
-														               exception: ex) open ] ] ] ] ] ];
-		              yourself.
+	timeProgressBar := self newProgressBar
+		                   fixedAt: 0.0;
+		                   yourself.
 	runButton := self newButton
 		             icon: self runIcon;
 		             action: [ self runState: self runState not ];
@@ -337,6 +203,15 @@ RMDExperimentarium >> modelName: aString [
 
 	modelName := aString.
 	self updateWindowTitle
+]
+
+{ #category : #'instance creation' }
+RMDExperimentarium >> open [
+
+	'Launching an experimentarium'
+		displayProgressFrom: 0
+		to: 1
+		during: [ ^ super open ]
 ]
 
 { #category : #private }
@@ -401,7 +276,6 @@ RMDExperimentarium >> runSimulation [
 		process := [ 
 		           | t |
 		           stepButton enabled: false.
-		           timeSlider enabled: false.
 		           t := DateAndTime now.
 		           [ 
 		           self runState == true and: [ 
@@ -425,11 +299,11 @@ RMDExperimentarium >> runSimulation [
 						            (RMDActionDebugger on: interpreter exception: ex)
 							            open.
 						            false ]) ifFalse: [ self runState: false ] ] ].
+		           self updateTimeLabel.
 		           fpsLabel label: ''.
 		           process := nil.
-		           stepButton enabled: true.
-		           timeSlider enabled: interpreter memory isRewindable ] 
-			           forkAt: Processor userBackgroundPriority ]
+		           stepButton enabled: true ] forkAt:
+			           Processor userBackgroundPriority ]
 ]
 
 { #category : #api }
@@ -454,17 +328,15 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 	interpreter := aRMDInterpreter.
 	self typecheck.
 	populationInspector interpreter: interpreter.
-	timeSlider enabled: interpreter memory isRewindable.
 	interpreter announcer weak
 		when: RMDTimeChanged
 		send: #timeChanged
 		to: self.
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
-	timeSlider quantum: interpreter deltaTime / interpreter duration.
-	self
-		resetSimulation;
-		updateTimeLabel
+	self resetSimulation.
+	interpreter fastForward.
+	self updateTimeLabel
 ]
 
 { #category : #api }
@@ -474,16 +346,23 @@ RMDExperimentarium >> stepSimulation [
 		self runState: false.
 		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
 			1 milliSecond wait ].
-		[interpreter stepSimulation ]
+		[ 
+		interpreter stepSimulation.
+		self updateTimeLabel ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
 RMDExperimentarium >> timeChanged [
-	self
-		informServer;
-		updateTimeLabel
+
+	| now |
+	self informServer.
+	now := DateAndTime now.
+	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
+		ifTrue: [ 
+			lastUpdateTime := now.
+			self updateTimeLabel ]
 ]
 
 { #category : #private }
@@ -507,7 +386,6 @@ RMDExperimentarium >> typecheck [
 		do: [ :ex | 
 			runButton disable.
 			stepButton disable.
-			timeSlider disable.
 			UIManager default alert: ex messageText title: 'Invalid Model'.
 			^ validated := false ]
 ]
@@ -530,7 +408,7 @@ RMDExperimentarium >> updateTimeLabel [
 				 stream nextPutAll: ' ], '.
 				 interpreter ticks printOn: stream.
 				 stream nextPutAll: ' steps.' ]).
-		timeSlider value: time / duration ]
+		timeProgressBar fixedAt: time / duration ]
 ]
 
 { #category : #private }

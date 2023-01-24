@@ -72,12 +72,6 @@ RMDRepositoryIconsBrowser >> getIcon: aString [
 		  repo iconNamed: aString ifAbsent: [ nil ] ]
 ]
 
-{ #category : #initialization }
-RMDRepositoryIconsBrowser >> initializeWindow: aWindowPresenter [
-	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Icons'
-]
-
 { #category : #accessing }
 RMDRepositoryIconsBrowser >> itemsInRepository [
 
@@ -133,6 +127,12 @@ RMDRepositoryIconsBrowser >> save: aForm [
 				   UIManager default confirm:
 					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
 				  ifTrue: [ repo addIcon: aForm named: item ifPresent: [  ] ] ] ]
+]
+
+{ #category : #accessing }
+RMDRepositoryIconsBrowser >> title [
+
+	^ 'Icons'
 ]
 
 { #category : #updating }

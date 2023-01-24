@@ -98,6 +98,12 @@ RMDRepository >> isModifiable [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+RMDRepository >> isRunsRepository [
+
+	^ false
+]
+
 { #category : #'accessing-models' }
 RMDRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 	^ self subclassResponsibility 
@@ -124,6 +130,12 @@ RMDRepository >> models [
 	^ self modelNames
 		  collect: [ :name | self modelNamed: name ifAbsent: [ nil ] ]
 		  thenSelect: #notNil
+]
+
+{ #category : #accessing }
+RMDRepository >> name [
+
+	^ self repositoryName
 ]
 
 { #category : #'accessing-actions' }

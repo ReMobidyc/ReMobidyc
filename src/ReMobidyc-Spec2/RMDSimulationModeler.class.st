@@ -4,13 +4,13 @@ Class {
 	#instVars : [
 		'simulationModel',
 		'views',
-		'runOnMemoryButton',
-		'runOnFileButton',
 		'simulationDefinitionPresenter',
 		'menuBar',
 		'modelFileReference',
 		'metadataPresenter',
-		'runOnDryMemoryButton'
+		'saveButton',
+		'openObservatoryButton',
+		'openExperimentariumButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -21,9 +21,11 @@ RMDSimulationModeler class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
 		  add: (SpBoxLayout newHorizontal
-				   add: #runOnDryMemoryButton;
-				   add: #runOnMemoryButton;
-				   add: #runOnFileButton)
+				   add: #saveButton width: self buttonHeight;
+				   add: '  ' expand: false;
+				   add: #openExperimentariumButton width: self buttonHeight;
+				   add: #openObservatoryButton width: self buttonHeight;
+				   yourself)
 		  height: self buttonHeight;
 		  add: #views yourself;
 		  yourself
@@ -32,7 +34,7 @@ RMDSimulationModeler class >> defaultLayout [
 { #category : #examples }
 RMDSimulationModeler class >> goatAndWolf [
 
-	<script: 'RMDSimulationModeler goatAndWolf openWithSpec'>
+	<script: 'RMDSimulationModeler goatAndWolf open'>
 	^ RMDSimulationModeler on: RMDSimulationModel goatAndWolf
 ]
 
@@ -248,27 +250,21 @@ RMDSimulationModeler >> initializePresenters [
 		         whenPageRemovedDo: [ :page | 
 			         self removeSpeciesNamed: page title ];
 		         yourself.
-	runOnDryMemoryButton := self newButton
-		                        label: 'Dry-run';
-		                        action: [ self openObservatoryOnDryMemory ];
-		                        help:
-			                        'Open an Observatory window for dry-run';
-		                        state: false;
-		                        yourself.
-	runOnMemoryButton := self newButton
-		                     label: 'Run';
-		                     action: [ self openObservatory ];
-		                     help:
-			                     'Open an on-memory Observatory window of this model';
-		                     state: false;
-		                     yourself.
-	runOnFileButton := self newButton
-		                   label: 'Run & Record';
-		                   action: [ self openObservatoryOnFile ];
-		                   help:
-			                   'Open an Observatory window of this model that records the trace into the model directory';
-		                   state: false;
-		                   yourself
+	saveButton := self newButton
+		              icon: self saveIcon;
+		              action: [ self save ];
+		              help: 'Save the model to file';
+		              yourself.
+	openExperimentariumButton := self newButton
+		                         icon: self experimentariumIcon;
+		                         action: [ self openInExperimentarium ];
+		                         help: 'Run the model in an experimentarium';
+		                         yourself.
+	openObservatoryButton := self newButton
+		                     icon: self observatoryIcon;
+		                     action: [ self openInObservatory ];
+		                     help: 'Run the model in an observatory';
+		                     yourself
 ]
 
 { #category : #initialization }
@@ -293,22 +289,69 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 	self updateWindowTitle
 ]
 
-{ #category : #operations }
-RMDSimulationModeler >> openObservatory [
+{ #category : #'instance creation' }
+RMDSimulationModeler >> open [
 
-	^ simulationModel interpreterOnMemory openInObservatory
+	Cursor wait showWhile: [ ^ super open ]
 ]
 
 { #category : #operations }
-RMDSimulationModeler >> openObservatoryOnDryMemory [
+RMDSimulationModeler >> openInExperimentarium [
 
-	simulationModel interpreterForDryRun openInObservatory
+	self openInExperimentariumMenu openWithSpecAtPointer
 ]
 
 { #category : #operations }
-RMDSimulationModeler >> openObservatoryOnFile [
+RMDSimulationModeler >> openInExperimentariumMenu [
 
-	simulationModel interpreterOnFile openInObservatory
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Dry-run';
+						  action: [ 
+							  simulationModel interpreterForDryRun openInExperimentarium ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On memory';
+						  action: [ 
+							  simulationModel interpreterOnMemory openInExperimentarium ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On file';
+						  action: [ 
+							  simulationModel interpreterOnFile openInExperimentarium ] ] ];
+		  yourself
+]
+
+{ #category : #operations }
+RMDSimulationModeler >> openInObservatory [
+
+	self openInObservatoryMenu openWithSpecAtPointer
+]
+
+{ #category : #operations }
+RMDSimulationModeler >> openInObservatoryMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Dry-run';
+						  action: [ 
+							  simulationModel interpreterForDryRun openInObservatory ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On memory';
+						  action: [ 
+							  simulationModel interpreterOnMemory openInObservatory ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'On file';
+						  action: [ simulationModel interpreterOnFile openInObservatory ] ] ];
+		  yourself
 ]
 
 { #category : #private }
@@ -357,6 +400,20 @@ RMDSimulationModeler >> renameStage: aString to: anotherString [
 		^ self ].
 	self simulationModel renameAnimat: aString to: anotherString.
 	self updatePages
+]
+
+{ #category : #operations }
+RMDSimulationModeler >> save [
+
+	modelFileReference ifNil: [ 
+		RMDRepositoryModelsBrowser
+			openForSave: simulationModel
+			do: [ :model :repBrowser | 
+			self modelFileReference: repBrowser file ] ].
+	modelFileReference ifNil: [ ^ self ].
+	simulationModel updateMetadata.
+	metadataPresenter metadataChanged.
+	simulationModel exportModel: modelFileReference
 ]
 
 { #category : #private }
@@ -423,14 +480,11 @@ RMDSimulationModeler >> updatePages [
 							 beCloseable;
 					 yourself ].
 			 stream nextPut:
-				 (SpNotebookPage
-					  title: ''
-					  icon: Smalltalk ui icons add
-					  provider: [ 
-						  RMDAddSpeciesEditor new
-							  action: [ :speciesName :stageName | 
-								  self addAnimatNamed: stageName species: speciesName ];
-							  yourself ]) ]).
+				 (SpNotebookPage title: '' icon: self addIcon provider: [ 
+					  RMDAddSpeciesEditor new
+						  action: [ :speciesName :stageName | 
+							  self addAnimatNamed: stageName species: speciesName ];
+						  yourself ]) ]).
 	selection > 0 ifTrue: [ 
 		views selectPageIndex: (selection min: views pages size) ]
 ]
@@ -444,10 +498,8 @@ RMDSimulationModeler >> updateWindowTitle [
 { #category : #private }
 RMDSimulationModeler >> windowTitle [
 
-	^ 'Modeler' , ((simulationModel ifNotNil: #name ifNil: '')
-		   ifNotEmpty: [ :name | ' @ ' , name ]
-		   ifEmpty: [ 
-			   modelFileReference
-				   ifNil: [ '' ]
-				   ifNotNil: [ ' @ ' , modelFileReference basename ] ])
+	^ 'Modeler'
+	  ,
+		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
+			   ' @ ' , name ])
 ]

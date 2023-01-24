@@ -81,12 +81,6 @@ RMDRepositoryActionsBrowser >> getAction: aString [
 		  repo actionNamed: aString ifAbsent: [ nil ] ]
 ]
 
-{ #category : #initialization }
-RMDRepositoryActionsBrowser >> initializeWindow: aWindowPresenter [
-	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Actions'
-]
-
 { #category : #accessing }
 RMDRepositoryActionsBrowser >> itemsInRepository [
 
@@ -149,6 +143,12 @@ RMDRepositoryActionsBrowser >> save: aRMDActionDefinitionNode [
 						  addAction: aRMDActionDefinitionNode
 						  named: item
 						  ifPresent: [  ] ] ] ]
+]
+
+{ #category : #accessing }
+RMDRepositoryActionsBrowser >> title [
+
+	^ 'Actions'
 ]
 
 { #category : #updating }

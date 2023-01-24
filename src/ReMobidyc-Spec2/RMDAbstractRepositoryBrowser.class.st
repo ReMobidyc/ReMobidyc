@@ -241,6 +241,12 @@ RMDAbstractRepositoryBrowser >> forSave [
 	self isForSave: true
 ]
 
+{ #category : #private }
+RMDAbstractRepositoryBrowser >> getRepositories [
+
+	^ self repositoryDirectory repositories
+]
+
 { #category : #initialization }
 RMDAbstractRepositoryBrowser >> initialize [
 
@@ -326,7 +332,6 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 RMDAbstractRepositoryBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter title: 'Repository Browser'.
 	aWindowPresenter initialExtent: 800 @ 400
 ]
 
@@ -428,6 +433,12 @@ RMDAbstractRepositoryBrowser >> save: anObject [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+RMDAbstractRepositoryBrowser >> title [
+
+	^ 'Repository Browser'
+]
+
 { #category : #updating }
 RMDAbstractRepositoryBrowser >> updateButtons [
 
@@ -447,7 +458,7 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 					editItemButton enabled: self item notNil ]
 				ifFalse: [ 
 					newItemButton disable.
-					removeItemButton disable.
+					removeItemButton enabled: repo isRunsRepository.
 					editItemButton disable ] ].
 	self item
 		ifNotNil: [ 
@@ -477,7 +488,7 @@ RMDAbstractRepositoryBrowser >> updateRepositoryList [
 	repository := self repository.
 	repositoryList
 		unselectAll;
-		items: self repositoryDirectory repositories.
+		items: self getRepositories.
 	(repositoryList items includes: repository) ifTrue: [ 
 		repositoryList selectItem: repository ]
 ]

@@ -14,25 +14,18 @@ Class {
 	#category : #'ReMobidyc-Storage'
 }
 
-{ #category : #accessing }
-RMDFileMemory class >> defaultRunsDirectory [
-
-	^ (FileLocator documents / 'ReMobidyc' / 'runs')
-		  ensureCreateDirectory
-]
-
 { #category : #'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel [
 
 	| modelPath basePath |
 	[ 
-	modelPath := self defaultRunsDirectory
-	            /
-		            ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
-		             , DateAndTime now printString).
+	modelPath := RMDRunsRepository runsDirectory
+	             /
+		             ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
+		              , DateAndTime now printString).
 	basePath := modelPath / aRMDSimulationModel runId.
 	basePath exists ] whileTrue: [ 100 milliSecond wait ].
-	^ (self on: basePath) modelPath: modelPath
+	^ self on: basePath modelPath: modelPath
 ]
 
 { #category : #'instance creation' }
@@ -40,6 +33,12 @@ RMDFileMemory class >> on: aFileReference [
 	^ self new
 		basePath: aFileReference asFileReference;
 		yourself
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> on: basePath modelPath: modelPath [
+
+	^ (self on: basePath) modelPath: modelPath
 ]
 
 { #category : #allocating }
