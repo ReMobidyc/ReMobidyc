@@ -9,7 +9,10 @@ Class {
 		'#modelFileReference => ObservableSlot',
 		'#editingTexts',
 		'#menuBar',
-		'#runOnDryMemoryButton'
+		'#runOnDryMemoryButton',
+		'#openModelerButton',
+		'#saveButton',
+		'#exportButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -20,9 +23,11 @@ RMDModelFileTextBrowser class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: #menuBar height: self toolbarHeight;
 		  add: (SpBoxLayout newHorizontal
-				   add: #runOnDryMemoryButton;
-				   add: #runOnMemoryButton;
-				   add: #runOnFileButton)
+				   add: #saveButton width: self buttonHeight;
+				   add: #exportButton width: self buttonHeight;
+				   add: '  ' expand: false;
+				   add: #openModelerButton width: self buttonHeight;
+				   yourself)
 		  height: self buttonHeight;
 		  add: (SpPanedLayout newHorizontal
 				   add: #fileList;
@@ -93,23 +98,6 @@ RMDModelFileTextBrowser >> agentsFileParser [
 	^ RMDGrammar new agentsFile end
 ]
 
-{ #category : #operations }
-RMDModelFileTextBrowser >> confirmSaveAllFor: aString [
-
-	| answer |
-	editingTexts ifEmpty: [ ^ false ].
-	answer := UIManager default
-		          confirm: 'Save model?'
-		          trueChoice: 'Save&' , aString
-		          falseChoice: aString , ' without save'
-		          cancelChoice: 'Cancel'
-		          default: nil.
-	answer
-		ifTrue: [ self saveAll ]
-		ifFalse: [ editingTexts removeAll ].
-	^ answer
-]
-
 { #category : #menu }
 RMDModelFileTextBrowser >> fileMenu [
 
@@ -172,23 +160,21 @@ RMDModelFileTextBrowser >> initializePresenters [
 						           name: 'File';
 						           subMenu: self fileMenu ] ];
 		           yourself.
-	runOnMemoryButton := self newButton
-		                     label: 'Run';
-		                     action: [ self openObservatory ];
-		                     state: false;
-		                     yourself.
-	runOnDryMemoryButton := self newButton
-		                        label: 'Dry-run';
-		                        action: [ self openObservatoryOnDryMemory ];
-		                        help:
-			                        'Open an Observatory window for dry-run';
-		                        state: false;
-		                        yourself.
-	runOnFileButton := self newButton
-		                   label: 'Run & Record';
-		                   action: [ self openObservatoryOnFile ];
-		                   state: false;
-		                   yourself.
+	saveButton := self newButton
+			icon: self saveIcon;
+			action: [ self saveAll ];
+			help: 'Save the files.';
+			yourself.
+	exportButton := self newButton
+			icon: self exportIcon;
+			action: [ self export ];
+			help: 'Export the model into repository.';
+			yourself.
+	openModelerButton := self newButton 
+			icon: self modelerIcon ;
+			action: [ self openInModeler ];
+			help: 'Open the model in modeler.';
+			yourself.
 	fileList := self newList
 		            display: [ :ref | ref basenameWithoutExtension ];
 		            displayIcon: [ :ref | 
@@ -235,67 +221,10 @@ RMDModelFileTextBrowser >> modelFileReference: aFileReference [
 ]
 
 { #category : #operations }
-RMDModelFileTextBrowser >> openObservatory [
+RMDModelFileTextBrowser >> openInModeler [
 
-	| interpreter |
-	(self confirmSaveAllFor: 'Run') ifNil: [ ^ self ].
-	interpreter := RMDInterpreter new
-		               setMemory: RMDOnMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel: self simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter)
-		  modelName:
-			  (modelFileReference ifNotNil: [ modelFileReference basename ]);
-		  open;
-		  yourself
-]
-
-{ #category : #operations }
-RMDModelFileTextBrowser >> openObservatoryOnDryMemory [
-
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDDryMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel: self simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter) ifValidated: [ 
-		  :observatory | 
-		  observatory
-			  modelName:
-				  (modelFileReference ifNotNil: [ modelFileReference basename ]);
-			  open;
-			  yourself ]
-]
-
-{ #category : #operations }
-RMDModelFileTextBrowser >> openObservatoryOnFile [
-
-	| memoryRef interpreter |
-	(self confirmSaveAllFor: 'Run') ifNil: [ ^ self ].
-	memoryRef := modelFileReference / 'memory'.
-	memoryRef isDirectory ifTrue: [ 
-		(UIManager default
-			 confirm:
-			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
-			 label: 'Simulation result exists'
-			 trueChoice: 'Erase & Open'
-			 falseChoice: 'Open'
-			 cancelChoice: 'Cancel'
-			 default: false)
-			ifNil: [ ^ self ]
-			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
-	interpreter := RMDInterpreter new
-		               setMemory:
-			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
-		               setContext: RMDActionContext new;
-		               simulationModel: self simulationModel;
-		               yourself.
-	^ (RMDObservatory interpreter: interpreter)
-		  modelName: modelFileReference basename;
-		  open;
-		  yourself
+	self simulationModel ifNotNil: [ :model | 
+		model openInModeler modelFileReference: self modelFileReference ]
 ]
 
 { #category : #operations }

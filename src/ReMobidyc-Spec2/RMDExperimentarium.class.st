@@ -52,12 +52,6 @@ RMDExperimentarium class >> interpreter: aRMDInterpreter [
 		yourself
 ]
 
-{ #category : #examples }
-RMDExperimentarium class >> sugarScape [
-	<script: 'RMDExperimentarium sugarScape open'>
-	^ self interpreter: RMDInterpreter sugarScape
-]
-
 { #category : #private }
 RMDExperimentarium >> animatInspector: aString [
 

@@ -10,7 +10,9 @@ Class {
 		'metadataPresenter',
 		'saveButton',
 		'openObservatoryButton',
-		'openExperimentariumButton'
+		'openObservatoryMenuButton',
+		'openExperimentariumButton',
+		'openExperimentariumMenuButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -22,9 +24,12 @@ RMDSimulationModeler class >> defaultLayout [
 		  add: #menuBar height: self toolbarHeight;
 		  add: (SpBoxLayout newHorizontal
 				   add: #saveButton width: self buttonHeight;
-				   add: '  ' expand: false;
-				   add: #openExperimentariumButton width: self buttonHeight;
-				   add: #openObservatoryButton width: self buttonHeight;
+				   addSpace;
+				   addButton: #openExperimentariumButton
+				   dropdownButton: #openExperimentariumMenuButton;
+				   addSpace;
+				   addButton: #openObservatoryButton
+				   dropdownButton: #openObservatoryMenuButton;
 				   yourself)
 		  height: self buttonHeight;
 		  add: #views yourself;
@@ -256,15 +261,33 @@ RMDSimulationModeler >> initializePresenters [
 		              help: 'Save the model to file';
 		              yourself.
 	openExperimentariumButton := self newButton
-		                         icon: self experimentariumIcon;
-		                         action: [ self openInExperimentarium ];
-		                         help: 'Run the model in an experimentarium';
-		                         yourself.
+		                             icon: self experimentariumIcon;
+		                             action: [ 
+			                             simulationModel interpreterOnFile 
+				                             ifNotNil: #openInExperimentarium ];
+		                             help:
+			                             'Run the model in an experimentarium.';
+		                             yourself.
+	openExperimentariumMenuButton := self newButton
+		                                 icon: self dropdownIcon;
+		                                 action: [ 
+			                                 self openInExperimentarium ];
+		                                 help:
+			                                 'Run the model in an experimentarium with selected memory model.';
+		                                 yourself.
 	openObservatoryButton := self newButton
-		                     icon: self observatoryIcon;
-		                     action: [ self openInObservatory ];
-		                     help: 'Run the model in an observatory';
-		                     yourself
+		                         icon: self observatoryIcon;
+		                         action: [ 
+			                         simulationModel interpreterOnFile
+				                         openInObservatory ];
+		                         help: 'Run the model in an observatory.';
+		                         yourself.
+	openObservatoryMenuButton := self newButton
+		                             icon: self dropdownIcon;
+		                             action: [ self openInObservatory ];
+		                             help:
+			                             'Run the model in an observatory with selected memory model.';
+		                             yourself
 ]
 
 { #category : #initialization }
@@ -305,23 +328,27 @@ RMDSimulationModeler >> openInExperimentarium [
 RMDSimulationModeler >> openInExperimentariumMenu [
 
 	^ self newMenu
+		  title: 'Experimentarium';
 		  addGroup: [ :group | 
 			  group
 				  addItem: [ :item | 
 					  item
 						  name: 'Dry-run';
 						  action: [ 
-							  simulationModel interpreterForDryRun openInExperimentarium ] ];
+							  simulationModel interpreterForDryRun ifNotNil:
+									  #openInExperimentarium ] ];
 				  addItem: [ :item | 
 					  item
 						  name: 'On memory';
 						  action: [ 
-							  simulationModel interpreterOnMemory openInExperimentarium ] ];
+							  simulationModel interpreterOnMemory ifNotNil:
+									  #openInExperimentarium ] ];
 				  addItem: [ :item | 
 					  item
 						  name: 'On file';
 						  action: [ 
-							  simulationModel interpreterOnFile openInExperimentarium ] ] ];
+							  simulationModel interpreterOnFile ifNotNil:
+									  #openInExperimentarium ] ] ];
 		  yourself
 ]
 
@@ -341,16 +368,20 @@ RMDSimulationModeler >> openInObservatoryMenu [
 					  item
 						  name: 'Dry-run';
 						  action: [ 
-							  simulationModel interpreterForDryRun openInObservatory ] ];
+							  simulationModel interpreterForDryRun ifNotNil:
+									  #openInObservatory ] ];
 				  addItem: [ :item | 
 					  item
 						  name: 'On memory';
 						  action: [ 
-							  simulationModel interpreterOnMemory openInObservatory ] ];
+							  simulationModel interpreterOnMemory ifNotNil:
+									  #openInObservatory ] ];
 				  addItem: [ :item | 
 					  item
 						  name: 'On file';
-						  action: [ simulationModel interpreterOnFile openInObservatory ] ] ];
+						  action: [ 
+							  simulationModel interpreterOnFile ifNotNil:
+									  #openInObservatory ] ] ];
 		  yourself
 ]
 
