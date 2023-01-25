@@ -62,7 +62,7 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 				| x y |
 				x := aRMDInterpreter my: 'x'.
 				y := aRMDInterpreter my: 'y'.
-				aCanvas paintImage: form at: (self
+				aCanvas translucentImage: form at: (self
 						 pointFromX: x
 						 y: y
 						 interpreter: aRMDInterpreter
