@@ -65,19 +65,8 @@ RMDObservatory class >> openOnDryRunFromUser [
 { #category : #'instance creation' }
 RMDObservatory class >> openOnDryRunOn: aFileReference [
 
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDDryMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
+	(RMDSimulationModel importModel: aFileReference ifError: [ ^ nil ])
+		interpreterForDryRun ifNotNil: #openInObservatory
 ]
 
 { #category : #utilities }
@@ -91,32 +80,8 @@ RMDObservatory class >> openOnFileFromUser [
 { #category : #'instance creation' }
 RMDObservatory class >> openOnFileOn: aFileReference [
 
-	| memoryRef interpreter |
-	memoryRef := aFileReference / 'memory'.
-	memoryRef isDirectory ifTrue: [ 
-		(UIManager default
-			 confirm:
-			 'A simulation result of the model is already stored. Do you want to erase the existing result?'
-			 label: 'Simulation result exists'
-			 trueChoice: 'Erase & Open'
-			 falseChoice: 'Open'
-			 cancelChoice: 'Cancel'
-			 default: false)
-			ifNil: [ ^ self ]
-			ifNotNil: [ :choice | choice ifTrue: [ memoryRef ensureDeleteAll ] ] ].
-	interpreter := RMDInterpreter new
-		               setMemory:
-			               (RMDFileMemory on: memoryRef ensureCreateDirectory);
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
+	(RMDSimulationModel importModel: aFileReference ifError: [ ^ nil ])
+		interpreterOnFile ifNotNil: #openInObservatory
 ]
 
 { #category : #utilities }
@@ -130,19 +95,8 @@ RMDObservatory class >> openOnMemoryFromUser [
 { #category : #'instance creation' }
 RMDObservatory class >> openOnMemoryOn: aFileReference [
 
-	| interpreter |
-	interpreter := RMDInterpreter new
-		               setMemory: RMDOnMemory new;
-		               setContext: RMDActionContext new;
-		               simulationModel:
-			               (RMDSimulationModel
-				                importModel: aFileReference
-				                ifError: [ ^ nil ]);
-		               yourself.
-	^ (self interpreter: interpreter)
-		  modelName: aFileReference basename;
-		  open;
-		  yourself
+	(RMDSimulationModel importModel: aFileReference ifError: [ ^ nil ])
+		interpreterOnMemory ifNotNil: #openInObservatory
 ]
 
 { #category : #menus }
@@ -173,12 +127,6 @@ RMDObservatory class >> remobidycMenuOn: aBuilder [
 				action: [ RMDObservatory openOnFileFromUser ];
 				help:
 					'Run and visualize a model recorded on files' ]
-]
-
-{ #category : #examples }
-RMDObservatory class >> sugarScape [
-	<script: 'RMDObservatory sugarScape openWithSpec'>
-	^ self interpreter: RMDInterpreter sugarScape
 ]
 
 { #category : #private }

@@ -30,6 +30,24 @@ RMDPresenter >> downIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> dropdownIcon [
+
+	| form |
+	form := Form extent: 8 @ 24 depth: 32.
+	form getCanvas
+		fillColor: Color transparent;
+		drawPolygon: { 
+				(1 @ 10).
+				(7 @ 10).
+				(4 @ 14) }
+		color: Color darkGray
+		borderWidth: 0
+		borderColor: Color black;
+		flush.
+	^ form
+]
+
+{ #category : #icons }
 RMDPresenter >> editIcon [
 	^ Smalltalk ui icons iconNamed: #edit
 ]

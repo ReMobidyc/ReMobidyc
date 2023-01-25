@@ -656,59 +656,89 @@ RMDSimulationModel >> initialize [
 { #category : #interpreting }
 RMDSimulationModel >> interpreterForDryRun [
 
+	[ 
+	self typecheck.
 	^ RMDInterpreter new
 		  setMemory: RMDDryMemory new;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself
+		  yourself ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ nil ]
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnExistingFile: basePath modelPath: modelPath [
 
+	[ 
 	| memory |
+	self typecheck.
 	memory := RMDFileMemory on: basePath modelPath: modelPath.
 	^ RMDInterpreter new
 		  setMemory: memory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself
+		  yourself ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ nil ]
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile [
 
+	[ 
 	| memory |
+	self typecheck.
 	memory := RMDFileMemory for: self.
 	self exportModel: memory modelPath.
 	^ RMDInterpreter new
 		  setMemory: memory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself
+		  yourself ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ nil ]
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile: basePath modelPath: modelPath [
 
+	[ 
 	| memory |
+	self typecheck.
 	memory := RMDFileMemory on: basePath modelPath: modelPath.
 	self exportModel: memory modelPath.
 	^ RMDInterpreter new
 		  setMemory: memory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself
+		  yourself ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ nil ]
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnMemory [
 
+	[ 
+	self typecheck.
 	^ RMDInterpreter new
 		  setMemory: RMDOnMemory new;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself
+		  yourself ]
+		on: RMDSemanticError
+		do: [ :ex | 
+			UIManager default alert: ex messageText title: 'Invalid Model'.
+			^ nil ]
 ]
 
 { #category : #accessing }

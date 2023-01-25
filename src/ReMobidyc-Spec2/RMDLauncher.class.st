@@ -3,8 +3,11 @@ Class {
 	#superclass : #RMDRepositoryModelsBrowser,
 	#instVars : [
 		'modelerButton',
+		'observatoryButton',
+		'experimentariumMenuButton',
 		'experimentariumButton',
-		'observatoryButton'
+		'observatoryMenuButton',
+		'modelerMenuButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -37,9 +40,14 @@ RMDLauncher class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: #descriptionText;
 						    add: (SpBoxLayout newHorizontal
-								     add: #modelerButton width: self buttonHeight;
-								     add: #experimentariumButton width: self buttonHeight;
-								     add: #observatoryButton width: self buttonHeight;
+								     addButton: #modelerButton
+								     dropdownButton: #modelerMenuButton;
+								     addSpace;
+								     addButton: #experimentariumButton
+								     dropdownButton: #experimentariumMenuButton;
+								     addSpace;
+								     addButton: #observatoryButton
+								     dropdownButton: #observatoryMenuButton;
 								     yourself)
 						    expand: false;
 						    yourself);
@@ -74,18 +82,38 @@ RMDLauncher >> initializePresenters [
 		                 help: 'Open the model in a modeler.';
 		                 disable;
 		                 yourself.
+	modelerMenuButton := self newButton
+		                     icon: self dropdownIcon;
+		                     action: [ self openModelerMenu ];
+		                     help: 'Open the model in a selected modeler.';
+		                     disable;
+		                     yourself.
 	experimentariumButton := self newButton
 		                         icon: self experimentariumIcon;
-		                         action: [ self openInExperimentarium ];
+		                         action: [ self openInExperimentariumOnFile ];
 		                         help:
 			                         'Run the model in an experimentarium.';
 		                         disable;
 		                         yourself.
+	experimentariumMenuButton := self newButton
+		                             icon: self dropdownIcon;
+		                             action: [ self openInExperimentarium ];
+		                             help:
+			                             'Run the model in an experimentarium with selected memory model.';
+		                             disable;
+		                             yourself.
+
 	observatoryButton := self newButton
-		                         icon: self observatoryIcon;
+		                     icon: self observatoryIcon;
+		                     action: [ self openInObservatoryOnFile ];
+		                     help: 'Run the model in an observatory.';
+		                     disable;
+		                     yourself.
+	observatoryMenuButton := self newButton
+		                         icon: self dropdownIcon;
 		                         action: [ self openInObservatory ];
 		                         help:
-			                         'Run the model in an observatory.';
+			                         'Run the model in an observatory with selected memory model.';
 		                         disable;
 		                         yourself.
 	super initializePresenters
@@ -103,7 +131,7 @@ RMDLauncher >> openInExperimentarium [
 RMDLauncher >> openInExperimentariumForDryRun [
 
 	self load ifNotNil: [ :model | 
-		model interpreterForDryRun openInExperimentarium ]
+		model interpreterForDryRun ifNotNil: #openInExperimentarium ]
 ]
 
 { #category : #operations }
@@ -135,24 +163,29 @@ RMDLauncher >> openInExperimentariumOnFile [
 			ifTrue: [ 
 				(model
 					 interpreterOnExistingFile: self file / 'run'
-					 modelPath: self file) openInExperimentarium ]
-			ifFalse: [ model interpreterOnFile openInExperimentarium ] ]
+					 modelPath: self file) ifNotNil: #openInExperimentarium ]
+			ifFalse: [ 
+			model interpreterOnFile ifNotNil: #openInExperimentarium ] ]
 ]
 
 { #category : #operations }
 RMDLauncher >> openInExperimentariumOnMemory [
 
 	self load ifNotNil: [ :model | 
-		model interpreterOnMemory openInExperimentarium ]
+		model interpreterOnMemory ifNotNil: #openInExperimentarium ]
 ]
 
 { #category : #operations }
 RMDLauncher >> openInModeler [
 
-	self load ifNotNil: [ :model | 
-		self repository isRunsRepository
-			ifTrue: [ model openInModeler ]
-			ifFalse: [ model openInModeler modelFileReference: self file ] ]
+	self load
+		ifNotNil: [ :model | 
+			self repository isRunsRepository
+				ifTrue: [ model openInModeler ]
+				ifFalse: [ model openInModeler modelFileReference: self file ] ]
+		ifNil: [ 
+			self file ifNotNil: [ :fileRef | 
+				(RMDModelFileTextBrowser on: fileRef) open ] ]
 ]
 
 { #category : #operations }
@@ -167,7 +200,7 @@ RMDLauncher >> openInObservatory [
 RMDLauncher >> openInObservatoryForDryRun [
 
 	self load ifNotNil: [ :model | 
-		model interpreterForDryRun openInObservatory ]
+		model interpreterForDryRun ifNotNil: #openInObservatory ]
 ]
 
 { #category : #operations }
@@ -197,16 +230,42 @@ RMDLauncher >> openInObservatoryOnFile [
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository
 			ifTrue: [ 
-				(model interpreterOnExistingFile: self file / 'run' modelPath: self file)
-					openInObservatory ]
-			ifFalse: [ model interpreterOnFile openInObservatory ] ]
+				(model
+					 interpreterOnExistingFile: self file / 'run'
+					 modelPath: self file) ifNotNil: #openInObservatory ]
+			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
 ]
 
 { #category : #operations }
 RMDLauncher >> openInObservatoryOnMemory [
 
 	self load ifNotNil: [ :model | 
-		model interpreterOnMemory openInObservatory ]
+		model interpreterOnMemory ifNotNil: #openInObservatory ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openInTextModeler [
+
+	self repository isRunsRepository ifFalse: [ 
+		self file ifNotNil: [ :fileRef | 
+			(RMDModelFileTextBrowser on: fileRef) open ] ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openModelerMenu [
+
+	^ self newMenu
+		  addGroup: [ :group | 
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Modeler';
+						  action: [ self openInModeler ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'Text-based Modeler';
+						  action: [ self openInTextModeler ] ] ];
+		  openWithSpecAtPointer
 ]
 
 { #category : #initialization }
@@ -221,10 +280,17 @@ RMDLauncher >> updateButtons [
 	self item
 		ifNotNil: [ 
 			modelerButton enable.
+			modelerMenuButton enabled: self repository isRunsRepository not.
 			experimentariumButton enable.
-			observatoryButton enable ]
+			experimentariumMenuButton enabled:
+				self repository isRunsRepository not.
+			observatoryButton enable.
+			observatoryMenuButton enabled: self repository isRunsRepository not ]
 		ifNil: [ 
 			modelerButton disable.
+			modelerMenuButton disable.
 			experimentariumButton disable.
-			observatoryButton disable ]
+			experimentariumMenuButton disable.
+			observatoryButton disable.
+			observatoryMenuButton disable ]
 ]

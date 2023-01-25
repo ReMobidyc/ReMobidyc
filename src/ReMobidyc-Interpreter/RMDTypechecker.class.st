@@ -4,16 +4,6 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
-{ #category : #examples }
-RMDTypechecker class >> sugarScape [
-	<script: 'RMDTypechecker sugarScape inspect'>
-	| typechecker |
-	typechecker := self new
-		simulationModel: RMDSimulationModel sugarScape;
-		yourself.
-	^ typechecker
-]
-
 { #category : #directives }
 RMDTypechecker >> changeStage: animatString [
 
