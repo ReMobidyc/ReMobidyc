@@ -13,13 +13,13 @@ Class {
 		'verbIdentifierField',
 		'objectIdentifierField',
 		'replacementList',
-		'addReplacementButton',
-		'removeReplacementButton',
-		'editReplacementButton',
 		'sourceText',
 		'taskDefinitionNode',
 		'rangeField',
-		'nearestCheckBox'
+		'nearestCheckBox',
+		'addParameterInstantiationButton',
+		'editParameterInstantiationButton',
+		'removeParameterInstantiationButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -61,12 +61,12 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 												       add: 'within ' expand: false;
 												       add: #rangeField width: 100) expand: false)
 								     height: self inputTextHeight;
-								     add: #replacementList;
+								     add: #parameterInstantiationList;
 								     add: (SpBoxLayout newHorizontal
-										      add: #addReplacementButton width: self buttonHeight;
-										      add: #removeReplacementButton
+										      add: #addParameterInstantiationButton width: self buttonHeight;
+										      add: #removeParameterInstantiationButton
 										      width: self buttonHeight;
-										      add: #editReplacementButton width: self buttonHeight;
+										      add: #editParameterInstantiationButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
 								     yourself);
@@ -163,7 +163,7 @@ RMDTaskDefinitionBrowser >> addAction [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionBrowser >> addReplacement [
+RMDTaskDefinitionBrowser >> addParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model | 
 		self taskDefinition ifNotNil: [ :taskDefinition | 
@@ -171,16 +171,16 @@ RMDTaskDefinitionBrowser >> addReplacement [
 				 actionDefinitionAt: taskDefinition actionIdentifier
 				 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 				| bindEditor |
-				(bindEditor := RMDReplacementEditor
+				(bindEditor := RMDParameterInstantiationEditor
 					               actionDefinition: actionDefinition
 					               except:
-					               (taskDefinition attributeBinds collect:
+					               (taskDefinition parameterInstantiations collect:
 						                #placeholder)) openDialog okAction: [ 
-					bindEditor attributeBindNode ifNotNil: [ :bindNode | 
-						taskDefinition attributeBinds:
-							(taskDefinition attributeBinds copyWith: bindNode).
+					bindEditor parameterInstantiationNode ifNotNil: [ :bindNode | 
+						taskDefinition parameterInstantiations:
+							(taskDefinition parameterInstantiations copyWith: bindNode).
 						self
-							updateReplacementList;
+							updateParameterInstantiationList;
 							updateSourceText ] ] ] ] ]
 ]
 
@@ -219,7 +219,7 @@ RMDTaskDefinitionBrowser >> editAction [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionBrowser >> editReplacement [
+RMDTaskDefinitionBrowser >> editParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model | 
 		replacementList selection selectedItem ifNotNil: [ :oldBind | 
@@ -228,25 +228,25 @@ RMDTaskDefinitionBrowser >> editReplacement [
 					 actionDefinitionAt: taskDefinition actionIdentifier
 					 ifAbsent: [ nil ]) ifNotNil: [ :actionDefinition | 
 					| bindEditor |
-					bindEditor := RMDReplacementEditor
+					bindEditor := RMDParameterInstantiationEditor
 						              actionDefinition: actionDefinition
-						              except: (taskDefinition attributeBinds
+						              except: (taskDefinition parameterInstantiations
 								               select: [ :bind | bind ~= oldBind ]
 								               thenCollect: #placeholder).
-					bindEditor attributeBindNode: oldBind.
+					bindEditor parameterInstantiationNode: oldBind.
 					bindEditor openDialog okAction: [ 
-						bindEditor attributeBindNode ifNotNil: [ :newBind | 
+						bindEditor parameterInstantiationNode ifNotNil: [ :newBind | 
 							| index |
-							index := taskDefinition attributeBinds indexOf: oldBind.
+							index := taskDefinition parameterInstantiations indexOf: oldBind.
 							index > 0
 								ifTrue: [ 
-									taskDefinition attributeBinds at: index put: newBind.
+									taskDefinition parameterInstantiations at: index put: newBind.
 									taskDefinition resetAction ]
 								ifFalse: [ 
-									taskDefinition attributeBinds:
-										(taskDefinition attributeBinds copyWith: newBind) ].
+									taskDefinition parameterInstantiations:
+										(taskDefinition parameterInstantiations copyWith: newBind) ].
 							self
-								updateReplacementList;
+								updateParameterInstantiationList;
 								updateSourceText ] ] ] ] ] ]
 ]
 
@@ -292,7 +292,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 							              self updateRangeField ].
 					              self
 						              updateTemplateText;
-						              updateReplacementList;
+						              updateParameterInstantiationList;
 						              updateSourceText ] ];
 		              yourself.
 	importActionButton := self newButton
@@ -380,25 +380,25 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 			                   | selected |
 			                   selected := replacementList selection
 				                               selectedItem notNil.
-			                   removeReplacementButton enabled: selected.
-			                   editReplacementButton enabled: selected ];
+			                   removeParameterInstantiationButton enabled: selected.
+			                   editParameterInstantiationButton enabled: selected ];
 		                   yourself.
-	addReplacementButton := self newButton
+	addParameterInstantiationButton := self newButton
 		                        icon: self addIcon;
-		                        action: [ self addReplacement ];
+		                        action: [ self addParameterInstantiation ];
 		                        help:
 			                        'Add a new replacement rule with a placeholder';
 		                        yourself.
-	removeReplacementButton := self newButton
+	removeParameterInstantiationButton := self newButton
 		                           icon: self removeIcon;
-		                           action: [ self removeReplacement ];
+		                           action: [ self removeParameterInstantiation ];
 		                           help:
 			                           'Remove the selected replacement rule';
 		                           disable;
 		                           yourself.
-	editReplacementButton := self newButton
+	editParameterInstantiationButton := self newButton
 		                         icon: self editIcon;
-		                         action: [ self editReplacement ];
+		                         action: [ self editParameterInstantiation ];
 		                         help: 'Edit the selected replacement rule';
 		                         disable;
 		                         yourself.
@@ -455,14 +455,14 @@ RMDTaskDefinitionBrowser >> removeAction [
 ]
 
 { #category : #operations }
-RMDTaskDefinitionBrowser >> removeReplacement [
+RMDTaskDefinitionBrowser >> removeParameterInstantiation [
 	replacementList selection selectedItem
 		ifNotNil: [ :bind | 
 			self taskDefinition
 				ifNotNil: [ :task | 
-					task attributeBinds: (task attributeBinds copyWithout: bind).
+					task parameterInstantiations: (task parameterInstantiations copyWithout: bind).
 					self
-						updateReplacementList;
+						updateParameterInstantiationList;
 						updateSourceText ] ]
 ]
 
@@ -500,7 +500,7 @@ RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 					 detect: [ :action | actionIdentifier = action identifier ]
 					 ifNone: [ nil ]) ] ].
 	self
-		updateReplacementList;
+		updateParameterInstantiationList;
 		updateTitle
 ]
 
@@ -558,6 +558,14 @@ RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
 ]
 
 { #category : #updating }
+RMDTaskDefinitionBrowser >> updateParameterInstantiationList [
+
+	replacementList items: (self taskDefinition
+			 ifNotNil: [ :taskDefinition | taskDefinition parameterInstantiations ]
+			 ifNil: [ Array new ])
+]
+
+{ #category : #updating }
 RMDTaskDefinitionBrowser >> updateRangeField [
 
 	rangeField text asString trim ifEmpty: [ 
@@ -565,14 +573,6 @@ RMDTaskDefinitionBrowser >> updateRangeField [
 			taskDefinition range
 				ifNotNil: [ :range | rangeField syntaxNode: range ]
 				ifNil: [ rangeField text: '' ] ] ]
-]
-
-{ #category : #updating }
-RMDTaskDefinitionBrowser >> updateReplacementList [
-
-	replacementList items: (self taskDefinition
-			 ifNotNil: [ :taskDefinition | taskDefinition attributeBinds ]
-			 ifNil: [ Array new ])
 ]
 
 { #category : #updating }
@@ -604,7 +604,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
 						 guard: nil
-						 attributeBinds: Array new) ]
+						 parameterInstantiations: Array new) ]
 			ifNotNil: [ :taskDefinition | 
 				taskDefinition actionIdentifier: actionDefinition identifier.
 				(taskDefinition actionWith: simulationModel) object

@@ -160,11 +160,6 @@ RMDSyntaxNode >> isAssignableDifferentialAttributeVariableNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isAttributeBindNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isAttributeDeclarationNode [
 	^ false
 ]
@@ -358,6 +353,11 @@ RMDSyntaxNode >> isNormalDistributionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isParameterInstantiationNode [
 	^ false
 ]
 

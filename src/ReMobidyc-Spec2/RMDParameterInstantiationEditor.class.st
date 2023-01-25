@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDReplacementEditor,
+	#name : #RMDParameterInstantiationEditor,
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'exceptVariableNodes',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDReplacementEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
+RMDParameterInstantiationEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
 	^ self new
 		actionDefinitionNode: aRMDActionDefinitionNode;
 		exceptVariableNodes: aCollectionOfRMDSyntaxNode;
@@ -21,7 +21,7 @@ RMDReplacementEditor class >> actionDefinition: aRMDActionDefinitionNode except:
 ]
 
 { #category : #layout }
-RMDReplacementEditor class >> defaultLayout [
+RMDParameterInstantiationEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -35,18 +35,18 @@ RMDReplacementEditor class >> defaultLayout [
 ]
 
 { #category : #accessing }
-RMDReplacementEditor >> actionDefinitionNode [
+RMDParameterInstantiationEditor >> actionDefinitionNode [
 	^ actionDefinitionNode
 ]
 
 { #category : #accessing }
-RMDReplacementEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
+RMDParameterInstantiationEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	actionDefinitionNode := aRMDActionDefinitionNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDReplacementEditor >> agentDirectiveMenu [
+RMDParameterInstantiationEditor >> agentDirectiveMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -72,40 +72,18 @@ RMDReplacementEditor >> agentDirectiveMenu [
 ]
 
 { #category : #accessing }
-RMDReplacementEditor >> attributeBindNode [
-
-	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
-		  expressionField syntaxNode ifNotNil: [ :replacement | 
-			  RMDAttributeBindNode
-				  placeholder: placeholder
-				  replacement: replacement ] ]
-]
-
-{ #category : #accessing }
-RMDReplacementEditor >> attributeBindNode: aRMDAttributeBindNode [
-
-	aRMDAttributeBindNode
-		ifNotNil: [ 
-			placeholderList selectItem: aRMDAttributeBindNode placeholder.
-			expressionField syntaxNode: aRMDAttributeBindNode replacement ]
-		ifNil: [ 
-			placeholderList selectItem: nil.
-			expressionField text: '' ]
-]
-
-{ #category : #accessing }
-RMDReplacementEditor >> exceptVariableNodes [
+RMDParameterInstantiationEditor >> exceptVariableNodes [
 	^ exceptVariableNodes 
 ]
 
 { #category : #accessing }
-RMDReplacementEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
+RMDParameterInstantiationEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	exceptVariableNodes := aCollectionOfRMDSyntaxNode.
 	self updatePlaceholderDropList
 ]
 
 { #category : #menu }
-RMDReplacementEditor >> expressionFieldMenu [
+RMDParameterInstantiationEditor >> expressionFieldMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
@@ -117,7 +95,7 @@ RMDReplacementEditor >> expressionFieldMenu [
 ]
 
 { #category : #initialization }
-RMDReplacementEditor >> initializePresenters [
+RMDParameterInstantiationEditor >> initializePresenters [
 
 	super initializePresenters.
 	placeholderList := self newDropList
@@ -138,22 +116,44 @@ RMDReplacementEditor >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDReplacementEditor >> initializeWindow: aWindowPresenter [
+RMDParameterInstantiationEditor >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Bindings for Adaptation'.
 	aWindowPresenter
 		initialExtent: 600 @ 150
 ]
 
+{ #category : #accessing }
+RMDParameterInstantiationEditor >> parameterInstantiationNode [
+
+	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
+		  expressionField syntaxNode ifNotNil: [ :replacement | 
+			  RMDParameterInstantiationNode
+				  placeholder: placeholder
+				  replacement: replacement ] ]
+]
+
+{ #category : #accessing }
+RMDParameterInstantiationEditor >> parameterInstantiationNode: aRMDParameterInstantiationNode [
+
+	aRMDParameterInstantiationNode
+		ifNotNil: [ 
+			placeholderList selectItem: aRMDParameterInstantiationNode placeholder.
+			expressionField syntaxNode: aRMDParameterInstantiationNode replacement ]
+		ifNil: [ 
+			placeholderList selectItem: nil.
+			expressionField text: '' ]
+]
+
 { #category : #menu }
-RMDReplacementEditor >> paste: aString [
+RMDParameterInstantiationEditor >> paste: aString [
 
 	Clipboard clipboardText: aString.
 	expressionField withAdapterDo: [ :a | a widget textArea editor paste ]
 ]
 
 { #category : #updating }
-RMDReplacementEditor >> updateExpressionFieldType [
+RMDParameterInstantiationEditor >> updateExpressionFieldType [
 
 	placeholderList selectedItem
 		ifNotNil: [ :placeholder | 
@@ -171,7 +171,7 @@ RMDReplacementEditor >> updateExpressionFieldType [
 ]
 
 { #category : #accessing }
-RMDReplacementEditor >> updatePlaceholderDropList [
+RMDParameterInstantiationEditor >> updatePlaceholderDropList [
 
 	| done |
 	exceptVariableNodes ifNil: [ exceptVariableNodes := Array new ].

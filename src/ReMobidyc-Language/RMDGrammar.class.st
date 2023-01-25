@@ -339,26 +339,6 @@ RMDGrammar >> assignableVariable [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> attributeBind [
-
-	^ self placeholder , '->' asPParser trimBlanks
-	  , (condition / expression)
-	  /
-	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
-	  /
-	  (self stageDirective , '->' asPParser trimBlanks
-	   , self stageDirective) ==> [ :triple | 
-	  self attributeBindNodeClass
-		  placeholder: triple first
-		  replacement: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> attributeBindNodeClass [
-	^ RMDAttributeBindNode
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> attributeDeclaration [
 
 	^ identifier , self type
@@ -972,6 +952,26 @@ RMDGrammar >> numberString [
 	^ self decimalString / self pi
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> parameterInstantiation [
+
+	^ self placeholder , '->' asPParser trimBlanks
+	  , (condition / expression)
+	  /
+	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
+	  /
+	  (self stageDirective , '->' asPParser trimBlanks
+	   , self stageDirective) ==> [ :triple | 
+	  self parameterInstantiationNodeClass
+		  placeholder: triple first
+		  replacement: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> parameterInstantiationNodeClass [
+	^ RMDParameterInstantiationNode
+]
+
 { #category : #'parsers-expressions' }
 RMDGrammar >> parenExpression [
 	^ ($( asPParser , guardedChoice , $) asPParser) ==> #second
@@ -1222,7 +1222,7 @@ RMDGrammar >> taskDefinition [
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
-		   (self attributeBind onlySeparatedBy:
+		   (self parameterInstantiation onlySeparatedBy:
 			    #newline asPParser trimBlanks) ==> #fourth) optional
 	  ,
 	  ($. asPParser trimBlanks , #newline asPParser trimBlanks optional)
@@ -1235,7 +1235,7 @@ RMDGrammar >> taskDefinition [
 			  nearest: quad first third
 			  within: quad first fifth
 			  guard: quad second
-			  attributeBinds: (quad third ifNil: [ Array new ]) ]
+			  parameterInstantiations: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }

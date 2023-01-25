@@ -498,37 +498,6 @@ RMDGrammarTest >> testAssignableDifferentialAttributeVariable [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testAttributeBind [
-
-	| node |
-	node := grammar attributeBind parse: 'the energy -> my sugar'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: 'my sugar').
-	node := grammar attributeBind parse: 'the energy -> 10 [m]'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: '10 [m]').
-	node := grammar attributeBind parse:
-		        'the condition -> my sugar = 0 [kcal]'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'condition'.
-	self
-		assert: node replacement
-		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
-]
-
-{ #category : #tests }
 RMDGrammarTest >> testAttributeDeclaration [
 
 	| declaration |
@@ -1062,6 +1031,37 @@ RMDGrammarTest >> testNormalDistribution [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testParameterInstantiation [
+
+	| node |
+	node := grammar parameterInstantiation parse: 'the energy -> my sugar'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: 'my sugar').
+	node := grammar parameterInstantiation parse: 'the energy -> 10 [m]'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: '10 [m]').
+	node := grammar parameterInstantiation parse:
+		        'the condition -> my sugar = 0 [kcal]'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'condition'.
+	self
+		assert: node replacement
+		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testPatchColorAlphaRenderer [
 
 	| renderer |
@@ -1266,7 +1266,7 @@ where
 	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
-	self assert: node attributeBinds size = 2.
+	self assert: node parameterInstantiations size = 2.
 	node := grammar taskDefinition parse: '
 Wolf eat Goat within 1[m]
 where
@@ -1277,7 +1277,7 @@ where
 	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node attributeBinds size = 1
+	self assert: node parameterInstantiations size = 1
 ]
 
 { #category : #tests }

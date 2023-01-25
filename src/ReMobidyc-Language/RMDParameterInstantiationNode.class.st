@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDAttributeBindNode,
+	#name : #RMDParameterInstantiationNode,
 	#superclass : #RMDSyntaxNode,
 	#instVars : [
 		'placeholder',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAttributeBindNode class >> placeholder: aRMDPlaceholderNode replacement: aRMDSyntaxNode [
+RMDParameterInstantiationNode class >> placeholder: aRMDPlaceholderNode replacement: aRMDSyntaxNode [
 
 	^ self new
 		  placeholder: aRMDPlaceholderNode;
@@ -18,7 +18,7 @@ RMDAttributeBindNode class >> placeholder: aRMDPlaceholderNode replacement: aRMD
 ]
 
 { #category : #comparing }
-RMDAttributeBindNode >> = anObject [
+RMDParameterInstantiationNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  placeholder = anObject placeholder and: [ 
@@ -26,42 +26,42 @@ RMDAttributeBindNode >> = anObject [
 ]
 
 { #category : #enumerating }
-RMDAttributeBindNode >> childrenDo: aBlock [
+RMDParameterInstantiationNode >> childrenDo: aBlock [
 
 	placeholder ifNotNil: [ aBlock value: placeholder ].
 	replacement ifNotNil: [ aBlock value: replacement ]
 ]
 
 { #category : #comparing }
-RMDAttributeBindNode >> hash [
+RMDParameterInstantiationNode >> hash [
 
 	^ (self class hash bitXor: placeholder hash) bitXor: replacement hash
 ]
 
 { #category : #testing }
-RMDAttributeBindNode >> isAttributeBindNode [
+RMDParameterInstantiationNode >> isParameterInstantiationNode [
 	^ true
 ]
 
 { #category : #accessing }
-RMDAttributeBindNode >> placeholder [
+RMDParameterInstantiationNode >> placeholder [
 
 	^ placeholder
 ]
 
 { #category : #accessing }
-RMDAttributeBindNode >> placeholder: aRMDSyntaxNode [
+RMDParameterInstantiationNode >> placeholder: aRMDSyntaxNode [
 
 	placeholder := aRMDSyntaxNode
 ]
 
 { #category : #copying }
-RMDAttributeBindNode >> postCopy [
+RMDParameterInstantiationNode >> postCopy [
 	
 ]
 
 { #category : #printing }
-RMDAttributeBindNode >> printOn: aStream [
+RMDParameterInstantiationNode >> printOn: aStream [
 
 	placeholder printOn: aStream.
 	aStream nextPutAll: ' -> '.
@@ -69,7 +69,7 @@ RMDAttributeBindNode >> printOn: aStream [
 ]
 
 { #category : #printing }
-RMDAttributeBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
+RMDParameterInstantiationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
 	start := aStream position + 1.
@@ -87,19 +87,19 @@ RMDAttributeBindNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNod
 ]
 
 { #category : #rewriting }
-RMDAttributeBindNode >> replaceChildren: aDictionary [
+RMDParameterInstantiationNode >> replaceChildren: aDictionary [
 
 	placeholder := placeholder copyReplace: aDictionary.
 	replacement := replacement copyReplace: aDictionary
 ]
 
 { #category : #accessing }
-RMDAttributeBindNode >> replacement [
+RMDParameterInstantiationNode >> replacement [
 	^ replacement
 ]
 
 { #category : #accessing }
-RMDAttributeBindNode >> replacement: aRMDSyntaxNode [
+RMDParameterInstantiationNode >> replacement: aRMDSyntaxNode [
 
 	replacement := aRMDSyntaxNode
 ]
