@@ -11,7 +11,8 @@ Class {
 		'taskDefinitions',
 		'patchDefinition',
 		'icons',
-		'runId'
+		'runId',
+		'metaParameters'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -650,6 +651,7 @@ RMDSimulationModel >> initialize [
 	super initialize.
 	metadata := RMDMetadata new.
 	runId := 'run'.
+	metaParameters := OrderedDictionary new.
 	self resetDefinitions
 ]
 
@@ -808,6 +810,27 @@ RMDSimulationModel >> patchXDivisions [
 { #category : #'accessing - cells' }
 RMDSimulationModel >> patchYDivisions [
 	^ simulationDefinition patchInitializer yDivisions
+]
+
+{ #category : #copying }
+RMDSimulationModel >> postCopy [
+
+	metadata := metadata copy.
+	simulationDefinition := simulationDefinition copy.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition copy.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: [ :renderer | renderer copy ].
+	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
+		                    assoc key -> assoc value copy ])
+		                   asOrderedDictionary.
+	patchDefinition := patchDefinition copy.
+	icons := icons copy.
+	metaParameters := metaParameters copy
 ]
 
 { #category : #adding }

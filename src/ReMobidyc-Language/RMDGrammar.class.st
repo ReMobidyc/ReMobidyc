@@ -528,7 +528,7 @@ RMDGrammar >> conjunctionNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> deUnitExpressionNode [
+RMDGrammar >> deUnitExpressionNodeClass [
 
 	^ RMDDeUnitExpressionNode
 ]
@@ -623,7 +623,7 @@ RMDGrammar >> distanceDirectiveNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> enUnitExpressionNode [
+RMDGrammar >> enUnitExpressionNodeClass [
 
 	^ RMDEnUnitExpressionNode
 ]
@@ -657,15 +657,15 @@ RMDGrammar >> expr1 [
 			  triple third
 				  ifNil: [ expr ]
 				  ifNotNil: [ :enUnit | 
-				  self enUnitExpressionNode expression: expr unit: enUnit ] ]
+				  self enUnitExpressionNodeClass expression: expr unit: enUnit ] ]
 		  ifNotNil: [ :deUnit | 
 			  triple third
 				  ifNil: [ 
-				  self deUnitExpressionNode expression: expr unit: deUnit ]
+				  self deUnitExpressionNodeClass expression: expr unit: deUnit ]
 				  ifNotNil: [ :enUnit | 
-					  self deUnitExpressionNode
+					  self deUnitExpressionNodeClass
 						  expression:
-						  (self enUnitExpressionNode expression: expr unit: enUnit)
+						  (self enUnitExpressionNodeClass expression: expr unit: enUnit)
 						  unit: deUnit ] ] ]
 ]
 
@@ -869,6 +869,57 @@ RMDGrammar >> logLogisticDistribution [
 RMDGrammar >> logLogisticDistributionNodeClass [
 
 	^ RMDLogLogisticDistributionNode
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaParameterSequence [
+
+	^ self metaSingleParameterSequence / self metaParameterSetSequence
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaParameterSetSequence [
+
+	^ (self placeholder onlySeparatedBy: $, asPParser trimBlanks)
+	  , '->' asPParser trimBlanks , ($( asPParser trimBlanks
+	   , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	   , $) asPParser trimBlanks ==> #second onlySeparatedBy:
+		   $, asPParser trimBlanks) ==> [ :triple | 
+	  | placeholders tupleSequence |
+	  placeholders := triple first.
+	  tupleSequence := triple third.
+	  (tupleSequence allSatisfy: [ :tuple | 
+		   placeholders size = tuple size ])
+		  ifTrue: [ 
+			  self metaParameterSetSequenceNodeClass
+				  placeholders: placeholders
+				  literalTuples: triple third ]
+		  ifFalse: [ 
+			  PP2Failure message:
+				  'The size of each tuple should be equal to the number of parameters' ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> metaParameterSetSequenceNodeClass [
+
+	^ RMDMetaParameterSetSequenceNode
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaSingleParameterSequence [
+
+	^ self placeholder , '->' asPParser trimBlanks
+	  , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	  ==> [ :triple | 
+		  self metaSingleParameterSequenceNodeClass
+			  placeholder: triple first
+			  literals: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> metaSingleParameterSequenceNodeClass [
+
+	^ RMDMetaSingleParameterSequenceNode
 ]
 
 { #category : #'parsers-atoms' }
@@ -1450,6 +1501,37 @@ RMDGrammar >> utilityVariable [
 { #category : #'class access' }
 RMDGrammar >> utilityVariableNodeClass [
 	^ RMDUtilityVariableNode
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> variability [
+
+	^ 'Variability' asPParser trimBlanks
+	  ,
+		  ('with' asPParser , #newline asPParser trimBlanks
+		   ==> [ :pair | nil ]
+		   ,
+			   ('reproduce' asPParser trimBlanks
+			    , 'random' asPParser trimBlanks , self nat
+			    , #newline asPParser trimBlanks ==> #third) optional
+		   ,
+			   (self nat , 'runs' asPParser trimBlanks
+			    , 'each' asPParser trimBlanks , #newline asPParser trimBlanks
+			    ==> #first) optional
+		   , (self metaParameterSequence onlySeparatedBy:
+				    #newline asPParser trimBlanks) optional) optional
+	  , '.' asPParser trimBlanks ==> #second ==> [ :quad | 
+	  quad ifNil: [ self variabilityNodeClass new ] ifNotNil: [ 
+		  self variabilityNodeClass
+			  random: quad second
+			  multiplicity: quad third
+			  metaParameterSequences: quad fourth ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> variabilityNodeClass [
+
+	^ RMDVariabilityNode
 ]
 
 { #category : #'parsers-files' }

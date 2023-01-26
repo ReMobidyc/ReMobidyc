@@ -300,7 +300,7 @@ RMDTaskDefinitionNode >> postCopy [
 	guard := guard ifNotNil: #copy.
 	parameterInstantiations := parameterInstantiations ifNotNil: [ 
 		                 parameterInstantiations collect: #copy ].
-	action := action ifNotNil: #copy
+	action := nil
 ]
 
 { #category : #printing }

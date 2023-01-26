@@ -326,6 +326,24 @@ RMDSyntaxNode >> isLogLogisticDistributionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isMetaParameterSequenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isMetaParameterSetSequenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isMetaSingleParameterSequenceNode [
+
+	^ true
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isMyAttributeVariableNode [
 
 	^ false

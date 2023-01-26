@@ -14,6 +14,16 @@ RMDSyntaxNodeTest class >> isAbstract [
 ]
 
 { #category : #utilities }
+RMDSyntaxNodeTest >> assertPrintString: aString convergeByParser: aParser [
+
+	| node copy |
+	node := aParser parse: aString.
+	node isPetit2Failure ifTrue: [ self fail ].
+	copy := aParser parse: node printString.
+	self assert: copy equals: node
+]
+
+{ #category : #utilities }
 RMDSyntaxNodeTest >> expression: aString [
 	^ parser expression end parse: aString
 ]
