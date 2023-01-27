@@ -1,8 +1,21 @@
 Class {
 	#name : #RMDTypechecker,
 	#superclass : #RMDAbstractInterpreter,
+	#instVars : [
+		'libraries'
+	],
 	#category : #'ReMobidyc-Interpreter'
 }
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> addLibraries: aCollectionOfDictionary [
+	libraries addAll: aCollectionOfDictionary
+]
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> addLibrary: aDictionary [
+	libraries add: aDictionary
+]
 
 { #category : #directives }
 RMDTypechecker >> changeStage: animatString [
@@ -16,6 +29,21 @@ RMDTypechecker >> changeStage: animatString [
 	^ animatString
 ]
 
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> functionAt: aString ifAbsent: errorBlock [
+	libraries
+		do:
+			[ :library | library at: aString ifPresent: [ :function | ^ function ] ].
+	^ errorBlock value
+]
+
+{ #category : #initialization }
+RMDTypechecker >> initialize [
+
+	super initialize.
+	libraries := OrderedCollection with: self standardLibrary
+]
+
 { #category : #directives }
 RMDTypechecker >> newIndividual: animatString [
 
@@ -26,6 +54,11 @@ RMDTypechecker >> newIndividual: animatString [
 		                    ^ RMDUnresolvedReferenceError on: self ].
 	context newDefinition: animatDefinition.
 	^ animatString
+]
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> standardLibrary [
+	^ self class standardLibrary 
 ]
 
 { #category : #'variable access' }
