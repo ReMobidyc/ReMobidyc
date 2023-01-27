@@ -2,13 +2,11 @@ Class {
 	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'modelName',
 		'interpreter',
 		'validated',
 		'runButton',
 		'populationInspector',
 		'process',
-		'visualizer',
 		'stepButton',
 		'timeLabel',
 		'fpsLabel',
@@ -50,57 +48,6 @@ RMDExperimentarium class >> interpreter: aRMDInterpreter [
 	^ self new
 		setInterpreter: aRMDInterpreter;
 		yourself
-]
-
-{ #category : #private }
-RMDExperimentarium >> animatInspector: aString [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDAnimatTabularInspector new
-						   interpreter: interpreter;
-						   animat: aString ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatPercentileInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatHistogramInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatTimeSeriesInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
 ]
 
 { #category : #updating }
@@ -192,13 +139,6 @@ RMDExperimentarium >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
-{ #category : #accessing }
-RMDExperimentarium >> modelName: aString [
-
-	modelName := aString.
-	self updateWindowTitle
-]
-
 { #category : #'instance creation' }
 RMDExperimentarium >> open [
 
@@ -206,50 +146,6 @@ RMDExperimentarium >> open [
 		displayProgressFrom: 0
 		to: 1
 		during: [ ^ super open ]
-]
-
-{ #category : #private }
-RMDExperimentarium >> patchInspector [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDPatchTabularInspector new interpreter: interpreter ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchPercentileInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchHistogramInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchTimeSeriesInspector new
-								    interpreter: interpreter;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
 ]
 
 { #category : #api }
@@ -359,12 +255,6 @@ RMDExperimentarium >> timeChanged [
 			self updateTimeLabel ]
 ]
 
-{ #category : #private }
-RMDExperimentarium >> timeSeriesInspector [
-
-	^ RMDTimeSeriesInspector new interpreter: interpreter
-]
-
 { #category : #api }
 RMDExperimentarium >> toggleRunPauseSimulation [
 	self runState: self runState not
@@ -426,47 +316,4 @@ RMDExperimentarium >> windowTitle [
 				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
 				   ifNil: [ '' ] ]
 		   ifNil: [ '' ])
-]
-
-{ #category : #private }
-RMDExperimentarium >> worldInspector [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDWorldTabularInspector new interpreter: interpreter ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldPercentileInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldHistogramInspector new
-								    interpreter: interpreter updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldTimeSeriesInspector new
-								    interpreter: interpreter;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
 ]

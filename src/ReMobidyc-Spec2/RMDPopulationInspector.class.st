@@ -2,14 +2,14 @@ Class {
 	#name : #RMDPopulationInspector,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'#interpreter => ObservableSlot',
-		'#populationTable',
-		'#populationChart',
-		'#currentPopulation',
-		'#maxPopulation',
-		'#minPopulation',
-		'#lastUpdateTime',
-		'#populationByTime'
+		'interpreter',
+		'populationTable',
+		'populationChart',
+		'currentPopulation',
+		'maxPopulation',
+		'minPopulation',
+		'lastUpdateTime',
+		'populationByTime'
 	],
 	#category : #'ReMobidyc-Spec2-Inspectors'
 }

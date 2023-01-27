@@ -285,6 +285,12 @@ RMDObservatory >> initializeWindow: aWindowPresenter [
 		initialExtent: 1100 @ 600
 ]
 
+{ #category : #accessing }
+RMDObservatory >> interpreter [
+
+	^ interpreter
+]
+
 { #category : #testing }
 RMDObservatory >> isValidated [
 	^ validated = true

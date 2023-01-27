@@ -19,12 +19,10 @@ RMDMetaContext class >> isAbstract [
 { #category : #adding }
 RMDMetaContext >> addSimulationModel: aRMDSimulationModel ifPresent: errorBlock [
 
-	| runId |
-	runId := self nextRunId.
-	aRMDSimulationModel runId: runId.
-	interpreters
-		at: runId
-		put: (self createInterpreterFor: aRMDSimulationModel).
+	aRMDSimulationModel runId: interpreters size + 1.
+	interpreters := interpreters copyWith:
+		                (self createInterpreterFor: aRMDSimulationModel).
+	processes := processes copyWith: nil.
 	^ aRMDSimulationModel
 ]
 
@@ -32,7 +30,7 @@ RMDMetaContext >> addSimulationModel: aRMDSimulationModel ifPresent: errorBlock 
 RMDMetaContext >> anyInterpreterRunning [
 
 	self removeTerminatedProcesses.
-	^ processes notEmpty
+	^ processes anySatisfy: #notNil
 ]
 
 { #category : #private }
@@ -45,32 +43,28 @@ RMDMetaContext >> createInterpreterFor: aRMDSimulationModel [
 RMDMetaContext >> initialize [
 
 	super initialize.
-	processes := Dictionary new.
-	processBarrier := true.
-	lastRunId := 0
+	interpreters := Array new.
+	processes := Array new.
+	processBarrier := true
 ]
 
 { #category : #accessing }
-RMDMetaContext >> interpreterAt: aString ifAbsent: errorBlock [
+RMDMetaContext >> interpreterAt: anInteger ifAbsent: errorBlock [
 
-	^ interpreters at: aString ifAbsent: errorBlock
+	^ interpreters at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #enumerating }
 RMDMetaContext >> interpretersDo: aBlock [
 
-	interpreters valuesDo: aBlock
-]
-
-{ #category : #private }
-RMDMetaContext >> nextRunId [
-	^ lastRunId := lastRunId + 1
+	interpreters do: aBlock
 ]
 
 { #category : #accessing }
-RMDMetaContext >> processAt: aString ifAbsent: errorBlock [
+RMDMetaContext >> processAt: anInteger ifAbsent: errorBlock [
+
 	self removeTerminatedProcesses.
-	^ processes at: aString ifAbsent: errorBlock
+	^ (processes at: anInteger ifAbsent: errorBlock) ifNil: errorBlock
 ]
 
 { #category : #accessing }
@@ -88,27 +82,27 @@ RMDMetaContext >> processBarrier: aBoolean [
 { #category : #private }
 RMDMetaContext >> removeTerminatedProcesses [
 
-	processes keys asArray do: [ :runId | 
-		(processes at: runId) isTerminated ifTrue: [ 
-			processes removeKey: runId ] ]
+	1 to: processes size do: [ :runId | 
+		(processes at: runId) ifNotNil: [ :p | 
+			p isTerminated ifTrue: [ processes at: runId put: nil ] ] ]
+]
+
+{ #category : #accessing }
+RMDMetaContext >> runIdString: anInteger [
+
+	^ 'run' , anInteger printString
 ]
 
 { #category : #enumerating }
 RMDMetaContext >> runIdsDo: aBlock [
 
-	interpreters keysDo: aBlock
-]
-
-{ #category : #enumerating }
-RMDMetaContext >> runningProcessesDo: aBlock [
-
-	self removeTerminatedProcesses.
-	processes valuesDo: aBlock
+	1 to: interpreters size do: aBlock
 ]
 
 { #category : #enumerating }
 RMDMetaContext >> runningRunIdsDo: aBlock [
 
 	self removeTerminatedProcesses.
-	processes keysDo: aBlock
+	1 to: processes size do: [ :runId | 
+	(processes at: runId) ifNotNil: [ aBlock value: runId ] ]
 ]

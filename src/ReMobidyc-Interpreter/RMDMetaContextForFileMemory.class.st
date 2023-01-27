@@ -7,6 +7,14 @@ Class {
 	#category : #'ReMobidyc-Interpreter'
 }
 
+{ #category : #'instance creation' }
+RMDMetaContextForFileMemory class >> modelPath: aFileReference [
+
+	^ self new
+		  modelPath: aFileReference;
+		  yourself
+]
+
 { #category : #private }
 RMDMetaContextForFileMemory >> createInterpreterFor: aRMDSimulationModel [
 

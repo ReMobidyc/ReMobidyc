@@ -658,12 +658,12 @@ RMDSimulationModel >> importVisualization: aFileReference [
 RMDSimulationModel >> initialize [
 
 	super initialize.
-	runId := 'run'.
+	runId := 1.
 	metaParameters := OrderedDictionary new.
 	self resetDefinitions
 ]
 
-{ #category : #rewriting }
+{ #category : #'accessing - meta parameters' }
 RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 
 	^ self shallowCopy metaParameters: aDictionary
@@ -774,7 +774,13 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	^ self error: 'Unknown load'
 ]
 
-{ #category : #rewriting }
+{ #category : #'accessing - meta parameters' }
+RMDSimulationModel >> metaParameters [
+
+	^ metaParameters
+]
+
+{ #category : #'accessing - meta parameters' }
 RMDSimulationModel >> metaParameters: aDictionary [
 
 	aDictionary keysAndValuesDo: [ :key :value | 
@@ -799,6 +805,19 @@ RMDSimulationModel >> metaParameters: aDictionary [
 		                   asOrderedDictionary.
 	patchDefinition := patchDefinition metaParameters: aDictionary.
 	icons := icons copy
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDSimulationModel >> metaParametersString [
+
+	^ String streamContents: [ :stream | 
+		  metaParameters keys
+			  do: [ :placeholder | 
+				  stream
+					  nextPutAll: placeholder identifier;
+					  nextPutAll: '='.
+				  (metaParameters at: placeholder) printOn: stream ]
+			  separatedBy: [ stream nextPutAll: ', ' ] ]
 ]
 
 { #category : #'accessing - metadata' }
@@ -1024,9 +1043,9 @@ RMDSimulationModel >> runId [
 ]
 
 { #category : #accessing }
-RMDSimulationModel >> runId: aString [
+RMDSimulationModel >> runId: anInteger [
 
-	runId := aString
+	runId := anInteger
 ]
 
 { #category : #'accessing - definitions' }
