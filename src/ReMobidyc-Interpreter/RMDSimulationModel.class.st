@@ -12,7 +12,8 @@ Class {
 		'patchDefinition',
 		'icons',
 		'runId',
-		'metaParameters'
+		'metaParameters',
+		'variability'
 	],
 	#category : #'ReMobidyc-Interpreter'
 }
@@ -649,10 +650,15 @@ RMDSimulationModel >> importVisualization: aFileReference [
 RMDSimulationModel >> initialize [
 
 	super initialize.
-	metadata := RMDMetadata new.
 	runId := 'run'.
 	metaParameters := OrderedDictionary new.
 	self resetDefinitions
+]
+
+{ #category : #rewriting }
+RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
+
+	^ self shallowCopy metaParameters: aDictionary
 ]
 
 { #category : #interpreting }
@@ -758,6 +764,33 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isSimulationDefinitionNode
 		ifTrue: [ ^self simulationDefinition: aRMDSyntaxNode ].
 	^ self error: 'Unknown load'
+]
+
+{ #category : #rewriting }
+RMDSimulationModel >> metaParameters: aDictionary [
+
+	aDictionary keysAndValuesDo: [ :key :value | 
+		metaParameters at: key put: value ].
+	simulationDefinition := simulationDefinition metaParameters:
+		                        aDictionary.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaParameters: aDictionary) ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition metaParameters: aDictionary.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaParameters: aDictionary) ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: #copy.
+	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
+		                    assoc key
+		                    -> (assoc value metaParameters: aDictionary) ])
+		                   asOrderedDictionary.
+	patchDefinition := patchDefinition metaParameters: aDictionary.
+	icons := icons copy
 ]
 
 { #category : #'accessing - metadata' }
@@ -924,6 +957,27 @@ RMDSimulationModel >> renderersDo: aBlock [
 	renderers do: aBlock
 ]
 
+{ #category : #rewriting }
+RMDSimulationModel >> replaceChildren: aDictionary [
+
+	metadata := metadata copy.
+	simulationDefinition := simulationDefinition copyReplace: aDictionary.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition copy.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: [ :renderer | renderer copy ].
+	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
+		                    assoc key -> assoc value copy ])
+		                   asOrderedDictionary.
+	patchDefinition := patchDefinition copy.
+	icons := icons copy.
+	metaParameters := metaParameters copy
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
 	| index |
@@ -944,6 +998,7 @@ RMDSimulationModel >> repositoryName [
 RMDSimulationModel >> resetDefinitions [
 
 	metadata := RMDMetadata new.
+	variability := RMDVariabilityNode new.
 	simulationDefinition := RMDSimulationDefinitionNode empty.
 	patchDefinition := RMDPatchDefinitionNode empty.
 	worldDefinition := RMDWorldDefinitionNode empty.

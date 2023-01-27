@@ -199,6 +199,13 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 			            yourself ]
 ]
 
+{ #category : #accessing }
+RMDTaskDefinitionNode >> appendParameterInstantiations: anArrayOfRMDParameterInstantiation [
+
+	parameterInstantiations := parameterInstantiations
+	                           , anArrayOfRMDParameterInstantiation
+]
+
 { #category : #enumerating }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
 
@@ -250,6 +257,18 @@ RMDTaskDefinitionNode >> hash [
 { #category : #testing }
 RMDTaskDefinitionNode >> isTaskDefinitionNode [
 	^ true
+]
+
+{ #category : #rewriting }
+RMDTaskDefinitionNode >> metaParameters: aDictionary [
+
+	^ self copy
+		  appendParameterInstantiations:
+			  (aDictionary associations collect: [ :assoc | 
+					   RMDParameterInstantiationNode
+						   placeholder: assoc key
+						   replacement: assoc value ]);
+		  yourself
 ]
 
 { #category : #accessing }

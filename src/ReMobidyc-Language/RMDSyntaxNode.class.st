@@ -504,6 +504,12 @@ RMDSyntaxNode >> isWorldInitializerNode [
 	^ false
 ]
 
+{ #category : #rewriting }
+RMDSyntaxNode >> metaParameters: aDictionary [
+
+	^ self copyReplace: aDictionary
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> nodesDo: aBlock [
 	aBlock value: self.

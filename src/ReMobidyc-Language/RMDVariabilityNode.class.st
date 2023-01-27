@@ -10,6 +10,24 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDVariabilityNode class >> multiplicity: anInteger metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
+
+	^ self new
+		  multiplicity: anInteger;
+		  metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDVariabilityNode class >> random: anIntegerOrNil metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
+
+	^ self new
+		  randomSeed: anIntegerOrNil;
+		  metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode;
+		  yourself
+]
+
+{ #category : #'instance creation' }
 RMDVariabilityNode class >> random: anIntegerOrNil multiplicity: anInteger metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
 
 	^ self new

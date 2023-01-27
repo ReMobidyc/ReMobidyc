@@ -1513,19 +1513,25 @@ RMDGrammar >> variability [
 		   ,
 			   ('reproduce' asPParser trimBlanks
 			    , 'random' asPParser trimBlanks , self nat
-			    , #newline asPParser trimBlanks ==> #third) optional
-		   ,
-			   (self nat , 'runs' asPParser trimBlanks
-			    , 'each' asPParser trimBlanks , #newline asPParser trimBlanks
-			    ==> #first) optional
+			    , #newline asPParser trimBlanks
+			    ==> [ :quad | #random -> quad third ]
+			    /
+				    (self nat , 'runs' asPParser trimBlanks
+				     , 'each' asPParser trimBlanks , #newline asPParser trimBlanks
+				     ==> [ :quad | #multiplicity -> quad first ])) optional
 		   , (self metaParameterSequence onlySeparatedBy:
 				    #newline asPParser trimBlanks) optional) optional
-	  , '.' asPParser trimBlanks ==> #second ==> [ :quad | 
-	  quad ifNil: [ self variabilityNodeClass new ] ifNotNil: [ 
-		  self variabilityNodeClass
-			  random: quad second
-			  multiplicity: quad third
-			  metaParameterSequences: quad fourth ] ]
+	  , '.' asPParser trimBlanks ==> #second ==> [ :triple | 
+	  triple ifNil: [ self variabilityNodeClass new ] ifNotNil: [ 
+		  triple second key = #random
+			  ifTrue: [ 
+				  self variabilityNodeClass
+					  random: triple second value
+					  metaParameterSequences: triple third ]
+			  ifFalse: [ 
+				  self variabilityNodeClass
+					  multiplicity: triple second value
+					  metaParameterSequences: triple third ] ] ]
 ]
 
 { #category : #'class access' }
