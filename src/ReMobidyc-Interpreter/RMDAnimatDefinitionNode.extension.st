@@ -4,7 +4,7 @@ Extension { #name : #RMDAnimatDefinitionNode }
 RMDAnimatDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context
-		subjectDefinition: (aRMDInterpreter
+		subjectDefinition: (aRMDInterpreter simulationModel
 				 animatDefinitionAt: self identifier
 				 ifAbsent: [ RMDUndefinedAnimatError signal: self identifier ]);
 		loadUtilityDefinitions: utilityDefinitions.

@@ -4,7 +4,7 @@ Extension { #name : #RMDWorldDefinitionNode }
 RMDWorldDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context
-		subjectDefinition: aRMDInterpreter worldDefinition;
+		subjectDefinition: aRMDInterpreter simulationModel worldDefinition;
 		loadUtilityDefinitions: utilityDefinitions.
 	^ super typecheckIn: aRMDInterpreter
 ]

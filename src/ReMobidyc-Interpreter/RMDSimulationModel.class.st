@@ -272,6 +272,14 @@ RMDSimulationModel >> addTaskDefinition: aRMDTaskDefinitionNode [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> agentDefinitionAt: aString ifAbsent: errorBlock [
+
+	aString = 'World' ifTrue: [ ^ self worldDefinition ].
+	aString = 'Patch' ifTrue: [ ^ self patchDefinition ].
+	^ self animatDefinitionAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ animatDefinitions at: aString ifAbsent: errorBlock
 ]

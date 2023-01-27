@@ -457,15 +457,17 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 							  yourself ];
 					  whenRetrievedDo: [ :content | content updateImage ];
 					  title: 'Map').
-			 interpreter worldDefinition allAttributeDeclarations ifNotEmpty: [ 
+			 interpreter simulationModel worldDefinition
+				 allAttributeDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self worldInspector ];
 						  title: 'World') ].
-			 interpreter patchDefinition allAttributeDeclarations ifNotEmpty: [ 
+			 interpreter simulationModel patchDefinition
+				 allAttributeDeclarations ifNotEmpty: [ 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self patchInspector ];
 						  title: 'Patch') ].
-			 interpreter animatNames do: [ :animat | 
+			 interpreter simulationModel animatNames do: [ :animat | 
 				 stream nextPut: (self newNotebookPage
 						  presenterProvider: [ self animatInspector: animat ];
 						  title: animat) ] ]).
@@ -533,11 +535,13 @@ RMDObservatory >> updateTimeLabel [
 				 interpreter simulationModel simulationDefinition timeDefinition 
 					 printOn: stream.
 				 stream nextPutAll: ' - now '.
-				 (interpreter simulationDefinition timeDefinition duration unit 
-					  fromSI: time) printOn: stream showingDecimalPlaces: 3.
+				 (interpreter simulationModel simulationDefinition timeDefinition
+					  duration unit fromSI: time)
+					 printOn: stream
+					 showingDecimalPlaces: 3.
 				 stream nextPutAll: ' [ '.
-				 interpreter simulationDefinition timeDefinition duration unit 
-					 printOn: stream.
+				 interpreter simulationModel simulationDefinition timeDefinition
+					 duration unit printOn: stream.
 				 stream nextPutAll: ' ], '.
 				 interpreter ticks printOn: stream.
 				 stream nextPutAll: ' steps.' ]).

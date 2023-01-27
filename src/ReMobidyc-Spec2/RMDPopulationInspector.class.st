@@ -183,11 +183,11 @@ RMDPopulationInspector >> updatePopulationChart [
 			| xScale yScale minString maxString |
 			xScale := chartWidth
 			          /
-				          (interpreter simulationDefinition timeDefinition
-					           duration numeric
+				          (interpreter simulationModel simulationDefinition
+					           timeDefinition duration numeric
 				           /
-				           interpreter simulationDefinition timeDefinition step
-					           numeric) ceiling.
+					           interpreter simulationModel simulationDefinition
+						           timeDefinition step numeric) ceiling.
 			yScale := chartHeight / (max - min).
 			minString := 'min = ' , min printString.
 			maxString := 'max = ' , max printString.
@@ -227,10 +227,10 @@ RMDPopulationInspector >> updatePopulationChart [
 			| time timeUnit timeString |
 			time := populationByTime size - 1
 			        *
-			        interpreter simulationDefinition timeDefinition step
-				        numeric.
-			timeUnit := interpreter simulationDefinition timeDefinition
-				            duration unit.
+				        interpreter simulationModel simulationDefinition
+					        timeDefinition step numeric.
+			timeUnit := interpreter simulationModel simulationDefinition
+				            timeDefinition duration unit.
 			timeString := ((timeUnit fromSI: time) printShowingDecimalPlaces: 1)
 			              , ' [' , timeUnit printString , ']'.
 			canvas

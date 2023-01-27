@@ -49,7 +49,7 @@ RMDAnimatIconRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
 		         ifAbsent: [ ^ self ]) magnifyBy: scale.
 	animatDefinition := animat isString
 		                    ifTrue: [ 
-			                    aRMDInterpreter
+			                    aRMDInterpreter simulationModel
 				                    animatDefinitionAt: animat
 				                    ifAbsent: [ 
 				                    ^ RMDUndefinedAnimatError signal: animat ] ]

@@ -5,6 +5,7 @@ Trait {
 
 { #category : #enumerating }
 TRMDCellObservatory >> agentDefinitionDo: aBlock [
-	self
-		interpreterDo: [ :interpreter | aBlock cull: interpreter patchDefinition ]
+
+	self interpreterDo: [ :interpreter | 
+		aBlock cull: interpreter simulationModel patchDefinition ]
 ]

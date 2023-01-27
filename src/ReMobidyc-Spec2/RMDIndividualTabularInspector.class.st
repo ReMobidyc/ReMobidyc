@@ -33,17 +33,18 @@ RMDIndividualTabularInspector >> createItem [
 	item at: nil put: interpreter memory time.
 	item at: 'Stage' put: currentAnimat.
 	item at: 'ID' put: currentAgent.
-	(interpreter animatDefinitionAt: currentAnimat ifAbsent: [ nil ]) 
-		ifNotNil: [ :animatDef | 
-			interpreter
-				withObserverContextWithSubject: currentAgent
-				definition: animatDef
-				do: [ 
-					animatDef allAttributeDeclarations do: [ :attDecl | 
-						(interpreter my: attDecl identifier) ifNotNil: [ :val | 
-							item
-								at: attDecl printString
-								put: ((attDecl unit fromSI: val) printShowingDecimalPlaces: 2) ] ] ] ].
+	(interpreter simulationModel
+		 animatDefinitionAt: currentAnimat
+		 ifAbsent: [ nil ]) ifNotNil: [ :animatDef | 
+		interpreter
+			withObserverContextWithSubject: currentAgent
+			definition: animatDef
+			do: [ 
+				animatDef allAttributeDeclarations do: [ :attDecl | 
+					(interpreter my: attDecl identifier) ifNotNil: [ :val | 
+						item
+							at: attDecl printString
+							put: ((attDecl unit fromSI: val) printShowingDecimalPlaces: 2) ] ] ] ].
 	^ item
 ]
 
@@ -129,23 +130,22 @@ RMDIndividualTabularInspector >> updateTableColumns [
 	interpreter ifNotNil: [ 
 		table ifNotNil: [ 
 			currentAnimat ifNotNil: [ 
-				(interpreter animatDefinitionAt: currentAnimat ifAbsent: [ nil ]) 
-					ifNotNil: [ :animatDef | 
-						animatDef allAttributeDeclarations do: [ :attDecl | 
-							| declString |
-							declString := attDecl printString.
-							(table columns contains: [ :column | column title = declString ]) 
-								ifFalse: [ 
-									table addColumn:
-										(SpStringTableColumn
-											 title: declString
-											 evaluated: [ :item | 
-												 (item at: declString ifAbsent: [ nil ])
-													 ifNil: [ '' ]
-													 ifNotNil: [ :val | 
-														 val isNumber
-															 ifTrue: [ val printShowingDecimalPlaces: 2 ]
-															 ifFalse: [ val asString ] ] ]) ] ] ] ] ] ]
+				(interpreter simulationModel
+					 animatDefinitionAt: currentAnimat
+					 ifAbsent: [ nil ]) ifNotNil: [ :animatDef | 
+					animatDef allAttributeDeclarations do: [ :attDecl | 
+						| declString |
+						declString := attDecl printString.
+						(table columns contains: [ :column | column title = declString ]) 
+							ifFalse: [ 
+								table addColumn:
+									(SpStringTableColumn title: declString evaluated: [ :item | 
+										 (item at: declString ifAbsent: [ nil ])
+											 ifNil: [ '' ]
+											 ifNotNil: [ :val | 
+												 val isNumber
+													 ifTrue: [ val printShowingDecimalPlaces: 2 ]
+													 ifFalse: [ val asString ] ] ]) ] ] ] ] ] ]
 ]
 
 { #category : #private }

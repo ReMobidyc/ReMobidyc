@@ -18,19 +18,20 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
-	specializedAction := self actionWith: aRMDInterpreter.
-	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
-	subjectAgent := aRMDInterpreter
+	specializedAction := self actionWith: aRMDInterpreter simulationModel.
+	taskHash := aRMDInterpreter simulationModel taskDefinitions indexOf:
+		            self.
+	subjectAgent := aRMDInterpreter simulationModel
 		                agentDefinitionAt: subjectIdentifier
 		                ifAbsent: [ 
 		                ^ RMDUndefinedAnimatError signal: subjectIdentifier ].
-	objectAgent := aRMDInterpreter
+	objectAgent := aRMDInterpreter simulationModel
 		               animatDefinitionAt: objectIdentifier
 		               ifAbsent: [ 
 		               ^ RMDUndefinedAnimatError signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
-		                    width: aRMDInterpreter north
-		                    height: aRMDInterpreter east
+		                    width: aRMDInterpreter simulationModel north
+		                    height: aRMDInterpreter simulationModel east
 		                    range: range numeric.
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
@@ -67,19 +68,20 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
-	specializedAction := self actionWith: aRMDInterpreter.
-	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
-	subjectAgent := aRMDInterpreter
+	specializedAction := self actionWith: aRMDInterpreter simulationModel.
+	taskHash := aRMDInterpreter simulationModel taskDefinitions indexOf:
+		            self.
+	subjectAgent := aRMDInterpreter simulationModel
 		                agentDefinitionAt: subjectIdentifier
 		                ifAbsent: [ 
 		                ^ RMDUndefinedAnimatError signal: subjectIdentifier ].
-	objectAgent := aRMDInterpreter
+	objectAgent := aRMDInterpreter simulationModel
 		               animatDefinitionAt: objectIdentifier
 		               ifAbsent: [ 
 		               ^ RMDUndefinedAnimatError signal: objectIdentifier ].
 	interactionSpace := RMDInteractionSpace
-		                    width: aRMDInterpreter north
-		                    height: aRMDInterpreter east
+		                    width: aRMDInterpreter simulationModel north
+		                    height: aRMDInterpreter simulationModel east
 		                    range: range numeric.
 	range numeric.
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
@@ -117,12 +119,13 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
 	| agent taskHash specializedAction |
-	agent := aRMDInterpreter
+	agent := aRMDInterpreter simulationModel
 		         agentDefinitionAt: subjectIdentifier
 		         ifAbsent: [ 
 		         ^ RMDUndefinedAnimatError signal: subjectIdentifier ].
-	taskHash := aRMDInterpreter taskDefinitions indexOf: self.
-	specializedAction := self actionWith: aRMDInterpreter.
+	taskHash := aRMDInterpreter simulationModel taskDefinitions indexOf:
+		            self.
+	specializedAction := self actionWith: aRMDInterpreter simulationModel.
 	aRMDInterpreter individualsOf: agent do: [ :animat | 
 		aRMDInterpreter
 			withActionContextWith: specializedAction
@@ -135,7 +138,9 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 
-	[ (self actionWith: aRMDInterpreter) typecheckIn: aRMDInterpreter ]
+	[ 
+	(self actionWith: aRMDInterpreter simulationModel) typecheckIn:
+		aRMDInterpreter ]
 		on: RMDSemanticError
 		do: [ :ex | ex signalWithScope: self ]
 ]

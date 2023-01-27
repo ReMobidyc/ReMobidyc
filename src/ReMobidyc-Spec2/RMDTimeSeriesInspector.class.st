@@ -80,8 +80,8 @@ RMDTimeSeriesInspector >> chartWith: attributeDefinition timeSeries: aDictionary
 		| xScale yScale minString maxString |
 		xScale := chartWidth
 		          /
-		          interpreter simulationDefinition timeDefinition duration
-			          numeric.
+			          interpreter simulationModel simulationDefinition
+				          timeDefinition duration numeric.
 		yScale := chartHeight / (max - min).
 		minString := min printShowingDecimalPlaces: 1.
 		maxString := max printShowingDecimalPlaces: 1.
@@ -187,8 +187,8 @@ RMDTimeSeriesInspector >> chartWith: attributeDefinition timeSeries: aDictionary
 	times size > 1 ifTrue: [ 
 		| time timeUnit timeString |
 		time := times last.
-		timeUnit := interpreter simulationDefinition timeDefinition duration
-			            unit.
+		timeUnit := interpreter simulationModel simulationDefinition
+			            timeDefinition duration unit.
 		timeString := ((timeUnit fromSI: time) printShowingDecimalPlaces: 1)
 		              , ' [' , timeUnit printString , ']'.
 		canvas

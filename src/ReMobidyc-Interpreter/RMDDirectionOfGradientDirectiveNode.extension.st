@@ -19,9 +19,9 @@ RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 			| x y patchX patchY |
 			x := aRMDInterpreter my: 'x'.
 			y := aRMDInterpreter my: 'y'.
-			patchX := aRMDInterpreter patchLength
+			patchX := aRMDInterpreter simulationModel patchLength
 			          * ((aRMDInterpreter patchX: x) floor + 0.5).
-			patchY := aRMDInterpreter patchLength
+			patchY := aRMDInterpreter simulationModel patchLength
 			          * ((aRMDInterpreter patchY: y) floor + 0.5).
 			vector := patchX - x @ (patchY - y) ].
 	^ vector theta ifNanOrInfinite: [ RMDNotComputableError signal: self ]

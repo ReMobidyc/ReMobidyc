@@ -29,15 +29,15 @@ RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 						 type: ex type1
 						 subnode: self
 						 type: ex type2) ] ].
-	animatDefinition := aRMDInterpreter
+	animatDefinition := aRMDInterpreter simulationModel
 		                    animatDefinitionAt: animatIdentifier
 		                    ifAbsent: [ 
 		                    ^ RMDUndefinedAnimatError on: animatIdentifier ].
-	animatDefinition species = aRMDInterpreter context subjectDefinition species 
-		ifFalse: [ 
-			^ RMDSpeciesError
-				  on: self
-				  animatDefinition1: aRMDInterpreter context subjectDefinition
-				  animatDefinition2: animatDefinition ].
+	animatDefinition species
+	= aRMDInterpreter context subjectDefinition species ifFalse: [ 
+		^ RMDSpeciesError
+			  on: self
+			  animatDefinition1: aRMDInterpreter context subjectDefinition
+			  animatDefinition2: animatDefinition ].
 	aRMDInterpreter newIndividual: animatIdentifier
 ]

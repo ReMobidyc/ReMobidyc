@@ -2,8 +2,10 @@ Extension { #name : #RMDUniformDistributionXNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionXNode >> evalIn: aRMDInterpreter [
-	^ (aRMDInterpreter east - aRMDInterpreter west)
-		* aRMDInterpreter random + aRMDInterpreter west
+
+	^ aRMDInterpreter simulationModel east
+	  - aRMDInterpreter simulationModel west * aRMDInterpreter random
+	  + aRMDInterpreter simulationModel west
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

@@ -5,6 +5,7 @@ Trait {
 
 { #category : #enumerating }
 TRMDWorldObservatory >> agentDefinitionDo: aBlock [
-	self
-		interpreterDo: [ :interpreter | aBlock cull: interpreter worldDefinition ]
+
+	self interpreterDo: [ :interpreter | 
+		aBlock cull: interpreter simulationModel worldDefinition ]
 ]

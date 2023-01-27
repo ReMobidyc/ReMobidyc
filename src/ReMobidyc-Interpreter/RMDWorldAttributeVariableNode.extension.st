@@ -9,5 +9,5 @@ RMDWorldAttributeVariableNode >> agentAddressIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDWorldAttributeVariableNode >> agentDefinitionIn: aRMDInterpreter [
 
-	^ aRMDInterpreter worldDefinition
+	^ aRMDInterpreter simulationModel worldDefinition
 ]

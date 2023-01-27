@@ -48,12 +48,6 @@ RMDMetaSingleParameterSequenceNode >> hash [
 	^ (self class hash bitXor: placeholder hash) bitXor: literals hash
 ]
 
-{ #category : #testing }
-RMDMetaSingleParameterSequenceNode >> isMetaSingleParameterSequenceNode [
-
-	^ true
-]
-
 { #category : #accessing }
 RMDMetaSingleParameterSequenceNode >> literalAt: anInteger ifAbsent: errorBlock [
 

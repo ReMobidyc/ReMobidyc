@@ -85,6 +85,12 @@ RMDInterpreter >> changeStage: animatString [
 ]
 
 { #category : #timing }
+RMDInterpreter >> deltaTime [
+
+	^ self simulationModel deltaTime
+]
+
+{ #category : #timing }
 RMDInterpreter >> duration [
 	^ simulationModel duration
 ]
@@ -323,6 +329,18 @@ RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
 ]
 
 { #category : #'space access' }
+RMDInterpreter >> patchX: aNumber [
+
+	^ aNumber - self simulationModel west / simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> patchY: aNumber [
+
+	^ aNumber - self simulationModel south / simulationModel patchLength
+]
+
+{ #category : #'space access' }
 RMDInterpreter >> patchesDo: aBlock [
 
 	memory patchesDo: aBlock
@@ -400,7 +418,8 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 			memory time.
 			(memory seedAt: anInteger1).
 			(memory seedAt: anInteger2).
-			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
+			(self simulationModel taskDefinitions indexOf:
+				 aRMDTaskDefinitionNode) }
 ]
 
 { #category : #'random numbers' }
@@ -410,7 +429,8 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 			globalSeed.
 			memory time.
 			(memory seedAt: anInteger).
-			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
+			(self simulationModel taskDefinitions indexOf:
+				 aRMDTaskDefinitionNode) }
 ]
 
 { #category : #simulating }
@@ -489,7 +509,8 @@ RMDInterpreter >> ticks [
 ]
 
 { #category : #timing }
-RMDInterpreter >> time [ 
+RMDInterpreter >> time [
+
 	^ memory time * self deltaTime
 ]
 

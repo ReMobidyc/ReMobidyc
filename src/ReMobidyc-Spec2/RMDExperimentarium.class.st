@@ -394,11 +394,13 @@ RMDExperimentarium >> updateTimeLabel [
 				 interpreter simulationModel simulationDefinition timeDefinition 
 					 printOn: stream.
 				 stream nextPutAll: ' - now '.
-				 (interpreter simulationDefinition timeDefinition duration unit 
-					  fromSI: time) printOn: stream showingDecimalPlaces: 3.
+				 (interpreter simulationModel simulationDefinition timeDefinition
+					  duration unit fromSI: time)
+					 printOn: stream
+					 showingDecimalPlaces: 3.
 				 stream nextPutAll: ' [ '.
-				 interpreter simulationDefinition timeDefinition duration unit 
-					 printOn: stream.
+				 interpreter simulationModel simulationDefinition timeDefinition
+					 duration unit printOn: stream.
 				 stream nextPutAll: ' ], '.
 				 interpreter ticks printOn: stream.
 				 stream nextPutAll: ' steps.' ]).

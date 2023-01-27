@@ -62,7 +62,7 @@ RMDPatchExpressionRenderer >> initialize [
 RMDPatchExpressionRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
 
 	| patchDef |
-	patchDef := aRMDInterpreter patchDefinition.
+	patchDef := aRMDInterpreter simulationModel patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
 		definition: patchDef

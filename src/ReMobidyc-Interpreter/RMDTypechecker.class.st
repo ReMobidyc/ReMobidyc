@@ -144,13 +144,13 @@ RMDTypechecker >> withSubject: subject object: object do: aBlock [
 	| subjectDefinition objectIdentifier objectDefinition |
 	subject isString
 		ifTrue: [ 
-			subjectDefinition := self
+			subjectDefinition := self simulationModel
 				                     agentDefinitionAt: subject
 				                     ifAbsent: [ nil ] ]
 		ifFalse: [ subjectDefinition := subject ].
 	object isString
 		ifTrue: [ 
-			objectDefinition := self
+			objectDefinition := self simulationModel
 				                    agentDefinitionAt: object
 				                    ifAbsent: [ nil ].
 			objectIdentifier := object ]
@@ -159,8 +159,8 @@ RMDTypechecker >> withSubject: subject object: object do: aBlock [
 			objectIdentifier := object ifNotNil: #identifier ].
 	^ self
 		  withContext: (RMDTypecheckContext new
-				   patchDefinition: self patchDefinition;
-				   worldDefinition: self worldDefinition;
+				   patchDefinition: self simulationModel patchDefinition;
+				   worldDefinition: self simulationModel worldDefinition;
 				   subjectDefinition: subjectDefinition;
 				   object: objectIdentifier definition: objectDefinition;
 				   yourself)
