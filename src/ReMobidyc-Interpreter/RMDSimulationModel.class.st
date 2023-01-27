@@ -799,10 +799,8 @@ RMDSimulationModel >> metaParameters: aDictionary [
 		                      -> (assoc value metaParameters: aDictionary) ])
 		                     asOrderedDictionary.
 	renderers := renderers collect: #copy.
-	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
-		                    assoc key
-		                    -> (assoc value metaParameters: aDictionary) ])
-		                   asOrderedDictionary.
+	taskDefinitions := taskDefinitions collect: [ :def | 
+		                   def metaParameters: aDictionary ].
 	patchDefinition := patchDefinition metaParameters: aDictionary.
 	icons := icons copy
 ]

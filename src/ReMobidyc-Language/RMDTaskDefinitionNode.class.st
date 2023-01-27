@@ -202,8 +202,13 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 { #category : #accessing }
 RMDTaskDefinitionNode >> appendParameterInstantiations: anArrayOfRMDParameterInstantiation [
 
+	| placeholders |
+	placeholders := (parameterInstantiations collect: #placeholder) asSet.
 	parameterInstantiations := parameterInstantiations
-	                           , anArrayOfRMDParameterInstantiation
+	                           ,
+		                           (anArrayOfRMDParameterInstantiation 
+			                            reject: [ :inst | 
+			                            placeholders includes: inst placeholder ])
 ]
 
 { #category : #enumerating }
