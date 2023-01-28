@@ -12,7 +12,7 @@ Class {
 		'attributes',
 		'patchDefinition'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #accessing }

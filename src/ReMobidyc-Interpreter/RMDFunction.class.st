@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDFunction,
 	#superclass : #Object,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Libraries'
 }
 
 { #category : #'typical instances' }

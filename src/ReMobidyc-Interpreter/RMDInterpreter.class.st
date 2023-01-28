@@ -5,9 +5,9 @@ Class {
 		'memory',
 		'libraries',
 		'globalSeed',
-		'worldAttributeDict'
+		'runState'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #'accessing - libraries' }
@@ -20,7 +20,7 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
-{ #category : #simulating }
+{ #category : #private }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -82,6 +82,12 @@ RMDInterpreter >> changeStage: animatString [
 			- 1
 		do: [ :slot | memory nextAt: slot put: nil ].
 	^ newIndividual
+]
+
+{ #category : #private }
+RMDInterpreter >> critical: aBlock [
+
+	runSemaphore critical: aBlock
 ]
 
 { #category : #timing }
@@ -149,8 +155,9 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 { #category : #simulating }
 RMDInterpreter >> fastForward [
 
-	memory time: memory latestTime.
-	self timeChanged
+	self critical: [ 
+		memory time: memory latestTime.
+		self timeChanged ]
 ]
 
 { #category : #'accessing - libraries' }
@@ -219,6 +226,12 @@ RMDInterpreter >> initialize [
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary.
 	globalSeed := 1
+]
+
+{ #category : #accessing }
+RMDInterpreter >> kindName [
+
+	^ 'interpreter'
 ]
 
 { #category : #private }
@@ -346,7 +359,7 @@ RMDInterpreter >> patchesDo: aBlock [
 	memory patchesDo: aBlock
 ]
 
-{ #category : #simulating }
+{ #category : #private }
 RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
 ]
@@ -375,7 +388,7 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
 ]
 
-{ #category : #simulating }
+{ #category : #private }
 RMDInterpreter >> removeOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -403,6 +416,32 @@ RMDInterpreter >> repositoryName [
 { #category : #'accessing - definitions' }
 RMDInterpreter >> resetTasks [
 	simulationModel tasksDo: [ :task | task resetAction ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> rewind [
+
+	self critical: [ 
+		memory time: 0.
+		self timeChanged ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> runSimulation [
+	
+]
+
+{ #category : #simulating }
+RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
+
+	runState := true.
+	[ 
+	self critical: [ 
+		[ 
+		[ [ runState = true and: [ self stepSimulation ] ] whileTrue ]
+			on: RMDSemanticError
+			do: errorHandlerBlock ] ensure: [ runState := false ] ] ] forkAt:
+		Processor userBackgroundPriority
 ]
 
 { #category : #private }
@@ -436,14 +475,21 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 
-	memory world ifNil: [ 
-		memory initialize.
-		simulationModel worldInitializer evalIn: self.
-		simulationModel patchInitializer evalIn: self.
-		simulationModel animatInitializersDo: [ :initializer | 
-			initializer evalIn: self ] ].
-	memory time: 0.
-	self timeChanged
+	self critical: [ 
+		memory world ifNil: [ 
+			memory initialize.
+			simulationModel worldInitializer evalIn: self.
+			simulationModel patchInitializer evalIn: self.
+			simulationModel animatInitializersDo: [ :initializer | 
+				initializer evalIn: self ] ].
+		memory time: 0.
+		self timeChanged ]
+]
+
+{ #category : #accessing }
+RMDInterpreter >> shortName [
+
+	^ self metaParameterString
 ]
 
 { #category : #'variable access' }
@@ -468,14 +514,31 @@ RMDInterpreter >> standardLibrary [
 
 { #category : #simulating }
 RMDInterpreter >> stepSimulation [
-	^ self time < simulationModel duration
-		and: [ memory time + 1 <= memory latestTime
-				ifTrue: [ memory time: memory time + 1 ]
-				ifFalse: [ self performTasks.
-					self tick.
-					self bounceOutOfBoundsAnimats ].
-			self timeChanged.
-			true ]
+
+	self critical: [ 
+		^ self time < simulationModel duration and: [ 
+			  memory time + 1 <= memory latestTime
+				  ifTrue: [ memory time: memory time + 1 ]
+				  ifFalse: [ 
+					  self performTasks.
+					  self tick.
+					  self bounceOutOfBoundsAnimats ].
+			  self timeChanged.
+			  true ] ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> stepSimulationSilently [
+
+	self critical: [ 
+		^ self time < simulationModel duration and: [ 
+			  memory time + 1 <= memory latestTime
+				  ifTrue: [ memory time: memory time + 1 ]
+				  ifFalse: [ 
+					  self performTasks.
+					  self tick.
+					  self bounceOutOfBoundsAnimats ].
+			  true ] ]
 ]
 
 { #category : #'animat operations' }
@@ -530,9 +593,17 @@ RMDInterpreter >> time: aNumber [
 	self timeChanged
 ]
 
-{ #category : #simulating }
+{ #category : #announcement }
 RMDInterpreter >> timeChanged [
-	self announcer announce: (RMDTimeChanged time: self time)
+
+	self announcer announce:
+		(RMDTimeChanged interpreter: self time: self time)
+]
+
+{ #category : #simulating }
+RMDInterpreter >> typecheck [
+
+	self critical: [ simulationModel typecheck ]
 ]
 
 { #category : #'variable access' }

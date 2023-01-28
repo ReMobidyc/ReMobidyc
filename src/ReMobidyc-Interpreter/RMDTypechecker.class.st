@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'libraries'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #'accessing - libraries' }
@@ -42,6 +42,12 @@ RMDTypechecker >> initialize [
 
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary
+]
+
+{ #category : #accessing }
+RMDTypechecker >> kindName [
+
+	^ 'type checker'
 ]
 
 { #category : #directives }

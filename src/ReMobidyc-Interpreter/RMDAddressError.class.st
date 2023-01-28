@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'address'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #'instance creation' }

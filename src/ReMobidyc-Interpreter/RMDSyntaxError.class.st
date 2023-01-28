@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'failure'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #signalling }

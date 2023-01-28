@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDUndefinedDirectiveError,
 	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #private }

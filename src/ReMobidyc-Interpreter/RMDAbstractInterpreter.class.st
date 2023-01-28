@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'simulationModel',
 		'context',
-		'contextSemaphore'
+		'runSemaphore'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #'library access' }
@@ -40,7 +40,13 @@ RMDAbstractInterpreter >> context [
 RMDAbstractInterpreter >> initialize [
 	super initialize.
 	simulationModel := RMDSimulationModel new.
-	contextSemaphore := Semaphore forMutualExclusion
+	runSemaphore := Semaphore forMutualExclusion
+]
+
+{ #category : #accessing }
+RMDAbstractInterpreter >> kindName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing - definitions' }
@@ -48,9 +54,42 @@ RMDAbstractInterpreter >> load: aRMDSyntaxNode [
 	simulationModel load: aRMDSyntaxNode
 ]
 
+{ #category : #accessing }
+RMDAbstractInterpreter >> metaParameterString [
+
+	^ simulationModel
+		  ifNotNil: [ simulationModel metaParametersString ]
+		  ifNil: [ '' ]
+]
+
+{ #category : #accessing }
+RMDAbstractInterpreter >> modelName [
+
+	^ simulationModel ifNotNil: #name ifNil: [ '' ]
+]
+
+{ #category : #accessing }
+RMDAbstractInterpreter >> name [
+
+	^ String streamContents: [ :stream | 
+		  stream
+			  nextPutAll: self kindName;
+			  nextPutAll: ':';
+			  nextPutAll: self modelName;
+			  nextPutAll: '[';
+			  nextPutAll: self metaParameterString;
+			  nextPutAll: ']' ]
+]
+
 { #category : #private }
 RMDAbstractInterpreter >> setContext: aRMDContext [
 	context := aRMDContext
+]
+
+{ #category : #accessing }
+RMDAbstractInterpreter >> shortName [
+
+	^ self modelName
 ]
 
 { #category : #'accessing - definitions' }
@@ -66,11 +105,11 @@ RMDAbstractInterpreter >> simulationModel: aRMDSimulationModel [
 { #category : #'context controls' }
 RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 
-	^ contextSemaphore critical: [ 
-		  | originalContext |
-		  originalContext := context.
-		  self setContext: aRMDContext.
-		  aBlock ensure: [ context := originalContext ] ]
+	| originalContext |
+	originalContext := context.
+	self setContext: aRMDContext.
+	^ [ aBlock cull: self cull: context ] ensure: [ 
+		  context := originalContext ]
 ]
 
 { #category : #'context controls' }

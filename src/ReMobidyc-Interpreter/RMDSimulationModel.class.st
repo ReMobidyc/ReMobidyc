@@ -15,7 +15,7 @@ Class {
 		'metaParameters',
 		'variability'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #accessing }

@@ -51,7 +51,7 @@ RMDAgentInspector >> interpreter: aRMDInterpreter [
 	interpreter := aRMDInterpreter.
 	interpreter announcer weak
 		when: RMDTimeChanged
-		send: #updateObservation
+		send: #timeChanged:
 		to: self
 ]
 
@@ -64,6 +64,11 @@ RMDAgentInspector >> interpreterDo: aBlock [
 RMDAgentInspector >> spawnIcon [
 
 	^ Smalltalk ui iconNamed: #expandBox
+]
+
+{ #category : #private }
+RMDAgentInspector >> timeChanged: aRMDTimeChanged [
+	self updateObservation
 ]
 
 { #category : #private }

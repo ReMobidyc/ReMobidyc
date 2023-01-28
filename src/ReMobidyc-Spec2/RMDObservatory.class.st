@@ -452,7 +452,7 @@ RMDObservatory >> setInterpreter: aRMDInterpreter [
 	timeSlider enabled: interpreter memory isRewindable.
 	interpreter announcer weak
 		when: RMDTimeChanged
-		send: #timeChanged
+		send: #timeChanged:
 		to: self.
 	views pages: (Array streamContents: [ :stream | 
 			 stream nextPut: (self newNotebookPage
@@ -498,7 +498,7 @@ RMDObservatory >> stepSimulation [
 ]
 
 { #category : #updating }
-RMDObservatory >> timeChanged [
+RMDObservatory >> timeChanged: aRMDTimeChanged [
 	self
 		informServer;
 		updateTimeLabel
@@ -519,7 +519,7 @@ RMDObservatory >> toggleRunPauseSimulation [
 RMDObservatory >> typecheck [
 
 	[ 
-	interpreter simulationModel typecheck.
+	interpreter typecheck.
 	^ validated := true ]
 		on: RMDSemanticError
 		do: [ :ex | 

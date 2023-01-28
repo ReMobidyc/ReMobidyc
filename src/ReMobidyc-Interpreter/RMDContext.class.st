@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDContext,
 	#superclass : #Object,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #private }

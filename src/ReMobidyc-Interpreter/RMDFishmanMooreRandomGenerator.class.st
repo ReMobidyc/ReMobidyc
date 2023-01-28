@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'seed'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Utilities'
 }
 
 { #category : #accessing }

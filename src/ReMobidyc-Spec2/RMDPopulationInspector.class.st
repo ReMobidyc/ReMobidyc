@@ -85,7 +85,7 @@ RMDPopulationInspector >> interpreter: aRMDInterpreter [
 	self updateTableItems.
 	interpreter announcer weak
 		when: RMDTimeChanged
-		send: #updateObservation
+		send: #timeChanged:
 		to: self
 ]
 
@@ -118,6 +118,12 @@ RMDPopulationInspector >> printNat: anInteger [
 { #category : #accessing }
 RMDPopulationInspector >> stagePrefix [
 	^ '  '
+]
+
+{ #category : #updating }
+RMDPopulationInspector >> timeChanged: aRMDTimeChanged [
+
+	self updateObservation
 ]
 
 { #category : #updating }

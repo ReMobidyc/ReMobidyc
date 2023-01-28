@@ -5,7 +5,7 @@ Class {
 		'animatDefinition1',
 		'animatDefinition2'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #'instance creation' }

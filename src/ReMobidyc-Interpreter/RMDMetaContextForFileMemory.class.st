@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'modelPath'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #'instance creation' }

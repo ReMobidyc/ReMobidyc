@@ -7,7 +7,7 @@ Class {
 		'processBarrier',
 		'lastRunId'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #testing }

@@ -220,7 +220,7 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 	populationInspector interpreter: interpreter.
 	interpreter announcer weak
 		when: RMDTimeChanged
-		send: #timeChanged
+		send: #timeChanged:
 		to: self.
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
@@ -244,7 +244,7 @@ RMDExperimentarium >> stepSimulation [
 ]
 
 { #category : #updating }
-RMDExperimentarium >> timeChanged [
+RMDExperimentarium >> timeChanged: anAnnouncement [
 
 	| now |
 	self informServer.
@@ -264,7 +264,7 @@ RMDExperimentarium >> toggleRunPauseSimulation [
 RMDExperimentarium >> typecheck [
 
 	[ 
-	interpreter simulationModel typecheck.
+	interpreter typecheck.
 	^ validated := true ]
 		on: RMDSemanticError
 		do: [ :ex | 

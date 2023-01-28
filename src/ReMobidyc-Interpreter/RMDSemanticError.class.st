@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'node'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #testing }

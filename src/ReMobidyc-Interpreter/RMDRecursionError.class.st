@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDRecursionError,
 	#superclass : #RMDSemanticError,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #private }

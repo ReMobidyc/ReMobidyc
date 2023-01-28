@@ -5,7 +5,7 @@ Class {
 		'type1',
 		'type2'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #'instance creation' }

@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDUnresolvedReferenceError,
 	#superclass : #RMDSemanticError,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
