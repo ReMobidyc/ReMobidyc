@@ -249,6 +249,12 @@ RMDInterpreter >> initialize [
 	globalSeed := 1
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> isRunningSimulation [
+
+	^ runState
+]
+
 { #category : #accessing }
 RMDInterpreter >> kindName [
 

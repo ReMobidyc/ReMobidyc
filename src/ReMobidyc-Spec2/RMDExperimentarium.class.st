@@ -6,7 +6,6 @@ Class {
 		'validated',
 		'runButton',
 		'populationInspector',
-		'process',
 		'stepButton',
 		'timeLabel',
 		'fpsLabel',
@@ -14,7 +13,8 @@ Class {
 		'duration',
 		'lastServerUpdate',
 		'timeProgressBar',
-		'lastUpdateTime'
+		'lastUpdateTime',
+		'lastTimeChanged'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -61,12 +61,6 @@ RMDExperimentarium >> basicInformServer [
 			from: self ]
 ]
 
-{ #category : #api }
-RMDExperimentarium >> forceKill [
-	self runState: false.
-	process ifNotNil: #terminate
-]
-
 { #category : #controlling }
 RMDExperimentarium >> ifValidated: aBlock [
 
@@ -102,11 +96,9 @@ RMDExperimentarium >> initializePresenters [
 		                   yourself.
 	runButton := self newButton
 		             icon: self runIcon;
-		             action: [ self runState: self runState not ];
+		             action: [ self runButtonPressed ];
 		             help: 'Run the simulation to the end';
 		             state: false;
-		             whenStateChangedDo: [ :state | 
-			             state == true ifTrue: [ self runSimulation ] ];
 		             yourself.
 	stepButton := self newButton
 		              icon: self stepIcon;
@@ -126,6 +118,12 @@ RMDExperimentarium >> initializeWindow: aWindowPresenter [
 		initialExtent: 700 @ 400
 ]
 
+{ #category : #api }
+RMDExperimentarium >> isRunningSimulation [
+
+	^ interpreter isRunningSimulation
+]
+
 { #category : #testing }
 RMDExperimentarium >> isValidated [
 	^ validated = true
@@ -139,13 +137,10 @@ RMDExperimentarium >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
-{ #category : #'instance creation' }
-RMDExperimentarium >> open [
+{ #category : #api }
+RMDExperimentarium >> pauseSimulation [
 
-	'Launching an experimentarium'
-		displayProgressFrom: 0
-		to: 1
-		during: [ ^ super open ]
+	interpreter pauseSimulation
 ]
 
 { #category : #api }
@@ -153,57 +148,20 @@ RMDExperimentarium >> progress [
 	^ time / duration
 ]
 
-{ #category : #api }
-RMDExperimentarium >> resetSimulation [
+{ #category : #updating }
+RMDExperimentarium >> runButtonPressed [
 
-	self isValidated ifTrue: [ interpreter setupSimulation ]
+	interpreter isRunningSimulation
+		ifTrue: [ self pauseSimulation ]
+		ifFalse: [ self runSimulation ]
 ]
 
 { #category : #api }
 RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
-		process := [ 
-		           | t |
-		           stepButton enabled: false.
-		           t := DateAndTime now.
-		           [ 
-		           self runState == true and: [ 
-			           self adapter notNil and: [ 
-				           self adapter widget notNil and: [ 
-					           self adapter widget world notNil ] ] ] ] whileTrue: [ 
-			           interpreter ifNotNil: [ 
-				           ([ 
-				            | t0 msec result |
-				            result := interpreter stepSimulation.
-				            t0 := DateAndTime now.
-				            msec := (t0 - t) asMilliSeconds.
-				            msec > 1.0 ifTrue: [ 
-					            fpsLabel label:
-						            ' (' , (1000.0 / msec printShowingDecimalPlaces: 3)
-						            , ' fps)' ].
-				            t := t0.
-				            result ]
-					            on: RMDSemanticError
-					            do: [ :ex | 
-						            (RMDActionDebugger on: interpreter exception: ex)
-							            open.
-						            false ]) ifFalse: [ self runState: false ] ] ].
-		           self updateTimeLabel.
-		           fpsLabel label: ''.
-		           process := nil.
-		           stepButton enabled: true ] forkAt:
-			           Processor userBackgroundPriority ]
-]
-
-{ #category : #api }
-RMDExperimentarium >> runState [
-	^ runButton state == true
-]
-
-{ #category : #api }
-RMDExperimentarium >> runState: aBoolean [
-	runButton state: aBoolean = true
+		interpreter runSimulationOnError: [ :ex | 
+			(RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #accessing }
@@ -219,26 +177,40 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 	self typecheck.
 	populationInspector interpreter: interpreter.
 	interpreter announcer weak
-		when: RMDTimeChanged
-		send: #timeChanged:
-		to: self.
+		when: RMDSimulationStarted send: #simulationStarted: to: self;
+		when: RMDTimeChanged send: #timeChanged: to: self;
+		when: RMDSimulationPaused send: #simulationPaused: to: self.
 	duration := interpreter simulationModel simulationDefinition
 		            timeDefinition duration evalIn: interpreter.
-	self resetSimulation.
-	interpreter fastForward.
-	self updateTimeLabel
+	self isValidated ifTrue: [ 
+		interpreter
+			setupSimulation;
+			fastForward ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
+
+	runButton state: false.
+	stepButton enable.
+	self updateFpsLabel.
+	self updateTimeLabel.
+	lastUpdateTime := nil
+]
+
+{ #category : #updating }
+RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
+
+	runButton state: true.
+	stepButton disable.
+	lastTimeChanged := DateAndTime now
 ]
 
 { #category : #api }
 RMDExperimentarium >> stepSimulation [
 
 	self isValidated ifTrue: [ 
-		self runState: false.
-		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
-			1 milliSecond wait ].
-		[ 
-		interpreter stepSimulation.
-		self updateTimeLabel ]
+		[ interpreter stepSimulation ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
@@ -248,16 +220,12 @@ RMDExperimentarium >> timeChanged: anAnnouncement [
 
 	| now |
 	self informServer.
+	self updateFpsLabel.
 	now := DateAndTime now.
 	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
 		ifTrue: [ 
 			lastUpdateTime := now.
 			self updateTimeLabel ]
-]
-
-{ #category : #api }
-RMDExperimentarium >> toggleRunPauseSimulation [
-	self runState: self runState not
 ]
 
 { #category : #api }
@@ -272,6 +240,24 @@ RMDExperimentarium >> typecheck [
 			stepButton disable.
 			UIManager default alert: ex messageText title: 'Invalid Model'.
 			^ validated := false ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateFpsLabel [
+
+	interpreter ifNotNil: [ 
+		| now |
+		now := DateAndTime now.
+		lastTimeChanged
+			ifNotNil: [ 
+				| dt |
+				dt := (now - lastTimeChanged) asMilliSeconds.
+				dt > 1.0 ifTrue: [ 
+					fpsLabel label:
+						' (' , (1000.0 / dt asFloat printShowingDecimalPlaces: 3)
+						, ' fps)' ] ]
+			ifNil: [ fpsLabel label: '' ].
+		lastTimeChanged := now ]
 ]
 
 { #category : #updating }
