@@ -3,8 +3,7 @@ Class {
 	#superclass : #Model,
 	#instVars : [
 		'simulationModel',
-		'context',
-		'runSemaphore'
+		'context'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
 }
@@ -39,8 +38,7 @@ RMDAbstractInterpreter >> context [
 { #category : #initialization }
 RMDAbstractInterpreter >> initialize [
 	super initialize.
-	simulationModel := RMDSimulationModel new.
-	runSemaphore := Semaphore forMutualExclusion
+	simulationModel := RMDSimulationModel new
 ]
 
 { #category : #accessing }

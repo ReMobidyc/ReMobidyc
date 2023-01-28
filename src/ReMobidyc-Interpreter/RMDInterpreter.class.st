@@ -5,6 +5,7 @@ Class {
 		'memory',
 		'libraries',
 		'globalSeed',
+		'runSemaphore',
 		'runState'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
@@ -18,6 +19,20 @@ RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 { #category : #'accessing - libraries' }
 RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
+]
+
+{ #category : #simulating }
+RMDInterpreter >> basicStepSimulation [
+
+	^ self time < simulationModel duration and: [ 
+		  memory time + 1 <= memory latestTime
+			  ifTrue: [ memory time: memory time + 1 ]
+			  ifFalse: [ 
+				  self performTasks.
+				  self tick.
+				  self bounceOutOfBoundsAnimats ].
+		  self timeChanged.
+		  true ]
 ]
 
 { #category : #private }
@@ -84,10 +99,15 @@ RMDInterpreter >> changeStage: animatString [
 	^ newIndividual
 ]
 
-{ #category : #private }
+{ #category : #simulating }
 RMDInterpreter >> critical: aBlock [
 
-	runSemaphore critical: aBlock
+	^ runSemaphore critical: [ 
+		  self simulationStarted.
+		  runState := true.
+		  aBlock ensure: [ 
+			  runState := false.
+			  self simulationPaused ] ]
 ]
 
 { #category : #timing }
@@ -224,6 +244,7 @@ RMDInterpreter >> individualsOf: aRMDAgentDefinitionNode do: aBlock [
 RMDInterpreter >> initialize [
 
 	super initialize.
+	runSemaphore := Semaphore forMutualExclusion.
 	libraries := OrderedCollection with: self standardLibrary.
 	globalSeed := 1
 ]
@@ -359,6 +380,12 @@ RMDInterpreter >> patchesDo: aBlock [
 	memory patchesDo: aBlock
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> pauseSimulation [
+
+	runState := false
+]
+
 { #category : #private }
 RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
@@ -427,21 +454,13 @@ RMDInterpreter >> rewind [
 ]
 
 { #category : #simulating }
-RMDInterpreter >> runSimulation [
-	
-]
-
-{ #category : #simulating }
 RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 
-	runState := true.
 	[ 
 	self critical: [ 
-		[ 
-		[ [ runState = true and: [ self stepSimulation ] ] whileTrue ]
+		[ [ runState = true and: [ self basicStepSimulation ] ] whileTrue ]
 			on: RMDSemanticError
-			do: errorHandlerBlock ] ensure: [ runState := false ] ] ] forkAt:
-		Processor userBackgroundPriority
+			do: errorHandlerBlock ] ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #private }
@@ -492,6 +511,18 @@ RMDInterpreter >> shortName [
 	^ self metaParameterString
 ]
 
+{ #category : #announcement }
+RMDInterpreter >> simulationPaused [
+
+	self announcer announce: (RMDSimulationPaused interpreter: self)
+]
+
+{ #category : #announcement }
+RMDInterpreter >> simulationStarted [
+
+	self announcer announce: (RMDSimulationStarted interpreter: self)
+]
+
 { #category : #'variable access' }
 RMDInterpreter >> souths: aString ifAbsent: errorBlock [
 
@@ -515,16 +546,7 @@ RMDInterpreter >> standardLibrary [
 { #category : #simulating }
 RMDInterpreter >> stepSimulation [
 
-	self critical: [ 
-		^ self time < simulationModel duration and: [ 
-			  memory time + 1 <= memory latestTime
-				  ifTrue: [ memory time: memory time + 1 ]
-				  ifFalse: [ 
-					  self performTasks.
-					  self tick.
-					  self bounceOutOfBoundsAnimats ].
-			  self timeChanged.
-			  true ] ]
+	self critical: [ ^ self basicStepSimulation ]
 ]
 
 { #category : #simulating }
