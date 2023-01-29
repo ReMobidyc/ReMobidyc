@@ -3,16 +3,13 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'interpreter',
-		'validated',
-		'runButton',
-		'populationInspector',
 		'stepButton',
-		'time',
-		'duration',
-		'lastServerUpdate',
+		'runButton',
 		'timeProgressBar',
-		'lastUpdateTime',
-		'lastTimeChanged'
+		'populationInspector',
+		'validated',
+		'lastServerUpdate',
+		'lastDisplayUpdate'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -46,7 +43,7 @@ RMDExperimentarium >> basicInformServer [
 	Smalltalk at: #RMDClient ifPresent: [ :clientClass | 
 		clientClass
 			informModel: self modelName
-			progress: time / duration asFloat
+			progress: interpreter progress
 			from: self ]
 ]
 
@@ -126,11 +123,6 @@ RMDExperimentarium >> pauseSimulation [
 	interpreter pauseSimulation
 ]
 
-{ #category : #api }
-RMDExperimentarium >> progress [
-	^ time / duration
-]
-
 { #category : #updating }
 RMDExperimentarium >> runButtonPressed [
 
@@ -163,8 +155,6 @@ RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 		when: RMDSimulationStarted send: #simulationStarted: to: self;
 		when: RMDTimeChanged send: #timeChanged: to: self;
 		when: RMDSimulationPaused send: #simulationPaused: to: self.
-	duration := interpreter simulationModel simulationDefinition
-		            timeDefinition duration evalIn: interpreter.
 	self isValidated ifTrue: [ 
 		interpreter
 			setupSimulation;
@@ -177,7 +167,7 @@ RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 	runButton state: false.
 	stepButton enable.
 	self updateTimeProgressBar.
-	lastUpdateTime := nil
+	lastDisplayUpdate := nil
 ]
 
 { #category : #updating }
@@ -185,7 +175,7 @@ RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
 
 	runButton state: true.
 	stepButton disable.
-	lastTimeChanged := DateAndTime now
+	lastDisplayUpdate := DateAndTime now
 ]
 
 { #category : #api }
@@ -203,9 +193,9 @@ RMDExperimentarium >> timeChanged: anAnnouncement [
 	| now |
 	self informServer.
 	now := DateAndTime now.
-	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
+	(lastDisplayUpdate isNil or: [ now - lastDisplayUpdate > 100 milliSecond ]) 
 		ifTrue: [ 
-			lastUpdateTime := now.
+			lastDisplayUpdate := now.
 			self updateTimeProgressBar ]
 ]
 
