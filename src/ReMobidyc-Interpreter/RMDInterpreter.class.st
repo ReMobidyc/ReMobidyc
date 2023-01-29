@@ -652,6 +652,18 @@ RMDInterpreter >> typecheck [
 	self critical: [ simulationModel typecheck ]
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> waitForPause [
+
+	[ self isRunningSimulation ] whileTrue: [ self waitingTime wait ]
+]
+
+{ #category : #accessing }
+RMDInterpreter >> waitingTime [
+
+	^ 200 milliSecond
+]
+
 { #category : #'variable access' }
 RMDInterpreter >> wests: aString ifAbsent: errorBlock [
 

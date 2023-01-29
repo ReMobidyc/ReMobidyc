@@ -14,12 +14,14 @@ RMDMetaContext class >> isAbstract [
 ]
 
 { #category : #adding }
-RMDMetaContext >> addSimulationModel: aRMDSimulationModel ifPresent: errorBlock [
+RMDMetaContext >> addSimulationModel: aRMDSimulationModel [
 
-	aRMDSimulationModel runId: interpreters size + 1.
+	| runId |
+	runId := interpreters size + 1.
+	aRMDSimulationModel runId: runId.
 	interpreters := interpreters copyWith:
 		                (self createInterpreterFor: aRMDSimulationModel).
-	^ aRMDSimulationModel
+	^ runId
 ]
 
 { #category : #testing }

@@ -23,6 +23,37 @@ RMDMetaInterpreter class >> forModelPath: aFileReference on: aRMDSimulationModel
 		  yourself
 ]
 
+{ #category : #'meta-interpreting' }
+RMDMetaInterpreter >> addSimulationModel: aRMDSimulationModel [
+
+	^ self addSimulationModel: aRMDSimulationModel randomSeed: 1
+]
+
+{ #category : #'meta-interpreting' }
+RMDMetaInterpreter >> addSimulationModel: aRMDSimulationModel multiplicity: anInteger [
+
+	| runIds |
+	runIds := Array new: anInteger.
+	1 to: anInteger do: [ :index | 
+		| runId |
+		runId := context addSimulationModel: aRMDSimulationModel.
+		(self interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
+			:interpreter | 
+			interpreter randomSeed: SharedRandom globalGenerator next ].
+		runIds at: index put: runId ].
+	^ runIds
+]
+
+{ #category : #'meta-interpreting' }
+RMDMetaInterpreter >> addSimulationModel: aRMDSimulationModel randomSeed: anInteger [
+
+	| runId |
+	runId := context addSimulationModel: aRMDSimulationModel.
+	(self interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
+		:interpreter | interpreter randomSeed: anInteger ].
+	^ runId
+]
+
 { #category : #simulating }
 RMDMetaInterpreter >> fastForward [
 
@@ -82,7 +113,11 @@ RMDMetaInterpreter >> numberOfInterpreters [
 { #category : #simulating }
 RMDMetaInterpreter >> pauseSimulation [
 
-	self interpretersDo: #pauseSimulation
+	self interpretersDo: #pauseSimulation.
+	[ 
+	self
+		waitForPause;
+		simulationPaused ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #simulating }
@@ -124,11 +159,16 @@ RMDMetaInterpreter >> setupSimulation [
 	self interpretersDo: #setupSimulation
 ]
 
-{ #category : #'accessing-interpreters' }
-RMDMetaInterpreter >> simulationModelAt: anInteger ifAbsent: errorBlock [
+{ #category : #announcement }
+RMDMetaInterpreter >> simulationPaused [
 
-	^ (context interpreterAt: anInteger ifAbsent: [ ^ errorBlock value ])
-		  simulationModel
+	self announcer announce: (RMDSimulationPaused interpreter: self)
+]
+
+{ #category : #announcement }
+RMDMetaInterpreter >> simulationStarted [
+
+	self announcer announce: (RMDSimulationStarted interpreter: self)
 ]
 
 { #category : #simulating }
@@ -148,20 +188,29 @@ RMDMetaInterpreter >> typecheck [
 	self interpretersDo: #typecheck
 ]
 
-{ #category : #'accessing-interpreters' }
-RMDMetaInterpreter >> waitForRunningInterpreters [
+{ #category : #simulating }
+RMDMetaInterpreter >> waitForPause [
 
 	[ context anyInterpreterRunning ] whileTrue: [ self waitingTime wait ]
 ]
 
-{ #category : #'context controls' }
-RMDMetaInterpreter >> withContext: aRMDContext do: aBlock [
+{ #category : #'accessing-interpreters' }
+RMDMetaInterpreter >> waitingTime [
 
-	self shouldNotImplement
+	^ 200 milliSecond
 ]
 
 { #category : #'context controls' }
-RMDMetaInterpreter >> withSubContext: aRMDContext do: aBlock [
+RMDMetaInterpreter >> withDryRunContextDo: aBlock [
 
-	^ self shouldNotImplement
+	^ self withContext: RMDMetaContextForDryRun new do: aBlock
+]
+
+{ #category : #'context controls' }
+RMDMetaInterpreter >> withFileMemoryContextOnModelPath: aFileReference do: aBlock [
+
+	^ self
+		  withContext:
+		  (RMDMetaContextForFileMemory modelPath: aFileReference)
+		  do: aBlock
 ]

@@ -47,6 +47,13 @@ RMDExperimentarium >> basicInformServer [
 			from: self ]
 ]
 
+{ #category : #updating }
+RMDExperimentarium >> basicUpdateTimeProgressBar [
+
+	interpreter ifNotNil: [ 
+		timeProgressBar fixedAt: interpreter progress ]
+]
+
 { #category : #controlling }
 RMDExperimentarium >> ifValidated: aBlock [
 
@@ -190,13 +197,8 @@ RMDExperimentarium >> stepSimulation [
 { #category : #updating }
 RMDExperimentarium >> timeChanged: anAnnouncement [
 
-	| now |
 	self informServer.
-	now := DateAndTime now.
-	(lastDisplayUpdate isNil or: [ now - lastDisplayUpdate > 100 milliSecond ]) 
-		ifTrue: [ 
-			lastDisplayUpdate := now.
-			self updateTimeProgressBar ]
+	self updateTimeProgressBar
 ]
 
 { #category : #api }
@@ -216,8 +218,12 @@ RMDExperimentarium >> typecheck [
 { #category : #updating }
 RMDExperimentarium >> updateTimeProgressBar [
 
-	interpreter ifNotNil: [ 
-		timeProgressBar fixedAt: interpreter progress ]
+	| now |
+	now := DateAndTime now.
+	(lastDisplayUpdate isNil or: [ 
+		 now - lastDisplayUpdate > 100 milliSecond ]) ifTrue: [ 
+		lastDisplayUpdate := now.
+		self basicUpdateTimeProgressBar ]
 ]
 
 { #category : #private }
