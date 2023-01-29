@@ -46,6 +46,20 @@ RMDMetaInterpreter >> interpretersDo: aBlock [
 	context interpretersDo: aBlock
 ]
 
+{ #category : #testing }
+RMDMetaInterpreter >> isMetaInterpreter [
+
+	^ true
+]
+
+{ #category : #simulating }
+RMDMetaInterpreter >> isRunningSimulation [
+
+	self interpretersDo: [ :interpreter | 
+		interpreter isRunningSimulation ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : #accessing }
 RMDMetaInterpreter >> kindName [
 
@@ -59,6 +73,32 @@ RMDMetaInterpreter >> nameAt: anInteger ifAbsent: errorBlock [
 		  simulationModel metaParametersString
 ]
 
+{ #category : #'accessing-interpreters' }
+RMDMetaInterpreter >> numberOfInterpreters [
+
+	^ context numberOfInterpreters
+]
+
+{ #category : #simulating }
+RMDMetaInterpreter >> pauseSimulation [
+
+	self interpretersDo: #pauseSimulation
+]
+
+{ #category : #simulating }
+RMDMetaInterpreter >> progress [
+
+	| sum n |
+	sum := 0.0.
+	n := 0.
+	self interpretersDo: [ :interpreter | 
+		sum := sum + interpreter progress.
+		n := n + 1 ].
+	^ n > 0
+		  ifTrue: [ sum / n ]
+		  ifFalse: [ ^ 0.0 ]
+]
+
 { #category : #simulating }
 RMDMetaInterpreter >> rewind [
 
@@ -70,6 +110,12 @@ RMDMetaInterpreter >> runIds [
 
 	^ Array streamContents: [ :stream | 
 		  context runIdsDo: [ :runId | stream nextPut: runId ] ]
+]
+
+{ #category : #simulating }
+RMDMetaInterpreter >> runSimulation [
+
+	self interpretersDo: #runSimulation
 ]
 
 { #category : #simulating }

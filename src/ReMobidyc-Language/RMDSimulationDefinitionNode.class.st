@@ -63,6 +63,11 @@ RMDSimulationDefinitionNode >> childrenDo: aBlock [
 	animatInitializers ifNotNil: [ animatInitializers do: aBlock ]
 ]
 
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> duration [
+	^ timeDefinition duration
+]
+
 { #category : #comparing }
 RMDSimulationDefinitionNode >> hash [
 	^ ((timeDefinition hash bitXor: worldInitializer hash)
@@ -159,6 +164,12 @@ RMDSimulationDefinitionNode >> timeDefinition [
 { #category : #accessing }
 RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode [
 	timeDefinition := aRMDSimulationTimeDefinitionNode
+]
+
+{ #category : #accessing }
+RMDSimulationDefinitionNode >> timeStep [
+
+	^ timeDefinition step
 ]
 
 { #category : #accessing }

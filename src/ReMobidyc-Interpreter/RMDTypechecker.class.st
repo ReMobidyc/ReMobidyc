@@ -44,6 +44,12 @@ RMDTypechecker >> initialize [
 	libraries := OrderedCollection with: self standardLibrary
 ]
 
+{ #category : #testing }
+RMDTypechecker >> isTypechecker [
+
+	^ true
+]
+
 { #category : #accessing }
 RMDTypechecker >> kindName [
 

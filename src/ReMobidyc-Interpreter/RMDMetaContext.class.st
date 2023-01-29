@@ -56,6 +56,12 @@ RMDMetaContext >> interpretersDo: aBlock [
 ]
 
 { #category : #accessing }
+RMDMetaContext >> numberOfInterpreters [
+
+	^ interpreters size
+]
+
+{ #category : #accessing }
 RMDMetaContext >> runIdString: anInteger [
 
 	^ 'run' , anInteger printString

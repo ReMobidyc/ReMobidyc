@@ -7,8 +7,6 @@ Class {
 		'runButton',
 		'populationInspector',
 		'stepButton',
-		'timeLabel',
-		'fpsLabel',
 		'time',
 		'duration',
 		'lastServerUpdate',
@@ -27,16 +25,7 @@ RMDExperimentarium class >> defaultLayout [
 				   vAlignCenter;
 				   add: #stepButton expand: false;
 				   add: #runButton expand: false;
-				   add: (SpBoxLayout newVertical
-						    add: (SpBoxLayout newHorizontal
-								     add: #timeLabel expand: false;
-								     add: #fpsLabel expand: false;
-								     yourself);
-						    add:
-						    (SpBoxLayout newHorizontal add: #timeProgressBar expand: true)
-						    expand: false;
-						    yourself)
-				   expand: true;
+				   add: #timeProgressBar expand: true;
 				   yourself)
 		  height: self buttonHeight * 2;
 		  add: #populationInspector;
@@ -85,12 +74,6 @@ RMDExperimentarium >> initialize [
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
-	timeLabel := self newLabel
-		             label: '0';
-		             yourself.
-	fpsLabel := self newLabel
-		            label: '';
-		            yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
 		                   yourself.
@@ -115,7 +98,7 @@ RMDExperimentarium >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self windowTitle;
-		initialExtent: 700 @ 400
+		initialExtent: 700 @ 450
 ]
 
 { #category : #api }
@@ -193,8 +176,7 @@ RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 
 	runButton state: false.
 	stepButton enable.
-	self updateFpsLabel.
-	self updateTimeLabel.
+	self updateTimeProgressBar.
 	lastUpdateTime := nil
 ]
 
@@ -220,12 +202,11 @@ RMDExperimentarium >> timeChanged: anAnnouncement [
 
 	| now |
 	self informServer.
-	self updateFpsLabel.
 	now := DateAndTime now.
 	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
 		ifTrue: [ 
 			lastUpdateTime := now.
-			self updateTimeLabel ]
+			self updateTimeProgressBar ]
 ]
 
 { #category : #api }
@@ -243,44 +224,10 @@ RMDExperimentarium >> typecheck [
 ]
 
 { #category : #updating }
-RMDExperimentarium >> updateFpsLabel [
+RMDExperimentarium >> updateTimeProgressBar [
 
 	interpreter ifNotNil: [ 
-		| now |
-		now := DateAndTime now.
-		lastTimeChanged
-			ifNotNil: [ 
-				| dt |
-				dt := (now - lastTimeChanged) asMilliSeconds.
-				dt > 1.0 ifTrue: [ 
-					fpsLabel label:
-						' (' , (1000.0 / dt asFloat printShowingDecimalPlaces: 3)
-						, ' fps)' ] ]
-			ifNil: [ fpsLabel label: '' ].
-		lastTimeChanged := now ]
-]
-
-{ #category : #updating }
-RMDExperimentarium >> updateTimeLabel [
-
-	interpreter ifNotNil: [ 
-		time := interpreter time.
-		timeLabel label: (String streamContents: [ :stream | 
-				 4 timesRepeat: [ stream space ].
-				 interpreter simulationModel simulationDefinition timeDefinition 
-					 printOn: stream.
-				 stream nextPutAll: ' - now '.
-				 (interpreter simulationModel simulationDefinition timeDefinition
-					  duration unit fromSI: time)
-					 printOn: stream
-					 showingDecimalPlaces: 3.
-				 stream nextPutAll: ' [ '.
-				 interpreter simulationModel simulationDefinition timeDefinition
-					 duration unit printOn: stream.
-				 stream nextPutAll: ' ], '.
-				 interpreter ticks printOn: stream.
-				 stream nextPutAll: ' steps.' ]).
-		timeProgressBar fixedAt: time / duration ]
+		timeProgressBar fixedAt: interpreter progress ]
 ]
 
 { #category : #private }

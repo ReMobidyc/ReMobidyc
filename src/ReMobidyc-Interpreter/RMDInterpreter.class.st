@@ -121,6 +121,12 @@ RMDInterpreter >> duration [
 	^ simulationModel duration
 ]
 
+{ #category : #timing }
+RMDInterpreter >> durationUnit [
+
+	^ simulationModel durationUnit
+]
+
 { #category : #'variable access' }
 RMDInterpreter >> easts: aString ifAbsent: errorBlock [
 
@@ -397,6 +403,12 @@ RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> progress [
+
+	^ self time / self duration
+]
+
 { #category : #'random numbers' }
 RMDInterpreter >> random [
 
@@ -457,6 +469,12 @@ RMDInterpreter >> rewind [
 	self critical: [ 
 		memory time: 0.
 		self timeChanged ]
+]
+
+{ #category : #accessing }
+RMDInterpreter >> runId [
+
+	^ simulationModel runId
 ]
 
 { #category : #simulating }

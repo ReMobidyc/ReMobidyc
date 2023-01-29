@@ -380,6 +380,12 @@ RMDSimulationModel >> duration [
 	^ simulationDefinition timeDefinition duration numeric
 ]
 
+{ #category : #'accessing - time' }
+RMDSimulationModel >> durationUnit [
+
+	^ simulationDefinition timeDefinition duration unit
+]
+
 { #category : #'accessing - cells' }
 RMDSimulationModel >> east [
 	^ self patchLength * self patchXDivisions

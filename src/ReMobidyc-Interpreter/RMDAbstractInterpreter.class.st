@@ -41,6 +41,16 @@ RMDAbstractInterpreter >> initialize [
 	simulationModel := RMDSimulationModel new
 ]
 
+{ #category : #testing }
+RMDAbstractInterpreter >> isMetaInterpreter [
+	^ false
+]
+
+{ #category : #testing }
+RMDAbstractInterpreter >> isTypechecker [
+	^ false
+]
+
 { #category : #accessing }
 RMDAbstractInterpreter >> kindName [
 
