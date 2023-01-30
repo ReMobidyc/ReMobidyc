@@ -20,7 +20,10 @@ Class {
 		'patch',
 		'patchSize',
 		'xPatches',
-		'yPatches'
+		'yPatches',
+		'runId',
+		'randomSeed',
+		'metaparameters'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -231,6 +234,12 @@ RMDMemory >> latestTime: anInteger [
 	latestTime := anInteger
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDMemory >> metaparameters [
+
+	^ metaparameters
+]
+
 { #category : #accessing }
 RMDMemory >> name [
 
@@ -344,6 +353,12 @@ RMDMemory >> previousStageOf: anInteger [
 	^ stageLinks at: anInteger ifAbsent: [ nil ]
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDMemory >> randomSeed [
+
+	^ randomSeed ifNil: [ 1 ]
+]
+
 { #category : #'accessing-storage' }
 RMDMemory >> readAnimatsForTime: anInteger [
 	^ self subclassResponsibility
@@ -395,6 +410,20 @@ RMDMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
 	reproductionLinks at: individual put: anInteger.
 	^ individual
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDMemory >> runId [
+
+	^ runId ifNil: [ 1 ]
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger [
+
+	runId := anInteger.
+	metaparameters := aDictionary.
+	randomSeed := anotherInteger
 ]
 
 { #category : #'accessing-individuals' }

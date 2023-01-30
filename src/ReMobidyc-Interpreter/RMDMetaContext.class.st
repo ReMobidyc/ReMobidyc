@@ -14,6 +14,15 @@ RMDMetaContext class >> isAbstract [
 ]
 
 { #category : #adding }
+RMDMetaContext >> addInterpreter: aRMDInterpreter [
+
+	interpreters size + 1 = aRMDInterpreter runId ifFalse: [ 
+		aRMDInterpreter runId: interpreters size + 1 ].
+	interpreters := interpreters copyWith: aRMDInterpreter.
+	^ aRMDInterpreter runId
+]
+
+{ #category : #adding }
 RMDMetaContext >> addSimulationModel: aRMDSimulationModel [
 
 	| runId |
@@ -61,6 +70,12 @@ RMDMetaContext >> interpretersDo: aBlock [
 RMDMetaContext >> numberOfInterpreters [
 
 	^ interpreters size
+]
+
+{ #category : #enumerating }
+RMDMetaContext >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

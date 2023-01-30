@@ -166,6 +166,18 @@ RMDFileMemory >> latestTime: anInteger [
 		ifFalse: [ allocationDirty := true ]
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> metaparameterJsonBasename [
+	^ 'meta-parameters.json'
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> metaparameters [
+
+	metaparameters ifNil: [ self readMetaparameters ].
+	^ super metaparameters
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> modelPath [
 
@@ -205,6 +217,13 @@ RMDFileMemory >> patchSize: anInteger [
 	spaceDirty := true
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> randomSeed [
+
+	randomSeed ifNil: [ self readMetaparameters ].
+	^ super randomSeed
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> readAllocation [
 	self allocationFile
@@ -238,6 +257,28 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 					at: row first
 					put: (row copyWithoutFirst collect: #asInteger) asSet ] ].
 		^ vals ]
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> readMetaparameters [
+
+	| path jsonObject |
+	path := self basePath / self metaparameterJsonBasename.
+	jsonObject := path isFile
+		              ifTrue: [ 
+		              path readStreamDo: [ :stream | 
+			              STONJSON fromStream: stream ] ]
+		              ifFalse: [ Dictionary new ].
+	runId := jsonObject at: 'runId' ifAbsent: [ 1 ].
+	metaparameters := jsonObject
+		                  at: 'metaparameters'
+		                  ifPresent: [ :dict | 
+			                  (dict associations collect: [ :assoc | 
+				                   (RMDPlaceholderNode identifier: assoc key)
+				                   -> assoc value asRMDExpression ])
+				                  asOrderedDictionary ]
+		                  ifAbsent: [ OrderedDictionary new ].
+	randomSeed := jsonObject at: 'randomSeed' ifAbsent: [ 1 ]
 ]
 
 { #category : #'accessing-storage' }
@@ -349,6 +390,19 @@ RMDFileMemory >> reproductionLinksFileBasename [
 	^ 'reproductionLinks.csv'
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> runId [
+
+	runId ifNil: [ self readMetaparameters ].
+	^ super runId
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger [
+	super runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger.
+	self writeMetaparameters
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> seedsFileBasename [
 	^ 'seeds.csv'
@@ -440,6 +494,24 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 								do: [ :id | id printOn: csvStream ]
 								separatedBy: [ csvStream nextPut: $, ] ].
 					csvStream lf ] ]
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> writeMetaparameters [
+
+	| jsonObject |
+	jsonObject := Dictionary new
+		              at: 'runId' put: (runId ifNil: [ 1 ]);
+		              at: 'metaparameters' put: (metaparameters
+				               ifNotNil: [ 
+					               (metaparameters associations collect: [ :assoc | 
+							                assoc key identifier -> assoc value printString ])
+						               asOrderedDictionary ]
+				               ifNil: [ OrderedDictionary new ]);
+		              at: 'randomSeed' put: (randomSeed ifNil: [ 1 ]);
+		              yourself.
+	self basePath / self metaparameterJsonBasename writeStreamDo: [ 
+		:stream | STONJSON put: jsonObject onStreamPretty: stream ]
 ]
 
 { #category : #'accessing-storage' }

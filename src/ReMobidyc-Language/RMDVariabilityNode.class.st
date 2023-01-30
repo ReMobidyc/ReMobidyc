@@ -90,6 +90,18 @@ RMDVariabilityNode >> initialize [
 	metaParameterSequences := Array new
 ]
 
+{ #category : #enumerating }
+RMDVariabilityNode >> metaEvalIn: aRMDMetaInterpreter [
+
+	self dictionariesDo: [ :metaparameters | 
+		aRMDMetaInterpreter
+			addSimulationModel:
+				(aRMDMetaInterpreter simulationModel 
+					 instantiateWithMetaParameters: metaparameters)
+			multiplicity: multiplicity
+			randomSeed: randomSeed ]
+]
+
 { #category : #accessing }
 RMDVariabilityNode >> metaParameterSequences [
 

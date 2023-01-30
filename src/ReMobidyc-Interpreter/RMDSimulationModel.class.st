@@ -678,10 +678,16 @@ RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 { #category : #interpreting }
 RMDSimulationModel >> interpreterForDryRun [
 
+	^ self interpreterOn: RMDDryMemory new
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterOn: aRMDMemory [
+
 	[ 
 	self typecheck.
 	^ RMDInterpreter new
-		  setMemory: RMDDryMemory new;
+		  setMemory: aRMDMemory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
 		  yourself ]
@@ -694,73 +700,30 @@ RMDSimulationModel >> interpreterForDryRun [
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnExistingFile: basePath modelPath: modelPath [
 
-	[ 
-	| memory |
-	self typecheck.
-	memory := RMDFileMemory on: basePath modelPath: modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn:
+		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile [
 
-	[ 
 	| memory |
-	self typecheck.
 	memory := RMDFileMemory for: self.
 	self exportModel: memory modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn: memory
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile: basePath modelPath: modelPath [
 
-	[ 
-	| memory |
-	self typecheck.
-	memory := RMDFileMemory on: basePath modelPath: modelPath.
-	self exportModel: memory modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn:
+		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnMemory [
 
-	[ 
-	self typecheck.
-	^ RMDInterpreter new
-		  setMemory: RMDOnMemory new;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn: RMDOnMemory new
 ]
 
 { #category : #accessing }
@@ -1040,13 +1003,13 @@ RMDSimulationModel >> resetDefinitions [
 	icons := Dictionary new
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - meta parameters' }
 RMDSimulationModel >> runId [
 
 	^ runId
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - meta parameters' }
 RMDSimulationModel >> runId: anInteger [
 
 	runId := anInteger

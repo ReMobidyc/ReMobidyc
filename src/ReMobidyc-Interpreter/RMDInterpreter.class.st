@@ -272,6 +272,18 @@ RMDInterpreter >> memory [
 	^ memory
 ]
 
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> metaParameters [
+
+	^ simulationModel metaParameters
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> metaParameters: aDictionary [
+
+	simulationModel metaParameters: aDictionary
+]
+
 { #category : #'variable access' }
 RMDInterpreter >> my: aString [
 
@@ -415,6 +427,17 @@ RMDInterpreter >> random [
 	^ context random
 ]
 
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> randomSeed [
+	^ self globalSeed
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> randomSeed: anInteger [
+
+	self globalSeed: anInteger
+]
+
 { #category : #'variable access' }
 RMDInterpreter >> read: anInteger ifAbsent: errorBlock [
 
@@ -471,10 +494,16 @@ RMDInterpreter >> rewind [
 		self timeChanged ]
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - meta parameters' }
 RMDInterpreter >> runId [
 
 	^ simulationModel runId
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> runId: anInteger [
+
+	simulationModel runId: anInteger
 ]
 
 { #category : #simulating }
@@ -489,7 +518,9 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
-	memory := aRMDMemory
+
+	memory := aRMDMemory.
+	globalSeed := aRMDMemory randomSeed
 ]
 
 { #category : #'random numbers' }

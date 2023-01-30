@@ -34,3 +34,13 @@ RMDMetaContextForFileMemory >> modelPath: aFileReference [
 
 	modelPath := aFileReference
 ]
+
+{ #category : #enumerating }
+RMDMetaContextForFileMemory >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
+
+	^ (modelPath directoriesMatching: 'run*')
+		  ifNotEmpty: [ :refs | 
+			  refs do: [ :ref | 
+				  aBlock value: (RMDFileMemory on: ref modelPath: modelPath) ] ]
+		  ifEmpty: emptyBlock
+]
