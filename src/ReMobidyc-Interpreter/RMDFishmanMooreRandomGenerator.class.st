@@ -13,6 +13,12 @@ Class {
 }
 
 { #category : #accessing }
+RMDFishmanMooreRandomGenerator class >> modulo [
+
+	^ 2147483647
+]
+
+{ #category : #accessing }
 RMDFishmanMooreRandomGenerator >> factor [
 
 	^ 742938285
@@ -36,7 +42,7 @@ RMDFishmanMooreRandomGenerator >> initialize [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> modulo [
 
-	^ 2147483647
+	^ self class modulo
 ]
 
 { #category : #accessing }

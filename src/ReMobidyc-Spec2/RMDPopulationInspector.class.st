@@ -55,8 +55,16 @@ RMDPopulationInspector >> initialize [
 RMDPopulationInspector >> initializePresenters [
 
 	super initializePresenters.
-	interpreterDropList := self newDropList whenSelectedItemChangedDo: [ 
-		                       self updateDisplay ].
+	interpreterDropList := self newDropList
+		                       display: [ :runId | 
+			                       (metaInterpreter
+				                        interpreterAt: runId
+				                        ifAbsent: [ nil ])
+				                       ifNotNil: #shortName
+				                       ifNil: [ '-' ] ];
+		                       whenSelectedItemChangedDo: [ 
+			                       self updateDisplay ];
+		                       yourself.
 	timeLabel := self newLabel
 		             label: '';
 		             yourself.
@@ -236,49 +244,49 @@ RMDPopulationInspector >> updateDisplay [
 { #category : #updating }
 RMDPopulationInspector >> updateObservation: aRMDTimeChanged [
 
-	self interpreterDo: [ :interpreter | 
-		| model runId speciesPopulations |
-		model := interpreter simulationModel.
-		runId := interpreter runId.
-		speciesPopulations := Dictionary new.
-		model animatDefinitionsDo: [ :animat | 
-			| population stage |
-			population := interpreter numberOfIndivisualsOf: animat.
-			speciesPopulations
-				at: animat species
+	| interpreter model runId speciesPopulations |
+	interpreter := aRMDTimeChanged interpreter.
+	model := interpreter simulationModel.
+	runId := interpreter runId.
+	speciesPopulations := Dictionary new.
+	model animatDefinitionsDo: [ :animat | 
+		| population stage |
+		population := interpreter numberOfIndivisualsOf: animat.
+		speciesPopulations
+			at: animat species
+			put:
+			(speciesPopulations at: animat species ifAbsent: [ 0 ])
+			+ population.
+		stage := self stagePrefix , animat name.
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | current at: stage put: population ].
+		minPopulation at: runId ifPresent: [ :mins | 
+			mins
+				at: stage
 				put:
-				(speciesPopulations at: animat species ifAbsent: [ 0 ])
-				+ population.
-			stage := self stagePrefix , animat name.
-			currentPopulation
-				at: runId
-				ifPresent: [ :current | current at: stage put: population ].
-			minPopulation at: runId ifPresent: [ :mins | 
-				mins
-					at: stage
-					put:
-					((mins at: stage ifAbsent: [ Float infinity ]) min: population) ].
-			maxPopulation at: runId ifPresent: [ :maxs | 
-				maxs
-					at: stage
-					put: ((maxs at: stage ifAbsent: [ 0 ]) max: population) ] ].
-		speciesPopulations keysAndValuesDo: [ :species :population | 
-			currentPopulation
-				at: runId
-				ifPresent: [ :current | current at: species put: population ].
-			minPopulation at: runId ifPresent: [ :mins | 
-				mins
-					at: species
-					put:
-					((mins at: species ifAbsent: [ Float infinity ]) min: population) ].
-			maxPopulation at: runId ifPresent: [ :maxs | 
-				maxs
-					at: species
-					put: ((maxs at: species ifAbsent: [ 0 ]) max: population) ] ].
-		populationByTime at: runId ifPresent: [ :byTime | 
-			currentPopulation
-				at: runId
-				ifPresent: [ :current | byTime add: current copy ] ] ]
+				((mins at: stage ifAbsent: [ Float infinity ]) min: population) ].
+		maxPopulation at: runId ifPresent: [ :maxs | 
+			maxs
+				at: stage
+				put: ((maxs at: stage ifAbsent: [ 0 ]) max: population) ] ].
+	speciesPopulations keysAndValuesDo: [ :species :population | 
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | current at: species put: population ].
+		minPopulation at: runId ifPresent: [ :mins | 
+			mins
+				at: species
+				put:
+				((mins at: species ifAbsent: [ Float infinity ]) min: population) ].
+		maxPopulation at: runId ifPresent: [ :maxs | 
+			maxs
+				at: species
+				put: ((maxs at: species ifAbsent: [ 0 ]) max: population) ] ].
+	populationByTime at: runId ifPresent: [ :byTime | 
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | byTime add: current copy ] ]
 ]
 
 { #category : #updating }

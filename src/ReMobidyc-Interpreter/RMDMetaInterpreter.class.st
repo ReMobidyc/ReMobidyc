@@ -14,10 +14,23 @@ RMDMetaInterpreter class >> forDryRunOn: aRMDSimulationModel [
 ]
 
 { #category : #'instancce creation' }
-RMDMetaInterpreter class >> forModelPath: aFileReference on: aRMDSimulationModel [
+RMDMetaInterpreter class >> on: aRMDSimulationModel modelPath: aFileReference [
 
 	^ self new
 		  simulationModel: aRMDSimulationModel;
+		  setContext:
+			  (RMDMetaContextForFileMemory modelPath: aFileReference);
+		  yourself
+]
+
+{ #category : #'instancce creation' }
+RMDMetaInterpreter class >> onModelPath: aFileReference [
+
+	^ self new
+		  simulationModel:
+			  (RMDSimulationModel
+				   importModel: aFileReference
+				   ifError: [ ^ nil ]);
 		  setContext:
 			  (RMDMetaContextForFileMemory modelPath: aFileReference);
 		  yourself
@@ -30,13 +43,26 @@ RMDMetaInterpreter >> addSimulationModel: aRMDSimulationModel multiplicity: anIn
 	runIds := Array new: anInteger.
 	1 to: anInteger do: [ :index | 
 		| runId |
-		runId := context addSimulationModel: aRMDSimulationModel.
+		runId := context addSimulationModel: aRMDSimulationModel copy.
 		(self interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
 			:interpreter | 
-			interpreter randomSeed:
-				(anIntegerOrNil ifNil: [ SharedRandom globalGenerator next ]) ].
+			interpreter randomSeed: (anIntegerOrNil ifNil: [ 
+					 SharedRandom globalGenerator nextInteger:
+						 RMDFishmanMooreRandomGenerator modulo ]) ].
 		runIds at: index put: runId ].
 	^ runIds
+]
+
+{ #category : #announcement }
+RMDMetaInterpreter >> announceSimulationPaused [
+
+	self announcer announce: (RMDSimulationPaused interpreter: self)
+]
+
+{ #category : #announcement }
+RMDMetaInterpreter >> announceSimulationStarted [
+
+	self announcer announce: (RMDSimulationStarted interpreter: self)
 ]
 
 { #category : #simulating }
@@ -82,6 +108,12 @@ RMDMetaInterpreter >> kindName [
 	^ 'meta-interpreter'
 ]
 
+{ #category : #accessing }
+RMDMetaInterpreter >> memoryName [
+
+	^ context ifNotNil: #memoryName ifNil: [ '' ]
+]
+
 { #category : #'accessing-interpreters' }
 RMDMetaInterpreter >> nameAt: anInteger ifAbsent: errorBlock [
 
@@ -98,11 +130,7 @@ RMDMetaInterpreter >> numberOfInterpreters [
 { #category : #simulating }
 RMDMetaInterpreter >> pauseSimulation [
 
-	self interpretersDo: #pauseSimulation.
-	[ 
-	self
-		waitForPause;
-		simulationPaused ] forkAt: Processor userBackgroundPriority
+	self interpretersDo: #pauseSimulation
 ]
 
 { #category : #simulating }
@@ -133,9 +161,15 @@ RMDMetaInterpreter >> runIds [
 ]
 
 { #category : #simulating }
-RMDMetaInterpreter >> runSimulation [
+RMDMetaInterpreter >> runSimulationOnError: errorHandlerBlock [
 
-	self interpretersDo: #runSimulation
+	self interpretersDo: [ :interpreter | 
+		interpreter runSimulationOnError: errorHandlerBlock ].
+	[ 
+	self announceSimulationStarted.
+	self
+		waitForPause;
+		announceSimulationPaused ] forkAt: Processor userBackgroundPriority
 ]
 
 { #category : #'meta-interpreting' }
@@ -153,18 +187,6 @@ RMDMetaInterpreter >> setupInterpreters [
 RMDMetaInterpreter >> setupSimulation [
 	self setupInterpreters.
 	self interpretersDo: #setupSimulation
-]
-
-{ #category : #announcement }
-RMDMetaInterpreter >> simulationPaused [
-
-	self announcer announce: (RMDSimulationPaused interpreter: self)
-]
-
-{ #category : #announcement }
-RMDMetaInterpreter >> simulationStarted [
-
-	self announcer announce: (RMDSimulationStarted interpreter: self)
 ]
 
 { #category : #simulating }
@@ -187,7 +209,7 @@ RMDMetaInterpreter >> typecheck [
 { #category : #simulating }
 RMDMetaInterpreter >> waitForPause [
 
-	[ context anyInterpreterRunning ] whileTrue: [ self waitingTime wait ]
+	[ context isRunningSimulation ] whileTrue: [ self waitingTime wait ]
 ]
 
 { #category : #'accessing-interpreters' }

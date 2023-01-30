@@ -146,10 +146,6 @@ RMDLauncher >> openInExperimentariumMenu [
 						  action: [ self openInExperimentariumForDryRun ] ];
 				  addItem: [ :item | 
 					  item
-						  name: 'On memory';
-						  action: [ self openInExperimentariumOnMemory ] ];
-				  addItem: [ :item | 
-					  item
 						  name: 'On file';
 						  action: [ self openInExperimentariumOnFile ] ] ];
 		  yourself
@@ -161,18 +157,10 @@ RMDLauncher >> openInExperimentariumOnFile [
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository
 			ifTrue: [ 
-				(model
-					 interpreterOnExistingFile: self file / 'run'
-					 modelPath: self file) ifNotNil: #openInExperimentarium ]
+				(model metaInterpreterOnModelPath: self file) ifNotNil:
+					#openInExperimentarium ]
 			ifFalse: [ 
-			model interpreterOnFile ifNotNil: #openInExperimentarium ] ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInExperimentariumOnMemory [
-
-	self load ifNotNil: [ :model | 
-		model interpreterOnMemory ifNotNil: #openInExperimentarium ]
+			model metaInterpreterOnFile ifNotNil: #openInExperimentarium ] ]
 ]
 
 { #category : #operations }

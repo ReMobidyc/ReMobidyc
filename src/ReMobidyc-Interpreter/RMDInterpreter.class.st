@@ -21,6 +21,25 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
+{ #category : #announcement }
+RMDInterpreter >> announceSimulationPaused [
+
+	self announcer announce: (RMDSimulationPaused interpreter: self)
+]
+
+{ #category : #announcement }
+RMDInterpreter >> announceSimulationStarted [
+
+	self announcer announce: (RMDSimulationStarted interpreter: self)
+]
+
+{ #category : #announcement }
+RMDInterpreter >> announceTimeChanged [
+
+	self announcer announce:
+		(RMDTimeChanged interpreter: self time: self time)
+]
+
 { #category : #simulating }
 RMDInterpreter >> basicStepSimulation [
 
@@ -31,7 +50,7 @@ RMDInterpreter >> basicStepSimulation [
 				  self performTasks.
 				  self tick.
 				  self bounceOutOfBoundsAnimats ].
-		  self timeChanged.
+		  self announceTimeChanged.
 		  true ]
 ]
 
@@ -103,11 +122,11 @@ RMDInterpreter >> changeStage: animatString [
 RMDInterpreter >> critical: aBlock [
 
 	^ runSemaphore critical: [ 
-		  self simulationStarted.
+		  self announceSimulationStarted.
 		  runState := true.
 		  aBlock ensure: [ 
 			  runState := false.
-			  self simulationPaused ] ]
+			  self announceSimulationPaused ] ]
 ]
 
 { #category : #timing }
@@ -183,7 +202,7 @@ RMDInterpreter >> fastForward [
 
 	self critical: [ 
 		memory time: memory latestTime.
-		self timeChanged ]
+		self announceTimeChanged ]
 ]
 
 { #category : #'accessing - libraries' }
@@ -270,6 +289,12 @@ RMDInterpreter >> kindName [
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
+]
+
+{ #category : #accessing }
+RMDInterpreter >> memoryName [
+
+	^ memory ifNotNil: #name ifNil: [ '' ]
 ]
 
 { #category : #'accessing - meta parameters' }
@@ -491,7 +516,7 @@ RMDInterpreter >> rewind [
 
 	self critical: [ 
 		memory time: 0.
-		self timeChanged ]
+		self announceTimeChanged ]
 ]
 
 { #category : #'accessing - meta parameters' }
@@ -557,25 +582,13 @@ RMDInterpreter >> setupSimulation [
 			simulationModel animatInitializersDo: [ :initializer | 
 				initializer evalIn: self ] ].
 		memory time: 0.
-		self timeChanged ]
+		self announceTimeChanged ]
 ]
 
 { #category : #accessing }
 RMDInterpreter >> shortName [
 
-	^ self metaParameterString
-]
-
-{ #category : #announcement }
-RMDInterpreter >> simulationPaused [
-
-	self announcer announce: (RMDSimulationPaused interpreter: self)
-]
-
-{ #category : #announcement }
-RMDInterpreter >> simulationStarted [
-
-	self announcer announce: (RMDSimulationStarted interpreter: self)
+	^ self runId printString, ':', self metaParameterString
 ]
 
 { #category : #'variable access' }
@@ -667,14 +680,7 @@ RMDInterpreter >> time: aNumber [
 							self tick.
 							self bounceOutOfBoundsAnimats ] ] ]
 		ifFalse: [ memory time: newTime ].
-	self timeChanged
-]
-
-{ #category : #announcement }
-RMDInterpreter >> timeChanged [
-
-	self announcer announce:
-		(RMDTimeChanged interpreter: self time: self time)
+	self announceTimeChanged
 ]
 
 { #category : #simulating }

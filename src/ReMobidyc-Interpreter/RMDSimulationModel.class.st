@@ -33,71 +33,84 @@ RMDSimulationModel class >> agentsFileName [
 { #category : #'instance creation' }
 RMDSimulationModel class >> goatAndWolf [
 
-	^ self new
-		  name: 'Goat and Wolf';
-		  authors: {'Tomohiro Oda'};
-		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
-		  description:
-			  'A simple demo that wolves chase and eat goats in a grass field.';
-		  load: RMDWorldDefinitionNode empty;
-		  load: RMDPatchDefinitionNode grassField;
-		  load: RMDAnimatDefinitionNode goat;
-		  load: RMDAnimatDefinitionNode wolf;
-		  load: RMDBuiltinRepository current gain;
-		  load: RMDBuiltinRepository current lose;
-		  load: RMDBuiltinRepository current transfer;
-		  load: RMDBuiltinRepository current move;
-		  load: RMDBuiltinRepository current starve;
-		  load: RMDActionDefinitionNode reproduce;
-		  load: RMDActionDefinitionNode prey_on;
-		  load: (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
-		  load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
-		  load: RMDTaskDefinitionNode goat_walk_for_grass;
-		  load:
-			  (RMDTaskDefinitionNode
-				   goat_eat: '3000 [kcal/day]'
-				   upto: '10000[kcal]');
-		  load: RMDTaskDefinitionNode goat_reproduce;
-		  load: (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
-		  load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
-		  load: RMDTaskDefinitionNode wolf_chase_goat;
-		  load: (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
-		  load: RMDTaskDefinitionNode wolf_reproduce;
-		  load: (RMDTaskDefinitionNode
-				   patch_grow_grass: '1500[kcal/day]'
-				   upto: '1000000[kcal]');
-		  load: (RMDSimulationDefinitionNode
-				   timeDefinition:
-					   (RMDSimulationTimeDefinitionNode
-						    during: '2[year]'
-						    by: '0.5[day]')
-				   worldInitializer: RMDWorldInitializerNode empty
-				   patchInitializer: (RMDPatchInitializerNode
-						    grassInitializer: 10
-						    by: 10
-						    of: '5[km]'
-						    grass: '0[kcal]'
-						    to: '700000[kcal]')
-				   animatInitializers: { 
-						   (RMDAnimatInitializerNode
-							    goatInitializer: 100
-							    bloodSugar: '5000[kcal]'
-							    to: '9000[kcal]').
-						   (RMDAnimatInitializerNode
-							    wolfInitializer: 5
-							    bloodSugar: '2000[kcal]'
-							    to: '6000[kcal]') });
-		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
-		  addRenderer: (RMDPatchColorAlphaRenderer
-				   color: Color green
-				   alpha: 'my grass' asRMDExpression
-				   between: '0[kcal]' asRMDExpression
-				   and: '1000000[kcal]' asRMDExpression);
-		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Goat' shapeSize: 7 color: Color yellow);
-		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Wolf' shapeSize: 10 color: Color red);
-		  yourself
+	| model |
+	model := self new
+		         name: 'Goat and Wolf';
+		         authors: { 'Tomohiro Oda' };
+		         date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
+		         description:
+			         'A simple demo that wolves chase and eat goats in a grass field.';
+		         load: RMDWorldDefinitionNode empty;
+		         load: RMDPatchDefinitionNode grassField;
+		         load: RMDAnimatDefinitionNode goat;
+		         load: RMDAnimatDefinitionNode wolf;
+		         load: RMDBuiltinRepository current gain;
+		         load: RMDBuiltinRepository current lose;
+		         load: RMDBuiltinRepository current transfer;
+		         load: RMDBuiltinRepository current move;
+		         load: RMDBuiltinRepository current starve;
+		         load: RMDActionDefinitionNode reproduce;
+		         load: RMDActionDefinitionNode prey_on;
+		         load:
+			         (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
+		         load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
+		         load: RMDTaskDefinitionNode goat_walk_for_grass;
+		         load:
+			         (RMDTaskDefinitionNode
+				          goat_eat: '3000 [kcal/day]'
+				          upto: '10000[kcal]');
+		         load: RMDTaskDefinitionNode goat_reproduce;
+		         load:
+			         (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
+		         load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
+		         load: RMDTaskDefinitionNode wolf_chase_goat;
+		         load:
+			         (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
+		         load: RMDTaskDefinitionNode wolf_reproduce;
+		         load: (RMDTaskDefinitionNode
+				          patch_grow_grass: '1500[kcal/day]'
+				          upto: '1000000[kcal]');
+		         load: (RMDSimulationDefinitionNode
+				          timeDefinition:
+					          (RMDSimulationTimeDefinitionNode
+						           during: '2[year]'
+						           by: '0.5[day]')
+				          worldInitializer: RMDWorldInitializerNode empty
+				          patchInitializer: (RMDPatchInitializerNode
+						           grassInitializer: 10
+						           by: 10
+						           of: '5[km]'
+						           grass: '0[kcal]'
+						           to: '700000[kcal]')
+				          animatInitializers: { 
+						          (RMDAnimatInitializerNode
+							           goatInitializer: 100
+							           bloodSugar: '5000[kcal]'
+							           to: '9000[kcal]').
+						          (RMDAnimatInitializerNode
+							           wolfInitializer: 5
+							           bloodSugar: '2000[kcal]'
+							           to: '6000[kcal]') });
+		         addRenderer:
+			         (RMDBackgroundColorRenderer color: Color black);
+		         addRenderer: (RMDPatchColorAlphaRenderer
+				          color: Color green
+				          alpha: 'my grass' asRMDExpression
+				          between: '0[kcal]' asRMDExpression
+				          and: '1000000[kcal]' asRMDExpression);
+		         addRenderer:
+			         (RMDAnimatDotRenderer
+				          on: 'Goat'
+				          shapeSize: 7
+				          color: Color yellow);
+		         addRenderer:
+			         (RMDAnimatDotRenderer
+				          on: 'Wolf'
+				          shapeSize: 10
+				          color: Color red);
+		         yourself.
+	model variability multiplicity: 10.
+	^ model
 ]
 
 { #category : #accessing }
@@ -672,7 +685,9 @@ RMDSimulationModel >> initialize [
 { #category : #'accessing - meta parameters' }
 RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 
-	^ self shallowCopy metaParameters: aDictionary
+	^ self shallowCopy
+		  metaParameters: aDictionary;
+		  yourself
 ]
 
 { #category : #interpreting }
@@ -743,6 +758,26 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	^ self error: 'Unknown load'
 ]
 
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterForDryRun [
+
+	^ RMDMetaInterpreter forDryRunOn: self
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnFile [
+
+	^ RMDMetaInterpreter
+		  on: self
+		  modelPath: (RMDFileMemory modelPathFor: self)
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnModelPath: aFileReference [
+
+	^ RMDMetaInterpreter on: self modelPath: aFileReference
+]
+
 { #category : #'accessing - meta parameters' }
 RMDSimulationModel >> metaParameters [
 
@@ -752,8 +787,10 @@ RMDSimulationModel >> metaParameters [
 { #category : #'accessing - meta parameters' }
 RMDSimulationModel >> metaParameters: aDictionary [
 
+	metaParameters := metaParameters copy.
 	aDictionary keysAndValuesDo: [ :key :value | 
 		metaParameters at: key put: value ].
+	variability := variability copy.
 	simulationDefinition := simulationDefinition metaParameters:
 		                        aDictionary.
 	animatDefinitions := (animatDefinitions associations collect: [ 
@@ -843,6 +880,7 @@ RMDSimulationModel >> patchYDivisions [
 RMDSimulationModel >> postCopy [
 
 	metadata := metadata copy.
+	variability := variability copy.
 	simulationDefinition := simulationDefinition copy.
 	animatDefinitions := (animatDefinitions associations collect: [ 
 		                      :assoc | assoc key -> assoc value copy ])
@@ -852,9 +890,7 @@ RMDSimulationModel >> postCopy [
 		                      :assoc | assoc key -> assoc value copy ])
 		                     asOrderedDictionary.
 	renderers := renderers collect: [ :renderer | renderer copy ].
-	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
-		                    assoc key -> assoc value copy ])
-		                   asOrderedDictionary.
+	taskDefinitions := taskDefinitions collect: #copy.
 	patchDefinition := patchDefinition copy.
 	icons := icons copy.
 	metaParameters := metaParameters copy
@@ -1004,6 +1040,12 @@ RMDSimulationModel >> resetDefinitions [
 ]
 
 { #category : #'accessing - meta parameters' }
+RMDSimulationModel >> runBasename [
+
+	^ 'run' , (runId ifNotNil: #printString ifNil: [ '' ])
+]
+
+{ #category : #'accessing - meta parameters' }
 RMDSimulationModel >> runId [
 
 	^ runId
@@ -1114,6 +1156,18 @@ RMDSimulationModel >> updateMetadata [
 	metadata
 		ensureCurrentAuthor;
 		updateDate
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> variability [
+
+	^ variability
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> variability: aRMDVariabilityNode [
+
+	variability := aRMDVariabilityNode
 ]
 
 { #category : #'accessing - cells' }

@@ -33,14 +33,6 @@ RMDMetaContext >> addSimulationModel: aRMDSimulationModel [
 	^ runId
 ]
 
-{ #category : #testing }
-RMDMetaContext >> anyInterpreterRunning [
-
-	self interpretersDo: [ :interpreter | 
-		interpreter runState ifTrue: [ ^ true ] ].
-	^ false
-]
-
 { #category : #private }
 RMDMetaContext >> createInterpreterFor: aRMDSimulationModel [
 
@@ -64,6 +56,20 @@ RMDMetaContext >> interpreterAt: anInteger ifAbsent: errorBlock [
 RMDMetaContext >> interpretersDo: aBlock [
 
 	interpreters do: aBlock
+]
+
+{ #category : #testing }
+RMDMetaContext >> isRunningSimulation [
+
+	self interpretersDo: [ :interpreter | 
+		interpreter isRunningSimulation ifTrue: [ ^ true ] ].
+	^ false
+]
+
+{ #category : #accessing }
+RMDMetaContext >> memoryName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

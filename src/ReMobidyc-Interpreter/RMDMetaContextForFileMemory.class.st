@@ -19,8 +19,15 @@ RMDMetaContextForFileMemory class >> modelPath: aFileReference [
 RMDMetaContextForFileMemory >> createInterpreterFor: aRMDSimulationModel [
 
 	^ aRMDSimulationModel
-		  interpreterOnExistingFile: modelPath / aRMDSimulationModel runId
+		  interpreterOnExistingFile:
+		  modelPath / aRMDSimulationModel runBasename
 		  modelPath: modelPath
+]
+
+{ #category : #accessing }
+RMDMetaContextForFileMemory >> memoryName [
+
+	^ modelPath ifNotNil: #basename ifNil: [ '' ]
 ]
 
 { #category : #accessing }
@@ -32,7 +39,7 @@ RMDMetaContextForFileMemory >> modelPath [
 { #category : #accessing }
 RMDMetaContextForFileMemory >> modelPath: aFileReference [
 
-	modelPath := aFileReference
+	modelPath := aFileReference ensureCreateDirectory
 ]
 
 { #category : #enumerating }

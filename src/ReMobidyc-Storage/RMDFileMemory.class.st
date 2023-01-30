@@ -18,14 +18,34 @@ Class {
 RMDFileMemory class >> for: aRMDSimulationModel [
 
 	| modelPath basePath |
+	modelPath := self modelPathFor: aRMDSimulationModel.
+	basePath := modelPath / aRMDSimulationModel runBasename.
+	^ self on: basePath modelPath: modelPath
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> for: aRMDSimulationModel modelPath: aFileReference [
+
+	| basePath |
+	basePath := aFileReference / ('run'
+	             ,
+	             (aRMDSimulationModel runId
+		              ifNotNil: #printString
+		              ifNil: [ '' ])).
+	^ self on: basePath modelPath: aFileReference
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
+
+	| modelPath |
 	[ 
 	modelPath := RMDRunsRepository runsDirectory
 	             /
 		             ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
 		              , DateAndTime now printString).
-	basePath := modelPath / aRMDSimulationModel runId.
-	basePath exists ] whileTrue: [ 100 milliSecond wait ].
-	^ self on: basePath modelPath: modelPath
+	modelPath exists ] whileTrue: [ 100 milliSecond wait ].
+	^ modelPath
 ]
 
 { #category : #'instance creation' }

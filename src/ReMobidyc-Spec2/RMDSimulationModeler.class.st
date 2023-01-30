@@ -263,7 +263,7 @@ RMDSimulationModeler >> initializePresenters [
 	openExperimentariumButton := self newButton
 		                             icon: self experimentariumIcon;
 		                             action: [ 
-			                             simulationModel interpreterOnFile 
+			                             simulationModel metaInterpreterOnFile 
 				                             ifNotNil: #openInExperimentarium ];
 		                             help:
 			                             'Run the model in an experimentarium.';
@@ -335,19 +335,13 @@ RMDSimulationModeler >> openInExperimentariumMenu [
 					  item
 						  name: 'Dry-run';
 						  action: [ 
-							  simulationModel interpreterForDryRun ifNotNil:
-									  #openInExperimentarium ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'On memory';
-						  action: [ 
-							  simulationModel interpreterOnMemory ifNotNil:
+							  simulationModel metaInterpreterForDryRun ifNotNil:
 									  #openInExperimentarium ] ];
 				  addItem: [ :item | 
 					  item
 						  name: 'On file';
 						  action: [ 
-							  simulationModel interpreterOnFile ifNotNil:
+							  simulationModel metaInterpreterOnFile ifNotNil:
 									  #openInExperimentarium ] ] ];
 		  yourself
 ]

@@ -130,7 +130,7 @@ RMDExperimentarium >> pauseSimulation [
 	interpreter pauseSimulation
 ]
 
-{ #category : #updating }
+{ #category : #operations }
 RMDExperimentarium >> runButtonPressed [
 
 	interpreter isRunningSimulation
@@ -154,18 +154,31 @@ RMDExperimentarium >> serverUpdateInterval [
 { #category : #initialization }
 RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 
-	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
+	interpreter ifNotNil: [ 
+		interpreter announcer unsubscribe: self.
+		interpreter isMeta ifTrue: [ 
+			interpreter interpretersDo: [ :i | i announcer unsubscribe: self ] ] ].
 	interpreter := aRMDInterpreter.
 	self typecheck.
-	populationInspector interpreter: interpreter.
-	interpreter announcer weak
-		when: RMDSimulationStarted send: #simulationStarted: to: self;
-		when: RMDTimeChanged send: #timeChanged: to: self;
-		when: RMDSimulationPaused send: #simulationPaused: to: self.
 	self isValidated ifTrue: [ 
-		interpreter
-			setupSimulation;
-			fastForward ]
+		interpreter setupSimulation.
+		populationInspector interpreter: interpreter.
+		interpreter announcer weak
+			when: RMDSimulationStarted send: #simulationStarted: to: self;
+			when: RMDSimulationPaused send: #simulationPaused: to: self.
+		interpreter isMetaInterpreter
+			ifTrue: [ 
+				interpreter interpretersDo: [ :i | 
+					i announcer weak
+						when: RMDTimeChanged
+						send: #timeChanged:
+						to: self ] ]
+			ifFalse: [ 
+				interpreter announcer weak
+					when: RMDTimeChanged
+					send: #timeChanged:
+					to: self ].
+		interpreter fastForward ]
 ]
 
 { #category : #updating }
@@ -241,8 +254,6 @@ RMDExperimentarium >> windowTitle [
 			   ifTrue: [ '' ]
 			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
 		   ifNotNil: [ 
-			   interpreter memory
-				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
-				   ifNil: [ '' ] ]
+			   '[', interpreter memoryName, ']' ]
 		   ifNil: [ '' ])
 ]
