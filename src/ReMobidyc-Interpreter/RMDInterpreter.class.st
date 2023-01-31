@@ -525,7 +525,7 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 	self critical: [ 
 		[ [ runState = true and: [ self basicStepSimulation ] ] whileTrue ]
 			on: RMDSemanticError
-			do: errorHandlerBlock ] ] forkAt: Processor userBackgroundPriority
+			do: errorHandlerBlock ] ] forkAt: Processor userSchedulingPriority 
 ]
 
 { #category : #private }
