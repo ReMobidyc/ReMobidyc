@@ -219,7 +219,7 @@ RMDLauncher >> openInObservatoryOnFile [
 		self repository isRunsRepository
 			ifTrue: [ 
 				(model
-					 interpreterOnExistingFile: self file / 'run'
+					 interpreterOnExistingFile: self file / 'run1'
 					 modelPath: self file) ifNotNil: #openInObservatory ]
 			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
 ]

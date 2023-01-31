@@ -12,7 +12,7 @@ RMDStageDirectiveNode >> typecheckIn: aRMDInterpreter [
 	| animatDefinition |
 	animatIdentifier ifNil: [ 
 		^ (RMDUnresolvedReferenceError on: self) signal ].
-	animatDefinition := aRMDInterpreter
+	animatDefinition := aRMDInterpreter simulationModel
 		                    animatDefinitionAt: animatIdentifier
 		                    ifAbsent: [ 
 		                    ^ RMDUndefinedAnimatError on: animatIdentifier ].
