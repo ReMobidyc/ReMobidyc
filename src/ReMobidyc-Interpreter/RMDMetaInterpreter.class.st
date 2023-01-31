@@ -69,11 +69,6 @@ RMDMetaInterpreter >> fastForward [
 	self interpretersDo: #fastForward
 ]
 
-{ #category : #threading }
-RMDMetaInterpreter >> forkAllInterpretersDo: aBlock at: anInteger [
-	
-]
-
 { #category : #'accessing-interpreters' }
 RMDMetaInterpreter >> interpreterAt: anInteger ifAbsent: errorBlock [
 

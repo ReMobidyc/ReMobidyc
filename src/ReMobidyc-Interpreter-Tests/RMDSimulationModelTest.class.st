@@ -354,11 +354,7 @@ where
 			         -> '20 [DegreeC]' asRMDExpression).
 			        ('the tempStep' asRMDExpression
 			         -> '1 [DegreeC]' asRMDExpression) } asOrderedDictionary.
-	sim runId: 1.
-	sim1 runId: 2.
 	self deny: sim1 == sim.
-	self assert: sim runId equals: 1.
-	self assert: sim1 runId equals: 2.
 	self
 		assert:
 		sim worldDefinition attributeDeclarations first

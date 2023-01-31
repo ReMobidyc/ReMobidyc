@@ -16,9 +16,12 @@ RMDMetaContext class >> isAbstract [
 { #category : #adding }
 RMDMetaContext >> addInterpreter: aRMDInterpreter [
 
-	interpreters size + 1 = aRMDInterpreter runId ifFalse: [ 
-		aRMDInterpreter runId: interpreters size + 1 ].
-	interpreters := interpreters copyWith: aRMDInterpreter.
+	aRMDInterpreter runId > interpreters size ifTrue: [ 
+		interpreters := interpreters
+		                ,
+		                (Array new:
+			                 aRMDInterpreter runId - interpreters size) ].
+	interpreters at: aRMDInterpreter runId put: aRMDInterpreter.
 	^ aRMDInterpreter runId
 ]
 
@@ -57,13 +60,13 @@ RMDMetaContext >> initialize [
 { #category : #accessing }
 RMDMetaContext >> interpreterAt: anInteger ifAbsent: errorBlock [
 
-	^ interpreters at: anInteger ifAbsent: errorBlock
+	^ (interpreters at: anInteger ifAbsent: [ nil ]) ifNil: errorBlock
 ]
 
 { #category : #enumerating }
 RMDMetaContext >> interpretersDo: aBlock [
 
-	interpreters do: aBlock
+	interpreters do: [ :i | i ifNotNil: aBlock ]
 ]
 
 { #category : #testing }
@@ -92,21 +95,16 @@ RMDMetaContext >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
-RMDMetaContext >> runIdString: anInteger [
-
-	^ 'run' , anInteger printString
-]
-
 { #category : #enumerating }
 RMDMetaContext >> runIdsDo: aBlock [
 
-	1 to: interpreters size do: aBlock
+	self interpretersDo: [ :interpreter | 
+		aBlock value: interpreter runId ]
 ]
 
 { #category : #enumerating }
 RMDMetaContext >> runningRunIdsDo: aBlock [
 
-	1 to: interpreters size do: [ :runId | 
-		(interpreters at: runId) runState ifTrue: [ aBlock value: runId ] ]
+	self interpretersDo: [ :interpreter | 
+		interpreter runState ifTrue: [ aBlock value: interpreter runId ] ]
 ]

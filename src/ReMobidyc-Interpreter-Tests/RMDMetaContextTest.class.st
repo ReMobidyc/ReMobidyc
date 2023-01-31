@@ -25,10 +25,3 @@ RMDMetaContextTest >> testInterpreterAtIfAbsent [
 	self assert: (context interpreterAt: 2 ifAbsent: [ nil ]) equals: i2.
 	self assert: (context interpreterAt: 3 ifAbsent: [ nil ]) equals: nil
 ]
-
-{ #category : #tests }
-RMDMetaContextTest >> testRunIdString [
-
-	self assert: (context runIdString: 1) equals: 'run1'.
-	self assert: (context runIdString: 123) equals: 'run123'
-]
