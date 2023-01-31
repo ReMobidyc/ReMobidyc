@@ -63,14 +63,6 @@ RMDAbstractInterpreter >> load: aRMDSyntaxNode [
 ]
 
 { #category : #accessing }
-RMDAbstractInterpreter >> metaParameterString [
-
-	^ simulationModel
-		  ifNotNil: [ simulationModel metaParametersString ]
-		  ifNil: [ '' ]
-]
-
-{ #category : #accessing }
 RMDAbstractInterpreter >> modelName [
 
 	^ simulationModel ifNotNil: #name ifNil: [ '' ]
@@ -85,7 +77,7 @@ RMDAbstractInterpreter >> name [
 			  nextPutAll: ':';
 			  nextPutAll: self modelName;
 			  nextPutAll: '[';
-			  nextPutAll: self metaParameterString;
+			  nextPutAll: self metaParametersString;
 			  nextPutAll: ']' ]
 ]
 

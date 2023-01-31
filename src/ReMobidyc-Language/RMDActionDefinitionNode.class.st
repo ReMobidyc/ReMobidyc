@@ -239,7 +239,7 @@ RMDActionDefinitionNode >> lifeDirectives: anArrayOfRMDLifeDirective [
 ]
 
 { #category : #rewriting }
-RMDActionDefinitionNode >> metaParameters: aDictionary [
+RMDActionDefinitionNode >> metaparameters: aDictionary [
 
 	^ self copy
 ]

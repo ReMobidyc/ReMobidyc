@@ -265,7 +265,7 @@ RMDTaskDefinitionNode >> isTaskDefinitionNode [
 ]
 
 { #category : #rewriting }
-RMDTaskDefinitionNode >> metaParameters: aDictionary [
+RMDTaskDefinitionNode >> metaparameters: aDictionary [
 
 	^ self copy
 		  appendParameterInstantiations:

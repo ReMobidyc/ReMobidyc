@@ -505,7 +505,7 @@ RMDSyntaxNode >> isWorldInitializerNode [
 ]
 
 { #category : #rewriting }
-RMDSyntaxNode >> metaParameters: aDictionary [
+RMDSyntaxNode >> metaparameters: aDictionary [
 
 	^ self copyReplace: aDictionary
 ]

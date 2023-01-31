@@ -23,18 +23,26 @@ RMDMetaContext >> addInterpreter: aRMDInterpreter [
 ]
 
 { #category : #adding }
-RMDMetaContext >> addSimulationModel: aRMDSimulationModel [
+RMDMetaContext >> addInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil [
 
 	| runId |
 	runId := interpreters size + 1.
-	aRMDSimulationModel runId: runId.
-	interpreters := interpreters copyWith:
-		                (self createInterpreterFor: aRMDSimulationModel).
+	interpreters := interpreters copyWith: (self
+			                 createInterpreterOn: aRMDSimulationModel
+			                 metaparameters: aDictionary
+			                 randomSeed: anIntegerOrNil
+			                 runId: runId).
 	^ runId
 ]
 
 { #category : #private }
-RMDMetaContext >> createInterpreterFor: aRMDSimulationModel [
+RMDMetaContext >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
+RMDMetaContext >> exportModel: aRMDSimulationModel [
 
 	^ self subclassResponsibility
 ]

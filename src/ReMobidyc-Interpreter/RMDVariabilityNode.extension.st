@@ -5,9 +5,7 @@ RMDVariabilityNode >> metaEvalIn: aRMDMetaInterpreter [
 
 	self dictionariesDo: [ :metaparameters | 
 		aRMDMetaInterpreter
-			addSimulationModel:
-				(aRMDMetaInterpreter simulationModel 
-					 instantiateWithMetaParameters: metaparameters)
+			addInterpreterWithMetaparameters: metaparameters
 			multiplicity: multiplicity
 			randomSeed: randomSeed ]
 ]

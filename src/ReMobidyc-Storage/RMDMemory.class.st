@@ -235,6 +235,19 @@ RMDMemory >> latestTime: anInteger [
 ]
 
 { #category : #'accessing-meta parameters' }
+RMDMemory >> metaParametersString [
+
+	^ String streamContents: [ :stream | 
+		  metaparameters keys
+			  do: [ :placeholder | 
+				  stream
+					  nextPutAll: placeholder identifier;
+					  nextPutAll: '='.
+				  (metaparameters at: placeholder) printOn: stream ]
+			  separatedBy: [ stream nextPutAll: ', ' ] ]
+]
+
+{ #category : #'accessing-meta parameters' }
 RMDMemory >> metaparameters [
 
 	^ metaparameters

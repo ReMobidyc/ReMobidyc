@@ -16,12 +16,26 @@ RMDMetaContextForFileMemory class >> modelPath: aFileReference [
 ]
 
 { #category : #private }
-RMDMetaContextForFileMemory >> createInterpreterFor: aRMDSimulationModel [
+RMDMetaContextForFileMemory >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
 
-	^ aRMDSimulationModel
-		  interpreterOnExistingFile:
-		  modelPath / aRMDSimulationModel runBasename
-		  modelPath: modelPath
+	| memory |
+	memory := RMDFileMemory
+		          on: modelPath / ('run' , anInteger printString)
+		          modelPath: modelPath.
+	memory
+		runId: anInteger
+		metaparameters: aDictionary
+		randomSeed: (anIntegerOrNil ifNil: [ 
+				 SharedRandom globalGenerator nextInteger:
+					 RMDFishmanMooreRandomGenerator modulo ]).
+	^ (aRMDSimulationModel instantiateWithMetaParameters: aDictionary) 
+		  interpreterOn: memory
+]
+
+{ #category : #private }
+RMDMetaContextForFileMemory >> exportModel: aRMDSimulationModel [
+
+	aRMDSimulationModel exportModel: modelPath
 ]
 
 { #category : #accessing }

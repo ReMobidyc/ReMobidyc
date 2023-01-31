@@ -37,18 +37,16 @@ RMDMetaInterpreter class >> onModelPath: aFileReference [
 ]
 
 { #category : #'meta-interpreting' }
-RMDMetaInterpreter >> addSimulationModel: aRMDSimulationModel multiplicity: anInteger randomSeed: anIntegerOrNil [
+RMDMetaInterpreter >> addInterpreterWithMetaparameters: aDictionary multiplicity: anInteger randomSeed: anIntegerOrNil [
 
 	| runIds |
 	runIds := Array new: anInteger.
 	1 to: anInteger do: [ :index | 
 		| runId |
-		runId := context addSimulationModel: aRMDSimulationModel copy.
-		(self interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
-			:interpreter | 
-			interpreter randomSeed: (anIntegerOrNil ifNil: [ 
-					 SharedRandom globalGenerator nextInteger:
-						 RMDFishmanMooreRandomGenerator modulo ]) ].
+		runId := context
+			         addInterpreterOn: simulationModel
+			         metaparameters: aDictionary
+			         randomSeed: anIntegerOrNil.
 		runIds at: index put: runId ].
 	^ runIds
 ]
@@ -118,7 +116,7 @@ RMDMetaInterpreter >> memoryName [
 RMDMetaInterpreter >> nameAt: anInteger ifAbsent: errorBlock [
 
 	^ (context interpreterAt: anInteger ifAbsent: [ ^ errorBlock value ])
-		  simulationModel metaParametersString
+		  shortName
 ]
 
 { #category : #'accessing-interpreters' }
@@ -177,10 +175,10 @@ RMDMetaInterpreter >> setupInterpreters [
 
 	context
 		restoreMemoriesDo: [ :memory | 
-			context addInterpreter:
-				((simulationModel instantiateWithMetaParameters:
-					  memory metaparameters) interpreterOn: memory) ]
-		ifEmpty: [ simulationModel variability metaEvalIn: self ]
+			context addInterpreter: (simulationModel interpreterOn: memory) ]
+		ifEmpty: [ 
+			context exportModel: simulationModel.
+			simulationModel variability metaEvalIn: self ]
 ]
 
 { #category : #simulating }

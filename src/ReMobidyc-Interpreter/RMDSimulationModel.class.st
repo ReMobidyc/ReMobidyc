@@ -11,8 +11,6 @@ Class {
 		'taskDefinitions',
 		'patchDefinition',
 		'icons',
-		'runId',
-		'metaParameters',
 		'variability'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
@@ -677,8 +675,6 @@ RMDSimulationModel >> importVisualization: aFileReference [
 RMDSimulationModel >> initialize [
 
 	super initialize.
-	runId := 1.
-	metaParameters := OrderedDictionary new.
 	self resetDefinitions
 ]
 
@@ -686,7 +682,7 @@ RMDSimulationModel >> initialize [
 RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 
 	^ self shallowCopy
-		  metaParameters: aDictionary;
+		  metaparameters: aDictionary;
 		  yourself
 ]
 
@@ -778,56 +774,34 @@ RMDSimulationModel >> metaInterpreterOnModelPath: aFileReference [
 	^ RMDMetaInterpreter on: self modelPath: aFileReference
 ]
 
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> metaParameters [
-
-	^ metaParameters
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> metaParameters: aDictionary [
-
-	metaParameters := metaParameters copy.
-	aDictionary keysAndValuesDo: [ :key :value | 
-		metaParameters at: key put: value ].
-	variability := variability copy.
-	simulationDefinition := simulationDefinition metaParameters:
-		                        aDictionary.
-	animatDefinitions := (animatDefinitions associations collect: [ 
-		                      :assoc | 
-		                      assoc key
-		                      -> (assoc value metaParameters: aDictionary) ])
-		                     asOrderedDictionary.
-	worldDefinition := worldDefinition metaParameters: aDictionary.
-	actionDefinitions := (actionDefinitions associations collect: [ 
-		                      :assoc | 
-		                      assoc key
-		                      -> (assoc value metaParameters: aDictionary) ])
-		                     asOrderedDictionary.
-	renderers := renderers collect: #copy.
-	taskDefinitions := taskDefinitions collect: [ :def | 
-		                   def metaParameters: aDictionary ].
-	patchDefinition := patchDefinition metaParameters: aDictionary.
-	icons := icons copy
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> metaParametersString [
-
-	^ String streamContents: [ :stream | 
-		  metaParameters keys
-			  do: [ :placeholder | 
-				  stream
-					  nextPutAll: placeholder identifier;
-					  nextPutAll: '='.
-				  (metaParameters at: placeholder) printOn: stream ]
-			  separatedBy: [ stream nextPutAll: ', ' ] ]
-]
-
 { #category : #'accessing - metadata' }
 RMDSimulationModel >> metadata [
 
 	^ metadata
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDSimulationModel >> metaparameters: aDictionary [
+
+	variability := variability copy.
+	simulationDefinition := simulationDefinition metaparameters:
+		                        aDictionary.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaparameters: aDictionary) ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition metaparameters: aDictionary.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaparameters: aDictionary) ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: #copy.
+	taskDefinitions := taskDefinitions collect: [ :def | 
+		                   def metaparameters: aDictionary ].
+	patchDefinition := patchDefinition metaparameters: aDictionary.
+	icons := icons copy
 ]
 
 { #category : #'accessing - metadata' }
@@ -892,8 +866,7 @@ RMDSimulationModel >> postCopy [
 	renderers := renderers collect: [ :renderer | renderer copy ].
 	taskDefinitions := taskDefinitions collect: #copy.
 	patchDefinition := patchDefinition copy.
-	icons := icons copy.
-	metaParameters := metaParameters copy
+	icons := icons copy
 ]
 
 { #category : #adding }
@@ -1004,8 +977,7 @@ RMDSimulationModel >> replaceChildren: aDictionary [
 		                    assoc key -> assoc value copy ])
 		                   asOrderedDictionary.
 	patchDefinition := patchDefinition copy.
-	icons := icons copy.
-	metaParameters := metaParameters copy
+	icons := icons copy
 ]
 
 { #category : #'accessing - definitions' }
@@ -1037,24 +1009,6 @@ RMDSimulationModel >> resetDefinitions [
 	taskDefinitions := OrderedCollection new.
 	renderers := OrderedCollection new.
 	icons := Dictionary new
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> runBasename [
-
-	^ 'run' , (runId ifNotNil: #printString ifNil: [ '' ])
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> runId [
-
-	^ runId
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDSimulationModel >> runId: anInteger [
-
-	runId := anInteger
 ]
 
 { #category : #'accessing - definitions' }

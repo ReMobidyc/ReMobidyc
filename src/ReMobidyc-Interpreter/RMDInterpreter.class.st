@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'globalSeed',
 		'runSemaphore',
 		'runState'
 	],
@@ -213,17 +212,6 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #'random numbers' }
-RMDInterpreter >> globalSeed [
-	^ globalSeed
-]
-
-{ #category : #'random numbers' }
-RMDInterpreter >> globalSeed: anInteger [
-
-	globalSeed := anInteger asInteger
-]
-
 { #category : #'space access' }
 RMDInterpreter >> here [
 
@@ -270,8 +258,7 @@ RMDInterpreter >> initialize [
 
 	super initialize.
 	runSemaphore := Semaphore forMutualExclusion.
-	libraries := OrderedCollection with: self standardLibrary.
-	globalSeed := 1
+	libraries := OrderedCollection with: self standardLibrary
 ]
 
 { #category : #simulating }
@@ -298,15 +285,15 @@ RMDInterpreter >> memoryName [
 ]
 
 { #category : #'accessing - meta parameters' }
-RMDInterpreter >> metaParameters [
+RMDInterpreter >> metaParametersString [
 
-	^ simulationModel metaParameters
+	^ memory metaParametersString
 ]
 
 { #category : #'accessing - meta parameters' }
-RMDInterpreter >> metaParameters: aDictionary [
+RMDInterpreter >> metaparameters [
 
-	simulationModel metaParameters: aDictionary
+	^ memory metaparameters
 ]
 
 { #category : #'variable access' }
@@ -330,6 +317,17 @@ RMDInterpreter >> my: aString ifAbsent: errorBlock [
 				   offsetAt: aString
 				   ifAbsent: [ ^ errorBlock value ])
 		  ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDInterpreter >> name [
+
+	^ String streamContents: [ :stream | 
+		  stream
+			  nextPutAll: super name;
+			  nextPutAll: '[';
+			  nextPutAll: self metaParametersString;
+			  nextPutAll: ']' ]
 ]
 
 { #category : #'animat operations' }
@@ -454,13 +452,8 @@ RMDInterpreter >> random [
 
 { #category : #'accessing - meta parameters' }
 RMDInterpreter >> randomSeed [
-	^ self globalSeed
-]
 
-{ #category : #'accessing - meta parameters' }
-RMDInterpreter >> randomSeed: anInteger [
-
-	self globalSeed: anInteger
+	^ memory randomSeed
 ]
 
 { #category : #'variable access' }
@@ -522,13 +515,7 @@ RMDInterpreter >> rewind [
 { #category : #'accessing - meta parameters' }
 RMDInterpreter >> runId [
 
-	^ simulationModel runId
-]
-
-{ #category : #'accessing - meta parameters' }
-RMDInterpreter >> runId: anInteger [
-
-	simulationModel runId: anInteger
+	^ memory runId
 ]
 
 { #category : #simulating }
@@ -544,15 +531,14 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 
-	memory := aRMDMemory.
-	globalSeed := aRMDMemory randomSeed
+	memory := aRMDMemory
 ]
 
 { #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
-			globalSeed.
+			self randomSeed.
 			memory time.
 			(memory seedAt: anInteger1).
 			(memory seedAt: anInteger2).
@@ -564,7 +550,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
-			globalSeed.
+			self randomSeed.
 			memory time.
 			(memory seedAt: anInteger).
 			(self simulationModel taskDefinitions indexOf:
@@ -588,7 +574,7 @@ RMDInterpreter >> setupSimulation [
 { #category : #accessing }
 RMDInterpreter >> shortName [
 
-	^ self runId printString, ':', self metaParameterString
+	^ self runId printString, ':', self metaParametersString
 ]
 
 { #category : #'variable access' }
@@ -725,7 +711,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               definition: aRMDAnimatDefinitionNode1)
 		              space: memory;
 		              randomSeedWithHash: { 
-				              globalSeed.
+				              self randomSeed.
 				              memory time.
 				              (memory seedAt: anInteger1).
 				              (memory seedAt: anInteger2).
@@ -754,7 +740,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               definition: aRMDAnimatDefinitionNode)
 		              space: memory;
 		              randomSeedWithHash: { 
-				              globalSeed.
+				              self randomSeed.
 				              memory time.
 				              (memory seedAt: anInteger).
 				              anotherInteger };
@@ -786,7 +772,7 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 				    subject: anInteger
 				    definition: aRMDAgentDefinitionNode)
 				   randomSeedWithHash: { 
-						   globalSeed.
+						   self randomSeed.
 						   anInteger };
 				   yourself)
 		  do: aBlock
@@ -810,7 +796,7 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 				    subject: anInteger
 				    definition: aRMDAgentDefinitionNode)
 				   randomSeedWithHash: { 
-						   globalSeed.
+						   self randomSeed.
 						   memory time.
 						   (memory seedAt: anInteger) };
 				   yourself)

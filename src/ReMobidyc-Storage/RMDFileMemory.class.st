@@ -17,22 +17,16 @@ Class {
 { #category : #'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel [
 
-	| modelPath basePath |
-	modelPath := self modelPathFor: aRMDSimulationModel.
-	basePath := modelPath / aRMDSimulationModel runBasename.
-	^ self on: basePath modelPath: modelPath
+	^ self for: aRMDSimulationModel runId: 1
 ]
 
 { #category : #'instance creation' }
-RMDFileMemory class >> for: aRMDSimulationModel modelPath: aFileReference [
+RMDFileMemory class >> for: aRMDSimulationModel runId: anInteger [
 
-	| basePath |
-	basePath := aFileReference / ('run'
-	             ,
-	             (aRMDSimulationModel runId
-		              ifNotNil: #printString
-		              ifNil: [ '' ])).
-	^ self on: basePath modelPath: aFileReference
+	| modelPath basePath |
+	modelPath := self modelPathFor: aRMDSimulationModel.
+	basePath := modelPath / ('run' , anInteger printString).
+	^ self on: basePath modelPath: modelPath
 ]
 
 { #category : #'instance creation' }
@@ -530,8 +524,9 @@ RMDFileMemory >> writeMetaparameters [
 				               ifNil: [ OrderedDictionary new ]);
 		              at: 'randomSeed' put: (randomSeed ifNil: [ 1 ]);
 		              yourself.
-	self basePath / self metaparameterJsonBasename writeStreamDo: [ 
-		:stream | STONJSON put: jsonObject onStreamPretty: stream ]
+	self basePath ensureCreateDirectory / self metaparameterJsonBasename 
+		lfWriteStreamDo: [ :stream | 
+		STONJSON put: jsonObject onStreamPretty: stream ]
 ]
 
 { #category : #'accessing-storage' }
