@@ -314,15 +314,11 @@ RMDFileMemory >> readReproductionLinksForTime: anInteger [
 	ref := (self directoryForTime: anInteger)
 	       / self reproductionLinksFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :stream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| params |
 		params := Dictionary new.
 		[ stream atEnd ] whileFalse: [ 
-			(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
-				pair size = 2 ifTrue: [ 
-					params
-						at: pair first trim asInteger
-						put: pair second trim asInteger ] ] ].
+			params at: stream uint32 put: stream uint32 ].
 		^ params ]
 ]
 
@@ -407,13 +403,8 @@ RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 ]
 
 { #category : #'accessing-storage' }
-RMDFileMemory >> reproductionLinksFile [
-	^ self basePath / self reproductionLinksFileBasename
-]
-
-{ #category : #'accessing-storage' }
 RMDFileMemory >> reproductionLinksFileBasename [
-	^ 'reproductionLinks.csv'
+	^ 'reproductionLinks.raw'
 ]
 
 { #category : #'accessing-meta parameters' }
@@ -549,12 +540,11 @@ RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 	       / self reproductionLinksFileBasename.
 	ref
 		ensureDelete;
-		writeStreamDo: [ :stream | 
+		binaryWriteStreamDo: [ :stream | 
 			aDictionary keysAndValuesDo: [ :key :value | 
-					key printOn: stream.
-					stream nextPut: $,.
-					value printOn: stream.
-					stream nextPut: Character lf ] ]
+					stream
+						uint32: key;
+						uint32: value ] ]
 ]
 
 { #category : #'accessing-storage' }

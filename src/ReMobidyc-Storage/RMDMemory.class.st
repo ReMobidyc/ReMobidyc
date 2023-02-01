@@ -7,8 +7,6 @@ Class {
 		'nextValues',
 		'nextDeltas',
 		'values',
-		'oldValues',
-		'old2Values',
 		'nextAvailableSlot',
 		'stageLinks',
 		'reproductionLinks',
@@ -148,8 +146,6 @@ RMDMemory >> eastOf: anInteger do: aBlock [
 { #category : #timing }
 RMDMemory >> fastSunrise [
 
-	old2Values := oldValues.
-	oldValues := values.
 	nextValues size * 10 < nextValues capacity ifTrue: [ 
 		nextValues compact ].
 	values := nextValues copy.
@@ -201,8 +197,6 @@ RMDMemory >> initialize [
 	latestTime := 0.
 	nextValues := Dictionary new.
 	values := Dictionary new.
-	oldValues := Dictionary new.
-	old2Values := Dictionary new.
 	nextDeltas := Dictionary new.
 	nextAvailableSlot := 1.
 	xPatches := 0.
@@ -307,17 +301,6 @@ RMDMemory >> northOf: anInteger do: aBlock [
 { #category : #'accessing-individuals' }
 RMDMemory >> numberOfAnimats: aString [
 	^ (animats at: aString ifAbsent: [ ^ 0 ]) size
-]
-
-{ #category : #accessing }
-RMDMemory >> oldAt: anInteger [
-	^ self oldAt: anInteger ifAbsent: [ KeyNotFound signal ]
-]
-
-{ #category : #accessing }
-RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
-
-	^ oldValues at: anInteger ifAbsent: errorBlock
 ]
 
 { #category : #'accessing-individuals' }
@@ -486,9 +469,6 @@ RMDMemory >> stageHistoryOf: anInteger [
 { #category : #timing }
 RMDMemory >> sunrise [
 
-	oldValues := time >= 1
-		             ifTrue: [ self readValuesForTime: time - 1 ]
-		             ifFalse: [ Dictionary new ].
 	values := self readValuesForTime: time.
 	nextValues := values copy.
 	nextDeltas := Dictionary new.
