@@ -363,15 +363,10 @@ RMDFileMemory >> readStageLinksForTime: anInteger [
 	ref := (self directoryForTime: anInteger)
 	       / self stageLinksFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :stream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| params |
 		params := Dictionary new.
-		[ stream atEnd ] whileFalse: [ 
-			(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
-				pair size = 2 ifTrue: [ 
-					params
-						at: pair first trim asInteger
-						put: pair second trim asInteger ] ] ].
+		[ stream atEnd ] whileFalse: [params at: stream uint32 put: stream uint32].
 		^ params ]
 ]
 
@@ -443,13 +438,8 @@ RMDFileMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 ]
 
 { #category : #'accessing-storage' }
-RMDFileMemory >> stageLinksFile [
-	^ self basePath / self stageLinksFileBasename
-]
-
-{ #category : #'accessing-storage' }
 RMDFileMemory >> stageLinksFileBasename [
-	^ 'stageLinks.csv'
+	^ 'stageLinks.raw'
 ]
 
 { #category : #'accessing-storage' }
@@ -589,12 +579,11 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 	       / self stageLinksFileBasename.
 	ref
 		ensureDelete;
-		writeStreamDo: [ :stream | 
+		binaryWriteStreamDo: [ :stream | 
 			aDictionary keysAndValuesDo: [ :key :value | 
-					key printOn: stream.
-					stream nextPut: $,.
-					value printOn: stream.
-					stream nextPut: Character lf ] ]
+					stream
+						uint32: key;
+						uint32: value ] ]
 ]
 
 { #category : #'accessing-storage' }
