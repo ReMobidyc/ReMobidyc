@@ -317,6 +317,12 @@ RMDPresenter >> stepIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> tabularIcon [
+
+	^ Smalltalk ui icons iconNamed: #workspace
+]
+
+{ #category : #icons }
 RMDPresenter >> upIcon [
 	^ Smalltalk ui icons up
 ]

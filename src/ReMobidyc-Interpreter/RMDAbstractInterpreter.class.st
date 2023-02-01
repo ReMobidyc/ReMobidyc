@@ -77,7 +77,7 @@ RMDAbstractInterpreter >> name [
 			  nextPutAll: ':';
 			  nextPutAll: self modelName;
 			  nextPutAll: '[';
-			  nextPutAll: self metaParametersString;
+			  nextPutAll: self metaparametersString;
 			  nextPutAll: ']' ]
 ]
 

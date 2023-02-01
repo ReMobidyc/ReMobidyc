@@ -235,7 +235,13 @@ RMDMemory >> latestTime: anInteger [
 ]
 
 { #category : #'accessing-meta parameters' }
-RMDMemory >> metaParametersString [
+RMDMemory >> metaparameters [
+
+	^ metaparameters
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDMemory >> metaparametersString [
 
 	^ String streamContents: [ :stream | 
 		  metaparameters keys
@@ -245,12 +251,6 @@ RMDMemory >> metaParametersString [
 					  nextPutAll: '='.
 				  (metaparameters at: placeholder) printOn: stream ]
 			  separatedBy: [ stream nextPutAll: ', ' ] ]
-]
-
-{ #category : #'accessing-meta parameters' }
-RMDMemory >> metaparameters [
-
-	^ metaparameters
 ]
 
 { #category : #accessing }
@@ -316,6 +316,7 @@ RMDMemory >> oldAt: anInteger [
 
 { #category : #accessing }
 RMDMemory >> oldAt: anInteger ifAbsent: errorBlock [
+
 	^ oldValues at: anInteger ifAbsent: errorBlock
 ]
 

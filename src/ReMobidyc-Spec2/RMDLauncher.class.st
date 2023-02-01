@@ -7,6 +7,7 @@ Class {
 		'experimentariumMenuButton',
 		'experimentariumButton',
 		'observatoryMenuButton',
+		'tabularButton',
 		'modelerMenuButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
@@ -45,6 +46,8 @@ RMDLauncher class >> defaultLayout [
 								     addSpace;
 								     addButton: #experimentariumButton
 								     dropdownButton: #experimentariumMenuButton;
+								     addSpace;
+								     add: #tabularButton width: self buttonHeight;
 								     addSpace;
 								     addButton: #observatoryButton
 								     dropdownButton: #observatoryMenuButton;
@@ -116,6 +119,12 @@ RMDLauncher >> initializePresenters [
 			                         'Run the model in an observatory with selected memory model.';
 		                         disable;
 		                         yourself.
+	tabularButton := self newButton
+		                 icon: self tabularIcon;
+		                 action: [ self openInPopulationTabular ];
+		                 help: 'Analyze the model on a population tabular.';
+		                 disable;
+		                 yourself.
 	super initializePresenters
 ]
 
@@ -232,6 +241,15 @@ RMDLauncher >> openInObservatoryOnMemory [
 ]
 
 { #category : #operations }
+RMDLauncher >> openInPopulationTabular [
+
+	self load ifNotNil: [ :model | 
+		self repository isRunsRepository ifTrue: [ 
+			(model metaInterpreterOnModelPath: self file) ifNotNil:
+				#openInPopulationTabular ] ]
+]
+
+{ #category : #operations }
 RMDLauncher >> openInTextModeler [
 
 	self repository isRunsRepository ifFalse: [ 
@@ -272,6 +290,7 @@ RMDLauncher >> updateButtons [
 			experimentariumButton enable.
 			experimentariumMenuButton enabled:
 				self repository isRunsRepository not.
+			tabularButton enabled: self repository isRunsRepository.
 			observatoryButton enable.
 			observatoryMenuButton enabled: self repository isRunsRepository not ]
 		ifNil: [ 
@@ -279,6 +298,7 @@ RMDLauncher >> updateButtons [
 			modelerMenuButton disable.
 			experimentariumButton disable.
 			experimentariumMenuButton disable.
+			tabularButton disable.
 			observatoryButton disable.
 			observatoryMenuButton disable ]
 ]

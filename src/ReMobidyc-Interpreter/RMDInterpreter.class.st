@@ -285,15 +285,15 @@ RMDInterpreter >> memoryName [
 ]
 
 { #category : #'accessing - meta parameters' }
-RMDInterpreter >> metaParametersString [
-
-	^ memory metaParametersString
-]
-
-{ #category : #'accessing - meta parameters' }
 RMDInterpreter >> metaparameters [
 
 	^ memory metaparameters
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> metaparametersString [
+
+	^ memory metaparametersString
 ]
 
 { #category : #'variable access' }
@@ -326,7 +326,7 @@ RMDInterpreter >> name [
 		  stream
 			  nextPutAll: super name;
 			  nextPutAll: '[';
-			  nextPutAll: self metaParametersString;
+			  nextPutAll: self metaparametersString;
 			  nextPutAll: ']' ]
 ]
 
@@ -574,7 +574,7 @@ RMDInterpreter >> setupSimulation [
 { #category : #accessing }
 RMDInterpreter >> shortName [
 
-	^ self runId printString, ':', self metaParametersString
+	^ self runId printString, ':', self metaparametersString
 ]
 
 { #category : #'variable access' }
