@@ -79,7 +79,7 @@ RMDFileMemory >> allocationFileBasename [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> animatsFileBasename [
-	^ 'animats.csv'
+	^ 'animats.raw'
 ]
 
 { #category : #accessing }
@@ -92,22 +92,6 @@ RMDFileMemory >> at: anInteger ifAbsent: aBlock [
 RMDFileMemory >> at: anInteger put: aNumber [
 
 	^ values at: anInteger put: aNumber
-]
-
-{ #category : #controlling }
-RMDFileMemory >> backoffOnError: aBlock [
-
-	| backoff |
-	backoff := 100.
-	WriteSemaphore ifNil: [ 
-		WriteSemaphore := Semaphore forMutualExclusion ].
-	[ WriteSemaphore critical: aBlock ]
-		on: Error
-		do: [ :ex | 
-			backoff milliSecond wait.
-			Smalltalk garbageCollect.
-			backoff := backoff * 2 min: 2000.
-			ex retry ]
 ]
 
 { #category : #'accessing-storage' }
@@ -290,17 +274,17 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) / self animatsFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :csvStream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| vals |
 		vals := Dictionary new.
-		[ 
-		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
-			whileTrue: [ csvStream next ].
-		csvStream atEnd ] whileFalse: [ 
-			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
-				vals
-					at: row first
-					put: (row copyWithoutFirst collect: #asInteger) asSet ] ].
+		[ stream atEnd ] whileFalse: [ 
+			| len animat ids |
+			len := stream uint32.
+			animat := (stream next: len) utf8Decoded.
+			len := stream uint32.
+			ids := Set new: len.
+			len timesRepeat: [ ids add: stream uint32 ].
+			vals at: animat put: ids ].
 		^ vals ]
 ]
 
@@ -390,15 +374,15 @@ RMDFileMemory >> readValuesForTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) / self valuesFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref binaryReadStreamDo: [ :binStream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| vals |
-		vals := Dictionary new.
-		[ binStream atEnd ] whileFalse: [ 
+		vals := Dictionary new: stream size // 3.
+		[ stream atEnd ] whileFalse: [ 
 			| id value |
-			id := binStream uint32.
+			id := stream uint32.
 			value := ((BoxedFloat64 basicNew: 2)
-				          basicAt: 1 put: binStream uint32;
-				          basicAt: 2 put: binStream uint32;
+				          basicAt: 1 put: stream uint32;
+				          basicAt: 2 put: stream uint32;
 				          yourself) * 1.0.
 			vals at: id put: value ].
 		^ vals ]
@@ -486,7 +470,7 @@ RMDFileMemory >> valuesFileBasename [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAllocation [
 
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		self allocationFile writeStreamDo: [ :stream | 
 			stream truncate.
 			stream nextPutAll: 'latestTime,'.
@@ -504,19 +488,27 @@ RMDFileMemory >> writeAllocation [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 
-	self backoffOnError: [ 
-		(self directoryForTime: anInteger) ensureCreateDirectory
-		/ self animatsFileBasename writeStreamDo: [ :csvStream | 
-			csvStream truncate.
+	| ref |
+	ref := (self directoryForTime: anInteger) ensureCreateDirectory
+	       / self animatsFileBasename.
+	self writeCritical: [ 
+		ref binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :animat :individuals | 
-				csvStream nextPutAll: animat.
-				individuals ifNotEmpty: [ 
-					csvStream nextPut: $,.
-					individuals
-						do: [ :id | id printOn: csvStream ]
-						separatedBy: [ csvStream nextPut: $, ] ].
-				csvStream lf ].
-			csvStream close ] ]
+				| utf8animat |
+				utf8animat := animat utf8Encoded.
+				stream uint32: utf8animat size.
+				stream nextPutAll: utf8animat.
+				stream uint32: individuals size.
+				individuals do: [ :id | stream uint32: id ] ].
+			stream close ] ]
+]
+
+{ #category : #controlling }
+RMDFileMemory >> writeCritical: aBlock [
+
+	(WriteSemaphore ifNil: [ 
+		 WriteSemaphore := Semaphore forMutualExclusion ]) critical: aBlock
 ]
 
 { #category : #'accessing-meta parameters' }
@@ -550,7 +542,7 @@ RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) ensureCreateDirectory
 	       / self reproductionLinksFileBasename.
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		ref binaryWriteStreamDo: [ :stream | 
 			stream truncate.
 			aDictionary keysAndValuesDo: [ :key :value | 
@@ -563,7 +555,7 @@ RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		(self directoryForTime: anInteger) ensureCreateDirectory
 		/ self seedsFileBasename binaryWriteStreamDo: [ :stream | 
 			stream truncate.
@@ -577,7 +569,7 @@ RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeSpace [
 
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		self spaceFile writeStreamDo: [ :stream | 
 			stream truncate.
 			stream nextPutAll: 'patch,'.
@@ -601,7 +593,7 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) ensureCreateDirectory
 	       / self stageLinksFileBasename.
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		ref binaryWriteStreamDo: [ :stream | 
 			stream truncate.
 			aDictionary keysAndValuesDo: [ :key :value | 
@@ -614,7 +606,7 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 
-	self backoffOnError: [ 
+	self writeCritical: [ 
 		(self directoryForTime: anInteger) ensureCreateDirectory
 		/ self valuesFileBasename binaryWriteStreamDo: [ :stream | 
 			stream truncate.
