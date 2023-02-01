@@ -107,7 +107,7 @@ RMDSimulationModel class >> goatAndWolf [
 				          shapeSize: 10
 				          color: Color red);
 		         yourself.
-	model variability multiplicity: 3.
+	model variability multiplicity: 10.
 	^ model
 ]
 

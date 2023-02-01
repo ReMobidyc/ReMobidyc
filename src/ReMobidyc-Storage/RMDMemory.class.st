@@ -521,8 +521,9 @@ RMDMemory >> time [
 { #category : #timing }
 RMDMemory >> time: anInteger [
 
+	time = anInteger ifTrue: [ ^ self ].
 	(anInteger isInteger and: [ 
-		 anInteger between: 0 and: self latestTime]) ifFalse: [ 
+		 anInteger between: 0 and: self latestTime ]) ifFalse: [ 
 		^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
