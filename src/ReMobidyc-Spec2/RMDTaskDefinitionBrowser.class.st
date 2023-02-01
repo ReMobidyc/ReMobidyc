@@ -12,7 +12,7 @@ Class {
 		'editActionButton',
 		'verbIdentifierField',
 		'objectIdentifierField',
-		'replacementList',
+		'parameterInstantiationList',
 		'sourceText',
 		'taskDefinitionNode',
 		'rangeField',
@@ -222,7 +222,7 @@ RMDTaskDefinitionBrowser >> editAction [
 RMDTaskDefinitionBrowser >> editParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model | 
-		replacementList selection selectedItem ifNotNil: [ :oldBind | 
+		parameterInstantiationList selection selectedItem ifNotNil: [ :oldBind | 
 			self taskDefinition ifNotNil: [ :taskDefinition | 
 				(model
 					 actionDefinitionAt: taskDefinition actionIdentifier
@@ -345,63 +345,78 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		              whenLastValidSyntaxNodeChangedDo: [ 
 			              self acceptRangeField ];
 		              yourself.
-	replacementList := self newTable
-		                   beSingleSelection;
-		                   beResizable;
-		                   addColumn:
-			                   ((SpStringTableColumn
-				                     title: 'placeholder'
-				                     evaluated: [ :item | 
-					                     | actionAttribute actionDefinition |
-					                     actionAttribute := item placeholder
-						                                        printString asText.
-					                     actionDefinition := self actionDefinition.
-					                     (actionDefinition isNil or: [ 
-							                      (actionDefinition includesNode:
-									                       item placeholder) not ]) ifTrue: [ 
-							                     actionAttribute makeAllColor: Color red ].
-					                     actionAttribute ])
-				                    beExpandable;
-				                    yourself);
-		                   addColumn:
-			                   ((SpImageTableColumn evaluated: [ :item | 
-					                     self replacementIcon ])
-				                    width: 20;
-				                    beNotExpandable);
-		                   addColumn: ((SpStringTableColumn
-				                     title: 'specialized'
-				                     evaluated: [ :item | 
-					                     item replacement printString ])
-				                    beExpandable;
-				                    yourself);
-		                   whenModelChangedDo: [ 
-		                   replacementList selectItem: nil ];
-		                   whenSelectionChangedDo: [ 
-			                   | selected |
-			                   selected := replacementList selection
-				                               selectedItem notNil.
-			                   removeParameterInstantiationButton enabled: selected.
-			                   editParameterInstantiationButton enabled: selected ];
-		                   yourself.
+	parameterInstantiationList := self newTable
+		                              beSingleSelection;
+		                              beResizable;
+		                              addColumn:
+			                              ((SpStringTableColumn
+				                                title: 'placeholder'
+				                                evaluated: [ :item | 
+					                                | actionAttribute actionDefinition |
+					                                actionAttribute := item
+						                                                   placeholder
+						                                                   printString
+						                                                   asText.
+					                                actionDefinition := self
+						                                                    actionDefinition.
+					                                (actionDefinition isNil or: [ 
+							                                 (actionDefinition 
+								                                  includesNode:
+									                                  item placeholder) not ]) 
+						                                ifTrue: [ 
+							                                actionAttribute makeAllColor:
+									                                Color red ].
+					                                actionAttribute ])
+				                               beExpandable;
+				                               yourself);
+		                              addColumn:
+			                              ((SpImageTableColumn evaluated: [ 
+					                                :item | self replacementIcon ])
+				                               width: 20;
+				                               beNotExpandable);
+		                              addColumn: ((SpStringTableColumn
+				                                title: 'specialized'
+				                                evaluated: [ :item | 
+					                                item replacement printString ])
+				                               beExpandable;
+				                               yourself);
+		                              whenModelChangedDo: [ 
+		                              parameterInstantiationList 
+			                              selectItem: nil ];
+		                              whenSelectionChangedDo: [ 
+			                              | selected |
+			                              selected := parameterInstantiationList
+				                                          selection selectedItem
+				                                          notNil.
+			                              removeParameterInstantiationButton 
+				                              enabled: selected.
+			                              editParameterInstantiationButton 
+				                              enabled: selected ];
+		                              yourself.
 	addParameterInstantiationButton := self newButton
-		                        icon: self addIcon;
-		                        action: [ self addParameterInstantiation ];
-		                        help:
-			                        'Add a new replacement rule with a placeholder';
-		                        yourself.
+		                                   icon: self addIcon;
+		                                   action: [ 
+			                                   self addParameterInstantiation ];
+		                                   help:
+			                                   'Add a new replacement rule with a placeholder';
+		                                   yourself.
 	removeParameterInstantiationButton := self newButton
-		                           icon: self removeIcon;
-		                           action: [ self removeParameterInstantiation ];
-		                           help:
-			                           'Remove the selected replacement rule';
-		                           disable;
-		                           yourself.
+		                                      icon: self removeIcon;
+		                                      action: [ 
+			                                      self
+				                                      removeParameterInstantiation ];
+		                                      help:
+			                                      'Remove the selected replacement rule';
+		                                      disable;
+		                                      yourself.
 	editParameterInstantiationButton := self newButton
-		                         icon: self editIcon;
-		                         action: [ self editParameterInstantiation ];
-		                         help: 'Edit the selected replacement rule';
-		                         disable;
-		                         yourself.
+		                                    icon: self editIcon;
+		                                    action: [ 
+			                                    self editParameterInstantiation ];
+		                                    help:
+			                                    'Edit the selected replacement rule';
+		                                    disable;
+		                                    yourself.
 	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
 		              enabled: false;
 		              beNotEditable;
@@ -456,14 +471,14 @@ RMDTaskDefinitionBrowser >> removeAction [
 
 { #category : #operations }
 RMDTaskDefinitionBrowser >> removeParameterInstantiation [
-	replacementList selection selectedItem
-		ifNotNil: [ :bind | 
-			self taskDefinition
-				ifNotNil: [ :task | 
-					task parameterInstantiations: (task parameterInstantiations copyWithout: bind).
-					self
-						updateParameterInstantiationList;
-						updateSourceText ] ]
+
+	parameterInstantiationList selection selectedItem ifNotNil: [ :bind | 
+		self taskDefinition ifNotNil: [ :task | 
+			task parameterInstantiations:
+				(task parameterInstantiations copyWithout: bind).
+			self
+				updateParameterInstantiationList;
+				updateSourceText ] ]
 ]
 
 { #category : #accessing }
@@ -560,8 +575,9 @@ RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateParameterInstantiationList [
 
-	replacementList items: (self taskDefinition
-			 ifNotNil: [ :taskDefinition | taskDefinition parameterInstantiations ]
+	parameterInstantiationList items: (self taskDefinition
+			 ifNotNil: [ :taskDefinition | 
+			 taskDefinition parameterInstantiations ]
 			 ifNil: [ Array new ])
 ]
 
