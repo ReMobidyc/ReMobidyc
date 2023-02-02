@@ -18,8 +18,8 @@ RMDApplyNode >> evalIn: aRMDInterpreter [
 RMDApplyNode >> typecheckIn: aRMDInterpreter [
 
 	| func |
-	func := RMDFunction
-		        at: function
+	func := aRMDInterpreter
+		        functionAt: function
 		        ifAbsent: [ ^ RMDUndefinedFunctionError signal: self ].
 	^ func
 		  typecheckWithArguments: arguments

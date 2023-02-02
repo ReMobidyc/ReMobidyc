@@ -23,7 +23,7 @@ RMDTaskDefinitionPresenter >> initializePresenters [
 					node actionIdentifier: newNode actionIdentifier.
 					node objectIdentifier: newNode objectIdentifier.
 					node range: newNode range.
-					node attributeBinds: newNode attributeBinds ]
+					node parameterInstantiations: newNode parameterInstantiations ]
 				ifNil: [ node := newNode ] ]
 ]
 

@@ -498,37 +498,6 @@ RMDGrammarTest >> testAssignableDifferentialAttributeVariable [
 ]
 
 { #category : #tests }
-RMDGrammarTest >> testAttributeBind [
-
-	| node |
-	node := grammar attributeBind parse: 'the energy -> my sugar'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: 'my sugar').
-	node := grammar attributeBind parse: 'the energy -> 10 [m]'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'energy'.
-	self
-		assert: node replacement
-		equals: (grammar expression parse: '10 [m]').
-	node := grammar attributeBind parse:
-		        'the condition -> my sugar = 0 [kcal]'.
-	self deny: node isPetit2Failure.
-	self assert: node isAttributeBindNode.
-	self assert: node placeholder isPlaceholderNode.
-	self assert: node placeholder identifier equals: 'condition'.
-	self
-		assert: node replacement
-		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
-]
-
-{ #category : #tests }
 RMDGrammarTest >> testAttributeDeclaration [
 
 	| declaration |
@@ -1031,6 +1000,86 @@ RMDGrammarTest >> testLogLogisticDistribution [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testMetaParameterSequence [
+
+	self
+		assert:
+		(grammar metaParameterSequence end parse:
+			 'the p -> 1, 2, 3, 4, 5, 6')
+		with: [ :node | 
+			self assert: node isMetaSingleParameterSequenceNode.
+			self assert: node size equals: 6 ].
+	self
+		assert: (grammar metaParameterSequence end parse:
+				 'the p -> (1), (2), (3), (4), (5), (6)')
+		with: [ :node | 
+			self assert: node isMetaParameterSetSequenceNode.
+			self assert: node size equals: 6 ].
+	self
+		assert: (grammar metaParameterSequence end parse:
+				 'the p, the q -> (1, 2), (3, 4), (5, 6)')
+		with: [ :node | 
+			self assert: node isMetaParameterSetSequenceNode.
+			self assert: node size equals: 3 ].
+	self assert: (grammar metaParameterSequence end parse:
+			 'the p, the q -> (1, 2), 3, 4, (5, 6)') isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testMetaParameterSetSequence [
+
+	self
+		assert: (grammar metaParameterSetSequence end parse:
+				 'the p, the q -> (1, 2), (3, 4), (5, 6)')
+		with: [ :node | 
+			self assert: node isMetaParameterSetSequenceNode.
+			self assert: node size equals: 3.
+			self assert: node placeholders size equals: 2 ].
+	self
+		assert: (grammar metaParameterSetSequence end parse:
+				 'the p, the q -> (1 [cm], 2 [mm]), (3 [km], 4 [m]), (5 [microm], 6 [nm])')
+		with: [ :node | 
+			self assert: node isMetaParameterSetSequenceNode.
+			self assert: node size equals: 3.
+			self assert: node placeholders size equals: 2 ].
+	self assert: (grammar metaParameterSetSequence end parse:
+			 'the p, the q -> (1, 2, 3)') isPetit2Failure.
+	self assert: (grammar metaParameterSetSequence end parse:
+			 'the p, the q -> (1, 2), (3, 4, 5)') isPetit2Failure.
+	self assert:
+		(grammar metaSingleParameterSequence end parse: 'the p -> ')
+			isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testMetaSingleParameterSequence [
+
+	self
+		assert:
+		(grammar metaSingleParameterSequence end parse:
+			 'the p -> 1, 2, 3, 4')
+		with: [ :node | 
+			self assert: node isMetaSingleParameterSequenceNode.
+			self assert: node size equals: 4.
+			self assert: node placeholder isPlaceholderNode.
+			self assert: node placeholder identifier equals: 'p' ].
+	self
+		assert: (grammar metaSingleParameterSequence end parse:
+				 'the p -> 1 [cm], 2 [mm], 3 [km], 4 [m]')
+		with: [ :node | 
+			self assert: node isMetaSingleParameterSequenceNode.
+			self assert: node size equals: 4.
+			self assert: node placeholder isPlaceholderNode.
+			self assert: node placeholder identifier equals: 'p' ].
+	self assert:
+		(grammar metaSingleParameterSequence end parse: 'the p -> x')
+			isPetit2Failure.
+	self assert:
+		(grammar metaSingleParameterSequence end parse: 'the p -> ')
+			isPetit2Failure
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testMetaVariable [
 
 	| variable |
@@ -1059,6 +1108,37 @@ RMDGrammarTest >> testNormalDistribution [
 	self
 		assert: node sigmaExpression
 		equals: (grammar expression parse: '2[cm]')
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testParameterInstantiation [
+
+	| node |
+	node := grammar parameterInstantiation parse: 'the energy -> my sugar'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: 'my sugar').
+	node := grammar parameterInstantiation parse: 'the energy -> 10 [m]'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'energy'.
+	self
+		assert: node replacement
+		equals: (grammar expression parse: '10 [m]').
+	node := grammar parameterInstantiation parse:
+		        'the condition -> my sugar = 0 [kcal]'.
+	self deny: node isPetit2Failure.
+	self assert: node isParameterInstantiationNode.
+	self assert: node placeholder isPlaceholderNode.
+	self assert: node placeholder identifier equals: 'condition'.
+	self
+		assert: node replacement
+		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
 ]
 
 { #category : #tests }
@@ -1266,7 +1346,7 @@ where
 	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
-	self assert: node attributeBinds size = 2.
+	self assert: node parameterInstantiations size = 2.
 	node := grammar taskDefinition parse: '
 Wolf eat Goat within 1[m]
 where
@@ -1277,7 +1357,7 @@ where
 	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node attributeBinds size = 1
+	self assert: node parameterInstantiations size = 1
 ]
 
 { #category : #tests }
@@ -1430,6 +1510,48 @@ RMDGrammarTest >> testUtilityVariable [
 	self assert: variable isPetit2Failure.
 	variable := grammar utilityVariable parse: '_foo_'.
 	self assert: variable isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testVariability [
+
+	self
+		assert: (grammar variability end parse: 'Variability.')
+		with: [ :node | 
+			self deny: node isPetit2Failure.
+			self assert: node randomSeed equals: nil.
+			self assert: node multiplicity equals: 1.
+			self assert: node metaParameterSequences isEmpty ].
+	self
+		assert: (grammar variability end parse: 'Variability with
+	reproduce random 1
+	the p -> 1, 2
+	the q, the r -> (3 [cm], 4[s]), (5 [m], 6[day]).')
+		with: [ :node | 
+			self deny: node isPetit2Failure.
+			self assert: node randomSeed equals: 1.
+			self assert: node multiplicity equals: 1.
+			self assert: node metaParameterSequences size equals: 2.
+			self assert:
+				node metaParameterSequences first
+					isMetaSingleParameterSequenceNode.
+			self assert:
+				node metaParameterSequences second isMetaParameterSetSequenceNode ].
+	self
+		assert: (grammar variability end parse: 'Variability with
+	10 runs each
+	the p -> 1, 2
+	the q, the r -> (3 [cm], 4[s]), (5 [m], 6[day]).')
+		with: [ :node | 
+			self deny: node isPetit2Failure.
+			self assert: node randomSeed equals: nil.
+			self assert: node multiplicity equals: 10.
+			self assert: node metaParameterSequences size equals: 2.
+			self assert:
+				node metaParameterSequences first
+					isMetaSingleParameterSequenceNode.
+			self assert:
+				node metaParameterSequences second isMetaParameterSetSequenceNode ]
 ]
 
 { #category : #tests }

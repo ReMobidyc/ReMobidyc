@@ -131,14 +131,17 @@ RMDVisualizer >> renderersReverseDo: aBlock [
 
 { #category : #visualizing }
 RMDVisualizer >> visualize: aRMDInterpreter [
+
 	| scale form canvas |
-	scale := extent x asFloat / aRMDInterpreter patchXDivisions asFloat
-		min: extent y asFloat / aRMDInterpreter patchYDivisions asFloat.
+	scale := extent x asFloat
+	         / aRMDInterpreter simulationModel patchXDivisions asFloat 
+		         min: extent y asFloat
+			         / aRMDInterpreter simulationModel patchYDivisions asFloat.
 	form := self formToWrite.
 	canvas := form getCanvas.
 	canvas fillColor: Color white.
-	renderers
-		do: [ :renderer | renderer draw: aRMDInterpreter scale: scale on: canvas ].
+	renderers do: [ :renderer | 
+		renderer draw: aRMDInterpreter scale: scale on: canvas ].
 	form := formToRead.
 	formToRead := formToWrite.
 	formToWrite := form.

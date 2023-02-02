@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDInitializerContext,
 	#superclass : #RMDExecutionContextWithRandomGenerator,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }

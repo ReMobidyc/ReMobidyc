@@ -95,9 +95,11 @@ RMDAnimatTabularInspector >> updateObservation [
 RMDAnimatTabularInspector >> updatePopulationLabel [
 
 	populationLabel ifNotNil: [ 
-		populationLabel label: 'Population: '
-			, ((interpreter animatDefinitionAt: animat ifAbsent: [ nil ])
-					 ifNotNil: [ :animatDef | 
-						 (interpreter numberOfIndivisualsOf: animatDef) printString ]
-					 ifNil: [ '?' ]) ]
+		populationLabel label:
+			'Population: ' , ((interpreter simulationModel
+				  animatDefinitionAt: animat
+				  ifAbsent: [ nil ])
+				 ifNotNil: [ :animatDef | 
+					 (interpreter numberOfIndivisualsOf: animatDef) printString ]
+				 ifNil: [ '?' ]) ]
 ]

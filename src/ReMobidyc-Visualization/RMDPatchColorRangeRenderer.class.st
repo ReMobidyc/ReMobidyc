@@ -52,7 +52,7 @@ RMDPatchColorRangeRenderer >> min: aRMDLiteral [
 RMDPatchColorRangeRenderer >> valueForIndividual: anInteger interpreter: aRMDInterpreter [
 
 	| patchDef value |
-	patchDef := aRMDInterpreter patchDefinition.
+	patchDef := aRMDInterpreter simulationModel patchDefinition.
 	aRMDInterpreter
 		withObserverContextWithSubject: anInteger
 		definition: patchDef

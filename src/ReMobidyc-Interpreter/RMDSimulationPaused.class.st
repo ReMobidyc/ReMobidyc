@@ -1,5 +1,5 @@
 Class {
 	#name : #RMDSimulationPaused,
-	#superclass : #Announcement,
-	#category : #'ReMobidyc-Interpreter'
+	#superclass : #RMDSimulationAnnouncement,
+	#category : #'ReMobidyc-Interpreter-Announcements'
 }

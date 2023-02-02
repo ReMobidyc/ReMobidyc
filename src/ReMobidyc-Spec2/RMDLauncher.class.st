@@ -7,6 +7,7 @@ Class {
 		'experimentariumMenuButton',
 		'experimentariumButton',
 		'observatoryMenuButton',
+		'tabularButton',
 		'modelerMenuButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
@@ -45,6 +46,8 @@ RMDLauncher class >> defaultLayout [
 								     addSpace;
 								     addButton: #experimentariumButton
 								     dropdownButton: #experimentariumMenuButton;
+								     addSpace;
+								     add: #tabularButton width: self buttonHeight;
 								     addSpace;
 								     addButton: #observatoryButton
 								     dropdownButton: #observatoryMenuButton;
@@ -116,6 +119,12 @@ RMDLauncher >> initializePresenters [
 			                         'Run the model in an observatory with selected memory model.';
 		                         disable;
 		                         yourself.
+	tabularButton := self newButton
+		                 icon: self tabularIcon;
+		                 action: [ self openInPopulationTabular ];
+		                 help: 'Analyze the model on a population tabular.';
+		                 disable;
+		                 yourself.
 	super initializePresenters
 ]
 
@@ -146,10 +155,6 @@ RMDLauncher >> openInExperimentariumMenu [
 						  action: [ self openInExperimentariumForDryRun ] ];
 				  addItem: [ :item | 
 					  item
-						  name: 'On memory';
-						  action: [ self openInExperimentariumOnMemory ] ];
-				  addItem: [ :item | 
-					  item
 						  name: 'On file';
 						  action: [ self openInExperimentariumOnFile ] ] ];
 		  yourself
@@ -161,18 +166,10 @@ RMDLauncher >> openInExperimentariumOnFile [
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository
 			ifTrue: [ 
-				(model
-					 interpreterOnExistingFile: self file / 'run'
-					 modelPath: self file) ifNotNil: #openInExperimentarium ]
+				(model metaInterpreterOnModelPath: self file) ifNotNil:
+					#openInExperimentarium ]
 			ifFalse: [ 
-			model interpreterOnFile ifNotNil: #openInExperimentarium ] ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInExperimentariumOnMemory [
-
-	self load ifNotNil: [ :model | 
-		model interpreterOnMemory ifNotNil: #openInExperimentarium ]
+			model metaInterpreterOnFile ifNotNil: #openInExperimentarium ] ]
 ]
 
 { #category : #operations }
@@ -231,7 +228,7 @@ RMDLauncher >> openInObservatoryOnFile [
 		self repository isRunsRepository
 			ifTrue: [ 
 				(model
-					 interpreterOnExistingFile: self file / 'run'
+					 interpreterOnExistingFile: self file / 'run1'
 					 modelPath: self file) ifNotNil: #openInObservatory ]
 			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
 ]
@@ -241,6 +238,15 @@ RMDLauncher >> openInObservatoryOnMemory [
 
 	self load ifNotNil: [ :model | 
 		model interpreterOnMemory ifNotNil: #openInObservatory ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openInPopulationTabular [
+
+	self load ifNotNil: [ :model | 
+		self repository isRunsRepository ifTrue: [ 
+			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
+				#openInPopulationTabular ] ]
 ]
 
 { #category : #operations }
@@ -284,6 +290,7 @@ RMDLauncher >> updateButtons [
 			experimentariumButton enable.
 			experimentariumMenuButton enabled:
 				self repository isRunsRepository not.
+			tabularButton enabled: self repository isRunsRepository.
 			observatoryButton enable.
 			observatoryMenuButton enabled: self repository isRunsRepository not ]
 		ifNil: [ 
@@ -291,6 +298,7 @@ RMDLauncher >> updateButtons [
 			modelerMenuButton disable.
 			experimentariumButton disable.
 			experimentariumMenuButton disable.
+			tabularButton disable.
 			observatoryButton disable.
 			observatoryMenuButton disable ]
 ]

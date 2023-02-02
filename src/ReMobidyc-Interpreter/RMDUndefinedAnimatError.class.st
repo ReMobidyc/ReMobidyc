@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDUndefinedAnimatError,
 	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #private }

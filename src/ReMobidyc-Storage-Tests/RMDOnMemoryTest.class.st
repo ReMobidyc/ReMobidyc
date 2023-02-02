@@ -16,12 +16,13 @@ RMDOnMemoryTest >> destroyMemory [
 
 { #category : #tests }
 RMDOnMemoryTest >> testChangeStorageCapacityTo [
+
 	memory
-		at: 1 put: 1;
+		nextAt: 1 put: 1;
 		tick;
-		at: 1 put: 2;
+		nextAt: 1 put: 2;
 		tick;
-		at: 1 put: 3;
+		nextAt: 1 put: 3;
 		time: 0.
 	memory changeStorageCapacityTo: 2.
 	memory time: 0.

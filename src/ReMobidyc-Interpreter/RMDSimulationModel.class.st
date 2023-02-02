@@ -11,9 +11,9 @@ Class {
 		'taskDefinitions',
 		'patchDefinition',
 		'icons',
-		'runId'
+		'variability'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #accessing }
@@ -31,71 +31,84 @@ RMDSimulationModel class >> agentsFileName [
 { #category : #'instance creation' }
 RMDSimulationModel class >> goatAndWolf [
 
-	^ self new
-		  name: 'Goat and Wolf';
-		  authors: {'Tomohiro Oda'};
-		  date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
-		  description:
-			  'A simple demo that wolves chase and eat goats in a grass field.';
-		  load: RMDWorldDefinitionNode empty;
-		  load: RMDPatchDefinitionNode grassField;
-		  load: RMDAnimatDefinitionNode goat;
-		  load: RMDAnimatDefinitionNode wolf;
-		  load: RMDBuiltinRepository current gain;
-		  load: RMDBuiltinRepository current lose;
-		  load: RMDBuiltinRepository current transfer;
-		  load: RMDBuiltinRepository current move;
-		  load: RMDBuiltinRepository current starve;
-		  load: RMDActionDefinitionNode reproduce;
-		  load: RMDActionDefinitionNode prey_on;
-		  load: (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
-		  load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
-		  load: RMDTaskDefinitionNode goat_walk_for_grass;
-		  load:
-			  (RMDTaskDefinitionNode
-				   goat_eat: '3000 [kcal/day]'
-				   upto: '10000[kcal]');
-		  load: RMDTaskDefinitionNode goat_reproduce;
-		  load: (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
-		  load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
-		  load: RMDTaskDefinitionNode wolf_chase_goat;
-		  load: (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
-		  load: RMDTaskDefinitionNode wolf_reproduce;
-		  load: (RMDTaskDefinitionNode
-				   patch_grow_grass: '1500[kcal/day]'
-				   upto: '1000000[kcal]');
-		  load: (RMDSimulationDefinitionNode
-				   timeDefinition:
-					   (RMDSimulationTimeDefinitionNode
-						    during: '2[year]'
-						    by: '0.5[day]')
-				   worldInitializer: RMDWorldInitializerNode empty
-				   patchInitializer: (RMDPatchInitializerNode
-						    grassInitializer: 10
-						    by: 10
-						    of: '5[km]'
-						    grass: '0[kcal]'
-						    to: '700000[kcal]')
-				   animatInitializers: { 
-						   (RMDAnimatInitializerNode
-							    goatInitializer: 100
-							    bloodSugar: '5000[kcal]'
-							    to: '9000[kcal]').
-						   (RMDAnimatInitializerNode
-							    wolfInitializer: 5
-							    bloodSugar: '2000[kcal]'
-							    to: '6000[kcal]') });
-		  addRenderer: (RMDBackgroundColorRenderer color: Color black);
-		  addRenderer: (RMDPatchColorAlphaRenderer
-				   color: Color green
-				   alpha: 'my grass' asRMDExpression
-				   between: '0[kcal]' asRMDExpression
-				   and: '1000000[kcal]' asRMDExpression);
-		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Goat' shapeSize: 7 color: Color yellow);
-		  addRenderer:
-			  (RMDAnimatDotRenderer on: 'Wolf' shapeSize: 10 color: Color red);
-		  yourself
+	| model |
+	model := self new
+		         name: 'Goat and Wolf';
+		         authors: { 'Tomohiro Oda' };
+		         date: '2023-01-07T10:11:44.444037+09:00' asDateAndTime;
+		         description:
+			         'A simple demo that wolves chase and eat goats in a grass field.';
+		         load: RMDWorldDefinitionNode empty;
+		         load: RMDPatchDefinitionNode grassField;
+		         load: RMDAnimatDefinitionNode goat;
+		         load: RMDAnimatDefinitionNode wolf;
+		         load: RMDBuiltinRepository current gain;
+		         load: RMDBuiltinRepository current lose;
+		         load: RMDBuiltinRepository current transfer;
+		         load: RMDBuiltinRepository current move;
+		         load: RMDBuiltinRepository current starve;
+		         load: RMDActionDefinitionNode reproduce;
+		         load: RMDActionDefinitionNode prey_on;
+		         load:
+			         (RMDTaskDefinitionNode goat_respire: '1000 [kcal/day]');
+		         load: (RMDTaskDefinitionNode goat_starve: '1000 [kcal]');
+		         load: RMDTaskDefinitionNode goat_walk_for_grass;
+		         load:
+			         (RMDTaskDefinitionNode
+				          goat_eat: '3000 [kcal/day]'
+				          upto: '10000[kcal]');
+		         load: RMDTaskDefinitionNode goat_reproduce;
+		         load:
+			         (RMDTaskDefinitionNode wolf_respire: '200 [kcal/day]');
+		         load: (RMDTaskDefinitionNode wolf_starve: '500 [kcal]');
+		         load: RMDTaskDefinitionNode wolf_chase_goat;
+		         load:
+			         (RMDTaskDefinitionNode wolf_prey_on_goat: '2000 [kcal]');
+		         load: RMDTaskDefinitionNode wolf_reproduce;
+		         load: (RMDTaskDefinitionNode
+				          patch_grow_grass: '1500[kcal/day]'
+				          upto: '1000000[kcal]');
+		         load: (RMDSimulationDefinitionNode
+				          timeDefinition:
+					          (RMDSimulationTimeDefinitionNode
+						           during: '2[year]'
+						           by: '0.5[day]')
+				          worldInitializer: RMDWorldInitializerNode empty
+				          patchInitializer: (RMDPatchInitializerNode
+						           grassInitializer: 10
+						           by: 10
+						           of: '5[km]'
+						           grass: '0[kcal]'
+						           to: '700000[kcal]')
+				          animatInitializers: { 
+						          (RMDAnimatInitializerNode
+							           goatInitializer: 100
+							           bloodSugar: '5000[kcal]'
+							           to: '9000[kcal]').
+						          (RMDAnimatInitializerNode
+							           wolfInitializer: 5
+							           bloodSugar: '2000[kcal]'
+							           to: '6000[kcal]') });
+		         addRenderer:
+			         (RMDBackgroundColorRenderer color: Color black);
+		         addRenderer: (RMDPatchColorAlphaRenderer
+				          color: Color green
+				          alpha: 'my grass' asRMDExpression
+				          between: '0[kcal]' asRMDExpression
+				          and: '1000000[kcal]' asRMDExpression);
+		         addRenderer:
+			         (RMDAnimatDotRenderer
+				          on: 'Goat'
+				          shapeSize: 7
+				          color: Color yellow);
+		         addRenderer:
+			         (RMDAnimatDotRenderer
+				          on: 'Wolf'
+				          shapeSize: 10
+				          color: Color red);
+		         yourself.
+	model variability multiplicity: 10.
+	^ model
 ]
 
 { #category : #accessing }
@@ -270,6 +283,14 @@ RMDSimulationModel >> addTaskDefinition: aRMDTaskDefinitionNode [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> agentDefinitionAt: aString ifAbsent: errorBlock [
+
+	aString = 'World' ifTrue: [ ^ self worldDefinition ].
+	aString = 'Patch' ifTrue: [ ^ self patchDefinition ].
+	^ self animatDefinitionAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ animatDefinitions at: aString ifAbsent: errorBlock
 ]
@@ -368,6 +389,12 @@ RMDSimulationModel >> description: aString [
 { #category : #'accessing - time' }
 RMDSimulationModel >> duration [
 	^ simulationDefinition timeDefinition duration numeric
+]
+
+{ #category : #'accessing - time' }
+RMDSimulationModel >> durationUnit [
+
+	^ simulationDefinition timeDefinition duration unit
 ]
 
 { #category : #'accessing - cells' }
@@ -648,18 +675,30 @@ RMDSimulationModel >> importVisualization: aFileReference [
 RMDSimulationModel >> initialize [
 
 	super initialize.
-	metadata := RMDMetadata new.
-	runId := 'run'.
 	self resetDefinitions
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
+
+	^ self shallowCopy
+		  metaparameters: aDictionary;
+		  yourself
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterForDryRun [
 
+	^ self interpreterOn: RMDDryMemory new
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> interpreterOn: aRMDMemory [
+
 	[ 
 	self typecheck.
 	^ RMDInterpreter new
-		  setMemory: RMDDryMemory new;
+		  setMemory: aRMDMemory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
 		  yourself ]
@@ -672,73 +711,30 @@ RMDSimulationModel >> interpreterForDryRun [
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnExistingFile: basePath modelPath: modelPath [
 
-	[ 
-	| memory |
-	self typecheck.
-	memory := RMDFileMemory on: basePath modelPath: modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn:
+		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile [
 
-	[ 
 	| memory |
-	self typecheck.
 	memory := RMDFileMemory for: self.
 	self exportModel: memory modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn: memory
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnFile: basePath modelPath: modelPath [
 
-	[ 
-	| memory |
-	self typecheck.
-	memory := RMDFileMemory on: basePath modelPath: modelPath.
-	self exportModel: memory modelPath.
-	^ RMDInterpreter new
-		  setMemory: memory;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn:
+		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOnMemory [
 
-	[ 
-	self typecheck.
-	^ RMDInterpreter new
-		  setMemory: RMDOnMemory new;
-		  setContext: RMDActionContext new;
-		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+	^ self interpreterOn: RMDOnMemory new
 ]
 
 { #category : #accessing }
@@ -758,10 +754,60 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	^ self error: 'Unknown load'
 ]
 
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterForDryRun [
+
+	^ RMDMetaInterpreter forDryRunOn: self
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnFile [
+
+	^ RMDMetaInterpreter
+		  on: self
+		  modelPath: (RMDFileMemory modelPathFor: self)
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnModelPath: aFileReference [
+
+	^ RMDMetaInterpreter on: self modelPath: aFileReference
+]
+
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnReadOnlyModelPath: aFileReference [
+
+	^ RMDMetaInterpreter on: self readOnlyModelPath: aFileReference
+]
+
 { #category : #'accessing - metadata' }
 RMDSimulationModel >> metadata [
 
 	^ metadata
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDSimulationModel >> metaparameters: aDictionary [
+
+	variability := variability copy.
+	simulationDefinition := simulationDefinition metaparameters:
+		                        aDictionary.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaparameters: aDictionary) ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition metaparameters: aDictionary.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | 
+		                      assoc key
+		                      -> (assoc value metaparameters: aDictionary) ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: #copy.
+	taskDefinitions := taskDefinitions collect: [ :def | 
+		                   def metaparameters: aDictionary ].
+	patchDefinition := patchDefinition metaparameters: aDictionary.
+	icons := icons copy
 ]
 
 { #category : #'accessing - metadata' }
@@ -808,6 +854,25 @@ RMDSimulationModel >> patchXDivisions [
 { #category : #'accessing - cells' }
 RMDSimulationModel >> patchYDivisions [
 	^ simulationDefinition patchInitializer yDivisions
+]
+
+{ #category : #copying }
+RMDSimulationModel >> postCopy [
+
+	metadata := metadata copy.
+	variability := variability copy.
+	simulationDefinition := simulationDefinition copy.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition copy.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: [ :renderer | renderer copy ].
+	taskDefinitions := taskDefinitions collect: #copy.
+	patchDefinition := patchDefinition copy.
+	icons := icons copy
 ]
 
 { #category : #adding }
@@ -901,6 +966,26 @@ RMDSimulationModel >> renderersDo: aBlock [
 	renderers do: aBlock
 ]
 
+{ #category : #rewriting }
+RMDSimulationModel >> replaceChildren: aDictionary [
+
+	metadata := metadata copy.
+	simulationDefinition := simulationDefinition copyReplace: aDictionary.
+	animatDefinitions := (animatDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	worldDefinition := worldDefinition copy.
+	actionDefinitions := (actionDefinitions associations collect: [ 
+		                      :assoc | assoc key -> assoc value copy ])
+		                     asOrderedDictionary.
+	renderers := renderers collect: [ :renderer | renderer copy ].
+	taskDefinitions := (taskDefinitions associations collect: [ :assoc | 
+		                    assoc key -> assoc value copy ])
+		                   asOrderedDictionary.
+	patchDefinition := patchDefinition copy.
+	icons := icons copy
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
 	| index |
@@ -921,6 +1006,7 @@ RMDSimulationModel >> repositoryName [
 RMDSimulationModel >> resetDefinitions [
 
 	metadata := RMDMetadata new.
+	variability := RMDVariabilityNode new.
 	simulationDefinition := RMDSimulationDefinitionNode empty.
 	patchDefinition := RMDPatchDefinitionNode empty.
 	worldDefinition := RMDWorldDefinitionNode empty.
@@ -929,18 +1015,6 @@ RMDSimulationModel >> resetDefinitions [
 	taskDefinitions := OrderedCollection new.
 	renderers := OrderedCollection new.
 	icons := Dictionary new
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> runId [
-
-	^ runId
-]
-
-{ #category : #accessing }
-RMDSimulationModel >> runId: aString [
-
-	runId := aString
 ]
 
 { #category : #'accessing - definitions' }
@@ -1042,6 +1116,18 @@ RMDSimulationModel >> updateMetadata [
 	metadata
 		ensureCurrentAuthor;
 		updateDate
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> variability [
+
+	^ variability
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> variability: aRMDVariabilityNode [
+
+	variability := aRMDVariabilityNode
 ]
 
 { #category : #'accessing - cells' }

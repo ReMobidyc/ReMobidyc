@@ -19,8 +19,8 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDPatchInitializerNode >> typecheckIn: aRMDInterpreter [
 
-	aRMDInterpreter context subjectDefinition:
-		aRMDInterpreter patchDefinition;
+	aRMDInterpreter context
+		subjectDefinition: aRMDInterpreter simulationModel patchDefinition;
 		loadUtilityDefinitions: utilityDefinitions.
 	^ super typecheckIn: aRMDInterpreter
 ]

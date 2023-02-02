@@ -4,10 +4,10 @@ Class {
 	#instVars : [
 		'memory',
 		'libraries',
-		'globalSeed',
-		'worldAttributeDict'
+		'runSemaphore',
+		'runState'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Core'
 }
 
 { #category : #'accessing - libraries' }
@@ -20,7 +20,40 @@ RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
+{ #category : #announcement }
+RMDInterpreter >> announceSimulationPaused [
+
+	self announcer announce: (RMDSimulationPaused interpreter: self)
+]
+
+{ #category : #announcement }
+RMDInterpreter >> announceSimulationStarted [
+
+	self announcer announce: (RMDSimulationStarted interpreter: self)
+]
+
+{ #category : #announcement }
+RMDInterpreter >> announceTimeChanged [
+
+	self announcer announce:
+		(RMDTimeChanged interpreter: self time: self time)
+]
+
 { #category : #simulating }
+RMDInterpreter >> basicStepSimulation [
+
+	^ self time < simulationModel duration and: [ 
+		  memory time + 1 <= memory latestTime
+			  ifTrue: [ memory time: memory time + 1 ]
+			  ifFalse: [ 
+				  self performTasks.
+				  self tick.
+				  self bounceOutOfBoundsAnimats ].
+		  self announceTimeChanged.
+		  true ]
+]
+
+{ #category : #private }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -84,9 +117,32 @@ RMDInterpreter >> changeStage: animatString [
 	^ newIndividual
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> critical: aBlock [
+
+	^ runSemaphore critical: [ 
+		  self announceSimulationStarted.
+		  runState := true.
+		  aBlock ensure: [ 
+			  runState := false.
+			  self announceSimulationPaused ] ]
+]
+
+{ #category : #timing }
+RMDInterpreter >> deltaTime [
+
+	^ self simulationModel deltaTime
+]
+
 { #category : #timing }
 RMDInterpreter >> duration [
 	^ simulationModel duration
+]
+
+{ #category : #timing }
+RMDInterpreter >> durationUnit [
+
+	^ simulationModel durationUnit
 ]
 
 { #category : #'variable access' }
@@ -143,8 +199,9 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 { #category : #simulating }
 RMDInterpreter >> fastForward [
 
-	memory time: memory latestTime.
-	self timeChanged
+	self critical: [ 
+		memory time: memory latestTime.
+		self announceTimeChanged ]
 ]
 
 { #category : #'accessing - libraries' }
@@ -153,17 +210,6 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 		do:
 			[ :library | library at: aString ifPresent: [ :function | ^ function ] ].
 	^ errorBlock value
-]
-
-{ #category : #'random numbers' }
-RMDInterpreter >> globalSeed [
-	^ globalSeed
-]
-
-{ #category : #'random numbers' }
-RMDInterpreter >> globalSeed: anInteger [
-
-	globalSeed := anInteger asInteger
 ]
 
 { #category : #'space access' }
@@ -211,13 +257,43 @@ RMDInterpreter >> individualsOf: aRMDAgentDefinitionNode do: aBlock [
 RMDInterpreter >> initialize [
 
 	super initialize.
-	libraries := OrderedCollection with: self standardLibrary.
-	globalSeed := 1
+	runSemaphore := Semaphore forMutualExclusion.
+	libraries := OrderedCollection with: self standardLibrary
+]
+
+{ #category : #simulating }
+RMDInterpreter >> isRunningSimulation [
+
+	^ runState
+]
+
+{ #category : #accessing }
+RMDInterpreter >> kindName [
+
+	^ 'interpreter'
 ]
 
 { #category : #private }
 RMDInterpreter >> memory [
 	^ memory
+]
+
+{ #category : #accessing }
+RMDInterpreter >> memoryName [
+
+	^ memory ifNotNil: #name ifNil: [ '' ]
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> metaparameters [
+
+	^ memory metaparameters
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> metaparametersString [
+
+	^ memory metaparametersString
 ]
 
 { #category : #'variable access' }
@@ -241,6 +317,17 @@ RMDInterpreter >> my: aString ifAbsent: errorBlock [
 				   offsetAt: aString
 				   ifAbsent: [ ^ errorBlock value ])
 		  ifAbsent: errorBlock
+]
+
+{ #category : #accessing }
+RMDInterpreter >> name [
+
+	^ String streamContents: [ :stream | 
+		  stream
+			  nextPutAll: super name;
+			  nextPutAll: '[';
+			  nextPutAll: self metaparametersString;
+			  nextPutAll: ']' ]
 ]
 
 { #category : #'animat operations' }
@@ -323,20 +410,50 @@ RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
 ]
 
 { #category : #'space access' }
+RMDInterpreter >> patchX: aNumber [
+
+	^ aNumber - self simulationModel west / simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> patchY: aNumber [
+
+	^ aNumber - self simulationModel south / simulationModel patchLength
+]
+
+{ #category : #'space access' }
 RMDInterpreter >> patchesDo: aBlock [
 
 	memory patchesDo: aBlock
 ]
 
 { #category : #simulating }
+RMDInterpreter >> pauseSimulation [
+
+	runState := false
+]
+
+{ #category : #private }
 RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> progress [
+
+	^ self time / self duration
 ]
 
 { #category : #'random numbers' }
 RMDInterpreter >> random [
 
 	^ context random
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> randomSeed [
+
+	^ memory randomSeed
 ]
 
 { #category : #'variable access' }
@@ -357,7 +474,7 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
 ]
 
-{ #category : #simulating }
+{ #category : #private }
 RMDInterpreter >> removeOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -387,8 +504,33 @@ RMDInterpreter >> resetTasks [
 	simulationModel tasksDo: [ :task | task resetAction ]
 ]
 
+{ #category : #simulating }
+RMDInterpreter >> rewind [
+
+	self critical: [ 
+		memory time: 0.
+		self announceTimeChanged ]
+]
+
+{ #category : #'accessing - meta parameters' }
+RMDInterpreter >> runId [
+
+	^ memory runId
+]
+
+{ #category : #simulating }
+RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
+
+	[ 
+	self critical: [ 
+		[ [ runState = true and: [ self basicStepSimulation ] ] whileTrue ]
+			on: RMDSemanticError
+			do: errorHandlerBlock ] ] forkAt: Processor userBackgroundPriority 
+]
+
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
+
 	memory := aRMDMemory
 ]
 
@@ -396,34 +538,43 @@ RMDInterpreter >> setMemory: aRMDMemory [
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
-			globalSeed.
+			self randomSeed.
 			memory time.
 			(memory seedAt: anInteger1).
 			(memory seedAt: anInteger2).
-			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
+			(self simulationModel taskDefinitions indexOf:
+				 aRMDTaskDefinitionNode) }
 ]
 
 { #category : #'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
-			globalSeed.
+			self randomSeed.
 			memory time.
 			(memory seedAt: anInteger).
-			(self taskDefinitions indexOf: aRMDTaskDefinitionNode) }
+			(self simulationModel taskDefinitions indexOf:
+				 aRMDTaskDefinitionNode) }
 ]
 
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 
-	memory world ifNil: [ 
-		memory initialize.
-		simulationModel worldInitializer evalIn: self.
-		simulationModel patchInitializer evalIn: self.
-		simulationModel animatInitializersDo: [ :initializer | 
-			initializer evalIn: self ] ].
-	memory time: 0.
-	self timeChanged
+	self critical: [ 
+		memory world ifNil: [ 
+			memory initialize.
+			simulationModel worldInitializer evalIn: self.
+			simulationModel patchInitializer evalIn: self.
+			simulationModel animatInitializersDo: [ :initializer | 
+				initializer evalIn: self ] ].
+		memory time: 0.
+		self announceTimeChanged ]
+]
+
+{ #category : #accessing }
+RMDInterpreter >> shortName [
+
+	^ self runId printString, ':', self metaparametersString
 ]
 
 { #category : #'variable access' }
@@ -448,14 +599,22 @@ RMDInterpreter >> standardLibrary [
 
 { #category : #simulating }
 RMDInterpreter >> stepSimulation [
-	^ self time < simulationModel duration
-		and: [ memory time + 1 <= memory latestTime
-				ifTrue: [ memory time: memory time + 1 ]
-				ifFalse: [ self performTasks.
-					self tick.
-					self bounceOutOfBoundsAnimats ].
-			self timeChanged.
-			true ]
+
+	self critical: [ ^ self basicStepSimulation ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> stepSimulationSilently [
+
+	self critical: [ 
+		^ self time < simulationModel duration and: [ 
+			  memory time + 1 <= memory latestTime
+				  ifTrue: [ memory time: memory time + 1 ]
+				  ifFalse: [ 
+					  self performTasks.
+					  self tick.
+					  self bounceOutOfBoundsAnimats ].
+			  true ] ]
 ]
 
 { #category : #'animat operations' }
@@ -489,7 +648,8 @@ RMDInterpreter >> ticks [
 ]
 
 { #category : #timing }
-RMDInterpreter >> time [ 
+RMDInterpreter >> time [
+
 	^ memory time * self deltaTime
 ]
 
@@ -506,12 +666,25 @@ RMDInterpreter >> time: aNumber [
 							self tick.
 							self bounceOutOfBoundsAnimats ] ] ]
 		ifFalse: [ memory time: newTime ].
-	self timeChanged
+	self announceTimeChanged
 ]
 
 { #category : #simulating }
-RMDInterpreter >> timeChanged [
-	self announcer announce: (RMDTimeChanged time: self time)
+RMDInterpreter >> typecheck [
+
+	self critical: [ simulationModel typecheck ]
+]
+
+{ #category : #simulating }
+RMDInterpreter >> waitForPause [
+
+	[ self isRunningSimulation ] whileTrue: [ self waitingTime wait ]
+]
+
+{ #category : #accessing }
+RMDInterpreter >> waitingTime [
+
+	^ 200 milliSecond
 ]
 
 { #category : #'variable access' }
@@ -538,7 +711,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               definition: aRMDAnimatDefinitionNode1)
 		              space: memory;
 		              randomSeedWithHash: { 
-				              globalSeed.
+				              self randomSeed.
 				              memory time.
 				              (memory seedAt: anInteger1).
 				              (memory seedAt: anInteger2).
@@ -567,7 +740,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               definition: aRMDAnimatDefinitionNode)
 		              space: memory;
 		              randomSeedWithHash: { 
-				              globalSeed.
+				              self randomSeed.
 				              memory time.
 				              (memory seedAt: anInteger).
 				              anotherInteger };
@@ -599,7 +772,7 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 				    subject: anInteger
 				    definition: aRMDAgentDefinitionNode)
 				   randomSeedWithHash: { 
-						   globalSeed.
+						   self randomSeed.
 						   anInteger };
 				   yourself)
 		  do: aBlock
@@ -623,7 +796,7 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 				    subject: anInteger
 				    definition: aRMDAgentDefinitionNode)
 				   randomSeedWithHash: { 
-						   globalSeed.
+						   self randomSeed.
 						   memory time.
 						   (memory seedAt: anInteger) };
 				   yourself)

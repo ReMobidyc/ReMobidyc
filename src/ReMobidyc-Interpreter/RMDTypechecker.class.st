@@ -1,8 +1,21 @@
 Class {
 	#name : #RMDTypechecker,
 	#superclass : #RMDAbstractInterpreter,
-	#category : #'ReMobidyc-Interpreter'
+	#instVars : [
+		'libraries'
+	],
+	#category : #'ReMobidyc-Interpreter-Core'
 }
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> addLibraries: aCollectionOfDictionary [
+	libraries addAll: aCollectionOfDictionary
+]
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> addLibrary: aDictionary [
+	libraries add: aDictionary
+]
 
 { #category : #directives }
 RMDTypechecker >> changeStage: animatString [
@@ -16,6 +29,33 @@ RMDTypechecker >> changeStage: animatString [
 	^ animatString
 ]
 
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> functionAt: aString ifAbsent: errorBlock [
+	libraries
+		do:
+			[ :library | library at: aString ifPresent: [ :function | ^ function ] ].
+	^ errorBlock value
+]
+
+{ #category : #initialization }
+RMDTypechecker >> initialize [
+
+	super initialize.
+	libraries := OrderedCollection with: self standardLibrary
+]
+
+{ #category : #testing }
+RMDTypechecker >> isTypechecker [
+
+	^ true
+]
+
+{ #category : #accessing }
+RMDTypechecker >> kindName [
+
+	^ 'type checker'
+]
+
 { #category : #directives }
 RMDTypechecker >> newIndividual: animatString [
 
@@ -26,6 +66,11 @@ RMDTypechecker >> newIndividual: animatString [
 		                    ^ RMDUnresolvedReferenceError on: self ].
 	context newDefinition: animatDefinition.
 	^ animatString
+]
+
+{ #category : #'accessing - libraries' }
+RMDTypechecker >> standardLibrary [
+	^ self class standardLibrary 
 ]
 
 { #category : #'variable access' }
@@ -144,13 +189,13 @@ RMDTypechecker >> withSubject: subject object: object do: aBlock [
 	| subjectDefinition objectIdentifier objectDefinition |
 	subject isString
 		ifTrue: [ 
-			subjectDefinition := self
+			subjectDefinition := self simulationModel
 				                     agentDefinitionAt: subject
 				                     ifAbsent: [ nil ] ]
 		ifFalse: [ subjectDefinition := subject ].
 	object isString
 		ifTrue: [ 
-			objectDefinition := self
+			objectDefinition := self simulationModel
 				                    agentDefinitionAt: object
 				                    ifAbsent: [ nil ].
 			objectIdentifier := object ]
@@ -159,8 +204,8 @@ RMDTypechecker >> withSubject: subject object: object do: aBlock [
 			objectIdentifier := object ifNotNil: #identifier ].
 	^ self
 		  withContext: (RMDTypecheckContext new
-				   patchDefinition: self patchDefinition;
-				   worldDefinition: self worldDefinition;
+				   patchDefinition: self simulationModel patchDefinition;
+				   worldDefinition: self simulationModel worldDefinition;
 				   subjectDefinition: subjectDefinition;
 				   object: objectIdentifier definition: objectDefinition;
 				   yourself)

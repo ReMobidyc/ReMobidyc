@@ -5,7 +5,7 @@ Class {
 		'randomGenerator',
 		'utilities'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #initialization }

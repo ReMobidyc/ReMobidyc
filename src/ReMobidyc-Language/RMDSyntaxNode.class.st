@@ -160,11 +160,6 @@ RMDSyntaxNode >> isAssignableDifferentialAttributeVariableNode [
 ]
 
 { #category : #testing }
-RMDSyntaxNode >> isAttributeBindNode [
-	^ false
-]
-
-{ #category : #testing }
 RMDSyntaxNode >> isAttributeDeclarationNode [
 	^ false
 ]
@@ -331,6 +326,24 @@ RMDSyntaxNode >> isLogLogisticDistributionNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isMetaParameterSequenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isMetaParameterSetSequenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isMetaSingleParameterSequenceNode [
+
+	^ true
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isMyAttributeVariableNode [
 
 	^ false
@@ -358,6 +371,11 @@ RMDSyntaxNode >> isNormalDistributionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isParameterInstantiationNode [
 	^ false
 ]
 
@@ -484,6 +502,12 @@ RMDSyntaxNode >> isWorldDefinitionNode [
 { #category : #testing }
 RMDSyntaxNode >> isWorldInitializerNode [
 	^ false
+]
+
+{ #category : #rewriting }
+RMDSyntaxNode >> metaparameters: aDictionary [
+
+	^ self copyReplace: aDictionary
 ]
 
 { #category : #enumerating }

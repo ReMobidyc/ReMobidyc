@@ -7,5 +7,5 @@ Class {
 { #category : #enumerating }
 RMDPatchTimeSeriesInspector >> agentDefinitionDo: aBlock [
 
-	aBlock cull: interpreter patchDefinition
+	aBlock cull: interpreter simulationModel patchDefinition
 ]

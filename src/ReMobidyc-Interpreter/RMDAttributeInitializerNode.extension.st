@@ -11,7 +11,7 @@ RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 
 	expression ifNotNil: [ 
 		aRMDInterpreter
-			write: ([ expression evalIn: aRMDInterpreter ]
+			writeNext: ([ expression evalIn: aRMDInterpreter ]
 					 on: RMDSemanticError
 					 do: [ :ex | ex signalWithScope: self ])
 			to: (self addressIn: aRMDInterpreter) ]

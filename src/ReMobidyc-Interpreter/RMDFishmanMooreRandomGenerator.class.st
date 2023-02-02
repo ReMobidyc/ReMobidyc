@@ -9,8 +9,14 @@ Class {
 	#instVars : [
 		'seed'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Utilities'
 }
+
+{ #category : #accessing }
+RMDFishmanMooreRandomGenerator class >> modulo [
+
+	^ 2147483647
+]
 
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> factor [
@@ -36,7 +42,7 @@ RMDFishmanMooreRandomGenerator >> initialize [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> modulo [
 
-	^ 2147483647
+	^ self class modulo
 ]
 
 { #category : #accessing }

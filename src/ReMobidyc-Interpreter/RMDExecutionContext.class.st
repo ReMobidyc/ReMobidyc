@@ -5,7 +5,7 @@ Class {
 		'subject',
 		'subjectDefinition'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #'instance creation' }

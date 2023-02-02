@@ -13,6 +13,7 @@ RMDPatchInitializerNodeTest >> testEvalIn [
 			fertility = 1100 [kcal]'.
 	interpreter simulationModel patchDefinition: patchDef.
 	patchInitializer evalIn: interpreter.
+	interpreter memory tick.
 	self assert: interpreter time closeTo: 0.0.
 	grass := 'kcal' asRMDUnit toSI: 1000.
 	fertility := 'kcal' asRMDUnit toSI: 1100.

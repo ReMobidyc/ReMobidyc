@@ -5,6 +5,9 @@ Trait {
 
 { #category : #enumerating }
 TRMDAnimatObservatory >> agentDefinitionDo: aBlock [
-	self
-		interpreterDo: [ :interpreter | interpreter animatDefinitionAt: self animat ifPresent: aBlock ]
+
+	self interpreterDo: [ :interpreter | 
+		interpreter simulationModel
+			animatDefinitionAt: self animat
+			ifPresent: aBlock ]
 ]

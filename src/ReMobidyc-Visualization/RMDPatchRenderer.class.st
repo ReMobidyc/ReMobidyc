@@ -53,38 +53,36 @@ RMDPatchRenderer >> defaultColor [
 
 { #category : #drawing }
 RMDPatchRenderer >> draw: aRMDInterpreter scale: aNumber on: aCanvas [
+
 	| xDivisions yDivisions patchLength |
-	xDivisions := aRMDInterpreter patchXDivisions.
-	yDivisions := aRMDInterpreter patchYDivisions.
-	patchLength := aRMDInterpreter patchLength.
+	xDivisions := aRMDInterpreter simulationModel patchXDivisions.
+	yDivisions := aRMDInterpreter simulationModel patchYDivisions.
+	patchLength := aRMDInterpreter simulationModel patchLength.
 	1 to: yDivisions do: [ :patchY | 
 		1 to: xDivisions do: [ :patchX | 
 			self
 				drawPatch: (aRMDInterpreter patchAtXIndex: patchX yIndex: patchY)
 				interpreter: aRMDInterpreter
-				bounds:
-					((self
-						pointFromX: (patchX - 1) * patchLength
-						y: (patchY - 1) * patchLength
-						interpreter: aRMDInterpreter
-						scale: aNumber)
-						corner:
-							(self
-								pointFromX: patchX * patchLength
-								y: patchY * patchLength
-								interpreter: aRMDInterpreter
-								scale: aNumber))
+				bounds: ((self
+						  pointFromX: patchX - 1 * patchLength
+						  y: patchY - 1 * patchLength
+						  interpreter: aRMDInterpreter
+						  scale: aNumber) corner: (self
+							  pointFromX: patchX * patchLength
+							  y: patchY * patchLength
+							  interpreter: aRMDInterpreter
+							  scale: aNumber))
 				on: aCanvas ] ].
 	0 to: xDivisions do: [ :x | 
 		aCanvas
-			line: (x * aNumber) @ 0
-			to: (x * aNumber) @ (yDivisions * aNumber)
+			line: x * aNumber @ 0
+			to: x * aNumber @ (yDivisions * aNumber)
 			width: borderWidth
 			color: borderColor ].
 	0 to: yDivisions do: [ :y | 
 		aCanvas
 			line: 0 @ (y * aNumber)
-			to: (xDivisions * aNumber) @ (y * aNumber)
+			to: xDivisions * aNumber @ (y * aNumber)
 			width: borderWidth
 			color: borderColor ]
 ]

@@ -6,5 +6,5 @@ RMDDeltaTimeDirectiveNodeTest >> testEvalIn [
 	self
 		assert:
 		((parser expression parse: 'delta time') evalIn: interpreter)
-		closeTo: interpreter deltaTime
+		closeTo: interpreter simulationModel deltaTime
 ]

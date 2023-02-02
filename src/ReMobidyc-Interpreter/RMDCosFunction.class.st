@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDCosFunction,
 	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Libraries'
 }
 
 { #category : #accessing }

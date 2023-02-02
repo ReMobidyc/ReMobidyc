@@ -7,5 +7,5 @@ Class {
 { #category : #enumerating }
 RMDWorldTimeSeriesInspector >> agentDefinitionDo: aBlock [
 
-	aBlock cull: interpreter worldDefinition
+	aBlock cull: interpreter simulationModel worldDefinition
 ]

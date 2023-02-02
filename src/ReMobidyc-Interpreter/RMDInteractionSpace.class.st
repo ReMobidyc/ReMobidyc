@@ -11,7 +11,7 @@ Class {
 		'xs',
 		'ys'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Libraries'
 }
 
 { #category : #'instance creation' }

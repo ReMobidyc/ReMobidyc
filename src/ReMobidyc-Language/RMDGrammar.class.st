@@ -339,26 +339,6 @@ RMDGrammar >> assignableVariable [
 ]
 
 { #category : #'parsers-definitions' }
-RMDGrammar >> attributeBind [
-
-	^ self placeholder , '->' asPParser trimBlanks
-	  , (condition / expression)
-	  /
-	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
-	  /
-	  (self stageDirective , '->' asPParser trimBlanks
-	   , self stageDirective) ==> [ :triple | 
-	  self attributeBindNodeClass
-		  placeholder: triple first
-		  replacement: triple third ]
-]
-
-{ #category : #'class access' }
-RMDGrammar >> attributeBindNodeClass [
-	^ RMDAttributeBindNode
-]
-
-{ #category : #'parsers-definitions' }
 RMDGrammar >> attributeDeclaration [
 
 	^ identifier , self type
@@ -548,7 +528,7 @@ RMDGrammar >> conjunctionNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> deUnitExpressionNode [
+RMDGrammar >> deUnitExpressionNodeClass [
 
 	^ RMDDeUnitExpressionNode
 ]
@@ -643,7 +623,7 @@ RMDGrammar >> distanceDirectiveNodeClass [
 ]
 
 { #category : #'class access' }
-RMDGrammar >> enUnitExpressionNode [
+RMDGrammar >> enUnitExpressionNodeClass [
 
 	^ RMDEnUnitExpressionNode
 ]
@@ -677,15 +657,15 @@ RMDGrammar >> expr1 [
 			  triple third
 				  ifNil: [ expr ]
 				  ifNotNil: [ :enUnit | 
-				  self enUnitExpressionNode expression: expr unit: enUnit ] ]
+				  self enUnitExpressionNodeClass expression: expr unit: enUnit ] ]
 		  ifNotNil: [ :deUnit | 
 			  triple third
 				  ifNil: [ 
-				  self deUnitExpressionNode expression: expr unit: deUnit ]
+				  self deUnitExpressionNodeClass expression: expr unit: deUnit ]
 				  ifNotNil: [ :enUnit | 
-					  self deUnitExpressionNode
+					  self deUnitExpressionNodeClass
 						  expression:
-						  (self enUnitExpressionNode expression: expr unit: enUnit)
+						  (self enUnitExpressionNodeClass expression: expr unit: enUnit)
 						  unit: deUnit ] ] ]
 ]
 
@@ -891,6 +871,57 @@ RMDGrammar >> logLogisticDistributionNodeClass [
 	^ RMDLogLogisticDistributionNode
 ]
 
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaParameterSequence [
+
+	^ self metaSingleParameterSequence / self metaParameterSetSequence
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaParameterSetSequence [
+
+	^ (self placeholder onlySeparatedBy: $, asPParser trimBlanks)
+	  , '->' asPParser trimBlanks , ($( asPParser trimBlanks
+	   , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	   , $) asPParser trimBlanks ==> #second onlySeparatedBy:
+		   $, asPParser trimBlanks) ==> [ :triple | 
+	  | placeholders tupleSequence |
+	  placeholders := triple first.
+	  tupleSequence := triple third.
+	  (tupleSequence allSatisfy: [ :tuple | 
+		   placeholders size = tuple size ])
+		  ifTrue: [ 
+			  self metaParameterSetSequenceNodeClass
+				  placeholders: placeholders
+				  literalTuples: triple third ]
+		  ifFalse: [ 
+			  PP2Failure message:
+				  'The size of each tuple should be equal to the number of parameters' ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> metaParameterSetSequenceNodeClass [
+
+	^ RMDMetaParameterSetSequenceNode
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> metaSingleParameterSequence [
+
+	^ self placeholder , '->' asPParser trimBlanks
+	  , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	  ==> [ :triple | 
+		  self metaSingleParameterSequenceNodeClass
+			  placeholder: triple first
+			  literals: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> metaSingleParameterSequenceNodeClass [
+
+	^ RMDMetaSingleParameterSequenceNode
+]
+
 { #category : #'parsers-atoms' }
 RMDGrammar >> metaVariable [
 
@@ -970,6 +1001,26 @@ RMDGrammar >> normalDistributionNodeClass [
 RMDGrammar >> numberString [
 
 	^ self decimalString / self pi
+]
+
+{ #category : #'parsers-definitions' }
+RMDGrammar >> parameterInstantiation [
+
+	^ self placeholder , '->' asPParser trimBlanks
+	  , (condition / expression)
+	  /
+	  (self newDirective , '->' asPParser trimBlanks , self newDirective)
+	  /
+	  (self stageDirective , '->' asPParser trimBlanks
+	   , self stageDirective) ==> [ :triple | 
+	  self parameterInstantiationNodeClass
+		  placeholder: triple first
+		  replacement: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> parameterInstantiationNodeClass [
+	^ RMDParameterInstantiationNode
 ]
 
 { #category : #'parsers-expressions' }
@@ -1222,7 +1273,7 @@ RMDGrammar >> taskDefinition [
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
 		   ,
-		   (self attributeBind onlySeparatedBy:
+		   (self parameterInstantiation onlySeparatedBy:
 			    #newline asPParser trimBlanks) ==> #fourth) optional
 	  ,
 	  ($. asPParser trimBlanks , #newline asPParser trimBlanks optional)
@@ -1235,7 +1286,7 @@ RMDGrammar >> taskDefinition [
 			  nearest: quad first third
 			  within: quad first fifth
 			  guard: quad second
-			  attributeBinds: (quad third ifNil: [ Array new ]) ]
+			  parameterInstantiations: (quad third ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }
@@ -1450,6 +1501,43 @@ RMDGrammar >> utilityVariable [
 { #category : #'class access' }
 RMDGrammar >> utilityVariableNodeClass [
 	^ RMDUtilityVariableNode
+]
+
+{ #category : #'parsers-variability' }
+RMDGrammar >> variability [
+
+	^ 'Variability' asPParser trimBlanks
+	  ,
+		  ('with' asPParser , #newline asPParser trimBlanks
+		   ==> [ :pair | nil ]
+		   ,
+			   ('reproduce' asPParser trimBlanks
+			    , 'random' asPParser trimBlanks , self nat
+			    , #newline asPParser trimBlanks
+			    ==> [ :quad | #random -> quad third ]
+			    /
+				    (self nat , 'runs' asPParser trimBlanks
+				     , 'each' asPParser trimBlanks , #newline asPParser trimBlanks
+				     ==> [ :quad | #multiplicity -> quad first ])) optional
+		   , (self metaParameterSequence onlySeparatedBy:
+				    #newline asPParser trimBlanks) optional) optional
+	  , '.' asPParser trimBlanks ==> #second ==> [ :triple | 
+	  triple ifNil: [ self variabilityNodeClass new ] ifNotNil: [ 
+		  triple second key = #random
+			  ifTrue: [ 
+				  self variabilityNodeClass
+					  random: triple second value
+					  metaParameterSequences: triple third ]
+			  ifFalse: [ 
+				  self variabilityNodeClass
+					  multiplicity: triple second value
+					  metaParameterSequences: triple third ] ] ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> variabilityNodeClass [
+
+	^ RMDVariabilityNode
 ]
 
 { #category : #'parsers-files' }

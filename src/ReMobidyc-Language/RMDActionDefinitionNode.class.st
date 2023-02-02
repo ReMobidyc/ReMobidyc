@@ -238,6 +238,12 @@ RMDActionDefinitionNode >> lifeDirectives: anArrayOfRMDLifeDirective [
 	lifeDirectives := anArrayOfRMDLifeDirective
 ]
 
+{ #category : #rewriting }
+RMDActionDefinitionNode >> metaparameters: aDictionary [
+
+	^ self copy
+]
+
 { #category : #accessing }
 RMDActionDefinitionNode >> name [
 

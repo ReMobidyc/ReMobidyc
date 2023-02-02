@@ -272,6 +272,12 @@ RMDMetadata >> nameField [
 	^ 'name'
 ]
 
+{ #category : #copying }
+RMDMetadata >> postCopy [
+
+	authors := authors copy
+]
+
 { #category : #printing }
 RMDMetadata >> printJsonOn: aStream [
 

@@ -11,21 +11,38 @@ Class {
 		'reproductionLinksDirty',
 		'modelPath'
 	],
+	#classVars : [
+		'WriteSemaphore'
+	],
 	#category : #'ReMobidyc-Storage'
 }
 
 { #category : #'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel [
 
+	^ self for: aRMDSimulationModel runId: 1
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> for: aRMDSimulationModel runId: anInteger [
+
 	| modelPath basePath |
+	modelPath := self modelPathFor: aRMDSimulationModel.
+	basePath := modelPath / ('run' , anInteger printString).
+	^ self on: basePath modelPath: modelPath
+]
+
+{ #category : #'instance creation' }
+RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
+
+	| modelPath |
 	[ 
 	modelPath := RMDRunsRepository runsDirectory
 	             /
 		             ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
 		              , DateAndTime now printString).
-	basePath := modelPath / aRMDSimulationModel runId.
-	basePath exists ] whileTrue: [ 100 milliSecond wait ].
-	^ self on: basePath modelPath: modelPath
+	modelPath exists ] whileTrue: [ 100 milliSecond wait ].
+	^ modelPath
 ]
 
 { #category : #'instance creation' }
@@ -62,7 +79,7 @@ RMDFileMemory >> allocationFileBasename [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> animatsFileBasename [
-	^ 'animats.csv'
+	^ 'animats.raw'
 ]
 
 { #category : #'accessing-storage' }
@@ -166,6 +183,18 @@ RMDFileMemory >> latestTime: anInteger [
 		ifFalse: [ allocationDirty := true ]
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> metaparameterJsonBasename [
+	^ 'meta-parameters.json'
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> metaparameters [
+
+	metaparameters ifNil: [ self readMetaparameters ].
+	^ super metaparameters
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> modelPath [
 
@@ -205,6 +234,13 @@ RMDFileMemory >> patchSize: anInteger [
 	spaceDirty := true
 ]
 
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> randomSeed [
+
+	randomSeed ifNil: [ self readMetaparameters ].
+	^ super randomSeed
+]
+
 { #category : #'accessing-storage' }
 RMDFileMemory >> readAllocation [
 	self allocationFile
@@ -226,18 +262,40 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) / self animatsFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :csvStream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| vals |
 		vals := Dictionary new.
-		[ 
-		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
-			whileTrue: [ csvStream next ].
-		csvStream atEnd ] whileFalse: [ 
-			((csvStream upTo: Character lf) substrings: ',') ifNotEmpty: [ :row | 
-				vals
-					at: row first
-					put: (row copyWithoutFirst collect: #asInteger) asSet ] ].
+		[ stream atEnd ] whileFalse: [ 
+			| len animat ids |
+			len := stream uint32.
+			animat := (stream next: len) utf8Decoded.
+			len := stream uint32.
+			ids := Set new: len.
+			len timesRepeat: [ ids add: stream uint32 ].
+			vals at: animat put: ids ].
 		^ vals ]
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> readMetaparameters [
+
+	| path jsonObject |
+	path := self basePath / self metaparameterJsonBasename.
+	jsonObject := path isFile
+		              ifTrue: [ 
+		              path readStreamDo: [ :stream | 
+			              STONJSON fromStream: stream ] ]
+		              ifFalse: [ Dictionary new ].
+	runId := jsonObject at: 'runId' ifAbsent: [ 1 ].
+	metaparameters := jsonObject
+		                  at: 'metaparameters'
+		                  ifPresent: [ :dict | 
+			                  (dict associations collect: [ :assoc | 
+				                   (RMDPlaceholderNode identifier: assoc key)
+				                   -> assoc value asRMDExpression ])
+				                  asOrderedDictionary ]
+		                  ifAbsent: [ OrderedDictionary new ].
+	randomSeed := jsonObject at: 'randomSeed' ifAbsent: [ 1 ]
 ]
 
 { #category : #'accessing-storage' }
@@ -247,15 +305,11 @@ RMDFileMemory >> readReproductionLinksForTime: anInteger [
 	ref := (self directoryForTime: anInteger)
 	       / self reproductionLinksFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :stream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| params |
 		params := Dictionary new.
 		[ stream atEnd ] whileFalse: [ 
-			(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
-				pair size = 2 ifTrue: [ 
-					params
-						at: pair first trim asInteger
-						put: pair second trim asInteger ] ] ].
+			params at: stream uint32 put: stream uint32 ].
 		^ params ]
 ]
 
@@ -265,16 +319,11 @@ RMDFileMemory >> readSeedsForTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) / self seedsFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :csvStream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| vals |
 		vals := Dictionary new.
-		[ 
-		[ csvStream atEnd not and: [ csvStream peek isSeparator ] ] 
-			whileTrue: [ csvStream next ].
-		csvStream atEnd ] whileFalse: [ 
-			vals
-				at: (csvStream upTo: $,) asInteger
-				put: (csvStream upTo: Character lf) asInteger ].
+		[ stream atEnd ] whileFalse: [ 
+			vals at: stream uint32 put: stream uint32 ].
 		^ vals ]
 ]
 
@@ -300,15 +349,10 @@ RMDFileMemory >> readStageLinksForTime: anInteger [
 	ref := (self directoryForTime: anInteger)
 	       / self stageLinksFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref readStreamDo: [ :stream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| params |
 		params := Dictionary new.
-		[ stream atEnd ] whileFalse: [ 
-			(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
-				pair size = 2 ifTrue: [ 
-					params
-						at: pair first trim asInteger
-						put: pair second trim asInteger ] ] ].
+		[ stream atEnd ] whileFalse: [params at: stream uint32 put: stream uint32].
 		^ params ]
 ]
 
@@ -318,15 +362,15 @@ RMDFileMemory >> readValuesForTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) / self valuesFileBasename.
 	ref exists ifFalse: [ ^ Dictionary new ].
-	ref binaryReadStreamDo: [ :binStream | 
+	ref binaryReadStreamDo: [ :stream | 
 		| vals |
-		vals := Dictionary new.
-		[ binStream atEnd ] whileFalse: [ 
+		vals := Dictionary new: stream size // 3.
+		[ stream atEnd ] whileFalse: [ 
 			| id value |
-			id := binStream uint32.
+			id := stream uint32.
 			value := ((BoxedFloat64 basicNew: 2)
-				          basicAt: 1 put: binStream uint32;
-				          basicAt: 2 put: binStream uint32;
+				          basicAt: 1 put: stream uint32;
+				          basicAt: 2 put: stream uint32;
 				          yourself) * 1.0.
 			vals at: id put: value ].
 		^ vals ]
@@ -340,18 +384,26 @@ RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 ]
 
 { #category : #'accessing-storage' }
-RMDFileMemory >> reproductionLinksFile [
-	^ self basePath / self reproductionLinksFileBasename
+RMDFileMemory >> reproductionLinksFileBasename [
+	^ 'reproductionLinks.raw'
 ]
 
-{ #category : #'accessing-storage' }
-RMDFileMemory >> reproductionLinksFileBasename [
-	^ 'reproductionLinks.csv'
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> runId [
+
+	runId ifNil: [ self readMetaparameters ].
+	^ super runId
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger [
+	super runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger.
+	self writeMetaparameters
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> seedsFileBasename [
-	^ 'seeds.csv'
+	^ 'seeds.raw'
 ]
 
 { #category : #'accessing-storage' }
@@ -372,13 +424,8 @@ RMDFileMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 ]
 
 { #category : #'accessing-storage' }
-RMDFileMemory >> stageLinksFile [
-	^ self basePath / self stageLinksFileBasename
-]
-
-{ #category : #'accessing-storage' }
 RMDFileMemory >> stageLinksFileBasename [
-	^ 'stageLinks.csv'
+	^ 'stageLinks.raw'
 ]
 
 { #category : #'accessing-storage' }
@@ -411,9 +458,9 @@ RMDFileMemory >> valuesFileBasename [
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAllocation [
 
-	self allocationFile
-		ensureDelete;
-		writeStreamDo: [ :stream | 
+	self writeCritical: [ 
+		self allocationFile writeStreamDo: [ :stream | 
+			stream truncate.
 			stream nextPutAll: 'latestTime,'.
 			latestTime storeOn: stream.
 			stream lf.
@@ -422,24 +469,59 @@ RMDFileMemory >> writeAllocation [
 			stream lf.
 			stream nextPutAll: 'world,'.
 			world storeOn: stream.
-			stream lf ]
+			stream lf.
+			stream close ] ]
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 
-	((self directoryForTime: anInteger) ensureCreateDirectory
-	 / self animatsFileBasename)
-		ensureDelete;
-		writeStreamDo: [ :csvStream | 
+	| ref |
+	ref := (self directoryForTime: anInteger) ensureCreateDirectory
+	       / self animatsFileBasename.
+	self writeCritical: [ 
+		ref binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :animat :individuals | 
-					csvStream nextPutAll: animat.
-					individuals ifNotEmpty: [ 
-							csvStream nextPut: $,.
-							individuals
-								do: [ :id | id printOn: csvStream ]
-								separatedBy: [ csvStream nextPut: $, ] ].
-					csvStream lf ] ]
+				| utf8animat |
+				utf8animat := animat utf8Encoded.
+				stream uint32: utf8animat size.
+				stream nextPutAll: utf8animat.
+				stream uint32: individuals size.
+				individuals do: [ :id | stream uint32: id ] ].
+			stream close ] ]
+]
+
+{ #category : #controlling }
+RMDFileMemory >> writeCritical: aBlock [
+
+	(WriteSemaphore ifNil: [ 
+		 WriteSemaphore := Semaphore forMutualExclusion ]) critical: aBlock
+]
+
+{ #category : #'accessing-meta parameters' }
+RMDFileMemory >> writeMetaparameters [
+
+	| jsonObject |
+	jsonObject := Dictionary new
+		              at: 'runId' put: (runId ifNil: [ 1 ]);
+		              at: 'metaparameters' put: (metaparameters
+				               ifNotNil: [ 
+					               (metaparameters associations collect: [ :assoc | 
+							                assoc key identifier -> assoc value printString ])
+						               asOrderedDictionary ]
+				               ifNil: [ OrderedDictionary new ]);
+		              at: 'randomSeed' put: (randomSeed ifNil: [ 1 ]);
+		              yourself.
+	[ 
+	self basePath ensureCreateDirectory / self metaparameterJsonBasename 
+		lfWriteStreamDo: [ :stream | 
+			STONJSON put: jsonObject onStreamPretty: stream.
+			stream close ] ]
+		on: Error
+		do: [ :ex | 
+			100 milliSecond wait.
+			ex retry ]
 ]
 
 { #category : #'accessing-storage' }
@@ -448,36 +530,36 @@ RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) ensureCreateDirectory
 	       / self reproductionLinksFileBasename.
-	ref
-		ensureDelete;
-		writeStreamDo: [ :stream | 
+	self writeCritical: [ 
+		ref binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :key :value | 
-					key printOn: stream.
-					stream nextPut: $,.
-					value printOn: stream.
-					stream nextPut: Character lf ] ]
+				stream
+					uint32: key;
+					uint32: value ].
+			stream close ] ]
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 
-	((self directoryForTime: anInteger) ensureCreateDirectory
-	 / self seedsFileBasename)
-		ensureDelete;
-		writeStreamDo: [ :csvStream | 
+	self writeCritical: [ 
+		(self directoryForTime: anInteger) ensureCreateDirectory
+		/ self seedsFileBasename binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :animat :seed | 
-					animat printOn: csvStream.
-					csvStream nextPut: $,.
-					seed printOn: csvStream.
-					csvStream lf ] ]
+				stream
+					uint32: animat;
+					uint32: seed ].
+			stream close ] ]
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeSpace [
 
-	self spaceFile
-		ensureDelete;
-		writeStreamDo: [ :stream | 
+	self writeCritical: [ 
+		self spaceFile writeStreamDo: [ :stream | 
+			stream truncate.
 			stream nextPutAll: 'patch,'.
 			patch storeOn: stream.
 			stream lf.
@@ -489,7 +571,8 @@ RMDFileMemory >> writeSpace [
 			stream lf.
 			stream nextPutAll: 'patchSize,'.
 			patchSize storeOn: stream.
-			stream lf ]
+			stream lf.
+			stream close ] ]
 ]
 
 { #category : #'accessing-storage' }
@@ -498,28 +581,29 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 	| ref |
 	ref := (self directoryForTime: anInteger) ensureCreateDirectory
 	       / self stageLinksFileBasename.
-	ref
-		ensureDelete;
-		writeStreamDo: [ :stream | 
+	self writeCritical: [ 
+		ref binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :key :value | 
-					key printOn: stream.
-					stream nextPut: $,.
-					value printOn: stream.
-					stream nextPut: Character lf ] ]
+				stream
+					uint32: key;
+					uint32: value ].
+			stream close ] ]
 ]
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 
-	((self directoryForTime: anInteger) ensureCreateDirectory
-	 / self valuesFileBasename)
-		ensureDelete;
-		binaryWriteStreamDo: [ :binStream | 
+	self writeCritical: [ 
+		(self directoryForTime: anInteger) ensureCreateDirectory
+		/ self valuesFileBasename binaryWriteStreamDo: [ :stream | 
+			stream truncate.
 			aDictionary keysAndValuesDo: [ :id :value | 
-					binStream
-						uint32: id;
-						uint32: (value basicAt: 1);
-						uint32: (value basicAt: 2) ] ]
+				stream
+					uint32: id;
+					uint32: (value basicAt: 1);
+					uint32: (value basicAt: 2) ].
+			stream close ] ]
 ]
 
 { #category : #'accessing-individuals' }

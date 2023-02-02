@@ -32,7 +32,9 @@ RMDAnimatTimeSeriesInspector class >> defaultLayout [
 { #category : #enumerating }
 RMDAnimatTimeSeriesInspector >> agentDefinitionDo: aBlock [
 
-	interpreter animatDefinitionAt: self animat ifPresent: aBlock
+	interpreter simulationModel
+		animatDefinitionAt: self animat
+		ifPresent: aBlock
 ]
 
 { #category : #accessing }
@@ -73,8 +75,8 @@ RMDAnimatTimeSeriesInspector >> chartWithPopulation [
 		| xScale yScale minString maxString |
 		xScale := chartWidth
 		          /
-		          interpreter simulationDefinition timeDefinition duration
-			          numeric.
+			          interpreter simulationModel simulationDefinition
+				          timeDefinition duration numeric.
 		yScale := chartHeight / (max - min).
 		minString := 'min = ' , min printString.
 		maxString := 'max = ' , max printString.
@@ -125,8 +127,8 @@ RMDAnimatTimeSeriesInspector >> chartWithPopulation [
 	times size > 1 ifTrue: [ 
 		| time timeUnit timeString |
 		time := times last.
-		timeUnit := interpreter simulationDefinition timeDefinition duration
-			            unit.
+		timeUnit := interpreter simulationModel simulationDefinition
+			            timeDefinition duration unit.
 		timeString := ((timeUnit fromSI: time) printShowingDecimalPlaces: 1)
 		              , ' [' , timeUnit printString , ']'.
 		canvas
@@ -205,19 +207,22 @@ RMDAnimatTimeSeriesInspector >> updateObservation [
 RMDAnimatTimeSeriesInspector >> updatePopulationLabel [
 
 	populationLabel ifNotNil: [ 
-		populationLabel label: 'Population: '
-			, ((interpreter animatDefinitionAt: animat ifAbsent: [ nil ])
-					 ifNotNil: [ :animatDef | 
-						 (interpreter numberOfIndivisualsOf: animatDef) printString ]
-					 ifNil: [ '?' ]) ]
+		populationLabel label:
+			'Population: ' , ((interpreter simulationModel
+				  animatDefinitionAt: animat
+				  ifAbsent: [ nil ])
+				 ifNotNil: [ :animatDef | 
+					 (interpreter numberOfIndivisualsOf: animatDef) printString ]
+				 ifNil: [ '?' ]) ]
 ]
 
 { #category : #updating }
 RMDAnimatTimeSeriesInspector >> updateTimeSeries [
 
 	super updateTimeSeries.
-	(interpreter animatDefinitionAt: animat ifAbsent: [ nil ]) ifNotNil: [ 
-		:animatDefinition | 
+	(interpreter simulationModel
+		 animatDefinitionAt: animat
+		 ifAbsent: [ nil ]) ifNotNil: [ :animatDefinition | 
 		populationTimeSeries
 			at: interpreter time
 			put: (interpreter numberOfIndivisualsOf: animatDefinition) ]

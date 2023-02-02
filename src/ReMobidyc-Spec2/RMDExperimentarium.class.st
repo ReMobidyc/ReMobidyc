@@ -2,21 +2,14 @@ Class {
 	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'modelName',
 		'interpreter',
-		'validated',
-		'runButton',
-		'populationInspector',
-		'process',
-		'visualizer',
 		'stepButton',
-		'timeLabel',
-		'fpsLabel',
-		'time',
-		'duration',
-		'lastServerUpdate',
+		'runButton',
 		'timeProgressBar',
-		'lastUpdateTime'
+		'populationInspector',
+		'validated',
+		'lastServerUpdate',
+		'lastDisplayUpdate'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -29,16 +22,7 @@ RMDExperimentarium class >> defaultLayout [
 				   vAlignCenter;
 				   add: #stepButton expand: false;
 				   add: #runButton expand: false;
-				   add: (SpBoxLayout newVertical
-						    add: (SpBoxLayout newHorizontal
-								     add: #timeLabel expand: false;
-								     add: #fpsLabel expand: false;
-								     yourself);
-						    add:
-						    (SpBoxLayout newHorizontal add: #timeProgressBar expand: true)
-						    expand: false;
-						    yourself)
-				   expand: true;
+				   add: #timeProgressBar expand: true;
 				   yourself)
 		  height: self buttonHeight * 2;
 		  add: #populationInspector;
@@ -52,57 +36,6 @@ RMDExperimentarium class >> interpreter: aRMDInterpreter [
 		yourself
 ]
 
-{ #category : #private }
-RMDExperimentarium >> animatInspector: aString [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDAnimatTabularInspector new
-						   interpreter: interpreter;
-						   animat: aString ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatPercentileInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatHistogramInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDAnimatTimeSeriesInspector new
-								    interpreter: interpreter;
-								    animat: aString;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
-]
-
 { #category : #updating }
 RMDExperimentarium >> basicInformServer [
 
@@ -110,14 +43,15 @@ RMDExperimentarium >> basicInformServer [
 	Smalltalk at: #RMDClient ifPresent: [ :clientClass | 
 		clientClass
 			informModel: self modelName
-			progress: time / duration asFloat
+			progress: interpreter progress
 			from: self ]
 ]
 
-{ #category : #api }
-RMDExperimentarium >> forceKill [
-	self runState: false.
-	process ifNotNil: #terminate
+{ #category : #updating }
+RMDExperimentarium >> basicUpdateTimeProgressBar [
+
+	interpreter ifNotNil: [ 
+		timeProgressBar fixedAt: interpreter progress ]
 ]
 
 { #category : #controlling }
@@ -144,22 +78,14 @@ RMDExperimentarium >> initialize [
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
-	timeLabel := self newLabel
-		             label: '0';
-		             yourself.
-	fpsLabel := self newLabel
-		            label: '';
-		            yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
 		                   yourself.
 	runButton := self newButton
 		             icon: self runIcon;
-		             action: [ self runState: self runState not ];
+		             action: [ self runButtonPressed ];
 		             help: 'Run the simulation to the end';
 		             state: false;
-		             whenStateChangedDo: [ :state | 
-			             state == true ifTrue: [ self runSimulation ] ];
 		             yourself.
 	stepButton := self newButton
 		              icon: self stepIcon;
@@ -176,7 +102,13 @@ RMDExperimentarium >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: self windowTitle;
-		initialExtent: 700 @ 400
+		initialExtent: 700 @ 450
+]
+
+{ #category : #api }
+RMDExperimentarium >> isRunningSimulation [
+
+	^ interpreter isRunningSimulation
 ]
 
 { #category : #testing }
@@ -192,122 +124,26 @@ RMDExperimentarium >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
-{ #category : #accessing }
-RMDExperimentarium >> modelName: aString [
-
-	modelName := aString.
-	self updateWindowTitle
-]
-
-{ #category : #'instance creation' }
-RMDExperimentarium >> open [
-
-	'Launching an experimentarium'
-		displayProgressFrom: 0
-		to: 1
-		during: [ ^ super open ]
-]
-
-{ #category : #private }
-RMDExperimentarium >> patchInspector [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDPatchTabularInspector new interpreter: interpreter ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchPercentileInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchHistogramInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDPatchTimeSeriesInspector new
-								    interpreter: interpreter;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
-]
-
 { #category : #api }
-RMDExperimentarium >> progress [
-	^ time / duration
+RMDExperimentarium >> pauseSimulation [
+
+	interpreter pauseSimulation
 ]
 
-{ #category : #api }
-RMDExperimentarium >> resetSimulation [
+{ #category : #operations }
+RMDExperimentarium >> runButtonPressed [
 
-	self isValidated ifTrue: [ interpreter setupSimulation ]
+	interpreter isRunningSimulation
+		ifTrue: [ self pauseSimulation ]
+		ifFalse: [ self runSimulation ]
 ]
 
 { #category : #api }
 RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
-		process := [ 
-		           | t |
-		           stepButton enabled: false.
-		           t := DateAndTime now.
-		           [ 
-		           self runState == true and: [ 
-			           self adapter notNil and: [ 
-				           self adapter widget notNil and: [ 
-					           self adapter widget world notNil ] ] ] ] whileTrue: [ 
-			           interpreter ifNotNil: [ 
-				           ([ 
-				            | t0 msec result |
-				            result := interpreter stepSimulation.
-				            t0 := DateAndTime now.
-				            msec := (t0 - t) asMilliSeconds.
-				            msec > 1.0 ifTrue: [ 
-					            fpsLabel label:
-						            ' (' , (1000.0 / msec printShowingDecimalPlaces: 3)
-						            , ' fps)' ].
-				            t := t0.
-				            result ]
-					            on: RMDSemanticError
-					            do: [ :ex | 
-						            (RMDActionDebugger on: interpreter exception: ex)
-							            open.
-						            false ]) ifFalse: [ self runState: false ] ] ].
-		           self updateTimeLabel.
-		           fpsLabel label: ''.
-		           process := nil.
-		           stepButton enabled: true ] forkAt:
-			           Processor userBackgroundPriority ]
-]
-
-{ #category : #api }
-RMDExperimentarium >> runState [
-	^ runButton state == true
-]
-
-{ #category : #api }
-RMDExperimentarium >> runState: aBoolean [
-	runButton state: aBoolean = true
+		interpreter runSimulationOnError: [ :ex | 
+			(RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #accessing }
@@ -318,63 +154,71 @@ RMDExperimentarium >> serverUpdateInterval [
 { #category : #initialization }
 RMDExperimentarium >> setInterpreter: aRMDInterpreter [
 
-	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
+	interpreter ifNotNil: [ 
+		interpreter announcer unsubscribe: self.
+		interpreter isMeta ifTrue: [ 
+			interpreter interpretersDo: [ :i | i announcer unsubscribe: self ] ] ].
 	interpreter := aRMDInterpreter.
 	self typecheck.
-	populationInspector interpreter: interpreter.
-	interpreter announcer weak
-		when: RMDTimeChanged
-		send: #timeChanged
-		to: self.
-	duration := interpreter simulationModel simulationDefinition
-		            timeDefinition duration evalIn: interpreter.
-	self resetSimulation.
-	interpreter fastForward.
-	self updateTimeLabel
+	self isValidated ifTrue: [ 
+		interpreter setupSimulation.
+		populationInspector interpreter: interpreter.
+		interpreter announcer weak
+			when: RMDSimulationStarted send: #simulationStarted: to: self;
+			when: RMDSimulationPaused send: #simulationPaused: to: self.
+		interpreter isMetaInterpreter
+			ifTrue: [ 
+				interpreter interpretersDo: [ :i | 
+					i announcer weak
+						when: RMDTimeChanged
+						send: #timeChanged:
+						to: self ] ]
+			ifFalse: [ 
+				interpreter announcer weak
+					when: RMDTimeChanged
+					send: #timeChanged:
+					to: self ].
+		interpreter fastForward ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
+
+	runButton state: false.
+	stepButton enable.
+	self updateTimeProgressBar.
+	lastDisplayUpdate := nil
+]
+
+{ #category : #updating }
+RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
+
+	runButton state: true.
+	stepButton disable.
+	lastDisplayUpdate := DateAndTime now
 ]
 
 { #category : #api }
 RMDExperimentarium >> stepSimulation [
 
 	self isValidated ifTrue: [ 
-		self runState: false.
-		[ process isNil or: [ process isTerminated ] ] whileFalse: [ 
-			1 milliSecond wait ].
-		[ 
-		interpreter stepSimulation.
-		self updateTimeLabel ]
+		[ interpreter stepSimulation ]
 			on: RMDSemanticError
 			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
-RMDExperimentarium >> timeChanged [
+RMDExperimentarium >> timeChanged: anAnnouncement [
 
-	| now |
 	self informServer.
-	now := DateAndTime now.
-	(lastUpdateTime isNil or: [ now - lastUpdateTime > 100 milliSecond ]) 
-		ifTrue: [ 
-			lastUpdateTime := now.
-			self updateTimeLabel ]
-]
-
-{ #category : #private }
-RMDExperimentarium >> timeSeriesInspector [
-
-	^ RMDTimeSeriesInspector new interpreter: interpreter
-]
-
-{ #category : #api }
-RMDExperimentarium >> toggleRunPauseSimulation [
-	self runState: self runState not
+	self updateTimeProgressBar
 ]
 
 { #category : #api }
 RMDExperimentarium >> typecheck [
 
 	[ 
-	interpreter simulationModel typecheck.
+	interpreter typecheck.
 	^ validated := true ]
 		on: RMDSemanticError
 		do: [ :ex | 
@@ -385,24 +229,14 @@ RMDExperimentarium >> typecheck [
 ]
 
 { #category : #updating }
-RMDExperimentarium >> updateTimeLabel [
+RMDExperimentarium >> updateTimeProgressBar [
 
-	interpreter ifNotNil: [ 
-		time := interpreter time.
-		timeLabel label: (String streamContents: [ :stream | 
-				 4 timesRepeat: [ stream space ].
-				 interpreter simulationModel simulationDefinition timeDefinition 
-					 printOn: stream.
-				 stream nextPutAll: ' - now '.
-				 (interpreter simulationDefinition timeDefinition duration unit 
-					  fromSI: time) printOn: stream showingDecimalPlaces: 3.
-				 stream nextPutAll: ' [ '.
-				 interpreter simulationDefinition timeDefinition duration unit 
-					 printOn: stream.
-				 stream nextPutAll: ' ], '.
-				 interpreter ticks printOn: stream.
-				 stream nextPutAll: ' steps.' ]).
-		timeProgressBar fixedAt: time / duration ]
+	| now |
+	now := DateAndTime now.
+	(lastDisplayUpdate isNil or: [ 
+		 now - lastDisplayUpdate > 100 milliSecond ]) ifTrue: [ 
+		lastDisplayUpdate := now.
+		self basicUpdateTimeProgressBar ]
 ]
 
 { #category : #private }
@@ -420,51 +254,6 @@ RMDExperimentarium >> windowTitle [
 			   ifTrue: [ '' ]
 			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
 		   ifNotNil: [ 
-			   interpreter memory
-				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
-				   ifNil: [ '' ] ]
+			   '[', interpreter memoryName, ']' ]
 		   ifNil: [ '' ])
-]
-
-{ #category : #private }
-RMDExperimentarium >> worldInspector [
-
-	^ self newNotebook
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDWorldTabularInspector new interpreter: interpreter ];
-				   whenRetrievedDo: [ :content | content updateObservation ];
-				   title: 'Table';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldPercentileInspector new
-								    interpreter: interpreter;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Percentile';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldHistogramInspector new
-								    interpreter: interpreter updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Histogram';
-				   yourself);
-		  addPage: (self newNotebookPage
-				   presenterProvider: [ 
-					   RMDScrollPresenter with: (RMDWorldTimeSeriesInspector new
-								    interpreter: interpreter;
-								    updateLayout;
-								    updateObservation;
-								    yourself) ];
-				   whenRetrievedDo: [ :content | 
-				   content presenter updateObservation ];
-				   title: 'Time series';
-				   yourself);
-		  yourself
 ]

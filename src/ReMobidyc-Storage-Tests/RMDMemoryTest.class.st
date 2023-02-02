@@ -230,35 +230,6 @@ RMDMemoryTest >> testNorthOfDo [
 ]
 
 { #category : #tests }
-RMDMemoryTest >> testOldAt [
-	memory
-		at: 1 put: 2.0;
-		at: 3 put: 4.0;
-		tick;
-		at: 1 put: 5.0;
-		at: 3 put: 6.0.
-	self assert: (memory oldAt: 1) equals: 2.0.
-	self assert: (memory oldAt: 3) equals: 4.0.
-	self should: [ memory oldAt: 7 ] raise: KeyNotFound
-]
-
-{ #category : #tests }
-RMDMemoryTest >> testOldAtIfAbsent [
-	memory
-		at: 1 put: 2.0;
-		at: 3 put: 4.0;
-		tick;
-		at: 1 put: 5.0;
-		at: 6 put: 7.0.
-	self assert: (memory oldAt: 1) equals: 2.0.
-	self assert: (memory oldAt: 1 ifAbsent: [ 8.0 ]) equals: 2.0.
-	self assert: (memory oldAt: 3) equals: 4.0.
-	self assert: (memory oldAt: 3 ifAbsent: [ 9.0 ]) equals: 4.0.
-	self should: [ memory oldAt: 6 ] raise: KeyNotFound.
-	self assert: (memory oldAt: 6 ifAbsent: [ 10.0 ]) equals: 10.0
-]
-
-{ #category : #tests }
 RMDMemoryTest >> testPatch [
 	| patch individual |
 	patch := parser patchDefinition end
@@ -346,8 +317,7 @@ RMDMemoryTest >> testRemoveAnimat [
 { #category : #tests }
 RMDMemoryTest >> testRemoveSeedAt [
 
-	| t |
-	t := memory time.
+	self assert: memory time equals: -1.
 	memory seedAt: 1 put: 10.
 	memory seedAt: 2 put: 20.
 	self assert: (memory seedAt: 1) equals: 10.
@@ -356,18 +326,19 @@ RMDMemoryTest >> testRemoveSeedAt [
 	memory removeSeedAt: 1.
 	self assert: (memory seedAt: 1) equals: 1.
 	self assert: (memory seedAt: 2) equals: 20.
-	memory time: t.
+	memory tick.
+	memory time: 0.
 	self assert: (memory seedAt: 1) equals: 10.
 	self assert: (memory seedAt: 2) equals: 20
 ]
 
 { #category : #tests }
 RMDMemoryTest >> testSeedAt [
-
 	memory tick.
 	memory seedAt: 1 put: 10.
 	self assert: (memory seedAt: 1) equals: 10.
 	self assert: (memory seedAt: 2) equals: 2.
+	memory tick.
 	memory time: 0.
 	self assert: (memory seedAt: 1) equals: 1.
 	self assert: (memory seedAt: 2) equals: 2.
@@ -378,9 +349,6 @@ RMDMemoryTest >> testSeedAt [
 
 { #category : #tests }
 RMDMemoryTest >> testSeedAtPut [
-
-	| t |
-	t := memory time.
 	memory seedAt: 1 put: 10.
 	memory seedAt: 2 put: 20.
 	self assert: (memory seedAt: 1) equals: 10.
@@ -389,7 +357,8 @@ RMDMemoryTest >> testSeedAtPut [
 	memory seedAt: 1 put: 30.
 	self assert: (memory seedAt: 1) equals: 30.
 	self assert: (memory seedAt: 2) equals: 20.
-	memory time: t.
+	memory tick.
+	memory time: 0.
 	self assert: (memory seedAt: 1) equals: 10.
 	self assert: (memory seedAt: 2) equals: 20
 ]
@@ -426,45 +395,37 @@ RMDMemoryTest >> testSouthOfDo [
 
 { #category : #tests }
 RMDMemoryTest >> testTick [
-	memory at: 1 put: 2.0.
-	memory at: 3 put: 4.0.
+
+	memory nextAt: 1 put: 2.0.
+	memory nextAt: 3 put: 4.0.
 	memory nextAt: 5 put: 6.0.
 	memory nextAt: 3 put: 7.0.
-	self assert: (memory at: 1) equals: 2.0.
-	self assert: (memory at: 3) equals: 4.0.
-	self assert: (memory nextAt: 5) equals: 6.0.
+	self should: [memory at: 1] raise: KeyNotFound.
+	self should: [memory at: 3] raise: KeyNotFound.
 	self should: [ memory at: 5 ] raise: KeyNotFound.
 	memory tick.
 	self assert: (memory at: 1) equals: 2.0.
 	self assert: (memory at: 3) equals: 7.0.
-	self assert: (memory at: 5) equals: 6.0.
-	self assert: (memory oldAt: 1) equals: 2.0.
-	self assert: (memory oldAt: 3) equals: 4.0.
-	self should: [ memory oldAt: 5 ] raise: KeyNotFound
+	self assert: (memory at: 5) equals: 6.0
 ]
 
 { #category : #tests }
 RMDMemoryTest >> testTime [
-	memory at: 1 put: 2.0.
-	memory at: 3 put: 4.0.
+	memory tick.
+	memory nextAt: 3 put: 4.0.
 	memory nextAt: 1 put: 5.0.
 	memory tick.
-	memory at: 3 put: 6.0.
+	memory nextAt: 3 put: 6.0.
 	memory nextAt: 1 put: 7.0.
 	memory tick.
-	memory at: 8 put: 9.0.
+	memory nextAt: 8 put: 9.0.
 	memory time: 1.
 	self assert: (memory at: 1) equals: 5.0.
-	self assert: (memory at: 3) equals: 6.0.
-	self assert: (memory oldAt: 1) equals: 2.0.
-	self assert: (memory oldAt: 3) equals: 4.0.
-	memory time: 2.
+	self assert: (memory at: 3) equals: 4.0.
+	memory time: 3.
 	self assert: (memory at: 1) equals: 7.0.
-	self assert: (memory at: 3 ifAbsent: [ 10.0 ]) equals: 4.0.
-	self assert: (memory at: 8) equals: 9.0.
-	self assert: (memory oldAt: 1) equals: 5.0.
-	self assert: (memory oldAt: 3) equals: 6.0.
-	self assert: (memory oldAt: 8 ifAbsent: [ 11.0 ]) equals: 11.0
+	self assert: (memory at: 3 ifAbsent: [ 10.0 ]) equals: 6.0.
+	self assert: (memory at: 8) equals: 9.0
 ]
 
 { #category : #tests }

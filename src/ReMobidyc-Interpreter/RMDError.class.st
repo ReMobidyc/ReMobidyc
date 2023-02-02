@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDError,
 	#superclass : #Exception,
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #private }

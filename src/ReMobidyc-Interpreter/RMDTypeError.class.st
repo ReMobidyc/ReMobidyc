@@ -7,7 +7,7 @@ Class {
 		'subnode1',
 		'subnode2'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
 { #category : #'instance creation' }

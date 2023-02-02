@@ -84,8 +84,14 @@ RMDVisualizerPresenter >> interpreter: aRMDInterpreter [
 	interpreter
 		ifNotNil: [ interpreter announcer weak
 				when: RMDTimeChanged
-				send: #updateImage
+				send: #timeChanged:
 				to: self ]
+]
+
+{ #category : #accessing }
+RMDVisualizerPresenter >> timeChanged: aRMDTimeChanged [
+
+	self updateImage
 ]
 
 { #category : #updating }

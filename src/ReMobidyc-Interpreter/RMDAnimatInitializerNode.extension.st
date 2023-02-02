@@ -23,10 +23,10 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 			definition: animatDefinition
 			do: [ 
 				aRMDInterpreter
-					write:
+					writeNext:
 						(RMDUniformDistributionXNode current evalIn: aRMDInterpreter)
 					to: individual + xOffset;
-					write:
+					writeNext:
 						(RMDUniformDistributionYNode current evalIn: aRMDInterpreter)
 					to: individual + yOffset.
 				animatDefinition evalIn: aRMDInterpreter.
@@ -37,7 +37,7 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context
-		subjectDefinition: (aRMDInterpreter
+		subjectDefinition: (aRMDInterpreter simulationModel
 				 animatDefinitionAt: self animat
 				 ifAbsent: [ RMDUndefinedAnimatError signal: self animat ]);
 		loadUtilityDefinitions: utilityDefinitions.

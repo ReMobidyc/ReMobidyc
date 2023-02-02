@@ -12,7 +12,7 @@ Class {
 		'location',
 		'space'
 	],
-	#category : #'ReMobidyc-Interpreter'
+	#category : #'ReMobidyc-Interpreter-Contexts'
 }
 
 { #category : #accessing }
