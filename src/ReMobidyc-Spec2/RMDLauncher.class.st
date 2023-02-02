@@ -245,7 +245,7 @@ RMDLauncher >> openInPopulationTabular [
 
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository ifTrue: [ 
-			(model metaInterpreterOnModelPath: self file) ifNotNil:
+			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
 				#openInPopulationTabular ] ]
 ]
 

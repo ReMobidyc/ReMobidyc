@@ -24,6 +24,16 @@ RMDMetaInterpreter class >> on: aRMDSimulationModel modelPath: aFileReference [
 ]
 
 { #category : #'instancce creation' }
+RMDMetaInterpreter class >> on: aRMDSimulationModel readOnlyModelPath: aFileReference [
+
+	^ self new
+		  simulationModel: aRMDSimulationModel;
+		  setContext:
+			  (RMDMetaContextForReadOnlyFileMemory modelPath: aFileReference);
+		  yourself
+]
+
+{ #category : #'instancce creation' }
 RMDMetaInterpreter class >> onModelPath: aFileReference [
 
 	^ self new
@@ -33,6 +43,19 @@ RMDMetaInterpreter class >> onModelPath: aFileReference [
 				   ifError: [ ^ nil ]);
 		  setContext:
 			  (RMDMetaContextForFileMemory modelPath: aFileReference);
+		  yourself
+]
+
+{ #category : #'instancce creation' }
+RMDMetaInterpreter class >> onReadOnlyModelPath: aFileReference [
+
+	^ self new
+		  simulationModel:
+			  (RMDSimulationModel
+				   importModel: aFileReference
+				   ifError: [ ^ nil ]);
+		  setContext:
+			  (RMDMetaContextForReadOnlyFileMemory modelPath: aFileReference);
 		  yourself
 ]
 
@@ -215,13 +238,4 @@ RMDMetaInterpreter >> waitingTime [
 RMDMetaInterpreter >> withDryRunContextDo: aBlock [
 
 	^ self withContext: RMDMetaContextForDryRun new do: aBlock
-]
-
-{ #category : #'context controls' }
-RMDMetaInterpreter >> withFileMemoryContextOnModelPath: aFileReference do: aBlock [
-
-	^ self
-		  withContext:
-		  (RMDMetaContextForFileMemory modelPath: aFileReference)
-		  do: aBlock
 ]

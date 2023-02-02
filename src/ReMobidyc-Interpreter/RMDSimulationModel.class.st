@@ -774,6 +774,12 @@ RMDSimulationModel >> metaInterpreterOnModelPath: aFileReference [
 	^ RMDMetaInterpreter on: self modelPath: aFileReference
 ]
 
+{ #category : #interpreting }
+RMDSimulationModel >> metaInterpreterOnReadOnlyModelPath: aFileReference [
+
+	^ RMDMetaInterpreter on: self readOnlyModelPath: aFileReference
+]
+
 { #category : #'accessing - metadata' }
 RMDSimulationModel >> metadata [
 

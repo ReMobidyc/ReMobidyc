@@ -82,18 +82,6 @@ RMDFileMemory >> animatsFileBasename [
 	^ 'animats.raw'
 ]
 
-{ #category : #accessing }
-RMDFileMemory >> at: anInteger ifAbsent: aBlock [
-
-	^ values at: anInteger ifAbsent: aBlock
-]
-
-{ #category : #accessing }
-RMDFileMemory >> at: anInteger put: aNumber [
-
-	^ values at: anInteger put: aNumber
-]
-
 { #category : #'accessing-storage' }
 RMDFileMemory >> basePath [
 	^ basePath

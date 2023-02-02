@@ -19,7 +19,7 @@ RMDMetaContextForFileMemory class >> modelPath: aFileReference [
 RMDMetaContextForFileMemory >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
 
 	| memory |
-	memory := RMDFileMemory
+	memory := self memoryClass
 		          on: modelPath / ('run' , anInteger printString)
 		          modelPath: modelPath.
 	memory
@@ -36,6 +36,12 @@ RMDMetaContextForFileMemory >> createInterpreterOn: aRMDSimulationModel metapara
 RMDMetaContextForFileMemory >> exportModel: aRMDSimulationModel [
 
 	aRMDSimulationModel exportModel: modelPath
+]
+
+{ #category : #'class access' }
+RMDMetaContextForFileMemory >> memoryClass [
+
+	^ RMDFileMemory
 ]
 
 { #category : #accessing }
@@ -62,6 +68,6 @@ RMDMetaContextForFileMemory >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 	^ (modelPath directoriesMatching: 'run*')
 		  ifNotEmpty: [ :refs | 
 			  refs do: [ :ref | 
-				  aBlock value: (RMDFileMemory on: ref modelPath: modelPath) ] ]
+				  aBlock value: (self memoryClass on: ref modelPath: modelPath) ] ]
 		  ifEmpty: emptyBlock
 ]
