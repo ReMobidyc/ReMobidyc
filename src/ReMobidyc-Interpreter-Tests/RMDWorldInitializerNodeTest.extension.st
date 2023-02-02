@@ -13,6 +13,7 @@ RMDWorldInitializerNodeTest >> testEvalIn [
 	interpreter simulationModel worldDefinition: worldDef.
 	worldInitializer evalIn: interpreter.
 	count := 0.
+	interpreter memory tick.
 	interpreter individualsOf: worldDef do: [ :world | 
 		interpreter
 			withActionContextWith: RMDActionDefinitionNode template

@@ -34,12 +34,14 @@ RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVi
 	columnCollectors := anArrayOfAssociationOfColumnKeyAndBlock.
 	table columns: #(  ).
 	self updateRows.
-	table columns: (anArrayOfAssociationOfColumnKeyAndBlock
-			 select: [ :assoc | aBlock value: assoc key ]
-			 thenCollect: [ :assoc | 
-				 SpStringTableColumn
-					 title: assoc key asString
-					 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ])
+	table
+		columns: (anArrayOfAssociationOfColumnKeyAndBlock
+				 select: [ :assoc | aBlock value: assoc key ]
+				 thenCollect: [ :assoc | 
+					 SpStringTableColumn
+						 title: assoc key asString
+						 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ]);
+		refresh
 ]
 
 { #category : #enumerating }
@@ -86,12 +88,14 @@ RMDTabular >> runChanged [
 RMDTabular >> selectVisibleColumns: aBlock [
 
 	columnCollectors ifNotNil: [ 
-		table columns: (columnCollectors
-				 select: [ :assoc | aBlock value: assoc key ]
-				 thenCollect: [ :assoc | 
-					 SpStringTableColumn
-						 title: assoc key asString
-						 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ]) ]
+		table
+			columns: (columnCollectors
+					 select: [ :assoc | aBlock value: assoc key ]
+					 thenCollect: [ :assoc | 
+						 SpStringTableColumn
+							 title: assoc key asString
+							 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ]);
+			refresh ]
 ]
 
 { #category : #accessing }

@@ -23,6 +23,7 @@ RMDAnimatInitializerNodeTest >> testEvalIn [
 	maxBody := 'kcal' asRMDUnit toSI: 5000.
 	age := 0.0.
 	count := 0.
+	interpreter memory tick.
 	interpreter individualsOf: goatDef do: [ :goat | 
 		interpreter
 			withObserverContextWithSubject: goat
