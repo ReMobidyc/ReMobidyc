@@ -193,8 +193,8 @@ RMDMemory >> firstStageOf: anInteger [
 RMDMemory >> initialize [
 
 	super initialize.
-	time := 0.
-	latestTime := 0.
+	time := -1.
+	latestTime := -1.
 	nextValues := Dictionary new.
 	values := Dictionary new.
 	nextDeltas := Dictionary new.
@@ -481,9 +481,9 @@ RMDMemory >> sunrise [
 { #category : #timing }
 RMDMemory >> sunset [
 
-	latestTime = time ifTrue: [ 
-		self writeAnimats: animats forTime: time.
-		self commitOuts ].
+	self
+		commitOuts;
+		commitIns.
 	nextDeltas ifNotEmpty: [ 
 		nextDeltas keysAndValuesDo: [ :id :delta | 
 			| nextValue |
@@ -494,12 +494,11 @@ RMDMemory >> sunset [
 			nextDeltas removeKey: id ifAbsent: [  ].
 			true ] ].
 	latestTime = time ifTrue: [ 
-		self writeValues: values forTime: time.
 		self writeValues: nextValues forTime: time + 1.
-		self writeSeeds: seeds forTime: time.
-		self writeReproductionLinks: reproductionLinks forTime: time.
-		self writeStageLinks: stageLinks forTime: time.
-		self commitIns ]
+		self writeAnimats: animats forTime: time + 1.
+		self writeSeeds: seeds forTime: time + 1.
+		self writeReproductionLinks: reproductionLinks forTime: time + 1.
+		self writeStageLinks: stageLinks forTime: time + 1 ]
 ]
 
 { #category : #timing }
@@ -521,7 +520,7 @@ RMDMemory >> time: anInteger [
 
 	time = anInteger ifTrue: [ ^ self ].
 	(anInteger isInteger and: [ 
-		 anInteger between: 0 and: self latestTime ]) ifFalse: [ 
+		 anInteger between: 0 and: self latestTime + 1 ]) ifFalse: [ 
 		^ SubscriptOutOfBounds signal ].
 	self sunset.
 	time := anInteger.
