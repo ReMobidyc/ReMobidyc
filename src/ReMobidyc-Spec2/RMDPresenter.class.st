@@ -299,6 +299,32 @@ RMDPresenter >> saveIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> saveIconWith: aString [
+
+	| form label font x y |
+	form := Form extent: 24 @ 24 depth: 32.
+	font := TextStyle defaultFont.
+	label := Form
+		         extent: (font widthOfString: aString) @ font height
+		         depth: 32.
+	label getCanvas
+		fillColor: Color white;
+		drawString: aString
+		at: 0 @ 0
+		font: font
+		color: Color black.
+	label := label scaledToSize: 16 @ 12.
+	form getCanvas
+		paintImage:
+			((Smalltalk ui icons iconNamed: #smallSave) scaledToSize: 24 @ 24)
+		at: 0 @ 0;
+		translucentImage: label
+		at: form width - label width // 2 @ (form height - label height);
+		flush.
+	^ form
+]
+
+{ #category : #icons }
 RMDPresenter >> stepIcon [
 
 	| form |

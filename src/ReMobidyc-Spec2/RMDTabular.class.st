@@ -5,8 +5,8 @@ Class {
 		'metaInterpreter',
 		'runDropList',
 		'table',
-		'rows',
-		'columnCollectors'
+		'columnCollectors',
+		'exportCSVButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -15,7 +15,10 @@ Class {
 RMDTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
-		  add: #runDropList expand: false;
+		  add: (SpBoxLayout newHorizontal
+				   add: #exportCSVButton width: self buttonHeight;
+				   add: #runDropList)
+		  expand: false;
 		  add: #table;
 		  yourself
 ]
@@ -44,6 +47,18 @@ RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVi
 		refresh
 ]
 
+{ #category : #operations }
+RMDTabular >> exportAsCSV [
+
+	(UIManager default
+		 chooseForSaveFileReference: 'Export a CSV file...'
+		 extensions: #( 'csv' )
+		 path: ((FileLocator documents / 'ReMobidyc') ensureCreateDirectory
+			  / (metaInterpreter context modelPath basename , '-populations') 
+				  withExtension: 'csv') absolutePath) ifNotNil: [ :fileRef | 
+		self writeCSVInto: fileRef ]
+]
+
 { #category : #enumerating }
 RMDTabular >> generateRowsDo: aBlock [
 
@@ -54,6 +69,10 @@ RMDTabular >> generateRowsDo: aBlock [
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
+	exportCSVButton := self newButton
+		                   icon: (self saveIconWith: 'CSV');
+		                   action: [ self exportAsCSV ];
+		                   yourself.
 	runDropList := self newDropList
 		               display: [ :runId | 
 			               runId
@@ -67,6 +86,8 @@ RMDTabular >> initializePresenters [
 		               whenSelectedItemChangedDo: [ self runChanged ];
 		               yourself.
 	table := self newTable
+		         hideColumnHeaders;
+		         yourself
 ]
 
 { #category : #private }
@@ -74,8 +95,15 @@ RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	aRMDMetaInterpreter setupSimulation.
 	metaInterpreter := aRMDMetaInterpreter.
-	runDropList items: { nil } , aRMDMetaInterpreter runIds.
-	runDropList selectIndex: 1
+	runDropList items: { nil } , aRMDMetaInterpreter runIds
+]
+
+{ #category : #accessing }
+RMDTabular >> modelName [
+
+	^ metaInterpreter
+		  ifNotNil: [ metaInterpreter simulationModel name ]
+		  ifNil: [ 'noname' ]
 ]
 
 { #category : #updating }
@@ -162,13 +190,34 @@ RMDTabular >> titleRowsDo: aBlock [
 { #category : #updating }
 RMDTabular >> updateRows [
 
-	rows := Array streamContents: [ :stream | 
-		        self titleRowsDo: [ :block | 
-			        stream nextPut: (columnCollectors collect: [ :assoc | 
-					         assoc key -> (block value: assoc key) ]) asDictionary ].
-		        self generateRowsDo: [ :rowIndex | 
-			        stream nextPut: (columnCollectors collect: [ :assoc | 
-					         assoc key -> (assoc value value: rowIndex) ])
-					        asDictionary ] ].
-	table items: rows
+	table items: (Array streamContents: [ :stream | 
+			 self titleRowsDo: [ :block | 
+				 stream nextPut: (columnCollectors collect: [ :assoc | 
+						  assoc key -> (block value: assoc key) ]) asDictionary ].
+			 self generateRowsDo: [ :rowIndex | 
+				 stream nextPut: (columnCollectors collect: [ :assoc | 
+						  assoc key -> (assoc value value: rowIndex) ]) asDictionary ] ])
+]
+
+{ #category : #operations }
+RMDTabular >> writeCSVInto: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		table items
+			do: [ :row | 
+				table columns
+					do: [ :column | 
+						| item |
+						item := column evaluation value: row.
+						item isNumber
+							ifTrue: [ item printOn: stream ]
+							ifFalse: [ 
+								stream
+									nextPut: $";
+									nextPutAll: ((item asString copyReplaceAll: '"' with: '\"')
+											 copyReplaceAll: ','
+											 with: '\,');
+									nextPut: $" ] ]
+					separatedBy: [ stream nextPut: $, ] ]
+			separatedBy: [ stream cr ] ]
 ]

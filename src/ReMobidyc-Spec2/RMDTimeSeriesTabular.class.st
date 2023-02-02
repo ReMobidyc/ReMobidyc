@@ -33,10 +33,7 @@ RMDTimeSeriesTabular >> generateRowsDo: aBlock [
 { #category : #updating }
 RMDTimeSeriesTabular >> runChanged [
 
-	runDropList selectedItem
-		ifNotNil: [ :runId | 
-			self selectVisibleColumns: [ :columnKey | columnKey first = runId ] ]
-		ifNil: [ self selectVisibleColumns: [ :columnKey | true ] ]
+	self updateVisibleColumns
 ]
 
 { #category : #'accessing - column collectors' }
@@ -45,4 +42,10 @@ RMDTimeSeriesTabular >> timeColumnCollector [
 	^ #time -> [ :rowIndex | 
 	  metaInterpreter simulationModel durationUnit fromSI:
 		  rowIndex - 1 * metaInterpreter simulationModel deltaTime ]
+]
+
+{ #category : #updating }
+RMDTimeSeriesTabular >> updateVisibleColumns [
+
+	^ self subclassResponsibility
 ]
