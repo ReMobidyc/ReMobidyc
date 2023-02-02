@@ -113,7 +113,7 @@ RMDPopulationTabular >> stageChanged [
 { #category : #initialization }
 RMDPopulationTabular >> title [
 
-	^ 'Tabular'
+	^ 'Population Tabular'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 	  , (metaInterpreter
 			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
