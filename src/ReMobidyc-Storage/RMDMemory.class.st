@@ -484,8 +484,6 @@ RMDMemory >> sunset [
 	latestTime = time ifTrue: [ 
 		self writeAnimats: animats forTime: time.
 		self commitOuts ].
-	values keysAndValuesDo: [ :id :value | 
-		nextValues at: id ifAbsentPut: [ value ] ].
 	nextDeltas ifNotEmpty: [ 
 		nextDeltas keysAndValuesDo: [ :id :delta | 
 			| nextValue |
