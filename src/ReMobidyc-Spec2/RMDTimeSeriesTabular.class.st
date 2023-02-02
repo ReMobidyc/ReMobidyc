@@ -24,10 +24,10 @@ RMDTimeSeriesTabular >> generateRowsDo: aBlock [
 	'Collecting data from the run record'
 		displayProgressFrom: 1
 		to: latestTime
-		during: [ :progress | TimeProfiler spyOn: [ 
+		during: [ :progress | 
 			1 to: latestTime do: [ :time | 
 				aBlock value: time.
-				progress value: time ] ]]
+				progress value: time ] ]
 ]
 
 { #category : #updating }
