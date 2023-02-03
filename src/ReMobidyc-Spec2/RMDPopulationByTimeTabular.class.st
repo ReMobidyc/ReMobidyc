@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDPopulationTabular,
+	#name : #RMDPopulationByTimeTabular,
 	#superclass : #RMDTimeSeriesTabular,
 	#instVars : [
 		'speciesDropList',
@@ -9,41 +9,46 @@ Class {
 }
 
 { #category : #layout }
-RMDPopulationTabular class >> defaultLayout [
+RMDPopulationByTimeTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: #exportCSVButton width: self buttonHeight;
+				   add: #reloadButton width: self buttonHeight;
+				   addSpace;
 				   add: #runDropList;
 				   add: #speciesDropList;
 				   add: #stageDropList;
 				   yourself)
 		  expand: false;
 		  add: #table;
+		  add: (SpBoxLayout newHorizontal
+				   add: #exportCSVButton width: self buttonHeight;
+				   yourself)
+		  expand: false;
 		  yourself
 ]
 
 { #category : #'instance creation' }
-RMDPopulationTabular class >> on: aRMDMetaInterpreter [
+RMDPopulationByTimeTabular class >> on: aRMDMetaInterpreter [
 
 	^ self new metaInterpreter: aRMDMetaInterpreter
 ]
 
 { #category : #'instance creation' }
-RMDPopulationTabular class >> openOn: aRMDMetaInterpreter [
+RMDPopulationByTimeTabular class >> openOn: aRMDMetaInterpreter [
 
 	^ (self on: aRMDMetaInterpreter) open
 ]
 
 { #category : #accessing }
-RMDPopulationTabular >> allSpecies [
+RMDPopulationByTimeTabular >> allSpecies [
 
 	^ Array streamContents: [ :stream | 
 		  self speciesDo: [ :species | stream nextPut: species ] ]
 ]
 
 { #category : #initialization }
-RMDPopulationTabular >> initializePresenters [
+RMDPopulationByTimeTabular >> initializePresenters [
 
 	super initializePresenters.
 	speciesDropList := self newDropList
@@ -57,14 +62,14 @@ RMDPopulationTabular >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDPopulationTabular >> initializeWindow: aWindowPresenter [
+RMDPopulationByTimeTabular >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 700 @ 800
 ]
 
 { #category : #private }
-RMDPopulationTabular >> metaInterpreter: aRMDMetaInterpreter [
+RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
 	self columnCollectors: (Array streamContents: [ :stream | 
@@ -79,7 +84,7 @@ RMDPopulationTabular >> metaInterpreter: aRMDMetaInterpreter [
 ]
 
 { #category : #'accessing - column collectors' }
-RMDPopulationTabular >> populationCollectorOnRunId: anInteger animat: aRMDAnimatDefinition [
+RMDPopulationByTimeTabular >> populationCollectorOnRunId: anInteger animat: aRMDAnimatDefinition [
 
 	^ { 
 		  anInteger.
@@ -98,20 +103,20 @@ RMDPopulationTabular >> populationCollectorOnRunId: anInteger animat: aRMDAnimat
 ]
 
 { #category : #updating }
-RMDPopulationTabular >> speciesChanged [
+RMDPopulationByTimeTabular >> speciesChanged [
 
 	self updateVisibleColumns.
 	self updateStageDropList
 ]
 
 { #category : #updating }
-RMDPopulationTabular >> stageChanged [
+RMDPopulationByTimeTabular >> stageChanged [
 
 	self updateVisibleColumns
 ]
 
 { #category : #initialization }
-RMDPopulationTabular >> title [
+RMDPopulationByTimeTabular >> title [
 
 	^ 'Population Tabular'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
@@ -121,7 +126,7 @@ RMDPopulationTabular >> title [
 ]
 
 { #category : #enumerating }
-RMDPopulationTabular >> titleRowsDo: aBlock [
+RMDPopulationByTimeTabular >> titleRowsDo: aBlock [
 
 	aBlock value: [ :columnKey | 
 		columnKey = #time
@@ -144,7 +149,7 @@ RMDPopulationTabular >> titleRowsDo: aBlock [
 ]
 
 { #category : #updating }
-RMDPopulationTabular >> updateSpeciesDropList [
+RMDPopulationByTimeTabular >> updateSpeciesDropList [
 
 	speciesDropList items: (Array streamContents: [ :stream | 
 			 stream nextPut: nil.
@@ -152,7 +157,7 @@ RMDPopulationTabular >> updateSpeciesDropList [
 ]
 
 { #category : #updating }
-RMDPopulationTabular >> updateStageDropList [
+RMDPopulationByTimeTabular >> updateStageDropList [
 
 	stageDropList items: (Array streamContents: [ :stream | 
 			 stream nextPut: nil.
@@ -166,7 +171,7 @@ RMDPopulationTabular >> updateStageDropList [
 ]
 
 { #category : #updating }
-RMDPopulationTabular >> updateVisibleColumns [
+RMDPopulationByTimeTabular >> updateVisibleColumns [
 
 	| runBlock speciesBlock stageBlock |
 	runBlock := runDropList selectedItem

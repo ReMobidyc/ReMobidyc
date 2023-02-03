@@ -6,7 +6,8 @@ Class {
 		'runDropList',
 		'table',
 		'columnCollectors',
-		'exportCSVButton'
+		'exportCSVButton',
+		'reloadButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -16,10 +17,16 @@ RMDTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: #exportCSVButton width: self buttonHeight;
-				   add: #runDropList)
+				   add: #reloadButton width: self buttonHeight;
+				   addSpace;
+				   add: #runDropList expand: false;
+				   yourself);
 		  expand: false;
 		  add: #table;
+		  add: (SpBoxLayout newHorizontal
+				   add: #exportCSVButton width: self buttonHeight;
+				   yourself)
+		  expand: false;
 		  yourself
 ]
 
@@ -69,6 +76,10 @@ RMDTabular >> generateRowsDo: aBlock [
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
+	reloadButton := self newButton
+		                icon: self updateIcon;
+		                action: [ self reloadTable ];
+		                yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
 		                   action: [ self exportAsCSV ];
@@ -104,6 +115,12 @@ RMDTabular >> modelName [
 	^ metaInterpreter
 		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
+]
+
+{ #category : #operations }
+RMDTabular >> reloadTable [
+
+	self updateRows
 ]
 
 { #category : #updating }
