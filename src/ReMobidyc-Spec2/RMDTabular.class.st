@@ -120,7 +120,9 @@ RMDTabular >> modelName [
 { #category : #operations }
 RMDTabular >> reloadTable [
 
-	self updateRows
+	metaInterpreter reloadMemory.
+	self updateRows.
+	table refresh
 ]
 
 { #category : #updating }
