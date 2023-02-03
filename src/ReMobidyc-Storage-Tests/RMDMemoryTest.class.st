@@ -400,13 +400,18 @@ RMDMemoryTest >> testTick [
 	memory nextAt: 3 put: 4.0.
 	memory nextAt: 5 put: 6.0.
 	memory nextAt: 3 put: 7.0.
-	self should: [memory at: 1] raise: KeyNotFound.
-	self should: [memory at: 3] raise: KeyNotFound.
-	self should: [ memory at: 5 ] raise: KeyNotFound.
 	memory tick.
+	memory nextAt: 1 put: 12.0.
+	memory nextAt: 3 put: 14.0.
+	memory nextAt: 5 put: 16.0.
+	memory nextAt: 3 put: 17.0.
 	self assert: (memory at: 1) equals: 2.0.
 	self assert: (memory at: 3) equals: 7.0.
-	self assert: (memory at: 5) equals: 6.0
+	self assert: (memory at: 5) equals: 6.0.
+	memory tick.
+	self assert: (memory at: 1) equals: 12.0.
+	self assert: (memory at: 3) equals: 17.0.
+	self assert: (memory at: 5) equals: 16.0
 ]
 
 { #category : #tests }
