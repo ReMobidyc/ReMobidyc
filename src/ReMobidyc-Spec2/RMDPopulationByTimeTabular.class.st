@@ -15,9 +15,15 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: #reloadButton width: self buttonHeight;
 				   addSpace;
-				   add: #runDropList;
-				   add: #speciesDropList;
-				   add: #stageDropList;
+				   add: (SpBoxLayout newVertical
+						    add: 'Run';
+						    add: #runDropList);
+				   add: (SpBoxLayout newVertical
+						    add: 'Species';
+						    add: #speciesDropList);
+				   add: (SpBoxLayout newVertical
+						    add: 'Stage';
+						    add: #stageDropList);
 				   yourself)
 		  expand: false;
 		  add: #table;
@@ -40,13 +46,6 @@ RMDPopulationByTimeTabular >> initializePresenters [
 		                 display: [ :item | item ifNil: [ 'all stages' ] ];
 		                 whenSelectedItemChangedDo: [ self stageChanged ];
 		                 yourself
-]
-
-{ #category : #initialization }
-RMDPopulationByTimeTabular >> initializeWindow: aWindowPresenter [
-
-	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 700 @ 800
 ]
 
 { #category : #private }

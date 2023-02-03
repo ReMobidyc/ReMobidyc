@@ -14,9 +14,15 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: #reloadButton width: self buttonHeight;
 				   addSpace;
-				   add: #runDropList;
-				   add: #stageDropList;
-				   add: #timeDropList;
+				   add: (SpBoxLayout newVertical
+						    add: 'Species(Stage)';
+						    add: #stageDropList);
+				   add: (SpBoxLayout newVertical
+						    add: 'Run';
+						    add: #runDropList);
+				   add: (SpBoxLayout newVertical
+						    add: 'Time';
+						    add: #timeDropList);
 				   yourself)
 		  expand: false;
 		  add: #table;

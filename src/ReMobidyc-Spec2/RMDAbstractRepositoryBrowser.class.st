@@ -12,7 +12,8 @@ Class {
 		'removeItemButton',
 		'editItemButton',
 		'exportItemButton',
-		'isForSave'
+		'isForSave',
+		'updateItemListButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -35,6 +36,7 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: #itemList;
 						    add: (SpBoxLayout newHorizontal
+								     add: #updateItemListButton width: self buttonHeight;
 								     add: #newItemButton width: self buttonHeight;
 								     add: #removeItemButton width: self buttonHeight;
 								     add: #editItemButton width: self buttonHeight;
@@ -293,6 +295,11 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 			            self
 				            updateButtons;
 				            updateDescriptionText ].
+	updateItemListButton := self newButton
+		                        icon: self updateIcon;
+		                        action: [ self updateItemList ];
+		                        disable;
+		                        yourself.
 	newItemButton := self newButton
 		                 icon: self addIcon;
 		                 action: [ self addItem ];
@@ -307,12 +314,12 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 		                    disable;
 		                    yourself.
 	editItemButton := self newButton
-		                    icon: self editIcon;
-		                    action: [ self editItem ];
-		                    help:
-			                    'Rename the selected item from the repository';
-		                    disable;
-		                    yourself.
+		                  icon: self editIcon;
+		                  action: [ self editItem ];
+		                  help:
+			                  'Rename the selected item from the repository';
+		                  disable;
+		                  yourself.
 	exportItemButton := self newButton
 		                    icon: self exportIcon;
 		                    action: [ self exportItem ];
@@ -446,11 +453,13 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 		ifNil: [ 
 			removeRepositoryButton disable.
 			editRepositoryButton disable.
+			updateItemListButton disable.
 			newItemButton disable.
 			editItemButton disable ]
 		ifNotNil: [ :repo | 
 			removeRepositoryButton enable.
 			editRepositoryButton enable.
+			updateItemListButton enable.
 			repo isModifiable
 				ifTrue: [ 
 					newItemButton enabled: true.

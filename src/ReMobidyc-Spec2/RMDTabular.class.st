@@ -126,6 +126,13 @@ RMDTabular >> initializePresenters [
 		         yourself
 ]
 
+{ #category : #initialization }
+RMDTabular >> initializeWindow: aWindowPresenter [
+
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter initialExtent: 700 @ 800
+]
+
 { #category : #accessing }
 RMDTabular >> latestTime [
 

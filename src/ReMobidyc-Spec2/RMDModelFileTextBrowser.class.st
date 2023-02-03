@@ -195,9 +195,7 @@ RMDModelFileTextBrowser >> initializePresenters [
 RMDModelFileTextBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: self windowTitle;
-		initialExtent: 800 @ 600
+	aWindowPresenter initialExtent: 800 @ 600
 ]
 
 { #category : #parsers }
@@ -270,6 +268,14 @@ RMDModelFileTextBrowser >> sourceTextContextMenu [
 RMDModelFileTextBrowser >> tasksFileParser [
 
 	^ RMDGrammar new tasksFile end
+]
+
+{ #category : #private }
+RMDModelFileTextBrowser >> title [
+
+	^ 'Modeler' , (modelFileReference
+		   ifNil: [ '' ]
+		   ifNotNil: [ ' @ ' , modelFileReference basename ])
 ]
 
 { #category : #updating }
@@ -361,19 +367,11 @@ RMDModelFileTextBrowser >> updateSourceText [
 { #category : #private }
 RMDModelFileTextBrowser >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
+	self window ifNotNil: [ :window | window title: self title ]
 ]
 
 { #category : #parsers }
 RMDModelFileTextBrowser >> visualizationFileParser [
 
 	^ RMDGrammar new visualizationFile end
-]
-
-{ #category : #private }
-RMDModelFileTextBrowser >> windowTitle [
-
-	^ 'Modeler' , (modelFileReference
-		   ifNil: [ '' ]
-		   ifNotNil: [ ' @ ' , modelFileReference basename ])
 ]

@@ -302,5 +302,5 @@ RMDExperimentarium >> updateTimeProgressBar [
 { #category : #private }
 RMDExperimentarium >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
+	self window ifNotNil: [ :window | window title: self title ]
 ]

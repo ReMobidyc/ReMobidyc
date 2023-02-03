@@ -32,6 +32,7 @@ RMDLauncher class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: #itemList;
 						    add: (SpBoxLayout newHorizontal
+								     add: #updateItemListButton width: self buttonHeight;
 								     add: #newItemButton width: self buttonHeight;
 								     add: #removeItemButton width: self buttonHeight;
 								     add: #editItemButton width: self buttonHeight;

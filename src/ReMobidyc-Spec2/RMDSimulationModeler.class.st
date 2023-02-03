@@ -294,9 +294,7 @@ RMDSimulationModeler >> initializePresenters [
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: self windowTitle;
-		initialExtent: 1000 @ 600
+	aWindowPresenter initialExtent: 1000 @ 600
 ]
 
 { #category : #accessing }
@@ -467,6 +465,15 @@ RMDSimulationModeler >> simulationModel [
 ]
 
 { #category : #private }
+RMDSimulationModeler >> title [
+
+	^ 'Modeler'
+	  ,
+		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
+			   ' @ ' , name ])
+]
+
+{ #category : #private }
 RMDSimulationModeler >> updatePages [
 
 	| selection |
@@ -517,14 +524,5 @@ RMDSimulationModeler >> updatePages [
 { #category : #private }
 RMDSimulationModeler >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
-]
-
-{ #category : #private }
-RMDSimulationModeler >> windowTitle [
-
-	^ 'Modeler'
-	  ,
-		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
-			   ' @ ' , name ])
+	self window ifNotNil: [ :window | window title: self title ]
 ]
