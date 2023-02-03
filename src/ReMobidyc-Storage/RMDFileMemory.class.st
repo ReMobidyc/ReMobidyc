@@ -243,17 +243,18 @@ RMDFileMemory >> randomSeed [
 
 { #category : #'accessing-storage' }
 RMDFileMemory >> readAllocation [
-	self allocationFile
-		ensureCreateFile;
-		readStreamDo: [ :stream | 
-			| params |
-			params := Dictionary new.
-			[ stream atEnd ]
-				whileFalse: [ (stream nextLine trim substrings: ',')
-						ifNotEmpty: [ :pair | 
-							pair size = 2
-								ifTrue: [ params at: pair first put: pair second asInteger ] ] ].
-			^ params ]
+
+	self writeCritical: [ 
+		self allocationFile
+			ensureCreateFile;
+			readStreamDo: [ :stream | 
+				| params |
+				params := Dictionary new.
+				[ stream atEnd ] whileFalse: [ 
+						(stream nextLine trim substrings: ',') ifNotEmpty: [ :pair | 
+								pair size = 2 ifTrue: [ 
+										params at: pair first put: pair second asInteger ] ] ].
+				^ params ] ]
 ]
 
 { #category : #'accessing-storage' }
@@ -376,6 +377,12 @@ RMDFileMemory >> readValuesForTime: anInteger [
 		^ vals ]
 ]
 
+{ #category : #'accessing-storage' }
+RMDFileMemory >> reload [
+
+	self initializeAllocation
+]
+
 { #category : #allocating }
 RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
@@ -462,7 +469,7 @@ RMDFileMemory >> writeAllocation [
 		self allocationFile writeStreamDo: [ :stream | 
 			stream truncate.
 			stream nextPutAll: 'latestTime,'.
-			latestTime storeOn: stream.
+			latestTime + 1 storeOn: stream.
 			stream lf.
 			stream nextPutAll: 'nextAvailableSlot,'.
 			nextAvailableSlot storeOn: stream.

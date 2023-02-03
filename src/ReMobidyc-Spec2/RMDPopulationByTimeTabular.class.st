@@ -28,25 +28,6 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
-RMDPopulationByTimeTabular class >> on: aRMDMetaInterpreter [
-
-	^ self new metaInterpreter: aRMDMetaInterpreter
-]
-
-{ #category : #'instance creation' }
-RMDPopulationByTimeTabular class >> openOn: aRMDMetaInterpreter [
-
-	^ (self on: aRMDMetaInterpreter) open
-]
-
-{ #category : #accessing }
-RMDPopulationByTimeTabular >> allSpecies [
-
-	^ Array streamContents: [ :stream | 
-		  self speciesDo: [ :species | stream nextPut: species ] ]
-]
-
 { #category : #initialization }
 RMDPopulationByTimeTabular >> initializePresenters [
 
@@ -88,12 +69,11 @@ RMDPopulationByTimeTabular >> populationCollectorOnRunId: anInteger animat: aRMD
 
 	^ { 
 		  anInteger.
-		  aRMDAnimatDefinition } -> [ :rowIndex | 
+		  aRMDAnimatDefinition } -> [ :time | 
 	  (metaInterpreter interpreterAt: anInteger ifAbsent: [ nil ]) 
 		  ifNotNil: [ :interpreter | 
-			  | memory time |
+			  | memory |
 			  memory := interpreter memory.
-			  time := rowIndex - 1.
 			  time <= memory latestTime
 				  ifTrue: [ 
 					  memory

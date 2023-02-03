@@ -20,7 +20,7 @@ RMDTabular class >> defaultLayout [
 				   add: #reloadButton width: self buttonHeight;
 				   addSpace;
 				   add: #runDropList expand: false;
-				   yourself);
+				   yourself)
 		  expand: false;
 		  add: #table;
 		  add: (SpBoxLayout newHorizontal
@@ -28,6 +28,32 @@ RMDTabular class >> defaultLayout [
 				   yourself)
 		  expand: false;
 		  yourself
+]
+
+{ #category : #'instance creation' }
+RMDTabular class >> on: aRMDMetaInterpreter [
+
+	^ self new metaInterpreter: aRMDMetaInterpreter
+]
+
+{ #category : #'instance creation' }
+RMDTabular class >> openOn: aRMDMetaInterpreter [
+
+	^ (self on: aRMDMetaInterpreter) open
+]
+
+{ #category : #accessing }
+RMDTabular >> allSpecies [
+
+	^ Array streamContents: [ :stream | 
+		  self speciesDo: [ :species | stream nextPut: species ] ]
+]
+
+{ #category : #accessing }
+RMDTabular >> allStages [
+
+	^ Array streamContents: [ :stream | 
+		  self stagesDo: [ :stage | stream nextPut: stage ] ]
 ]
 
 { #category : #accessing }
@@ -48,9 +74,8 @@ RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVi
 		columns: (anArrayOfAssociationOfColumnKeyAndBlock
 				 select: [ :assoc | aBlock value: assoc key ]
 				 thenCollect: [ :assoc | 
-					 SpStringTableColumn
-						 title: assoc key asString
-						 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ]);
+					 SpStringTableColumn evaluated: [ :row | 
+							 row at: assoc key ifAbsent: [ '' ] ] ]);
 		refresh
 ]
 
@@ -78,7 +103,7 @@ RMDTabular >> initializePresenters [
 	super initializePresenters.
 	reloadButton := self newButton
 		                icon: self updateIcon;
-		                action: [ self reloadTable ];
+		                action: [ self reloadInterpreter ];
 		                yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
@@ -97,8 +122,18 @@ RMDTabular >> initializePresenters [
 		               whenSelectedItemChangedDo: [ self runChanged ];
 		               yourself.
 	table := self newTable
-		         hideColumnHeaders;
+		         beResizable;
 		         yourself
+]
+
+{ #category : #accessing }
+RMDTabular >> latestTime [
+
+	| latestTime |
+	latestTime := 0.
+	metaInterpreter interpretersDo: [ :interpreter | 
+		latestTime := latestTime max: interpreter memory latestTime ].
+	^ latestTime
 ]
 
 { #category : #private }
@@ -106,7 +141,14 @@ RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	aRMDMetaInterpreter setupSimulation.
 	metaInterpreter := aRMDMetaInterpreter.
-	runDropList items: { nil } , aRMDMetaInterpreter runIds
+	self updateRunDropList
+]
+
+{ #category : #updating }
+RMDTabular >> metaInterpreterReloaded [
+
+	self updateRows.
+	table refresh
 ]
 
 { #category : #accessing }
@@ -118,9 +160,18 @@ RMDTabular >> modelName [
 ]
 
 { #category : #operations }
+RMDTabular >> reloadInterpreter [
+
+	metaInterpreter reloadMemory.
+	self metaInterpreterReloaded
+]
+
+{ #category : #operations }
 RMDTabular >> reloadTable [
 
-	self updateRows
+	metaInterpreter reloadMemory.
+	self updateRows.
+	table refresh
 ]
 
 { #category : #updating }
@@ -137,9 +188,8 @@ RMDTabular >> selectVisibleColumns: aBlock [
 			columns: (columnCollectors
 					 select: [ :assoc | aBlock value: assoc key ]
 					 thenCollect: [ :assoc | 
-						 SpStringTableColumn
-							 title: assoc key asString
-							 evaluated: [ :row | row at: assoc key ifAbsent: [ '' ] ] ]);
+						 SpStringTableColumn evaluated: [ :row | 
+								 row at: assoc key ifAbsent: [ '' ] ] ]);
 			refresh ]
 ]
 
@@ -198,6 +248,10 @@ RMDTabular >> stagesOf: aString do: aBlock [
 			aBlock value: animatDefinition ] ]
 ]
 
+{ #category : #initialization }
+RMDTabular >> title [ 
+]
+
 { #category : #enumerating }
 RMDTabular >> titleRowsDo: aBlock [
 
@@ -208,12 +262,19 @@ RMDTabular >> titleRowsDo: aBlock [
 RMDTabular >> updateRows [
 
 	table items: (Array streamContents: [ :stream | 
-			 self titleRowsDo: [ :block | 
-				 stream nextPut: (columnCollectors collect: [ :assoc | 
-						  assoc key -> (block value: assoc key) ]) asDictionary ].
-			 self generateRowsDo: [ :rowIndex | 
-				 stream nextPut: (columnCollectors collect: [ :assoc | 
-						  assoc key -> (assoc value value: rowIndex) ]) asDictionary ] ])
+			 columnCollectors ifNotNil: [ 
+				 self titleRowsDo: [ :block | 
+					 stream nextPut: (columnCollectors collect: [ :assoc | 
+							  assoc key -> (block value: assoc key) ]) asDictionary ].
+				 self generateRowsDo: [ :row | 
+					 stream nextPut: (columnCollectors collect: [ :assoc | 
+							  assoc key -> (assoc value value: row) ]) asDictionary ] ] ])
+]
+
+{ #category : #updating }
+RMDTabular >> updateRunDropList [
+
+	runDropList items: { nil } , metaInterpreter runIds
 ]
 
 { #category : #operations }

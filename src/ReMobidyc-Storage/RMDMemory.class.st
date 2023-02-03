@@ -410,6 +410,12 @@ RMDMemory >> readValuesForTime: anInteger [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-storage' }
+RMDMemory >> reload [
+
+	
+]
+
 { #category : #allocating }
 RMDMemory >> removeAnimat: anInteger [
 

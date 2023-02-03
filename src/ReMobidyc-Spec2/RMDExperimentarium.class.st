@@ -1,6 +1,7 @@
 Class {
 	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
+	#classTraits : 'TRMDLaunchTabular classTrait',
 	#instVars : [
 		'stepButton',
 		'runButton',
@@ -86,7 +87,7 @@ RMDExperimentarium >> initializePresenters [
 	openTabularButton := self newButton
 		                     disable;
 		                     icon: self tabularIcon;
-		                     action: [ self openInPopulationTabular ];
+		                     action: [ self openInTabular ];
 		                     yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
@@ -133,6 +134,16 @@ RMDExperimentarium >> modelName [
 ]
 
 { #category : #operations }
+RMDExperimentarium >> openInAttributeTabular [
+
+	(metaInterpreter notNil and: [ 
+		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		(metaInterpreter simulationModel 
+			 metaInterpreterOnReadOnlyModelPath:
+			 metaInterpreter context modelPath) openInAttributeTabular ]
+]
+
+{ #category : #operations }
 RMDExperimentarium >> openInPopulationTabular [
 
 	(metaInterpreter notNil and: [ 
@@ -140,6 +151,23 @@ RMDExperimentarium >> openInPopulationTabular [
 		(metaInterpreter simulationModel 
 			 metaInterpreterOnReadOnlyModelPath:
 			 metaInterpreter context modelPath) openInPopulationTabular ]
+]
+
+{ #category : #operations }
+RMDExperimentarium >> openInTabular [
+
+	(self newMenu
+		 addGroup: [ :group | 
+			 group
+				 addItem: [ :item | 
+					 item
+						 name: 'Population';
+						 action: [ self openInPopulationTabular ] ];
+				 addItem: [ :item | 
+					 item
+						 name: 'Attributes';
+						 action: [ self openInAttributeTabular ] ] ];
+		 yourself) openWithSpecAtPointer
 ]
 
 { #category : #api }

@@ -164,6 +164,12 @@ RMDMetaInterpreter >> progress [
 ]
 
 { #category : #simulating }
+RMDMetaInterpreter >> reloadMemory [
+
+	self interpretersDo: #reloadMemory
+]
+
+{ #category : #simulating }
 RMDMetaInterpreter >> rewind [
 
 	self interpretersDo: #rewind

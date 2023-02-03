@@ -474,6 +474,12 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
 ]
 
+{ #category : #timing }
+RMDInterpreter >> reloadMemory [
+
+	memory reload
+]
+
 { #category : #private }
 RMDInterpreter >> removeOutOfBoundsAnimats [
 
