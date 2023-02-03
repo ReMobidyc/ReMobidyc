@@ -140,7 +140,7 @@ RMDLauncher >> openInExperimentarium [
 RMDLauncher >> openInExperimentariumForDryRun [
 
 	self load ifNotNil: [ :model | 
-		model interpreterForDryRun ifNotNil: #openInExperimentarium ]
+		model metaInterpreterForDryRun ifNotNil: #openInExperimentarium ]
 ]
 
 { #category : #operations }

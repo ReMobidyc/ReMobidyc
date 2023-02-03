@@ -2,14 +2,15 @@ Class {
 	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'interpreter',
 		'stepButton',
 		'runButton',
 		'timeProgressBar',
 		'populationInspector',
 		'validated',
 		'lastServerUpdate',
-		'lastDisplayUpdate'
+		'lastDisplayUpdate',
+		'metaInterpreter',
+		'openTabularButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -26,13 +27,17 @@ RMDExperimentarium class >> defaultLayout [
 				   yourself)
 		  height: self buttonHeight * 2;
 		  add: #populationInspector;
+		  add: (SpBoxLayout newHorizontal
+				   add: #openTabularButton
+				   width: self buttonHeight)
+		  expand: false;
 		  yourself
 ]
 
 { #category : #'instance creation' }
-RMDExperimentarium class >> interpreter: aRMDInterpreter [
+RMDExperimentarium class >> metaInterpreter: aRMDInterpreter [
 	^ self new
-		setInterpreter: aRMDInterpreter;
+		setMetaInterpreter: aRMDInterpreter;
 		yourself
 ]
 
@@ -43,15 +48,15 @@ RMDExperimentarium >> basicInformServer [
 	Smalltalk at: #RMDClient ifPresent: [ :clientClass | 
 		clientClass
 			informModel: self modelName
-			progress: interpreter progress
+			progress: metaInterpreter progress
 			from: self ]
 ]
 
 { #category : #updating }
 RMDExperimentarium >> basicUpdateTimeProgressBar [
 
-	interpreter ifNotNil: [ 
-		timeProgressBar fixedAt: interpreter progress ]
+	metaInterpreter ifNotNil: [ 
+		timeProgressBar fixedAt: metaInterpreter progress ]
 ]
 
 { #category : #controlling }
@@ -78,6 +83,11 @@ RMDExperimentarium >> initialize [
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
+	openTabularButton := self newButton
+		                     disable;
+		                     icon: self tabularIcon;
+		                     action: [ self openInPopulationTabular ];
+		                     yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
 		                   yourself.
@@ -100,15 +110,13 @@ RMDExperimentarium >> initializePresenters [
 RMDExperimentarium >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: self windowTitle;
-		initialExtent: 700 @ 450
+	aWindowPresenter initialExtent: 700 @ 450
 ]
 
 { #category : #api }
 RMDExperimentarium >> isRunningSimulation [
 
-	^ interpreter isRunningSimulation
+	^ metaInterpreter isRunningSimulation
 ]
 
 { #category : #testing }
@@ -119,21 +127,31 @@ RMDExperimentarium >> isValidated [
 { #category : #accessing }
 RMDExperimentarium >> modelName [
 
-	^ interpreter
-		  ifNotNil: [ interpreter simulationModel name ]
+	^ metaInterpreter
+		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
+]
+
+{ #category : #operations }
+RMDExperimentarium >> openInPopulationTabular [
+
+	(metaInterpreter notNil and: [ 
+		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		(metaInterpreter simulationModel 
+			 metaInterpreterOnReadOnlyModelPath:
+			 metaInterpreter context modelPath) openInPopulationTabular ]
 ]
 
 { #category : #api }
 RMDExperimentarium >> pauseSimulation [
 
-	interpreter pauseSimulation
+	metaInterpreter pauseSimulation
 ]
 
 { #category : #operations }
 RMDExperimentarium >> runButtonPressed [
 
-	interpreter isRunningSimulation
+	metaInterpreter isRunningSimulation
 		ifTrue: [ self pauseSimulation ]
 		ifFalse: [ self runSimulation ]
 ]
@@ -142,8 +160,8 @@ RMDExperimentarium >> runButtonPressed [
 RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
-		interpreter runSimulationOnError: [ :ex | 
-			(RMDActionDebugger on: interpreter exception: ex) open ] ]
+		metaInterpreter runSimulationOnError: [ :ex | 
+			(RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
 ]
 
 { #category : #accessing }
@@ -152,33 +170,27 @@ RMDExperimentarium >> serverUpdateInterval [
 ]
 
 { #category : #initialization }
-RMDExperimentarium >> setInterpreter: aRMDInterpreter [
+RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 
-	interpreter ifNotNil: [ 
-		interpreter announcer unsubscribe: self.
-		interpreter isMeta ifTrue: [ 
-			interpreter interpretersDo: [ :i | i announcer unsubscribe: self ] ] ].
-	interpreter := aRMDInterpreter.
+	metaInterpreter ifNotNil: [ 
+		metaInterpreter announcer unsubscribe: self.
+		metaInterpreter interpretersDo: [ :interpreter | 
+			interpreter announcer unsubscribe: self ] ].
+	metaInterpreter := aRMDMetaInterpreter.
 	self typecheck.
 	self isValidated ifTrue: [ 
-		interpreter setupSimulation.
-		populationInspector interpreter: interpreter.
-		interpreter announcer weak
+		metaInterpreter setupSimulation.
+		populationInspector interpreter: metaInterpreter.
+		metaInterpreter announcer weak
 			when: RMDSimulationStarted send: #simulationStarted: to: self;
 			when: RMDSimulationPaused send: #simulationPaused: to: self.
-		interpreter isMetaInterpreter
-			ifTrue: [ 
-				interpreter interpretersDo: [ :i | 
-					i announcer weak
-						when: RMDTimeChanged
-						send: #timeChanged:
-						to: self ] ]
-			ifFalse: [ 
-				interpreter announcer weak
-					when: RMDTimeChanged
-					send: #timeChanged:
-					to: self ].
-		interpreter fastForward ]
+		metaInterpreter interpretersDo: [ :interpreter | 
+			interpreter announcer weak
+				when: RMDTimeChanged
+				send: #timeChanged:
+				to: self ].
+		metaInterpreter fastForward.
+		self updateButtons ]
 ]
 
 { #category : #updating }
@@ -202,9 +214,9 @@ RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
 RMDExperimentarium >> stepSimulation [
 
 	self isValidated ifTrue: [ 
-		[ interpreter stepSimulation ]
+		[ metaInterpreter stepSimulation ]
 			on: RMDSemanticError
-			do: [ :ex | (RMDActionDebugger on: interpreter exception: ex) open ] ]
+			do: [ :ex | (RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
 ]
 
 { #category : #updating }
@@ -214,11 +226,24 @@ RMDExperimentarium >> timeChanged: anAnnouncement [
 	self updateTimeProgressBar
 ]
 
+{ #category : #private }
+RMDExperimentarium >> title [
+
+	^ 'Experimentarium'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (self isValidated
+			   ifTrue: [ '' ]
+			   ifFalse: [ ' (INVALID MODEL)' ]) , (metaInterpreter
+		   ifNotNil: [ 
+			   '[', metaInterpreter memoryName, ']' ]
+		   ifNil: [ '' ])
+]
+
 { #category : #api }
 RMDExperimentarium >> typecheck [
 
 	[ 
-	interpreter typecheck.
+	metaInterpreter typecheck.
 	^ validated := true ]
 		on: RMDSemanticError
 		do: [ :ex | 
@@ -226,6 +251,13 @@ RMDExperimentarium >> typecheck [
 			stepButton disable.
 			UIManager default alert: ex messageText title: 'Invalid Model'.
 			^ validated := false ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateButtons [
+
+	openTabularButton enabled: (metaInterpreter notNil and: [ 
+			 metaInterpreter context isForFileMemory ])
 ]
 
 { #category : #updating }
@@ -243,17 +275,4 @@ RMDExperimentarium >> updateTimeProgressBar [
 RMDExperimentarium >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self windowTitle ]
-]
-
-{ #category : #private }
-RMDExperimentarium >> windowTitle [
-
-	^ 'Experimentarium'
-	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
-	  , (self isValidated
-			   ifTrue: [ '' ]
-			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
-		   ifNotNil: [ 
-			   '[', interpreter memoryName, ']' ]
-		   ifNil: [ '' ])
 ]

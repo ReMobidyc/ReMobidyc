@@ -38,6 +38,12 @@ RMDMetaContextForFileMemory >> exportModel: aRMDSimulationModel [
 	aRMDSimulationModel exportModel: modelPath
 ]
 
+{ #category : #testing }
+RMDMetaContextForFileMemory >> isForFileMemory [
+
+	^ true
+]
+
 { #category : #'class access' }
 RMDMetaContextForFileMemory >> memoryClass [
 

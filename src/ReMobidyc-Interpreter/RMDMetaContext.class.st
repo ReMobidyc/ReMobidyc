@@ -70,6 +70,12 @@ RMDMetaContext >> interpretersDo: aBlock [
 ]
 
 { #category : #testing }
+RMDMetaContext >> isForFileMemory [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDMetaContext >> isRunningSimulation [
 
 	self interpretersDo: [ :interpreter | 
