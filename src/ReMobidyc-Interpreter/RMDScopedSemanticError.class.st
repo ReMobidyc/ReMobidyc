@@ -25,7 +25,7 @@ RMDScopedSemanticError class >> signal: aRMDSyntaxNode exception: aRMDSemanticEx
 RMDScopedSemanticError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
-		  stream nextPutAll: 'Type error in '.
+		  stream nextPutAll: 'Error in '.
 		  node printShortOn: stream.
 		  stream
 			  nextPutAll: ' : ';

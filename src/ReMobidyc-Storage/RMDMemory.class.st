@@ -97,7 +97,10 @@ RMDMemory >> at: anInteger [
 
 { #category : #accessing }
 RMDMemory >> at: anInteger ifAbsent: aBlock [
-	^ self values at: anInteger ifAbsent: aBlock
+
+	^ self values
+		  at: anInteger
+		  ifAbsent: [ self nextValues at: anInteger ifAbsent: aBlock ]
 ]
 
 { #category : #accessing }
