@@ -18,14 +18,12 @@ RMDTimeSeriesTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBloc
 RMDTimeSeriesTabular >> generateRowsDo: aBlock [
 
 	| latestTime |
-	latestTime := 0.
-	metaInterpreter interpretersDo: [ :interpreter | 
-		latestTime := latestTime max: interpreter memory latestTime ].
+	latestTime := self latestTime.
 	'Collecting data from the run record'
-		displayProgressFrom: 1
+		displayProgressFrom: 0
 		to: latestTime
 		during: [ :progress | 
-			1 to: latestTime + 1 do: [ :time | 
+			0 to: latestTime do: [ :time | 
 				aBlock value: time.
 				progress value: time ] ]
 ]
@@ -39,9 +37,9 @@ RMDTimeSeriesTabular >> runChanged [
 { #category : #'accessing - column collectors' }
 RMDTimeSeriesTabular >> timeColumnCollector [
 
-	^ #time -> [ :rowIndex | 
+	^ #time -> [ :time | 
 	  metaInterpreter simulationModel durationUnit fromSI:
-		  rowIndex - 1 * metaInterpreter simulationModel deltaTime ]
+		  time * metaInterpreter simulationModel deltaTime ]
 ]
 
 { #category : #updating }

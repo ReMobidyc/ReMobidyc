@@ -1,6 +1,7 @@
 Class {
 	#name : #RMDLauncher,
 	#superclass : #RMDRepositoryModelsBrowser,
+	#classTraits : 'TRMDLaunchTabular classTrait',
 	#instVars : [
 		'modelerButton',
 		'observatoryButton',
@@ -121,11 +122,20 @@ RMDLauncher >> initializePresenters [
 		                         yourself.
 	tabularButton := self newButton
 		                 icon: self tabularIcon;
-		                 action: [ self openInPopulationTabular ];
-		                 help: 'Analyze the model on a population tabular.';
+		                 action: [ self openInTabular ];
+		                 help: 'Analyze the model on a selected tabular.';
 		                 disable;
 		                 yourself.
 	super initializePresenters
+]
+
+{ #category : #operations }
+RMDLauncher >> openInAttributeTabular [
+
+	self load ifNotNil: [ :model | 
+		self repository isRunsRepository ifTrue: [ 
+			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
+				#openInAttributeTabular ] ]
 ]
 
 { #category : #operations }
@@ -247,6 +257,23 @@ RMDLauncher >> openInPopulationTabular [
 		self repository isRunsRepository ifTrue: [ 
 			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
 				#openInPopulationTabular ] ]
+]
+
+{ #category : #operations }
+RMDLauncher >> openInTabular [
+
+	(self newMenu
+		 addGroup: [ :group | 
+			 group
+				 addItem: [ :item | 
+					 item
+						 name: 'Population';
+						 action: [ self openInPopulationTabular ] ];
+				 addItem: [ :item | 
+					 item
+						 name: 'Attributes';
+						 action: [ self openInAttributeTabular ] ] ];
+		 yourself) openWithSpecAtPointer
 ]
 
 { #category : #operations }

@@ -17,6 +17,14 @@ RMDReadOnlyFileMemory >> fastSunrise [
 ]
 
 { #category : #private }
+RMDReadOnlyFileMemory >> loadValues [
+
+	values := self readValuesForTime: time.
+	nextValues := values copy.
+	nextDeltas := Dictionary new
+]
+
+{ #category : #private }
 RMDReadOnlyFileMemory >> nextDeltas [
 
 	nextDeltas ifNil: [ self loadValues ].
