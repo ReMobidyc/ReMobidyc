@@ -12,7 +12,12 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: #reloadButton width: self buttonHeight;
+				   vAlignEnd;
+				   add:
+					   (SpBoxLayout newVertical
+						    add: #reloadButton
+						    height: self buttonHeight)
+				   width: self buttonHeight;
 				   addSpace;
 				   add: (SpBoxLayout newVertical
 						    add: 'Species(Stage)';
@@ -27,6 +32,8 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 		  expand: false;
 		  add: #table;
 		  add: (SpBoxLayout newHorizontal
+				   add: #openObservatoryButton width: self buttonHeight;
+				   add: '    ' expand: false;
 				   add: #exportCSVButton width: self buttonHeight;
 				   yourself)
 		  expand: false;

@@ -11,7 +11,8 @@ Class {
 		'lastServerUpdate',
 		'lastDisplayUpdate',
 		'metaInterpreter',
-		'openTabularButton'
+		'openTabularButton',
+		'openObservatoryButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -29,8 +30,9 @@ RMDExperimentarium class >> defaultLayout [
 		  height: self buttonHeight * 2;
 		  add: #populationInspector;
 		  add: (SpBoxLayout newHorizontal
-				   add: #openTabularButton
-				   width: self buttonHeight)
+				   add: #openTabularButton width: self buttonHeight;
+				   add: #openObservatoryButton width: self buttonHeight;
+				   yourself)
 		  expand: false;
 		  yourself
 ]
@@ -89,6 +91,11 @@ RMDExperimentarium >> initializePresenters [
 		                     icon: self tabularIcon;
 		                     action: [ self openInTabular ];
 		                     yourself.
+	openObservatoryButton := self newButton
+		                         disable;
+		                         icon: self observatoryIcon;
+		                         action: [ self openInObservatory ];
+		                         yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
 		                   yourself.
@@ -141,6 +148,16 @@ RMDExperimentarium >> openInAttributeTabular [
 		(metaInterpreter simulationModel 
 			 metaInterpreterOnReadOnlyModelPath:
 			 metaInterpreter context modelPath) openInAttributeTabular ]
+]
+
+{ #category : #operations }
+RMDExperimentarium >> openInObservatory [
+
+	(metaInterpreter notNil and: [ 
+		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		(metaInterpreter simulationModel 
+			 metaInterpreterOnReadOnlyModelPath:
+			 metaInterpreter context modelPath) openInReplayObservatory ]
 ]
 
 { #category : #operations }
@@ -284,8 +301,14 @@ RMDExperimentarium >> typecheck [
 { #category : #updating }
 RMDExperimentarium >> updateButtons [
 
-	openTabularButton enabled: (metaInterpreter notNil and: [ 
-			 metaInterpreter context isForFileMemory ])
+	(metaInterpreter notNil and: [ 
+		 metaInterpreter context isForFileMemory ])
+		ifTrue: [ 
+			openTabularButton enable.
+			openObservatoryButton enable ]
+		ifFalse: [ 
+			openTabularButton disable.
+			openObservatoryButton disable ]
 ]
 
 { #category : #updating }

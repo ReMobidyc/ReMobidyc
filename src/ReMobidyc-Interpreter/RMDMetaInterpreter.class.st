@@ -95,6 +95,7 @@ RMDMetaInterpreter >> fastForward [
 { #category : #'accessing-interpreters' }
 RMDMetaInterpreter >> interpreterAt: anInteger ifAbsent: errorBlock [
 
+	anInteger ifNil: [ ^ errorBlock value ].
 	^ context interpreterAt: anInteger ifAbsent: errorBlock
 ]
 
