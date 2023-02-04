@@ -80,12 +80,13 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	| repository |
 	repository := self ensureIcebergRepository.
 	repository pull.
-	Metacello new
-		repository: 'gitlocal://' , (repository location / 'src') fullName;
-		baseline: 'ReMobidyc';
-		onConflictUseIncoming;
-		onWarningLog;
-		load: #(  ).
+	Cursor wait showWhile: [ 
+		Metacello new
+			repository: 'gitlocal://' , (repository location / 'src') fullName;
+			baseline: 'ReMobidyc';
+			onConflictUseIncoming;
+			onWarningLog;
+			load: #(  ) ].
 	Smalltalk snapshot: true andQuit: false
 ]
 
