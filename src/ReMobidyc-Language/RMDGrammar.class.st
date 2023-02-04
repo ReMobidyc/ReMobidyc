@@ -854,6 +854,12 @@ RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
 ]
 
+{ #category : #'parsers-variability' }
+RMDGrammar >> literalSequence [
+
+	^ literal onlySeparatedBy: $, asPParser trimSpaces
+]
+
 { #category : #'parsers-expressions' }
 RMDGrammar >> logLogisticDistribution [
 
@@ -881,10 +887,7 @@ RMDGrammar >> metaParameterSequence [
 RMDGrammar >> metaParameterSetSequence [
 
 	^ (self placeholder onlySeparatedBy: $, asPParser trimBlanks)
-	  , '->' asPParser trimBlanks , ($( asPParser trimBlanks
-	   , (literal onlySeparatedBy: $, asPParser trimBlanks)
-	   , $) asPParser trimBlanks ==> #second onlySeparatedBy:
-		   $, asPParser trimBlanks) ==> [ :triple | 
+	  , '->' asPParser trimSpaces , self tupleSequence ==> [ :triple | 
 	  | placeholders tupleSequence |
 	  placeholders := triple first.
 	  tupleSequence := triple third.
@@ -908,8 +911,7 @@ RMDGrammar >> metaParameterSetSequenceNodeClass [
 { #category : #'parsers-variability' }
 RMDGrammar >> metaSingleParameterSequence [
 
-	^ self placeholder , '->' asPParser trimBlanks
-	  , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	^ self placeholder , '->' asPParser trimSpaces , self literalSequence
 	  ==> [ :triple | 
 		  self metaSingleParameterSequenceNodeClass
 			  placeholder: triple first
@@ -1392,6 +1394,15 @@ RMDGrammar >> timeUnits [
 	('day' -> #(86400.0 nil 's'))} asDictionary
 ]
 
+{ #category : #'parsers-variability' }
+RMDGrammar >> tupleSequence [
+
+	^ $( asPParser trimBlanks
+	  , (literal onlySeparatedBy: $, asPParser trimBlanks)
+	  , $) asPParser trimBlanks ==> #second onlySeparatedBy:
+		  $, asPParser trimSpaces
+]
+
 { #category : #'parsers-units' }
 RMDGrammar >> type [
 
@@ -1506,32 +1517,34 @@ RMDGrammar >> utilityVariableNodeClass [
 { #category : #'parsers-variability' }
 RMDGrammar >> variability [
 
-	^ 'Variability' asPParser trimBlanks
-	  ,
-		  ('with' asPParser , #newline asPParser trimBlanks
-		   ==> [ :pair | nil ]
-		   ,
-			   ('reproduce' asPParser trimBlanks
-			    , 'random' asPParser trimBlanks , self nat
-			    , #newline asPParser trimBlanks
-			    ==> [ :quad | #random -> quad third ]
-			    /
-				    (self nat , 'runs' asPParser trimBlanks
-				     , 'each' asPParser trimBlanks , #newline asPParser trimBlanks
-				     ==> [ :quad | #multiplicity -> quad first ])) optional
-		   , (self metaParameterSequence onlySeparatedBy:
-				    #newline asPParser trimBlanks) optional) optional
-	  , '.' asPParser trimBlanks ==> #second ==> [ :triple | 
+	^ 'Variability' asPParser trimBlanks , ('with' asPParser
+	   ,
+		   (#newline asPParser trimBlanks , 'reproduce' asPParser trimBlanks
+		    , 'random' asPParser trimBlanks , self nat
+		    ==> [ :quad | #random -> quad fourth ]
+		    / (#newline asPParser trimBlanks , self nat
+			     , 'runs' asPParser trimBlanks , 'each' asPParser trimBlanks
+			     ==> [ :quad | #multiplicity -> quad second ])) optional
+	   , (#newline asPParser trimBlanks
+		    , (self metaParameterSequence onlySeparatedBy:
+				     #newline asPParser trimBlanks) ==> #second) optional)
+		  optional , '.' asPParser trimBlanks ==> #second ==> [ :triple | 
 	  triple ifNil: [ self variabilityNodeClass new ] ifNotNil: [ 
-		  triple second key = #random
-			  ifTrue: [ 
+		  triple second
+			  ifNil: [ 
 				  self variabilityNodeClass
-					  random: triple second value
-					  metaParameterSequences: triple third ]
-			  ifFalse: [ 
-				  self variabilityNodeClass
-					  multiplicity: triple second value
-					  metaParameterSequences: triple third ] ] ]
+					  multiplicity: 1
+					  metaParameterSequences: (triple third ifNil: [ #(  ) ]) ]
+			  ifNotNil: [ 
+				  triple second key = #random
+					  ifTrue: [ 
+						  self variabilityNodeClass
+							  random: triple second value
+							  metaParameterSequences: (triple third ifNil: [ #(  ) ]) ]
+					  ifFalse: [ 
+						  self variabilityNodeClass
+							  multiplicity: triple second value
+							  metaParameterSequences: (triple third ifNil: [ #(  ) ]) ] ] ] ]
 ]
 
 { #category : #'class access' }

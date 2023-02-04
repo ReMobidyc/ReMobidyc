@@ -86,10 +86,15 @@ RMDMetaParameterSetSequenceNode >> placeholders: anArrayOfRMDPlaceHolderNode [
 	placeholders := anArrayOfRMDPlaceHolderNode
 ]
 
+{ #category : #enumerating }
+RMDMetaParameterSetSequenceNode >> placeholdersDo: aBlock [
+
+	placeholders do: aBlock
+]
+
 { #category : #copying }
 RMDMetaParameterSetSequenceNode >> postCopy [
 
-	super postCopy.
 	placeholders := placeholders collect: #copy.
 	literalTuples := literalTuples collect: [ :tuple | 
 		                 tuple collect: #copy ]
@@ -109,7 +114,10 @@ RMDMetaParameterSetSequenceNode >> printOn: aStream [
 				do: [ :literal | literal printOn: aStream ]
 				separatedBy: [ aStream nextPutAll: ', ' ].
 			aStream nextPut: $) ]
-		separatedBy: [ aStream nextPutAll: ', ' ]
+		separatedBy: [ 
+			aStream
+				nextPutAll: ',';
+				cr ]
 ]
 
 { #category : #printing }
@@ -136,7 +144,10 @@ RMDMetaParameterSetSequenceNode >> printOn: aStream ifIncludedIn: aCollectionOfR
 						addSectionTo: aCollection ]
 				separatedBy: [ aStream nextPutAll: ', ' ].
 			aStream nextPut: $) ]
-		separatedBy: [ aStream nextPutAll: ', ' ].
+		separatedBy: [ 
+			aStream
+				nextPutAll: ',';
+				cr ].
 	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
 		aCollection add: (start to: aStream position) ]
 ]
@@ -155,4 +166,28 @@ RMDMetaParameterSetSequenceNode >> replaceChildren: aDictionary [
 RMDMetaParameterSetSequenceNode >> size [
 
 	^ literalTuples size
+]
+
+{ #category : #operations }
+RMDMetaParameterSetSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
+
+	^ ((1 to: placeholders size) reject: [ :index | 
+		   aCollectionOfRMDPlaceholderNode includes:
+			   (placeholders at: index) ])
+		  ifEmpty: [ nil ]
+		  ifNotEmpty: [ :aliveIndices | 
+			  aliveIndices size > 1
+				  ifTrue: [ 
+					  | index |
+					  index := aliveIndices first.
+					  RMDMetaSingleParameterSequenceNode
+						  placeholder: (placeholders at: index)
+						  literals:
+						  (literalTuples collect: [ :tuple | tuple at: index ]) ]
+				  ifFalse: [ 
+					  RMDMetaParameterSetSequenceNode
+						  placeholders:
+						  (aliveIndices collect: [ :index | placeholders at: index ])
+						  literalTuples: (literalTuples collect: [ :tuple | 
+								   aliveIndices collect: [ :index | tuple at: index ] ]) ] ]
 ]

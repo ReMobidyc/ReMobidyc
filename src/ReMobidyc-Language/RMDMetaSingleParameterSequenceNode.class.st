@@ -84,10 +84,15 @@ RMDMetaSingleParameterSequenceNode >> placeholder: anArrayOfRMDPlaceholderNode [
 	placeholder := anArrayOfRMDPlaceholderNode
 ]
 
+{ #category : #enumerating }
+RMDMetaSingleParameterSequenceNode >> placeholdersDo: aBlock [
+
+	aBlock value: placeholder
+]
+
 { #category : #copying }
 RMDMetaSingleParameterSequenceNode >> postCopy [
 
-	super postCopy.
 	placeholder := placeholder copy.
 	literals := literals collect: #copy
 ]
@@ -135,4 +140,12 @@ RMDMetaSingleParameterSequenceNode >> replaceChildren: aDictionary [
 RMDMetaSingleParameterSequenceNode >> size [
 
 	^ literals size
+]
+
+{ #category : #operations }
+RMDMetaSingleParameterSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
+
+	^ (aCollectionOfRMDPlaceholderNode includes: placeholder)
+		  ifTrue: [ nil ]
+		  ifFalse: [ self ]
 ]

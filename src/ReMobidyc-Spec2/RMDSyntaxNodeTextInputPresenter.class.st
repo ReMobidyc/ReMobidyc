@@ -7,6 +7,7 @@ Class {
 		'#syntaxNode => ObservableSlot',
 		'#lastValidSyntaxNode => ObservableSlot',
 		'#parser',
+		'#display',
 		'#submitActions'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
@@ -53,21 +54,8 @@ RMDSyntaxNodeTextInputPresenter >> allowEmpty [
 RMDSyntaxNodeTextInputPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
 	syntaxNode := aRMDSyntaxNode.
-	syntaxNode
-		ifNil: [ 
-			self beOk.
-			lastValidSyntaxNode := aRMDSyntaxNode ]
-		ifNotNil: [ 
-			syntaxNode isString
-				ifTrue: [ 
-					self beOk.
-					lastValidSyntaxNode := aRMDSyntaxNode ]
-				ifFalse: [ 
-					(aRMDSyntaxNode isKindOf: RMDSyntaxNode)
-						ifTrue: [ 
-							self beOk.
-							lastValidSyntaxNode := aRMDSyntaxNode ]
-						ifFalse: [ self beError ] ] ]
+	self beOk.
+	lastValidSyntaxNode := aRMDSyntaxNode
 ]
 
 { #category : #api }
@@ -125,6 +113,18 @@ RMDSyntaxNodeTextInputPresenter >> color: aColor [
 	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
 ]
 
+{ #category : #api }
+RMDSyntaxNodeTextInputPresenter >> display [
+
+	^ display
+]
+
+{ #category : #api }
+RMDSyntaxNodeTextInputPresenter >> display: aBlock [
+
+	display := aBlock
+]
+
 { #category : #private }
 RMDSyntaxNodeTextInputPresenter >> doTextPaste [
 
@@ -173,7 +173,10 @@ RMDSyntaxNodeTextInputPresenter >> syntaxNode [
 RMDSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	self basicSyntaxNode: aRMDSyntaxNode.
-	text := aRMDSyntaxNode ifNil: [ '' ] ifNotNil: #asString
+	text := aRMDSyntaxNode ifNil: [ '' ] ifNotNil: [ 
+		        display
+			        ifNil: [ aRMDSyntaxNode asString ]
+			        ifNotNil: [ display value: aRMDSyntaxNode ] ]
 ]
 
 { #category : #api }
