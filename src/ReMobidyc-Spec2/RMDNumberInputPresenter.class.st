@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #api }
-RMDNumberInputPresenter >> acceptNumebr: aNumber [
+RMDNumberInputPresenter >> acceptNumber: aNumber [
 
 	number := self isInteger
 		          ifTrue: [ aNumber asInteger ]
@@ -46,7 +46,7 @@ RMDNumberInputPresenter >> number: aNumber [
 			          ifFalse: [ aNumber asFloat ] ].
 	lastValidNumber := number.
 	self beOk.
-	text := number printString
+	super text: aNumber printString
 ]
 
 { #category : #api }
@@ -78,5 +78,6 @@ RMDNumberInputPresenter >> whenLastValidNumberChangedDo: aBlock [
 
 { #category : #'api-events' }
 RMDNumberInputPresenter >> whenNumberChangedDo: aBlock [
-	self property: #number whenChangedDo: aBlock
+
+	self whenTextChangedDo: [ :txt | aBlock cull: self number ]
 ]

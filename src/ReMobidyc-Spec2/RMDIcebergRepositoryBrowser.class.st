@@ -334,10 +334,7 @@ RMDIcebergRepositoryBrowser >> initializePresenters [
 RMDIcebergRepositoryBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter
-		initialExtent: 400 @ 600;
-		title: self windowTitle;
-		withDecorations
+	aSpWindowPresenter initialExtent: 500 @ 600
 ]
 
 { #category : #'git-conflicts' }
@@ -440,6 +437,14 @@ RMDIcebergRepositoryBrowser >> remoteCommitsDo: aBlock [
 		repository branch upstream commits do: aBlock ]
 ]
 
+{ #category : #accessing }
+RMDIcebergRepositoryBrowser >> title [
+
+	^ icebergRepository
+		  ifNotNil: [ icebergRepository name ]
+		  ifNil: [ 'IcebergRepositoryBrowser' ]
+]
+
 { #category : #updating }
 RMDIcebergRepositoryBrowser >> updateCheckoutButton [
 ]
@@ -509,19 +514,11 @@ RMDIcebergRepositoryBrowser >> updatePullButton [
 { #category : #updating }
 RMDIcebergRepositoryBrowser >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
+	self window ifNotNil: [ :window | window title: self title ]
 ]
 
 { #category : #initialization }
 RMDIcebergRepositoryBrowser >> windowIcon [
 
 	^ self icebergIcon
-]
-
-{ #category : #accessing }
-RMDIcebergRepositoryBrowser >> windowTitle [
-
-	^ icebergRepository
-		  ifNotNil: [ icebergRepository name ]
-		  ifNil: [ 'IcebergRepositoryBrowser' ]
 ]

@@ -7,7 +7,8 @@ Class {
 		'table',
 		'columnCollectors',
 		'exportCSVButton',
-		'reloadButton'
+		'reloadButton',
+		'openObservatoryButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -105,6 +106,10 @@ RMDTabular >> initializePresenters [
 		                icon: self updateIcon;
 		                action: [ self reloadInterpreter ];
 		                yourself.
+	openObservatoryButton := self newButton
+		                         icon: self observatoryIcon;
+		                         action: [ self openInObservatory ];
+		                         yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
 		                   action: [ self exportAsCSV ];
@@ -124,6 +129,13 @@ RMDTabular >> initializePresenters [
 	table := self newTable
 		         beResizable;
 		         yourself
+]
+
+{ #category : #initialization }
+RMDTabular >> initializeWindow: aWindowPresenter [
+
+	super initializeWindow: aWindowPresenter.
+	aWindowPresenter initialExtent: 700 @ 800
 ]
 
 { #category : #accessing }
@@ -157,6 +169,16 @@ RMDTabular >> modelName [
 	^ metaInterpreter
 		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
+]
+
+{ #category : #operations }
+RMDTabular >> openInObservatory [
+
+	(metaInterpreter notNil and: [ 
+		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		(metaInterpreter simulationModel 
+			 metaInterpreterOnReadOnlyModelPath:
+			 metaInterpreter context modelPath) openInReplayObservatory ]
 ]
 
 { #category : #operations }

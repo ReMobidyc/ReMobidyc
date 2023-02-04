@@ -226,6 +226,12 @@ RMDSimulationModel class >> tasksFileName [
 ]
 
 { #category : #accessing }
+RMDSimulationModel class >> variabilityFileName [
+
+	^ 'variability.rmd'
+]
+
+{ #category : #accessing }
 RMDSimulationModel class >> visualizationFileName [
 
 	^ 'visualization.rmd'
@@ -459,6 +465,7 @@ RMDSimulationModel >> exportModel: aFileReference [
 		ensureDeleteAllChildren.
 	self
 		exportMetadata: aFileReference / self class metadataFileName;
+		exportVariability: aFileReference / self class variabilityFileName;
 		exportSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		exportAgents: aFileReference / self class agentsFileName;
@@ -485,6 +492,13 @@ RMDSimulationModel >> exportTasks: aFileReference [
 		taskDefinitions do: [ :taskDefinition | 
 			taskDefinition printOn: stream.
 			stream nextPut: Character cr ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> exportVariability: aFileReference [
+
+	aFileReference lfWriteStreamDo: [ :stream | 
+		variability printOn: stream ]
 ]
 
 { #category : #'exporting/importing' }
@@ -604,6 +618,7 @@ RMDSimulationModel >> importModel: aFileReference [
 	self resetDefinitions.
 	self
 		importMetadata: aFileReference / self class metadataFileName;
+		importVariability: aFileReference / self class variabilityFileName;
 		importSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		importAgents: aFileReference / self class agentsFileName;
@@ -646,6 +661,16 @@ RMDSimulationModel >> importTasks: aFileReference [
 			def := parser parse: source.
 			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
 			self load: def ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importVariability: aFileReference [
+
+	aFileReference isFile ifTrue: [ 
+		aFileReference readStreamDo: [ :stream | 
+			| node |
+			node := RMDGrammar new variability end parse: stream contents.
+			node isPetit2Success ifTrue: [ self variability: node ] ] ]
 ]
 
 { #category : #'exporting/importing' }
@@ -695,17 +720,11 @@ RMDSimulationModel >> interpreterForDryRun [
 { #category : #interpreting }
 RMDSimulationModel >> interpreterOn: aRMDMemory [
 
-	[ 
-	self typecheck.
 	^ RMDInterpreter new
 		  setMemory: aRMDMemory;
 		  setContext: RMDActionContext new;
 		  simulationModel: self;
-		  yourself ]
-		on: RMDSemanticError
-		do: [ :ex | 
-			UIManager default alert: ex messageText title: 'Invalid Model'.
-			^ nil ]
+		  yourself
 ]
 
 { #category : #interpreting }
@@ -1108,6 +1127,37 @@ RMDSimulationModel >> typechecker [
 	^ RMDTypechecker new
 		simulationModel: self;
 		yourself
+]
+
+{ #category : #private }
+RMDSimulationModel >> updateMetaParameters [
+
+	| freePlaceholders boundPlaceholders |
+	freePlaceholders := Set new.
+	simulationDefinition
+		nodesSuchThat: #isPlaceholderNode
+		do: [ :placeholder | freePlaceholders add: placeholder ].
+	worldDefinition
+		nodesSuchThat: #isPlaceholderNode
+		do: [ :placeholder | freePlaceholders add: placeholder ].
+	patchDefinition
+		nodesSuchThat: #isPlaceholderNode
+		do: [ :placeholder | freePlaceholders add: placeholder ].
+	animatDefinitions valuesDo: [ :animatDefinition | 
+		animatDefinition
+			nodesSuchThat: #isPlaceholderNode
+			do: [ :placeholder | freePlaceholders add: placeholder ] ].
+	taskDefinitions do: [ :taskDefinition | 
+		(taskDefinition actionWith: self)
+			nodesSuchThat: #isPlaceholderNode
+			do: [ :placeholder | freePlaceholders add: placeholder ] ].
+	boundPlaceholders := OrderedCollection new.
+	variability metaParameterSequences do: [ :metaParameterSequence | 
+		metaParameterSequence placeholdersDo: [ :placeholder | 
+			boundPlaceholders add: placeholder ] ].
+	variability
+		removePlaceholders: boundPlaceholders \ freePlaceholders;
+		addPlaceholders: freePlaceholders asArray \ boundPlaceholders
 ]
 
 { #category : #'accessing - metadata' }

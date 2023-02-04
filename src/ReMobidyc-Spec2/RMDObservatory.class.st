@@ -280,9 +280,7 @@ RMDObservatory >> initializePresenters [
 RMDObservatory >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: self windowTitle;
-		initialExtent: 1100 @ 600
+	aWindowPresenter initialExtent: 1100 @ 600
 ]
 
 { #category : #accessing }
@@ -510,6 +508,21 @@ RMDObservatory >> timeSeriesInspector [
 	^ RMDTimeSeriesInspector new interpreter: interpreter
 ]
 
+{ #category : #private }
+RMDObservatory >> title [
+
+	^ 'Observatory'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (self isValidated
+			   ifTrue: [ '' ]
+			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
+		   ifNotNil: [ 
+			   interpreter memory
+				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
+				   ifNil: [ '' ] ]
+		   ifNil: [ '' ])
+]
+
 { #category : #api }
 RMDObservatory >> toggleRunPauseSimulation [
 	self runState: self runState not
@@ -557,22 +570,7 @@ RMDObservatory >> updateTimeLabel [
 { #category : #private }
 RMDObservatory >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
-]
-
-{ #category : #private }
-RMDObservatory >> windowTitle [
-
-	^ 'Observatory'
-	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
-	  , (self isValidated
-			   ifTrue: [ '' ]
-			   ifFalse: [ ' (INVALID MODEL)' ]) , (interpreter
-		   ifNotNil: [ 
-			   interpreter memory
-				   ifNotNil: [ :memory | ' [' , memory name , ']' ]
-				   ifNil: [ '' ] ]
-		   ifNil: [ '' ])
+	self window ifNotNil: [ :window | window title: self title ]
 ]
 
 { #category : #private }

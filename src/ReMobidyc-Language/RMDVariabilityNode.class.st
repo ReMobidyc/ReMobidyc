@@ -46,6 +46,18 @@ RMDVariabilityNode >> = anObject [
 				  metaParameterSequences = anObject metaParameterSequences ] ] ]
 ]
 
+{ #category : #operations }
+RMDVariabilityNode >> addPlaceholders: aCollectionOfPlaceholders [
+
+	metaParameterSequences := metaParameterSequences
+	                          ,
+		                          (aCollectionOfPlaceholders collect: [ 
+			                           :placeholder | 
+			                           RMDMetaSingleParameterSequenceNode
+				                           placeholder: placeholder
+				                           literals: { '0.0' asRMDExpression } ])
+]
+
 { #category : #enumerating }
 RMDVariabilityNode >> childrenDo: aBlock [
 
@@ -183,6 +195,19 @@ RMDVariabilityNode >> randomSeed [
 RMDVariabilityNode >> randomSeed: anIntegerOrNil [
 
 	randomSeed := anIntegerOrNil
+]
+
+{ #category : #operations }
+RMDVariabilityNode >> removePlaceholders: aCollectionOfPlaceholders [
+
+	metaParameterSequences := Array streamContents: [ :stream | 
+		                          metaParameterSequences do: [ 
+			                          :metaParameterSequence | 
+			                          (metaParameterSequence 
+				                           withoutPlaceholders:
+				                           aCollectionOfPlaceholders) ifNotNil: [ 
+				                          :newSequence | 
+				                          stream nextPut: newSequence ] ] ]
 ]
 
 { #category : #rewriting }

@@ -12,7 +12,8 @@ Class {
 		'openObservatoryButton',
 		'openObservatoryMenuButton',
 		'openExperimentariumButton',
-		'openExperimentariumMenuButton'
+		'openExperimentariumMenuButton',
+		'variabilityPresenter'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -249,9 +250,17 @@ RMDSimulationModeler >> initializePresenters [
 	metadataPresenter := self newMetadata
 		                     whenNameChangedDo: [ self updateWindowTitle ];
 		                     yourself.
+
 	views := self newNotebook
 		         whenSelectedPageChangedDo: [ 
-			         simulationDefinitionPresenter ifNotNil: #nodeChanged ];
+			         | pageIndex |
+			         pageIndex := views selectedPageIndex.
+			         pageIndex = self variabilityPageIndex ifTrue: [ 
+					         simulationModel ifNotNil: #updateMetaParameters.
+					         variabilityPresenter ifNotNil: #nodeChanged.
+					         (views pageAt: self variabilityPageIndex) resetContent ].
+			         pageIndex = self simulationDefinitionPageIndex ifTrue: [ 
+					         simulationDefinitionPresenter ifNotNil: #nodeChanged ] ];
 		         whenPageRemovedDo: [ :page | 
 			         self removeSpeciesNamed: page title ];
 		         yourself.
@@ -294,9 +303,12 @@ RMDSimulationModeler >> initializePresenters [
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter
-		title: self windowTitle;
-		initialExtent: 1000 @ 600
+	aWindowPresenter initialExtent: 1000 @ 600
+]
+
+{ #category : #private }
+RMDSimulationModeler >> metadataPageIndex [
+	^ 1
 ]
 
 { #category : #accessing }
@@ -312,7 +324,7 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 	self updateWindowTitle
 ]
 
-{ #category : #'instance creation' }
+{ #category : #operations }
 RMDSimulationModeler >> open [
 
 	Cursor wait showWhile: [ ^ super open ]
@@ -454,6 +466,11 @@ RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	self updatePages
 ]
 
+{ #category : #private }
+RMDSimulationModeler >> simulationDefinitionPageIndex [
+	^ 3
+]
+
 { #category : #accessing }
 RMDSimulationModeler >> simulationDefinitionPresenter [
 
@@ -467,6 +484,15 @@ RMDSimulationModeler >> simulationModel [
 ]
 
 { #category : #private }
+RMDSimulationModeler >> title [
+
+	^ 'Modeler'
+	  ,
+		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
+			   ' @ ' , name ])
+]
+
+{ #category : #private }
 RMDSimulationModeler >> updatePages [
 
 	| selection |
@@ -477,19 +503,23 @@ RMDSimulationModeler >> updatePages [
 					 (SpNotebookPage
 						  title: 'Metadata'
 						  provider: [ metadataPresenter ]);
+				 nextPut: (SpNotebookPage title: 'Variability' provider: [ 
+							  variabilityPresenter := RMDVariabilityPresenter on:
+									                          (simulationModel
+										                           updateMetaParameters;
+										                           variability) ]);
 				 nextPut:
 					 (SpNotebookPage title: 'Simulation Conditions' provider: [ 
-							  RMDScrollPresenter with:
-									  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter 
-										                                     on:
-											                                     (simulationModel 
-												                                      ifNotNil:
-													                                      #simulationDefinition))
-										                                    
-										                                    addAnimatInitializerAction: [ 
-											                                    self
-												                                    addAnimatInitializer ];
-										                                    yourself) ]);
+						  RMDScrollPresenter with:
+							  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter 
+								                                     on:
+									                                     (simulationModel 
+										                                      ifNotNil:
+											                                      #simulationDefinition))
+								                                    
+								                                    addAnimatInitializerAction: [ 
+									                                    self addAnimatInitializer ];
+								                                    yourself) ]);
 				 nextPut: (SpNotebookPage
 						  title: 'World'
 						  provider: [ RMDWorldDefinitionBrowser on: self ]);
@@ -517,14 +547,10 @@ RMDSimulationModeler >> updatePages [
 { #category : #private }
 RMDSimulationModeler >> updateWindowTitle [
 
-	self window ifNotNil: [ :window | window title: self windowTitle ]
+	self window ifNotNil: [ :window | window title: self title ]
 ]
 
 { #category : #private }
-RMDSimulationModeler >> windowTitle [
-
-	^ 'Modeler'
-	  ,
-		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
-			   ' @ ' , name ])
+RMDSimulationModeler >> variabilityPageIndex [
+	^ 2
 ]

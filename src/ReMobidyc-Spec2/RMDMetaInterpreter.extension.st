@@ -17,3 +17,9 @@ RMDMetaInterpreter >> openInPopulationTabular [
 
 	^ (RMDPopulationByTimeTabular on: self) open
 ]
+
+{ #category : #'*ReMobidyc-Spec2' }
+RMDMetaInterpreter >> openInReplayObservatory [
+
+	^ (RMDReplayObservatory metaInterpreter: self) open
+]

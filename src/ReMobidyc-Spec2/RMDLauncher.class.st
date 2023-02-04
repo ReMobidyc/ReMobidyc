@@ -32,6 +32,7 @@ RMDLauncher class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: #itemList;
 						    add: (SpBoxLayout newHorizontal
+								     add: #updateItemListButton width: self buttonHeight;
 								     add: #newItemButton width: self buttonHeight;
 								     add: #removeItemButton width: self buttonHeight;
 								     add: #editItemButton width: self buttonHeight;
@@ -237,9 +238,8 @@ RMDLauncher >> openInObservatoryOnFile [
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository
 			ifTrue: [ 
-				(model
-					 interpreterOnExistingFile: self file / 'run1'
-					 modelPath: self file) ifNotNil: #openInObservatory ]
+				(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
+					#openInReplayObservatory ]
 			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
 ]
 

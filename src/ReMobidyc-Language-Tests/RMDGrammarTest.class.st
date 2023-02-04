@@ -1524,6 +1524,22 @@ RMDGrammarTest >> testVariability [
 			self assert: node metaParameterSequences isEmpty ].
 	self
 		assert: (grammar variability end parse: 'Variability with
+	reproduce random 1024.')
+		with: [ :node | 
+			self deny: node isPetit2Failure.
+			self assert: node randomSeed equals: 1024.
+			self assert: node multiplicity equals: 1.
+			self assert: node metaParameterSequences isEmpty ].
+	self
+		assert: (grammar variability end parse: 'Variability with
+	10 runs each.')
+		with: [ :node | 
+			self deny: node isPetit2Failure.
+			self assert: node randomSeed equals: nil.
+			self assert: node multiplicity equals: 10.
+			self assert: node metaParameterSequences isEmpty ].
+	self
+		assert: (grammar variability end parse: 'Variability with
 	reproduce random 1
 	the p -> 1, 2
 	the q, the r -> (3 [cm], 4[s]), (5 [m], 6[day]).')

@@ -28,8 +28,20 @@ RMDMetaParameterSequenceNode >> metaParametersSize [
 	^ self subclassResponsibility
 ]
 
+{ #category : #enumerating }
+RMDMetaParameterSequenceNode >> placeholdersDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : #accessing }
 RMDMetaParameterSequenceNode >> size [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #operations }
+RMDMetaParameterSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
 
 	^ self subclassResponsibility
 ]
