@@ -228,7 +228,7 @@ RMDSimulationModel class >> tasksFileName [
 { #category : #accessing }
 RMDSimulationModel class >> variabilityFileName [
 
-	^ 'variability.json'
+	^ 'variability.rmd'
 ]
 
 { #category : #accessing }

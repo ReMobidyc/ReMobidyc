@@ -303,9 +303,9 @@ RMDModelFileTextBrowser >> updateFileList [
 			fileList items: #(  ).
 			^ self ].
 	fileList items:
-		(#( 'metadata.json' 'actions.rmd' 'agents.rmd' 'simulation.rmd'
-		    'tasks.rmd' 'visualization.rmd' ) collect: [ :basename | 
-			 (modelFileReference / basename) ensureCreateFile ])
+		(#( 'metadata.json' 'variability.rmd' 'actions.rmd' 'agents.rmd'
+		    'simulation.rmd' 'tasks.rmd' 'visualization.rmd' ) collect: [ 
+			 :basename | (modelFileReference / basename) ensureCreateFile ])
 ]
 
 { #category : #operations }
@@ -338,6 +338,9 @@ RMDModelFileTextBrowser >> updateParser [
 			sourceText parser: self jsonParser.
 			^ self ].
 		basename := ref basenameWithoutExtension: 'rmd'.
+		basename = 'variability' ifTrue: [ 
+			sourceText parser: self variabilityFileParser.
+			^ self ].
 		basename = 'actions' ifTrue: [ 
 			sourceText parser: self actionsFileParser.
 			^ self ].
@@ -368,6 +371,12 @@ RMDModelFileTextBrowser >> updateSourceText [
 RMDModelFileTextBrowser >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]
+]
+
+{ #category : #parsers }
+RMDModelFileTextBrowser >> variabilityFileParser [
+
+	^ RMDGrammar new variability end
 ]
 
 { #category : #parsers }
