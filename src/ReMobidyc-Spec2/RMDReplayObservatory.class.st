@@ -162,7 +162,8 @@ RMDReplayObservatory >> open [
 { #category : #operations }
 RMDReplayObservatory >> reloadMemory [
 
-	metaInterpreter reloadMemory
+	metaInterpreter reloadMemory.
+	self updateTimeSlider
 ]
 
 { #category : #operations }
@@ -177,7 +178,6 @@ RMDReplayObservatory >> runDropListChanged [
 	self interpreterDo: [ :interpreter | 
 		timeSlider quantum: interpreter deltaTime / interpreter duration ].
 	self
-		updateTimeSlider;
 		updateTimeLabel;
 		updateVisual
 ]
@@ -189,9 +189,7 @@ RMDReplayObservatory >> runSimulation [
 	self updateButtons.
 	(runProcess isNil or: [ runProcess isRunning not ]) ifTrue: [ 
 		runProcess := [ 
-		              [ 
-		              runButton state and: [ 
-			              timeSlider value < (1.0 - 1.0e-16) ] ] whileTrue: [ 
+		              [ runButton state ] whileTrue: [ 
 			              self stepSimulation.
 			              100 milliSecond wait ].
 		              runButton state: false.
@@ -213,8 +211,12 @@ RMDReplayObservatory >> simulationModelDo: aBlock [
 RMDReplayObservatory >> stepSimulation [
 
 	self interpreterDo: [ :interpreter | 
-		timeSlider value:
-			interpreter deltaTime / interpreter duration + timeSlider value ]
+		interpreter memory time < interpreter memory latestTime
+			ifTrue: [ 
+				timeSlider value:
+					timeSlider value
+					+ interpreter memory latestTime asFloat reciprocal ]
+			ifFalse: [ self stopSimulation ] ]
 ]
 
 { #category : #operations }
@@ -309,7 +311,8 @@ RMDReplayObservatory >> updateTimeSlider [
 
 	self interpreterDo: [ :interpreter | 
 		timeSlider
-			value: interpreter progress;
+			value: interpreter memory time asFloat
+				/ (interpreter memory latestTime max: 1);
 			enable.
 		^ self ].
 	timeSlider
