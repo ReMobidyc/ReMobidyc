@@ -455,7 +455,9 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 			editRepositoryButton disable.
 			updateItemListButton disable.
 			newItemButton disable.
-			editItemButton disable ]
+			editItemButton disable.
+			exportItemButton disable.
+			self disableOk ]
 		ifNotNil: [ :repo | 
 			removeRepositoryButton enable.
 			editRepositoryButton enable.
@@ -468,14 +470,16 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 				ifFalse: [ 
 					newItemButton disable.
 					removeItemButton enabled: repo isRunsRepository.
-					editItemButton disable ] ].
-	self item
-		ifNotNil: [ 
-			exportItemButton enable.
-			self enableOk ]
-		ifNil: [ 
-			exportItemButton disable.
-			self disableOk ]
+					editItemButton disable ].
+			self item
+				ifNotNil: [ 
+					exportItemButton enable.
+					repo isRunsRepository
+						ifTrue: [ self disableOk ]
+						ifFalse: [ self enableOk ] ]
+				ifNil: [ 
+					exportItemButton disable.
+					self disableOk ] ]
 ]
 
 { #category : #updating }
