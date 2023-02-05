@@ -301,6 +301,24 @@ RMDLauncher >> openModelerMenu [
 		  openWithSpecAtPointer
 ]
 
+{ #category : #operations }
+RMDLauncher >> removeItem [
+
+	| items |
+	self repository ifNotNil: [ :repo | 
+		(self repository isRunsRepository and: [ 
+			 items := itemList selectedItems.
+			 items size > 1 ])
+			ifTrue: [ 
+				(UIManager default confirm:
+					 'Remove ' , items size printString , ' runs from ' , repo name
+					 , ' repository?') ifTrue: [ 
+					Cursor wait showWhile: [ 
+						items do: [ :item | repo removeModelNamed: item ifAbsent: [  ] ] ].
+					self updateItemList ] ]
+			ifFalse: [ super removeItem ] ]
+]
+
 { #category : #initialization }
 RMDLauncher >> title [
 	^ 'Launcher'
@@ -328,4 +346,14 @@ RMDLauncher >> updateButtons [
 			tabularButton disable.
 			observatoryButton disable.
 			observatoryMenuButton disable ]
+]
+
+{ #category : #updating }
+RMDLauncher >> updateItemList [
+
+	super updateItemList.
+	self repository ifNotNil: [ :repo | 
+		repo isRunsRepository
+			ifTrue: [ itemList beMultipleSelection ]
+			ifFalse: [ itemList beSingleSelection ] ]
 ]

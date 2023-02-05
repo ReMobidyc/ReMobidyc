@@ -118,7 +118,8 @@ RMDRepositoryModelsBrowser >> removeItem [
 			(UIManager default confirm:
 				 'Remove ' , item , ' from ' , repo name , ' repository?') 
 				ifTrue: [ 
-					repo removeModelNamed: item ifAbsent: [  ].
+					Cursor wait showWhile: [ 
+						repo removeModelNamed: item ifAbsent: [  ] ].
 					self updateItemList ] ] ]
 ]
 
