@@ -345,6 +345,12 @@ RMDLauncher >> updateItemList [
 	super updateItemList.
 	self repository ifNotNil: [ :repo | 
 		repo isRunsRepository
-			ifTrue: [ itemList beMultipleSelection ]
-			ifFalse: [ itemList beSingleSelection ] ]
+			ifTrue: [ 
+				itemList beMultipleSelection.
+				itemList withAdapterDo: [ :a | 
+					a widgetDo: [ :w | w beMultipleSelection ] ] ]
+			ifFalse: [ 
+				itemList beSingleSelection.
+				itemList withAdapterDo: [ :a | 
+					a widgetDo: [ :w | w beSingleSelection ] ] ] ]
 ]
