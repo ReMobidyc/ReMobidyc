@@ -28,6 +28,13 @@ RMDTimeSeriesTabular >> generateRowsDo: aBlock [
 				progress value: time ] ]
 ]
 
+{ #category : #initialization }
+RMDTimeSeriesTabular >> initializePresenters [
+
+	super initializePresenters.
+	table contextMenu: [ self analysisMenu ]
+]
+
 { #category : #updating }
 RMDTimeSeriesTabular >> runChanged [
 
