@@ -33,6 +33,7 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 		  expand: false;
 		  add: #table;
 		  add: (SpBoxLayout newHorizontal
+				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
 				   add: '    ' expand: false;
 				   add: #exportCSVButton width: self buttonHeight;

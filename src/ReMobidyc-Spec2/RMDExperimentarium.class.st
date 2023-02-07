@@ -1,7 +1,8 @@
 Class {
 	#name : #RMDExperimentarium,
 	#superclass : #RMDPresenter,
-	#classTraits : 'TRMDLaunchTabular classTrait',
+	#traits : 'TRMDLaunchAnalysisTools',
+	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
 		'stepButton',
 		'runButton',
@@ -89,12 +90,12 @@ RMDExperimentarium >> initializePresenters [
 	openTabularButton := self newButton
 		                     disable;
 		                     icon: self tabularIcon;
-		                     action: [ self openInTabular ];
+		                     action: [ self openTabularMenu ];
 		                     yourself.
 	openObservatoryButton := self newButton
 		                         disable;
 		                         icon: self observatoryIcon;
-		                         action: [ self openInObservatory ];
+		                         action: [ self openInReplayObservatory ];
 		                         yourself.
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
@@ -132,59 +133,23 @@ RMDExperimentarium >> isValidated [
 	^ validated = true
 ]
 
+{ #category : #private }
+RMDExperimentarium >> metaInterpreterForTabularDo: aBlock [
+
+	^ (metaInterpreter notNil and: [ 
+		   metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		  aBlock value:
+			  (metaInterpreter simulationModel 
+				   metaInterpreterOnReadOnlyModelPath:
+				   metaInterpreter context modelPath) ]
+]
+
 { #category : #accessing }
 RMDExperimentarium >> modelName [
 
 	^ metaInterpreter
 		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
-]
-
-{ #category : #operations }
-RMDExperimentarium >> openInAttributeTabular [
-
-	(metaInterpreter notNil and: [ 
-		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
-		(metaInterpreter simulationModel 
-			 metaInterpreterOnReadOnlyModelPath:
-			 metaInterpreter context modelPath) openInAttributeTabular ]
-]
-
-{ #category : #operations }
-RMDExperimentarium >> openInObservatory [
-
-	(metaInterpreter notNil and: [ 
-		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
-		(metaInterpreter simulationModel 
-			 metaInterpreterOnReadOnlyModelPath:
-			 metaInterpreter context modelPath) openInReplayObservatory ]
-]
-
-{ #category : #operations }
-RMDExperimentarium >> openInPopulationTabular [
-
-	(metaInterpreter notNil and: [ 
-		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
-		(metaInterpreter simulationModel 
-			 metaInterpreterOnReadOnlyModelPath:
-			 metaInterpreter context modelPath) openInPopulationTabular ]
-]
-
-{ #category : #operations }
-RMDExperimentarium >> openInTabular [
-
-	(self newMenu
-		 addGroup: [ :group | 
-			 group
-				 addItem: [ :item | 
-					 item
-						 name: 'Population';
-						 action: [ self openInPopulationTabular ] ];
-				 addItem: [ :item | 
-					 item
-						 name: 'Attributes';
-						 action: [ self openInAttributeTabular ] ] ];
-		 yourself) openWithSpecAtPointer
 ]
 
 { #category : #api }
@@ -207,6 +172,18 @@ RMDExperimentarium >> runSimulation [
 	self isValidated ifTrue: [ 
 		metaInterpreter runSimulationOnError: [ :ex | 
 			(RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
+]
+
+{ #category : #private }
+RMDExperimentarium >> selectedTime [
+
+	| time |
+	time := nil.
+	metaInterpreter interpretersDo: [ :interpreter | 
+		| t |
+		t := interpreter time.
+		(time isNil or: [ time > t ]) ifTrue: [ time := t ] ].
+	^ time
 ]
 
 { #category : #accessing }

@@ -1,6 +1,8 @@
 Class {
 	#name : #RMDReplayObservatory,
 	#superclass : #RMDPresenter,
+	#traits : 'TRMDLaunchAnalysisTools',
+	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
 		'metaInterpreter',
 		'timeSlider',
@@ -149,6 +151,17 @@ RMDReplayObservatory >> metaInterpreterChanged [
 		updateVisual
 ]
 
+{ #category : #private }
+RMDReplayObservatory >> metaInterpreterForTabularDo: aBlock [
+
+	^ (metaInterpreter notNil and: [ 
+		   metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		  aBlock value:
+			  (metaInterpreter simulationModel 
+				   metaInterpreterOnReadOnlyModelPath:
+				   metaInterpreter context modelPath) ]
+]
+
 { #category : #operations }
 RMDReplayObservatory >> open [
 
@@ -196,6 +209,25 @@ RMDReplayObservatory >> runSimulation [
 		              self updateButtons.
 		              runProcess := nil ] forkAt:
 			              Processor userBackgroundPriority ]
+]
+
+{ #category : #private }
+RMDReplayObservatory >> selectTime: aNumber [
+
+	aNumber ifNil: [ ^ self ].
+	self stopSimulation.
+	self interpreterDo: [ :interpreter | 
+		timeSlider value:
+			(aNumber / metaInterpreter simulationModel deltaTime) rounded
+				asFloat / (interpreter memory latestTime max: 1) ]
+]
+
+{ #category : #private }
+RMDReplayObservatory >> selectedTime [
+
+	^ (metaInterpreter
+		   interpreterAt: runDropList selectedItem
+		   ifAbsent: [ nil ]) ifNotNil: [ :interpreter | interpreter time ]
 ]
 
 { #category : #accessing }
