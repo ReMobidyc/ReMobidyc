@@ -12,25 +12,23 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   vAlignEnd;
-				   add:
-					   (SpBoxLayout newVertical
-						    add: #reloadButton
-						    height: self buttonHeight)
-				   width: self buttonHeight;
-				   addSpace;
-				   add: (SpBoxLayout newVertical
-						    add: 'Species(Stage)';
-						    add: #stageDropList);
-				   add: (SpBoxLayout newVertical
-						    add: 'Run';
-						    add: #runDropList);
-				   add: (SpBoxLayout newVertical
-						    add: 'Time';
-						    add: #timeDropList);
+				   add: #reloadButton width: self buttonHeight;
 				   yourself)
-		  expand: false;
-		  add: #table;
+		  height: self buttonHeight;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.2;
+				   add: (SpBoxLayout newVertical
+						    add: 'Run' expand: false;
+						    add: #runDropList expand: false;
+						    add: 'Time' expand: false;
+						    add: #timeList;
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Species(Stage)' expand: false;
+						    add: #stageDropList expand: false;
+						    add: #table;
+						    yourself);
+				   yourself);
 		  add: (SpBoxLayout newHorizontal
 				   add: #openObservatoryButton width: self buttonHeight;
 				   add: '    ' expand: false;
@@ -48,7 +46,7 @@ RMDStageIndividualsAtTimeTabular >> attributeCollectorOn: aRMDAttributeDeclarati
 		   interpreterAt: runDropList selectedItem
 		   ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
 		  | time stage |
-		  time := timeDropList selectedItem.
+		  time := timeList selectedItem.
 		  stage := stageDropList selectedItem.
 		  (time notNil and: [ stage notNil ]) ifTrue: [ 
 			  (stage
@@ -78,7 +76,7 @@ RMDStageIndividualsAtTimeTabular >> generateRowsDo: aBlock [
 	(metaInterpreter
 		 interpreterAt: runDropList selectedItem
 		 ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
-		timeDropList selectedItem ifNotNil: [ :time | 
+		timeList selectedItem ifNotNil: [ :time | 
 			stageDropList selectedItem ifNotNil: [ :stage | 
 				interpreter memory time: time.
 				(Array streamContents: [ :stream | 

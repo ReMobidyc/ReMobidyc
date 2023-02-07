@@ -182,7 +182,7 @@ RMDExperimentarium >> openInTabular [
 						 action: [ self openInPopulationTabular ] ];
 				 addItem: [ :item | 
 					 item
-						 name: 'Attributes';
+						 name: 'Attributes at Time';
 						 action: [ self openInAttributeTabular ] ] ];
 		 yourself) openWithSpecAtPointer
 ]

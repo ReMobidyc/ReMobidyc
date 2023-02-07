@@ -2,7 +2,7 @@ Class {
 	#name : #RMDSnapshotTabular,
 	#superclass : #RMDTabular,
 	#instVars : [
-		'timeDropList'
+		'timeList'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -11,22 +11,20 @@ Class {
 RMDSnapshotTabular >> initializePresenters [
 
 	super initializePresenters.
-	timeDropList := self newDropList
-		                display: [ :time | 
-			                | unit |
-			                unit := metaInterpreter simulationModel
-				                        durationUnit.
-			                String streamContents: [ :stream | 
-					                (unit fromSI:
-							                 time
-							                 * metaInterpreter simulationModel deltaTime)
-						                printOn: stream
-						                showingDecimalPlaces: 4.
-					                stream nextPutAll: ' ['.
-					                unit printOn: stream.
-					                stream nextPutAll: ']' ] ];
-		                whenSelectedItemChangedDo: [ self timeChanged ];
-		                yourself
+	timeList := self newList
+		            display: [ :time | 
+			            | unit |
+			            unit := metaInterpreter simulationModel durationUnit.
+			            String streamContents: [ :stream | 
+					            (unit fromSI:
+							             time * metaInterpreter simulationModel deltaTime)
+						            printOn: stream
+						            showingDecimalPlaces: 4.
+					            stream nextPutAll: ' ['.
+					            unit printOn: stream.
+					            stream nextPutAll: ']' ] ];
+		            whenSelectionChangedDo: [ self timeChanged ];
+		            yourself
 ]
 
 { #category : #private }
@@ -61,9 +59,9 @@ RMDSnapshotTabular >> timeChanged [
 RMDSnapshotTabular >> updateTimeDropList [
 
 	| item items |
-	item := timeDropList selectedItem.
+	item := timeList selectedItem.
 	items := (0 to: self latestTime) asArray.
-	timeDropList
+	timeList
 		items: items;
 		selectItem: ((items includes: item)
 				 ifTrue: [ item ]
