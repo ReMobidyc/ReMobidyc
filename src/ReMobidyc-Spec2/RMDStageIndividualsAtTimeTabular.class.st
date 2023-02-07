@@ -116,6 +116,15 @@ RMDStageIndividualsAtTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateTable
 ]
 
+{ #category : #private }
+RMDStageIndividualsAtTimeTabular >> selectedIndividual [
+
+	^ (table selectedItem at: #individual) ifNotNil: [ :id | 
+		  id isInteger
+			  ifTrue: [ id ]
+			  ifFalse: [ nil ] ]
+]
+
 { #category : #updating }
 RMDStageIndividualsAtTimeTabular >> stageChanged [
 

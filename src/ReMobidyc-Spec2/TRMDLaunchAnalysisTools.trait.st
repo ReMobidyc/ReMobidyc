@@ -3,6 +3,16 @@ Trait {
 	#category : #'ReMobidyc-Spec2-Traits'
 }
 
+{ #category : #menus }
+TRMDLaunchAnalysisTools >> analysisMenu [
+
+	| menu |
+	menu := self newMenu.
+	self tabularMenu: menu.
+	self replayObservatoryMenu: menu.
+	^ menu
+]
+
 { #category : #private }
 TRMDLaunchAnalysisTools >> metaInterpreterForTabularDo: aBlock [
 
@@ -15,6 +25,20 @@ TRMDLaunchAnalysisTools >> openInAttributeTabular [
 	^ (self metaInterpreterForTabularDo: #openInAttributeTabular)
 		  selectTime: self selectedTime;
 		  yourself
+]
+
+{ #category : #operations }
+TRMDLaunchAnalysisTools >> openInIndividualTabularWithRunId: runId individual: individual time: time [
+
+	self metaInterpreterForTabularDo: [ :metaInterpreter | 
+		^ (RMDIndividualByTimeTabular
+			   on: metaInterpreter
+			   runId: runId
+			   individual: individual
+			   time: time)
+			  open;
+			  yourself ].
+	^ nil
 ]
 
 { #category : #operations }
@@ -36,22 +60,78 @@ TRMDLaunchAnalysisTools >> openInReplayObservatory [
 { #category : #operations }
 TRMDLaunchAnalysisTools >> openTabularMenu [
 
-	(self newMenu
-		 addGroup: [ :group | 
-			 group
-				 addItem: [ :item | 
-					 item
-						 name: 'Population';
-						 action: [ self openInPopulationTabular ] ];
-				 addItem: [ :item | 
-					 item
-						 name: 'Attributes at Time';
-						 action: [ self openInAttributeTabular ] ] ];
-		 yourself) openWithSpecAtPointer
+	self tabularMenu openWithSpecAtPointer
+]
+
+{ #category : #menus }
+TRMDLaunchAnalysisTools >> replayObservatoryMenu [
+
+	^ self replayObservatoryMenu: self newMenu
+]
+
+{ #category : #menus }
+TRMDLaunchAnalysisTools >> replayObservatoryMenu: aSpMenuPresenter [
+
+	^ aSpMenuPresenter
+		  addGroup: [ :group | 
+			  group addItem: [ :item | 
+					  item
+						  name: 'Open in Observatory';
+						  action: [ self openInReplayObservatory ] ] ];
+		  yourself
+]
+
+{ #category : #private }
+TRMDLaunchAnalysisTools >> selectedIndividual [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
+TRMDLaunchAnalysisTools >> selectedRunId [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #private }
 TRMDLaunchAnalysisTools >> selectedTime [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #menus }
+TRMDLaunchAnalysisTools >> tabularMenu [
+
+	^ self tabularMenu: self newMenu
+]
+
+{ #category : #menus }
+TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
+
+	^ aSpMenuPresenter
+		  addGroup: [ :group | 
+			  | runId time individual |
+			  runId := self selectedRunId.
+			  time := self selectedTime.
+			  individual := self selectedIndividual.
+			  group
+				  addItem: [ :item | 
+					  item
+						  name: 'Open in Population Tabular';
+						  action: [ self openInPopulationTabular ] ];
+				  addItem: [ :item | 
+					  item
+						  name: 'Open in Attributes at Time Tabular';
+						  action: [ self openInAttributeTabular ] ].
+			  (runId notNil and: [ time notNil and: [ individual notNil ] ]) 
+				  ifTrue: [ 
+					  group addItem: [ :item | 
+						  item
+							  name: 'Open in Individual''s Attributes Tabular';
+							  action: [ 
+								  self
+									  openInIndividualTabularWithRunId: runId
+									  individual: individual
+									  time: time ] ] ] ];
+		  yourself
 ]

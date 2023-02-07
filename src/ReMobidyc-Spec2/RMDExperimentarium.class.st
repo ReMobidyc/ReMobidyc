@@ -175,6 +175,18 @@ RMDExperimentarium >> runSimulation [
 ]
 
 { #category : #private }
+RMDExperimentarium >> selectedIndividual [
+
+	^ nil
+]
+
+{ #category : #private }
+RMDExperimentarium >> selectedRunId [
+
+	^ nil
+]
+
+{ #category : #private }
 RMDExperimentarium >> selectedTime [
 
 	| time |

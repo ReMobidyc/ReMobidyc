@@ -24,6 +24,7 @@ RMDSnapshotTabular >> initializePresenters [
 					            unit printOn: stream.
 					            stream nextPutAll: ']' ] ];
 		            whenSelectionChangedDo: [ self timeChanged ];
+		            contextMenu: [ self analysisMenu ];
 		            yourself
 ]
 

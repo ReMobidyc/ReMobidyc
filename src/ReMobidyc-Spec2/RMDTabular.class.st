@@ -125,6 +125,7 @@ RMDTabular >> initializePresenters [
 		               yourself.
 	table := self newTable
 		         beResizable;
+		         contextMenu: [ self analysisMenu ];
 		         yourself
 ]
 
@@ -219,6 +220,12 @@ RMDTabular >> selectVisibleColumns: aBlock [
 			refresh ]
 ]
 
+{ #category : #private }
+RMDTabular >> selectedRunId [
+
+	^ runDropList selectedItem
+]
+
 { #category : #accessing }
 RMDTabular >> selectedTime [
 
@@ -278,10 +285,6 @@ RMDTabular >> stagesOf: aString do: aBlock [
 	self stagesDo: [ :animatDefinition | 
 		animatDefinition species = aString ifTrue: [ 
 			aBlock value: animatDefinition ] ]
-]
-
-{ #category : #initialization }
-RMDTabular >> title [ 
 ]
 
 { #category : #enumerating }

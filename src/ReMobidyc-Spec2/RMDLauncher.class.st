@@ -293,6 +293,18 @@ RMDLauncher >> removeItem [
 ]
 
 { #category : #private }
+RMDLauncher >> selectedIndividual [
+
+	^ nil
+]
+
+{ #category : #private }
+RMDLauncher >> selectedRunId [
+
+	^ nil
+]
+
+{ #category : #private }
 RMDLauncher >> selectedTime [
 
 	^ nil
