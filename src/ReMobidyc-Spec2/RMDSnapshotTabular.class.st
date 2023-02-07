@@ -49,6 +49,25 @@ RMDSnapshotTabular >> runChanged [
 		updateTable
 ]
 
+{ #category : #accessing }
+RMDSnapshotTabular >> selectTime: aNumber [
+
+	timeList
+		selectIndex: (aNumber
+				 ifNotNil: [ 
+					 timeList items indexOf:
+						 (aNumber / metaInterpreter simulationModel deltaTime) rounded ]
+				 ifNil: [ 0 ])
+		scrollToSelection: true
+]
+
+{ #category : #accessing }
+RMDSnapshotTabular >> selectedTime [
+
+	^ timeList selectedItem ifNotNil: [ :time | 
+		  time * metaInterpreter simulationModel deltaTime ]
+]
+
 { #category : #updating }
 RMDSnapshotTabular >> timeChanged [
 

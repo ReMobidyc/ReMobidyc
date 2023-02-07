@@ -1,6 +1,8 @@
 Class {
 	#name : #RMDTabular,
 	#superclass : #RMDPresenter,
+	#traits : 'TRMDLaunchAnalysisTools',
+	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
 		'metaInterpreter',
 		'runDropList',
@@ -8,28 +10,12 @@ Class {
 		'columnCollectors',
 		'exportCSVButton',
 		'reloadButton',
-		'openObservatoryButton'
+		'openObservatoryButton',
+		'openTabularButton',
+		'baseRowIndex'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
-
-{ #category : #layout }
-RMDTabular class >> defaultLayout [
-
-	^ SpBoxLayout newVertical
-		  add: (SpBoxLayout newHorizontal
-				   add: #reloadButton width: self buttonHeight;
-				   addSpace;
-				   add: #runDropList expand: false;
-				   yourself)
-		  expand: false;
-		  add: #table;
-		  add: (SpBoxLayout newHorizontal
-				   add: #exportCSVButton width: self buttonHeight;
-				   yourself)
-		  expand: false;
-		  yourself
-]
 
 { #category : #'instance creation' }
 RMDTabular class >> on: aRMDMetaInterpreter [
@@ -99,6 +85,13 @@ RMDTabular >> generateRowsDo: aBlock [
 ]
 
 { #category : #initialization }
+RMDTabular >> initialize [
+
+	super initialize.
+	baseRowIndex := 1
+]
+
+{ #category : #initialization }
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -106,9 +99,13 @@ RMDTabular >> initializePresenters [
 		                icon: self updateIcon;
 		                action: [ self reloadInterpreter ];
 		                yourself.
+	openTabularButton := self newButton
+		                     icon: self tabularIcon;
+		                     action: [ self openTabularMenu ];
+		                     yourself.
 	openObservatoryButton := self newButton
 		                         icon: self observatoryIcon;
-		                         action: [ self openInObservatory ];
+		                         action: [ self openInReplayObservatory ];
 		                         yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
@@ -156,6 +153,17 @@ RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 	self updateRunDropList
 ]
 
+{ #category : #private }
+RMDTabular >> metaInterpreterForTabularDo: aBlock [
+
+	^ (metaInterpreter notNil and: [ 
+		   metaInterpreter context isForFileMemory ]) ifTrue: [ 
+		  aBlock value:
+			  (metaInterpreter simulationModel 
+				   metaInterpreterOnReadOnlyModelPath:
+				   metaInterpreter context modelPath) ]
+]
+
 { #category : #updating }
 RMDTabular >> metaInterpreterReloaded [
 
@@ -169,16 +177,6 @@ RMDTabular >> modelName [
 	^ metaInterpreter
 		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
-]
-
-{ #category : #operations }
-RMDTabular >> openInObservatory [
-
-	(metaInterpreter notNil and: [ 
-		 metaInterpreter context isForFileMemory ]) ifTrue: [ 
-		(metaInterpreter simulationModel 
-			 metaInterpreterOnReadOnlyModelPath:
-			 metaInterpreter context modelPath) openInReplayObservatory ]
 ]
 
 { #category : #operations }
@@ -203,6 +201,12 @@ RMDTabular >> runChanged [
 ]
 
 { #category : #accessing }
+RMDTabular >> selectTime: anInteger [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDTabular >> selectVisibleColumns: aBlock [
 
 	columnCollectors ifNotNil: [ 
@@ -213,6 +217,12 @@ RMDTabular >> selectVisibleColumns: aBlock [
 						 SpStringTableColumn evaluated: [ :row | 
 								 row at: assoc key ifAbsent: [ '' ] ] ]);
 			refresh ]
+]
+
+{ #category : #accessing }
+RMDTabular >> selectedTime [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -283,11 +293,15 @@ RMDTabular >> titleRowsDo: aBlock [
 { #category : #updating }
 RMDTabular >> updateRows [
 
+	| count |
+	count := 1.
 	table items: (Array streamContents: [ :stream | 
 			 columnCollectors ifNotNil: [ 
 				 self titleRowsDo: [ :block | 
 					 stream nextPut: (columnCollectors collect: [ :assoc | 
-							  assoc key -> (block value: assoc key) ]) asDictionary ].
+							  assoc key -> (block value: assoc key) ]) asDictionary.
+					 count := count + 1 ].
+				 baseRowIndex := count.
 				 self generateRowsDo: [ :row | 
 					 stream nextPut: (columnCollectors collect: [ :assoc | 
 							  assoc key -> (assoc value value: row) ]) asDictionary ] ] ])

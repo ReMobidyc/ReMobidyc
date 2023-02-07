@@ -22,19 +22,22 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 						    add: #runDropList expand: false;
 						    add: 'Time' expand: false;
 						    add: #timeList;
+						    add: (SpBoxLayout newHorizontal
+								     add: #openTabularButton width: self buttonHeight;
+								     add: #openObservatoryButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
 						    add: 'Species(Stage)' expand: false;
 						    add: #stageDropList expand: false;
 						    add: #table;
+						    add: (SpBoxLayout newHorizontal
+								     add: #exportCSVButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
 						    yourself);
 				   yourself);
-		  add: (SpBoxLayout newHorizontal
-				   add: #openObservatoryButton width: self buttonHeight;
-				   add: '    ' expand: false;
-				   add: #exportCSVButton width: self buttonHeight;
-				   yourself)
-		  expand: false;
 		  yourself
 ]
 

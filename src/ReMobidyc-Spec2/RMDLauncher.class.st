@@ -1,7 +1,8 @@
 Class {
 	#name : #RMDLauncher,
 	#superclass : #RMDRepositoryModelsBrowser,
-	#classTraits : 'TRMDLaunchTabular classTrait',
+	#traits : 'TRMDLaunchAnalysisTools',
+	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
 		'modelerButton',
 		'observatoryButton',
@@ -116,27 +117,27 @@ RMDLauncher >> initializePresenters [
 		                     yourself.
 	observatoryMenuButton := self newButton
 		                         icon: self dropdownIcon;
-		                         action: [ self openInObservatory ];
+		                         action: [ self openInReplayObservatory ];
 		                         help:
 			                         'Run the model in an observatory with selected memory model.';
 		                         disable;
 		                         yourself.
 	tabularButton := self newButton
 		                 icon: self tabularIcon;
-		                 action: [ self openInTabular ];
+		                 action: [ self openTabularMenu ];
 		                 help: 'Analyze the model on a selected tabular.';
 		                 disable;
 		                 yourself.
 	super initializePresenters
 ]
 
-{ #category : #operations }
-RMDLauncher >> openInAttributeTabular [
+{ #category : #private }
+RMDLauncher >> metaInterpreterForTabularDo: aBlock [
 
-	self load ifNotNil: [ :model | 
-		self repository isRunsRepository ifTrue: [ 
-			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
-				#openInAttributeTabular ] ]
+	^ self load ifNotNil: [ :model | 
+		  self repository isRunsRepository ifTrue: [ 
+			  (model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
+				  aBlock ] ]
 ]
 
 { #category : #operations }
@@ -237,9 +238,7 @@ RMDLauncher >> openInObservatoryOnFile [
 
 	self load ifNotNil: [ :model | 
 		self repository isRunsRepository
-			ifTrue: [ 
-				(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
-					#openInReplayObservatory ]
+			ifTrue: [ self openInReplayObservatory ]
 			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
 ]
 
@@ -248,32 +247,6 @@ RMDLauncher >> openInObservatoryOnMemory [
 
 	self load ifNotNil: [ :model | 
 		model interpreterOnMemory ifNotNil: #openInObservatory ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInPopulationTabular [
-
-	self load ifNotNil: [ :model | 
-		self repository isRunsRepository ifTrue: [ 
-			(model metaInterpreterOnReadOnlyModelPath: self file) ifNotNil:
-				#openInPopulationTabular ] ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInTabular [
-
-	(self newMenu
-		 addGroup: [ :group | 
-			 group
-				 addItem: [ :item | 
-					 item
-						 name: 'Population';
-						 action: [ self openInPopulationTabular ] ];
-				 addItem: [ :item | 
-					 item
-						 name: 'Attributes at Time';
-						 action: [ self openInAttributeTabular ] ] ];
-		 yourself) openWithSpecAtPointer
 ]
 
 { #category : #operations }
@@ -317,6 +290,12 @@ RMDLauncher >> removeItem [
 						items do: [ :item | repo removeModelNamed: item ifAbsent: [  ] ] ].
 					self updateItemList ] ]
 			ifFalse: [ super removeItem ] ]
+]
+
+{ #category : #private }
+RMDLauncher >> selectedTime [
+
+	^ nil
 ]
 
 { #category : #initialization }
