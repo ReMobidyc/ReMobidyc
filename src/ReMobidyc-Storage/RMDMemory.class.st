@@ -70,6 +70,13 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> animat: aString includes: anInteger [
+
+	^ (self animats at: aString ifAbsent: [ ^ false ]) includes:
+		  anInteger
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> animatOfIndividual: anInteger ifAbsent: errorBlock [
 
 	self animats keysAndValuesDo: [ :animat :inds | 
@@ -187,17 +194,6 @@ RMDMemory >> findCurrentOf: anInteger ifPresent: aBlock ifAbsent: errorBlock [
 		(self animatOfIndividual: individual ifAbsent: [ nil ]) ifNotNil: [ 
 			:animat | ^ aBlock cull: individual cull: animat ] ].
 	^ errorBlock value
-]
-
-{ #category : #'accessing-links' }
-RMDMemory >> firstStageOf: anInteger [
-
-	| stage prevStage |
-	stage := anInteger.
-	[ 
-	prevStage := self previousStageOf: stage.
-	prevStage notNil ] whileTrue: [ stage := prevStage ].
-	^ stage
 ]
 
 { #category : #initialization }
@@ -377,6 +373,12 @@ RMDMemory >> previousStageOf: anInteger [
 	^ self stageLinks at: anInteger ifAbsent: [ nil ]
 ]
 
+{ #category : #'accessing-links' }
+RMDMemory >> previously: anInteger [
+
+	^ self stageLinks keyAtValue: anInteger ifAbsent: [ nil ]
+]
+
 { #category : #'accessing-meta parameters' }
 RMDMemory >> randomSeed [
 
@@ -496,19 +498,6 @@ RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
 	stageLinks at: individual put: anInteger.
 	^ individual
-]
-
-{ #category : #'accessing-links' }
-RMDMemory >> stageHistoryOf: anInteger [
-
-	| stage |
-	stage := anInteger.
-	^ (Array streamContents: [ :stream | 
-		   | prevStage |
-		   [ 
-		   stream nextPut: stage.
-		   prevStage := self previousStageOf: stage.
-		   prevStage notNil ] whileTrue: [ stage := prevStage ] ]) reverse
 ]
 
 { #category : #private }

@@ -28,6 +28,20 @@ TRMDLaunchAnalysisTools >> openInAttributeTabular [
 ]
 
 { #category : #operations }
+TRMDLaunchAnalysisTools >> openInIndividualTabularWithRunId: runId individual: individual time: time [
+
+	self metaInterpreterForTabularDo: [ :metaInterpreter | 
+		^ (RMDIndividualByTimeTabular
+			   on: metaInterpreter
+			   runId: runId
+			   individual: individual
+			   time: time)
+			  open;
+			  yourself ].
+	^ nil
+]
+
+{ #category : #operations }
 TRMDLaunchAnalysisTools >> openInPopulationTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInPopulationTabular)
@@ -68,6 +82,18 @@ TRMDLaunchAnalysisTools >> replayObservatoryMenu: aSpMenuPresenter [
 ]
 
 { #category : #private }
+TRMDLaunchAnalysisTools >> selectedIndividual [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
+TRMDLaunchAnalysisTools >> selectedRunId [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #private }
 TRMDLaunchAnalysisTools >> selectedTime [
 
 	^ self subclassResponsibility
@@ -84,6 +110,10 @@ TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 
 	^ aSpMenuPresenter
 		  addGroup: [ :group | 
+			  | runId time individual |
+			  runId := self selectedRunId.
+			  time := self selectedTime.
+			  individual := self selectedIndividual.
 			  group
 				  addItem: [ :item | 
 					  item
@@ -92,6 +122,16 @@ TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 				  addItem: [ :item | 
 					  item
 						  name: 'Open in Attributes at Time Tabular';
-						  action: [ self openInAttributeTabular ] ] ];
+						  action: [ self openInAttributeTabular ] ].
+			  (runId notNil and: [ time notNil and: [ individual notNil ] ]) 
+				  ifTrue: [ 
+					  group addItem: [ :item | 
+						  item
+							  name: 'Open in Individual''s Attributes Tabular';
+							  action: [ 
+								  self
+									  openInIndividualTabularWithRunId: runId
+									  individual: individual
+									  time: time ] ] ] ];
 		  yourself
 ]

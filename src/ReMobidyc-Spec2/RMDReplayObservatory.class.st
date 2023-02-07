@@ -223,6 +223,18 @@ RMDReplayObservatory >> selectTime: aNumber [
 ]
 
 { #category : #private }
+RMDReplayObservatory >> selectedIndividual [
+
+	^ nil
+]
+
+{ #category : #private }
+RMDReplayObservatory >> selectedRunId [
+
+	^ runDropList selectedItem
+]
+
+{ #category : #private }
 RMDReplayObservatory >> selectedTime [
 
 	^ (metaInterpreter
