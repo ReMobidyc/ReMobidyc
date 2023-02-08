@@ -43,6 +43,14 @@ RMDParameterInstantiationNode >> isParameterInstantiationNode [
 	^ true
 ]
 
+{ #category : #rewriting }
+RMDParameterInstantiationNode >> metaparameters: aDictionary [
+
+	^ self copy
+		  replacement: (replacement copyReplace: aDictionary);
+		  yourself
+]
+
 { #category : #accessing }
 RMDParameterInstantiationNode >> placeholder [
 
