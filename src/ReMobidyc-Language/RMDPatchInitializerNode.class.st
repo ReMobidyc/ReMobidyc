@@ -72,7 +72,7 @@ RMDPatchInitializerNode >> agentName [
 { #category : #enumerating }
 RMDPatchInitializerNode >> childrenDo: aBlock [
 
-	length ifNotNil: [ aBlock value: length ].
+	size ifNotNil: [ aBlock value: size ].
 	super childrenDo: aBlock
 ]
 

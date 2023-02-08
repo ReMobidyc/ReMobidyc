@@ -268,6 +268,9 @@ RMDTaskDefinitionNode >> isTaskDefinitionNode [
 RMDTaskDefinitionNode >> metaparameters: aDictionary [
 
 	^ self copy
+		  parameterInstantiations:
+			  (parameterInstantiations collect: [ :parameterInstantiation | 
+					   parameterInstantiation metaparameters: aDictionary ]);
 		  appendParameterInstantiations:
 			  (aDictionary associations collect: [ :assoc | 
 					   RMDParameterInstantiationNode
