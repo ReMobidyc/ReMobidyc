@@ -1111,6 +1111,16 @@ RMDGrammarTest >> testNormalDistribution [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testNumberOfIndividualsInPatchDirective [
+
+	| expr |
+	expr := grammar expression parse: 'number of A here'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isNumberOfIndividualsInPatchDirective.
+	self assert: expr animatName equals: 'A'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testParameterInstantiation [
 
 	| node |

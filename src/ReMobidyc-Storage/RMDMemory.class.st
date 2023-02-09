@@ -12,6 +12,7 @@ Class {
 		'reproductionLinks',
 		'world',
 		'animats',
+		'animatsInPatch',
 		'seeds',
 		'ins',
 		'outs',
@@ -88,6 +89,24 @@ RMDMemory >> animatOfIndividual: anInteger ifAbsent: errorBlock [
 RMDMemory >> animats [
 
 	^ animats
+]
+
+{ #category : #private }
+RMDMemory >> animatsInPatch: aBlock [
+
+	^ animatsInPatch ifNil: [ 
+		  | dict |
+		  dict := Dictionary new: self xPatches * self yPatches.
+		  self animats keysAndValuesDo: [ :animat :inds | 
+			  inds do: [ :id | 
+				  | x y p |
+				  x := self at: id.
+				  y := self at: id + 1.
+				  p := aBlock value: x value: y.
+				  ((dict at: p ifAbsentPut: [ Dictionary new ])
+					   at: animat
+					   ifAbsentPut: [ OrderedCollection new ]) add: id ] ].
+		  animatsInPatch := dict ]
 ]
 
 { #category : #'accessing-individuals' }
@@ -167,7 +186,8 @@ RMDMemory >> fastSunrise [
 	self nextValues size * 10 < nextValues capacity ifTrue: [ 
 		self nextValues compact ].
 	values := self nextValues copy.
-	nextDeltas := Dictionary new
+	nextDeltas := Dictionary new.
+	animatsInPatch := nil
 ]
 
 { #category : #timing }
@@ -324,6 +344,14 @@ RMDMemory >> northOf: anInteger do: aBlock [
 RMDMemory >> numberOfAnimats: aString [
 
 	^ (self animats at: aString ifAbsent: [ ^ 0 ]) size
+]
+
+{ #category : #'accessing-individuals' }
+RMDMemory >> numberOfIndividuals: animatName patch: anInteger patchBlock: aBlock [
+
+	^ (((self animatsInPatch: aBlock) at: anInteger ifAbsent: [ ^ 0 ])
+		   at: animatName
+		   ifAbsent: [ ^ 0 ]) size
 ]
 
 { #category : #'accessing-individuals' }
@@ -515,7 +543,8 @@ RMDMemory >> sunrise [
 	animats := self readAnimatsForTime: time.
 	seeds := self readSeedsForTime: time.
 	stageLinks := self readStageLinksForTime: time.
-	reproductionLinks := self readReproductionLinksForTime: time
+	reproductionLinks := self readReproductionLinksForTime: time.
+	animatsInPatch := nil
 ]
 
 { #category : #timing }

@@ -217,11 +217,11 @@ RMDInterpreter >> here [
 
 	| patchX patchY |
 	patchX := (self patchX: (self my: 'x')) floor + 1
-		          min: 1
-		          max: simulationModel patchXDivisions.
+		          min: simulationModel patchXDivisions
+		          max: 1.
 	patchY := (self patchY: (self my: 'y')) floor + 1
-		          min: 1
-		          max: simulationModel patchYDivisions.
+		          min: simulationModel patchYDivisions
+		          max: 1.
 	^ memory patchAtXIndex: patchX yIndex: patchY
 ]
 
@@ -382,8 +382,25 @@ RMDInterpreter >> norths: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #directives }
+RMDInterpreter >> numberOfIndividualsInPatch: animatName [
+
+	^ memory
+		  numberOfIndividuals: animatName
+		  patch: context location
+		  patchBlock: [ :x :y | 
+			  | patchX patchY |
+			  patchX := (self patchX: x) floor + 1
+				            min: simulationModel patchXDivisions
+				            max: 1.
+			  patchY := (self patchY: y) floor + 1
+				            min: simulationModel patchYDivisions
+				            max: 1.
+			  memory patchAtXIndex: patchX yIndex: patchY ]
+]
+
 { #category : #'animat operations' }
-RMDInterpreter >> numberOfIndivisualsOf: aRMDAgentDefinitionNode [
+RMDInterpreter >> numberOfIndividualsOf: aRMDAgentDefinitionNode [
 
 	aRMDAgentDefinitionNode isWorldDefinitionNode ifTrue: [ ^ 1 ].
 	aRMDAgentDefinitionNode isPatchDefinitionNode ifTrue: [ 

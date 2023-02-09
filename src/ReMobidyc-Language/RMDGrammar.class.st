@@ -100,7 +100,8 @@ RMDGrammar >> agentDefinition [
 { #category : #'parsers-atoms' }
 RMDGrammar >> agentDirective [
 
-	^ self directionOfGradientDirective / self distanceDirective
+	^ self numberOfIndividualsInPatchDirective
+	  / self directionOfGradientDirective / self distanceDirective
 	  / self directionDirective / self timeDirective
 ]
 
@@ -997,6 +998,21 @@ RMDGrammar >> normalDistribution [
 RMDGrammar >> normalDistributionNodeClass [
 
 	^ RMDNormalDistributionNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> numberOfIndividualsInPatchDirective [
+
+	^ 'number' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier , 'here' asPParser trimBlanks ==> [ :triple | 
+	  self numberOfIndividualsInPatchDirectiveNodeClass animatName:
+		  triple second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> numberOfIndividualsInPatchDirectiveNodeClass [
+	^ RMDNumberOfIndividualsInPatchDirectiveNode
 ]
 
 { #category : #'parsers-atoms' }

@@ -375,6 +375,12 @@ RMDSyntaxNode >> isNotEqualNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isNumberOfIndividualsInPatchDirective [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isParameterInstantiationNode [
 	^ false
 ]

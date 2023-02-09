@@ -99,7 +99,8 @@ RMDReadOnlyFileMemory >> sunrise [
 	seeds := nil.
 	stageLinks := nil.
 	reproductionLinks := nil.
-	numberOfAnimats := nil
+	numberOfAnimats := nil.
+	animatsInPatch := nil
 ]
 
 { #category : #timing }

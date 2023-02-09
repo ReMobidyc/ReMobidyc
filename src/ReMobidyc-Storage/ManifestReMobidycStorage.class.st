@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #'code-critics' }
+ManifestReMobidycStorage class >> ruleCollectionMessagesToExternalObjectRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#RMDMemory #animatsInPatch: #false)) #'2023-02-09T16:50:42.715416+09:00') )
+]
+
+{ #category : #'code-critics' }
+ManifestReMobidycStorage class >> ruleCollectionProtocolRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#RMDMemory #animatsInPatch: #false)) #'2023-02-09T16:50:51.778571+09:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestReMobidycStorage class >> ruleRBAtIfAbsentRuleV1FalsePositive [
 	^ #(#(#(#RGMethodDefinition #(#RMDMemory #at:ifAbsentPut: #false)) #'2019-12-27T13:38:37.83963+09:00') )
 ]
