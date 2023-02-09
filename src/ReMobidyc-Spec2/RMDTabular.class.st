@@ -296,7 +296,7 @@ RMDTabular >> titleRowsDo: aBlock [
 { #category : #updating }
 RMDTabular >> updateRows [
 
-	| count |
+TimeProfiler spyOn: [ 	| count |
 	count := 1.
 	table items: (Array streamContents: [ :stream | 
 			 columnCollectors ifNotNil: [ 
@@ -307,7 +307,7 @@ RMDTabular >> updateRows [
 				 baseRowIndex := count.
 				 self generateRowsDo: [ :row | 
 					 stream nextPut: (columnCollectors collect: [ :assoc | 
-							  assoc key -> (assoc value value: row) ]) asDictionary ] ] ])
+							  assoc key -> (assoc value value: row) ]) asDictionary ] ] ])]
 ]
 
 { #category : #updating }
