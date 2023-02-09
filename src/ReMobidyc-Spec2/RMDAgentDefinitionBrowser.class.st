@@ -94,6 +94,12 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 				   yourself) yourself
 ]
 
+{ #category : #testing }
+RMDAgentDefinitionBrowser class >> isAbstract [
+
+	^ self = RMDAgentDefinitionBrowser
+]
+
 { #category : #operations }
 RMDAgentDefinitionBrowser >> addAttribute [
 

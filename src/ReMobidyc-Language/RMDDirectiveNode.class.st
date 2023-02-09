@@ -7,7 +7,7 @@ Class {
 { #category : #testing }
 RMDDirectiveNode class >> isAbstract [
 
-	^ true
+	^ self = RMDDirectiveNode
 ]
 
 { #category : #accessing }

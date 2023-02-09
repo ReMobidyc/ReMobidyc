@@ -52,7 +52,7 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 { #category : #testing }
 RMDAbstractRepositoryBrowser class >> isAbstract [
 
-	^ true
+	^ self = RMDAbstractRepositoryBrowser 
 ]
 
 { #category : #utilities }

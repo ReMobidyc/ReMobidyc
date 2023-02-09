@@ -18,7 +18,7 @@ RMDAgentDirectiveNode class >> directive: aString agent: anotherString [
 { #category : #testing }
 RMDAgentDirectiveNode class >> isAbstract [
 
-	^ true
+	^ self = RMDAgentDirectiveNode 
 ]
 
 { #category : #comparing }
