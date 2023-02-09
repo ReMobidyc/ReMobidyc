@@ -251,7 +251,7 @@ RMDPopulationInspector >> updateObservation: aRMDTimeChanged [
 	speciesPopulations := Dictionary new.
 	model animatDefinitionsDo: [ :animat | 
 		| population stage |
-		population := interpreter numberOfIndivisualsOf: animat.
+		population := interpreter numberOfIndividualsOf: animat.
 		speciesPopulations
 			at: animat species
 			put:

@@ -10,7 +10,7 @@ Class {
 { #category : #testing }
 RMDSemanticError class >> isAbstract [
 
-	^ true
+	^ self = RMDSemanticError
 ]
 
 { #category : #'instance creation' }

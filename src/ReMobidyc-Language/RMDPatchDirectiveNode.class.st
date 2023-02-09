@@ -6,5 +6,6 @@ Class {
 
 { #category : #testing }
 RMDPatchDirectiveNode class >> isAbstract [
-	^ true
+
+	^ self = RMDPatchDirectiveNode
 ]

@@ -212,7 +212,7 @@ RMDAnimatTimeSeriesInspector >> updatePopulationLabel [
 				  animatDefinitionAt: animat
 				  ifAbsent: [ nil ])
 				 ifNotNil: [ :animatDef | 
-					 (interpreter numberOfIndivisualsOf: animatDef) printString ]
+					 (interpreter numberOfIndividualsOf: animatDef) printString ]
 				 ifNil: [ '?' ]) ]
 ]
 
@@ -225,5 +225,5 @@ RMDAnimatTimeSeriesInspector >> updateTimeSeries [
 		 ifAbsent: [ nil ]) ifNotNil: [ :animatDefinition | 
 		populationTimeSeries
 			at: interpreter time
-			put: (interpreter numberOfIndivisualsOf: animatDefinition) ]
+			put: (interpreter numberOfIndividualsOf: animatDefinition) ]
 ]

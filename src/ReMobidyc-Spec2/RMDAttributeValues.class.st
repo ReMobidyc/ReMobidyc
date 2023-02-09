@@ -17,7 +17,7 @@ RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDe
 	attributeDeclarations := aRMDAgentDefinitionNode
 		                         allAttributeDeclarations.
 	ids := Array new:
-		       (aRMDInterpreter numberOfIndivisualsOf:
+		       (aRMDInterpreter numberOfIndividualsOf:
 			        aRMDAgentDefinitionNode).
 	attributeValues := (1 to: attributeDeclarations size) collect: [ :i | 
 		                   Array new: ids size ].

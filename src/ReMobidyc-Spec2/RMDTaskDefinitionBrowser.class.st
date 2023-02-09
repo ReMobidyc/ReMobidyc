@@ -341,7 +341,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	rangeField := self newHighlightingSyntaxNodeTextInput
 		              beLiteral;
 		              allowEmpty;
-		              expectedType: RMDType m;
+		              expectedType: RMDType length;
 		              whenLastValidSyntaxNodeChangedDo: [ 
 			              self acceptRangeField ];
 		              yourself.

@@ -10,5 +10,5 @@ RMDUniformDistributionXNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionXNode >> typecheckIn: aRMDInterpreter [
-	^ RMDType m
+	^ RMDType length
 ]

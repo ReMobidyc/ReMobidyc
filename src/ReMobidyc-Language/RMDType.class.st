@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'instance creation' }
+RMDType class >> angle [
+
+	^ self rad
+]
+
+{ #category : #'instance creation' }
 RMDType class >> any [
 	^ self anyTypeClass new
 ]
@@ -12,6 +18,17 @@ RMDType class >> any [
 { #category : #'class access' }
 RMDType class >> anyTypeClass [
 	^ RMDAnyType
+]
+
+{ #category : #'instance creation' }
+RMDType class >> area [
+
+	^ self length ** 2
+]
+
+{ #category : #'instance creation' }
+RMDType class >> length [
+	^ self unitTypeClass unit: RMDUnit m
 ]
 
 { #category : #'instance creation' }
@@ -32,6 +49,12 @@ RMDType class >> rad [
 { #category : #'instance creation' }
 RMDType class >> s [
 	^ self unitTypeClass unit: RMDUnit s
+]
+
+{ #category : #'instance creation' }
+RMDType class >> time [
+
+	^ self s
 ]
 
 { #category : #'instance creation' }

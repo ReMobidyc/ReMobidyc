@@ -206,6 +206,18 @@ RMDSyntaxNode >> isDeltaTimeDirectiveNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDensityOfIndividualsInPatchDirective [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isDensityOfIndividualsInWorldDirective [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
@@ -371,6 +383,18 @@ RMDSyntaxNode >> isNormalDistributionNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isNotEqualNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isNumberOfIndividualsInPatchDirective [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isNumberOfIndividualsInWorldDirective [
+
 	^ false
 ]
 

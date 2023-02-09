@@ -10,5 +10,5 @@ RMDUniformDistributionYNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionYNode >> typecheckIn: aRMDInterpreter [
-	^ RMDType m
+	^ RMDType length
 ]

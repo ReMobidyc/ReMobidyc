@@ -21,5 +21,5 @@ RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber toNewIndividua
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 
-	^ (attributeVariable typecheckIn: aRMDInterpreter) / RMDType s
+	^ (attributeVariable typecheckIn: aRMDInterpreter) / RMDType time
 ]

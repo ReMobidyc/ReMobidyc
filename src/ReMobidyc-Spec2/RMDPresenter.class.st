@@ -6,6 +6,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Abstract'
 }
 
+{ #category : #testing }
+RMDPresenter class >> isAbstract [
+
+	^ self = RMDPresenter
+]
+
 { #category : #icons }
 RMDPresenter >> acceptIcon [
 

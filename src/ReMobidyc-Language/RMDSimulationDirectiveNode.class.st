@@ -7,7 +7,7 @@ Class {
 { #category : #testing }
 RMDSimulationDirectiveNode class >> isAbstract [
 
-	^ true
+	^ self = RMDSimulationDirectiveNode
 ]
 
 { #category : #comparing }
