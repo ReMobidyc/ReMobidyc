@@ -386,7 +386,7 @@ RMDInterpreter >> norths: aString ifAbsent: errorBlock [
 RMDInterpreter >> numberOfIndividualsInPatch: animatName [
 
 	^ memory
-		  numberOfIndividuals: animatName
+		  numberOfAnimats: animatName
 		  patch: context location
 		  patchBlock: [ :x :y | 
 			  | patchX patchY |
@@ -397,6 +397,12 @@ RMDInterpreter >> numberOfIndividualsInPatch: animatName [
 				            min: simulationModel patchYDivisions
 				            max: 1.
 			  memory patchAtXIndex: patchX yIndex: patchY ]
+]
+
+{ #category : #directives }
+RMDInterpreter >> numberOfIndividualsInWorld: animatName [
+
+	^ memory numberOfAnimats: animatName
 ]
 
 { #category : #'animat operations' }

@@ -101,7 +101,9 @@ RMDGrammar >> agentDefinition [
 RMDGrammar >> agentDirective [
 
 	^ self numberOfIndividualsInPatchDirective
+	  / self numberOfIndividualsInWorldDirective
 	  / self densityOfIndividualsInPatchDirective
+	  / self densityOfIndividualsInWorldDirective
 	  / self directionOfGradientDirective / self distanceDirective
 	  / self directionDirective / self timeDirective
 ]
@@ -574,6 +576,26 @@ RMDGrammar >> densityOfIndividualsInPatchDirectiveNodeClass [
 ]
 
 { #category : #'parsers-directives' }
+RMDGrammar >> densityOfIndividualsInWorldDirective [
+
+	^ 'density' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier
+	  ,
+		  ('in' asPParser , #blank asPParser plus
+		   , 'world' asPParser trimBlanks ==> [ :array | nil ])
+	  ==> [ :triple | 
+		  self densityOfIndividualsInWorldDirectiveNodeClass animatName:
+			  triple second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> densityOfIndividualsInWorldDirectiveNodeClass [
+
+	^ RMDDensityOfIndividualsInWorldDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
 RMDGrammar >> dieDirective [
 
 	^ 'die' asPParser trimBlanks
@@ -1030,6 +1052,25 @@ RMDGrammar >> numberOfIndividualsInPatchDirective [
 { #category : #'class access' }
 RMDGrammar >> numberOfIndividualsInPatchDirectiveNodeClass [
 	^ RMDNumberOfIndividualsInPatchDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> numberOfIndividualsInWorldDirective [
+
+	^ 'number' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier
+	  ,
+		  ('in' asPParser , #blank asPParser plus
+		   , 'world' asPParser trimBlanks ==> [ :array | nil ])
+	  ==> [ :triple | 
+		  self numberOfIndividualsInWorldDirectiveNodeClass animatName:
+			  triple second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> numberOfIndividualsInWorldDirectiveNodeClass [
+	^ RMDNumberOfIndividualsInWorldDirectiveNode
 ]
 
 { #category : #'parsers-atoms' }

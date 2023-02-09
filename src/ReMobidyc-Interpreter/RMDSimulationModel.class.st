@@ -1190,6 +1190,12 @@ RMDSimulationModel >> west [
 	^ 0.0
 ]
 
+{ #category : #'accessing - patch' }
+RMDSimulationModel >> worldArea [
+
+	^ self patchArea * self patchXDivisions * self patchYDivisions
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> worldDefinition [
 	^ worldDefinition

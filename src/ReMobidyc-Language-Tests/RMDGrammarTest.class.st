@@ -731,6 +731,16 @@ RMDGrammarTest >> testDensityOfIndividualsInPatchDirective [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testDensityOfIndividualsInWorldDirective [
+
+	| expr |
+	expr := grammar expression parse: 'density of A in world'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isDensityOfIndividualsInWorldDirective.
+	self assert: expr animatName equals: 'A'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testExpr1 [
 
 	| expr1 |
@@ -1127,6 +1137,16 @@ RMDGrammarTest >> testNumberOfIndividualsInPatchDirective [
 	expr := grammar expression parse: 'number of A here'.
 	self deny: expr isPetit2Failure.
 	self assert: expr isNumberOfIndividualsInPatchDirective.
+	self assert: expr animatName equals: 'A'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testNumberOfIndividualsInWorldDirective [
+
+	| expr |
+	expr := grammar expression parse: 'number of A in world'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isNumberOfIndividualsInWorldDirective.
 	self assert: expr animatName equals: 'A'
 ]
 

@@ -347,7 +347,7 @@ RMDMemory >> numberOfAnimats: aString [
 ]
 
 { #category : #'accessing-individuals' }
-RMDMemory >> numberOfIndividuals: animatName patch: anInteger patchBlock: aBlock [
+RMDMemory >> numberOfAnimats: animatName patch: anInteger patchBlock: aBlock [
 
 	^ (((self animatsInPatch: aBlock) at: anInteger ifAbsent: [ ^ 0 ])
 		   at: animatName

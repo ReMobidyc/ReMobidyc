@@ -212,6 +212,12 @@ RMDSyntaxNode >> isDensityOfIndividualsInPatchDirective [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDensityOfIndividualsInWorldDirective [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
@@ -382,6 +388,12 @@ RMDSyntaxNode >> isNotEqualNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isNumberOfIndividualsInPatchDirective [
+
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isNumberOfIndividualsInWorldDirective [
 
 	^ false
 ]
