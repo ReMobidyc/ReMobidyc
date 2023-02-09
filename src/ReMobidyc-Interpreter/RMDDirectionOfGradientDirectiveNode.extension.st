@@ -36,5 +36,5 @@ RMDDirectionOfGradientDirectiveNode >> typecheckIn: aRMDInterpreter [
 		typecheck: patchAttributeVariable
 		with: RMDType any
 		in: aRMDInterpreter.
-	^ RMDType rad
+	^ RMDType angle
 ]

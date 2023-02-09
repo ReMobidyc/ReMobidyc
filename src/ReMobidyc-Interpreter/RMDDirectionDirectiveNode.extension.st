@@ -15,7 +15,7 @@ RMDDirectionDirectiveNode >> evalIn: aRMDInterpreter [
 RMDDirectionDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| type |
-	type := RMDType m.
+	type := RMDType length.
 	self
 		typecheck: (RMDAttributeVariableNode identifier: 'x' agent: nil)
 		with: type
@@ -34,5 +34,5 @@ RMDDirectionDirectiveNode >> typecheckIn: aRMDInterpreter [
 		(RMDAttributeVariableNode identifier: 'y' agent: agentIdentifier)
 		with: type
 		in: aRMDInterpreter.
-	^ RMDType rad
+	^ RMDType angle
 ]

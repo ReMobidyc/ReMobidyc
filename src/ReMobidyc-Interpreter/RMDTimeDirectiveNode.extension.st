@@ -9,5 +9,5 @@ RMDTimeDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTimeDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	^ RMDType s
+	^ RMDType time
 ]

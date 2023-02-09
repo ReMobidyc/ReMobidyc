@@ -16,7 +16,7 @@ RMDDistanceDirectiveNode >> evalIn: aRMDInterpreter [
 RMDDistanceDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| type |
-	type := RMDType m.
+	type := RMDType length.
 	self
 		typecheck: (RMDAttributeVariableNode identifier: 'x' agent: nil)
 		with: type

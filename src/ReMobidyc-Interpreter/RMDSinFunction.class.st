@@ -20,7 +20,7 @@ RMDSinFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 			  expected: 1 ].
 	[ 
 	(anArrayOfRMDExpression first typecheckIn: aRMDInterpreter) unify:
-		RMDType rad ]
+		RMDType angle ]
 		on: RMDTypeUnificationError
 		do: [ :ex | 
 			ex resignalAs: (RMDTypeError

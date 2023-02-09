@@ -4,7 +4,7 @@ Extension { #name : #RMDSimulationTimeDefinitionNode }
 RMDSimulationTimeDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	| type |
-	type := RMDType s.
+	type := RMDType time.
 	[ (duration typecheckIn: aRMDInterpreter) unify: type ]
 		on: RMDTypeUnificationError
 		do: [ :ex | 
