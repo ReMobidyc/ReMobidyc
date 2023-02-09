@@ -206,6 +206,12 @@ RMDSyntaxNode >> isDeltaTimeDirectiveNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isDensityOfIndividualsInPatchDirective [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]

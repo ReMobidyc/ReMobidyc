@@ -403,7 +403,7 @@ RMDSimulationModel >> durationUnit [
 	^ simulationDefinition timeDefinition duration unit
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> east [
 	^ self patchLength * self patchXDivisions
 ]
@@ -840,9 +840,14 @@ RMDSimulationModel >> name: aString [
 	metadata name: aString
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> north [
 	^ self patchLength * self patchYDivisions
+]
+
+{ #category : #'accessing - patch' }
+RMDSimulationModel >> patchArea [
+	^ self patchLength squared
 ]
 
 { #category : #'accessing - definitions' }
@@ -860,17 +865,17 @@ RMDSimulationModel >> patchInitializer [
 	^ simulationDefinition patchInitializer
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> patchLength [
 	^ simulationDefinition patchInitializer length
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> patchXDivisions [
 	^ simulationDefinition patchInitializer xDivisions
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> patchYDivisions [
 	^ simulationDefinition patchInitializer yDivisions
 ]
@@ -1046,7 +1051,7 @@ RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 	simulationDefinition := aRMDSimulationDefinition
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> south [
 	^ 0.0
 ]
@@ -1180,7 +1185,7 @@ RMDSimulationModel >> variability: aRMDVariabilityNode [
 	variability := aRMDVariabilityNode
 ]
 
-{ #category : #'accessing - cells' }
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> west [
 	^ 0.0
 ]

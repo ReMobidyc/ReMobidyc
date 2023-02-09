@@ -101,6 +101,7 @@ RMDGrammar >> agentDefinition [
 RMDGrammar >> agentDirective [
 
 	^ self numberOfIndividualsInPatchDirective
+	  / self densityOfIndividualsInPatchDirective
 	  / self directionOfGradientDirective / self distanceDirective
 	  / self directionDirective / self timeDirective
 ]
@@ -554,6 +555,22 @@ RMDGrammar >> delta [
 { #category : #'class access' }
 RMDGrammar >> deltaTimeDirectiveNodeClass [
 	^ RMDDeltaTimeDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> densityOfIndividualsInPatchDirective [
+
+	^ 'density' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier , 'here' asPParser trimBlanks ==> [ :triple | 
+	  self densityOfIndividualsInPatchDirectiveNodeClass animatName:
+		  triple second ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> densityOfIndividualsInPatchDirectiveNodeClass [
+
+	^ RMDDensityOfIndividualsInPatchDirectiveNode
 ]
 
 { #category : #'parsers-directives' }

@@ -721,6 +721,16 @@ RMDGrammarTest >> testCondition [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testDensityOfIndividualsInPatchDirective [
+
+	| expr |
+	expr := grammar expression parse: 'density of A here'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isDensityOfIndividualsInPatchDirective.
+	self assert: expr animatName equals: 'A'
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testExpr1 [
 
 	| expr1 |
