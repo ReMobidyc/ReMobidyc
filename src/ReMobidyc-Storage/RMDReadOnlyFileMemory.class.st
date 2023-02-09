@@ -1,6 +1,9 @@
 Class {
 	#name : #RMDReadOnlyFileMemory,
 	#superclass : #RMDFileMemory,
+	#instVars : [
+		'numberOfAnimats'
+	],
 	#category : #'ReMobidyc-Storage'
 }
 
@@ -38,6 +41,35 @@ RMDReadOnlyFileMemory >> nextValues [
 	^ nextValues
 ]
 
+{ #category : #'accessing-individuals' }
+RMDReadOnlyFileMemory >> numberOfAnimats: aString [
+
+	^ animats ifNotNil: [ super numberOfAnimats: aString ] ifNil: [ 
+		  (numberOfAnimats ifNil: [ 
+			   numberOfAnimats := self readNumberOfAnimatsForTime: time ])
+			  at: aString
+			  ifAbsent: [ 0 ] ]
+]
+
+{ #category : #'accessing-storage' }
+RMDReadOnlyFileMemory >> readNumberOfAnimatsForTime: anInteger [
+
+	| ref |
+	ref := (self directoryForTime: anInteger) / self animatsFileBasename.
+	ref exists ifFalse: [ ^ Dictionary new ].
+	ref binaryReadStreamDo: [ :stream | 
+		| vals |
+		vals := Dictionary new.
+		[ stream atEnd ] whileFalse: [ 
+			| len animat |
+			len := stream uint32.
+			animat := (stream next: len) utf8Decoded.
+			len := stream uint32.
+			vals at: animat put: len.
+			stream skip: len * 4 ].
+		^ vals ]
+]
+
 { #category : #private }
 RMDReadOnlyFileMemory >> reproductionLinks [
 
@@ -66,7 +98,8 @@ RMDReadOnlyFileMemory >> sunrise [
 	animats := nil.
 	seeds := nil.
 	stageLinks := nil.
-	reproductionLinks := nil
+	reproductionLinks := nil.
+	numberOfAnimats := nil
 ]
 
 { #category : #timing }
