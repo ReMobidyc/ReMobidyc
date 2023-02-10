@@ -346,6 +346,12 @@ RMDUnit class >> initialize [
 	KnownUnits at: 'degreeday' put: self celsius * self day
 ]
 
+{ #category : #testing }
+RMDUnit class >> isAbstract [
+
+	^ self = RMDUnit
+]
+
 { #category : #constants }
 RMDUnit class >> kcal [
 	^ self at: 'kcal'
@@ -499,6 +505,12 @@ RMDUnit >> isProportional [
 RMDUnit >> isTemperature [
 
 	^ false
+]
+
+{ #category : #accessing }
+RMDUnit >> scale [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

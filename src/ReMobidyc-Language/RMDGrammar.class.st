@@ -487,6 +487,19 @@ RMDGrammar >> bindNodeClass [
 	^ RMDTaskDefinitionNode
 ]
 
+{ #category : #'parsers-conditions' }
+RMDGrammar >> chance [
+
+	^ expression , 'chance' asPParser trimBlanks
+	  ==> [ :pair | self chanceNodeClass probability: pair first ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> chanceNodeClass [
+
+	^ RMDChanceNode
+]
+
 { #category : #'parsers-visualizations' }
 RMDGrammar >> color [
 
@@ -501,7 +514,7 @@ RMDGrammar >> color [
 RMDGrammar >> cond1 [
 
 	^ $( asPParser trimBlanks , condition , $) asPParser trimBlanks
-	  ==> #second / self binaryRelation / self placeholder
+	  ==> #second / self binaryRelation / self chance / self placeholder
 ]
 
 { #category : #'parsers-conditions' }

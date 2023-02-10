@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Units'
 }
 
+{ #category : #testing }
+RMDUnitSymbol class >> isAbstract [
+
+	^ self = RMDUnitSymbol
+]
+
 { #category : #arithmetics }
 RMDUnitSymbol >> * aRMDUnit [
 	^ self asCompoundUnit * aRMDUnit

@@ -29,6 +29,12 @@ RMDSIUnitSymbol >> isTemperature [
 ]
 
 { #category : #accessing }
+RMDSIUnitSymbol >> scale [
+
+	^ 1.0
+]
+
+{ #category : #accessing }
 RMDSIUnitSymbol >> siUnit [
 	^ self
 ]

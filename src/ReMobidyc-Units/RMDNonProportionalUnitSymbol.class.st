@@ -26,6 +26,12 @@ RMDNonProportionalUnitSymbol >> isProportional [
 	^ false
 ]
 
+{ #category : #accessing }
+RMDNonProportionalUnitSymbol >> scale [
+
+	^ self conversionError: self printString , ' can not be scaled.'
+]
+
 { #category : #private }
 RMDNonProportionalUnitSymbol >> setFromSIBlock: aBlock [
 	fromSIBlock := aBlock
