@@ -7,6 +7,8 @@ Class {
 		'stepButton',
 		'runButton',
 		'timeProgressBar',
+		'limitsNumberOfIndividualsCheckBox',
+		'numberOfIndividualField',
 		'populationInspector',
 		'validated',
 		'lastServerUpdate',
@@ -29,6 +31,10 @@ RMDExperimentarium class >> defaultLayout [
 				   add: #timeProgressBar expand: true;
 				   yourself)
 		  height: self buttonHeight * 2;
+		  add: (SpBoxLayout newHorizontal
+				   add: #limitsNumberOfIndividualsCheckBox expand: false;
+				   add: #numberOfIndividualField width: 100;
+				   yourself);
 		  add: #populationInspector;
 		  add: (SpBoxLayout newHorizontal
 				   add: #openTabularButton width: self buttonHeight;
@@ -63,6 +69,14 @@ RMDExperimentarium >> basicUpdateTimeProgressBar [
 		timeProgressBar fixedAt: metaInterpreter progress ]
 ]
 
+{ #category : #testing }
+RMDExperimentarium >> canProceed: aRMDInterpreter [
+
+	^ limitsNumberOfIndividualsCheckBox state not or: [ 
+		  aRMDInterpreter numberOfIndividuals
+		  <= numberOfIndividualField number ]
+]
+
 { #category : #controlling }
 RMDExperimentarium >> ifValidated: aBlock [
 
@@ -87,19 +101,6 @@ RMDExperimentarium >> initialize [
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
-	openTabularButton := self newButton
-		                     disable;
-		                     icon: self tabularIcon;
-		                     action: [ self openTabularMenu ];
-		                     yourself.
-	openObservatoryButton := self newButton
-		                         disable;
-		                         icon: self observatoryIcon;
-		                         action: [ self openInReplayObservatory ];
-		                         yourself.
-	timeProgressBar := self newProgressBar
-		                   fixedAt: 0.0;
-		                   yourself.
 	runButton := self newButton
 		             icon: self runIcon;
 		             action: [ self runButtonPressed ];
@@ -112,7 +113,39 @@ RMDExperimentarium >> initializePresenters [
 		              help: 'Run the simulation just one step forward';
 		              enabled: true;
 		              yourself.
-	populationInspector := self instantiate: RMDPopulationInspector
+	timeProgressBar := self newProgressBar
+		                   fixedAt: 0.0;
+		                   yourself.
+	limitsNumberOfIndividualsCheckBox := self newCheckBox
+		                                     label:
+			                                     'Limit max individuals to';
+		                                     labelClickable: true;
+		                                     state: false;
+		                                     whenChangedDo: [ 
+			                                     self
+				                                     limitsNumberOfIndividualsChanged ];
+		                                     yourself.
+	numberOfIndividualField := self newNumberInput
+		                           beInteger;
+		                           disable;
+		                           color: (Color gray: 0.75);
+		                           number: 100000;
+		                           climbRate: 10000;
+		                           whenBuiltDo: [ 
+			                           numberOfIndividualField color:
+					                           (Color gray: 0.75) ];
+		                           yourself.
+	populationInspector := self instantiate: RMDPopulationInspector.
+	openTabularButton := self newButton
+		                     disable;
+		                     icon: self tabularIcon;
+		                     action: [ self openTabularMenu ];
+		                     yourself.
+	openObservatoryButton := self newButton
+		                         disable;
+		                         icon: self observatoryIcon;
+		                         action: [ self openInReplayObservatory ];
+		                         yourself
 ]
 
 { #category : #initialization }
@@ -131,6 +164,20 @@ RMDExperimentarium >> isRunningSimulation [
 { #category : #testing }
 RMDExperimentarium >> isValidated [
 	^ validated = true
+]
+
+{ #category : #updating }
+RMDExperimentarium >> limitsNumberOfIndividualsChanged [
+
+	limitsNumberOfIndividualsCheckBox state
+		ifTrue: [ 
+			numberOfIndividualField
+				enable;
+				color: Color white ]
+		ifFalse: [ 
+			numberOfIndividualField
+				disable;
+				color: (Color gray: 0.75) ]
 ]
 
 { #category : #private }
@@ -214,6 +261,8 @@ RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 	self typecheck.
 	self isValidated ifTrue: [ 
 		metaInterpreter setupSimulation.
+		metaInterpreter guard: [ :interpreter | 
+			self canProceed: interpreter ].
 		populationInspector interpreter: metaInterpreter.
 		metaInterpreter announcer weak
 			when: RMDSimulationStarted send: #simulationStarted: to: self;

@@ -341,6 +341,12 @@ RMDMemory >> northOf: anInteger do: aBlock [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> numberOfAnimats [
+
+	^ self animats inject: 0 into: [ :sum :inds | sum + inds size ]
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> numberOfAnimats: aString [
 
 	^ (self animats at: aString ifAbsent: [ ^ 0 ]) size

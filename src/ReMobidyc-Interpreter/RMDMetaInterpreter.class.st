@@ -92,6 +92,12 @@ RMDMetaInterpreter >> fastForward [
 	self interpretersDo: #fastForward
 ]
 
+{ #category : #accessing }
+RMDMetaInterpreter >> guard: aBlock [
+
+	self interpretersDo: [ :interpreter | interpreter guard: aBlock ]
+]
+
 { #category : #'accessing-interpreters' }
 RMDMetaInterpreter >> interpreterAt: anInteger ifAbsent: errorBlock [
 
@@ -218,7 +224,7 @@ RMDMetaInterpreter >> stepSimulation [
 	| finishSemaphore |
 	finishSemaphore := Semaphore new.
 	self interpretersDo: [ :interpreter | 
-		[ [ TimeProfiler spyOn: [interpreter stepSimulation] ] ensure: [ finishSemaphore signal ] ] 
+		[ [ interpreter stepSimulation ] ensure: [ finishSemaphore signal ] ] 
 			forkAt: Processor userBackgroundPriority ].
 	self interpretersDo: [ :interpreter | finishSemaphore wait ]
 ]
