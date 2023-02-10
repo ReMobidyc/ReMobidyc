@@ -3,12 +3,14 @@ Extension { #name : #SpMorphicScrollableAdapter }
 { #category : #'*ReMobidyc-Spec2' }
 SpMorphicScrollableAdapter >> layout: aLayout [
 
+	layout := aLayout.
+	
 	emptyLayoutMarker := PanelMorph new
 		                     hResizing: #spaceFill;
 		                     vResizing: #spaceFill;
 		                     yourself.
 	widget ifNil: [ 
-		widget := GeneralScrollPane new
+		widget := GeneralScrollPaneMorph new
 			          changeScrollerTableLayout;
 			          hResizing: #spaceFill;
 			          vResizing: #spaceFill;
@@ -17,17 +19,8 @@ SpMorphicScrollableAdapter >> layout: aLayout [
 			          scrollTarget: emptyLayoutMarker;
 			          yourself ].
 
-	aLayout child ifNotNil: [ 
-		self
-			basicAdd: (model perform: aLayout child)
-			constraints: (aLayout constraintsFor: aLayout child)
-			to: widget ].
-
 	aLayout whenChildrenAddedDo: [ :ann | 
-		self
-			basicAdd: ann child
-			constraints: (aLayout constraintsFor: ann child)
-			to: widget ].
+		self basicAdd: ann child constraints: (aLayout constraintsFor: ann child) to: widget ].
 
 	aLayout whenChildrenRemovedDo: [ :ann | self removeChild: ann child ].
 
