@@ -185,6 +185,12 @@ RMDSyntaxNode >> isBinaryRelationNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isChanceNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isConditionNode [
 	^ false
 ]

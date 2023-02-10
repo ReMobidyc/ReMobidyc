@@ -636,6 +636,18 @@ RMDGrammarTest >> testCastingExpression [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testChance [
+
+	| node |
+	node := grammar condition parse: '10 [%] chance'.
+	self assert: node isChanceNode.
+	self assert: node probability equals: '10 [%]' asRMDExpression.
+	node := grammar condition parse: '0.1 + 0.2 chance'.
+	self assert: node isChanceNode.
+	self assert: node probability equals: '0.1 + 0.2' asRMDExpression
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testColor [
 
 	| color |
