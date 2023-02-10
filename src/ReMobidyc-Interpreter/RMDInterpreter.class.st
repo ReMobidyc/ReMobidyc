@@ -5,7 +5,8 @@ Class {
 		'memory',
 		'libraries',
 		'runSemaphore',
-		'runState'
+		'runState',
+		'guard'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
 }
@@ -42,15 +43,16 @@ RMDInterpreter >> announceTimeChanged [
 { #category : #simulating }
 RMDInterpreter >> basicStepSimulation [
 
-	^ self time < simulationModel duration and: [ 
-		  memory time + 1 <= memory latestTime
-			  ifTrue: [ memory time: memory time + 1 ]
-			  ifFalse: [ 
-				  self performTasks.
-				  self tick.
-				  self bounceOutOfBoundsAnimats ].
-		  self announceTimeChanged.
-		  true ]
+	^ (guard value: self) and: [ 
+		  self time < simulationModel duration and: [ 
+			  memory time + 1 <= memory latestTime
+				  ifTrue: [ memory time: memory time + 1 ]
+				  ifFalse: [ 
+					  self performTasks.
+					  self tick.
+					  self bounceOutOfBoundsAnimats ].
+			  self announceTimeChanged.
+			  true ] ]
 ]
 
 { #category : #private }
@@ -212,6 +214,18 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
+{ #category : #accessing }
+RMDInterpreter >> guard [
+
+	^ guard
+]
+
+{ #category : #accessing }
+RMDInterpreter >> guard: aBlock [
+
+	guard := aBlock
+]
+
 { #category : #'space access' }
 RMDInterpreter >> here [
 
@@ -258,7 +272,8 @@ RMDInterpreter >> initialize [
 
 	super initialize.
 	runSemaphore := Semaphore forMutualExclusion.
-	libraries := OrderedCollection with: self standardLibrary
+	libraries := OrderedCollection with: self standardLibrary.
+	guard := [ :interpreter | true ]
 ]
 
 { #category : #simulating }
@@ -380,6 +395,12 @@ RMDInterpreter >> norths: aString ifAbsent: errorBlock [
 				  RMDAddressError signal:
 					  (RMDAttributeVariableNode identifier: aString agent: nil) ] ].
 	^ errorBlock value
+]
+
+{ #category : #directives }
+RMDInterpreter >> numberOfIndividuals [
+
+	^ memory numberOfAnimats
 ]
 
 { #category : #directives }
@@ -630,20 +651,6 @@ RMDInterpreter >> standardLibrary [
 RMDInterpreter >> stepSimulation [
 
 	self critical: [ ^ self basicStepSimulation ]
-]
-
-{ #category : #simulating }
-RMDInterpreter >> stepSimulationSilently [
-
-	self critical: [ 
-		^ self time < simulationModel duration and: [ 
-			  memory time + 1 <= memory latestTime
-				  ifTrue: [ memory time: memory time + 1 ]
-				  ifFalse: [ 
-					  self performTasks.
-					  self tick.
-					  self bounceOutOfBoundsAnimats ].
-			  true ] ]
 ]
 
 { #category : #'animat operations' }

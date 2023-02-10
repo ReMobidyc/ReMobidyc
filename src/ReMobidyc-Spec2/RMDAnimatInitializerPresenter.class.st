@@ -10,15 +10,15 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
-{ #category : #specs }
-RMDAnimatInitializerPresenter class >> defaultSpec [
+{ #category : #layout }
+RMDAnimatInitializerPresenter class >> defaultLayout [
 
 	<spec>
 	^ super defaultSpec
 		  add: (SpBoxLayout newHorizontal
 				   add: #populationField expand: false;
 				   add: ' ' expand: false;
-				   add: #animatField expand: false;
+				   add: #animatField width: 300;
 				   add: ' with' expand: false;
 				   yourself)
 		  height: self inputTextHeight;
@@ -68,7 +68,8 @@ RMDAnimatInitializerPresenter >> initializePresenters [
 		                borderWidth: 0;
 		                action: [ removeButtonAction cull: node ];
 		                yourself.
-	removeButtonAction := [ :n |  ]
+	removeButtonAction := [ :n |  ].
+	self color: Color white
 ]
 
 { #category : #layouting }
@@ -82,7 +83,7 @@ RMDAnimatInitializerPresenter >> newLayout [
 				              vAlignCenter;
 				              add: populationField expand: false;
 				              add: ' ' asPresenter expand: false;
-				              add: animatField expand: false;
+				              add: animatField width: 200;
 				              add: ' with' asPresenter expand: false;
 				              yourself)
 		             height: self class inputTextHeight;

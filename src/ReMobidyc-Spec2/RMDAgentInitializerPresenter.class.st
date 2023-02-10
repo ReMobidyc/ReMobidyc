@@ -39,15 +39,15 @@ RMDAgentInitializerPresenter >> attributesAndUtilitiesToNewLayout: newLayout [
 
 { #category : #initialization }
 RMDAgentInitializerPresenter >> initializePresenters [
+
 	super initializePresenters.
-	self
-		whenBuiltDo: [ self
-				withWidgetDo: [ :w | 
-					w
-						update: #color: with: {Color white};
-						update: #borderColor: with: {Color darkGray};
-						update: #borderWidth: with: {1} ].
-			self updateLayout ]
+	self whenBuiltDo: [ 
+		self withWidgetDo: [ :w | 
+			w
+				color: Color white;
+				borderColor: Color darkGray;
+				borderWidth: 1 ].
+		self updateLayout ]
 ]
 
 { #category : #layouting }
@@ -64,10 +64,10 @@ RMDAgentInitializerPresenter >> nodeChanged [
 { #category : #updating }
 RMDAgentInitializerPresenter >> updateLayout [
 
-	self layout: self newLayout.
+	self layout: self newLayout".
 	self withWidgetDo: [ :w | 
 		w
 			update: #color: with: { Color white };
 			update: #borderColor: with: { Color darkGray };
-			update: #borderWidth: with: { 1 } ]
+			update: #borderWidth: with: { 1 } ]"
 ]
