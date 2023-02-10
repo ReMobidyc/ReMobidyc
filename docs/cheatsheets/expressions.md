@@ -84,6 +84,14 @@ The attributes of the object can be accessed in the following ways.
 | distance to agent | `distance` _agent_ | the distance between the individual and the _agent_ |
 | direction of spatial gradient | `direction neighbor's` _attribute_ | the direction of the gradient of _attribute_ at the current patch |
 
+## Population Expressions
+| name | syntax | description |
+| -----|------- | ----------- |
+| number of local agents | `number of ` _agent_ `here` | the number of individual agents in the same patch |
+| number of agents | `number of ` _agent_ `in world` | the number of individual agents in the simulation |
+| density of local agents | `density of ` _agent_ `here` | the number of individual agents per area in the patch |
+| density of agents | `density of ` _agent_ `in world` | the number of individual agents per area in the simulation |
+
 ## Math Expressions
 | name | syntax | description |
 | -----|------- | ----------- |
