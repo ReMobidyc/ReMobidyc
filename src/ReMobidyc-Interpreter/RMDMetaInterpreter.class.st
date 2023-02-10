@@ -218,7 +218,7 @@ RMDMetaInterpreter >> stepSimulation [
 	| finishSemaphore |
 	finishSemaphore := Semaphore new.
 	self interpretersDo: [ :interpreter | 
-		[ [ interpreter stepSimulation ] ensure: [ finishSemaphore signal ] ] 
+		[ [ TimeProfiler spyOn: [interpreter stepSimulation] ] ensure: [ finishSemaphore signal ] ] 
 			forkAt: Processor userBackgroundPriority ].
 	self interpretersDo: [ :interpreter | finishSemaphore wait ]
 ]

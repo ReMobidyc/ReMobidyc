@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Units'
 }
 
+{ #category : #testing }
+RMDNonSIUnitSymbol class >> isAbstract [
+
+	^ self = RMDNonSIUnitSymbol
+]
+
 { #category : #'instance creation' }
 RMDNonSIUnitSymbol class >> newSymbol: aString siUnit: anRMDUnit [
 	^ self new

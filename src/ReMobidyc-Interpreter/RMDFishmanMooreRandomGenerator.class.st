@@ -13,6 +13,20 @@ Class {
 }
 
 { #category : #accessing }
+RMDFishmanMooreRandomGenerator class >> factor [
+
+	^ 742938285
+]
+
+{ #category : #hashing }
+RMDFishmanMooreRandomGenerator class >> hash: anArrayOfInteger [
+
+	anArrayOfInteger ifEmpty: [ ^ 1 ].
+	^ anArrayOfInteger inject: 0 into: [ :hash :x | 
+		  (hash * self factor bitXor: x * self factor) \\ self modulo ]
+]
+
+{ #category : #accessing }
 RMDFishmanMooreRandomGenerator class >> modulo [
 
 	^ 2147483647
@@ -21,15 +35,13 @@ RMDFishmanMooreRandomGenerator class >> modulo [
 { #category : #accessing }
 RMDFishmanMooreRandomGenerator >> factor [
 
-	^ 742938285
+	^ self class factor
 ]
 
 { #category : #initialization }
 RMDFishmanMooreRandomGenerator >> hash: anArrayOfInteger [
 
-	anArrayOfInteger ifEmpty: [ ^ 1 ].
-	^ anArrayOfInteger inject: 0 into: [ :hash :x | 
-		  (hash * self factor bitXor: x * self factor) \\ self modulo ]
+	^ self class hash: anArrayOfInteger
 ]
 
 { #category : #initialization }

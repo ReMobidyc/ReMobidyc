@@ -2,7 +2,8 @@ Class {
 	#name : #RMDCompoundUnit,
 	#superclass : #RMDUnit,
 	#instVars : [
-		'unitSymbolsAndOrders'
+		'unitSymbolsAndOrders',
+		'scale'
 	],
 	#category : #'ReMobidyc-Units'
 }
@@ -80,17 +81,8 @@ RMDCompoundUnit >> = anObject [
 
 { #category : #conversions }
 RMDCompoundUnit >> fromSI: aNumber [
-	| value |
-	value := aNumber.
-	unitSymbolsAndOrders
-		keysAndValuesDo: [ :unit :order | 
-			unit isProportional
-				ifFalse:
-					[ ^ self conversionError: unit printString , ' can not be converted.' ].
-			order >= 0
-				ifTrue: [ order timesRepeat: [ value := unit fromSI: value ] ]
-				ifFalse: [ order abs timesRepeat: [ value := unit toSI: value ] ] ].
-	^ value
+
+	^ aNumber / self scale
 ]
 
 { #category : #testing }
@@ -143,6 +135,17 @@ RMDCompoundUnit >> printOn: aStream [
 			separatedBy: [ aStream nextPut: $  ] ]
 ]
 
+{ #category : #conversions }
+RMDCompoundUnit >> scale [
+
+	^ scale ifNil: [ 
+		  | s |
+		  s := 1.0.
+		  unitSymbolsAndOrders keysAndValuesDo: [ :unit :order | 
+			  s := unit scale ** order * s ].
+		  scale := s ]
+]
+
 { #category : #private }
 RMDCompoundUnit >> setUnitSymbolsAndOrders: aDictionary [
 	unitSymbolsAndOrders := aDictionary
@@ -162,17 +165,8 @@ RMDCompoundUnit >> symbolsAndOrdersDo: aBlock [
 
 { #category : #conversions }
 RMDCompoundUnit >> toSI: aNumber [
-	| value |
-	value := aNumber.
-	unitSymbolsAndOrders
-		keysAndValuesDo: [ :unit :order | 
-			unit isProportional
-				ifFalse:
-					[ ^ self conversionError: unit printString , ' can not be converted.' ].
-			order >= 0
-				ifTrue: [ order timesRepeat: [ value := unit toSI: value ] ]
-				ifFalse: [ order abs timesRepeat: [ value := unit fromSI: value ] ] ].
-	^ value
+
+	^ aNumber * self scale
 ]
 
 { #category : #private }
