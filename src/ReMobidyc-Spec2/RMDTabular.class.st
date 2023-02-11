@@ -43,6 +43,13 @@ RMDTabular >> allStages [
 		  self stagesDo: [ :stage | stream nextPut: stage ] ]
 ]
 
+{ #category : #testing }
+RMDTabular >> canOpenAnalysis [
+
+	^ metaInterpreter notNil and: [ 
+		  metaInterpreter context isForFileMemory ]
+]
+
 { #category : #accessing }
 RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock [
 
@@ -91,22 +98,15 @@ RMDTabular >> initialize [
 	baseRowIndex := 1
 ]
 
-{ #category : #initialization }
+{ #category : #'as yet unclassified' }
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
+	self initializeOpenAnalysisButtonsPresenters.
 	reloadButton := self newButton
 		                icon: self updateIcon;
 		                action: [ self reloadInterpreter ];
 		                yourself.
-	openTabularButton := self newButton
-		                     icon: self tabularIcon;
-		                     action: [ self openTabularMenu ];
-		                     yourself.
-	openObservatoryButton := self newButton
-		                         icon: self observatoryIcon;
-		                         action: [ self openInReplayObservatory ];
-		                         yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
 		                   action: [ self exportAsCSV ];
@@ -151,7 +151,8 @@ RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	aRMDMetaInterpreter setupSimulation.
 	metaInterpreter := aRMDMetaInterpreter.
-	self updateRunDropList
+	self updateRunDropList.
+	self updateOpenAnalysisButtons 
 ]
 
 { #category : #private }

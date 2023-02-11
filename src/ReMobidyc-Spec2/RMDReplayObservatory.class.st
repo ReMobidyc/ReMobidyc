@@ -56,6 +56,11 @@ RMDReplayObservatory class >> defaultLayout [
 				   yourself)
 		  expand: false;
 		  add: #image;
+		  add: (SpBoxLayout newHorizontal
+				   add: #openTabularButton width: self buttonHeight;
+				   add: #openObservatoryButton width: self buttonHeight;
+				   yourself)
+		  expand: false;
 		  yourself
 ]
 
@@ -65,6 +70,13 @@ RMDReplayObservatory class >> metaInterpreter: aRMDMetaInterpreter [
 	^ self new
 		  metaInterpreter: aRMDMetaInterpreter;
 		  yourself
+]
+
+{ #category : #testing }
+RMDReplayObservatory >> canOpenAnalysis [
+
+	^ metaInterpreter notNil and: [ 
+		  metaInterpreter context isForFileMemory ]
 ]
 
 { #category : #accessing }
@@ -77,6 +89,7 @@ RMDReplayObservatory >> imageExtent [
 RMDReplayObservatory >> initializePresenters [
 
 	super initializePresenters.
+	self initializeOpenAnalysisButtonsPresenters.
 	runDropList := self newDropList
 		               display: [ :runId | 
 			               (metaInterpreter
@@ -148,7 +161,8 @@ RMDReplayObservatory >> metaInterpreterChanged [
 		updateRunDropList;
 		updateTimeSlider;
 		updateTimeLabel;
-		updateVisual
+		updateVisual;
+		updateOpenAnalysisButtons
 ]
 
 { #category : #private }
