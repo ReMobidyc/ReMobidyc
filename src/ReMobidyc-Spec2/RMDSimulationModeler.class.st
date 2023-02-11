@@ -9,8 +9,6 @@ Class {
 		'modelFileReference',
 		'metadataPresenter',
 		'saveButton',
-		'openObservatoryButton',
-		'openObservatoryMenuButton',
 		'openExperimentariumButton',
 		'openExperimentariumMenuButton',
 		'variabilityPresenter'
@@ -28,9 +26,6 @@ RMDSimulationModeler class >> defaultLayout [
 				   addSpace;
 				   addButton: #openExperimentariumButton
 				   dropdownButton: #openExperimentariumMenuButton;
-				   addSpace;
-				   addButton: #openObservatoryButton
-				   dropdownButton: #openObservatoryMenuButton;
 				   yourself)
 		  height: self buttonHeight;
 		  add: #views yourself;
@@ -283,20 +278,7 @@ RMDSimulationModeler >> initializePresenters [
 			                                 self openInExperimentarium ];
 		                                 help:
 			                                 'Run the model in an experimentarium with selected memory model.';
-		                                 yourself.
-	openObservatoryButton := self newButton
-		                         icon: self observatoryIcon;
-		                         action: [ 
-			                         simulationModel interpreterOnFile
-				                         openInObservatory ];
-		                         help: 'Run the model in an observatory.';
-		                         yourself.
-	openObservatoryMenuButton := self newButton
-		                             icon: self dropdownIcon;
-		                             action: [ self openInObservatory ];
-		                             help:
-			                             'Run the model in an observatory with selected memory model.';
-		                             yourself
+		                                 yourself
 ]
 
 { #category : #initialization }
@@ -355,39 +337,6 @@ RMDSimulationModeler >> openInExperimentariumMenu [
 						  action: [ 
 							  simulationModel metaInterpreterOnFile ifNotNil:
 									  #openInExperimentarium ] ] ];
-		  yourself
-]
-
-{ #category : #operations }
-RMDSimulationModeler >> openInObservatory [
-
-	self openInObservatoryMenu openWithSpecAtPointer
-]
-
-{ #category : #operations }
-RMDSimulationModeler >> openInObservatoryMenu [
-
-	^ self newMenu
-		  addGroup: [ :group | 
-			  group
-				  addItem: [ :item | 
-					  item
-						  name: 'Dry-run';
-						  action: [ 
-							  simulationModel interpreterForDryRun ifNotNil:
-									  #openInObservatory ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'On memory';
-						  action: [ 
-							  simulationModel interpreterOnMemory ifNotNil:
-									  #openInObservatory ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'On file';
-						  action: [ 
-							  simulationModel interpreterOnFile ifNotNil:
-									  #openInObservatory ] ] ];
 		  yourself
 ]
 

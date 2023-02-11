@@ -3,7 +3,8 @@ Class {
 	#superclass : #Model,
 	#instVars : [
 		'simulationModel',
-		'context'
+		'context',
+		'contextSemaphore'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
 }
@@ -37,8 +38,10 @@ RMDAbstractInterpreter >> context [
 
 { #category : #initialization }
 RMDAbstractInterpreter >> initialize [
+
 	super initialize.
-	simulationModel := RMDSimulationModel new
+	simulationModel := RMDSimulationModel new.
+	contextSemaphore := Semaphore forMutualExclusion
 ]
 
 { #category : #testing }
@@ -105,11 +108,12 @@ RMDAbstractInterpreter >> simulationModel: aRMDSimulationModel [
 { #category : #'context controls' }
 RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 
-	| originalContext |
-	originalContext := context.
-	self setContext: aRMDContext.
-	^ [ aBlock cull: self cull: context ] ensure: [ 
-		  context := originalContext ]
+	contextSemaphore critical: [ 
+		| originalContext |
+		originalContext := context.
+		self setContext: aRMDContext.
+		^ [ aBlock cull: self cull: context ] ensure: [ 
+			  context := originalContext ] ]
 ]
 
 { #category : #'context controls' }

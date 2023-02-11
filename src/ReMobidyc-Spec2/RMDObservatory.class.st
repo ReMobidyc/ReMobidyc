@@ -99,36 +99,6 @@ RMDObservatory class >> openOnMemoryOn: aFileReference [
 		interpreterOnMemory ifNotNil: #openInObservatory
 ]
 
-{ #category : #menus }
-RMDObservatory class >> remobidycMenuOn: aBuilder [
-
-	<worldMenu>
-	(aBuilder item: #ReMobidycObservatory)
-		parent: 'ReMobidyc';
-		order: 10;
-		label: 'Observatory';
-		with: [ 
-			(aBuilder item: #ObservatoryOnDryRun)
-				parent: 'ReMobidycObservatory';
-				order: 10;
-				label: 'Dry-run';
-				action: [ RMDObservatory openOnDryRunFromUser ];
-				help: 'Dry-run and visualize a model'.
-			(aBuilder item: #ObservatoryOnMemory)
-				parent: 'ReMobidycObservatory';
-				order: 10;
-				label: 'On memory';
-				action: [ RMDObservatory openOnMemoryFromUser ];
-				help: 'Run and visualize a model on memory (for small scale data collection)'.
-			(aBuilder item: #ObservatoryOnFile)
-				parent: 'ReMobidycObservatory';
-				order: 11;
-				label: 'On file';
-				action: [ RMDObservatory openOnFileFromUser ];
-				help:
-					'Run and visualize a model recorded on files' ]
-]
-
 { #category : #private }
 RMDObservatory >> animatInspector: aString [
 

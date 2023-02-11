@@ -255,12 +255,8 @@ RMDExperimentarium >> initializeWindow: aWindowPresenter [
 { #category : #accessing }
 RMDExperimentarium >> interpreterDo: aBlock [
 
-	metaInterpreter isMetaInterpreter
-		ifTrue: [ 
-			(metaInterpreter
-				 interpreterAt: self runId
-				 ifAbsent: [ nil ]) ifNotNil: aBlock ]
-		ifFalse: [ metaInterpreter ifNotNil: aBlock ]
+	(metaInterpreter interpreterAt: self runId ifAbsent: [ nil ]) 
+		ifNotNil: aBlock
 ]
 
 { #category : #api }
@@ -469,8 +465,10 @@ RMDExperimentarium >> timeChanged: aRMDTimeChanged [
 	now := DateAndTime now.
 	(lastDisplayUpdate isNil or: [ 
 		 now - lastDisplayUpdate > 200 milliSecond ]) ifFalse: [ ^ self ].
-	lastDisplayUpdate := now.
-	self updateDisplay
+	self interpreterDo: [ :interpreter | 
+		interpreter == aRMDTimeChanged interpreter ifTrue: [ 
+			lastDisplayUpdate := now.
+			self updateDisplay ] ]
 ]
 
 { #category : #private }
