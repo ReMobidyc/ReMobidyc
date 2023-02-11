@@ -181,58 +181,6 @@ RMDLauncher >> openInModeler [
 ]
 
 { #category : #operations }
-RMDLauncher >> openInObservatory [
-
-	self repository isRunsRepository
-		ifTrue: [ self openInObservatoryOnFile ]
-		ifFalse: [ self openInObservatoryMenu openWithSpecAtPointer ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInObservatoryForDryRun [
-
-	self load ifNotNil: [ :model | 
-		model interpreterForDryRun ifNotNil: #openInObservatory ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInObservatoryMenu [
-
-	^ self newMenu
-		  addGroup: [ :group | 
-			  group
-				  addItem: [ :item | 
-					  item
-						  name: 'Dry-run';
-						  action: [ self openInObservatoryForDryRun ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'On memory';
-						  action: [ self openInObservatoryOnMemory ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'On file';
-						  action: [ self openInObservatoryOnFile ] ] ];
-		  yourself
-]
-
-{ #category : #operations }
-RMDLauncher >> openInObservatoryOnFile [
-
-	self load ifNotNil: [ :model | 
-		self repository isRunsRepository
-			ifTrue: [ self openInReplayObservatory ]
-			ifFalse: [ model interpreterOnFile ifNotNil: #openInObservatory ] ]
-]
-
-{ #category : #operations }
-RMDLauncher >> openInObservatoryOnMemory [
-
-	self load ifNotNil: [ :model | 
-		model interpreterOnMemory ifNotNil: #openInObservatory ]
-]
-
-{ #category : #operations }
 RMDLauncher >> openInTextModeler [
 
 	self repository isRunsRepository ifFalse: [ 

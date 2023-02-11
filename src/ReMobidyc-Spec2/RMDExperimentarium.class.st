@@ -9,11 +9,20 @@ Class {
 		'timeProgressBar',
 		'limitsNumberOfIndividualsCheckBox',
 		'numberOfIndividualField',
-		'populationInspector',
+		'interpreterDropList',
+		'timeLabel',
+		'populationTable',
+		'currentPopulation',
+		'maxPopulation',
+		'minPopulation',
+		'populationByTime',
 		'validated',
 		'lastServerUpdate',
 		'lastDisplayUpdate',
-		'metaInterpreter'
+		'metaInterpreter',
+		'visualizationImage',
+		'showPopulationChartRadioButton',
+		'showVisualMapRadioButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -32,8 +41,33 @@ RMDExperimentarium class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: #limitsNumberOfIndividualsCheckBox expand: false;
 				   add: #numberOfIndividualField width: 100;
+				   yourself)
+		  expand: false;
+		  add: (SpBoxLayout newVertical
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.3;
+						    add: #interpreterDropList;
+						    add: #timeLabel)
+				   expand: false;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.45;
+						    add: #populationTable;
+						    add: (SpBoxLayout newVertical
+								     add: (SpBoxLayout newHorizontal
+										      add: (SpBoxLayout newVertical
+												       add: #showPopulationChartRadioButton
+												       height: self buttonHeight)
+										      expand: false;
+										      add: (SpBoxLayout newVertical
+												       add: #showVisualMapRadioButton
+												       height: self buttonHeight)
+										      expand: false;
+										      yourself)
+								     height: self buttonHeight;
+								     add: #visualizationImage;
+								     yourself);
+						    yourself);
 				   yourself);
-		  add: #populationInspector;
 		  add: (SpBoxLayout newHorizontal
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
@@ -99,7 +133,11 @@ RMDExperimentarium >> informServer [
 RMDExperimentarium >> initialize [
 
 	super initialize.
-	validated := false
+	validated := false.
+	currentPopulation := Dictionary new.
+	maxPopulation := Dictionary new.
+	minPopulation := Dictionary new.
+	populationByTime := Dictionary new
 ]
 
 { #category : #initialization }
@@ -141,7 +179,70 @@ RMDExperimentarium >> initializePresenters [
 			                           numberOfIndividualField color:
 					                           (Color gray: 0.75) ];
 		                           yourself.
-	populationInspector := self instantiate: RMDPopulationInspector
+	interpreterDropList := self newDropList
+		                       display: [ :runId | 
+			                       (metaInterpreter
+				                        interpreterAt: runId
+				                        ifAbsent: [ nil ])
+				                       ifNotNil: #shortName
+				                       ifNil: [ '-' ] ];
+		                       whenSelectedItemChangedDo: [ 
+			                       self updateDisplay ];
+		                       yourself.
+	timeLabel := self newLabel
+		             label: '';
+		             yourself.
+	populationTable := self newTable
+		                   beResizable;
+		                   addColumn:
+			                   (SpStringTableColumn
+				                    title: 'name'
+				                    evaluated: #yourself);
+		                   addColumn:
+			                   (SpStringTableColumn
+				                    title: 'min'
+				                    evaluated: [ :name | 
+					                    self printNat: (minPopulation
+								                     at: self runId
+								                     ifPresent: [ :dict | 
+									                     dict at: name ifAbsent: [ nil ] ]
+								                     ifAbsent: [ nil ]) ]);
+		                   addColumn:
+			                   (SpStringTableColumn
+				                    title: 'max'
+				                    evaluated: [ :name | 
+					                    self printNat: (maxPopulation
+								                     at: self runId
+								                     ifPresent: [ :dict | 
+									                     dict at: name ifAbsent: [ nil ] ]
+								                     ifAbsent: [ nil ]) ]);
+		                   addColumn:
+			                   (SpStringTableColumn
+				                    title: 'now'
+				                    evaluated: [ :name | 
+					                    self printNat: (currentPopulation
+								                     at: self runId
+								                     ifPresent: [ :dict | 
+									                     dict at: name ifAbsent: [ nil ] ]
+								                     ifAbsent: [ nil ]) ]);
+		                   whenSelectionChangedDo: [ self updateDisplay ];
+		                   yourself.
+	showPopulationChartRadioButton := self newRadioButton
+		                                  label: 'Population chart';
+		                                  whenChangedDo: [ 
+			                                  self updateDisplay ];
+		                                  yourself.
+	showVisualMapRadioButton := self newRadioButton
+		                            label: 'Visual map';
+		                            whenChangedDo: [ self updateDisplay ];
+		                            associatedRadioButtons:
+			                            { showPopulationChartRadioButton };
+		                            yourself.
+	showPopulationChartRadioButton state: true.
+	visualizationImage := self newImage
+		                      autoScale: false;
+		                      yourself.
+	self whenDisplayDo: [ self updateDisplay ]
 ]
 
 { #category : #initialization }
@@ -149,6 +250,13 @@ RMDExperimentarium >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 700 @ 480
+]
+
+{ #category : #accessing }
+RMDExperimentarium >> interpreterDo: aBlock [
+
+	(metaInterpreter interpreterAt: self runId ifAbsent: [ nil ]) 
+		ifNotNil: aBlock
 ]
 
 { #category : #api }
@@ -201,12 +309,44 @@ RMDExperimentarium >> pauseSimulation [
 	metaInterpreter pauseSimulation
 ]
 
+{ #category : #private }
+RMDExperimentarium >> printNat: anInteger [
+
+	^ anInteger
+		  ifNotNil: [ 
+			  anInteger > 0
+				  ifTrue: [ 
+					  | nat str |
+					  nat := anInteger.
+					  str := ',' join: (Array streamContents: [ :stream | 
+							          [ nat > 0 ] whileTrue: [ 
+								          | n |
+								          n := nat % 1000.
+								          stream nextPut: (n < 100
+										           ifTrue: [ 
+											           n < 10
+												           ifTrue: [ '00' , n printString ]
+												           ifFalse: [ '0' , n printString ] ]
+										           ifFalse: [ n printString ]).
+								          nat := nat // 1000 ] ]) reversed.
+					  [ str first = $0 ] whileTrue: [ str := str allButFirst ].
+					  str ]
+				  ifFalse: [ '0' ] ]
+		  ifNil: [ '-' ]
+]
+
 { #category : #operations }
 RMDExperimentarium >> runButtonPressed [
 
 	metaInterpreter isRunningSimulation
 		ifTrue: [ self pauseSimulation ]
 		ifFalse: [ self runSimulation ]
+]
+
+{ #category : #accessing }
+RMDExperimentarium >> runId [
+
+	^ interpreterDropList selectedItem ifNil: [ 1 ]
 ]
 
 { #category : #api }
@@ -259,17 +399,30 @@ RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 		metaInterpreter setupSimulation.
 		metaInterpreter guard: [ :interpreter | 
 			self canProceed: interpreter ].
-		populationInspector interpreter: metaInterpreter.
-		metaInterpreter announcer weak
-			when: RMDSimulationStarted send: #simulationStarted: to: self;
-			when: RMDSimulationPaused send: #simulationPaused: to: self.
-		metaInterpreter interpretersDo: [ :interpreter | 
-			interpreter announcer weak
-				when: RMDTimeChanged
-				send: #timeChanged:
-				to: self ].
+		currentPopulation := Dictionary new.
+		maxPopulation := Dictionary new.
+		minPopulation := Dictionary new.
+		populationByTime := Dictionary new.
+		metaInterpreter interpretersDo: [ :i | 
+			| runId |
+			runId := i runId.
+			currentPopulation at: runId put: Dictionary new.
+			maxPopulation at: runId put: Dictionary new.
+			minPopulation at: runId put: Dictionary new.
+			populationByTime at: runId put: (OrderedCollection new: 1024).
+			i announcer weak
+				when: RMDSimulationStarted send: #simulationStarted: to: self;
+				when: RMDTimeChanged send: #timeChanged: to: self;
+				when: RMDSimulationPaused send: #simulationPaused: to: self ].
+		interpreterDropList
+			items: metaInterpreter runIds;
+			selectIndex: 1;
+			enable.
 		metaInterpreter fastForward.
-		self updateButtons ]
+		self
+			updateTableItems;
+			updateDisplay ].
+	self updateButtons
 ]
 
 { #category : #updating }
@@ -277,7 +430,7 @@ RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 
 	runButton state: false.
 	stepButton enable.
-	self updateTimeProgressBar.
+	self updateDisplay.
 	lastDisplayUpdate := nil
 ]
 
@@ -287,6 +440,11 @@ RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
 	runButton state: true.
 	stepButton disable.
 	lastDisplayUpdate := DateAndTime now
+]
+
+{ #category : #accessing }
+RMDExperimentarium >> stagePrefix [
+	^ '  '
 ]
 
 { #category : #api }
@@ -299,10 +457,18 @@ RMDExperimentarium >> stepSimulation [
 ]
 
 { #category : #updating }
-RMDExperimentarium >> timeChanged: anAnnouncement [
+RMDExperimentarium >> timeChanged: aRMDTimeChanged [
 
+	| now |
 	self informServer.
-	self updateTimeProgressBar
+	self updateObservation: aRMDTimeChanged.
+	now := DateAndTime now.
+	(lastDisplayUpdate isNil or: [ 
+		 now - lastDisplayUpdate > 200 milliSecond ]) ifFalse: [ ^ self ].
+	self interpreterDo: [ :interpreter | 
+		interpreter == aRMDTimeChanged interpreter ifTrue: [ 
+			lastDisplayUpdate := now.
+			self updateDisplay ] ]
 ]
 
 { #category : #private }
@@ -339,6 +505,184 @@ RMDExperimentarium >> updateButtons [
 ]
 
 { #category : #updating }
+RMDExperimentarium >> updateDisplay [
+
+	metaInterpreter ifNil: [ ^ self ].
+	populationTable ifNotNil: #refresh.
+	timeProgressBar fixedAt: metaInterpreter progress.
+	self
+		updatePopulationChart;
+		updateVisualMap;
+		updateTimeLabel
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateObservation: aRMDTimeChanged [
+
+	| interpreter model runId speciesPopulations |
+	interpreter := aRMDTimeChanged interpreter.
+	model := interpreter simulationModel.
+	runId := interpreter runId.
+	speciesPopulations := Dictionary new.
+	model animatDefinitionsDo: [ :animat | 
+		| population stage |
+		population := interpreter numberOfIndividualsOf: animat.
+		speciesPopulations
+			at: animat species
+			put:
+			(speciesPopulations at: animat species ifAbsent: [ 0 ])
+			+ population.
+		stage := self stagePrefix , animat name.
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | current at: stage put: population ].
+		minPopulation at: runId ifPresent: [ :mins | 
+			mins
+				at: stage
+				put:
+				((mins at: stage ifAbsent: [ Float infinity ]) min: population) ].
+		maxPopulation at: runId ifPresent: [ :maxs | 
+			maxs
+				at: stage
+				put: ((maxs at: stage ifAbsent: [ 0 ]) max: population) ] ].
+	speciesPopulations keysAndValuesDo: [ :species :population | 
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | current at: species put: population ].
+		minPopulation at: runId ifPresent: [ :mins | 
+			mins
+				at: species
+				put:
+				((mins at: species ifAbsent: [ Float infinity ]) min: population) ].
+		maxPopulation at: runId ifPresent: [ :maxs | 
+			maxs
+				at: species
+				put: ((maxs at: species ifAbsent: [ 0 ]) max: population) ] ].
+	populationByTime at: runId ifPresent: [ :byTime | 
+		currentPopulation
+			at: runId
+			ifPresent: [ :current | byTime add: current copy ] ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updatePopulationChart [
+
+	(showPopulationChartRadioButton state and: [ 
+		 visualizationImage adapter notNil ]) ifTrue: [ 
+		| form |
+		self interpreterDo: [ :interpreter | 
+			| runId canvas byTime |
+			runId := interpreter runId.
+			form := Form extent: visualizationImage adapter extent depth: 32.
+			canvas := form getCanvas.
+			canvas fillColor: Color white.
+			byTime := populationByTime at: runId ifAbsent: [ ^ self ].
+			byTime ifEmpty: [ ^ self ].
+			populationTable selectedItem ifNotNil: [ :animat | 
+				| chartWidth chartHeight font fontHeight min max |
+				font := TextStyle defaultFont.
+				fontHeight := font height.
+				chartWidth := form width.
+				chartHeight := form height - (fontHeight * 2).
+				min := (minPopulation at: runId ifAbsent: [ ^ self ])
+					       at: animat
+					       ifAbsent: [ ^ self ].
+				max := (maxPopulation at: runId ifAbsent: [ ^ self ])
+					       at: animat
+					       ifAbsent: [ ^ self ].
+				min < max ifTrue: [ 
+					| xScale yScale minString maxString |
+					xScale := chartWidth
+					          /
+					          (interpreter duration / interpreter deltaTime) ceiling.
+					yScale := chartHeight / (max - min).
+					minString := 'min = ' , min printString.
+					maxString := 'max = ' , max printString.
+					canvas
+						drawString: minString
+						at: 0 @ (chartHeight - fontHeight)
+						font: font
+						color: Color gray.
+					canvas
+						drawString: maxString
+						at: 0 @ 0
+						font: font
+						color: Color gray.
+					canvas
+						line: interpreter time * xScale @ 0
+						to: interpreter time * xScale @ chartHeight
+						width: 1
+						color: Color red.
+					1 to: byTime size - 1 do: [ :time1 | 
+						| time2 value1 value2 |
+						time2 := time1 + 1.
+						value1 := (byTime at: time1) at: animat.
+						value2 := (byTime at: time2) at: animat.
+						canvas
+							line: (time1 * xScale) rounded
+								@ (chartHeight - (value1 - min * yScale) rounded)
+							to: (time2 * xScale) rounded
+								@ (chartHeight - (value2 - min * yScale) rounded)
+							width: 1
+							color: Color black ] ].
+				canvas
+					drawString: '0'
+					at: 0 @ chartHeight
+					font: font
+					color: Color gray.
+				byTime size > 1 ifTrue: [ 
+					| time timeUnit timeString |
+					time := byTime size - 1 * interpreter deltaTime.
+					timeUnit := interpreter simulationModel simulationDefinition
+						            timeDefinition duration unit.
+					timeString := ((timeUnit fromSI: time) 
+						               printShowingDecimalPlaces: 1) , ' ['
+					              , timeUnit printString , ']'.
+					canvas
+						drawString: timeString
+						at: chartWidth - (font widthOfString: timeString) @ chartHeight
+						font: font
+						color: Color gray ].
+				visualizationImage image: form ] ] ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateTableItems [
+
+	populationTable items: (Array streamContents: [ :stream | 
+			 self interpreterDo: [ :interpreter | 
+				 | model |
+				 model := interpreter simulationModel.
+				 model speciesNames do: [ :species | 
+					 stream nextPut: species.
+					 model animatDefinitionsDo: [ :animat | 
+						 animat species = species ifTrue: [ 
+							 stream nextPut: self stagePrefix , animat name ] ] ] ] ]).
+	populationTable items ifNotEmpty: [ populationTable selectIndex: 1 ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateTimeLabel [
+
+	self interpreterDo: [ :interpreter | 
+		| time |
+		time := interpreter time.
+		timeLabel label: (String streamContents: [ :stream | 
+				 4 timesRepeat: [ stream space ].
+				 interpreter simulationModel simulationDefinition timeDefinition 
+					 printOn: stream.
+				 stream nextPutAll: ' - now '.
+				 (interpreter durationUnit fromSI: time)
+					 printOn: stream
+					 showingDecimalPlaces: 1.
+				 stream nextPutAll: ' [ '.
+				 interpreter durationUnit printOn: stream.
+				 stream nextPutAll: ' ], '.
+				 interpreter ticks printOn: stream.
+				 stream nextPutAll: ' steps.' ]) ]
+]
+
+{ #category : #updating }
 RMDExperimentarium >> updateTimeProgressBar [
 
 	| now |
@@ -347,6 +691,20 @@ RMDExperimentarium >> updateTimeProgressBar [
 		 now - lastDisplayUpdate > 100 milliSecond ]) ifTrue: [ 
 		lastDisplayUpdate := now.
 		self basicUpdateTimeProgressBar ]
+]
+
+{ #category : #updating }
+RMDExperimentarium >> updateVisualMap [
+
+	(showVisualMapRadioButton state and: [ 
+		 visualizationImage adapter notNil ]) ifTrue: [ 
+		self interpreterDo: [ :interpreter | 
+			| visualizer |
+			visualizer := RMDVisualizer new.
+			interpreter simulationModel renderersDo: [ :renderer | 
+				visualizer addRenderer: renderer ].
+			visualizer extent: visualizationImage adapter extent.
+			visualizationImage image: (visualizer visualize: interpreter) ] ]
 ]
 
 { #category : #private }
