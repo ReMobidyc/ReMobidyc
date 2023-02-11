@@ -10,8 +10,6 @@ Class {
 		'columnCollectors',
 		'exportCSVButton',
 		'reloadButton',
-		'openObservatoryButton',
-		'openTabularButton',
 		'baseRowIndex'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
