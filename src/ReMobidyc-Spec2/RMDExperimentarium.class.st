@@ -13,9 +13,7 @@ Class {
 		'validated',
 		'lastServerUpdate',
 		'lastDisplayUpdate',
-		'metaInterpreter',
-		'openTabularButton',
-		'openObservatoryButton'
+		'metaInterpreter'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -70,6 +68,13 @@ RMDExperimentarium >> basicUpdateTimeProgressBar [
 ]
 
 { #category : #testing }
+RMDExperimentarium >> canOpenAnalysis [
+
+	^ metaInterpreter notNil and: [ 
+		  metaInterpreter context isForFileMemory ]
+]
+
+{ #category : #testing }
 RMDExperimentarium >> canProceed: aRMDInterpreter [
 
 	^ limitsNumberOfIndividualsCheckBox state not or: [ 
@@ -101,6 +106,7 @@ RMDExperimentarium >> initialize [
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
+	self initializeOpenAnalysisButtonsPresenters.
 	runButton := self newButton
 		             icon: self runIcon;
 		             action: [ self runButtonPressed ];
@@ -135,24 +141,14 @@ RMDExperimentarium >> initializePresenters [
 			                           numberOfIndividualField color:
 					                           (Color gray: 0.75) ];
 		                           yourself.
-	populationInspector := self instantiate: RMDPopulationInspector.
-	openTabularButton := self newButton
-		                     disable;
-		                     icon: self tabularIcon;
-		                     action: [ self openTabularMenu ];
-		                     yourself.
-	openObservatoryButton := self newButton
-		                         disable;
-		                         icon: self observatoryIcon;
-		                         action: [ self openInReplayObservatory ];
-		                         yourself
+	populationInspector := self instantiate: RMDPopulationInspector
 ]
 
 { #category : #initialization }
 RMDExperimentarium >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 700 @ 450
+	aWindowPresenter initialExtent: 700 @ 480
 ]
 
 { #category : #api }
@@ -339,14 +335,7 @@ RMDExperimentarium >> typecheck [
 { #category : #updating }
 RMDExperimentarium >> updateButtons [
 
-	(metaInterpreter notNil and: [ 
-		 metaInterpreter context isForFileMemory ])
-		ifTrue: [ 
-			openTabularButton enable.
-			openObservatoryButton enable ]
-		ifFalse: [ 
-			openTabularButton disable.
-			openObservatoryButton disable ]
+	self updateOpenAnalysisButtons
 ]
 
 { #category : #updating }

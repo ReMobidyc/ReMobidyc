@@ -5,11 +5,8 @@ Class {
 	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
 		'modelerButton',
-		'observatoryButton',
 		'experimentariumMenuButton',
 		'experimentariumButton',
-		'observatoryMenuButton',
-		'tabularButton',
 		'modelerMenuButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
@@ -50,10 +47,9 @@ RMDLauncher class >> defaultLayout [
 								     addButton: #experimentariumButton
 								     dropdownButton: #experimentariumMenuButton;
 								     addSpace;
-								     add: #tabularButton width: self buttonHeight;
+								     add: #openTabularButton width: self buttonHeight;
 								     addSpace;
-								     addButton: #observatoryButton
-								     dropdownButton: #observatoryMenuButton;
+								     add: #openObservatoryButton width: self buttonHeight;
 								     yourself)
 						    expand: false;
 						    yourself);
@@ -73,6 +69,12 @@ RMDLauncher class >> remobidycMenuOn: aBuilder [
 		help: 'Open a model launcher'
 ]
 
+{ #category : #testing }
+RMDLauncher >> canOpenAnalysis [
+
+	^ self item notNil and: [ self repository isRunsRepository ]
+]
+
 { #category : #private }
 RMDLauncher >> getRepositories [
 
@@ -82,6 +84,7 @@ RMDLauncher >> getRepositories [
 { #category : #initialization }
 RMDLauncher >> initializePresenters [
 
+	self initializeOpenAnalysisButtonsPresenters.
 	modelerButton := self newButton
 		                 icon: self modelerIcon;
 		                 action: [ self openInModeler ];
@@ -108,26 +111,6 @@ RMDLauncher >> initializePresenters [
 			                             'Run the model in an experimentarium with selected memory model.';
 		                             disable;
 		                             yourself.
-
-	observatoryButton := self newButton
-		                     icon: self observatoryIcon;
-		                     action: [ self openInObservatoryOnFile ];
-		                     help: 'Run the model in an observatory.';
-		                     disable;
-		                     yourself.
-	observatoryMenuButton := self newButton
-		                         icon: self dropdownIcon;
-		                         action: [ self openInReplayObservatory ];
-		                         help:
-			                         'Run the model in an observatory with selected memory model.';
-		                         disable;
-		                         yourself.
-	tabularButton := self newButton
-		                 icon: self tabularIcon;
-		                 action: [ self openTabularMenu ];
-		                 help: 'Analyze the model on a selected tabular.';
-		                 disable;
-		                 yourself.
 	super initializePresenters
 ]
 
@@ -325,18 +308,13 @@ RMDLauncher >> updateButtons [
 			modelerMenuButton enabled: self repository isRunsRepository not.
 			experimentariumButton enable.
 			experimentariumMenuButton enabled:
-				self repository isRunsRepository not.
-			tabularButton enabled: self repository isRunsRepository.
-			observatoryButton enable.
-			observatoryMenuButton enabled: self repository isRunsRepository not ]
+				self repository isRunsRepository not ]
 		ifNil: [ 
 			modelerButton disable.
 			modelerMenuButton disable.
 			experimentariumButton disable.
-			experimentariumMenuButton disable.
-			tabularButton disable.
-			observatoryButton disable.
-			observatoryMenuButton disable ]
+			experimentariumMenuButton disable ].
+	self updateOpenAnalysisButtons
 ]
 
 { #category : #updating }

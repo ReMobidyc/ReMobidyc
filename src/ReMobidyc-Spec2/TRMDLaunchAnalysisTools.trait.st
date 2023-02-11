@@ -1,5 +1,9 @@
 Trait {
 	#name : #TRMDLaunchAnalysisTools,
+	#instVars : [
+		'openTabularButton',
+		'openObservatoryButton'
+	],
 	#category : #'ReMobidyc-Spec2-Traits'
 }
 
@@ -11,6 +15,27 @@ TRMDLaunchAnalysisTools >> analysisMenu [
 	self tabularMenu: menu.
 	self replayObservatoryMenu: menu.
 	^ menu
+]
+
+{ #category : #testing }
+TRMDLaunchAnalysisTools >> canOpenAnalysis [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #initialization }
+TRMDLaunchAnalysisTools >> initializeOpenAnalysisButtonsPresenters [
+
+	openTabularButton := self newButton
+		                     disable;
+		                     icon: self tabularIcon;
+		                     action: [ self openTabularMenu ];
+		                     yourself.
+	openObservatoryButton := self newButton
+		                         disable;
+		                         icon: self observatoryIcon;
+		                         action: [ self openInReplayObservatory ];
+		                         yourself
 ]
 
 { #category : #private }
@@ -134,4 +159,17 @@ TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 									  individual: individual
 									  time: time ] ] ] ];
 		  yourself
+]
+
+{ #category : #updating }
+TRMDLaunchAnalysisTools >> updateOpenAnalysisButtons [
+
+	self canOpenAnalysis
+		ifTrue: [ 
+			openTabularButton enable.
+			openObservatoryButton enable.
+			^ self ]
+		ifFalse: [ 
+			openTabularButton disable.
+			openObservatoryButton disable ]
 ]
