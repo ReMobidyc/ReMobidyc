@@ -43,7 +43,8 @@ RMDAbstractFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 RMDAbstractFileRepository >> actionNames [
 
 	self actionsDirectoryDo: [ :actionsDirectory | 
-		^ (actionsDirectory filesMatching: '*.rmd') collect: #basename ].
+		^ ((actionsDirectory filesMatching: '*.rmd') collect: #basename)
+			  asSortedCollection ].
 	^ Array new
 ]
 
@@ -123,7 +124,8 @@ RMDAbstractFileRepository >> iconNamed: aString ifAbsent: errorBlock [
 RMDAbstractFileRepository >> iconNames [
 
 	self iconsDirectoryDo: [ :iconDirectory | 
-		^ (iconDirectory filesMatching: '*.png') collect: #basename ].
+		^ ((iconDirectory filesMatching: '*.png') collect: #basename)
+			  asSortedCollection ].
 	^ Array new
 ]
 
@@ -176,8 +178,8 @@ RMDAbstractFileRepository >> modelNamed: aString ifAbsent: errorBlock [
 RMDAbstractFileRepository >> modelNames [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
-		^ modelsDirectory directoryNames reject: [ :dirname | 
-			  dirname isEmpty or: [ dirname first = $. ] ] ].
+		^ (modelsDirectory directoryNames reject: [ :dirname | 
+			   dirname isEmpty or: [ dirname first = $. ] ]) asSortedCollection ].
 	^ Array new
 ]
 

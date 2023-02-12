@@ -88,7 +88,7 @@ RMDRepositoryModelsBrowser >> initialize [
 { #category : #accessing }
 RMDRepositoryModelsBrowser >> itemsInRepository [
 
-	^ (self repository ifNotNil: #modelNames ifNil: [ #(  ) ]) asSortedCollection
+	^ self repository ifNotNil: #modelNames ifNil: [ #(  ) ]
 ]
 
 { #category : #operations }

@@ -84,7 +84,7 @@ RMDRepositoryActionsBrowser >> getAction: aString [
 { #category : #accessing }
 RMDRepositoryActionsBrowser >> itemsInRepository [
 
-	^ (self repository ifNotNil: #actionNames ifNil: [ #(  ) ]) asSortedCollection
+	^ self repository ifNotNil: #actionNames ifNil: [ #(  ) ]
 ]
 
 { #category : #private }
