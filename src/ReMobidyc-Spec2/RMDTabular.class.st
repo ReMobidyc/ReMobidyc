@@ -12,7 +12,7 @@ Class {
 		'reloadButton',
 		'baseRowIndex'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #'instance creation' }
@@ -67,7 +67,10 @@ RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVi
 				 select: [ :assoc | aBlock value: assoc key ]
 				 thenCollect: [ :assoc | 
 					 SpStringTableColumn evaluated: [ :row | 
-							 row at: assoc key ifAbsent: [ '' ] ] ]);
+							 | v |
+							 v := row at: assoc key ifAbsent: [ '' ].
+							 [ v isBlock ] whileTrue: [ v := v value: assoc key ].
+							 v ] ]);
 		refresh
 ]
 
@@ -221,7 +224,10 @@ RMDTabular >> selectVisibleColumns: aBlock [
 					 select: [ :assoc | aBlock value: assoc key ]
 					 thenCollect: [ :assoc | 
 						 SpStringTableColumn evaluated: [ :row | 
-								 row at: assoc key ifAbsent: [ '' ] ] ]);
+								 | v |
+								 v := row at: assoc key ifAbsent: [ '' ].
+								 [ v isBlock ] whileTrue: [ v := v value: row ].
+								 v ] ]);
 			refresh ]
 ]
 

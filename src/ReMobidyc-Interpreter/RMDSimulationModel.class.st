@@ -1069,7 +1069,7 @@ RMDSimulationModel >> speciesNames [
 ]
 
 { #category : #'accessing - definitions' }
-RMDSimulationModel >> stagesNamesOf: aString [
+RMDSimulationModel >> stageNamesOf: aString [
 
 	^ (animatDefinitions values
 		  select: [ :animat | animat species = aString ]
@@ -1081,6 +1081,13 @@ RMDSimulationModel >> stagesOf: aString [
 
 	^ (animatDefinitions values select: [ :animat | 
 		  animat species = aString ]) asArray
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> stagesOf: aString do: aBlock [
+
+	animatDefinitions valuesDo: [ :animat | 
+		animat species = aString ifTrue: [ aBlock value: animat ] ]
 ]
 
 { #category : #'accessing - definitions' }

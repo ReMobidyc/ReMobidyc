@@ -1,7 +1,7 @@
 Class {
 	#name : #RMDTimeSeriesTabular,
 	#superclass : #RMDTabular,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #accessing }

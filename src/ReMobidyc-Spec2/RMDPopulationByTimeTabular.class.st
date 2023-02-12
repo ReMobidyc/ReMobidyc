@@ -5,7 +5,7 @@ Class {
 		'speciesDropList',
 		'stageDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #layout }
@@ -51,7 +51,7 @@ RMDPopulationByTimeTabular >> initializePresenters [
 		                   whenSelectedItemChangedDo: [ self speciesChanged ];
 		                   yourself.
 	stageDropList := self newDropList
-		                 display: [ :item | item ifNil: [ 'all stages' ] ];
+		                 display: [ :item | item ifNil: [ 'every stage' ] ];
 		                 whenSelectedItemChangedDo: [ self stageChanged ];
 		                 yourself
 ]
@@ -62,11 +62,18 @@ RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 	super metaInterpreter: aRMDMetaInterpreter.
 	self columnCollectors: (Array streamContents: [ :stream | 
 			 metaInterpreter interpretersDo: [ :interpreter | 
-				 metaInterpreter simulationModel animatDefinitionsDo: [ 
-					 :animatDefinition | 
+				 metaInterpreter simulationModel speciesNames do: [ :speciesName | 
+					 metaInterpreter simulationModel
+						 stagesOf: speciesName
+						 do: [ :animatDefinition | 
+							 stream nextPut: (self
+									  populationCollectorOnRunId: interpreter runId
+									  animat: animatDefinition) ].
 					 stream nextPut: (self
-							  populationCollectorOnRunId: interpreter runId
-							  animat: animatDefinition) ] ] ]).
+							  speciesPopulationCollectorOnRunId: interpreter runId
+							  species: speciesName
+							  stages:
+							  (metaInterpreter simulationModel stagesOf: speciesName)) ] ] ]).
 	self updateSpeciesDropList.
 	self updateStageDropList
 ]
@@ -102,6 +109,19 @@ RMDPopulationByTimeTabular >> speciesChanged [
 	self updateStageDropList
 ]
 
+{ #category : #'accessing - column collectors' }
+RMDPopulationByTimeTabular >> speciesPopulationCollectorOnRunId: anInteger species: aString stages: anArrayOfRMDAnimatDefinitionNode [
+
+	^ { 
+		  anInteger.
+		  aString } -> [ :time | 
+	  [ :row | 
+	  anArrayOfRMDAnimatDefinitionNode inject: 0 into: [ :sum :animat | 
+		  sum + (row at: { 
+				   anInteger.
+				   animat }) ] ] ]
+]
+
 { #category : #updating }
 RMDPopulationByTimeTabular >> stageChanged [
 
@@ -134,11 +154,54 @@ RMDPopulationByTimeTabular >> titleRowsDo: aBlock [
 	aBlock value: [ :columnKey | 
 		columnKey = #time
 			ifTrue: [ '' ]
-			ifFalse: [ columnKey second species ] ].
+			ifFalse: [ 
+				| animat |
+				animat := columnKey second.
+				animat isString
+					ifTrue: [ animat ]
+					ifFalse: [ animat species ] ] ].
 	aBlock value: [ :columnKey | 
 		columnKey = #time
 			ifTrue: [ '' ]
-			ifFalse: [ columnKey second identifier ] ]
+			ifFalse: [ 
+				| animat |
+				animat := columnKey second.
+				animat isString
+					ifTrue: [ 'total' ]
+					ifFalse: [ animat identifier ] ] ]
+]
+
+{ #category : #updating }
+RMDPopulationByTimeTabular >> updateRows [
+
+	| latestTime |
+	table showColumnHeaders.
+	latestTime := self latestTime.
+	'Collecting data from the run record'
+		displayProgressFrom: 0
+		to: latestTime
+		during: [ :progress | 
+			table items: (Array streamContents: [ :stream | 
+					 0 to: latestTime do: [ :time | 
+						 | row |
+						 row := Dictionary new.
+						 metaInterpreter interpretersDo: [ :interpreter | 
+							 interpreter memory latestTime >= time ifTrue: [ 
+								 interpreter memory time: time.
+								 interpreter simulationModel animatDefinitionsDo: [ 
+									 :animatDefinition | 
+									 row
+										 at: { 
+												 interpreter runId.
+												 animatDefinition identifier }
+										 put:
+										 (interpreter memory numberOfAnimats:
+											  animatDefinition identifier) ].
+								 row
+									 at: #time
+									 put: time * metaInterpreter simulationModel deltaTime ] ].
+						 stream nextPut: row.
+						 progress value: time ] ]) ]
 ]
 
 { #category : #updating }
@@ -160,32 +223,69 @@ RMDPopulationByTimeTabular >> updateStageDropList [
 						 stagesOf: species
 						 do: [ :stage | stream nextPut: stage identifier ] ]
 				 ifNil: [ 
-				 self stagesDo: [ :stage | stream nextPut: stage identifier ] ] ])
+				 self stagesDo: [ :stage | stream nextPut: stage identifier ] ].
+			 stream nextPut: #total ])
 ]
 
 { #category : #updating }
 RMDPopulationByTimeTabular >> updateVisibleColumns [
 
-	| runBlock speciesBlock stageBlock |
-	runBlock := runDropList selectedItem
-		            ifNotNil: [ :runId | 
-			            [ :columnKey | 
-			            columnKey isSymbol or: [ columnKey first = runId ] ] ]
-		            ifNil: [ [ :columnKey | true ] ].
-	speciesBlock := speciesDropList selectedItem
-		                ifNotNil: [ :species | 
-			                [ :columnKey | 
-			                columnKey isSymbol or: [ 
-				                columnKey second species = species ] ] ]
-		                ifNil: [ [ :columnKey | true ] ].
-	stageBlock := stageDropList selectedItem
-		              ifNotNil: [ :stage | 
-			              [ :columnKey | 
-			              columnKey isSymbol or: [ 
-				              columnKey second identifier = stage ] ] ]
-		              ifNil: [ [ :columnKey | true ] ].
-
-	self selectVisibleColumns: [ :columnKey | 
-		(runBlock value: columnKey) and: [ 
-			(speciesBlock value: columnKey) and: [ stageBlock value: columnKey ] ] ]
+	table
+		columns: (Array streamContents: [ :stream | 
+					 stream nextPut: (RMDTimeColumn new
+								  title:
+									  'time ('
+									  , metaInterpreter simulationModel durationUnit printString
+									  , ')';
+								  unit: metaInterpreter simulationModel durationUnit;
+								  yourself).
+					 (runDropList selectedItem
+						  ifNotNil: [ :runId | { runId } ]
+						  ifNil: [ metaInterpreter runIds ]) do: [ :runId | 
+						 (stageDropList selectedItem
+							  ifNotNil: [ :stage | 
+								  stage = #total
+									  ifTrue: [ 
+										  speciesDropList selectedItem
+											  ifNotNil: [ :species | { species } ]
+											  ifNil: [ metaInterpreter simulationModel speciesNames ] ]
+									  ifFalse: [ 
+										  { (metaInterpreter simulationModel
+											   animatDefinitionAt: stage
+											   ifAbsent: [ nil ]) } ] ]
+							  ifNil: [ 
+								  speciesDropList selectedItem
+									  ifNotNil: [ :species | 
+										  (metaInterpreter simulationModel stagesOf: species)
+										  , { species } ]
+									  ifNil: [ metaInterpreter simulationModel animatDefinitions ] ]) 
+							 do: [ :animatDefinitionOrSpecies | 
+								 animatDefinitionOrSpecies isString
+									 ifTrue: [ 
+										 stream nextPut: (RMDSpeciesPopulationColumn new
+												  title: (runDropList selectedItem
+														   ifNotNil: [ '' ]
+														   ifNil: [ runId printString , ': ' ])
+													  , animatDefinitionOrSpecies;
+												  runId: runId;
+												  stages: (metaInterpreter simulationModel stageNamesOf:
+															   animatDefinitionOrSpecies)) ]
+									 ifFalse: [ 
+										 stream nextPut: (RMDStagePopulationColumn new
+												  title:
+													  (runDropList
+														   ifNotNil: [ '' ]
+														   ifNil: [ runId printString , ': ' ])
+													  , (speciesDropList selectedItem
+															   ifNotNil: [ '' ]
+															   ifNil: [ animatDefinitionOrSpecies species , ' (' ])
+													  , animatDefinitionOrSpecies identifier
+													  ,
+														  (speciesDropList selectedItem
+															   ifNotNil: [ '' ]
+															   ifNil: [ ')' ]);
+												  runId: runId;
+												  stage: animatDefinitionOrSpecies;
+												  yourself) ] ] ] ]);
+		refresh
 ]

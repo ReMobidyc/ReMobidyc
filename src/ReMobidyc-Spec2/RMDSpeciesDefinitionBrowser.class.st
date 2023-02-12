@@ -76,7 +76,7 @@ RMDSpeciesDefinitionBrowser >> updateStages [
 		ifTrue: [ ^ self ].
 	selection := stagesNotebook selectedPageIndex.
 	stagesNotebook pages:
-		(((modeler simulationModel stagesNamesOf: species) collect: [ 
+		(((modeler simulationModel stageNamesOf: species) collect: [ 
 			  :stageName | 
 			  (SpNotebookPage title: stageName provider: [ 
 					   RMDAnimatDefinitionBrowser

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'stageDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #layout }

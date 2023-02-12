@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'timeList'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #initialization }
