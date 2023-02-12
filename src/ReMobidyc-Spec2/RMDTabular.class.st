@@ -96,7 +96,7 @@ RMDTabular >> initialize [
 	baseRowIndex := 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -201,6 +201,12 @@ RMDTabular >> runChanged [
 ]
 
 { #category : #accessing }
+RMDTabular >> selectRunId: anInteger [
+
+	runDropList selectItem: anInteger
+]
+
+{ #category : #accessing }
 RMDTabular >> selectTime: anInteger [
 
 	^ self subclassResponsibility
@@ -222,7 +228,8 @@ RMDTabular >> selectVisibleColumns: aBlock [
 { #category : #private }
 RMDTabular >> selectedRunId [
 
-	^ runDropList selectedItem
+	^ runDropList selectedItem ifNotNil: [ :runId | 
+		  runId isInteger ifTrue: [ runId ] ]
 ]
 
 { #category : #accessing }

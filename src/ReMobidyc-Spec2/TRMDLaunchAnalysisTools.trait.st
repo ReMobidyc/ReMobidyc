@@ -52,6 +52,7 @@ TRMDLaunchAnalysisTools >> openInAttributeTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInAttributeTabular)
 		  selectTime: self selectedTime;
+		  selectRunId: self selectedRunId;
 		  yourself
 ]
 
@@ -74,6 +75,7 @@ TRMDLaunchAnalysisTools >> openInPopulationTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInPopulationTabular)
 		  selectTime: self selectedTime;
+		  selectRunId: self selectedRunId;
 		  yourself
 ]
 
@@ -82,6 +84,7 @@ TRMDLaunchAnalysisTools >> openInReplayObservatory [
 
 	^ (self metaInterpreterForTabularDo: #openInReplayObservatory)
 		  selectTime: self selectedTime;
+		  selectRunId: self selectedRunId;
 		  yourself
 ]
 

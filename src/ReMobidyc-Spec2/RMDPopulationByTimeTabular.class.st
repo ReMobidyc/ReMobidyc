@@ -89,33 +89,10 @@ RMDPopulationByTimeTabular >> populationCollectorOnRunId: anInteger animat: aRMD
 				  ifFalse: [ '' ] ] ]
 ]
 
-{ #category : #accessing }
-RMDPopulationByTimeTabular >> selectTime: aNumber [
-
-	| index |
-	aNumber ifNil: [ ^table unselectAll ].
-	index := (aNumber / metaInterpreter simulationModel deltaTime)
-		         rounded.
-	index >= 0
-		ifTrue: [ 
-		table selectIndex: index + baseRowIndex scrollToSelection: true ]
-		ifFalse: [ table unselectAll ]
-]
-
 { #category : #private }
 RMDPopulationByTimeTabular >> selectedIndividual [
 
 	^ nil
-]
-
-{ #category : #accessing }
-RMDPopulationByTimeTabular >> selectedTime [
-
-	| index |
-	index := table selection selectedIndex - baseRowIndex.
-	^ index >= 0
-		  ifTrue: [ index * metaInterpreter simulationModel deltaTime ]
-		  ifFalse: [ nil ]
 ]
 
 { #category : #updating }

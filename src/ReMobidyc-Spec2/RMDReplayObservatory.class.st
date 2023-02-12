@@ -226,6 +226,12 @@ RMDReplayObservatory >> runSimulation [
 ]
 
 { #category : #private }
+RMDReplayObservatory >> selectRunId: anInteger [
+
+	runDropList selectItem: anInteger
+]
+
+{ #category : #private }
 RMDReplayObservatory >> selectTime: aNumber [
 
 	aNumber ifNil: [ ^ self ].
