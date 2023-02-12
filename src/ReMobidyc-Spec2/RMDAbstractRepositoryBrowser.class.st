@@ -298,6 +298,8 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 	updateItemListButton := self newButton
 		                        icon: self updateIcon;
 		                        action: [ self updateItemList ];
+		                        help:
+			                        'Update the item listing.';
 		                        disable;
 		                        yourself.
 	newItemButton := self newButton
