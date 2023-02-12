@@ -29,11 +29,14 @@ TRMDLaunchAnalysisTools >> initializeOpenAnalysisButtonsPresenters [
 	openTabularButton := self newButton
 		                     disable;
 		                     icon: self tabularIcon;
+		                     help: 'Open the run data in a Tabular.';
 		                     action: [ self openTabularMenu ];
 		                     yourself.
 	openObservatoryButton := self newButton
 		                         disable;
 		                         icon: self observatoryIcon;
+		                         help:
+			                         'Visualize the run data in an Observatory.';
 		                         action: [ self openInReplayObservatory ];
 		                         yourself
 ]
