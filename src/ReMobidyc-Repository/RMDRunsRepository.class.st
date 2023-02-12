@@ -119,8 +119,10 @@ RMDRunsRepository >> modelNamed: aString ifAbsent: errorBlock [
 { #category : #'accessing-models' }
 RMDRunsRepository >> modelNames [
 
-	^ self runsDirectory directoryNames reject: [ :dirname | 
-		  dirname isEmpty or: [ dirname first = $. ] ]
+	^ ((self runsDirectory directories select: [ :dir | 
+		    dir basename first ~= $. ]) asSortedCollection: [ :newer :older | 
+		   newer modificationTime >= older modificationTime ]) collect:
+		  #basename
 ]
 
 { #category : #'accessing-actions' }

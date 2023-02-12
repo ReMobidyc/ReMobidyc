@@ -75,7 +75,7 @@ RMDRepositoryIconsBrowser >> getIcon: aString [
 { #category : #accessing }
 RMDRepositoryIconsBrowser >> itemsInRepository [
 
-	^ (self repository ifNotNil: #iconNames ifNil: [ #(  ) ]) asSortedCollection
+	^ self repository ifNotNil: #iconNames ifNil: [ #(  ) ]
 ]
 
 { #category : #actions }
