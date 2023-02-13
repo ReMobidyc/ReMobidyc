@@ -8,6 +8,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #initialization }
+RMDAverageStagePopulationColumn >> defaultEvaluation [
+
+	^ [ :row | 
+	  (self value: row) ifNotNil: [ :value | 
+		  value isInteger
+			  ifTrue: [ self printNat: value ]
+			  ifFalse: [ value ] ] ]
+]
+
 { #category : #accessing }
 RMDAverageStagePopulationColumn >> runIds [
 
@@ -35,12 +45,12 @@ RMDAverageStagePopulationColumn >> stage: aRMDAnimatDefinitionNode [
 { #category : #accessing }
 RMDAverageStagePopulationColumn >> value: aRow [
 
-	^ self printNat: ((runIds
-			    collect: [ :runId | 
-				    aRow
-					    at: { 
-							    runId.
-							    stage identifier }
-					    ifAbsent: [ nil ] ]
-			    thenSelect: #notNil) ifNotEmpty: #average ifEmpty: [ nil ])
+	^ (runIds
+		   collect: [ :runId | 
+			   aRow
+				   at: { 
+						   runId.
+						   stage identifier }
+				   ifAbsent: [ nil ] ]
+		   thenSelect: #notNil) ifNotEmpty: #average ifEmpty: [ nil ]
 ]

@@ -48,30 +48,12 @@ RMDTabular >> canOpenAnalysis [
 		  metaInterpreter context isForFileMemory ]
 ]
 
-{ #category : #accessing }
-RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock [
+{ #category : #private }
+RMDTabular >> csvQuote: aString [
 
-	self
-		columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock
-		selectVisible: [ :columnKey | true ]
-]
-
-{ #category : #accessing }
-RMDTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVisible: aBlock [
-
-	columnCollectors := anArrayOfAssociationOfColumnKeyAndBlock.
-	table columns: #(  ).
-	self updateRows.
-	table
-		columns: (anArrayOfAssociationOfColumnKeyAndBlock
-				 select: [ :assoc | aBlock value: assoc key ]
-				 thenCollect: [ :assoc | 
-					 SpStringTableColumn evaluated: [ :row | 
-							 | v |
-							 v := row at: assoc key ifAbsent: [ '' ].
-							 [ v isBlock ] whileTrue: [ v := v value: assoc key ].
-							 v ] ]);
-		refresh
+	^ '"' , (((aString copyReplaceAll: '"' with: '\"')
+		    copyReplaceAll: ','
+		    with: '\,') copyReplaceAll: String cr with: '\n') , '"'
 ]
 
 { #category : #operations }
@@ -84,12 +66,6 @@ RMDTabular >> exportAsCSV [
 			  / (metaInterpreter context modelPath basename , '-populations') 
 				  withExtension: 'csv') absolutePath) ifNotNil: [ :fileRef | 
 		self writeCSVInto: fileRef ]
-]
-
-{ #category : #enumerating }
-RMDTabular >> generateRowsDo: aBlock [
-
-	^ self subclassResponsibility
 ]
 
 { #category : #initialization }
@@ -170,8 +146,7 @@ RMDTabular >> metaInterpreterForTabularDo: aBlock [
 { #category : #updating }
 RMDTabular >> metaInterpreterReloaded [
 
-	self updateRows.
-	table refresh
+	self updateTable
 ]
 
 { #category : #accessing }
@@ -299,8 +274,8 @@ RMDTabular >> stagesOf: aString do: aBlock [
 			aBlock value: animatDefinition ] ]
 ]
 
-{ #category : #enumerating }
-RMDTabular >> titleRowsDo: aBlock [
+{ #category : #updating }
+RMDTabular >> updateColumns [
 
 	^ self subclassResponsibility
 ]
@@ -308,45 +283,44 @@ RMDTabular >> titleRowsDo: aBlock [
 { #category : #updating }
 RMDTabular >> updateRows [
 
-	| count |
-	count := 1.
-	table items: (Array streamContents: [ :stream | 
-			 columnCollectors ifNotNil: [ 
-				 self titleRowsDo: [ :block | 
-					 stream nextPut: (columnCollectors collect: [ :assoc | 
-							  assoc key -> (block value: assoc key) ]) asDictionary.
-					 count := count + 1 ].
-				 baseRowIndex := count.
-				 self generateRowsDo: [ :row | 
-					 stream nextPut: (columnCollectors collect: [ :assoc | 
-							  assoc key -> (assoc value value: row) ]) asDictionary ] ] ])
+	^ self subclassResponsibility
 ]
 
 { #category : #updating }
 RMDTabular >> updateRunDropList [
 
-	runDropList items: { nil } , metaInterpreter runIds
+	runDropList
+		items: { nil } , metaInterpreter runIds;
+		selectIndex: 1
+]
+
+{ #category : #updating }
+RMDTabular >> updateTable [
+
+	self
+		updateRows;
+		updateColumns
 ]
 
 { #category : #operations }
 RMDTabular >> writeCSVInto: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
+		table columns
+			do: [ :column | stream nextPutAll: (self csvQuote: column title) ]
+			separatedBy: [ stream nextPut: $, ].
+		stream cr.
 		table items
 			do: [ :row | 
 				table columns
 					do: [ :column | 
 						| item |
-						item := column evaluation value: row.
-						item isNumber
-							ifTrue: [ item printOn: stream ]
-							ifFalse: [ 
-								stream
-									nextPut: $";
-									nextPutAll: ((item asString copyReplaceAll: '"' with: '\"')
-											 copyReplaceAll: ','
-											 with: '\,');
-									nextPut: $" ] ]
+						item := column value: row.
+						item ifNotNil: [ 
+							item isNumber
+								ifTrue: [ item printOn: stream ]
+								ifFalse: [ 
+									stream nextPutAll: (self csvQuote: item) ] ] ]
 					separatedBy: [ stream nextPut: $, ] ]
 			separatedBy: [ stream cr ] ]
 ]

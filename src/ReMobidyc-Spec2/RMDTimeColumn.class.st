@@ -7,6 +7,14 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #'instancce creation' }
+RMDTimeColumn class >> unit: aRMDUnit [
+
+	^ self new
+		  unit: aRMDUnit;
+		  yourself
+]
+
 { #category : #accessing }
 RMDTimeColumn >> unit [
 
@@ -16,7 +24,8 @@ RMDTimeColumn >> unit [
 { #category : #accessing }
 RMDTimeColumn >> unit: aRMDUnit [
 
-	unit := aRMDUnit
+	unit := aRMDUnit.
+	title := 'time [' , unit printString , ']'
 ]
 
 { #category : #accessing }

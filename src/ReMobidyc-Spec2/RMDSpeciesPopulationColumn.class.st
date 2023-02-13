@@ -8,6 +8,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #initialization }
+RMDSpeciesPopulationColumn >> defaultEvaluation [
+
+	^ [ :row | 
+	  (self value: row) ifNotNil: [ :value | 
+		  value isInteger
+			  ifTrue: [ self printNat: value ]
+			  ifFalse: [ value ] ] ]
+]
+
 { #category : #accessing }
 RMDSpeciesPopulationColumn >> runId [
 
@@ -35,11 +45,11 @@ RMDSpeciesPopulationColumn >> stages: anArrayOfString [
 { #category : #accessing }
 RMDSpeciesPopulationColumn >> value: aRow [
 
-	^ self printNat: (stages inject: nil into: [ :sum :stage | 
-			   aRow
-				   at: { 
-						   runId.
-						   stage }
-				   ifPresent: [ :num | (sum ifNil: [ 0 ]) + num ]
-				   ifAbsent: [ sum ] ])
+	^ stages inject: nil into: [ :sum :stage | 
+		  aRow
+			  at: { 
+					  runId.
+					  stage }
+			  ifPresent: [ :num | (sum ifNil: [ 0 ]) + num ]
+			  ifAbsent: [ sum ] ]
 ]

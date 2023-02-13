@@ -8,6 +8,16 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #initialization }
+RMDStagePopulationColumn >> defaultEvaluation [
+
+	^ [ :row | 
+	  (self value: row) ifNotNil: [ :value | 
+		  value isInteger
+			  ifTrue: [ self printNat: value ]
+			  ifFalse: [ value ] ] ]
+]
+
 { #category : #accessing }
 RMDStagePopulationColumn >> runId [
 
@@ -35,9 +45,9 @@ RMDStagePopulationColumn >> stage: aRMDAnimatDefinitionNode [
 { #category : #accessing }
 RMDStagePopulationColumn >> value: aRow [
 
-	^ self printNat: (aRow
-			   at: { 
-					   runId.
-					   stage identifier }
-			   ifAbsent: [ nil ])
+	^ aRow
+		  at: { 
+				  runId.
+				  stage identifier }
+		  ifAbsent: [ nil ]
 ]

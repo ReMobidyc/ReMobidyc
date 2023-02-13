@@ -41,60 +41,6 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'accessing - column collectors' }
-RMDStageIndividualsAtTimeTabular >> attributeCollectorOn: aRMDAttributeDeclarationNode [
-
-	^ aRMDAttributeDeclarationNode -> [ :individual | 
-	  (metaInterpreter
-		   interpreterAt: runDropList selectedItem
-		   ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
-		  | time stage |
-		  time := timeList selectedItem.
-		  stage := stageDropList selectedItem.
-		  (time notNil and: [ stage notNil ]) ifTrue: [ 
-			  (stage
-				   attributeOffsetAt: aRMDAttributeDeclarationNode identifier
-				   ifAbsent: [ nil ]) ifNotNil: [ :offset | 
-				  | memory |
-				  memory := interpreter memory.
-				  time <= memory latestTime ifTrue: [ 
-					  (memory
-						   time: time;
-						   at: individual + offset ifAbsent: [ nil ]) ifNotNil: [ :value | 
-						  aRMDAttributeDeclarationNode unit fromSI: value ] ] ] ] ] ]
-]
-
-{ #category : #accessing }
-RMDStageIndividualsAtTimeTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVisible: aBlock [
-
-	super
-		columnCollectors: { self individualColumnCollector }
-			, anArrayOfAssociationOfColumnKeyAndBlock
-		selectVisible: aBlock
-]
-
-{ #category : #enumerating }
-RMDStageIndividualsAtTimeTabular >> generateRowsDo: aBlock [
-
-	(metaInterpreter
-		 interpreterAt: runDropList selectedItem
-		 ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
-		timeList selectedItem ifNotNil: [ :time | 
-			stageDropList selectedItem ifNotNil: [ :stage | 
-				interpreter memory time: time.
-				(Array streamContents: [ :stream | 
-					 interpreter memory
-						 animatsOf: stage identifier
-						 do: [ :individual | stream nextPut: individual ] ])
-					asSortedCollection do: aBlock ] ] ]
-]
-
-{ #category : #'accessing - column collectors' }
-RMDStageIndividualsAtTimeTabular >> individualColumnCollector [
-
-	^ #individual -> [ :individual | individual ]
-]
-
 { #category : #initialization }
 RMDStageIndividualsAtTimeTabular >> initializePresenters [
 
@@ -119,7 +65,7 @@ RMDStageIndividualsAtTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 { #category : #private }
 RMDStageIndividualsAtTimeTabular >> selectedIndividual [
 
-	^ (table selectedItem at: #individual) ifNotNil: [ :id | 
+	^ (table selectedItem at: #id) ifNotNil: [ :id | 
 		  id isInteger
 			  ifTrue: [ id ]
 			  ifFalse: [ nil ] ]
@@ -141,14 +87,41 @@ RMDStageIndividualsAtTimeTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #enumerating }
-RMDStageIndividualsAtTimeTabular >> titleRowsDo: aBlock [
+{ #category : #updating }
+RMDStageIndividualsAtTimeTabular >> updateColumns [
 
-	aBlock value: [ :columnKey | 
-		columnKey = #individual
-			ifTrue: [ 'ID' ]
-			ifFalse: [ 
-			columnKey identifier , '[' , columnKey unit printString , ']' ] ]
+	table columns: (Array streamContents: [ :stream | 
+			 runDropList selectedItem ifNotNil: [ :runId | 
+				 stageDropList selectedItem ifNotNil: [ :animatDefinition | 
+					 stream nextPut: RMDIdColumn new.
+					 animatDefinition attributeDeclarationsDo: [ :attributeDecl | 
+						 stream nextPut: (RMDAttributeColumn attribute: attributeDecl) ] ] ] ])
+]
+
+{ #category : #updating }
+RMDStageIndividualsAtTimeTabular >> updateRows [
+
+	table
+		items: (Array streamContents: [ :stream | 
+					 (metaInterpreter
+						  interpreterAt: runDropList selectedItem
+						  ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
+							 | memory |
+							 memory := interpreter memory.
+							 timeList selectedItem ifNotNil: [ :time | 
+									 stageDropList selectedItem ifNotNil: [ :animat | 
+											 memory time: time.
+											 (memory animatsOf: animat identifier) asSortedCollection 
+												 do: [ :individual | 
+													 | row |
+													 row := Dictionary new.
+													 row at: #id put: individual.
+													 animat attributeOffsetsDo: [ :attribute :offset | 
+															 row
+																 at: attribute
+																 put: (memory at: individual + offset) ].
+													 stream nextPut: row ] ] ] ] ]);
+		refresh
 ]
 
 { #category : #updating }
@@ -180,9 +153,7 @@ RMDStageIndividualsAtTimeTabular >> updateStageDropList [
 { #category : #updating }
 RMDStageIndividualsAtTimeTabular >> updateTable [
 
-	self columnCollectors: (Array streamContents: [ :stream | 
-			 runDropList selectedItem ifNotNil: [ :runId | 
-				 stageDropList selectedItem ifNotNil: [ :animatDefinition | 
-					 animatDefinition attributeDeclarationsDo: [ :attributeDecl | 
-						 stream nextPut: (self attributeCollectorOn: attributeDecl) ] ] ] ])
+	self
+		updateRows;
+		updateColumns
 ]

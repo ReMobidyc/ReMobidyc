@@ -5,10 +5,16 @@ Class {
 }
 
 { #category : #initialization }
+RMDTabularColumn >> defaultEvaluation [
+
+	^ [ :row | self value: row ]
+]
+
+{ #category : #initialization }
 RMDTabularColumn >> initialize [
 
 	super initialize.
-	evaluation := [ :row | self value: row ]
+	evaluation := self defaultEvaluation
 ]
 
 { #category : #printing }

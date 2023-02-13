@@ -110,6 +110,12 @@ RMDMemory >> animatsInPatch: aBlock [
 ]
 
 { #category : #'accessing-individuals' }
+RMDMemory >> animatsOf: aString [
+
+	^ (self animats at: aString ifAbsent: [ Array new ]) asArray
+]
+
+{ #category : #'accessing-individuals' }
 RMDMemory >> animatsOf: aString do: aBlock [
 
 	(self animats at: aString ifAbsent: [ ^ self ]) asArray do: [ 
