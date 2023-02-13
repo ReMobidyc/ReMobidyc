@@ -1,15 +1,15 @@
 Class {
-	#name : #RMDAverageStagePopulationColumn,
+	#name : #RMDPopulationColumn,
 	#superclass : #RMDTabularColumn,
 	#instVars : [
 		'runIds',
-		'stage'
+		'stages'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #initialization }
-RMDAverageStagePopulationColumn >> defaultEvaluation [
+RMDPopulationColumn >> defaultEvaluation [
 
 	^ [ :row | 
 	  (self value: row) ifNotNil: [ :value | 
@@ -19,38 +19,41 @@ RMDAverageStagePopulationColumn >> defaultEvaluation [
 ]
 
 { #category : #accessing }
-RMDAverageStagePopulationColumn >> runIds [
+RMDPopulationColumn >> runIds [
 
 	^ runIds
 ]
 
 { #category : #accessing }
-RMDAverageStagePopulationColumn >> runIds: anArrayOfInteger [
+RMDPopulationColumn >> runIds: anArrayOfInteger [
 
 	runIds := anArrayOfInteger
 ]
 
 { #category : #accessing }
-RMDAverageStagePopulationColumn >> stage [
+RMDPopulationColumn >> stages [
 
-	^ stage
+	^ stages
 ]
 
 { #category : #accessing }
-RMDAverageStagePopulationColumn >> stage: aRMDAnimatDefinitionNode [
+RMDPopulationColumn >> stages: anArrayOfRMDAnimatDefinitionNode [
 
-	stage := aRMDAnimatDefinitionNode
+	stages := anArrayOfRMDAnimatDefinitionNode
 ]
 
 { #category : #accessing }
-RMDAverageStagePopulationColumn >> value: aRow [
+RMDPopulationColumn >> value: aRow [
 
 	^ (runIds
 		   collect: [ :runId | 
-			   aRow
-				   at: { 
-						   runId.
-						   stage identifier }
-				   ifAbsent: [ nil ] ]
+			   (stages
+				    collect: [ :stage | 
+					    aRow
+						    at: { 
+								    runId.
+								    stage }
+						    ifAbsent: [ nil ] ]
+				    thenSelect: #notNil) ifNotEmpty: #sum ifEmpty: [ nil ] ]
 		   thenSelect: #notNil) ifNotEmpty: #average ifEmpty: [ nil ]
 ]
