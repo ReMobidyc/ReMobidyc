@@ -1,32 +1,8 @@
 Class {
 	#name : #RMDTimeSeriesTabular,
 	#superclass : #RMDTabular,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
-
-{ #category : #accessing }
-RMDTimeSeriesTabular >> columnCollectors: anArrayOfAssociationOfColumnKeyAndBlock selectVisible: aBlock [
-
-	super
-		columnCollectors:
-		{ self timeColumnCollector }
-		, anArrayOfAssociationOfColumnKeyAndBlock
-		selectVisible: aBlock
-]
-
-{ #category : #enumerating }
-RMDTimeSeriesTabular >> generateRowsDo: aBlock [
-
-	| latestTime |
-	latestTime := self latestTime.
-	'Collecting data from the run record'
-		displayProgressFrom: 0
-		to: latestTime
-		during: [ :progress | 
-			0 to: latestTime do: [ :time | 
-				aBlock value: time.
-				progress value: time ] ]
-]
 
 { #category : #initialization }
 RMDTimeSeriesTabular >> initializePresenters [
@@ -38,19 +14,28 @@ RMDTimeSeriesTabular >> initializePresenters [
 { #category : #updating }
 RMDTimeSeriesTabular >> runChanged [
 
-	self updateVisibleColumns
+	self updateColumns
 ]
 
-{ #category : #'accessing - column collectors' }
-RMDTimeSeriesTabular >> timeColumnCollector [
+{ #category : #accessing }
+RMDTimeSeriesTabular >> selectTime: aNumber [
 
-	^ #time -> [ :time | 
-	  metaInterpreter simulationModel durationUnit fromSI:
-		  time * metaInterpreter simulationModel deltaTime ]
+	| index |
+	aNumber ifNil: [ ^table unselectAll ].
+	index := (aNumber / metaInterpreter simulationModel deltaTime)
+		         rounded.
+	index >= 0
+		ifTrue: [ 
+		table selectIndex: index + baseRowIndex scrollToSelection: true ]
+		ifFalse: [ table unselectAll ]
 ]
 
-{ #category : #updating }
-RMDTimeSeriesTabular >> updateVisibleColumns [
+{ #category : #accessing }
+RMDTimeSeriesTabular >> selectedTime [
 
-	^ self subclassResponsibility
+	| index |
+	index := table selection selectedIndex - baseRowIndex.
+	^ index >= 0
+		  ifTrue: [ index * metaInterpreter simulationModel deltaTime ]
+		  ifFalse: [ nil ]
 ]

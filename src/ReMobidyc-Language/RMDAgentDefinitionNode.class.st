@@ -68,6 +68,17 @@ RMDAgentDefinitionNode >> allAttributeDeclarations [
 		, self attributeDeclarations
 ]
 
+{ #category : #enumerating }
+RMDAgentDefinitionNode >> allAttributeDeclarationsDo: aBlock [
+
+	self builtinAttributes do: [ :assoc | 
+		aBlock value:
+			(RMDAttributeDeclarationNode
+				 identifier: assoc key
+				 unit: assoc value) ].
+	self attributeDeclarations do: aBlock
+]
+
 { #category : #utilities }
 RMDAgentDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 	^ (self attributeOffsets associations

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'stageDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
 { #category : #layout }
@@ -45,49 +45,6 @@ RMDIndividualByTimeTabular class >> on: aRMDMetaInterpreter runId: runId individ
 		  initializeWithRunId: runId
 		  animat: id
 		  time: secondsSinceEpoch
-]
-
-{ #category : #'accessing - column collectors' }
-RMDIndividualByTimeTabular >> attributeCollectorOn: aRMDAttributeDeclarationNode [
-
-	^ aRMDAttributeDeclarationNode -> [ :time | 
-	  (metaInterpreter
-		   interpreterAt: runDropList selectedItem
-		   ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
-		  | stage individual |
-		  stage := interpreter simulationModel
-			           animatDefinitionAt:
-			           (stageDropList selectedItem ifNotNil: [ :assoc | 
-				            assoc value first ])
-			           ifAbsent: [ nil ].
-		  individual := stageDropList selectedItem ifNotNil: [ :assoc | 
-			                assoc value second ].
-		  (stage notNil and: [ individual notNil ]) ifTrue: [ 
-			  (stage
-				   attributeOffsetAt: aRMDAttributeDeclarationNode identifier
-				   ifAbsent: [ nil ]) ifNotNil: [ :offset | 
-				  | memory |
-				  memory := interpreter memory.
-				  time <= memory latestTime ifTrue: [ 
-					  (memory
-						   time: time;
-						   at: individual + offset ifAbsent: [ nil ]) ifNotNil: [ :value | 
-						  aRMDAttributeDeclarationNode unit fromSI: value ] ] ] ] ] ]
-]
-
-{ #category : #enumerating }
-RMDIndividualByTimeTabular >> generateRowsDo: aBlock [
-
-	stageDropList selectedItem ifNotNil: [ :assoc | 
-		| interval |
-		interval := assoc key.
-		'Collecting data from the run record'
-			displayProgressFrom: interval first
-			to: interval last
-			during: [ :progress | 
-				interval do: [ :time | 
-					aBlock value: time.
-					progress value: time ] ] ]
 ]
 
 { #category : #initialization }
@@ -229,7 +186,8 @@ RMDIndividualByTimeTabular >> selectedTime [
 { #category : #updating }
 RMDIndividualByTimeTabular >> stageChanged [
 
-	self updateVisibleColumns
+	self
+		updateTable
 ]
 
 { #category : #initialization }
@@ -242,29 +200,64 @@ RMDIndividualByTimeTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #enumerating }
-RMDIndividualByTimeTabular >> titleRowsDo: aBlock [
+{ #category : #updating }
+RMDIndividualByTimeTabular >> updateColumns [
 
-	aBlock value: [ :columnKey | 
-		columnKey = #time
-			ifTrue: [ 
-				'time ['
-				, metaInterpreter simulationModel durationUnit printString , ']' ]
-			ifFalse: [ 
-			columnKey identifier , '[' , columnKey unit printString , ']' ] ]
+	table columns: (Array streamContents: [ :stream | 
+			 stageDropList selectedItem ifNotNil: [ :assoc | 
+				 (metaInterpreter
+					  interpreterAt: runDropList selectedItem
+					  ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
+					 (interpreter simulationModel
+						  animatDefinitionAt: assoc value first
+						  ifAbsent: [ nil ]) ifNotNil: [ :stage | 
+						 stream nextPut:
+							 (RMDTimeColumn unit: interpreter simulationModel durationUnit).
+						 stage allAttributeDeclarationsDo: [ :attribute | 
+							 stream nextPut: (RMDAttributeColumn attribute: attribute) ] ] ] ] ])
+]
+
+{ #category : #enumerating }
+RMDIndividualByTimeTabular >> updateRows [
+
+	table
+		items: (Array streamContents: [ :stream | 
+					 (metaInterpreter
+						  interpreterAt: runDropList selectedItem
+						  ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
+							 | simulationModel memory |
+							 simulationModel := interpreter simulationModel.
+							 memory := interpreter memory.
+							 stageDropList selectedItem ifNotNil: [ :assoc | 
+									 | interval stageName individual |
+									 interval := assoc key.
+									 stageName := assoc value first.
+									 individual := assoc value second.
+									 (interpreter simulationModel
+										  animatDefinitionAt: stageName
+										  ifAbsent: [ nil ]) ifNotNil: [ :animat | 
+											 'Collecting data from the run record'
+												 displayProgressFrom: interval first
+												 to: interval last
+												 during: [ :progress | 
+													 interval do: [ :time | 
+															 | row |
+															 row := Dictionary new.
+															 memory time: time.
+															 row at: #time put: interpreter time.
+															 animat attributeOffsetsDo: [ :attribute :offset | 
+																	 row
+																		 at: attribute
+																		 put: (memory at: individual + offset) ].
+															 stream nextPut: row.
+															 progress value: time ] ] ] ] ] ]);
+		refresh
 ]
 
 { #category : #updating }
-RMDIndividualByTimeTabular >> updateVisibleColumns [
+RMDIndividualByTimeTabular >> updateTable [
 
-	stageDropList selectedItem ifNotNil: [ :assoc | 
-		(metaInterpreter
-			 interpreterAt: runDropList selectedItem
-			 ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
-			(interpreter simulationModel
-				 animatDefinitionAt: assoc value first
-				 ifAbsent: [ nil ]) ifNotNil: [ :stage | 
-				self columnCollectors:
-					(stage attributeDeclarations collect: [ :attribute | 
-						 self attributeCollectorOn: attribute ]) ] ] ]
+	self
+		updateRows;
+		updateColumns
 ]
