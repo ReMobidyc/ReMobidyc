@@ -126,19 +126,18 @@ RMDPopulationByTimeTabular >> updateColumns [
 								 do: [ :animatDefinitionOrSpecies | 
 									 animatDefinitionOrSpecies isString
 										 ifTrue: [ 
-											 stream nextPut: (RMDSpeciesPopulationColumn new
+											 stream nextPut: (RMDPopulationColumn new
 														  title: (runDropList selectedItem
 																   ifNotNil: [ '' ]
 																   ifNil: [ runId printString , ': ' ])
 															  , animatDefinitionOrSpecies;
-														  runId: runId;
+														  runIds: { runId };
 														  stages:
 															  (metaInterpreter simulationModel stageNamesOf:
 																	   animatDefinitionOrSpecies)) ]
 										 ifFalse: [ 
-											 stream nextPut: (RMDStagePopulationColumn new
-													  title:
-														  (runDropList
+											 stream nextPut: (RMDPopulationColumn new
+													  title: (runDropList selectedItem
 															   ifNotNil: [ '' ]
 															   ifNil: [ runId printString , ': ' ])
 														  , (speciesDropList selectedItem
@@ -149,8 +148,8 @@ RMDPopulationByTimeTabular >> updateColumns [
 															  (speciesDropList selectedItem
 																   ifNotNil: [ '' ]
 																   ifNil: [ ')' ]);
-													  runId: runId;
-													  stage: animatDefinitionOrSpecies;
+													  runIds: { runId };
+													  stages: { animatDefinitionOrSpecies identifier };
 													  yourself) ] ] ] ]);
 		refresh
 ]
