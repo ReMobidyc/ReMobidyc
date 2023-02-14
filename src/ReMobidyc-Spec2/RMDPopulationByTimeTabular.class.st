@@ -2,6 +2,9 @@ Class {
 	#name : #RMDPopulationByTimeTabular,
 	#superclass : #RMDTimeSeriesTabular,
 	#instVars : [
+		'runAggregationDropList',
+		'animatAggregationDropList',
+		'animatDropList',
 		'speciesDropList',
 		'stageDropList'
 	],
@@ -21,14 +24,17 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 				   width: self buttonHeight;
 				   addSpace;
 				   add: (SpBoxLayout newVertical
-						    add: 'Run';
+						    add: 'Run Aggregation';
+						    add: #runAggregationDropList);
+				   add: (SpBoxLayout newVertical
+						    add: 'meta-parameters';
 						    add: #runDropList);
 				   add: (SpBoxLayout newVertical
-						    add: 'Species';
-						    add: #speciesDropList);
+						    add: 'Animat Aggregation';
+						    add: #animatAggregationDropList);
 				   add: (SpBoxLayout newVertical
-						    add: 'Stage';
-						    add: #stageDropList);
+						    add: 'Species';
+						    add: #animatDropList);
 				   yourself)
 		  expand: false;
 		  add: #table;
@@ -42,46 +48,164 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateAllAnimats [
+
+	^ Array streamContents: [ :stream | 
+		  stream nextPut: 'all'
+			  ->
+				  { ('all'
+				   -> (metaInterpreter simulationModel animatDefinitions collect:
+						    #identifier)) } ]
+]
+
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateAllRuns [
+
+	^ Array streamContents: [ :stream | 
+		  stream nextPut: 'all' -> { ('' -> metaInterpreter runIds) } ]
+]
+
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateByMetaparameters [
+
+	| groups |
+	groups := OrderedDictionary new.
+	metaInterpreter interpretersDo: [ :interpreter | 
+		(groups
+			 at: interpreter metaparametersString
+			 ifAbsentPut: [ OrderedCollection new ]) add: interpreter runId ].
+
+	^ Array streamContents: [ :stream | 
+		  stream nextPut: 'all' -> groups associations.
+		  groups keysAndValuesDo: [ :metaparameters :runIds | 
+			  stream nextPut: metaparameters -> { (metaparameters -> runIds) } ] ]
+]
+
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateByRuns [
+
+	| groups lister |
+	groups := OrderedDictionary new.
+	metaInterpreter interpretersDo: [ :interpreter | 
+		(groups
+			 at: interpreter metaparametersString
+			 ifAbsentPut: [ OrderedCollection new ]) add: interpreter runId ].
+
+	lister := [ :runs | 
+	          runs
+		          collect: [ :runId | 
+			          (metaInterpreter interpreterAt: runId ifAbsent: [ nil ]) 
+				          ifNotNil: [ :interpreter | 
+				          interpreter shortName -> { runId } ] ]
+		          thenSelect: #notNil ].
+
+	^ Array streamContents: [ :stream | 
+		  stream nextPut: 'all' -> (lister value: metaInterpreter runIds).
+		  groups keysAndValuesDo: [ :metaparameters :runIds | 
+			  stream nextPut: metaparameters -> (lister value: runIds) ] ]
+]
+
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateBySpecies [
+
+	| simulationModel groups |
+	simulationModel := metaInterpreter simulationModel.
+	groups := OrderedDictionary new.
+	simulationModel animatDefinitionsDo: [ :animatDef | 
+		(groups at: animatDef species ifAbsentPut: [ OrderedCollection new ]) 
+			add: animatDef identifier ].
+	^ Array streamContents: [ :stream | 
+		  stream nextPut: 'all' -> groups associations.
+		  groups keysAndValuesDo: [ :species :stages | 
+			  stream nextPut: species -> { (species -> stages) } ] ]
+]
+
+{ #category : #aggregating }
+RMDPopulationByTimeTabular >> aggregateByStages [
+
+	| simulationModel groups |
+	simulationModel := metaInterpreter simulationModel.
+	groups := OrderedDictionary new.
+	simulationModel animatDefinitionsDo: [ :animatDef | 
+		(groups at: animatDef species ifAbsentPut: [ OrderedCollection new ]) 
+			add: animatDef identifier ].
+	^ Array streamContents: [ :stream | 
+		  stream nextPut:
+			  'all'
+			  -> (simulationModel animatDefinitions collect: [ :animat | 
+					   animat identifier -> { animat identifier } ]).
+		  groups keysAndValuesDo: [ :species :stages | 
+			  stream nextPut:
+				  species -> (stages collect: [ :stage | stage -> { stage } ]) ] ]
+]
+
+{ #category : #updating }
+RMDPopulationByTimeTabular >> animatAggregationChanged [
+	self updateAnimatDropList
+]
+
+{ #category : #updating }
+RMDPopulationByTimeTabular >> animatChanged [
+
+	self updateColumns
+]
+
 { #category : #initialization }
 RMDPopulationByTimeTabular >> initializePresenters [
 
 	super initializePresenters.
-	speciesDropList := self newDropList
-		                   display: [ :item | item ifNil: [ 'all species' ] ];
-		                   whenSelectedItemChangedDo: [ self speciesChanged ];
-		                   yourself.
-	stageDropList := self newDropList
-		                 display: [ :item | item ifNil: [ 'every stage' ] ];
-		                 whenSelectedItemChangedDo: [ self stageChanged ];
-		                 yourself
+	runAggregationDropList := self newDropList
+		                          display: [ :item | item key ];
+		                          items: { 
+				                          ('each run' -> #aggregateByRuns).
+				                          ('by meta-parameters'
+				                           -> #aggregateByMetaparameters).
+				                          ('all' -> #aggregateAllRuns) };
+		                          selectIndex: 1;
+		                          whenSelectedItemChangedDo: [ 
+			                          self runAggregationChanged ];
+		                          yourself.
+	animatAggregationDropList := self newDropList
+		                             display: [ :item | item key ];
+		                             items: { 
+				                             ('stages' -> #aggregateByStages).
+				                             ('species' -> #aggregateBySpecies).
+				                             ('all' -> #aggregateAllAnimats) };
+		                             selectIndex: 1;
+		                             whenSelectedItemChangedDo: [ 
+			                             self animatAggregationChanged ];
+		                             yourself.
+	runDropList
+		display: [ :item | item key ];
+		items: {  }.
+	animatDropList := self newDropList
+		                  display: [ :item | item key ];
+		                  items: {  };
+		                  whenSelectedItemChangedDo: [ self animatChanged ];
+		                  yourself
 ]
 
 { #category : #private }
 RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
-	self updateRows.
-	self updateSpeciesDropList.
-	self updateStageDropList
+	self
+		updateRunDropList;
+		updateAnimatDropList;
+		updateColumns;
+		updateRows
+]
+
+{ #category : #updating }
+RMDPopulationByTimeTabular >> runAggregationChanged [
+	self updateRunDropList
 ]
 
 { #category : #private }
 RMDPopulationByTimeTabular >> selectedIndividual [
 
 	^ nil
-]
-
-{ #category : #updating }
-RMDPopulationByTimeTabular >> speciesChanged [
-
-	self updateColumns.
-	self updateStageDropList
-]
-
-{ #category : #updating }
-RMDPopulationByTimeTabular >> stageChanged [
-
-	self updateColumns
 ]
 
 { #category : #initialization }
@@ -95,62 +219,51 @@ RMDPopulationByTimeTabular >> title [
 ]
 
 { #category : #updating }
+RMDPopulationByTimeTabular >> updateAnimatDropList [
+
+	| selectedItem |
+	selectedItem := animatDropList selectedItem.
+	animatDropList items: (animatAggregationDropList selectedItem
+			 ifNotNil: [ :assoc | self perform: assoc value ]
+			 ifNil: [ {  } ]).
+	selectedItem ifNotNil: [ 
+		selectedItem := animatDropList items
+			                detect: [ :item | item key = selectedItem key ]
+			                ifNone: [ nil ].
+		animatDropList selectItem: selectedItem ]
+]
+
+{ #category : #updating }
 RMDPopulationByTimeTabular >> updateColumns [
 
+	metaInterpreter ifNil: [ ^ self ].
+	runDropList items
+		ifNotEmpty: [ 
+		runDropList selectedItem ifNil: [ runDropList selectIndex: 1 ] ]
+		ifEmpty: [ ^ self ].
+	animatDropList items
+		ifNotEmpty: [ 
+			animatDropList selectedItem ifNil: [ animatDropList selectIndex: 1 ] ]
+		ifEmpty: [ ^ self ].
 	table
 		columns: (Array streamContents: [ :stream | 
 					 stream nextPut:
 							 (RMDTimeColumn unit:
 									  metaInterpreter simulationModel durationUnit).
-					 (runDropList selectedItem
-						  ifNotNil: [ :runId | { runId } ]
-						  ifNil: [ metaInterpreter runIds ]) do: [ :runId | 
-							 (stageDropList selectedItem
-								  ifNotNil: [ :stage | 
-									  stage = #total
-										  ifTrue: [ 
-											  speciesDropList selectedItem
-												  ifNotNil: [ :species | { species } ]
-												  ifNil: [ metaInterpreter simulationModel speciesNames ] ]
-										  ifFalse: [ 
-											  { (metaInterpreter simulationModel
-												   animatDefinitionAt: stage
-												   ifAbsent: [ nil ]) } ] ]
-								  ifNil: [ 
-									  speciesDropList selectedItem
-										  ifNotNil: [ :species | 
-											  (metaInterpreter simulationModel stagesOf: species)
-											  , { species } ]
-										  ifNil: [ 
-											  metaInterpreter simulationModel animatDefinitions ] ]) 
-								 do: [ :animatDefinitionOrSpecies | 
-									 animatDefinitionOrSpecies isString
-										 ifTrue: [ 
-											 stream nextPut: (RMDPopulationColumn new
-														  title: (runDropList selectedItem
-																   ifNotNil: [ '' ]
-																   ifNil: [ runId printString , ': ' ])
-															  , animatDefinitionOrSpecies;
-														  runIds: { runId };
-														  stages:
-															  (metaInterpreter simulationModel stageNamesOf:
-																	   animatDefinitionOrSpecies)) ]
-										 ifFalse: [ 
-											 stream nextPut: (RMDPopulationColumn new
-													  title: (runDropList selectedItem
-															   ifNotNil: [ '' ]
-															   ifNil: [ runId printString , ': ' ])
-														  , (speciesDropList selectedItem
-																   ifNotNil: [ '' ]
-																   ifNil: [ animatDefinitionOrSpecies species , ' (' ])
-														  , animatDefinitionOrSpecies identifier
-														  ,
-															  (speciesDropList selectedItem
-																   ifNotNil: [ '' ]
-																   ifNil: [ ')' ]);
-													  runIds: { runId };
-													  stages: { animatDefinitionOrSpecies identifier };
-													  yourself) ] ] ] ]);
+					 (runDropList selectedItem ifNil: [ runDropList items first ])
+						 value do: [ :assoc1 | 
+							 | runName runIds |
+							 runName := assoc1 key.
+							 runIds := assoc1 value.
+							 (animatDropList selectedItem ifNil: [ 
+									  animatDropList items first ]) value do: [ :assoc2 | 
+									 | animatName stageNames |
+									 animatName := assoc2 key.
+									 stageNames := assoc2 value.
+									 stream nextPut: (RMDPopulationColumn new
+												  title: '(' , runName , ') ' , animatName;
+												  runIds: runIds;
+												  stages: stageNames) ] ] ]);
 		refresh
 ]
 
@@ -188,24 +301,16 @@ RMDPopulationByTimeTabular >> updateRows [
 ]
 
 { #category : #updating }
-RMDPopulationByTimeTabular >> updateSpeciesDropList [
+RMDPopulationByTimeTabular >> updateRunDropList [
 
-	speciesDropList items: (Array streamContents: [ :stream | 
-			 stream nextPut: nil.
-			 self speciesDo: [ :species | stream nextPut: species ] ])
-]
-
-{ #category : #updating }
-RMDPopulationByTimeTabular >> updateStageDropList [
-
-	stageDropList items: (Array streamContents: [ :stream | 
-			 stream nextPut: nil.
-			 speciesDropList selectedItem
-				 ifNotNil: [ :species | 
-					 self
-						 stagesOf: species
-						 do: [ :stage | stream nextPut: stage identifier ] ]
-				 ifNil: [ 
-				 self stagesDo: [ :stage | stream nextPut: stage identifier ] ].
-			 stream nextPut: #total ])
+	| selectedItem |
+	selectedItem := runDropList selectedItem.
+	runDropList items: (runAggregationDropList selectedItem
+			 ifNotNil: [ :assoc | self perform: assoc value ]
+			 ifNil: [ {  } ]).
+	selectedItem ifNotNil: [ 
+		selectedItem := runDropList items
+			                detect: [ :item | item key = selectedItem key ]
+			                ifNone: [ nil ].
+		runDropList selectItem: selectedItem ]
 ]

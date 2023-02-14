@@ -45,15 +45,19 @@ RMDPopulationColumn >> stages: anArrayOfRMDAnimatDefinitionNode [
 { #category : #accessing }
 RMDPopulationColumn >> value: aRow [
 
-	^ (runIds
-		   collect: [ :runId | 
-			   (stages
-				    collect: [ :stage | 
-					    aRow
-						    at: { 
-								    runId.
-								    stage }
-						    ifAbsent: [ nil ] ]
-				    thenSelect: #notNil) ifNotEmpty: #sum ifEmpty: [ nil ] ]
-		   thenSelect: #notNil) ifNotEmpty: #average ifEmpty: [ nil ]
+	^ ((runIds
+		    collect: [ :runId | 
+			    (stages
+				     collect: [ :stage | 
+					     aRow
+						     at: { 
+								     runId.
+								     stage }
+						     ifAbsent: [ nil ] ]
+				     thenSelect: #notNil) ifNotEmpty: #sum ifEmpty: [ nil ] ]
+		    thenSelect: #notNil) ifNotEmpty: #average ifEmpty: [ nil ]) 
+		  ifNotNil: [ :value | 
+			  (value isFraction and: [ value isInteger not ])
+				  ifTrue: [ value asFloat ]
+				  ifFalse: [ value ] ]
 ]
