@@ -31,6 +31,34 @@ RMDPresenter >> agentNameValidation [
 ]
 
 { #category : #icons }
+RMDPresenter >> boxChartIcon [
+
+	| form fillColor |
+	fillColor := Color blue mixed: 0.5 with: Color cyan.
+	form := Form extent: 24 @ 24 depth: 32.
+	form getCanvas
+		fillColor: Color white;
+		line: 5 @ 2
+		to: 5 @ 18
+		width: 2
+		color: Color black;
+		frameAndFillRectangle: (2 @ 4 corner: 8 @ 14)
+		fillColor: fillColor
+		borderWidth: 1
+		borderColor: Color black;
+		line: 15 @ 6
+		to: 15 @ 22
+		width: 2
+		color: Color black;
+		frameAndFillRectangle: (12 @ 10 corner: 18 @ 20)
+		fillColor: fillColor
+		borderWidth: 1
+		borderColor: Color black;
+		flush.
+	^ form
+]
+
+{ #category : #icons }
 RMDPresenter >> chartIcon [
 
 	^ self lineChartIcon
