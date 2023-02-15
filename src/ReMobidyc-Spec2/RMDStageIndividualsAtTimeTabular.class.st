@@ -91,7 +91,7 @@ RMDStageIndividualsAtTimeTabular >> openChart [
 						 asFloat).
 			canvas addShape: (RSComposite new shapes: chart build shapes) ].
 		RSHorizontalLineLayout on: canvas shapes.
-		(canvas openWithTitle: 'Population Chart'
+		(canvas openWithTitle: 'Attributes Chart'
 			 ,
 			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 			 , (metaInterpreter
