@@ -2,7 +2,8 @@ Class {
 	#name : #RMDStageIndividualsAtTimeTabular,
 	#superclass : #RMDSnapshotTabular,
 	#instVars : [
-		'stageDropList'
+		'stageDropList',
+		'openBoxChartButton'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -33,6 +34,7 @@ RMDStageIndividualsAtTimeTabular class >> defaultLayout [
 						    add: #stageDropList expand: false;
 						    add: #table;
 						    add: (SpBoxLayout newHorizontal
+								     add: #openBoxChartButton width: self buttonHeight;
 								     add: #exportCSVButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
@@ -50,7 +52,12 @@ RMDStageIndividualsAtTimeTabular >> initializePresenters [
 			                 animatDefinition species , '('
 			                 , animatDefinition identifier , ')' ];
 		                 whenSelectedItemChangedDo: [ self stageChanged ];
-		                 yourself
+		                 yourself.
+	openBoxChartButton := self newButton
+		                      icon: self boxChartIcon;
+		                      action: [ self openChart ];
+		                      help: 'Open box charts';
+		                      yourself
 ]
 
 { #category : #private }
@@ -60,6 +67,36 @@ RMDStageIndividualsAtTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 	self
 		updateStageDropList;
 		updateTable
+]
+
+{ #category : #charts }
+RMDStageIndividualsAtTimeTabular >> openChart [
+
+	table columns ifNotEmpty: [ :columns | 
+		| canvas |
+		canvas := RSCanvas new @ RSCanvasController.
+		2 to: columns size do: [ :columnIndex | 
+			| chart column |
+			chart := RSChart new.
+			column := columns at: columnIndex.
+			chart
+				extent: 150 @ 400;
+				title: column title.
+			chart
+				addPlot: (RSBoxPlot new y:
+							 { (table items collect: [ :row | column value: row ]) });
+				addDecoration: (RSVerticalTick new
+						 numberOfTicks: 10;
+						 fontSize: 10;
+						 asFloat).
+			canvas addShape: (RSComposite new shapes: chart build shapes) ].
+		RSHorizontalLineLayout on: canvas shapes.
+		(canvas openWithTitle: 'Attributes Chart'
+			 ,
+			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+			 , (metaInterpreter
+					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+					  ifNil: [ '' ])) extent: (160 * columns size) @ 400 ]
 ]
 
 { #category : #private }

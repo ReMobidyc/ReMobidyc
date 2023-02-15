@@ -31,6 +31,40 @@ RMDPresenter >> agentNameValidation [
 ]
 
 { #category : #icons }
+RMDPresenter >> boxChartIcon [
+
+	| form fillColor |
+	fillColor := Color blue mixed: 0.5 with: Color cyan.
+	form := Form extent: 24 @ 24 depth: 32.
+	form getCanvas
+		fillColor: Color white;
+		line: 5 @ 2
+		to: 5 @ 18
+		width: 2
+		color: Color black;
+		frameAndFillRectangle: (2 @ 4 corner: 8 @ 14)
+		fillColor: fillColor
+		borderWidth: 1
+		borderColor: Color black;
+		line: 15 @ 6
+		to: 15 @ 22
+		width: 2
+		color: Color black;
+		frameAndFillRectangle: (12 @ 10 corner: 18 @ 20)
+		fillColor: fillColor
+		borderWidth: 1
+		borderColor: Color black;
+		flush.
+	^ form
+]
+
+{ #category : #icons }
+RMDPresenter >> chartIcon [
+
+	^ self lineChartIcon
+]
+
+{ #category : #icons }
 RMDPresenter >> downIcon [
 	^ Smalltalk ui icons down
 ]
@@ -86,6 +120,48 @@ RMDPresenter >> initializePresenters [
 				allMorphsDo: [ :m | 
 					(m respondsTo: #font:)
 						ifTrue: [ m font: font ] ] ]
+]
+
+{ #category : #icons }
+RMDPresenter >> lineChartIcon [
+
+	| form |
+	form := Form extent: 24 @ 24 depth: 32.
+	form getCanvas
+		fillColor: Color white;
+		line: 0 @ 0
+		to: 0 @ 23
+		width: 1
+		color: Color black;
+		line: 0 @ 23
+		to: 23 @ 23
+		width: 1
+		color: Color black;
+		line: 2 @ 20
+		to: 10 @ 5
+		width: 1.5
+		color: Color red;
+		line: 10 @ 5
+		to: 15 @ 18
+		width: 1.5
+		color: Color red;
+		line: 15 @ 18
+		to: 20 @ 3
+		width: 1.5
+		color: Color red;
+		line: 2 @ 10
+		to: 10 @ 15
+		width: 1.5
+		color: Color blue;
+		line: 10 @ 15
+		to: 15 @ 8
+		width: 1.5
+		color: Color blue;
+		line: 15 @ 8
+		to: 20 @ 13
+		width: 1.5
+		color: Color blue.
+	^ form
 ]
 
 { #category : #icons }

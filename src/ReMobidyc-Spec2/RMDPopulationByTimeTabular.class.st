@@ -6,7 +6,8 @@ Class {
 		'animatAggregationDropList',
 		'animatDropList',
 		'speciesDropList',
-		'stageDropList'
+		'stageDropList',
+		'openLineChartButton'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -42,6 +43,7 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
 				   add: '    ' expand: false;
+				   add: #openLineChartButton width: self buttonHeight;
 				   add: #exportCSVButton width: self buttonHeight;
 				   yourself)
 		  expand: false;
@@ -183,7 +185,12 @@ RMDPopulationByTimeTabular >> initializePresenters [
 		                  display: [ :item | item key ];
 		                  items: {  };
 		                  whenSelectedItemChangedDo: [ self animatChanged ];
-		                  yourself
+		                  yourself.
+	openLineChartButton := self newButton
+		                      icon: self lineChartIcon;
+		                      action: [ self openChart ];
+		                      help: 'Open a line chart';
+		                      yourself
 ]
 
 { #category : #private }
@@ -195,6 +202,54 @@ RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateAnimatDropList;
 		updateColumns;
 		updateRows
+]
+
+{ #category : #charts }
+RMDPopulationByTimeTabular >> openChart [
+
+	table columns ifNotEmpty: [ :columns | 
+		| chart time canvas legend |
+		chart := RSChart new.
+		chart extent: 800 @ 400.
+		time := table items collect: [ :row | columns first value: row ].
+		2 to: columns size do: [ :columnIndex | 
+			| column |
+			column := columns at: columnIndex.
+			chart addPlot: (RSLinePlot new
+					 x: time
+					 y: (table items collect: [ :row | column value: row ])) ].
+		chart
+			addDecoration: RSHorizontalTick new;
+			addDecoration: RSVerticalTick new;
+			addDecoration: (RSChartTitleDecoration new
+					 title:
+						 (runDropList selectedItem ifNotNil: #key ifNil: [ 'all' ])
+						 , ' - '
+						 , (animatDropList selectedItem ifNotNil: #key ifNil: [ 'all' ]);
+					 fontSize: 10);
+			addDecoration: (RSXLabelDecoration new
+					 title:
+						 'time ['
+						 , metaInterpreter simulationModel durationUnit printString
+						 , ']';
+					 fontSize: 10);
+			addDecoration: (RSYLabelDecoration new
+					 title: 'Population';
+					 fontSize: 10;
+					 horizontal).
+		canvas := chart build.
+		legend := RSLegend new.
+		legend container: canvas.
+		1 to: chart plots size do: [ :plotIndex | 
+			legend
+				text: (columns at: plotIndex + 1) title
+				withBoxColor: (chart plots at: plotIndex) color ].
+		legend build.
+		(canvas openWithTitle: 'Population Chart'
+			, (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+			, (metaInterpreter
+					 ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+					 ifNil: [ '' ])) extent: 1000@600 ]
 ]
 
 { #category : #updating }
