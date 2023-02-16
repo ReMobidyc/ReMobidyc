@@ -239,7 +239,7 @@ RMDIndividualHistoryTabular >> stageChanged [
 { #category : #initialization }
 RMDIndividualHistoryTabular >> title [
 
-	^ 'Individual''s Attributes Tabular'
+	^ 'Individual History Tabular'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 	  , (metaInterpreter
 			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]

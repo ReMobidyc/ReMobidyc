@@ -117,7 +117,7 @@ RMDSnapshotTabular >> stageChanged [
 { #category : #initialization }
 RMDSnapshotTabular >> title [
 
-	^ 'Attribute Tabular'
+	^ 'Snapshot Tabular'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 	  , (metaInterpreter
 			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
