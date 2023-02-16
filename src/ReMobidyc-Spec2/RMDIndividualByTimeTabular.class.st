@@ -2,7 +2,8 @@ Class {
 	#name : #RMDIndividualByTimeTabular,
 	#superclass : #RMDTimeSeriesTabular,
 	#instVars : [
-		'stageDropList'
+		'stageDropList',
+		'openLineChartsButton'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -32,6 +33,7 @@ RMDIndividualByTimeTabular class >> defaultLayout [
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
 				   add: '    ' expand: false;
+				   add: #openLineChartsButton width: self buttonHeight;
 				   add: #exportCSVButton width: self buttonHeight;
 				   yourself)
 		  expand: false;
@@ -57,7 +59,13 @@ RMDIndividualByTimeTabular >> initializePresenters [
 			                 assoc value first , ' ('
 			                 , assoc value second printString , ')' ];
 		                 whenSelectedItemChangedDo: [ self stageChanged ];
-		                 yourself
+		                 yourself.
+	openLineChartsButton := self newButton
+		                        icon: self lineChartIcon;
+		                        action: [ self openChart ];
+		                        help:
+			                        'Open line charts of time x attributes';
+		                        yourself
 ]
 
 { #category : #initialization }
@@ -84,6 +92,44 @@ RMDIndividualByTimeTabular >> initializeWithRunId: runId animat: animatId time: 
 			selectItem: (timeIntervalsAndIds
 					 detect: [ :assoc | assoc key includes: t0 ]
 					 ifNone: [ nil ]) ]
+]
+
+{ #category : #charts }
+RMDIndividualByTimeTabular >> openChart [
+
+	table columns ifNotEmpty: [ :columns | 
+		| canvas time |
+		canvas := RSCanvas new @ RSCanvasController.
+		time := table items collect: [ :row | columns first value: row ].
+		2 to: columns size do: [ :columnIndex | 
+			| chart column |
+			chart := RSChart new.
+			column := columns at: columnIndex.
+			chart
+				extent: 400 @ 400;
+				title: column title.
+			chart
+				addPlot: (RSLinePlot new
+						 x: time
+						 y: (table items collect: [ :row | column value: row ]));
+				addDecoration: (RSHorizontalTick new fontSize: 8);
+				addDecoration: (RSVerticalTick new fontSize: 8);
+				addDecoration: (RSXLabelDecoration new
+						 title: columns first title;
+						 fontSize: 10);
+				addDecoration: (RSYLabelDecoration new
+						 title: column title;
+						 fontSize: 10).
+			canvas addShape: (RSComposite new shapes: chart build shapes) ].
+		RSFlowLayout on: canvas shapes.
+		(canvas openWithTitle:
+			 stageDropList selectedItem value first , ' ('
+			 , stageDropList selectedItem value first printString , ')'
+			 ,
+			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+			 , (metaInterpreter
+					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+					  ifNil: [ '' ])) extent: 800 @ 800 ]
 ]
 
 { #category : #private }
