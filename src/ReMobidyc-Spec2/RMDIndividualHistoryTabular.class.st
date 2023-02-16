@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDIndividualByTimeTabular,
+	#name : #RMDIndividualHistoryTabular,
 	#superclass : #RMDTimeSeriesTabular,
 	#instVars : [
 		'stageDropList',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #layout }
-RMDIndividualByTimeTabular class >> defaultLayout [
+RMDIndividualHistoryTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
@@ -41,7 +41,7 @@ RMDIndividualByTimeTabular class >> defaultLayout [
 ]
 
 { #category : #'instance creation' }
-RMDIndividualByTimeTabular class >> on: aRMDMetaInterpreter runId: runId individual: id time: secondsSinceEpoch [
+RMDIndividualHistoryTabular class >> on: aRMDMetaInterpreter runId: runId individual: id time: secondsSinceEpoch [
 
 	^ (self on: aRMDMetaInterpreter)
 		  initializeWithRunId: runId
@@ -50,7 +50,7 @@ RMDIndividualByTimeTabular class >> on: aRMDMetaInterpreter runId: runId individ
 ]
 
 { #category : #initialization }
-RMDIndividualByTimeTabular >> initializePresenters [
+RMDIndividualHistoryTabular >> initializePresenters [
 
 	super initializePresenters.
 	runDropList disable.
@@ -69,7 +69,7 @@ RMDIndividualByTimeTabular >> initializePresenters [
 ]
 
 { #category : #initialization }
-RMDIndividualByTimeTabular >> initializeWithRunId: runId animat: animatId time: secondsSinceEpoch [
+RMDIndividualHistoryTabular >> initializeWithRunId: runId animat: animatId time: secondsSinceEpoch [
 
 	(metaInterpreter interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
 		:interpreter | 
@@ -95,7 +95,7 @@ RMDIndividualByTimeTabular >> initializeWithRunId: runId animat: animatId time: 
 ]
 
 { #category : #charts }
-RMDIndividualByTimeTabular >> openChart [
+RMDIndividualHistoryTabular >> openChart [
 
 	table columns ifNotEmpty: [ :columns | 
 		| canvas time |
@@ -133,7 +133,7 @@ RMDIndividualByTimeTabular >> openChart [
 ]
 
 { #category : #private }
-RMDIndividualByTimeTabular >> searchHistoryBackward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
+RMDIndividualHistoryTabular >> searchHistoryBackward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
 
 	| t animat id prevId |
 	t := anOrderedCollectionOfTimeIntervalAndAnimatId first key first.
@@ -169,7 +169,7 @@ RMDIndividualByTimeTabular >> searchHistoryBackward: anOrderedCollectionOfTimeIn
 ]
 
 { #category : #private }
-RMDIndividualByTimeTabular >> searchHistoryForward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
+RMDIndividualHistoryTabular >> searchHistoryForward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
 
 	| t animat id |
 	t := anOrderedCollectionOfTimeIntervalAndAnimatId last key last.
@@ -203,7 +203,7 @@ RMDIndividualByTimeTabular >> searchHistoryForward: anOrderedCollectionOfTimeInt
 ]
 
 { #category : #accessing }
-RMDIndividualByTimeTabular >> selectTime: anInteger [
+RMDIndividualHistoryTabular >> selectTime: anInteger [
 
 	| t |
 	t := (anInteger / metaInterpreter simulationModel deltaTime) rounded.
@@ -213,13 +213,13 @@ RMDIndividualByTimeTabular >> selectTime: anInteger [
 ]
 
 { #category : #private }
-RMDIndividualByTimeTabular >> selectedIndividual [
+RMDIndividualHistoryTabular >> selectedIndividual [
 
 	^ stageDropList selectedItem ifNotNil: [ :assoc | assoc value second ]
 ]
 
 { #category : #private }
-RMDIndividualByTimeTabular >> selectedTime [
+RMDIndividualHistoryTabular >> selectedTime [
 
 	| t0 t |
 	t0 := stageDropList selectedItem
@@ -230,14 +230,14 @@ RMDIndividualByTimeTabular >> selectedTime [
 ]
 
 { #category : #updating }
-RMDIndividualByTimeTabular >> stageChanged [
+RMDIndividualHistoryTabular >> stageChanged [
 
 	self
 		updateTable
 ]
 
 { #category : #initialization }
-RMDIndividualByTimeTabular >> title [
+RMDIndividualHistoryTabular >> title [
 
 	^ 'Individual''s Attributes Tabular'
 	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
@@ -247,7 +247,7 @@ RMDIndividualByTimeTabular >> title [
 ]
 
 { #category : #updating }
-RMDIndividualByTimeTabular >> updateColumns [
+RMDIndividualHistoryTabular >> updateColumns [
 
 	table columns: (Array streamContents: [ :stream | 
 			 stageDropList selectedItem ifNotNil: [ :assoc | 
@@ -264,7 +264,7 @@ RMDIndividualByTimeTabular >> updateColumns [
 ]
 
 { #category : #enumerating }
-RMDIndividualByTimeTabular >> updateRows [
+RMDIndividualHistoryTabular >> updateRows [
 
 	table
 		items: (Array streamContents: [ :stream | 
@@ -301,7 +301,7 @@ RMDIndividualByTimeTabular >> updateRows [
 ]
 
 { #category : #updating }
-RMDIndividualByTimeTabular >> updateTable [
+RMDIndividualHistoryTabular >> updateTable [
 
 	self
 		updateRows;

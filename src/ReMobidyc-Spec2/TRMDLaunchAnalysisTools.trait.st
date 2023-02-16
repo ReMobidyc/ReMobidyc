@@ -48,19 +48,10 @@ TRMDLaunchAnalysisTools >> metaInterpreterForTabularDo: aBlock [
 ]
 
 { #category : #operations }
-TRMDLaunchAnalysisTools >> openInAttributeTabular [
-
-	^ (self metaInterpreterForTabularDo: #openInAttributeTabular)
-		  selectTime: self selectedTime;
-		  selectRunId: self selectedRunId;
-		  yourself
-]
-
-{ #category : #operations }
-TRMDLaunchAnalysisTools >> openInIndividualTabularWithRunId: runId individual: individual time: time [
+TRMDLaunchAnalysisTools >> openInIndividualHistoryTabularWithRunId: runId individual: individual time: time [
 
 	self metaInterpreterForTabularDo: [ :metaInterpreter | 
-		^ (RMDIndividualByTimeTabular
+		^ (RMDIndividualHistoryTabular
 			   on: metaInterpreter
 			   runId: runId
 			   individual: individual
@@ -83,6 +74,15 @@ TRMDLaunchAnalysisTools >> openInPopulationTabular [
 TRMDLaunchAnalysisTools >> openInReplayObservatory [
 
 	^ (self metaInterpreterForTabularDo: #openInReplayObservatory)
+		  selectTime: self selectedTime;
+		  selectRunId: self selectedRunId;
+		  yourself
+]
+
+{ #category : #operations }
+TRMDLaunchAnalysisTools >> openInSnapshotTabular [
+
+	^ (self metaInterpreterForTabularDo: #openInSnapshotTabular)
 		  selectTime: self selectedTime;
 		  selectRunId: self selectedRunId;
 		  yourself
@@ -152,16 +152,16 @@ TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 						  action: [ self openInPopulationTabular ] ];
 				  addItem: [ :item | 
 					  item
-						  name: 'Open in Attributes at Time Tabular';
-						  action: [ self openInAttributeTabular ] ].
+						  name: 'Open in Snapshot Tabular';
+						  action: [ self openInSnapshotTabular ] ].
 			  (runId notNil and: [ time notNil and: [ individual notNil ] ]) 
 				  ifTrue: [ 
 					  group addItem: [ :item | 
 						  item
-							  name: 'Open in Individual''s Attributes Tabular';
+							  name: 'Open in Individual History Tabular';
 							  action: [ 
 								  self
-									  openInIndividualTabularWithRunId: runId
+									  openInIndividualHistoryTabularWithRunId: runId
 									  individual: individual
 									  time: time ] ] ] ];
 		  yourself
