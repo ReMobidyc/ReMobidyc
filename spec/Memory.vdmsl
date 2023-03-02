@@ -80,8 +80,7 @@ operations
     pre  nextAvailableSlot <> nil;
     
     deallocateAnimat : AST`Identifier * Address ==> ()
-    deallocateAnimat(-, address) ==
-        deads := deads union {address};
+    deallocateAnimat(-, address) == deads := deads union {address};
     
     pure getWorld : () ==> Address
     getWorld() == return world;
