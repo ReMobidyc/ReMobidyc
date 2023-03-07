@@ -99,7 +99,7 @@ operations
         return {a | a in set dom animats
                 & let mk_(n, -) = animats(a) in n = animatName};
     
-    pure read : Address ==> real
+    read : Address ==> real
     read(address) ==
         if address in set dom vals then return vals(address) else exit ADDRESS_ERROR;
     
