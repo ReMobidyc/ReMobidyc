@@ -32,6 +32,17 @@ RMDFileMemory class >> for: aRMDSimulationModel runId: anInteger [
 	^ self on: basePath modelPath: modelPath
 ]
 
+{ #category : #initialization }
+RMDFileMemory class >> initialize [
+
+	WriteSemaphore := Semaphore new
+		                  signal;
+		                  signal;
+		                  signal;
+		                  signal;
+		                  yourself
+]
+
 { #category : #'instance creation' }
 RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
 
@@ -503,7 +514,11 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 RMDFileMemory >> writeCritical: aBlock [
 
 	(WriteSemaphore ifNil: [ 
-		 WriteSemaphore := Semaphore forMutualExclusion ]) critical: aBlock
+		 WriteSemaphore := Semaphore forMutualExclusion
+			                   signal;
+			                   signal;
+			                   signal;
+			                   yourself ]) critical: aBlock
 ]
 
 { #category : #'accessing-meta parameters' }

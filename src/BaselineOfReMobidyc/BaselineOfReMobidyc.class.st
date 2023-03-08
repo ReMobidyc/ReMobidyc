@@ -205,5 +205,6 @@ BaselineOfReMobidyc >> postLoad [
 		(self logoDirectoryPath / 'default.png') fullName.
 	PolymorphSystemSettings desktopColor:
 		(Color cyan mixed: 0.02 with: Color white).
+	Smalltalk at: #RMDFileMemory ifPresent: [ :class | class initialize ].
 	self installStandardRepository
 ]
