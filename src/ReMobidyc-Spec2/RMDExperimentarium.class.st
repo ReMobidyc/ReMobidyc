@@ -428,10 +428,11 @@ RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 { #category : #updating }
 RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 
-	runButton state: false.
-	stepButton enable.
-	self updateDisplay.
-	lastDisplayUpdate := nil
+	metaInterpreter isRunningSimulation ifFalse: [ 
+		runButton state: false.
+		stepButton enable.
+		self updateDisplay.
+		lastDisplayUpdate := nil ]
 ]
 
 { #category : #updating }
