@@ -213,11 +213,12 @@ RMDPopulationByTimeTabular >> openChart [
 		chart extent: 800 @ 400.
 		time := table items collect: [ :row | columns first value: row ].
 		2 to: columns size do: [ :columnIndex | 
-			| column |
+			| column y |
 			column := columns at: columnIndex.
+			y := (table items collect: [ :row | column value: row ]) reject: #isNil.
 			chart addPlot: (RSLinePlot new
-					 x: time
-					 y: (table items collect: [ :row | column value: row ])) ].
+					 x: (time copyFrom: 1 to: y size)
+					 y: (y)) ].
 		chart
 			addDecoration: RSHorizontalTick new;
 			addDecoration: RSVerticalTick new;
