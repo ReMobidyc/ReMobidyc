@@ -181,7 +181,8 @@ RMDTabular >> runChanged [
 { #category : #accessing }
 RMDTabular >> selectRunId: anInteger [
 
-	anInteger ifNotNil: [ runDropList selectItem: anInteger ]
+	(runDropList items includes: anInteger) ifTrue: [ 
+		runDropList selectItem: anInteger ]
 ]
 
 { #category : #accessing }
