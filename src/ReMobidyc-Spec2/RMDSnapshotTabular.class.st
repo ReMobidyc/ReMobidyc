@@ -102,10 +102,11 @@ RMDSnapshotTabular >> openChart [
 { #category : #private }
 RMDSnapshotTabular >> selectedIndividual [
 
-	^ (table selectedItem at: #id) ifNotNil: [ :id | 
-		  id isInteger
-			  ifTrue: [ id ]
-			  ifFalse: [ nil ] ]
+	^ table selectedItem ifNotNil: [ :item | 
+		  (item at: #id) ifNotNil: [ :id | 
+			  id isInteger
+				  ifTrue: [ id ]
+				  ifFalse: [ nil ] ] ]
 ]
 
 { #category : #updating }
@@ -131,7 +132,7 @@ RMDSnapshotTabular >> updateColumns [
 			 runDropList selectedItem ifNotNil: [ :runId | 
 				 stageDropList selectedItem ifNotNil: [ :animatDefinition | 
 					 stream nextPut: RMDIdColumn new.
-					 animatDefinition attributeDeclarationsDo: [ :attributeDecl | 
+					 animatDefinition allAttributeDeclarationsDo: [ :attributeDecl | 
 						 stream nextPut: (RMDAttributeColumn attribute: attributeDecl) ] ] ] ])
 ]
 
