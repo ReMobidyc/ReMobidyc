@@ -287,6 +287,19 @@ RMDMemory >> name [
 ]
 
 { #category : #accessing }
+RMDMemory >> nextAndDeltaAt: anInteger between: aFloat and: anotherFloat [
+
+	| v |
+	v := ((self nextAt: anInteger ifAbsent: [ ^ self ]) ifNil: [ ^ self ])
+	     + (self nextDeltas at: anInteger ifAbsent: [ 0.0 ]).
+	v < aFloat ifTrue: [ 
+		self nextDeltaAt: anInteger add: aFloat - v.
+		^ self ].
+	v > anotherFloat ifTrue: [ 
+		self nextDeltaAt: anInteger add: anotherFloat - v ]
+]
+
+{ #category : #accessing }
 RMDMemory >> nextAt: anInteger [
 	^ self nextAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
 ]

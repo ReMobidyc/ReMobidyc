@@ -49,8 +49,8 @@ RMDInterpreter >> basicStepSimulation [
 				  ifTrue: [ memory time: memory time + 1 ]
 				  ifFalse: [ 
 					  self performTasks.
-					  self tick.
-					  self bounceOutOfBoundsAnimats ].
+					  self bounceOutOfBoundsAnimats.
+					  self tick ].
 			  self announceTimeChanged.
 			  true ] ]
 ]
@@ -67,17 +67,13 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 			           ^ RMDUndefinedAttributeError signal:
 				             (RMDAttributeVariableNode identifier: 'y' agent: nil) ].
 		memory animatsOf: animatDef identifier do: [ :individual | 
-			| x y |
-			x := memory at: individual + xOffset ifAbsent: [ nil ].
-			x < simulationModel west ifTrue: [ 
-				memory at: individual + xOffset put: simulationModel west ].
-			x > simulationModel east ifTrue: [ 
-				memory at: individual + xOffset put: simulationModel east ].
-			y := memory at: individual + yOffset ifAbsent: [ nil ].
-			y < simulationModel south ifTrue: [ 
-				memory at: individual + yOffset put: simulationModel south ].
-			y > simulationModel north ifTrue: [ 
-				memory at: individual + yOffset put: simulationModel north ] ] ]
+			memory
+				nextAndDeltaAt: individual + xOffset
+				between: simulationModel west
+				and: simulationModel east;
+				nextAndDeltaAt: individual + yOffset
+				between: simulationModel south
+				and: simulationModel north ] ]
 ]
 
 { #category : #directives }
