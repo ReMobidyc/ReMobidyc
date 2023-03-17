@@ -2,8 +2,8 @@ Class {
 	#name : #RMDSnapshotTabular,
 	#superclass : #RMDAbstractSnapshotTabular,
 	#instVars : [
-		'stageDropList',
-		'openBoxChartButton'
+		'openBoxChartButton',
+		'agentDropList'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -30,8 +30,8 @@ RMDSnapshotTabular class >> defaultLayout [
 						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
-						    add: 'Species(Stage)' expand: false;
-						    add: #stageDropList expand: false;
+						    add: 'Agent' expand: false;
+						    add: #agentDropList expand: false;
 						    add: #table;
 						    add: (SpBoxLayout newHorizontal
 								     add: #openBoxChartButton width: self buttonHeight;
@@ -43,15 +43,20 @@ RMDSnapshotTabular class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : #updating }
+RMDSnapshotTabular >> agentChanged [
+
+	self updateTable
+]
+
 { #category : #initialization }
 RMDSnapshotTabular >> initializePresenters [
 
 	super initializePresenters.
-	stageDropList := self newDropList
-		                 display: [ :animatDefinition | 
-			                 animatDefinition species , '('
-			                 , animatDefinition identifier , ')' ];
-		                 whenSelectedItemChangedDo: [ self stageChanged ];
+	agentDropList := self newDropList
+		                 display: [ :agentDefinition | 
+			                 agentDefinition fullName ];
+		                 whenSelectedItemChangedDo: [ self agentChanged ];
 		                 yourself.
 	openBoxChartButton := self newButton
 		                      icon: self boxChartIcon;
@@ -65,7 +70,7 @@ RMDSnapshotTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
 	self
-		updateStageDropList;
+		updateAgentDropList;
 		updateTable
 ]
 
@@ -109,12 +114,6 @@ RMDSnapshotTabular >> selectedIndividual [
 				  ifFalse: [ nil ] ] ]
 ]
 
-{ #category : #updating }
-RMDSnapshotTabular >> stageChanged [
-
-	self updateTable
-]
-
 { #category : #initialization }
 RMDSnapshotTabular >> title [
 
@@ -126,13 +125,33 @@ RMDSnapshotTabular >> title [
 ]
 
 { #category : #updating }
+RMDSnapshotTabular >> updateAgentDropList [
+
+	| selection items |
+	selection := agentDropList selectedItem.
+	items := self allAgents reject: [ :agentDef | 
+		         agentDef allAttributeDeclarations isEmpty ].
+	agentDropList
+		items: items;
+		selectItem: ((items includes: selection)
+				 ifTrue: [ selection ]
+				 ifFalse: [ items ifNotEmpty: #first ifEmpty: [ nil ] ])
+]
+
+{ #category : #updating }
 RMDSnapshotTabular >> updateColumns [
 
 	table columns: (Array streamContents: [ :stream | 
 			 runDropList selectedItem ifNotNil: [ :runId | 
-				 stageDropList selectedItem ifNotNil: [ :animatDefinition | 
-					 stream nextPut: RMDIdColumn new.
-					 animatDefinition allAttributeDeclarationsDo: [ :attributeDecl | 
+				 agentDropList selectedItem ifNotNil: [ :agentDefinition | 
+					 agentDefinition isPatchDefinitionNode ifTrue: [ 
+						 self simulationModelDo: [ :model | 
+							 stream
+								 nextPut: (RMDPatchXColumn unit: model patchLengthUnit);
+								 nextPut: (RMDPatchYColumn unit: model patchLengthUnit) ] ].
+					 agentDefinition isAnimatDefinitionNode ifTrue: [ 
+						 stream nextPut: RMDIdColumn new ].
+					 agentDefinition allAttributeDeclarationsDo: [ :attributeDecl | 
 						 stream nextPut: (RMDAttributeColumn attribute: attributeDecl) ] ] ] ])
 ]
 
@@ -147,18 +166,37 @@ RMDSnapshotTabular >> updateRows [
 							 | memory |
 							 memory := interpreter memory.
 							 timeList selectedItem ifNotNil: [ :time | 
-									 stageDropList selectedItem ifNotNil: [ :animat | 
+									 agentDropList selectedItem ifNotNil: [ :agentDefinition | 
 											 memory time: time.
-											 (memory animatsOf: animat identifier) asSortedCollection 
-												 do: [ :individual | 
+											 agentDefinition isWorldDefinitionNode ifTrue: [ 
+													 | row |
+													 row := Dictionary new.
+													 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+															 row
+																 at: attribute
+																 put: (memory at: memory world + offset) ].
+													 stream nextPut: row ].
+											 agentDefinition isPatchDefinitionNode ifTrue: [ 
+													 memory patchesDo: [ :patch | 
+															 | row |
+															 row := Dictionary new.
+															 row
+																 at: 'x' put: (interpreter centerXOfPatch: patch);
+																 at: 'y' put: (interpreter centerYOfPatch: patch).
+															 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+																 row
+																	 at: attribute
+																	 put: (memory at: memory world + offset) ].
+															 stream nextPut: row ] ].
+											 agentDefinition isAnimatDefinitionNode ifTrue: [ 
+												 (memory animatsOf: agentDefinition identifier)
+													 asSortedCollection do: [ :individual | 
 													 | row |
 													 row := Dictionary new.
 													 row at: #id put: individual.
-													 animat attributeOffsetsDo: [ :attribute :offset | 
-															 row
-																 at: attribute
-																 put: (memory at: individual + offset) ].
-													 stream nextPut: row ] ] ] ] ]);
+													 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+														 row at: attribute put: (memory at: individual + offset) ].
+													 stream nextPut: row ] ] ] ] ] ]);
 		refresh
 ]
 
@@ -173,19 +211,6 @@ RMDSnapshotTabular >> updateRunDropList [
 		selectItem: ((items includes: selection)
 				 ifTrue: [ selection ]
 				 ifFalse: [ items ifEmpty: [ nil ] ifNotEmpty: #first ])
-]
-
-{ #category : #updating }
-RMDSnapshotTabular >> updateStageDropList [
-
-	| selection items |
-	selection := stageDropList selectedItem.
-	items := self allStages.
-	stageDropList
-		items: items;
-		selectItem: ((items includes: selection)
-				 ifTrue: [ selection ]
-				 ifFalse: [ items ifNotEmpty: #first ifEmpty: [ nil ] ])
 ]
 
 { #category : #updating }

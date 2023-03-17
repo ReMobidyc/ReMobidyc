@@ -188,6 +188,12 @@ RMDAgentDefinitionNode >> complementUtilityDefinitions [
 				                       expression: RMDLiteralNode zero ])
 ]
 
+{ #category : #accessing }
+RMDAgentDefinitionNode >> fullName [
+
+	^ self subclassResponsibility
+]
+
 { #category : #comparing }
 RMDAgentDefinitionNode >> hash [
 

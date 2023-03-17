@@ -24,6 +24,12 @@ RMDPatchDefinitionNode class >> sugarField [
 	sugar [kcal].'
 ]
 
+{ #category : #accessing }
+RMDPatchDefinitionNode >> fullName [
+
+	^ self name
+]
+
 { #category : #testing }
 RMDPatchDefinitionNode >> isPatchDefinitionNode [
 	^ true

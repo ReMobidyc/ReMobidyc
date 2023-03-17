@@ -30,7 +30,8 @@ RMDPatchXColumn >> unit [
 { #category : #accessing }
 RMDPatchXColumn >> unit: aRMDUnit [
 
-	unit := aRMDUnit
+	unit := aRMDUnit.
+	title := 'center x [' , unit printString , ']'
 ]
 
 { #category : #accessing }

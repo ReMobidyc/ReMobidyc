@@ -27,6 +27,22 @@ RMDTabular class >> openOn: aRMDMetaInterpreter [
 	^ (self on: aRMDMetaInterpreter) open
 ]
 
+{ #category : #enumerating }
+RMDTabular >> agentsDo: aBlock [
+
+	self simulationModelDo: [ :simulationModel | 
+		simulationModel worldDefinition ifNotNil: aBlock.
+		simulationModel patchDefinition ifNotNil: aBlock.
+		simulationModel animatDefinitionsDo: aBlock ]
+]
+
+{ #category : #accessing }
+RMDTabular >> allAgents [
+
+	^ Array streamContents: [ :stream | 
+		  self agentsDo: [ :stage | stream nextPut: stage ] ]
+]
+
 { #category : #accessing }
 RMDTabular >> allSpecies [
 

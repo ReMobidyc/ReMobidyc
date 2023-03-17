@@ -30,7 +30,8 @@ RMDPatchYColumn >> unit [
 { #category : #accessing }
 RMDPatchYColumn >> unit: aRMDUnit [
 
-	unit := aRMDUnit
+	unit := aRMDUnit.
+	title := 'center y [' , unit printString , ']'
 ]
 
 { #category : #accessing }
