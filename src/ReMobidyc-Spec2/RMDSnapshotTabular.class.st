@@ -108,7 +108,7 @@ RMDSnapshotTabular >> openChart [
 RMDSnapshotTabular >> selectedIndividual [
 
 	^ table selectedItem ifNotNil: [ :item | 
-		  (item at: #id) ifNotNil: [ :id | 
+		  (item at: #id ifAbsent: [ nil ]) ifNotNil: [ :id | 
 			  id isInteger
 				  ifTrue: [ id ]
 				  ifFalse: [ nil ] ] ]
