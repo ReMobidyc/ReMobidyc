@@ -184,9 +184,7 @@ RMDSnapshotTabular >> updateRows [
 																 at: 'x' put: (interpreter centerXOfPatch: patch);
 																 at: 'y' put: (interpreter centerYOfPatch: patch).
 															 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
-																 row
-																	 at: attribute
-																	 put: (memory at: memory world + offset) ].
+																 row at: attribute put: (memory at: patch + offset) ].
 															 stream nextPut: row ] ].
 											 agentDefinition isAnimatDefinitionNode ifTrue: [ 
 												 (memory animatsOf: agentDefinition identifier)
