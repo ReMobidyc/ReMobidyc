@@ -17,6 +17,12 @@ RMDWorldDefinitionNode class >> empty [
 	^ self attributeDeclarations: Array new utilityDefinitions: Array new
 ]
 
+{ #category : #accessing }
+RMDWorldDefinitionNode >> fullName [
+
+	^ self name
+]
+
 { #category : #testing }
 RMDWorldDefinitionNode >> isWorldDefinitionNode [
 	^ true

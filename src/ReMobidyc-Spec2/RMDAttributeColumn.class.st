@@ -29,6 +29,11 @@ RMDAttributeColumn >> attribute: aRMDAttributeDeclarationNode [
 	         , ']'
 ]
 
+{ #category : #enumerating }
+RMDAttributeColumn >> ifOnChartDo: aBlock [
+	^ aBlock cull: self
+]
+
 { #category : #accessing }
 RMDAttributeColumn >> value: aRow [
 

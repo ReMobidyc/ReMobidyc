@@ -101,26 +101,26 @@ RMDIndividualHistoryTabular >> openChart [
 		| canvas time |
 		canvas := RSCanvas new @ RSCanvasController.
 		time := table items collect: [ :row | columns first value: row ].
-		2 to: columns size do: [ :columnIndex | 
-			| chart column |
-			chart := RSChart new.
-			column := columns at: columnIndex.
-			chart
-				extent: 400 @ 400;
-				title: column title.
-			chart
-				addPlot: (RSLinePlot new
-						 x: time
-						 y: (table items collect: [ :row | column value: row ]));
-				addDecoration: (RSHorizontalTick new fontSize: 8);
-				addDecoration: (RSVerticalTick new fontSize: 8);
-				addDecoration: (RSXLabelDecoration new
-						 title: columns first title;
-						 fontSize: 10);
-				addDecoration: (RSYLabelDecoration new
-						 title: column title;
-						 fontSize: 10).
-			canvas addShape: (RSComposite new shapes: chart build shapes) ].
+		columns do: [ :column | 
+			column ifOnChartDo: [ 
+				| chart |
+				chart := RSChart new.
+				chart
+					extent: 400 @ 400;
+					title: column title.
+				chart
+					addPlot: (RSLinePlot new
+							 x: time
+							 y: (table items collect: [ :row | column value: row ]));
+					addDecoration: (RSHorizontalTick new fontSize: 8);
+					addDecoration: (RSVerticalTick new fontSize: 8);
+					addDecoration: (RSXLabelDecoration new
+							 title: columns first title;
+							 fontSize: 10);
+					addDecoration: (RSYLabelDecoration new
+							 title: column title;
+							 fontSize: 10).
+				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSFlowLayout on: canvas shapes.
 		(canvas openWithTitle:
 			 stageDropList selectedItem value first , ' ('

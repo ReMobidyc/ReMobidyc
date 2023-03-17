@@ -15,6 +15,12 @@ RMDTimeColumn class >> unit: aRMDUnit [
 		  yourself
 ]
 
+{ #category : #enumerating }
+RMDTimeColumn >> ifOnChartDo: aBlock [
+
+	
+]
+
 { #category : #accessing }
 RMDTimeColumn >> unit [
 

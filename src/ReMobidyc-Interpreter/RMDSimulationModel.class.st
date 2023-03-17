@@ -871,6 +871,12 @@ RMDSimulationModel >> patchLength [
 ]
 
 { #category : #'accessing - patch' }
+RMDSimulationModel >> patchLengthUnit [
+
+	^ simulationDefinition patchInitializer size unit
+]
+
+{ #category : #'accessing - patch' }
 RMDSimulationModel >> patchXDivisions [
 	^ simulationDefinition patchInitializer xDivisions
 ]

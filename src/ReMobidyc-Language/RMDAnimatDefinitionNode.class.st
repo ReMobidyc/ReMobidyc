@@ -46,6 +46,12 @@ RMDAnimatDefinitionNode >> = anObject [
 	^ super = anObject and: [ identifier = anObject identifier ]
 ]
 
+{ #category : #accessing }
+RMDAnimatDefinitionNode >> fullName [
+
+	^ self species , '(' , identifier , ')'
+]
+
 { #category : #comparing }
 RMDAnimatDefinitionNode >> hash [
 	^ super hash bitXor: identifier hash

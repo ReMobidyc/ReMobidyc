@@ -81,6 +81,18 @@ RMDInterpreter >> byChanceOf: aNumber [
 	^ self random < aNumber
 ]
 
+{ #category : #'space access' }
+RMDInterpreter >> centerXOfPatch: anInteger [
+
+	^ (self xPatchOf: anInteger) - 0.5 * simulationModel patchLength
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> centerYOfPatch: anInteger [
+
+	^ (self yPatchOf: anInteger) - 0.5 * simulationModel patchLength
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> changeStage: animatString [
 
@@ -878,4 +890,28 @@ RMDInterpreter >> writeNext: aFloat to: anInteger [
 
 	memory nextAt: anInteger put: aFloat.
 	^ aFloat
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> xIndexOfPatch: anInteger [
+
+	^ anInteger - memory patch // memory patchSize + 1
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> xPatchOf: anInteger [
+
+	^ memory xPatchOf: anInteger
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> yIndexOfPatch: anInteger [
+
+	^ anInteger - memory patch // memory patchSize \\ memory xPatches + 1
+]
+
+{ #category : #'space access' }
+RMDInterpreter >> yPatchOf: anInteger [
+
+	^ memory yPatchOf: anInteger
 ]
