@@ -75,28 +75,28 @@ RMDSnapshotTabular >> openChart [
 	table columns ifNotEmpty: [ :columns | 
 		| canvas |
 		canvas := RSCanvas new @ RSCanvasController.
-		2 to: columns size do: [ :columnIndex | 
-			| chart column |
-			chart := RSChart new.
-			column := columns at: columnIndex.
-			chart
-				extent: 150 @ 400;
-				title: column title.
-			chart
-				addPlot: (RSBoxPlot new y:
-							 { (table items collect: [ :row | column value: row ]) });
-				addDecoration: (RSVerticalTick new
-						 numberOfTicks: 10;
-						 fontSize: 10;
-						 asFloat).
-			canvas addShape: (RSComposite new shapes: chart build shapes) ].
+		columns do: [ :column | 
+			column ifOnChartDo: [ 
+				| chart |
+				chart := RSChart new.
+				chart
+					extent: 150 @ 400;
+					title: column title.
+				chart
+					addPlot: (RSBoxPlot new y:
+								 { (table items collect: [ :row | column value: row ]) });
+					addDecoration: (RSVerticalTick new
+							 numberOfTicks: 10;
+							 fontSize: 10;
+							 asFloat).
+				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSHorizontalLineLayout on: canvas shapes.
 		(canvas openWithTitle: 'Attributes Chart'
 			 ,
 			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 			 , (metaInterpreter
 					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
-					  ifNil: [ '' ])) extent: (160 * columns size) @ 400 ]
+					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
 ]
 
 { #category : #private }

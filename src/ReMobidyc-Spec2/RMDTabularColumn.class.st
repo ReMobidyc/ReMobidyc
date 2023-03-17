@@ -10,6 +10,12 @@ RMDTabularColumn >> defaultEvaluation [
 	^ [ :row | self value: row ]
 ]
 
+{ #category : #controlling }
+RMDTabularColumn >> ifOnChartDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : #initialization }
 RMDTabularColumn >> initialize [
 

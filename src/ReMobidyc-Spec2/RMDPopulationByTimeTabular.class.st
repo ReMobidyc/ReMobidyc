@@ -212,13 +212,13 @@ RMDPopulationByTimeTabular >> openChart [
 		chart := RSChart new.
 		chart extent: 800 @ 400.
 		time := table items collect: [ :row | columns first value: row ].
-		2 to: columns size do: [ :columnIndex | 
-			| column y |
-			column := columns at: columnIndex.
-			y := (table items collect: [ :row | column value: row ]) reject: #isNil.
-			chart addPlot: (RSLinePlot new
-					 x: (time copyFrom: 1 to: y size)
-					 y: (y)) ].
+		columns do: [ :column | 
+			column ifOnChartDo: [ 
+				| y |
+				y := (table items collect: [ :row | column value: row ]) reject:
+					     #isNil.
+				chart addPlot:
+					(RSLinePlot new x: (time copyFrom: 1 to: y size) y: y) ] ].
 		chart
 			addDecoration: RSHorizontalTick new;
 			addDecoration: RSVerticalTick new;
@@ -247,10 +247,11 @@ RMDPopulationByTimeTabular >> openChart [
 				withBoxColor: (chart plots at: plotIndex) color ].
 		legend build.
 		(canvas openWithTitle: 'Population Chart'
-			, (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
-			, (metaInterpreter
-					 ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
-					 ifNil: [ '' ])) extent: 1000@600 ]
+			 ,
+			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+			 , (metaInterpreter
+					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+					  ifNil: [ '' ])) extent: 1000 @ 600 ]
 ]
 
 { #category : #updating }

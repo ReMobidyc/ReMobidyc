@@ -18,6 +18,11 @@ RMDPopulationColumn >> defaultEvaluation [
 			  ifFalse: [ value ] ] ]
 ]
 
+{ #category : #enumerating }
+RMDPopulationColumn >> ifOnChartDo: aBlock [
+	^ aBlock cull: self
+]
+
 { #category : #accessing }
 RMDPopulationColumn >> runIds [
 

@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #enumerating }
+RMDIdColumn >> ifOnChartDo: aBlock [
+
+	
+]
+
 { #category : #accessing }
 RMDIdColumn >> title [
 
