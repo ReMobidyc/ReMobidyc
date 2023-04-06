@@ -2,8 +2,9 @@ Class {
 	#name : #RMDAnimatDefinitionBrowser,
 	#superclass : #RMDAgentDefinitionBrowser,
 	#instVars : [
-		'renameButton',
-		'copyButton'
+		'copyStageButton',
+		'renameStageButton',
+		'renameSpeciesButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -13,8 +14,9 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: #renameButton expand: false;
-				   add: #copyButton expand: false;
+				   add: #renameSpeciesButton expand: false;
+				   add: #renameStageButton expand: false;
+				   add: #copyStageButton expand: false;
 				   yourself)
 		  height: self buttonHeight;
 		  add: (SpPanedLayout newVertical
@@ -185,22 +187,28 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 
 	self simulationModel ifNil: [ ^ nil ].
 	animat ifNil: [ ^ nil ].
-	(self simulationModel animatDefinitionAt: animat ifAbsent: [  ]) 
-		ifNotNil: aBlock
+	^ (self simulationModel animatDefinitionAt: animat ifAbsent: [  ]) 
+		  ifNotNil: aBlock
 ]
 
 { #category : #initialization }
 RMDAnimatDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
-	renameButton := self newButton
-		                label: 'rename';
+	renameSpeciesButton := self newButton
+		                label: 'rename species';
+		                help:
+			                'Change the name of species.';
+		                action: [ self renameSpecies ];
+		                yourself.
+	renameStageButton := self newButton
+		                label: 'rename stage';
 		                help:
 			                'Change the name of stage. All references to this stage will be modified.';
 		                action: [ self renameStage ];
 		                yourself.
-	copyButton := self newButton
-		              label: 'copy';
+	copyStageButton := self newButton
+		              label: 'copy stage';
 		              help: 'Create a copy of this stage and rename it.';
 		              action: [ self copyStage ];
 		              yourself
@@ -215,6 +223,14 @@ RMDAnimatDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode 
 			animatInitializer attributeInitializers:
 				(animatInitializer attributeInitializers reject: [ :initializer | 
 					 initializer identifier = aRMDAttributeNode identifier ]) ] ]
+]
+
+{ #category : #operations }
+RMDAnimatDefinitionBrowser >> renameSpecies [
+
+	(UIManager default request: 'New name?' initialAnswer: self speciesName) 
+		ifNotNil: [ :name | 
+		modeler renameSpecies: self speciesName to: name capitalized ]
 ]
 
 { #category : #operations }
@@ -240,4 +256,10 @@ RMDAnimatDefinitionBrowser >> setSimulationModeler: aRMDSimulationModeler animat
 
 	animat := aString.
 	self setModeler: aRMDSimulationModeler
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionBrowser >> speciesName [
+
+	^ self definitionDo: [ :animatDefinition | animatDefinition species ]
 ]
