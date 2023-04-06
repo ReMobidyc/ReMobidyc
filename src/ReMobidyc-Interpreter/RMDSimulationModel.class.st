@@ -987,6 +987,18 @@ RMDSimulationModel >> renameAnimat: aString to: anotherString [
 ]
 
 { #category : #'accessing - definitions' }
+RMDSimulationModel >> renameSpecies: aString to: anotherString [
+
+	(animatDefinitions anySatisfy: [ :animatDef | 
+		 animatDef species = aString ]) ifFalse: [ ^ self ].
+	(animatDefinitions anySatisfy: [ :animatDef | 
+		 animatDef species = anotherString ]) ifTrue: [ ^ self ].
+	animatDefinitions do: [ :animatDef | 
+		animatDef species = aString ifTrue: [ 
+			animatDef species: anotherString ] ]
+]
+
+{ #category : #'accessing - definitions' }
 RMDSimulationModel >> renderers [
 	^ renderers
 ]

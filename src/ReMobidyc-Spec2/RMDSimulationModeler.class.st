@@ -372,6 +372,22 @@ RMDSimulationModeler >> removeSpeciesNamed: aString [
 ]
 
 { #category : #operations }
+RMDSimulationModeler >> renameSpecies: aString to: anotherString [
+
+	| stages |
+	stages := self simulationModel stageNamesOf: aString.
+	stages ifEmpty: [ 
+		UIManager default alert: 'No species named ' , aString.
+		^ self ].
+	(self simulationModel stageNamesOf: anotherString) ifNotEmpty: [ 
+		UIManager default alert:
+			'The species ' , anotherString , ' already exists.'.
+		^ self ].
+	self simulationModel renameSpecies: aString to: anotherString.
+	self updatePages
+]
+
+{ #category : #operations }
 RMDSimulationModeler >> renameStage: aString to: anotherString [
 
 	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 
