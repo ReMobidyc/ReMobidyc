@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDGammaDistributionNode class >> isAbstract [
+
+	^ self == RMDGammaDistributionNode
+]
+
 { #category : #'instance creation' }
 RMDGammaDistributionNode class >> shape: aRMDExpressionNode mean: anotherRMDExpressionNode [
 

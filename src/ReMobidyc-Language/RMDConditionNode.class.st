@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDConditionNode class >> isAbstract [
+
+	^ self == RMDConditionNode
+]
+
 { #category : #'boolean operations' }
 RMDConditionNode >> & aRMDConditionNode [
 

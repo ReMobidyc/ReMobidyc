@@ -8,6 +8,12 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #testing }
+RMDPatchRenderer class >> isAbstract [
+
+	^ self == RMDPatchRenderer
+]
+
 { #category : #comparing }
 RMDPatchRenderer >> = anObject [
 

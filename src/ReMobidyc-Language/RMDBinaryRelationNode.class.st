@@ -14,6 +14,12 @@ RMDBinaryRelationNode class >> expressions: anArrayOfRMDExpressionNode [
 		yourself
 ]
 
+{ #category : #testing }
+RMDBinaryRelationNode class >> isAbstract [
+
+	^ self == RMDBinaryRelationNode
+]
+
 { #category : #comparing }
 RMDBinaryRelationNode >> = anObject [
 	^ self class = anObject class

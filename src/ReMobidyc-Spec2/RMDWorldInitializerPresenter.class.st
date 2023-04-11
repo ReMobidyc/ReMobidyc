@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #specs }
-RMDWorldInitializerPresenter class >> defaultSpec [
+RMDWorldInitializerPresenter class >> defaultLayout [
 	<spec>
-	^ super defaultSpec
+	^ super defaultLayout
 		add: 'World with' expand: false;
 		yourself
 ]

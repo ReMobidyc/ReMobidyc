@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #testing }
+RMDAbstractSnapshotTabular class >> isAbstract [
+
+	^ self == RMDAbstractSnapshotTabular
+]
+
 { #category : #initialization }
 RMDAbstractSnapshotTabular >> initializePresenters [
 

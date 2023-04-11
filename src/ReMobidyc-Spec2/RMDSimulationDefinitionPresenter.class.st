@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #specs }
-RMDSimulationDefinitionPresenter class >> defaultSpec [
+RMDSimulationDefinitionPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		spacing: 10;

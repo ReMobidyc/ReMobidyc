@@ -8,6 +8,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDDefinitionNode class >> isAbstract [
+
+	^ self == RMDDefinitionNode
+]
+
 { #category : #'instance creation' }
 RMDDefinitionNode class >> variable: aRMDVariableNode expression: aRMDExpressionNode [
 	^ self new

@@ -14,7 +14,7 @@ Class {
 RMDAnimatInitializerPresenter class >> defaultLayout [
 
 	<spec>
-	^ super defaultSpec
+	^ super defaultLayout
 		  add: (SpBoxLayout newHorizontal
 				   add: #populationField expand: false;
 				   add: ' ' expand: false;

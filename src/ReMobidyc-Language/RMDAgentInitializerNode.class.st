@@ -8,6 +8,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDAgentInitializerNode class >> isAbstract [
+
+	^ self == RMDAgentInitializerNode
+]
+
 { #category : #comparing }
 RMDAgentInitializerNode >> = anObject [
 

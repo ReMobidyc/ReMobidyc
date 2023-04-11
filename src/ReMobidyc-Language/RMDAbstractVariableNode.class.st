@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDAbstractVariableNode class >> isAbstract [
+
+	^ self == RMDAbstractVariableNode
+]
+
 { #category : #comparing }
 RMDAbstractVariableNode >> = anObject [
 	^ self class = anObject class and: [ identifier = anObject identifier ]

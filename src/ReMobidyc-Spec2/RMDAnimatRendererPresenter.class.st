@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDAnimatRendererPresenter class >> isAbstract [
+
+	^ self == RMDAnimatRendererPresenter
+]
+
 { #category : #updating }
 RMDAnimatRendererPresenter >> disableAgentFields [
 

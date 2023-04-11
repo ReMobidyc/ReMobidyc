@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #testing }
+RMDAnimatRenderer class >> isAbstract [
+
+	^ self == RMDAnimatRenderer
+]
+
 { #category : #'instance creation' }
 RMDAnimatRenderer class >> on: aString [
 	^ self new

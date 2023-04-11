@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDLeftAssociativeApplicationNode class >> isAbstract [
+
+	^ self == RMDLeftAssociativeApplicationNode
+]
+
 { #category : #printing }
 RMDLeftAssociativeApplicationNode >> printOn: aStream [
 	self precedence < expression1 precedence

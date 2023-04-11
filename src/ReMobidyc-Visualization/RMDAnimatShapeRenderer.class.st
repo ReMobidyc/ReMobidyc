@@ -7,7 +7,13 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+RMDAnimatShapeRenderer class >> isAbstract [
+
+	^ self == RMDAnimatShapeRenderer
+]
+
+{ #category : #'instance creation' }
 RMDAnimatShapeRenderer class >> on: aString shapeSize: anInteger color: aColor [
 
 	^ (self on: aString)

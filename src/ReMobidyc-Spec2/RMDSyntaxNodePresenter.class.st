@@ -8,6 +8,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDSyntaxNodePresenter class >> isAbstract [
+
+	^ self == RMDSyntaxNodePresenter
+]
+
 { #category : #'instance creation' }
 RMDSyntaxNodePresenter class >> on: aRMDSyntaxNode [
 	^ self new

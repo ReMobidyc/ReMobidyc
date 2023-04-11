@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #testing }
+RMDPatchColorRenderer class >> isAbstract [
+
+	^ self == RMDPatchColorRenderer
+]
+
 { #category : #accessing }
 RMDPatchColorRenderer >> colorFrom: aNumber [
 	^ self subclassResponsibility 

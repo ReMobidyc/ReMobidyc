@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDPatchColorRangeRendererPresenter class >> isAbstract [
+
+	^ self == RMDPatchColorRangeRendererPresenter
+]
+
 { #category : #initialization }
 RMDPatchColorRangeRendererPresenter >> initializePresenters [
 	super initializePresenters.
