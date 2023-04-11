@@ -8,6 +8,12 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #testing }
+RMDPatchColorRangeRenderer class >> isAbstract [
+
+	^ self == RMDPatchColorRangeRenderer
+]
+
 { #category : #comparing }
 RMDPatchColorRangeRenderer >> = anObject [
 

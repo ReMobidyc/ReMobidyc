@@ -17,6 +17,12 @@ RMDCastExpression class >> expression: aRMDExpressionNode unit: aRMDUnit [
 		  yourself
 ]
 
+{ #category : #testing }
+RMDCastExpression class >> isAbstract [
+
+	^ self == RMDCastExpression
+]
+
 { #category : #comparing }
 RMDCastExpression >> = anObject [
 

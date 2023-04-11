@@ -15,6 +15,12 @@ RMDIndividualsInPatchDirectiveNode class >> animatName: aString [
 		  yourself
 ]
 
+{ #category : #testing }
+RMDIndividualsInPatchDirectiveNode class >> isAbstract [
+
+	^ self == RMDIndividualsInPatchDirectiveNode
+]
+
 { #category : #comparing }
 RMDIndividualsInPatchDirectiveNode >> = anObject [
 

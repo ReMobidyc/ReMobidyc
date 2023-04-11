@@ -5,12 +5,18 @@ Class {
 }
 
 { #category : #specs }
-RMDAgentInitializerPresenter class >> defaultSpec [
+RMDAgentInitializerPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;
 		spacing: 0;
 		yourself
+]
+
+{ #category : #testing }
+RMDAgentInitializerPresenter class >> isAbstract [
+
+	^ self == RMDAgentInitializerPresenter
 ]
 
 { #category : #layouting }

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #specs }
-RMDTaskDefinitionPresenter class >> defaultSpec [
+RMDTaskDefinitionPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical add: #source expand: true
 ]

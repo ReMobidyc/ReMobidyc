@@ -11,10 +11,10 @@ Class {
 }
 
 { #category : #specs }
-RMDPatchInitializerPresenter class >> defaultSpec [
+RMDPatchInitializerPresenter class >> defaultLayout [
 
 	<spec>
-	^ super defaultSpec
+	^ super defaultLayout
 		  add: (SpBoxLayout newHorizontal
 				   vAlignCenter;
 				   add: #xDivisionsField expand: false;

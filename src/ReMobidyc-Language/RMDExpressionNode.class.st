@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDExpressionNode class >> isAbstract [
+
+	^ self == RMDExpressionNode
+]
+
 { #category : #arithmetics }
 RMDExpressionNode >> * aRMDExpression [
 	^ RMDProductNode expression: self expression: aRMDExpression

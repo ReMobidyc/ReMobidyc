@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Visualization'
 }
 
+{ #category : #testing }
+RMDRenderer class >> isAbstract [
+
+	^ self == RMDRenderer
+]
+
 { #category : #comparing }
 RMDRenderer >> = anObject [
 	^ self class = anObject class and: [ color = anObject color ]

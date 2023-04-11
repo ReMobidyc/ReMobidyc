@@ -46,6 +46,12 @@ RMDAgentDefinitionNode class >> flushBuiltinAttributes [
 	builtinAttributes := nil
 ]
 
+{ #category : #testing }
+RMDAgentDefinitionNode class >> isAbstract [
+
+	^ self == RMDAgentDefinitionNode
+]
+
 { #category : #comparing }
 RMDAgentDefinitionNode >> = anObject [
 

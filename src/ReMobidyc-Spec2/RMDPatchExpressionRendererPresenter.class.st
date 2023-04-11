@@ -11,6 +11,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDPatchExpressionRendererPresenter class >> isAbstract [
+
+	^ self == RMDPatchExpressionRendererPresenter
+]
+
 { #category : #initialization }
 RMDPatchExpressionRendererPresenter >> initializePresenters [
 	super initializePresenters.

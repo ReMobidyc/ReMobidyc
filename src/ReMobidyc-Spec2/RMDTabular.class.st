@@ -15,6 +15,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #testing }
+RMDTabular class >> isAbstract [
+
+	^ self == RMDTabular
+]
+
 { #category : #'instance creation' }
 RMDTabular class >> on: aRMDMetaInterpreter [
 

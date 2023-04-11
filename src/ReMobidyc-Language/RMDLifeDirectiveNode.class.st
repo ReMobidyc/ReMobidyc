@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #testing }
+RMDLifeDirectiveNode class >> isAbstract [
+
+	^ self == RMDLifeDirectiveNode
+]
+
 { #category : #comparing }
 RMDLifeDirectiveNode >> = anObject [
 	^ self class = anObject class

@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #testing }
+RMDTimeSeriesTabular class >> isAbstract [
+
+	^ self == RMDTimeSeriesTabular
+]
+
 { #category : #initialization }
 RMDTimeSeriesTabular >> initializePresenters [
 

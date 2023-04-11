@@ -7,6 +7,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDAnimatShapeRendererPresenter class >> isAbstract [
+
+	^ self == RMDAnimatShapeRendererPresenter
+]
+
 { #category : #initialization }
 RMDAnimatShapeRendererPresenter >> initializePresenters [
 

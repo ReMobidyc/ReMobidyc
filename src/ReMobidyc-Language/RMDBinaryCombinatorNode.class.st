@@ -14,6 +14,12 @@ RMDBinaryCombinatorNode class >> conditions: anArrayOfRMDConditionNode [
 		yourself
 ]
 
+{ #category : #testing }
+RMDBinaryCombinatorNode class >> isAbstract [
+
+	^ self == RMDBinaryCombinatorNode
+]
+
 { #category : #comparing }
 RMDBinaryCombinatorNode >> = anObject [
 	^ self class = anObject class

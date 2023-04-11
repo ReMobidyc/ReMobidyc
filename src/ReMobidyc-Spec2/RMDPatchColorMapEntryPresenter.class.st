@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #specs }
-RMDPatchColorMapEntryPresenter class >> defaultSpec [
+RMDPatchColorMapEntryPresenter class >> defaultLayout [
 	^ SpBoxLayout newHorizontal
 		borderWidth: 5;
 		spacing: 5;

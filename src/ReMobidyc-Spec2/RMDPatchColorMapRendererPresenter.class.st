@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #specs }
-RMDPatchColorMapRendererPresenter class >> defaultSpec [
+RMDPatchColorMapRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
 		borderWidth: 0;

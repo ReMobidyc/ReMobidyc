@@ -27,6 +27,12 @@ Class {
 	#category : #'ReMobidyc-Storage'
 }
 
+{ #category : #testing }
+RMDMemory class >> isAbstract [
+
+	^ self == RMDMemory
+]
+
 { #category : #allocating }
 RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 

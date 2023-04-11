@@ -3,3 +3,9 @@ Class {
 	#superclass : #RMDError,
 	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
+
+{ #category : #private }
+RMDStorageError >> composeMessageText [
+
+	^ 'Storage error.'
+]

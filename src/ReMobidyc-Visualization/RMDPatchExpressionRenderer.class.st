@@ -16,6 +16,12 @@ RMDPatchExpressionRenderer class >> expression: aRMDExpressionNode min: aNumber 
 		yourself
 ]
 
+{ #category : #testing }
+RMDPatchExpressionRenderer class >> isAbstract [
+
+	^ self == RMDPatchExpressionRenderer
+]
+
 { #category : #comparing }
 RMDPatchExpressionRenderer >> = anObject [
 

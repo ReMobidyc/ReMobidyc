@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
 
+{ #category : #testing }
+RMDTabularColumn class >> isAbstract [
+
+	^ self == RMDTabularColumn
+]
+
 { #category : #initialization }
 RMDTabularColumn >> defaultEvaluation [
 

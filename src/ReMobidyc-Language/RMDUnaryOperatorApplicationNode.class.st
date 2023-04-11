@@ -14,6 +14,12 @@ RMDUnaryOperatorApplicationNode class >> expression: aRMDExpressionNode [
 		yourself
 ]
 
+{ #category : #testing }
+RMDUnaryOperatorApplicationNode class >> isAbstract [
+
+	^ self == RMDUnaryOperatorApplicationNode
+]
+
 { #category : #comparing }
 RMDUnaryOperatorApplicationNode >> = anObject [
 	^ self class = anObject class

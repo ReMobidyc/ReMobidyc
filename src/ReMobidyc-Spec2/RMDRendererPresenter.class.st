@@ -9,6 +9,12 @@ Class {
 	#category : #'ReMobidyc-Spec2-Editors'
 }
 
+{ #category : #testing }
+RMDRendererPresenter class >> isAbstract [
+
+	^ self == RMDRendererPresenter
+]
+
 { #category : #'instance creation' }
 RMDRendererPresenter class >> on: aRMDRenderer [
 	^ self new
