@@ -30,7 +30,7 @@ RMDAbout class >> remobidycMenuOn: aBuilder [
 
 { #category : #accessing }
 RMDAbout >> codename [
-	^ 'Thonon'
+	^ 'Preview'
 ]
 
 { #category : #initialization }
