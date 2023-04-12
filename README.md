@@ -52,11 +52,11 @@ EpMonitor disableDuring: [
 
 The following pre-built packages are available.
 
-Release: [preview-7](https://github.com/ReMobidyc/ReMobidyc/releases/preview-7/)
-* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-7/remobidyc-mac-arm64.dmg)
-* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-7/remobidyc-mac-x64.dmg)
-* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-7/remobidyc-linux-x64.tar.bz2)
-* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-7/remobidyc-win-x64.zip)
+Release: [preview-8](https://github.com/ReMobidyc/ReMobidyc/releases/preview-8/)
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-mac-x64.dmg)
+* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-linux-x64.tar.bz2)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-win-x64.zip)
 
 ## Modeling Language
 
