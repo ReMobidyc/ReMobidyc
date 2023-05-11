@@ -153,6 +153,45 @@ TRMDTemplateMenu >> arithmetics [
 ]
 
 { #category : #'templates-units' }
+TRMDTemplateMenu >> carbonmasses [
+
+	^ Array streamContents: [ :stream |
+		  stream
+			  nextPut: (RMDSourceTemplate
+					   name: 'tC (tons-of-carbon)'
+					   description: '1 [t] = 1000 [kg]'
+					   sourceText: 't');
+			  nextPut: (RMDSourceTemplate
+					   name: 'kgC (kilo-grams-of-carbon)'
+					   description: 'kg of Carbon'
+					   sourceText: 'kgC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'gC (grams-of-carbon)'
+					   description: '1000 [gC] = 1 [kgC]'
+					   sourceText: 'gC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'mgC (milli-grams-of-carbon)'
+					   description: '10^6 [mgC] = 1 [kgC]'
+					   sourceText: 'mgC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'µgC (micro-grams-of-carbon)'
+					   description: '10^9 [µgC] = 1 [kgC]'
+					   sourceText: 'µmC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'ngC (nano-grams-of-carbon)'
+					   description: '10^12 [ngC] = 1 [kgC]'
+					   sourceText: 'ngC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'pgC (pico-grams-of-carbon)'
+					   description: '10^15 [ngC] = 1 [kgC]'
+					   sourceText: 'pgC');
+			  nextPut: (RMDSourceTemplate
+					   name: 'fgC (femto-grams-of-carbon)'
+					   description: '10^18 [ngC] = 1 [kgC]'
+					   sourceText: 'fgC') ]
+]
+
+{ #category : #'templates-units' }
 TRMDTemplateMenu >> energies [
 
 	^ Array streamContents: [ :stream | 
@@ -671,10 +710,11 @@ TRMDTemplateMenu >> unitTemplateMenu [
 
 	| menu |
 	menu := SpMenuPresenter new.
-	menu addGroup: [ :group | 
-		{ 
+	menu addGroup: [ :group |
+		{
 			('Length...' -> self lengths).
 			('Mass...' -> self masses).
+			('Mass of Carbon...' -> self carbonmasses).
 			('Time...' -> self times).
 			('Temperature...' -> self temperatures).
 			('Angle...' -> self angles).
@@ -685,12 +725,12 @@ TRMDTemplateMenu >> unitTemplateMenu [
 			('Force...' -> self forces).
 			('Pressure...' -> self pressures).
 			('Energy...' -> self energies).
-			('Power' -> self powers) } do: [ :assoc | 
-			group addItem: [ :item | 
+			('Power' -> self powers) } do: [ :assoc |
+			group addItem: [ :item |
 				| submenu |
 				item name: assoc key.
 				submenu := SpMenuPresenter new.
-				assoc value do: [ :sourceTemplate | 
+				assoc value do: [ :sourceTemplate |
 					sourceTemplate addToMenu: submenu for: self ].
 				item subMenu: submenu ] ] ].
 	^ menu
