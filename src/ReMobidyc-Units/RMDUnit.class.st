@@ -63,7 +63,7 @@ RMDUnit class >> hour [
 RMDUnit class >> initialize [
 
 	<script: 'RMDProportionalUnitSymbol initialize'>
-	| register m m2 m3 kg s kelvin n pa j w radian |
+	| register m m2 m3 kg kgC s kelvin n pa j w radian |
 	KnownUnits ifNil: [ KnownUnits := Dictionary new ].
 	KnownUnits removeAll.
 	KnownUnits at: '' put: RMDCompoundUnit noDimension.
@@ -113,10 +113,10 @@ RMDUnit class >> initialize [
 	register value: (kg := self newSISymbol: 'kg') value: #(  ).
 	register
 		value: (self newSymbol: 't' scale: 1.0e3 siUnit: kg)
-		value: #( Mg ).
+		value: #( 'Mg' ).
 	register
 		value: (self newSymbol: 'g' scale: 1.0e-3 siUnit: kg)
-		value: #(  ).
+		value: #( 'gram' ).
 	register
 		value: (self newSymbol: 'mg' scale: 1.0e-6 siUnit: kg)
 		value: #( 'millig' 'milligram' ).
@@ -141,6 +141,29 @@ RMDUnit class >> initialize [
 	register
 		value: (self newSymbol: 'gr' scale: 0.00006479891 siUnit: kg)
 		value: #(  ).
+	"biovolume"
+	register value: (kgC := self newSISymbol: 'kgC') value: #(  ).
+	register
+		value: (self newSymbol: 'tC' scale: 1.0e3 siUnit: kgC)
+		value: #( 'MgC' ).
+	register
+		value: (self newSymbol: 'gC' scale: 1.0e-3 siUnit: kgC)
+		value: #( 'gramC' ).
+	register
+		value: (self newSymbol: 'mgC' scale: 1.0e-6 siUnit: kgC)
+		value: #( 'milligC' 'milligramC' ).
+	register
+		value: (self newSymbol: 'µgC' scale: 1.0e-9 siUnit: kgC)
+		value: #( 'microgC' 'microgramC' ).
+	register
+		value: (self newSymbol: 'ngC' scale: 1.0e-12 siUnit: kgC)
+		value: #( 'nanogC' 'nanogramC' ).
+	register
+		value: (self newSymbol: 'pgC' scale: 1.0e-15 siUnit: kgC)
+		value: #( 'picogC' 'picogramC' ).
+	register
+		value: (self newSymbol: 'fgC' scale: 1.0e-18 siUnit: kgC)
+		value: #( 'femtogC' 'femtogramC' ).
 	"time"
 	register
 		value: (s := self newSISymbol: 's')
