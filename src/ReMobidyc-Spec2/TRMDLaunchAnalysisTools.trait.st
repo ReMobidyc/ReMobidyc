@@ -48,6 +48,14 @@ TRMDLaunchAnalysisTools >> metaInterpreterForTabularDo: aBlock [
 ]
 
 { #category : #operations }
+TRMDLaunchAnalysisTools >> openInAttributeTabular [
+
+	^ (self metaInterpreterForTabularDo: #openInAttributeTabular)
+		  selectRunId: self selectedRunId;
+		  yourself
+]
+
+{ #category : #operations }
 TRMDLaunchAnalysisTools >> openInIndividualHistoryTabularWithRunId: runId individual: individual time: time [
 
 	self metaInterpreterForTabularDo: [ :metaInterpreter | 
@@ -140,26 +148,30 @@ TRMDLaunchAnalysisTools >> tabularMenu [
 TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 
 	^ aSpMenuPresenter
-		  addGroup: [ :group | 
+		  addGroup: [ :group |
 			  | runId time individual |
 			  runId := self selectedRunId.
 			  time := self selectedTime.
 			  individual := self selectedIndividual.
 			  group
-				  addItem: [ :item | 
+				  addItem: [ :item |
 					  item
 						  name: 'Open in Population Tabular';
 						  action: [ self openInPopulationTabular ] ];
-				  addItem: [ :item | 
+				  addItem: [ :item |
 					  item
 						  name: 'Open in Snapshot Tabular';
-						  action: [ self openInSnapshotTabular ] ].
-			  (runId notNil and: [ time notNil and: [ individual notNil ] ]) 
-				  ifTrue: [ 
-					  group addItem: [ :item | 
+						  action: [ self openInSnapshotTabular ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Open in Attribute Tabular';
+						  action: [ self openInAttributeTabular ] ].
+			  (runId notNil and: [ time notNil and: [ individual notNil ] ])
+				  ifTrue: [
+					  group addItem: [ :item |
 						  item
 							  name: 'Open in Individual History Tabular';
-							  action: [ 
+							  action: [
 								  self
 									  openInIndividualHistoryTabularWithRunId: runId
 									  individual: individual

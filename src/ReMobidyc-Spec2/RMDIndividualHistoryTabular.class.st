@@ -299,11 +299,3 @@ RMDIndividualHistoryTabular >> updateRows [
 															 progress value: time ] ] ] ] ] ]);
 		refresh
 ]
-
-{ #category : #updating }
-RMDIndividualHistoryTabular >> updateTable [
-
-	self
-		updateRows;
-		updateColumns
-]
