@@ -7,7 +7,6 @@ Class {
 		'metaInterpreter',
 		'runDropList',
 		'table',
-		'columnCollectors',
 		'exportCSVButton',
 		'reloadButton',
 		'baseRowIndex'
@@ -213,22 +212,6 @@ RMDTabular >> selectTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
-RMDTabular >> selectVisibleColumns: aBlock [
-
-	columnCollectors ifNotNil: [ 
-		table
-			columns: (columnCollectors
-					 select: [ :assoc | aBlock value: assoc key ]
-					 thenCollect: [ :assoc | 
-						 SpStringTableColumn evaluated: [ :row | 
-								 | v |
-								 v := row at: assoc key ifAbsent: [ '' ].
-								 [ v isBlock ] whileTrue: [ v := v value: row ].
-								 v ] ]);
-			refresh ]
-]
-
 { #category : #private }
 RMDTabular >> selectedRunId [
 
@@ -322,7 +305,8 @@ RMDTabular >> updateTable [
 
 	self
 		updateRows;
-		updateColumns
+		updateColumns.
+	table refresh
 ]
 
 { #category : #operations }

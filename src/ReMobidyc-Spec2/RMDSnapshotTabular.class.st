@@ -210,11 +210,3 @@ RMDSnapshotTabular >> updateRunDropList [
 				 ifTrue: [ selection ]
 				 ifFalse: [ items ifEmpty: [ nil ] ifNotEmpty: #first ])
 ]
-
-{ #category : #updating }
-RMDSnapshotTabular >> updateTable [
-
-	self
-		updateRows;
-		updateColumns
-]
