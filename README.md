@@ -5,7 +5,7 @@
 <img alt="logo" src="images/logo-light1.png" width=600>
 
 # reːmobidyc
-reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuation letter) is a multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
 
 ## Presentations
 
