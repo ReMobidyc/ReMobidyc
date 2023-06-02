@@ -13,7 +13,8 @@ Class {
 		'editItemButton',
 		'exportItemButton',
 		'isForSave',
-		'updateItemListButton'
+		'updateItemListButton',
+		'updateRepositoryListButton'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -26,6 +27,7 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 		  add: (SpBoxLayout newVertical
 				   add: #repositoryList expand: true;
 				   add: (SpBoxLayout newHorizontal
+						    add: #updateRepositoryListButton width: self buttonHeight;
 						    add: #addRepositoryButton width: self buttonHeight;
 						    add: #removeRepositoryButton width: self buttonHeight;
 						    add: #editRepositoryButton width: self buttonHeight;
@@ -262,15 +264,21 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 	super initializePresenters.
 	repositoryList := self newList
 		                  beSingleSelection;
-		                  whenModelChangedDo: [ 
+		                  whenModelChangedDo: [
 			                  repositoryList selectItem: nil ];
-		                  whenSelectionChangedDo: [ 
+		                  whenSelectionChangedDo: [
 			                  self
 				                  updateButtons;
 				                  updateItemList ];
 		                  display: [ :item | item repositoryName ];
 		                  displayIcon: [ :item | item icon ];
+		                  contextMenu: [ self repositoryListMenu ];
 		                  yourself.
+	updateRepositoryListButton := self newButton
+		                              icon: self updateIcon;
+		                              action: [ self updateRepositoryList ];
+		                              help: 'Update the repository listing.';
+		                              yourself.
 	addRepositoryButton := self newButton
 		                       icon: self addIcon;
 		                       action: [ self addRepository ];
@@ -290,16 +298,16 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 		                        disable;
 		                        yourself.
 	itemList := self newItemList
+		            contextMenu: [ self itemListMenu ];
 		            whenModelChangedDo: [ itemList selectItem: nil ];
-		            whenSelectionChangedDo: [ 
+		            whenSelectionChangedDo: [
 			            self
 				            updateButtons;
 				            updateDescriptionText ].
 	updateItemListButton := self newButton
 		                        icon: self updateIcon;
 		                        action: [ self updateItemList ];
-		                        help:
-			                        'Update the item listing.';
+		                        help: 'Update the item listing.';
 		                        disable;
 		                        yourself.
 	newItemButton := self newButton
@@ -381,6 +389,39 @@ RMDAbstractRepositoryBrowser >> item [
 	^ itemList selection selectedItem
 ]
 
+{ #category : #menus }
+RMDAbstractRepositoryBrowser >> itemListMenu [
+
+	| selectedItem |
+	selectedItem := self item.
+	^ self newMenu addGroup: [ :g |
+		  g
+			  addItem: [ :item |
+				  item
+					  name: 'Add';
+					  icon: self addIcon;
+					  enabled: newItemButton isEnabled;
+					  action: [ self addItem ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Rename';
+					  icon: self editIcon;
+					  enabled: editItemButton isEnabled;
+					  subMenu: selectedItem editMenu ];
+			  addItem: [ :item |
+				  item
+					  name: 'Remove';
+					  icon: self removeIcon;
+					  enabled: removeItemButton isEnabled;
+					  action: [ self removeItem ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Export';
+					  icon: self exportIcon;
+					  enabled: exportItemButton isEnabled;
+					  action: [ self exportItem ] ] ]
+]
+
 { #category : #accessing }
 RMDAbstractRepositoryBrowser >> itemsInRepository [
 
@@ -434,6 +475,34 @@ RMDAbstractRepositoryBrowser >> repository [
 RMDAbstractRepositoryBrowser >> repositoryDirectory [
 
 	^ RMDRepositoryDirectory current
+]
+
+{ #category : #menus }
+RMDAbstractRepositoryBrowser >> repositoryListMenu [
+
+	| repository |
+	repository := self repository.
+	^ self newMenu addGroup: [ :g |
+		  g
+			  addItem: [ :item |
+				  item
+					  name: 'Add';
+					  icon: self addIcon;
+					  enabled: addRepositoryButton isEnabled;
+					  subMenu: self addRepositoryMenu ];
+			  addItem: [ :item |
+				  item
+					  name: 'Edit';
+					  icon: self editIcon;
+					  enabled:
+						  (editRepositoryButton isEnabled and: [ repository hasEditMenu ]);
+					  subMenu: repository editMenu ];
+			  addItem: [ :item |
+				  item
+					  name: 'Remove';
+					  icon: self removeIcon;
+					  enabled: removeRepositoryButton isEnabled;
+					  action: [ self removeRepository ] ] ]
 ]
 
 { #category : #operations }

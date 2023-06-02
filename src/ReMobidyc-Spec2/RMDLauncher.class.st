@@ -20,6 +20,7 @@ RMDLauncher class >> defaultLayout [
 		  add: (SpBoxLayout newVertical
 				   add: #repositoryList expand: true;
 				   add: (SpBoxLayout newHorizontal
+						    add: #updateRepositoryListButton width: self buttonHeight;
 						    add: #addRepositoryButton width: self buttonHeight;
 						    add: #removeRepositoryButton width: self buttonHeight;
 						    add: #editRepositoryButton width: self buttonHeight;
@@ -93,7 +94,8 @@ RMDLauncher >> initializePresenters [
 		                 yourself.
 	modelerMenuButton := self newButton
 		                     icon: self dropdownIcon;
-		                     action: [ self openModelerMenu ];
+		                     action: [
+			                     self openModelerMenu openWithSpecAtPointer ];
 		                     help: 'Open the model in a selected modeler.';
 		                     disable;
 		                     yourself.
@@ -112,6 +114,66 @@ RMDLauncher >> initializePresenters [
 		                             disable;
 		                             yourself.
 	super initializePresenters
+]
+
+{ #category : #menus }
+RMDLauncher >> itemListMenu [
+
+	| selectedItem |
+	selectedItem := self item.
+	^ self newMenu
+		  addGroup: [ :g |
+			  g
+				  addItem: [ :item |
+					  item
+						  name: 'Modeler';
+						  icon: self modelerIcon;
+						  enabled: modelerMenuButton isEnabled;
+						  subMenu: self openModelerMenu ];
+				  addItem: [ :item |
+					  item
+						  name: 'Experimentarium';
+						  icon: self experimentariumIcon;
+						  enabled: experimentariumMenuButton isEnabled;
+						  subMenu: self openInExperimentariumMenu ];
+				  addItem: [ :item |
+					  item
+						  name: 'Tabular';
+						  icon: self tabularIcon;
+						  enabled: openTabularButton isEnabled;
+						  subMenu: self tabularMenu ];
+				  addItem: [ :item |
+					  item
+						  name: 'Observatory';
+						  icon: self observatoryIcon;
+						  enabled: openObservatoryButton isEnabled;
+						  action: [ self openInReplayObservatory ] ] ];
+		  addGroup: [ :g |
+			  g
+				  addItem: [ :item |
+					  item
+						  name: 'Add';
+						  icon: self addIcon;
+						  enabled: newItemButton isEnabled;
+						  action: [ self addItem ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Rename';
+						  icon: self editIcon;
+						  enabled: editItemButton isEnabled;
+						  action: [ self editItem ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeItemButton isEnabled;
+						  action: [ self removeItem ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Export';
+						  icon: self exportIcon;
+						  enabled: exportItemButton isEnabled;
+						  action: [ self exportItem ] ] ]
 ]
 
 { #category : #private }
@@ -191,18 +253,16 @@ RMDLauncher >> openInTextModeler [
 { #category : #operations }
 RMDLauncher >> openModelerMenu [
 
-	^ self newMenu
-		  addGroup: [ :group | 
-			  group
-				  addItem: [ :item | 
-					  item
-						  name: 'Modeler';
-						  action: [ self openInModeler ] ];
-				  addItem: [ :item | 
-					  item
-						  name: 'Text-based Modeler';
-						  action: [ self openInTextModeler ] ] ];
-		  openWithSpecAtPointer
+	^ self newMenu addGroup: [ :group |
+		  group
+			  addItem: [ :item |
+				  item
+					  name: 'Modeler';
+					  action: [ self openInModeler ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Text-based Modeler';
+					  action: [ self openInTextModeler ] ] ]
 ]
 
 { #category : #operations }
