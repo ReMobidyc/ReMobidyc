@@ -118,6 +118,15 @@ RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherStri
 ]
 
 { #category : #'type checking' }
+RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode [
+
+	^ self withSubject: aString object: anotherString do: [
+		  anArrayOfRMDUtilityDefinitionNode ifNotNil: [
+			  context loadUtilityDefinitions: anArrayOfRMDUtilityDefinitionNode ].
+		  aRMDSyntaxNode typecheckIn: self ]
+]
+
+{ #category : #'type checking' }
 RMDTypechecker >> typecheckAgentDefinitions [
 
 	self

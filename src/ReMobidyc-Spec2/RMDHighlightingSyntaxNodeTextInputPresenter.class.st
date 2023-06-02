@@ -6,6 +6,7 @@ Class {
 		'#simulationModelBlock',
 		'#subjectBlock',
 		'#objectBlock',
+		'#utilitiesBlock',
 		'#expectedType'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
@@ -20,7 +21,8 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> expectedType [
 { #category : #accessing }
 RMDHighlightingSyntaxNodeTextInputPresenter >> expectedType: aRMDType [
 
-	expectedType := aRMDType
+	expectedType := aRMDType.
+	self prettyPrint
 ]
 
 { #category : #initialization }
@@ -40,33 +42,42 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> object [
 { #category : #accessing }
 RMDHighlightingSyntaxNodeTextInputPresenter >> objectBlock: aBlock [
 
-	objectBlock := aBlock
+	objectBlock := aBlock.
+	self prettyPrint
+]
+
+{ #category : #api }
+RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint [
+
+	syntaxNode ifNotNil: [ text := self prettyPrint: syntaxNode ]
 ]
 
 { #category : #private }
 RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 
-	| errorNodes |
-	errorNodes := OrderedCollection new: 10.
-	[ 
-	[ 
-	[ 
-	expectedType unify: (self typechecker
-			 typecheck: aRMDSyntaxNode
-			 subject: self subject
-			 object: self object) ]
-		on: RMDTypeUnificationError
-		do: [ :ex | errorNodes add: aRMDSyntaxNode ] ]
-		on: RMDTypeError
-		do: [ :ex | 
-			errorNodes add: ex node.
-			ex resume: ex type2 ] ]
-		on: RMDUnresolvedReferenceError
-		do: [ :ex | 
-			errorNodes add: ex node.
-			ex resume: RMDType any ].
 	^ aRMDSyntaxNode
-		  ifNotNil: [ aRMDSyntaxNode asTextWithHighlights: errorNodes ]
+		  ifNotNil: [
+			  | errorNodes |
+			  errorNodes := OrderedCollection new: 10.
+			  [
+			  [
+			  [
+			  expectedType unify: (self typechecker
+					   typecheck: aRMDSyntaxNode
+					   subject: self subject
+					   object: self object
+					   utilities: self utilities) ]
+				  on: RMDTypeUnificationError
+				  do: [ :ex | errorNodes add: aRMDSyntaxNode ] ]
+				  on: RMDTypeError
+				  do: [ :ex |
+					  errorNodes add: ex node.
+					  ex resume: ex type2 ] ]
+				  on: RMDUnresolvedReferenceError
+				  do: [ :ex |
+					  errorNodes add: ex node.
+					  ex resume: RMDType any ].
+			  aRMDSyntaxNode asTextWithHighlights: errorNodes ]
 		  ifNil: [ Text new ]
 ]
 
@@ -78,7 +89,8 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> simulationModel [
 
 { #category : #accessing }
 RMDHighlightingSyntaxNodeTextInputPresenter >> simulationModelBlock: aBlock [
-	simulationModelBlock := aBlock
+	simulationModelBlock := aBlock.
+	self prettyPrint
 ]
 
 { #category : #accessing }
@@ -90,7 +102,8 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> subject [
 { #category : #accessing }
 RMDHighlightingSyntaxNodeTextInputPresenter >> subjectBlock: aBlock [
 
-	subjectBlock := aBlock
+	subjectBlock := aBlock.
+	self prettyPrint
 ]
 
 { #category : #api }
@@ -113,4 +126,17 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> typechecker [
 	^ self simulationModel
 		  ifNotNil: #typechecker
 		  ifNil: [ RMDTypechecker new ]
+]
+
+{ #category : #accessing }
+RMDHighlightingSyntaxNodeTextInputPresenter >> utilities [
+
+	^ utilitiesBlock ifNotNil: #value
+]
+
+{ #category : #accessing }
+RMDHighlightingSyntaxNodeTextInputPresenter >> utilitiesBlock: aBlock [
+
+	utilitiesBlock := aBlock.
+	self prettyPrint
 ]

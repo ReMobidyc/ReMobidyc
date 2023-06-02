@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'identifierField',
 		'unitField',
-		'initializerExpressionField'
+		'initializerExpressionField',
+		'agentName',
+		'utilities'
 	],
 	#category : #'ReMobidyc-Spec2-Editors'
 }
@@ -25,6 +27,19 @@ RMDAttributeDeclarationPresenter class >> defaultLayout [
 		  height: self inputTextHeight
 ]
 
+{ #category : #accessing }
+RMDAttributeDeclarationPresenter >> agentName [
+
+	^ agentName
+]
+
+{ #category : #accessing }
+RMDAttributeDeclarationPresenter >> agentName: aString [
+
+	agentName := aString.
+	initializerExpressionField subjectBlock: [ agentName ]
+]
+
 { #category : #initialization }
 RMDAttributeDeclarationPresenter >> initializePresenters [
 
@@ -32,48 +47,51 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 	identifierField := self newTextInput
 		                   beText;
 		                   placeholder: 'identifier';
-		                   whenTextChangedDo: [ 
-			                   node ifNotNil: [ 
+		                   whenTextChangedDo: [
+			                   node ifNotNil: [
 					                   node identifier:
 							                   identifierField text asString trim ] ];
 		                   yourself.
 	unitField := self newValidatedTextInput
 		             placeholder: 'unit';
-		             validation: [ :text | 
+		             validation: [ :text |
 			             (RMDGrammar new unit optional end parse:
 					              text asString trim) isPetit2Failure not ];
-		             contextMenu: [ 
+		             contextMenu: [
 			             | menu |
 			             menu := self newMenu.
-			             menu addItem: [ :item | 
+			             menu addItem: [ :item |
 					             item
 						             name: 'Template...';
 						             subMenu: unitField unitTemplateMenu ] ];
-		             whenLastValidTextChangedDo: [ :text | 
+		             whenLastValidTextChangedDo: [ :text |
 			             node unit:
 				             ((RMDGrammar new unit optional end parse:
-					               text asString trim) ifNil: [ RMDUnit noDimension ]) ];
+					               text asString trim) ifNil: [ RMDUnit noDimension ]).
+			             initializerExpressionField
+				             expectedType: (RMDType unit: node unit);
+				             prettyPrint ];
 		             yourself.
 	initializerExpressionField := self newHighlightingSyntaxNodeTextInput
 		                              placeholder:
 			                              'initial value (optional)';
 		                              beExpression;
 		                              allowEmpty;
-		                              contextMenu: [ 
+		                              contextMenu: [
 			                              | menu |
 			                              menu := self newMenu.
-			                              menu addItem: [ :item | 
+			                              menu addItem: [ :item |
 					                              item
 						                              name: 'Template...';
 						                              subMenu:
 							                              initializerExpressionField
 								                              templateMenu ] ];
-		                              whenSyntaxNodeChangedDo: [ 
-		                              :newExpression | 
+		                              whenSyntaxNodeChangedDo: [
+		                              :newExpression |
 		                              node initializerExpression:
 			                              newExpression ];
 		                              yourself.
-	self focusOrder: { 
+	self focusOrder: {
 			identifierField.
 			unitField.
 			initializerExpressionField } asOrderedCollection
@@ -100,6 +118,13 @@ RMDAttributeDeclarationPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
+{ #category : #accessing }
+RMDAttributeDeclarationPresenter >> simulationModel: aRMDSimulationModel [
+
+	super simulationModel: aRMDSimulationModel.
+	initializerExpressionField simulationModelBlock: [ simulationModel ]
+]
+
 { #category : #updating }
 RMDAttributeDeclarationPresenter >> updateIdentifier [
 	node ifNotNil: [ identifierField text: node identifier ]
@@ -122,6 +147,13 @@ RMDAttributeDeclarationPresenter >> updateUnit [
 					(unit hasDimension
 						ifTrue: [ unit printString ]
 						ifFalse: [ '' ]) ]
+]
+
+{ #category : #accessing }
+RMDAttributeDeclarationPresenter >> utilities: anArrayOfRMDUtilityDefinitionNode [
+
+	utilities := anArrayOfRMDUtilityDefinitionNode.
+	initializerExpressionField utilitiesBlock: [ utilities ]
 ]
 
 { #category : #enumerating }

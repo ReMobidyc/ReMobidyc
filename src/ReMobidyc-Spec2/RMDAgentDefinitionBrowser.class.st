@@ -104,16 +104,20 @@ RMDAgentDefinitionBrowser class >> isAbstract [
 RMDAgentDefinitionBrowser >> addAttribute [
 
 	| attributeNode |
-	(attributeNode := RMDAttributeDeclarationNode
-		                  identifier: ''
-		                  unit: RMDUnit noDimension) asPresenter openDialog
+	((attributeNode := RMDAttributeDeclarationNode
+		                   identifier: ''
+		                   unit: RMDUnit noDimension) asPresenter
+		 simulationModel: self simulationModel;
+		 agentName: self agentName;
+		 utilities: self agentDefinition utilityDefinitions;
+		 yourself) openDialog
 		title: 'Add attribute to ' , self agentName;
-		okAction: [ 
-			self definitionDo: [ :definition | 
-					definition attributeDeclarations:
-							(definition attributeDeclarations copyWith: attributeNode).
-					self addInitializerWithAttribute: attributeNode animat: animat.
-					self updateAttributeList ] ]
+		okAction: [
+			self definitionDo: [ :definition |
+				definition attributeDeclarations:
+					(definition attributeDeclarations copyWith: attributeNode).
+				self addInitializerWithAttribute: attributeNode animat: animat.
+				self updateAttributeList ] ]
 ]
 
 { #category : #private }
@@ -168,6 +172,13 @@ RMDAgentDefinitionBrowser >> addUtility [
 ]
 
 { #category : #accessing }
+RMDAgentDefinitionBrowser >> agentDefinition [
+
+	^ self simulationModel ifNotNil: [ :model |
+		  model agentDefinitionAt: self agentName ifAbsent: [ nil ] ]
+]
+
+{ #category : #accessing }
 RMDAgentDefinitionBrowser >> agentName [
 	^ self subclassResponsibility
 ]
@@ -180,22 +191,26 @@ RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> editAttribute [
 
-	attributeList selection selectedItem ifNotNil: [ 
-		:originalAttributeNode | 
+	attributeList selection selectedItem ifNotNil: [
+		:originalAttributeNode |
 		| newAttributeNode |
 		newAttributeNode := originalAttributeNode copy.
-		newAttributeNode asPresenter openDialog
+		(newAttributeNode asPresenter
+			 simulationModel: self simulationModel;
+			 agentName: self agentName;
+			 utilities: self agentDefinition utilityDefinitions;
+			 yourself) openDialog
 			title: 'Edit attribute of ' , self agentName;
-			okAction: [ 
-				self definitionDo: [ :definition | 
-						definition attributeDeclarations:
-								((definition attributeDeclarations copyWithout:
-										  originalAttributeNode) copyWith: newAttributeNode).
-						self
-							removeInitializerWithAttribute: originalAttributeNode
-							animat: animat;
-							addInitializerWithAttribute: newAttributeNode animat: animat.
-						self updateAttributeList ] ] ]
+			okAction: [
+				self definitionDo: [ :definition |
+					definition attributeDeclarations:
+						((definition attributeDeclarations copyWithout:
+							  originalAttributeNode) copyWith: newAttributeNode).
+					self
+						removeInitializerWithAttribute: originalAttributeNode
+						animat: animat;
+						addInitializerWithAttribute: newAttributeNode animat: animat.
+					self updateAttributeList ] ] ]
 ]
 
 { #category : #operations }
@@ -686,6 +701,12 @@ RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> simulationModel [
 	^ modeler ifNotNil: #simulationModel
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionBrowser >> typechecker [
+
+	^ self simulationModel ifNotNil: #typechecker
 ]
 
 { #category : #updating }
