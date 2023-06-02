@@ -101,6 +101,12 @@ RMDAbstractFileRepository >> directoryDo: aBlock [
 	^ nil
 ]
 
+{ #category : #testing }
+RMDAbstractFileRepository >> hasEditMenu [
+
+	^ true
+]
+
 { #category : #'accessing-icons' }
 RMDAbstractFileRepository >> iconFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 

@@ -115,6 +115,47 @@ RMDActionDefinitionBrowser >> addUtilityDefinition [
 		self nodeChanged ]
 ]
 
+{ #category : #menus }
+RMDActionDefinitionBrowser >> attributeDefinitionListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Add...';
+						  icon: self addIcon;
+						  enabled: addAttributeButton isEnabled;
+						  action: [ self addAttributeDefinition ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit...';
+						  icon: self editIcon;
+						  enabled: editAttributeButton isEnabled;
+						  action: [ self editAttributeDefinition ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeAttributeButton isEnabled;
+						  action: [ self removeAttributeDefinition ] ] ];
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Move up';
+						  icon: self upIcon;
+						  enabled: moveUpAttributeButton isEnabled;
+						  action: [ self moveUpAttribute ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Move down';
+						  icon: self downIcon;
+						  enabled: moveDownAttributeButton isEnabled;
+						  action: [ self moveDownAttribute ] ] ];
+		  yourself
+]
+
 { #category : #operations }
 RMDActionDefinitionBrowser >> editAttributeDefinition [
 
@@ -213,7 +254,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                   parser: RMDGrammar new identifier end;
 		                   placeholder: 'verb';
 		                   autoAccept: true;
-		                   whenLastValidSyntaxNodeChangedDo: [ :identifier | 
+		                   whenLastValidSyntaxNodeChangedDo: [ :identifier |
 			                   node identifier: identifier ];
 		                   yourself.
 	objectField := self newHighlightingSyntaxNodeTextInput
@@ -222,7 +263,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 				               end;
 		               placeholder: '(object)';
 		               autoAccept: true;
-		               whenLastValidSyntaxNodeChangedDo: [ :animat | 
+		               whenLastValidSyntaxNodeChangedDo: [ :animat |
 			               node object: animat ];
 		               yourself.
 	guardField := self newHighlightingSyntaxNodeTextInput
@@ -230,7 +271,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			              RMDGrammar new condition optional trimBlanks end;
 		              placeholder: 'guard condition';
 		              autoAccept: false;
-		              whenLastValidSyntaxNodeChangedDo: [ :guard | 
+		              whenLastValidSyntaxNodeChangedDo: [ :guard |
 			              node guard: guard ];
 		              yourself.
 	directivesButton := self newButton
@@ -241,10 +282,12 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                    'Edit directives such as new, stage, die and kill';
 		                    yourself.
 	attributeDefinitionList := self newList
-		                           display: [ :attributeDef | 
+		                           display: [ :attributeDef |
 			                           attributeDef printString ];
-		                           whenSelectionChangedDo: [ 
+		                           whenSelectionChangedDo: [
 			                           self updateAttributeButtons ];
+		                           contextMenu: [
+			                           self attributeDefinitionListMenu ];
 		                           yourself.
 	addAttributeButton := self newButton
 		                      label: '';
@@ -282,10 +325,12 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                       disable;
 		                       yourself.
 	utilityDefinitionList := self newList
-		                         display: [ :utilityDef | 
+		                         display: [ :utilityDef |
 			                         utilityDef printString ];
-		                         whenSelectionChangedDo: [ 
+		                         whenSelectionChangedDo: [
 			                         self updateUtilityButtons ];
+		                         contextMenu: [
+			                         self utilityDefinitionListMenu ];
 		                         yourself.
 	addUtilityButton := self newButton
 		                    label: '';
@@ -322,8 +367,8 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                     'Edit the definition of the selected utility variable';
 		                     disable;
 		                     yourself.
-	self whenBuiltDo: [ 
-		self withWidgetDo: [ :w | 
+	self whenBuiltDo: [
+		self withWidgetDo: [ :w |
 			w
 				update: #color: with: { Color white };
 				update: #borderColor: with: { Color darkGray };
@@ -559,4 +604,45 @@ RMDActionDefinitionBrowser >> updateUtilityButtons [
 			 utilityDefinitionList selection selectedIndex
 			 < utilityDefinitionList items size ]).
 	editUtilityButton enabled: hasSelection
+]
+
+{ #category : #menus }
+RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Add...';
+						  icon: self addIcon;
+						  enabled: addUtilityButton isEnabled;
+						  action: [ self addUtilityDefinition ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit...';
+						  icon: self editIcon;
+						  enabled: editUtilityButton isEnabled;
+						  action: [ self editUtilityDefinition ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeUtilityButton isEnabled;
+						  action: [ self removeUtilityDefinition ] ] ];
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Move up';
+						  icon: self upIcon;
+						  enabled: moveUpUtilityButton isEnabled;
+						  action: [ self moveUpUtility ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Move down';
+						  icon: self downIcon;
+						  enabled: moveDownUtilityButton isEnabled;
+						  action: [ self moveDownUtility ] ] ];
+		  yourself
 ]

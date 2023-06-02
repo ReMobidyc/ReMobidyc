@@ -5,3 +5,15 @@ RMDRunsRepository >> edit [
 
 	
 ]
+
+{ #category : #'*ReMobidyc-Spec2' }
+RMDRunsRepository >> editMenu [
+
+	^ SpMenuPresenter new
+]
+
+{ #category : #'*ReMobidyc-Spec2' }
+RMDRunsRepository >> hasEditMenu [
+
+	^ false
+]
