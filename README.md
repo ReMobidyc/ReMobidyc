@@ -5,7 +5,7 @@
 <img alt="logo" src="images/logo-light1.png" width=600>
 
 # reːmobidyc
-reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuation letter) is a web-based multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
+reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuation letter) is a multi-agent simulator for individual-based modeling in population dynamics and ecotoxicology.
 
 ## Presentations
 
@@ -25,13 +25,15 @@ reːmobidyc (also denoted as re:mobidyc or ReMobidyc without the exotic punctuat
 reːmobidyc is implemented on the [Pharo](https://pharo.org/) system.
 There are three ways to install reːmobidyc.
 
-### 1. from command shell
+### 1. from binary package
 
-The following one-liner will download Pharo and install reːmobidyc.
+The following pre-built packages are available.
 
-```
-curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-remobidyc.sh | bash
-```
+The latest release: [Thonon](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
+* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
+* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
+* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
+* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
 
 ### 2. from Pharo
 
@@ -48,15 +50,13 @@ EpMonitor disableDuring: [
 		load ] 
 ```
 
-### 3. from binary package
+### 3. from command shell
 
-The following pre-built packages are available.
+The following one-liner will download Pharo and install reːmobidyc.
 
-Release: [preview-8](https://github.com/ReMobidyc/ReMobidyc/releases/preview-8/)
-* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-mac-arm64.dmg)
-* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-mac-x64.dmg)
-* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-linux-x64.tar.bz2)
-* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/download/preview-8/remobidyc-win-x64.zip)
+```
+curl https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/main/scripts/install-remobidyc.sh | bash
+```
 
 ## Modeling Language
 
