@@ -131,7 +131,7 @@ RMDAgentDefinitionBrowser >> addRenderer [
 	self addRendererMenu openWithSpecAtPointer
 ]
 
-{ #category : #menus }
+{ #category : #operations }
 RMDAgentDefinitionBrowser >> addRenderer: aRMDRenderer [
 
 	modeler simulationModel addRenderer: aRMDRenderer.
@@ -181,6 +181,47 @@ RMDAgentDefinitionBrowser >> agentDefinition [
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> agentName [
 	^ self subclassResponsibility
+]
+
+{ #category : #menus }
+RMDAgentDefinitionBrowser >> attributeListMenu [
+
+	^ self newMenu
+		  addGroup: [ :g |
+			  g
+				  addItem: [ :item |
+					  item
+						  name: 'Add';
+						  icon: self addIcon;
+						  enabled: addAttributeButton isEnabled;
+						  action: [ self addAttribute ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit';
+						  icon: self editIcon;
+						  enabled: editAttributeButton isEnabled;
+						  action: [ self editAttribute ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeAttributeButton isEnabled;
+						  action: [ self removeAttribute ] ] ];
+		  addGroup: [ :g |
+			  g
+				  addItem: [ :item |
+					  item
+						  name: 'Move up';
+						  icon: self upIcon;
+						  enabled: moveUpAttributeButton isEnabled;
+						  action: [ self moveUpAttribute ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Move down';
+						  icon: self downIcon;
+						  enabled: moveDownAttributeButton isEnabled;
+						  action: [ self moveDownAttribute ] ] ];
+		  yourself
 ]
 
 { #category : #accessing }
@@ -302,6 +343,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 				                 (selected and: [
 					                  index < attributeList items size ]).
 			                 editAttributeButton enabled: selected ];
+		                 contextMenu: [ self attributeListMenu ];
 		                 yourself.
 	addAttributeButton := self newButton
 		                      icon: self addIcon;
@@ -361,6 +403,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			               moveDownUtilityButton enabled:
 				               (selected and: [ index < utilityList items size ]).
 			               editUtilityButton enabled: selected ];
+		               contextMenu: [ self utilityListMenu ];
 		               yourself.
 	addUtilityButton := self newButton
 		                    icon: self addIcon;
@@ -439,7 +482,8 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 								              ifFalse: [ '' ]) , o , ' within '
 							             , item range printString ]
 						             ifNil: [ '' ] ]);
-		            addColumn: ((SpCheckBoxTableColumn
+		            addColumn:
+			            ((SpCheckBoxTableColumn
 				              title: ''
 				              evaluated: [ :item | item enabled ])
 				             beNotExpandable;
@@ -456,6 +500,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 				            (selected and: [ index < taskList items size ]).
 			            editTaskButton enabled: selected.
 			            self updateSourceText ];
+		            contextMenu: [ self taskListMenu ];
 		            yourself.
 	addTaskButton := self newButton
 		                 icon: self addIcon;
@@ -703,6 +748,47 @@ RMDAgentDefinitionBrowser >> simulationModel [
 	^ modeler ifNotNil: #simulationModel
 ]
 
+{ #category : #menus }
+RMDAgentDefinitionBrowser >> taskListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Add';
+						  icon: self addIcon;
+						  enabled: addTaskButton isEnabled;
+						  action: [ self addTask ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit';
+						  icon: self editIcon;
+						  enabled: editTaskButton isEnabled;
+						  action: [ self editTask ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeTaskButton isEnabled;
+						  action: [ self removeTask ] ] ];
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Move up';
+						  icon: self upIcon;
+						  enabled: moveUpTaskButton isEnabled;
+						  action: [ self moveUpTask ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Move down';
+						  icon: self downIcon;
+						  enabled: moveDownTaskButton isEnabled;
+						  action: [ self moveDownTask ] ] ];
+		  yourself
+]
+
 { #category : #accessing }
 RMDAgentDefinitionBrowser >> typechecker [
 
@@ -757,4 +843,45 @@ RMDAgentDefinitionBrowser >> updateUtilityList [
 
 	self definitionDo: [ :definition | 
 		utilityList items: definition utilityDefinitions ]
+]
+
+{ #category : #menus }
+RMDAgentDefinitionBrowser >> utilityListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Add';
+						  icon: self addIcon;
+						  enabled: addUtilityButton isEnabled;
+						  action: [ self addUtility ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit';
+						  icon: self editIcon;
+						  enabled: editUtilityButton isEnabled;
+						  action: [ self editUtility ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeUtilityButton isEnabled;
+						  action: [ self removeUtility ] ] ];
+		  addGroup: [ :g |
+			  g
+				  addItem: [ :item |
+					  item
+						  name: 'Move up';
+						  icon: self upIcon;
+						  enabled: moveUpUtilityButton isEnabled;
+						  action: [ self moveUpUtility ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Move down';
+						  icon: self downIcon;
+						  enabled: moveDownUtilityButton isEnabled;
+						  action: [ self moveDownUtility ] ] ];
+		  yourself
 ]

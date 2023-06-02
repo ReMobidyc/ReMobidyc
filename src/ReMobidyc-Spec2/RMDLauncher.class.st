@@ -152,13 +152,13 @@ RMDLauncher >> itemListMenu [
 			  g
 				  addItem: [ :item |
 					  item
-						  name: 'Add';
+						  name: 'Add...';
 						  icon: self addIcon;
 						  enabled: newItemButton isEnabled;
 						  action: [ self addItem ] ];
 				  addItem: [ :item |
 					  item
-						  name: 'Rename';
+						  name: 'Rename...';
 						  icon: self editIcon;
 						  enabled: editItemButton isEnabled;
 						  action: [ self editItem ] ];
@@ -170,7 +170,7 @@ RMDLauncher >> itemListMenu [
 						  action: [ self removeItem ] ];
 				  addItem: [ :item |
 					  item
-						  name: 'Export';
+						  name: 'Export...';
 						  icon: self exportIcon;
 						  enabled: exportItemButton isEnabled;
 						  action: [ self exportItem ] ] ]

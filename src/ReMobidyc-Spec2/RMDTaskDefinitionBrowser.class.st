@@ -141,6 +141,39 @@ RMDTaskDefinitionBrowser >> actionDefinition [
 	^ actionList selection selectedItem
 ]
 
+{ #category : #menus }
+RMDTaskDefinitionBrowser >> actionListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Import...';
+						  icon: self repositoryIcon;
+						  enabled: importActionButton isEnabled;
+						  action: [ self importAction ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'New...';
+						  icon: self addIcon;
+						  enabled: addActionButton isEnabled;
+						  action: [ self addAction ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit...';
+						  icon: self editIcon;
+						  enabled: editActionButton isEnabled;
+						  action: [ self editAction ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeActionButton isEnabled;
+						  action: [ self removeAction ] ] ];
+		  yourself
+]
+
 { #category : #operations }
 RMDTaskDefinitionBrowser >> addAction [
 
@@ -281,11 +314,11 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 				               title: 'object'
 				               evaluated: [ :item | item object ifNil: [ '' ] ]);
 		              whenModelChangedDo: [ actionList selectItem: nil ];
-		              whenSelectionChangedDo: [ 
+		              whenSelectionChangedDo: [
 			              self updateActionButtons.
 			              self updateTaskDefinition.
-			              self taskDefinition ifNotNil: [ :taskDefinition | 
-					              self actionDefinition ifNotNil: [ :actionIdentifier | 
+			              self taskDefinition ifNotNil: [ :taskDefinition |
+					              self actionDefinition ifNotNil: [ :actionIdentifier |
 							              self updateVerbIdentifierField.
 							              self updateObjectIdentifierField.
 							              self updateNearestCheckBox.
@@ -294,6 +327,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 						              updateTemplateText;
 						              updateParameterInstantiationList;
 						              updateSourceText ] ];
+		              contextMenu: [ self actionListMenu ];
 		              yourself.
 	importActionButton := self newButton
 		                      icon: self repositoryIcon;
@@ -324,7 +358,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                yourself.
 	verbIdentifierField := self newSyntaxNodeTextInput
 		                       beIdentifier;
-		                       whenLastValidSyntaxNodeChangedDo: [ 
+		                       whenLastValidSyntaxNodeChangedDo: [
 			                       self acceptVerbIdentifierField ];
 		                       yourself.
 	nearestCheckBox := self newCheckBox
@@ -335,14 +369,14 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	objectIdentifierField := self newSyntaxNodeTextInput
 		                         beAgentIdentifier;
 		                         allowEmpty;
-		                         whenLastValidSyntaxNodeChangedDo: [ 
+		                         whenLastValidSyntaxNodeChangedDo: [
 			                         self acceptObjectIdentifierField ];
 		                         yourself.
 	rangeField := self newHighlightingSyntaxNodeTextInput
 		              beLiteral;
 		              allowEmpty;
 		              expectedType: RMDType length;
-		              whenLastValidSyntaxNodeChangedDo: [ 
+		              whenLastValidSyntaxNodeChangedDo: [
 			              self acceptRangeField ];
 		              yourself.
 	parameterInstantiationList := self newTable
@@ -351,7 +385,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                              addColumn:
 			                              ((SpStringTableColumn
 				                                title: 'placeholder'
-				                                evaluated: [ :item | 
+				                                evaluated: [ :item |
 					                                | actionAttribute actionDefinition |
 					                                actionAttribute := item
 						                                                   placeholder
@@ -359,50 +393,52 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 						                                                   asText.
 					                                actionDefinition := self
 						                                                    actionDefinition.
-					                                (actionDefinition isNil or: [ 
-							                                 (actionDefinition 
+					                                (actionDefinition isNil or: [
+							                                 (actionDefinition
 								                                  includesNode:
-									                                  item placeholder) not ]) 
-						                                ifTrue: [ 
+									                                  item placeholder) not ])
+						                                ifTrue: [
 							                                actionAttribute makeAllColor:
 									                                Color red ].
 					                                actionAttribute ])
 				                               beExpandable;
 				                               yourself);
 		                              addColumn:
-			                              ((SpImageTableColumn evaluated: [ 
+			                              ((SpImageTableColumn evaluated: [
 					                                :item | self replacementIcon ])
 				                               width: 20;
 				                               beNotExpandable);
 		                              addColumn: ((SpStringTableColumn
 				                                title: 'specialized'
-				                                evaluated: [ :item | 
+				                                evaluated: [ :item |
 					                                item replacement printString ])
 				                               beExpandable;
 				                               yourself);
-		                              whenModelChangedDo: [ 
-		                              parameterInstantiationList 
+		                              whenModelChangedDo: [
+		                              parameterInstantiationList
 			                              selectItem: nil ];
-		                              whenSelectionChangedDo: [ 
+		                              whenSelectionChangedDo: [
 			                              | selected |
 			                              selected := parameterInstantiationList
 				                                          selection selectedItem
 				                                          notNil.
-			                              removeParameterInstantiationButton 
+			                              removeParameterInstantiationButton
 				                              enabled: selected.
-			                              editParameterInstantiationButton 
+			                              editParameterInstantiationButton
 				                              enabled: selected ];
+		                              contextMenu: [
+		                              self parameterInstiationListMenu ];
 		                              yourself.
 	addParameterInstantiationButton := self newButton
 		                                   icon: self addIcon;
-		                                   action: [ 
+		                                   action: [
 			                                   self addParameterInstantiation ];
 		                                   help:
 			                                   'Add a new replacement rule with a placeholder';
 		                                   yourself.
 	removeParameterInstantiationButton := self newButton
 		                                      icon: self removeIcon;
-		                                      action: [ 
+		                                      action: [
 			                                      self
 				                                      removeParameterInstantiation ];
 		                                      help:
@@ -411,7 +447,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                                      yourself.
 	editParameterInstantiationButton := self newButton
 		                                    icon: self editIcon;
-		                                    action: [ 
+		                                    action: [
 			                                    self editParameterInstantiation ];
 		                                    help:
 			                                    'Edit the selected replacement rule';
@@ -448,6 +484,33 @@ RMDTaskDefinitionBrowser >> newSourceWith: aPP2Node [
 		  simulationModelBlock: [ self simulationModel ];
 		  subjectBlock: [ taskDefinitionNode ifNotNil: #subjectIdentifier ];
 		  objectBlock: [ taskDefinitionNode ifNotNil: #objectIdentifier ];
+		  yourself
+]
+
+{ #category : #menus }
+RMDTaskDefinitionBrowser >> parameterInstiationListMenu [
+
+	^ self newMenu
+		  addGroup: [ :group |
+			  group
+				  addItem: [ :item |
+					  item
+						  name: 'Add...';
+						  icon: self addIcon;
+						  enabled: addParameterInstantiationButton isEnabled;
+						  action: [ self addParameterInstantiation ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Edit...';
+						  icon: self editIcon;
+						  enabled: editParameterInstantiationButton isEnabled;
+						  action: [ self editParameterInstantiation ] ];
+				  addItem: [ :item |
+					  item
+						  name: 'Remove';
+						  icon: self removeIcon;
+						  enabled: removeParameterInstantiationButton isEnabled;
+						  action: [ self removeParameterInstantiation ] ] ];
 		  yourself
 ]
 

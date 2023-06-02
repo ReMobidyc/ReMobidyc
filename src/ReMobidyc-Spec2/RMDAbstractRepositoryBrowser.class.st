@@ -398,13 +398,13 @@ RMDAbstractRepositoryBrowser >> itemListMenu [
 		  g
 			  addItem: [ :item |
 				  item
-					  name: 'Add';
+					  name: 'Add...';
 					  icon: self addIcon;
 					  enabled: newItemButton isEnabled;
 					  action: [ self addItem ] ];
 			  addItem: [ :item |
 				  item
-					  name: 'Rename';
+					  name: 'Rename...';
 					  icon: self editIcon;
 					  enabled: editItemButton isEnabled;
 					  subMenu: selectedItem editMenu ];
@@ -416,7 +416,7 @@ RMDAbstractRepositoryBrowser >> itemListMenu [
 					  action: [ self removeItem ] ];
 			  addItem: [ :item |
 				  item
-					  name: 'Export';
+					  name: 'Export...';
 					  icon: self exportIcon;
 					  enabled: exportItemButton isEnabled;
 					  action: [ self exportItem ] ] ]
@@ -486,13 +486,13 @@ RMDAbstractRepositoryBrowser >> repositoryListMenu [
 		  g
 			  addItem: [ :item |
 				  item
-					  name: 'Add';
+					  name: 'Add...';
 					  icon: self addIcon;
 					  enabled: addRepositoryButton isEnabled;
 					  subMenu: self addRepositoryMenu ];
 			  addItem: [ :item |
 				  item
-					  name: 'Edit';
+					  name: 'Edit...';
 					  icon: self editIcon;
 					  enabled:
 						  (editRepositoryButton isEnabled and: [ repository hasEditMenu ]);
