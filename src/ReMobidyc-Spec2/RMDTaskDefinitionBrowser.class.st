@@ -606,25 +606,26 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateTaskDefinition [
 
-	self actionDefinition ifNotNil: [ :actionDefinition | 
+	self actionDefinition ifNotNil: [ :actionDefinition |
 		self taskDefinition
-			ifNil: [ 
+			ifNil: [
 				self taskDefinition: (RMDTaskDefinitionNode
 						 subjectIdentifier: self agentName
 						 verbIdentifier:
-							 (verbIdentifierField text asString trim ifEmpty: [ 
+							 (verbIdentifierField text asString trim ifEmpty: [
 								  actionDefinition identifier ])
 						 objectIdentifier:
 						 (objectIdentifierField text asString trim ifEmpty: [ nil ])
 						 actionIdentifier: actionDefinition identifier
 						 nearest: nearestCheckBox state
 						 within: rangeField lastValidSyntaxNode
+						 enabled: true
 						 guard: nil
 						 parameterInstantiations: Array new) ]
-			ifNotNil: [ :taskDefinition | 
+			ifNotNil: [ :taskDefinition |
 				taskDefinition actionIdentifier: actionDefinition identifier.
 				(taskDefinition actionWith: simulationModel) object
-					ifNil: [ 
+					ifNil: [
 						objectIdentifierField syntaxNode
 							ifNil: [ objectIdentifierField beOk ]
 							ifNotNil: [ objectIdentifierField beError ].
@@ -632,7 +633,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 						rangeField syntaxNode
 							ifNil: [ rangeField beOk ]
 							ifNotNil: [ rangeField beError ] ]
-					ifNotNil: [ 
+					ifNotNil: [
 						objectIdentifierField syntaxNode
 							ifNil: [ objectIdentifierField beError ]
 							ifNotNil: [ objectIdentifierField beOk ].
