@@ -53,8 +53,8 @@ RMDSyntaxNodeTextInputPresenter >> allowEmpty [
 { #category : #private }
 RMDSyntaxNodeTextInputPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
-	syntaxNode := aRMDSyntaxNode.
 	self beOk.
+	syntaxNode := aRMDSyntaxNode.
 	lastValidSyntaxNode := aRMDSyntaxNode
 ]
 
