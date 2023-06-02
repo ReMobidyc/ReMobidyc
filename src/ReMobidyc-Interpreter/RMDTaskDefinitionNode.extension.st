@@ -3,15 +3,16 @@ Extension { #name : #RMDTaskDefinitionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 
-	[ 
-	self hasObject
-		ifTrue: [ 
-			nearest
-				ifTrue: [ self evalWithNearestObjectsIn: aRMDInterpreter ]
-				ifFalse: [ self evalWithAllObjectsIn: aRMDInterpreter ] ]
-		ifFalse: [ self evalWithoutObjectIn: aRMDInterpreter ] ]
-		on: RMDSemanticError
-		do: [ :ex | ex signalWithScope: self ]
+	enabled ifTrue: [
+		[
+		self hasObject
+			ifTrue: [
+				nearest
+					ifTrue: [ self evalWithNearestObjectsIn: aRMDInterpreter ]
+					ifFalse: [ self evalWithAllObjectsIn: aRMDInterpreter ] ]
+			ifFalse: [ self evalWithoutObjectIn: aRMDInterpreter ] ]
+			on: RMDSemanticError
+			do: [ :ex | ex signalWithScope: self ] ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

@@ -1,6 +1,74 @@
 Extension { #name : #RMDTaskDefinitionNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
+RMDTaskDefinitionNodeTest >> testEvalDisabled [
+
+	| model horseDefinition drinkTaskDefinition |
+	model := RMDSimulationModel new.
+	model
+		load: RMDWorldDefinitionNode empty;
+		load: RMDPatchDefinitionNode empty;
+		load: (horseDefinition := parser animatDefinition end parse:
+					                    'Horse is Animat with
+		water [].');
+		load: (parser actionDefinition end parse: 'to err is
+		my delta water'' = 1/0.');
+		load: (drinkTaskDefinition := parser taskDefinition end parse:
+					                        'Horse drink disabled.');
+		load: (RMDSimulationDefinitionNode
+				 timeDefinition:
+					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')
+				 worldInitializer: RMDWorldInitializerNode empty
+				 patchInitializer:
+					 (parser patchInitializer end parse: '1x1 of 10 [m] Patch')
+				 animatInitializers:
+					 { (parser animatInitializer end parse: '1 Horse with
+					x = 5[m]
+					y = 5[m]
+					water = 0 []') }).
+	interpreter
+		simulationModel: model;
+		setupSimulation.
+	interpreter tick.
+	drinkTaskDefinition evalIn: interpreter
+]
+
+{ #category : #'*ReMobidyc-Interpreter-Tests' }
+RMDTaskDefinitionNodeTest >> testEvalEnabled [
+
+	| model horseDefinition drinkTaskDefinition |
+	model := RMDSimulationModel new.
+	model
+		load: RMDWorldDefinitionNode empty;
+		load: RMDPatchDefinitionNode empty;
+		load: (horseDefinition := parser animatDefinition end parse:
+					                    'Horse is Animat with
+		water [].');
+		load: (parser actionDefinition end parse: 'to err is
+		my delta water'' = 1/0.');
+		load: (drinkTaskDefinition := parser taskDefinition end parse:
+					                        'Horse drink.');
+		load: (RMDSimulationDefinitionNode
+				 timeDefinition:
+					 (RMDSimulationTimeDefinitionNode during: '10 [s]' by: '1[s]')
+				 worldInitializer: RMDWorldInitializerNode empty
+				 patchInitializer:
+					 (parser patchInitializer end parse: '1x1 of 10 [m] Patch')
+				 animatInitializers:
+					 { (parser animatInitializer end parse: '1 Horse with
+					x = 5[m]
+					y = 5[m]
+					water = 0 []') }).
+	interpreter
+		simulationModel: model;
+		setupSimulation.
+	interpreter tick.
+	self
+		should: [ drinkTaskDefinition evalIn: interpreter ]
+		raise: RMDError
+]
+
+{ #category : #'*ReMobidyc-Interpreter-Tests' }
 RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 
 	| model horseDefinition tankDefinition drinkTaskDefinition waterInTank waterInHorse |

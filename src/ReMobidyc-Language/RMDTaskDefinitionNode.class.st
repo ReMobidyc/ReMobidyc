@@ -11,7 +11,8 @@ Class {
 		'nearest',
 		'action',
 		'name',
-		'parameterInstantiations'
+		'parameterInstantiations',
+		'enabled'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -88,15 +89,16 @@ where
 ]
 
 { #category : #'instance creation' }
-RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean within: aRMDLiteralNode guard: aRMDConditionNode parameterInstantiations: anArrayOfRMDParameterInstantiationNode [
+RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean1 within: aRMDLiteralNode enabled: aBoolean2 guard: aRMDConditionNode parameterInstantiations: anArrayOfRMDParameterInstantiationNode [
 
 	^ self new
 		  subjectIdentifier: agentString1;
 		  verbIdentifier: verbString;
 		  actionIdentifier: aRMDActionIdentifierNode;
 		  objectIdentifier: agentString2;
-		  nearest: aBoolean;
+		  nearest: aBoolean1;
 		  range: aRMDLiteralNode;
+		  enabled: aBoolean2;
 		  guard: aRMDConditionNode;
 		  parameterInstantiations: anArrayOfRMDParameterInstantiationNode;
 		  yourself
@@ -161,13 +163,14 @@ where
 { #category : #comparing }
 RMDTaskDefinitionNode >> = anObject [
 
-	^ self class = anObject class and: [ 
-		  subjectIdentifier = anObject subjectIdentifier and: [ 
-			  verbIdentifier = anObject verbIdentifier and: [ 
-				  objectIdentifier = anObject objectIdentifier and: [ 
-					  range = anObject range and: [ 
-						  parameterInstantiations = anObject parameterInstantiations and: [ 
-							  actionIdentifier = anObject actionIdentifier ] ] ] ] ] ]
+	^ self class = anObject class and: [
+		  subjectIdentifier = anObject subjectIdentifier and: [
+			  verbIdentifier = anObject verbIdentifier and: [
+				  objectIdentifier = anObject objectIdentifier and: [
+					  range = anObject range and: [
+						  enabled = anObject enabled and: [
+							  parameterInstantiations = anObject parameterInstantiations
+								  and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -211,6 +214,18 @@ RMDTaskDefinitionNode >> appendParameterInstantiations: anArrayOfRMDParameterIns
 			                            placeholders includes: inst placeholder ])
 ]
 
+{ #category : #accessing }
+RMDTaskDefinitionNode >> beDisabled [
+
+	enabled := false
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> beEnabled [
+
+	enabled := true
+]
+
 { #category : #enumerating }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
 
@@ -234,6 +249,18 @@ RMDTaskDefinitionNode >> createName [
 ]
 
 { #category : #accessing }
+RMDTaskDefinitionNode >> enabled [
+
+	^ enabled
+]
+
+{ #category : #accessing }
+RMDTaskDefinitionNode >> enabled: aBoolean [
+
+	enabled := aBoolean ~= false
+]
+
+{ #category : #accessing }
 RMDTaskDefinitionNode >> guard [
 
 	^ guard
@@ -253,10 +280,17 @@ RMDTaskDefinitionNode >> hasObject [
 { #category : #comparing }
 RMDTaskDefinitionNode >> hash [
 
-	^ (((((self class hash bitXor: subjectIdentifier hash) bitXor:
-		      range hash) bitXor: verbIdentifier hash) bitXor:
-		    objectIdentifier hash) bitXor: parameterInstantiations hash) bitXor:
-		  actionIdentifier hash
+	^ ((((((self class hash bitXor: subjectIdentifier hash) bitXor:
+		       range hash) bitXor: verbIdentifier hash) bitXor:
+		     objectIdentifier hash) bitXor: enabled hash) bitXor:
+		   parameterInstantiations hash) bitXor: actionIdentifier hash
+]
+
+{ #category : #initialization }
+RMDTaskDefinitionNode >> initialize [
+
+	super initialize.
+	enabled := true
 ]
 
 { #category : #testing }
@@ -337,7 +371,7 @@ RMDTaskDefinitionNode >> printOn: aStream [
 		nextPutAll: subjectIdentifier;
 		space;
 		nextPutAll: verbIdentifier.
-	objectIdentifier ifNotNil: [ 
+	objectIdentifier ifNotNil: [
 		aStream space.
 		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
@@ -345,23 +379,25 @@ RMDTaskDefinitionNode >> printOn: aStream [
 			nextPutAll: ' within '.
 		range printOn: aStream.
 		aStream space ].
-	actionIdentifier = verbIdentifier ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [
 		aStream
 			space;
 			nextPutAll: 'namely ';
 			nextPutAll: actionIdentifier ].
-	guard ifNotNil: [ 
+	enabled ifFalse: [ aStream nextPutAll: ' disabled' ].
+	guard ifNotNil: [
 		aStream
 			cr;
 			nextPutAll: 'when '.
 		guard printOn: aStream ].
-	(parameterInstantiations notNil and: [ parameterInstantiations notEmpty ]) ifTrue: [ 
+	(parameterInstantiations notNil and: [
+		 parameterInstantiations notEmpty ]) ifTrue: [
 		aStream
 			cr;
 			nextPutAll: 'where';
 			cr.
 		parameterInstantiations
-			do: [ :bind | 
+			do: [ :bind |
 				aStream nextPutAll: '    '.
 				bind printOn: aStream ]
 			separatedBy: [ aStream nextPut: Character cr ] ].
@@ -377,7 +413,7 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		nextPutAll: subjectIdentifier;
 		space;
 		nextPutAll: verbIdentifier.
-	objectIdentifier ifNotNil: [ 
+	objectIdentifier ifNotNil: [
 		aStream space.
 		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
@@ -388,12 +424,13 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 			ifIncludedIn: aCollectionOfRMDSyntaxNode
 			addSectionTo: aCollection.
 		aStream space ].
-	actionIdentifier = verbIdentifier ifFalse: [ 
+	actionIdentifier = verbIdentifier ifFalse: [
 		aStream
 			space;
 			nextPutAll: 'namely ';
 			nextPutAll: actionIdentifier ].
-	guard ifNotNil: [ 
+	enabled ifFalse: [ aStream nextPutAll: ' disabled' ].
+	guard ifNotNil: [
 		aStream
 			cr;
 			nextPutAll: 'when '.
@@ -401,13 +438,14 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 			printOn: aStream
 			ifIncludedIn: aCollectionOfRMDSyntaxNode
 			addSectionTo: aCollection ].
-	(parameterInstantiations notNil and: [ parameterInstantiations notEmpty ]) ifTrue: [ 
+	(parameterInstantiations notNil and: [
+		 parameterInstantiations notEmpty ]) ifTrue: [
 		aStream
 			cr;
 			nextPutAll: 'where';
 			nextPut: Character cr.
 		parameterInstantiations
-			do: [ :bind | 
+			do: [ :bind |
 				aStream nextPutAll: '    '.
 				bind
 					printOn: aStream
@@ -415,7 +453,7 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 					addSectionTo: aCollection ]
 			separatedBy: [ aStream nextPut: Character cr ] ].
 	aStream nextPut: $..
-	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [ 
+	(aCollectionOfRMDSyntaxNode includes: self) ifTrue: [
 		aCollection add: (start to: aStream position) ]
 ]
 
@@ -426,13 +464,14 @@ RMDTaskDefinitionNode >> printShortOn: aStream [
 		nextPutAll: subjectIdentifier;
 		space;
 		nextPutAll: verbIdentifier.
-	objectIdentifier ifNotNil: [ 
+	objectIdentifier ifNotNil: [
 		aStream space.
 		nearest ifTrue: [ aStream nextPutAll: 'nearest ' ].
 		aStream
 			nextPutAll: objectIdentifier;
 			nextPutAll: ' within '.
-		range printOn: aStream ]
+		range printOn: aStream ].
+	enabled ifFalse: [ aStream nextPutAll: ' disabled' ]
 ]
 
 { #category : #accessing }

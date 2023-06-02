@@ -256,7 +256,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 addColumn:
 			                 ((SpStringTableColumn
 				                   title: 'unit'
-				                   evaluated: [ :item | 
+				                   evaluated: [ :item |
 					                   | unit |
 					                   unit := item unit.
 					                   unit hasDimension
@@ -267,15 +267,15 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 addColumn:
 			                 (SpStringTableColumn
 				                  title: 'initial value'
-				                  evaluated: [ :item | 
+				                  evaluated: [ :item |
 					                  | expr |
 					                  expr := item initializerExpression.
 					                  expr
 						                  ifNotNil: [ expr printString ]
 						                  ifNil: [ '' ] ]);
-		                 whenModelChangedDo: [ 
+		                 whenModelChangedDo: [
 		                 attributeList selectItem: nil ];
-		                 whenSelectionChangedDo: [ 
+		                 whenSelectionChangedDo: [
 			                 | selected index |
 			                 selected := attributeList selection selectedItem
 				                             notNil.
@@ -284,7 +284,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			                 moveUpAttributeButton enabled:
 				                 (selected and: [ index > 1 ]).
 			                 moveDownAttributeButton enabled:
-				                 (selected and: [ 
+				                 (selected and: [
 					                  index < attributeList items size ]).
 			                 editAttributeButton enabled: selected ];
 		                 yourself.
@@ -330,12 +330,12 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		               addColumn:
 			               (SpStringTableColumn
 				                title: 'value'
-				                evaluated: [ :item | 
+				                evaluated: [ :item |
 					                | expr |
 					                expr := item definitionBody.
 					                expr ifNotNil: [ expr printString ] ifNil: [ '' ] ]);
 		               whenModelChangedDo: [ utilityList selectItem: nil ];
-		               whenSelectionChangedDo: [ 
+		               whenSelectionChangedDo: [
 			               | selected index |
 			               selected := utilityList selection selectedItem
 				                           notNil.
@@ -383,7 +383,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 	rendererList := self newComponentList
 		                beSingleSelection;
 		                whenModelChangedDo: [ rendererList selectItem: nil ];
-		                whenSelectionChangedDo: [ 
+		                whenSelectionChangedDo: [
 			                | selected |
 			                selected := rendererList selection selectedItem
 				                            notNil.
@@ -410,26 +410,35 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 	taskList := self newTable
 		            beSingleSelection;
 		            beResizable;
+		            addColumn: (SpStringTableColumn
+				             title: 'verb'
+				             evaluated: [ :item | item verbIdentifier ]);
 		            addColumn:
-			            (SpStringTableColumn evaluated: [ :item | 
-					             item verbIdentifier ]);
-		            addColumn: (SpStringTableColumn evaluated: [ :item | 
+			            (SpStringTableColumn
+				             title: 'object'
+				             evaluated: [ :item |
 					             item objectIdentifier
-						             ifNotNil: [ :o | 
+						             ifNotNil: [ :o |
 							             (item nearest
 								              ifTrue: [ 'nearest ' ]
 								              ifFalse: [ '' ]) , o , ' within '
 							             , item range printString ]
 						             ifNil: [ '' ] ]);
+		            addColumn: ((SpCheckBoxTableColumn
+				              title: ''
+				              evaluated: [ :item | item enabled ])
+				             beNotExpandable;
+				             onActivation: #beEnabled;
+				             onDeactivation: #beDisabled);
 		            whenModelChangedDo: [ taskList selectItem: nil ];
-		            whenSelectionChangedDo: [ 
+		            whenSelectionChangedDo: [
 			            | selected index |
 			            selected := taskList selection selectedItem notNil.
 			            index := taskList selection selectedIndex.
 			            removeTaskButton enabled: selected.
 			            moveUpTaskButton enabled: (selected and: [ index > 1 ]).
 			            moveDownTaskButton enabled:
-					            (selected and: [ index < taskList items size ]).
+				            (selected and: [ index < taskList items size ]).
 			            editTaskButton enabled: selected.
 			            self updateSourceText ];
 		            yourself.

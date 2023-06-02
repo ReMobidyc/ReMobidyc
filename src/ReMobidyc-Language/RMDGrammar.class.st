@@ -658,6 +658,12 @@ RMDGrammar >> directionOfGradientDirectiveNodeClass [
 	^ RMDDirectionOfGradientDirectiveNode
 ]
 
+{ #category : #'parsers-definitions' }
+RMDGrammar >> disabled [
+
+	^ 'disabled' asPParser trimBlanks
+]
+
 { #category : #'class access' }
 RMDGrammar >> disjunctionNodeClass [
 	^ RMDDisjunctionNode
@@ -1358,15 +1364,15 @@ RMDGrammar >> subtractionNodeClass [
 { #category : #'parsers-definitions' }
 RMDGrammar >> taskDefinition [
 
-	^ self taskDefinitionHeader , self whenClause optional
+	^ self taskDefinitionHeader , self disabled optional
+	  , self whenClause optional
 	  , (#newline asPParser trimBlanks , 'where' asPParser trimBlanks
 		   , #newline asPParser trimBlanks
-		   ,
-		   (self parameterInstantiation onlySeparatedBy:
-			    #newline asPParser trimBlanks) ==> #fourth) optional
+		   , (self parameterInstantiation onlySeparatedBy:
+				    #newline asPParser trimBlanks) ==> #fourth) optional
 	  ,
 	  ($. asPParser trimBlanks , #newline asPParser trimBlanks optional)
-	  ==> [ :quad | 
+	  ==> [ :quad |
 		  self bindNodeClass
 			  subjectIdentifier: quad first first
 			  verbIdentifier: quad first second
@@ -1374,8 +1380,9 @@ RMDGrammar >> taskDefinition [
 			  actionIdentifier: quad first sixth
 			  nearest: quad first third
 			  within: quad first fifth
-			  guard: quad second
-			  parameterInstantiations: (quad third ifNil: [ Array new ]) ]
+			  enabled: quad second isNil
+			  guard: quad third
+			  parameterInstantiations: (quad fourth ifNil: [ Array new ]) ]
 ]
 
 { #category : #'parsers-definitions' }

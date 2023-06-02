@@ -1398,9 +1398,10 @@ where
 	self assert: node actionIdentifier equals: 'walk'.
 	self assert: node objectIdentifier isNil.
 	self assert: node range isNil.
-	self assert: node parameterInstantiations size = 2.
+	self assert: node enabled.
+	self assert: node parameterInstantiations size equals: 2.
 	node := grammar taskDefinition parse: '
-Wolf eat Goat within 1[m]
+Wolf eat Goat within 1[m] disabled
 where
 	the energy -> my sugar.' trim.
 	self deny: node isPetit2Failure.
@@ -1409,7 +1410,8 @@ where
 	self assert: node actionIdentifier equals: 'eat'.
 	self assert: node objectIdentifier equals: 'Goat'.
 	self assert: node range equals: (grammar literal parse: '1[m]').
-	self assert: node parameterInstantiations size = 1
+	self deny: node enabled.
+	self assert: node parameterInstantiations size equals: 1
 ]
 
 { #category : #tests }
