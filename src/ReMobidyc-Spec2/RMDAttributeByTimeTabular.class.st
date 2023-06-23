@@ -209,3 +209,11 @@ RMDAttributeByTimeTabular >> updateRows [
 											 progress value: time ] ] ]);
 				refresh ]
 ]
+
+{ #category : #updating }
+RMDAttributeByTimeTabular >> updateRunDropList [
+
+	runDropList
+		items: metaInterpreter runIds;
+		selectIndex: 1
+]
