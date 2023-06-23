@@ -103,6 +103,21 @@ RMDAttributeByTimeTabular >> openBoxChart [
 					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
 ]
 
+{ #category : #private }
+RMDAttributeByTimeTabular >> selectedIndividual [
+
+	^ table selectedItem ifNotNil: [ :row |
+		  (row at: #id ifAbsent: [ nil ]) ifNotNil: [ :id |
+			  id isInteger ifTrue: [ id ] ] ]
+]
+
+{ #category : #accessing }
+RMDAttributeByTimeTabular >> selectedTime [
+
+	^ table selectedItem ifNotNil: [ :item |
+		  item at: #time ifAbsent: [ nil ] ]
+]
+
 { #category : #accessing }
 RMDAttributeByTimeTabular >> title [
 
@@ -208,4 +223,12 @@ RMDAttributeByTimeTabular >> updateRows [
 															 stream nextPut: row ] ] ].
 											 progress value: time ] ] ]);
 				refresh ]
+]
+
+{ #category : #updating }
+RMDAttributeByTimeTabular >> updateRunDropList [
+
+	runDropList
+		items: metaInterpreter runIds;
+		selectIndex: 1
 ]
