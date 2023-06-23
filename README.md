@@ -30,10 +30,10 @@ There are three ways to install reːmobidyc.
 The following pre-built packages are available.
 
 The latest release: [Thonon](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
-* [macOS / AppleSilicon](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
-* [macOS / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
-* [Linux / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
-* [windows64 / Intel processor](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
+* macOS / AppleSilicon [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
+* macOS / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
+* Linux / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
+* windows64 / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
 
 ### 2. from Pharo
 
