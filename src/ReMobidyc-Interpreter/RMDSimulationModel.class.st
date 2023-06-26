@@ -11,7 +11,8 @@ Class {
 		'taskDefinitions',
 		'patchDefinition',
 		'icons',
-		'variability'
+		'variability',
+		'worldDataSource'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
 }
@@ -235,6 +236,12 @@ RMDSimulationModel class >> variabilityFileName [
 RMDSimulationModel class >> visualizationFileName [
 
 	^ 'visualization.rmd'
+]
+
+{ #category : #accessing }
+RMDSimulationModel class >> worldDataSourceFileName [
+
+	^ 'world.csv'
 ]
 
 { #category : #'accessing - definitions' }
@@ -466,6 +473,8 @@ RMDSimulationModel >> exportModel: aFileReference [
 	self
 		exportMetadata: aFileReference / self class metadataFileName;
 		exportVariability: aFileReference / self class variabilityFileName;
+		exportWorldDataSource:
+			aFileReference / self class worldDataSourceFileName;
 		exportSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		exportAgents: aFileReference / self class agentsFileName;
@@ -507,6 +516,13 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 	aFileReference lfWriteStreamDo: [ :stream | 
 		renderers do: [ :renderer | 
 			renderer printOn: stream ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> exportWorldDataSource: aFileReference [
+
+	worldDataSource ifNotNil: [
+		worldDataSource writeToCsv: aFileReference ]
 ]
 
 { #category : #'accessing - icons' }
@@ -619,6 +635,8 @@ RMDSimulationModel >> importModel: aFileReference [
 	self
 		importMetadata: aFileReference / self class metadataFileName;
 		importVariability: aFileReference / self class variabilityFileName;
+		importWorldDataSource:
+			aFileReference / self class worldDataSourceFileName;
 		importSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		importAgents: aFileReference / self class agentsFileName;
@@ -694,6 +712,15 @@ RMDSimulationModel >> importVisualization: aFileReference [
 			def := parser parse: source.
 			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
 			self addRenderer: def ] ]
+]
+
+{ #category : #'exporting/importing' }
+RMDSimulationModel >> importWorldDataSource: aFileReference [
+
+	aFileReference exists
+		ifTrue: [
+		worldDataSource := RMDDataSource readFromCsv: aFileReference ]
+		ifFalse: [ worldDataSource := nil ]
 ]
 
 { #category : #initialization }
@@ -891,6 +918,7 @@ RMDSimulationModel >> postCopy [
 
 	metadata := metadata copy.
 	variability := variability copy.
+	worldDataSource := worldDataSource copy.
 	simulationDefinition := simulationDefinition copy.
 	animatDefinitions := (animatDefinitions associations collect: [ 
 		                      :assoc | assoc key -> assoc value copy ])
@@ -1219,6 +1247,18 @@ RMDSimulationModel >> west [
 RMDSimulationModel >> worldArea [
 
 	^ self patchArea * self patchXDivisions * self patchYDivisions
+]
+
+{ #category : #'accessing - data source' }
+RMDSimulationModel >> worldDataSource [
+
+	^ worldDataSource
+]
+
+{ #category : #'accessing - data source' }
+RMDSimulationModel >> worldDataSource: aRMDDataSource [
+
+	worldDataSource := aRMDDataSource
 ]
 
 { #category : #'accessing - definitions' }
