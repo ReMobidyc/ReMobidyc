@@ -29,11 +29,11 @@ There are three ways to install reːmobidyc.
 
 The following pre-built packages are available.
 
-The latest release: [Thonon](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
-* macOS / AppleSilicon [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
-* macOS / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
-* Linux / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
-* windows64 / Intel processor [![download](images/download.png)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
+The latest release: [<kbd> <br> Thonon <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
+* macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
+* macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
+* Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
+* windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
 
 ### 2. from Pharo
 
