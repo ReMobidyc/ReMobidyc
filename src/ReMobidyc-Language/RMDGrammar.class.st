@@ -544,6 +544,12 @@ RMDGrammar >> conjunctionNodeClass [
 	^ RMDConjunctionNode
 ]
 
+{ #category : #'parsers-files' }
+RMDGrammar >> csvColumnName [
+
+	^ ('time' asPParser / identifier) trimBlanks , self type
+]
+
 { #category : #'class access' }
 RMDGrammar >> deUnitExpressionNodeClass [
 
