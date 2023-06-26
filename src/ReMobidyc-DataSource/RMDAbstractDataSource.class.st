@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'dataFrame',
+		'units',
 		'lastIndex'
 	],
 	#category : #'ReMobidyc-DataSource-Core'
@@ -96,21 +97,29 @@ RMDAbstractDataSource >> readFromCsv: aFileReference [
 	self dataFrame: (DataFrame readFromCsv: aFileReference)
 ]
 
+{ #category : #accessing }
+RMDAbstractDataSource >> unitAt: aString [
+
+	^ units at: aString ifAbsent: [ nil ]
+]
+
 { #category : #private }
 RMDAbstractDataSource >> validateDataFrame [
 
 	| parser columnNames |
 	dataFrame isNil ifTrue: [ ^ false ].
 	parser := RMDGrammar new csvColumnName end.
-	columnNames := dataFrame columnNames collect: [ :columnName |
-		               | pair unit |
-		               pair := parser parse: columnName.
-		               pair isPetit2Failure ifTrue: [ ^ false ].
-		               unit := pair second.
-		               dataFrame
-			               column: columnName
-			               transform: [ :v | unit toSI: v ].
-		               pair first ].
+	units := Dictionary new: dataFrame numberOfColumns.
+	columnNames := OrderedCollection new: dataFrame numberOfColumns.
+	dataFrame columnNames do: [ :columnName |
+		| pair name unit |
+		pair := parser parse: columnName.
+		pair isPetit2Failure ifTrue: [ ^ false ].
+		name := pair first.
+		unit := pair second.
+		dataFrame column: columnName transform: [ :v | unit toSI: v ].
+		columnNames add: name.
+		units at: name put: unit ].
 	(columnNames includes: 'time') ifFalse: [ ^ false ].
 	dataFrame columnNames: columnNames.
 	dataFrame sortBy: 'time'.

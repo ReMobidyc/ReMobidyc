@@ -45,3 +45,12 @@ RMDAbstractDataSourceTest >> testIndexAtTime [
 	self assert: (dataSource indexAtTime: 5.0) equals: 4.
 	self assert: (dataSource indexAtTime: 6.0) equals: 4
 ]
+
+{ #category : #tests }
+RMDAbstractDataSourceTest >> testUnitAt [
+
+	self assert: (dataSource unitAt: 'time') equals: 's' asRMDUnit.
+	self
+		assert: (dataSource unitAt: 'temperature')
+		equals: 'DegreeC' asRMDUnit
+]
