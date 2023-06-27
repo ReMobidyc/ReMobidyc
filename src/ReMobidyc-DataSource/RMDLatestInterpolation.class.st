@@ -15,3 +15,9 @@ RMDLatestInterpolation >> atTime: aNumber at: aString between: aDictionary and: 
 		   ifTrue: [ anotherDictionary ]
 		   ifFalse: [ aDictionary ]) at: aString
 ]
+
+{ #category : #accessing }
+RMDLatestInterpolation >> name [
+
+	^ 'latest'
+]

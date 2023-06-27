@@ -14,3 +14,9 @@ RMDNearestInterpolation >> atTime: aNumber at: aString between: aDictionary and:
 		   ifTrue: [ aDictionary ]
 		   ifFalse: [ anotherDictionary ]) at: aString
 ]
+
+{ #category : #accessing }
+RMDNearestInterpolation >> name [
+
+	^ 'nearest'
+]

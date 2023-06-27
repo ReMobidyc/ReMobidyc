@@ -48,3 +48,9 @@ RMDDataInterpolation >> atTime: aNumber at: aString between: aDictionary and: an
 
 	^ self subclassResponsibility
 ]
+
+{ #category : #accessing }
+RMDDataInterpolation >> name [
+
+	^ self subclassResponsibility
+]

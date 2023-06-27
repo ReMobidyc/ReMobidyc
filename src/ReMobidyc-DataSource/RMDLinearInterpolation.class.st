@@ -17,3 +17,9 @@ RMDLinearInterpolation >> atTime: aNumber at: aString between: aDictionary and: 
 	^ (aDictionary at: aString) * r1
 	  + ((anotherDictionary at: aString) * r0)
 ]
+
+{ #category : #accessing }
+RMDLinearInterpolation >> name [
+
+	^ 'linear'
+]
