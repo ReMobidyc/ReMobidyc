@@ -105,24 +105,28 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 BaselineOfReMobidyc >> baselineOf: spec [
 
 	<baseline>
-	spec for: #common do: [ 
+	spec for: #common do: [
 		spec
 			baseline: 'PetitParser2Core'
-			with: [ spec repository: 'github://kursjan/petitparser2/' ].
+			with: [ spec repository: 'github://kursjan/petitparser2/' ];
+			baseline: 'DataFrame'
+			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
 			package: 'ReMobidyc-Storage';
+			package: 'ReMobidyc-DataSource'
+			with: [ spec requires: #( 'DataFrame' ) ];
 			package: 'ReMobidyc-Units' with: [ spec requires: #(  ) ];
 			package: 'ReMobidyc-Language'
 			with: [ spec requires: #( 'PetitParser2Core' 'ReMobidyc-Units' ) ];
-			package: 'ReMobidyc-Interpreter'
-			with: [ 
-				spec requires: #( 'ReMobidyc-Storage' 'ReMobidyc-Language' ) ];
-			package: 'ReMobidyc-Visualization' with: [ 
+			package: 'ReMobidyc-Interpreter' with: [
+				spec requires:
+						#( 'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-DataSource' ) ];
+			package: 'ReMobidyc-Visualization' with: [
 				spec requires: #( 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
 						   'ReMobidyc-Storage' ) ];
 			package: 'ReMobidyc-Repository'
 			with: [ spec requires: #( 'ReMobidyc-Language' ) ];
-			package: 'ReMobidyc-Spec2' with: [ 
+			package: 'ReMobidyc-Spec2' with: [
 				spec requires: #( 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
 						   'ReMobidyc-Units' 'ReMobidyc-Visualization'
 						   'ReMobidyc-Repository' ) ];
@@ -133,19 +137,19 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			package: 'ReMobidyc-Units-Tests'
 			with: [ spec requires: #( 'ReMobidyc-Units' ) ];
 			package: 'ReMobidyc-Visualization-Tests'
-			with: [ 
+			with: [
 				spec requires: #( 'ReMobidyc-Visualization'
 					   'ReMobidyc-Language' ) ];
-			package: 'ReMobidyc-Interpreter-Tests' with: [ 
+			package: 'ReMobidyc-Interpreter-Tests' with: [
 				spec requires:
 						#( 'ReMobidyc-Language-Tests' 'ReMobidyc-Interpreter' ) ].
 		spec
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
-			with: #( 'ReMobidyc-Storage' 'ReMobidyc-Language'
-				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
-				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
-				   'ReMobidyc-Spec2' );
+			with:
+				#( 'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units'
+				   'ReMobidyc-Interpreter' 'ReMobidyc-Visualization'
+				   'ReMobidyc-Repository' 'ReMobidyc-Spec2' );
 			group: 'tests'
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'

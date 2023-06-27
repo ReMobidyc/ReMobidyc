@@ -544,6 +544,13 @@ RMDGrammar >> conjunctionNodeClass [
 	^ RMDConjunctionNode
 ]
 
+{ #category : #'parsers-files' }
+RMDGrammar >> csvColumnName [
+
+	^ ('time' asPParser / identifier) trimBlanks , self type
+	  , self interpolation optional
+]
+
 { #category : #'class access' }
 RMDGrammar >> deUnitExpressionNodeClass [
 
@@ -862,6 +869,15 @@ RMDGrammar >> int [
 	^ $- asPParser optional , self nat
 	  ==> [ :pair | 
 	  (pair first ifNil: [ 1 ] ifNotNil: [ -1 ]) * pair second ]
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> interpolation [
+
+	^ ('nearest' asPParser ==> [ :s | RMDDataInterpolation nearest ]
+	   / ('latest' asPParser ==> [ :s | RMDDataInterpolation latest ])
+	   / ('linear' asPParser ==> [ :s | RMDDataInterpolation linear ]))
+		  trimBlanks
 ]
 
 { #category : #accessing }
@@ -1718,7 +1734,7 @@ RMDGrammar >> worldDefinition [
 
 	^ 'World' asPParser , self withAttributeClause optional
 	  , self whereClause optional , '.' asPParser trimBlanks
-	  , #newline asPParser trimBlanks optional ==> [ :penta | 
+	  , #newline asPParser trimBlanks optional ==> [ :penta |
 	  self worldDefinitionNodeClass
 		  attributeDeclarations: (penta second ifNil: [ Array new ])
 		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]

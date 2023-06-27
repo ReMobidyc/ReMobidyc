@@ -181,28 +181,29 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 
 	| oldTime |
 	oldTime := self time.
-	[ 
+	[
 	self time: 0.
-	aFileReference binaryWriteStreamDo: [ :stream | 
+	aFileReference binaryWriteStreamDo: [ :stream |
 		| writer visualizer |
 		writer := RMDAPNGWriter on: stream.
 		"writer numPlays: 1."
-		visualizer := RMDVisualizer extent: 500@500.
-		self simulationModel renderersDo: [ :renderer | 
+		visualizer := RMDVisualizer extent: 500 @ 500.
+		self simulationModel renderersDo: [ :renderer |
 			visualizer addRenderer: renderer ].
-		[ 
+		[
 		UIManager default
 			displayProgress: 'exporting animated png'
 			from: 0.0
 			to: self duration
-			during: [ :progress | 
-				[ self time < self duration ] whileTrue: [ 
-					writer nextPutImage: ((visualizer visualize: self) scaledToSize: aPoint).
+			during: [ :progress |
+				[ self time < self duration ] whileTrue: [
+					writer nextPutImage:
+						((visualizer visualize: self) scaledToSize: aPoint).
 					self performTasks.
-					self tick.
 					self bounceOutOfBoundsAnimats.
+					self tick.
 					progress value: self time ] ].
-		writer nextPutImage: (visualizer visualize: self) ] ensure: [ 
+		writer nextPutImage: (visualizer visualize: self) ] ensure: [
 			writer close ] ] ] ensure: [ self time: oldTime ]
 ]
 
@@ -294,6 +295,19 @@ RMDInterpreter >> isRunningSimulation [
 RMDInterpreter >> kindName [
 
 	^ 'interpreter'
+]
+
+{ #category : #'accessing - data source' }
+RMDInterpreter >> loadNextValuesFromWorldDataSource [
+
+	simulationModel worldDataSource ifNotNil: [ :dataSource |
+		| values world |
+		values := dataSource atTime: self time + self deltaTime.
+		world := memory world.
+		simulationModel worldDefinition ifNotNil: [ :worldDefinition |
+			values keysAndValuesDo: [ :attribute :value |
+				(worldDefinition attributeOffsetAt: attribute ifAbsent: [ nil ])
+					ifNotNil: [ :offset | self writeNext: value to: world + offset ] ] ] ]
 ]
 
 { #category : #private }
@@ -618,12 +632,13 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 { #category : #simulating }
 RMDInterpreter >> setupSimulation [
 
-	self critical: [ 
-		memory world ifNil: [ 
+	self critical: [
+		memory world ifNil: [
 			memory initialize.
 			simulationModel worldInitializer evalIn: self.
+			self loadNextValuesFromWorldDataSource.
 			simulationModel patchInitializer evalIn: self.
-			simulationModel animatInitializersDo: [ :initializer | 
+			simulationModel animatInitializersDo: [ :initializer |
 				initializer evalIn: self ] ].
 		memory time: 0.
 		self announceTimeChanged ]
@@ -682,6 +697,8 @@ RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 
 { #category : #timing }
 RMDInterpreter >> tick [
+
+	self loadNextValuesFromWorldDataSource.
 	memory tick
 ]
 
@@ -699,16 +716,18 @@ RMDInterpreter >> time [
 
 { #category : #timing }
 RMDInterpreter >> time: aNumber [
+
 	| newTime lastTime |
 	newTime := (aNumber / self deltaTime) rounded.
 	lastTime := memory latestTime.
 	lastTime < newTime
-		ifTrue: [ Cursor wait
-				showWhile: [ memory time: lastTime.
-					[ memory time < newTime ]
-						whileTrue: [ self performTasks.
-							self tick.
-							self bounceOutOfBoundsAnimats ] ] ]
+		ifTrue: [
+			Cursor wait showWhile: [
+				memory time: lastTime.
+				[ memory time < newTime ] whileTrue: [
+					self performTasks.
+					self bounceOutOfBoundsAnimats.
+					self tick ] ] ]
 		ifFalse: [ memory time: newTime ].
 	self announceTimeChanged
 ]
