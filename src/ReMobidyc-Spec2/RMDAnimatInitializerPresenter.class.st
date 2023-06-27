@@ -81,7 +81,7 @@ RMDAnimatInitializerPresenter >> newLayout [
 		             spacing: 0;
 		             add: (SpBoxLayout newHorizontal
 				              vAlignCenter;
-				              add: populationField expand: false;
+				              add: populationField width: 60;
 				              add: ' ' asPresenter expand: false;
 				              add: animatField width: 200;
 				              add: ' with' asPresenter expand: false;

@@ -94,9 +94,9 @@ RMDPatchInitializerPresenter >> newLayout [
 		             spacing: 0;
 		             add: (SpBoxLayout newHorizontal
 				              vAlignCenter;
-				              add: xDivisionsField expand: false;
+				              add: xDivisionsField width: 60;
 				              add: ' x ' asPresenter expand: false;
-				              add: yDivisionsField expand: false;
+				              add: yDivisionsField width: 60;
 				              add: ' of ' asPresenter expand: false;
 				              add: sizeField width: 80;
 				              add: sizeUnitDropList width: 80;
