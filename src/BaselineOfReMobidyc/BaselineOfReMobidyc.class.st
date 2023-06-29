@@ -80,21 +80,24 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	| repository |
 	repository := self ensureIcebergRepository.
 	repository pull.
-	Cursor wait showWhile: [ 
+	Cursor wait showWhile: [
 		| maxCount count |
 		maxCount := 5.
 		count := 0.
-		[ 
+		[
+		[
 		Metacello new
 			repository: 'gitlocal://' , (repository location / 'src') fullName;
 			baseline: 'ReMobidyc';
 			onConflictUseIncoming;
 			onWarningLog;
 			load ]
+			on: IceExperimentalFeature
+			do: [ :ex | ex resume ] ]
 			on: Error
-			do: [ :ex | 
+			do: [ :ex |
 				(count := count + 1) < maxCount
-					ifTrue: [ 
+					ifTrue: [
 						2 seconds wait.
 						ex retry ]
 					ifFalse: [ UIManager default alert: 'Failed to update' ] ] ].
