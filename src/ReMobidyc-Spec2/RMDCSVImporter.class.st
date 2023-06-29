@@ -3,8 +3,14 @@ Class {
 	#superclass : #RMDPresenter,
 	#instVars : [
 		'fileReference',
-		'table',
-		'columnConnectors'
+		'sourceTable',
+		'connectorsList',
+		'addConnectorButton',
+		'removeConnectorButton',
+		'editConnectorButton',
+		'moveUpConnectorButton',
+		'moveDownConnectorButton',
+		'table'
 	],
 	#category : #'ReMobidyc-Spec2-DataSource'
 }

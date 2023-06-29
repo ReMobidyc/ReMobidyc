@@ -40,7 +40,7 @@ RMDAbstractColumnConnnector >> installTo: aRMDTableConnector [
 ]
 
 { #category : #evaluating }
-RMDAbstractColumnConnnector >> value: aDataSeries [
+RMDAbstractColumnConnnector >> value: aDataFrame [
 
-	^ aDataSeries at: self columnName
+	^ aDataFrame column: self columnName ifAbsent: [ nil ]
 ]
