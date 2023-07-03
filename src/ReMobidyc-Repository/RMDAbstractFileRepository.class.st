@@ -66,6 +66,16 @@ RMDAbstractFileRepository >> addAction: aRMDActionDefinitionNode named: aString 
 			aRMDActionDefinitionNode printOn: stream ] ]
 ]
 
+{ #category : #'accessing-data' }
+RMDAbstractFileRepository >> addDataFile: aFileReference named: aString ifPresent: aBlock [
+
+	self dataDirectoryDo: [ :dataDirectory |
+		| ref |
+		ref := dataDirectory / aString withExtension: 'csv'.
+		ref exists ifTrue: [ aBlock ifNotNil: [ aBlock cull: ref ] ].
+		aFileReference copyTo: ref ]
+]
+
 { #category : #'accessing-icons' }
 RMDAbstractFileRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
@@ -91,6 +101,32 @@ RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString ifPres
 RMDAbstractFileRepository >> basicDirectory [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-data' }
+RMDAbstractFileRepository >> dataDirectoryDo: aBlock [
+
+	^ self directoryDo: [ :directory |
+		  aBlock cull: (directory / 'data') ensureCreateDirectory ]
+]
+
+{ #category : #'accessing-data' }
+RMDAbstractFileRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
+
+	self dataDirectoryDo: [ :dataDirectory |
+		| ref |
+		ref := dataDirectory / aString withExtension: 'csv'.
+		ref isFile ifTrue: [ ^ aBlock cull: ref ] ].
+	^ errorBlock value
+]
+
+{ #category : #'accessing-data' }
+RMDAbstractFileRepository >> dataNames [
+
+	self dataDirectoryDo: [ :iconDirectory |
+		^ ((iconDirectory filesMatching: '*.csv') collect:
+			   #basenameWithoutExtension) asSortedCollection ].
+	^ Array new
 ]
 
 { #category : #controling }
@@ -248,6 +284,20 @@ RMDAbstractFileRepository >> renameAction: aString ifAbsent: absentBlock to: ano
 				actionFileNamed: anotherString
 				ifPresent: [ :ref | presentBlock value ]
 				ifAbsent: [ fileRef renameTo: anotherString , '.rmd' ] ]
+		ifAbsent: absentBlock
+]
+
+{ #category : #'accessing-data' }
+RMDAbstractFileRepository >> renameData: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	aString = anotherString ifTrue: [ ^ self ].
+	self
+		dataFileNamed: aString
+		ifPresent: [ :fileRef |
+			self
+				dataFileNamed: anotherString
+				ifPresent: presentBlock
+				ifAbsent: [ fileRef renameTo: anotherString , '.csv' ] ]
 		ifAbsent: absentBlock
 ]
 

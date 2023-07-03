@@ -189,7 +189,10 @@ RMDAttributeByTimeTabular >> updateRows [
 															 agentDefinition attributeOffsetsDo: [ :attribute :offset |
 																	 row
 																		 at: attribute
-																		 put: (memory at: memory world + offset) ].
+																		 put:
+																			 (memory
+																				  at: memory world + offset
+																				  ifAbsent: [ 0.0 ]) ].
 															 stream nextPut: row ].
 													 agentDefinition isPatchDefinitionNode ifTrue: [
 															 memory patchesDo: [ :patch |

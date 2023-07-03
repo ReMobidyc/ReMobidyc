@@ -11,8 +11,7 @@ Class {
 		'taskDefinitions',
 		'patchDefinition',
 		'icons',
-		'variability',
-		'worldDataSource'
+		'variability'
 	],
 	#category : #'ReMobidyc-Interpreter-Core'
 }
@@ -521,8 +520,8 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 { #category : #'exporting/importing' }
 RMDSimulationModel >> exportWorldDataSource: aFileReference [
 
-	worldDataSource ifNotNil: [
-		worldDataSource writeToCsv: aFileReference ]
+	self worldDataSource ifNotNil: [ :dataSource |
+		dataSource writeToCsv: aFileReference ]
 ]
 
 { #category : #'accessing - icons' }
@@ -635,10 +634,10 @@ RMDSimulationModel >> importModel: aFileReference [
 	self
 		importMetadata: aFileReference / self class metadataFileName;
 		importVariability: aFileReference / self class variabilityFileName;
-		importWorldDataSource:
-			aFileReference / self class worldDataSourceFileName;
 		importSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
+		importWorldDataSource:
+			aFileReference / self class worldDataSourceFileName;
 		importAgents: aFileReference / self class agentsFileName;
 		importActions: aFileReference / self class actionsFileName;
 		importTasks: aFileReference / self class tasksFileName;
@@ -717,10 +716,9 @@ RMDSimulationModel >> importVisualization: aFileReference [
 { #category : #'exporting/importing' }
 RMDSimulationModel >> importWorldDataSource: aFileReference [
 
-	aFileReference exists
-		ifTrue: [
-		worldDataSource := RMDDataSource readFromCsv: aFileReference ]
-		ifFalse: [ worldDataSource := nil ]
+	self worldDataSource: (aFileReference exists
+			 ifTrue: [ RMDDataSource readFromCsv: aFileReference ]
+			 ifFalse: [ nil ])
 ]
 
 { #category : #initialization }
@@ -918,7 +916,6 @@ RMDSimulationModel >> postCopy [
 
 	metadata := metadata copy.
 	variability := variability copy.
-	worldDataSource := worldDataSource copy.
 	simulationDefinition := simulationDefinition copy.
 	animatDefinitions := (animatDefinitions associations collect: [ 
 		                      :assoc | assoc key -> assoc value copy ])
@@ -1252,13 +1249,13 @@ RMDSimulationModel >> worldArea [
 { #category : #'accessing - data source' }
 RMDSimulationModel >> worldDataSource [
 
-	^ worldDataSource
+	^ simulationDefinition ifNotNil: #worldDataSource
 ]
 
 { #category : #'accessing - data source' }
 RMDSimulationModel >> worldDataSource: aRMDDataSource [
 
-	worldDataSource := aRMDDataSource
+	simulationDefinition worldDataSource: aRMDDataSource
 ]
 
 { #category : #'accessing - definitions' }

@@ -13,5 +13,5 @@ RMDTimeColumnConnector class >> isAbstract [
 { #category : #controlling }
 RMDTimeColumnConnector >> ifRMDTimeColumnConnector: aBlock [
 
-	^ aBlock value: self
+	^ aBlock cull: self
 ]
