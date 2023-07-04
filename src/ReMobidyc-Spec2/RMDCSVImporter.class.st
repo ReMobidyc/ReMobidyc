@@ -25,7 +25,8 @@ Class {
 		'timeUnitDropList',
 		'table',
 		'tableConnector',
-		'connectorList'
+		'connectorList',
+		'interpolateMissingValues'
 	],
 	#category : #'ReMobidyc-Spec2-DataSource'
 }
@@ -115,7 +116,10 @@ RMDCSVImporter class >> defaultLayout [
 								     yourself)
 						    at: 1 @ 9 span: 3 @ 1;
 						    yourself);
-				   add: #table;
+				   add: (SpBoxLayout newVertical
+						    add: #table;
+						    add: #interpolateMissingValues expand: false;
+						    yourself);
 				   yourself);
 		  yourself
 ]
@@ -159,16 +163,17 @@ RMDCSVImporter >> editConnector [
 			openDialogWithColumns: dataFrame columnNames
 			connector: connector
 			onAccept: [ :newConnector |
-				(tableConnector attributeConnectors anySatisfy: [ :c |
-					 c ~= connector and: [ c attribute = newConnector attribute ] ])
-					ifFalse: [
-						connector
-							columnName: newConnector columnName;
-							attribute: newConnector attribute;
-							unit: newConnector unit;
-							interpolation: newConnector interpolation.
-						connectorList refresh.
-						self updateTable ] ] ]
+				newConnector ifNotNil: [
+					(tableConnector attributeConnectors anySatisfy: [ :c |
+						 c ~= connector and: [ c attribute = newConnector attribute ] ])
+						ifFalse: [
+							connector
+								columnName: newConnector columnName;
+								attribute: newConnector attribute;
+								unit: newConnector unit;
+								interpolation: newConnector interpolation.
+							connectorList refresh.
+							self updateTable ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -314,6 +319,11 @@ RMDCSVImporter >> initializePresenters [
 	table := self newTable
 		         whenBuiltDo: [ table color: table color ];
 		         yourself.
+	interpolateMissingValues := self newCheckBox
+		                            label: 'interpolate missing values';
+		                            state: false;
+		                            whenChangedDo: [ self updateTable ];
+		                            yourself.
 	self whenBuiltDo: [
 		(self window notNil and: [ self window isDialog ]) ifTrue: [
 			self window buttons first disable ] ]
@@ -323,7 +333,7 @@ RMDCSVImporter >> initializePresenters [
 RMDCSVImporter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter initialExtent: 800 @ 500
+	aSpWindowPresenter initialExtent: 950 @ 500
 ]
 
 { #category : #operations }
@@ -364,6 +374,7 @@ RMDCSVImporter >> outputDataFrame [
 		  value: dataFrame
 		  baseTime: nil
 		  timeUnit: (timeUnitDropList selectedItem ifNil: [ RMDUnit day ])
+		  withInterpolation: interpolateMissingValues state
 ]
 
 { #category : #accessing }
@@ -453,7 +464,12 @@ RMDCSVImporter >> updateConnectors [
 { #category : #updating }
 RMDCSVImporter >> updateDataFrame [
 
-	[ dataFrame := DataFrame readFromCsv: fileReference ]
+	[
+	| reader |
+	reader := DataFrameCsvReader new.
+	reader shouldInferTypes: false.
+	dataFrame := (reader readFrom: fileReference) forceNumericOrNil.
+	dataFrame ]
 		on: Error
 		do: [ :ex |
 			fileReference := nil.

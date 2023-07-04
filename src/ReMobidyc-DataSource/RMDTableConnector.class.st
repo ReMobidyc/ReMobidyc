@@ -118,6 +118,16 @@ RMDTableConnector >> initialize [
 	second := 0
 ]
 
+{ #category : #evaluating }
+RMDTableConnector >> interpolateDataFrame: aDataFrame [
+
+	attributeConnectors doWithIndex: [ :connector :index |
+		connector interpolation
+			interpolateDataFrame: aDataFrame
+			columnAt: index + 1 ].
+	^ aDataFrame
+]
+
 { #category : #accessing }
 RMDTableConnector >> minute [
 
@@ -223,7 +233,7 @@ RMDTableConnector >> timeColumnFrom: aDataFrame baseTime: aDateAndTimeOrNil time
 ]
 
 { #category : #evaluating }
-RMDTableConnector >> value: aDataFrame baseTime: aDateAndTimeOrNil timeUnit: aRMDUnitOrNil [
+RMDTableConnector >> value: aDataFrame baseTime: aDateAndTimeOrNil timeUnit: aRMDUnitOrNil withInterpolation: aBoolean [
 
 	| dataFrame |
 	dataFrame := DataFrame new: aDataFrame numberOfRows @ 0.
@@ -233,6 +243,7 @@ RMDTableConnector >> value: aDataFrame baseTime: aDateAndTimeOrNil timeUnit: aRM
 			  timeUnit: aRMDUnitOrNil) ifNil: [ ^ nil ]).
 	attributeConnectors do: [ :connector |
 		dataFrame addColumn: (connector value: aDataFrame) ].
+	aBoolean ifTrue: [ dataFrame := self interpolateDataFrame: dataFrame ].
 	^ dataFrame
 ]
 

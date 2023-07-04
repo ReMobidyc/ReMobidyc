@@ -62,7 +62,7 @@ RMDDataSource >> atTime: aNumber at: aString [
 				  and: data1 ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDDataSource >> dataFrame [
 
 	^ dataFrame
@@ -71,7 +71,7 @@ RMDDataSource >> dataFrame [
 { #category : #accessing }
 RMDDataSource >> dataFrame: aDataFrame [
 
-	originalDataFrame := aDataFrame.
+	originalDataFrame := aDataFrame forceNumericOrNil.
 	dataFrame := DataFrame
 		             withRows: originalDataFrame asArray
 		             columnNames: originalDataFrame columnNames.

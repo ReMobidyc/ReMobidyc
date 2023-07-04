@@ -56,6 +56,12 @@ RMDDataInterpolation >> atTime: aNumber at: aString between: aDictionary and: an
 ]
 
 { #category : #accessing }
+RMDDataInterpolation >> interpolateDataFrame: aDataFrame columnAt: columnIndex [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDDataInterpolation >> name [
 
 	^ self subclassResponsibility
