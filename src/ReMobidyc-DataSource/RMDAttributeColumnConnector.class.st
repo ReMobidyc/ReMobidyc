@@ -1,5 +1,5 @@
 Class {
-	#name : #RMDAttributeConnector,
+	#name : #RMDAttributeColumnConnector,
 	#superclass : #RMDAbstractColumnConnnector,
 	#instVars : [
 		'attribute',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RMDAttributeConnector class >> columnName: aString attribute: anotherString unit: aRMDUnit interpolation: aRMDDataInterpolation [
+RMDAttributeColumnConnector class >> columnName: aString attribute: anotherString unit: aRMDUnit interpolation: aRMDDataInterpolation [
 
 	^ (self columnName: aString)
 		  attribute: anotherString;
@@ -20,37 +20,37 @@ RMDAttributeConnector class >> columnName: aString attribute: anotherString unit
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> attribute [
+RMDAttributeColumnConnector >> attribute [
 
 	^ attribute
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> attribute: aString [
+RMDAttributeColumnConnector >> attribute: aString [
 
 	attribute := aString
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> installTo: aRMDTableConnector [
+RMDAttributeColumnConnector >> installTo: aRMDTableConnector [
 
 	aRMDTableConnector addAttributeConnector: self
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> interpolation [
+RMDAttributeColumnConnector >> interpolation [
 
 	^ interpolation
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> interpolation: aRMDDataInterpolation [
+RMDAttributeColumnConnector >> interpolation: aRMDDataInterpolation [
 
 	interpolation := aRMDDataInterpolation
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> key [
+RMDAttributeColumnConnector >> key [
 
 	^ String streamContents: [ :stream |
 		  stream
@@ -63,13 +63,22 @@ RMDAttributeConnector >> key [
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> unit [
+RMDAttributeColumnConnector >> unit [
 
 	^ unit
 ]
 
 { #category : #accessing }
-RMDAttributeConnector >> unit: aRMDUnit [
+RMDAttributeColumnConnector >> unit: aRMDUnit [
 
 	unit := aRMDUnit
+]
+
+{ #category : #evaluating }
+RMDAttributeColumnConnector >> value: aDataFrame [
+
+	^ (aDataFrame column: self columnName ifAbsent: [ nil ]) ifNotNil: [
+		  :dataSeries |
+		  dataSeries name:
+			  attribute , '[' , unit printString , ']' , interpolation name ]
 ]

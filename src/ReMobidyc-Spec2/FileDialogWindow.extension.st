@@ -1,6 +1,15 @@
 Extension { #name : #FileDialogWindow }
 
 { #category : #'*ReMobidyc-Spec2' }
+FileDialogWindow >> getText [
+
+	^ self openSelectedFile
+		  ifNotNil: [ :ref |
+		  ref readStreamDo: [ :stream | stream nextLine ] ]
+		  ifNil: [ '' ]
+]
+
+{ #category : #'*ReMobidyc-Spec2' }
 FileDialogWindow >> updateImagePreview [
 	"Update the image preview."
 

@@ -89,6 +89,6 @@ RMDUnitTest >> testToSI [
 	self assert: (kelvin toSI: 300.0) closeTo: 300.0.
 	self assert: (ton toSI: 550) closeTo: 550000.0.
 	self assert: (hour toSI: 0.5) closeTo: 1800.0.
-	self assert: (acre toSI: 30) closeTo: 121406.
+	self assert: (acre toSI: 30) closeTo: 121405.692672.
 	self assert: (meter / hour toSI: 30000.0) closeTo: 8.3333333333333
 ]

@@ -13,5 +13,11 @@ RMDTimeColumnConnector class >> isAbstract [
 { #category : #controlling }
 RMDTimeColumnConnector >> ifRMDTimeColumnConnector: aBlock [
 
-	^ aBlock value: self
+	^ aBlock cull: self
+]
+
+{ #category : #evaluating }
+RMDTimeColumnConnector >> value: aDataFrame [
+
+	^ aDataFrame column: self columnName ifAbsent: [ nil ]
 ]

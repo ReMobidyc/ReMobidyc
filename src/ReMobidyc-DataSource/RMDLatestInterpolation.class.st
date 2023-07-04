@@ -16,6 +16,27 @@ RMDLatestInterpolation >> atTime: aNumber at: aString between: aDictionary and: 
 		   ifFalse: [ aDictionary ]) at: aString
 ]
 
+{ #category : #private }
+RMDLatestInterpolation >> findFirstNonNil: aDataFrame columnAt: columnIndex [
+
+	1 to: aDataFrame numberOfRows do: [ :rowIndex |
+		(aDataFrame at: rowIndex at: columnIndex) ifNotNil: [ :value |
+			^ value ] ].
+	^ nil
+]
+
+{ #category : #accessing }
+RMDLatestInterpolation >> interpolateDataFrame: aDataFrame columnAt: columnIndex [
+
+	(self findFirstNonNil: aDataFrame columnAt: columnIndex) ifNotNil: [
+		:firstNonNil |
+		| lastValue |
+		lastValue := firstNonNil.
+		1 to: aDataFrame numberOfRows do: [ :rowIndex |
+			aDataFrame at: rowIndex at: columnIndex transform: [ :value |
+				value ifNil: [ lastValue ] ifNotNil: [ lastValue := value ] ] ] ]
+]
+
 { #category : #accessing }
 RMDLatestInterpolation >> name [
 

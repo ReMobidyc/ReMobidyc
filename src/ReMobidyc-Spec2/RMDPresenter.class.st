@@ -105,6 +105,12 @@ RMDPresenter >> exportIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> historyIcon [
+
+	^ Smalltalk ui iconNamed: #history
+]
+
+{ #category : #icons }
 RMDPresenter >> icebergIcon [
 
 	^ Smalltalk ui icons iconNamed: #komitterSmalltalkhubRemote

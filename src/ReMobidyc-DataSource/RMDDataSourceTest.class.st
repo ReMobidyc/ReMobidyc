@@ -50,7 +50,7 @@ RMDDataSourceTest >> testAtTime [
 	self assert: ((dataSource atTime: 4.45) at: 't2') closeTo: 30.4.
 	self assert: ((dataSource atTime: 5.0) at: 't2') closeTo: 30.5.
 	self assert: ((dataSource atTime: 5.5) at: 't2') closeTo: 30.5.
-	self assert: ((dataSource atTime: -1.0) at: 't3') closeTo: 30.0.
+	self assert: ((dataSource atTime: -1.0) at: 't3') closeTo: 29.9.
 	self assert: ((dataSource atTime: 0.0) at: 't3') closeTo: 30.0.
 	self assert: ((dataSource atTime: 0.5) at: 't3') closeTo: 30.05.
 	self
@@ -65,7 +65,7 @@ RMDDataSourceTest >> testAtTime [
 	self assert: ((dataSource atTime: 4.0) at: 't3') closeTo: 30.4.
 	self assert: ((dataSource atTime: 4.5) at: 't3') closeTo: 30.45.
 	self assert: ((dataSource atTime: 5.0) at: 't3') closeTo: 30.5.
-	self assert: ((dataSource atTime: 5.5) at: 't3') closeTo: 30.5
+	self assert: ((dataSource atTime: 5.5) at: 't3') closeTo: 30.55
 ]
 
 { #category : #'tests-interpolation' }
@@ -99,7 +99,7 @@ RMDDataSourceTest >> testAtTimeAt [
 	self assert: (dataSource atTime: 4.45 at: 't2') closeTo: 30.4.
 	self assert: (dataSource atTime: 5.0 at: 't2') closeTo: 30.5.
 	self assert: (dataSource atTime: 5.5 at: 't2') closeTo: 30.5.
-	self assert: (dataSource atTime: -1.0 at: 't3') closeTo: 30.0.
+	self assert: (dataSource atTime: -1.0 at: 't3') closeTo: 29.9.
 	self assert: (dataSource atTime: 0.0 at: 't3') closeTo: 30.0.
 	self assert: (dataSource atTime: 0.5 at: 't3') closeTo: 30.05.
 	self assert: (dataSource atTime: 0.99999 at: 't3') closeTo: 30.099999.
@@ -112,7 +112,7 @@ RMDDataSourceTest >> testAtTimeAt [
 	self assert: (dataSource atTime: 4.0 at: 't3') closeTo: 30.4.
 	self assert: (dataSource atTime: 4.5 at: 't3') closeTo: 30.45.
 	self assert: (dataSource atTime: 5.0 at: 't3') closeTo: 30.5.
-	self assert: (dataSource atTime: 5.5 at: 't3') closeTo: 30.5
+	self assert: (dataSource atTime: 5.5 at: 't3') closeTo: 30.55
 ]
 
 { #category : #'tests-time' }

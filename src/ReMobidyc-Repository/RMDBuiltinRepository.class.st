@@ -59,6 +59,12 @@ RMDBuiltinRepository >> addAction: aRMDActionDefinitionNode named: aString ifPre
 	^ self shouldNotImplement
 ]
 
+{ #category : #'accessing-data' }
+RMDBuiltinRepository >> addDataFile: aFileReference named: aString ifPresent: aBlock [
+
+	^ self shouldNotImplement
+]
+
 { #category : #'accessing-icons' }
 RMDBuiltinRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
@@ -69,6 +75,18 @@ RMDBuiltinRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 RMDBuiltinRepository >> addModel: aRMDSimulationModel named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
+]
+
+{ #category : #'accessing-data' }
+RMDBuiltinRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
+
+	^ errorBlock value
+]
+
+{ #category : #'accessing-data' }
+RMDBuiltinRepository >> dataNames [
+
+	^ Array new
 ]
 
 { #category : #actions }
@@ -175,6 +193,12 @@ RMDBuiltinRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 
 { #category : #'accessing-actions' }
 RMDBuiltinRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ absentBlock value
+]
+
+{ #category : #'accessing-data' }
+RMDBuiltinRepository >> renameData: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ absentBlock value
 ]

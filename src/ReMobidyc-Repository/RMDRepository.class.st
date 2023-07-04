@@ -34,6 +34,12 @@ RMDRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: a
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-data' }
+RMDRepository >> addDataFile: aForm named: aString ifPresent: aBlock [
+
+	^ self subclassResponsibility
+]
+
 { #category : #'accessing-icons' }
 RMDRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
@@ -43,6 +49,26 @@ RMDRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 { #category : #'accessing-models' }
 RMDRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-data' }
+RMDRepository >> dataFileNamed: aString ifAbsent: errorBlock [
+
+	^ self
+		  dataFileNamed: aString
+		  ifPresent: #yourself
+		  ifAbsent: errorBlock
+]
+
+{ #category : #'accessing-data' }
+RMDRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-data' }
+RMDRepository >> dataNames [
 	^ self subclassResponsibility
 ]
 
@@ -144,6 +170,15 @@ RMDRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'accessing-data' }
+RMDRepository >> removeDataNamed: aString ifAbsent: errorBlock [
+
+	^ self
+		  dataFileNamed: aString
+		  ifPresent: #ensureDelete
+		  ifAbsent: errorBlock
+]
+
 { #category : #'accessing-icons' }
 RMDRepository >> removeIconNamed: aString ifAbsent: errorBlock [
 
@@ -158,6 +193,12 @@ RMDRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 
 { #category : #'accessing-actions' }
 RMDRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-data' }
+RMDRepository >> renameData: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ self subclassResponsibility
 ]

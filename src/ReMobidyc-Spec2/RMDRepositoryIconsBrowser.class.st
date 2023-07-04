@@ -121,11 +121,11 @@ RMDRepositoryIconsBrowser >> removeItem [
 { #category : #actions }
 RMDRepositoryIconsBrowser >> save: aForm [
 
-	^ self repository ifNotNil: [ :repo | 
-		  self item ifNotNil: [ :item | 
-			  ((repo actionNamed: item ifAbsent: [ nil ]) isNil or: [ 
+	^ self repository ifNotNil: [ :repo |
+		  self item ifNotNil: [ :item |
+			  ((repo iconNamed: item ifAbsent: [ nil ]) isNil or: [
 				   UIManager default confirm:
-					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ]) 
+					   'Overwrite ' , item , ' in ' , repo name , ' repository?' ])
 				  ifTrue: [ repo addIcon: aForm named: item ifPresent: [  ] ] ] ]
 ]
 

@@ -38,9 +38,3 @@ RMDAbstractColumnConnnector >> installTo: aRMDTableConnector [
 
 	^ self subclassResponsibility
 ]
-
-{ #category : #evaluating }
-RMDAbstractColumnConnnector >> value: aDataSeries [
-
-	^ aDataSeries at: self columnName
-]
