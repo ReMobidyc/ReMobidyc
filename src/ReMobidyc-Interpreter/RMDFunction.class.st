@@ -12,23 +12,7 @@ RMDFunction class >> abs [
 { #category : #'instance creation' }
 RMDFunction class >> at: aString [
 
-	aString = 'abs' ifTrue: [ ^ self abs ].
-	aString = 'cos' ifTrue: [ ^ self cos ].
-	aString = 'exp' ifTrue: [ ^ self exp ].
-	aString = 'log' ifTrue: [ ^ self ln ].
-	aString = 'ln' ifTrue: [ ^ self ln ].
-	aString = 'max' ifTrue: [ ^ self max ].
-	aString = 'mean' ifTrue: [ ^ self mean ].
-	aString = 'min' ifTrue: [ ^ self min ].
-	aString = 'power' ifTrue: [ ^ self power ].
-	aString = 'sqrt' ifTrue: [ ^ self sqrt ].
-	aString = 'sin' ifTrue: [ ^ self sin ].
-	aString = 'sum' ifTrue: [ ^ self sum ].
-	aString = 'positive' ifTrue: [ ^ self positive ].
-	aString = 'round' ifTrue: [ ^self round ].
-	aString = 'floor' ifTrue: [ ^self floor ].
-	aString = 'ceiling' ifTrue: [ ^self ceiling ].
-	^ KeyNotFound signal: aString
+	^ self at: aString ifAbsent: [ KeyNotFound signal: aString ]
 ]
 
 { #category : #'instance creation' }
@@ -50,6 +34,7 @@ RMDFunction class >> at: aString ifAbsent: errorBlock [
 	aString = 'round' ifTrue: [ ^ self round ].
 	aString = 'floor' ifTrue: [ ^ self floor ].
 	aString = 'ceiling' ifTrue: [ ^ self ceiling ].
+	aString = 'gaussian' ifTrue: [ ^ self gaussian ].
 	^ errorBlock cull: aString
 ]
 
@@ -71,6 +56,11 @@ RMDFunction class >> exp [
 { #category : #'typical instances' }
 RMDFunction class >> floor [
 	^ RMDFloorFunction new
+]
+
+{ #category : #'typical instances' }
+RMDFunction class >> gaussian [
+	^ RMDGaussianFunction new
 ]
 
 { #category : #'typical instances' }
