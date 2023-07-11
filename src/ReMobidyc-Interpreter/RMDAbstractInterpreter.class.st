@@ -12,7 +12,7 @@ Class {
 { #category : #'library access' }
 RMDAbstractInterpreter class >> standardLibrary [
 
-	^ { 
+	^ {
 		  ('exp' -> RMDFunction exp).
 		  ('log' -> RMDFunction ln).
 		  ('ln' -> RMDFunction ln).
@@ -28,7 +28,8 @@ RMDAbstractInterpreter class >> standardLibrary [
 		  ('positive' -> RMDFunction positive).
 		  ('round' -> RMDFunction round).
 		  ('floor' -> RMDFunction floor).
-		  ('celing' -> RMDFunction ceiling) } asDictionary
+		  ('celing' -> RMDFunction ceiling).
+		  ('gaussian' -> RMDFunction gaussian) } asDictionary
 ]
 
 { #category : #private }
