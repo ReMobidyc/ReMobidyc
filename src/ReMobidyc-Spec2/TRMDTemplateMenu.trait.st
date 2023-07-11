@@ -64,7 +64,7 @@ TRMDTemplateMenu >> areas [
 { #category : #'templates-expressions' }
 TRMDTemplateMenu >> arithmetics [
 
-	^ Array streamContents: [ :stream | 
+	^ Array streamContents: [ :stream |
 		  stream
 			  nextPut: (RMDSourceTemplate
 					   name: 'raised to'
@@ -149,7 +149,14 @@ TRMDTemplateMenu >> arithmetics [
 						   , String cr , 'the mean value of the arguments' , String cr
 						   , 'Note: one or more arguments must be given.'
 					   sourceText:
-						   'mean(_expression1_, _expression2_, ..., _expression_n_)') ]
+						   'mean(_expression1_, _expression2_, ..., _expression_n_)');
+			  nextPut: (RMDSourceTemplate
+					   name: 'gaussian'
+					   description:
+						   'Usage: gaussian(a, b, c, x)' , String cr
+						   , 'the gaussian function' , String cr
+						   , 'Note: b is also called as mean and c as sigma.'
+					   sourceText: 'gaussian(_a_, _b_, _c_ , _x_)') ]
 ]
 
 { #category : #'templates-units' }
