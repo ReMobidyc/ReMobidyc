@@ -101,6 +101,7 @@ The attributes of the object can be accessed in the following ways.
 | subtraction | _expr1_ `-` _expr2_ | diffs the two values |
 | product | _expr1_ `*` _expr2_ | multiplies the two values |
 | fraction | _expr1_ `/` _expr2_ | the left-value over the right-value |
+| remainder | _expr1_ `%` _expr2_ | the remainder of the left-value by the right-value |
 | repeated multiplication | _expr_ `^` _digit_ | _expr_ powered to _digit_ ||
 | square root | `sqrt(`_expr_`)` | the square root of _expr_ which must be non-negative |
 | power | `power(`_expr1_, _expr2_`)` | the left value powered to the right value <br>_expr1_ and _expr2_ must be non-dimensional|
