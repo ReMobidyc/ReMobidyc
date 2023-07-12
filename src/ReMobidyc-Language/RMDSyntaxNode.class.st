@@ -441,6 +441,12 @@ RMDSyntaxNode >> isProductNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isResidualNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isSimulationDefinitionNode [
 	^ false
 ]

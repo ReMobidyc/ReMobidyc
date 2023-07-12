@@ -841,6 +841,10 @@ RMDGrammarTest >> testExpr4 [
 	self assert: expr4 isProductNode.
 	self assert: expr4 expression1 isFractionNode.
 	self assert: expr4 expression2 identifier equals: 'z'.
+	expr4 := grammar expr4 parse: 'x % y * z'.
+	self assert: expr4 isProductNode.
+	self assert: expr4 expression1 isResidualNode.
+	self assert: expr4 expression2 identifier equals: 'z'.
 	expr4 := grammar expr4 parse: 'x'.
 	self assert: expr4 isUtilityVariableNode.
 	self assert: expr4 identifier equals: 'x'.
