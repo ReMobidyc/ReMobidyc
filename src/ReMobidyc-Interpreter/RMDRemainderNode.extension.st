@@ -1,7 +1,7 @@
-Extension { #name : #RMDResidualNode }
+Extension { #name : #RMDRemainderNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDResidualNode >> evalIn: aRMDInterpreter [
+RMDRemainderNode >> evalIn: aRMDInterpreter [
 
 	^ (expression1 evalIn: aRMDInterpreter)
 	  % (expression2 evalIn: aRMDInterpreter) ifNanOrInfinite: [
@@ -9,7 +9,7 @@ RMDResidualNode >> evalIn: aRMDInterpreter [
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }
-RMDResidualNode >> typecheckIn: aRMDInterpreter [
+RMDRemainderNode >> typecheckIn: aRMDInterpreter [
 
 	^ [
 	  (expression1 typecheckIn: aRMDInterpreter) unify:

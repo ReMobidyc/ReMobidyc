@@ -1,21 +1,21 @@
 Class {
-	#name : #RMDResidualNode,
+	#name : #RMDRemainderNode,
 	#superclass : #RMDLeftAssociativeApplicationNode,
 	#category : #'ReMobidyc-Language-AST'
 }
 
 { #category : #testing }
-RMDResidualNode >> isResidualNode [
+RMDRemainderNode >> isRemainderNode [
 
 	^ true
 ]
 
 { #category : #accessing }
-RMDResidualNode >> operator [
+RMDRemainderNode >> operator [
 	^ '%'
 ]
 
 { #category : #accessing }
-RMDResidualNode >> precedence [
+RMDRemainderNode >> precedence [
 	^ 4
 ]

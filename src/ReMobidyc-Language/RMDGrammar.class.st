@@ -761,7 +761,7 @@ RMDGrammar >> expr4 [
 					   ifFalse: [
 						   op = $/
 							   ifTrue: [ self fractionNodeClass ]
-							   ifFalse: [ self residualNodeClass ] ])
+							   ifFalse: [ self remainderNodeClass ] ])
 					  expression: total
 					  expression: (array at: index + 1) ] ]
 ]
@@ -1291,6 +1291,12 @@ RMDGrammar >> productNodeClass [
 	^ RMDProductNode
 ]
 
+{ #category : #'class access' }
+RMDGrammar >> remainderNodeClass [
+
+	^ RMDRemainderNode
+]
+
 { #category : #'parsers-visualizations' }
 RMDGrammar >> renderer [
 
@@ -1298,12 +1304,6 @@ RMDGrammar >> renderer [
 	  / self animatTriangleRenderer / self animatIconRenderer
 	  / self backgroundColorRenderer / self patchColorAlphaRenderer
 	  / self patchColorBrightnessRenderer / self patchColorMapRenderer
-]
-
-{ #category : #'class access' }
-RMDGrammar >> residualNodeClass [
-
-	^ RMDResidualNode
 ]
 
 { #category : #'parsers-definitions' }

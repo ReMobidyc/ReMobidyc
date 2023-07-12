@@ -1,11 +1,11 @@
 Class {
-	#name : #RMDResidualNodeTest,
+	#name : #RMDRemainderNodeTest,
 	#superclass : #RMDSyntaxNodeTest,
 	#category : #'ReMobidyc-Language-Tests'
 }
 
 { #category : #tests }
-RMDResidualNodeTest >> testCopyReplace [
+RMDRemainderNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '(a + b) % (c * d)'.
 	replacement := Dictionary new
@@ -18,7 +18,7 @@ RMDResidualNodeTest >> testCopyReplace [
 ]
 
 { #category : #tests }
-RMDResidualNodeTest >> testPrintOn [
+RMDRemainderNodeTest >> testPrintOn [
 
 	| node copy |
 	node := parser expression end parse: 'x % y'.

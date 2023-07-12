@@ -1,7 +1,7 @@
-Extension { #name : #RMDResidualNodeTest }
+Extension { #name : #RMDRemainderNodeTest }
 
 { #category : #'*ReMobidyc-Interpreter-Tests' }
-RMDResidualNodeTest >> testEvalIn [
+RMDRemainderNodeTest >> testEvalIn [
 
 	| expr |
 	expr := parser expression parse: '13 % 5'.
