@@ -67,6 +67,13 @@ TRMDTemplateMenu >> arithmetics [
 	^ Array streamContents: [ :stream |
 		  stream
 			  nextPut: (RMDSourceTemplate
+					   name: 'remainder'
+					   description: 'Usage: expression1 % expression2' , String cr
+						   , 'the remainder of expression1 by expression2' , String cr
+						   ,
+							   'Note: a remainder can be negative when the second argument (modulus) is negative.'
+					   sourceText: '_expression1_ % _expression2_');
+			  nextPut: (RMDSourceTemplate
 					   name: 'raised to'
 					   description:
 						   'Usage: expression ^ n' , String cr

@@ -747,18 +747,23 @@ RMDGrammar >> expr2 [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expr4 [
-	^ (self expr2 separatedBy: ($* asPParser / $/ asPParser) trimBlanks)
-		==> [ :array | 
-			(2 to: array size by: 2)
-				inject: array first
-				into: [ :total :index | 
-					| op |
-					op := array at: index.
-					(op = $*
-						ifTrue: [ self productNodeClass ]
-						ifFalse: [ self fractionNodeClass ])
-						expression: total
-						expression: (array at: index + 1) ] ]
+
+	^ (self expr2 separatedBy:
+		   ($* asPParser / $/ asPParser / $% asPParser) trimBlanks)
+	  ==> [ :array |
+		  (2 to: array size by: 2)
+			  inject: array first
+			  into: [ :total :index |
+				  | op |
+				  op := array at: index.
+				  (op = $*
+					   ifTrue: [ self productNodeClass ]
+					   ifFalse: [
+						   op = $/
+							   ifTrue: [ self fractionNodeClass ]
+							   ifFalse: [ self remainderNodeClass ] ])
+					  expression: total
+					  expression: (array at: index + 1) ] ]
 ]
 
 { #category : #'parsers-expressions' }
@@ -1284,6 +1289,12 @@ RMDGrammar >> powerNodeClass [
 { #category : #'class access' }
 RMDGrammar >> productNodeClass [
 	^ RMDProductNode
+]
+
+{ #category : #'class access' }
+RMDGrammar >> remainderNodeClass [
+
+	^ RMDRemainderNode
 ]
 
 { #category : #'parsers-visualizations' }
