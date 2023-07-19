@@ -90,6 +90,12 @@ RMDMetaContext >> memoryName [
 ]
 
 { #category : #accessing }
+RMDMetaContext >> modelPath [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDMetaContext >> numberOfInterpreters [
 
 	^ interpreters size

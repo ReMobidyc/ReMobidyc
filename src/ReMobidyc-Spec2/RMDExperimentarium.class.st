@@ -6,6 +6,8 @@ Class {
 	#instVars : [
 		'stepButton',
 		'runButton',
+		'saveRunAsButton',
+		'removeRunButton',
 		'timeProgressBar',
 		'limitsNumberOfIndividualsCheckBox',
 		'numberOfIndividualField',
@@ -71,6 +73,9 @@ RMDExperimentarium class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
+				   add: '    ' width: self buttonHeight;
+				   add: #saveRunAsButton width: self buttonHeight;
+				   add: #removeRunButton width: self buttonHeight;
 				   yourself)
 		  expand: false;
 		  yourself
@@ -157,6 +162,20 @@ RMDExperimentarium >> initializePresenters [
 		              help: 'Run the simulation just one step forward';
 		              enabled: true;
 		              yourself.
+	removeRunButton := self newButton
+		                   icon: self removeIcon;
+		                   action: [ self removeRun ];
+		                   help: 'Remove the run from the repository';
+		                   enabled: true;
+		                   yourself.
+	saveRunAsButton := self newButton
+		                   icon: self saveIcon;
+		                   action: [ self saveRunAs ];
+		                   help:
+			                   'Rename and save the run into the repository';
+		                   enabled: true;
+		                   yourself.
+
 	timeProgressBar := self newProgressBar
 		                   fixedAt: 0.0;
 		                   yourself.
@@ -165,7 +184,7 @@ RMDExperimentarium >> initializePresenters [
 			                                     'Limit max individuals to';
 		                                     labelClickable: true;
 		                                     state: false;
-		                                     whenChangedDo: [ 
+		                                     whenChangedDo: [
 			                                     self
 				                                     limitsNumberOfIndividualsChanged ];
 		                                     yourself.
@@ -175,18 +194,18 @@ RMDExperimentarium >> initializePresenters [
 		                           color: (Color gray: 0.75);
 		                           number: 100000;
 		                           climbRate: 10000;
-		                           whenBuiltDo: [ 
+		                           whenBuiltDo: [
 			                           numberOfIndividualField color:
 					                           (Color gray: 0.75) ];
 		                           yourself.
 	interpreterDropList := self newDropList
-		                       display: [ :runId | 
+		                       display: [ :runId |
 			                       (metaInterpreter
 				                        interpreterAt: runId
 				                        ifAbsent: [ nil ])
 				                       ifNotNil: #shortName
 				                       ifNil: [ '-' ] ];
-		                       whenSelectedItemChangedDo: [ 
+		                       whenSelectedItemChangedDo: [
 			                       self updateDisplay ];
 		                       yourself.
 	timeLabel := self newLabel
@@ -201,35 +220,35 @@ RMDExperimentarium >> initializePresenters [
 		                   addColumn:
 			                   (SpStringTableColumn
 				                    title: 'min'
-				                    evaluated: [ :name | 
+				                    evaluated: [ :name |
 					                    self printNat: (minPopulation
 								                     at: self runId
-								                     ifPresent: [ :dict | 
+								                     ifPresent: [ :dict |
 									                     dict at: name ifAbsent: [ nil ] ]
 								                     ifAbsent: [ nil ]) ]);
 		                   addColumn:
 			                   (SpStringTableColumn
 				                    title: 'max'
-				                    evaluated: [ :name | 
+				                    evaluated: [ :name |
 					                    self printNat: (maxPopulation
 								                     at: self runId
-								                     ifPresent: [ :dict | 
+								                     ifPresent: [ :dict |
 									                     dict at: name ifAbsent: [ nil ] ]
 								                     ifAbsent: [ nil ]) ]);
 		                   addColumn:
 			                   (SpStringTableColumn
 				                    title: 'now'
-				                    evaluated: [ :name | 
+				                    evaluated: [ :name |
 					                    self printNat: (currentPopulation
 								                     at: self runId
-								                     ifPresent: [ :dict | 
+								                     ifPresent: [ :dict |
 									                     dict at: name ifAbsent: [ nil ] ]
 								                     ifAbsent: [ nil ]) ]);
 		                   whenSelectionChangedDo: [ self updateDisplay ];
 		                   yourself.
 	showPopulationChartRadioButton := self newRadioButton
 		                                  label: 'Population chart';
-		                                  whenChangedDo: [ 
+		                                  whenChangedDo: [
 			                                  self updateDisplay ];
 		                                  yourself.
 	showVisualMapRadioButton := self newRadioButton
@@ -336,6 +355,18 @@ RMDExperimentarium >> printNat: anInteger [
 ]
 
 { #category : #operations }
+RMDExperimentarium >> removeRun [
+
+	(metaInterpreter ifNotNil: #modelPath) ifNotNil: [ :modelPath |
+		(UIManager default
+			 confirm: 'Remove this run from the repository?'
+			 label: 'Remove run') ifTrue: [
+			modelPath ensureDeleteAll.
+			self setMetaInterpreter: nil.
+			self updateButtons ] ]
+]
+
+{ #category : #operations }
 RMDExperimentarium >> runButtonPressed [
 
 	metaInterpreter isRunningSimulation
@@ -355,6 +386,24 @@ RMDExperimentarium >> runSimulation [
 	self isValidated ifTrue: [ 
 		metaInterpreter runSimulationOnError: [ :ex | 
 			(RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
+]
+
+{ #category : #operations }
+RMDExperimentarium >> saveRunAs [
+
+	(metaInterpreter ifNotNil: #modelPath) ifNotNil: [ :modelPath |
+		(UIManager default
+			 request: 'New name of this run'
+			 initialAnswer: modelPath basename
+			 title: 'Save this run as...') ifNotNil: [ :string |
+			string trim ifNotEmpty: [ :name |
+				| ref |
+				ref := RMDRunsRepository runsDirectory / name.
+				ref exists ifTrue: [
+					^ UIManager default alert:
+						  'A run named "' , name , '" already exists.' ].
+				modelPath moveTo: ref.
+				self setMetaInterpreter: (RMDMetaInterpreter onModelPath: ref) ] ] ]
 ]
 
 { #category : #private }
@@ -389,39 +438,41 @@ RMDExperimentarium >> serverUpdateInterval [
 { #category : #initialization }
 RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 
-	metaInterpreter ifNotNil: [ 
+	metaInterpreter ifNotNil: [
 		metaInterpreter announcer unsubscribe: self.
-		metaInterpreter interpretersDo: [ :interpreter | 
+		metaInterpreter interpretersDo: [ :interpreter |
 			interpreter announcer unsubscribe: self ] ].
 	metaInterpreter := aRMDMetaInterpreter.
-	self typecheck.
-	self isValidated ifTrue: [ 
-		metaInterpreter setupSimulation.
-		metaInterpreter guard: [ :interpreter | 
-			self canProceed: interpreter ].
-		currentPopulation := Dictionary new.
-		maxPopulation := Dictionary new.
-		minPopulation := Dictionary new.
-		populationByTime := Dictionary new.
-		metaInterpreter interpretersDo: [ :i | 
-			| runId |
-			runId := i runId.
-			currentPopulation at: runId put: Dictionary new.
-			maxPopulation at: runId put: Dictionary new.
-			minPopulation at: runId put: Dictionary new.
-			populationByTime at: runId put: (OrderedCollection new: 1024).
-			i announcer weak
-				when: RMDSimulationStarted send: #simulationStarted: to: self;
-				when: RMDTimeChanged send: #timeChanged: to: self;
-				when: RMDSimulationPaused send: #simulationPaused: to: self ].
-		interpreterDropList
-			items: metaInterpreter runIds;
-			selectIndex: 1;
-			enable.
-		metaInterpreter fastForward.
-		self
-			updateTableItems;
-			updateDisplay ].
+	self window ifNotNil: [ :window | window title: self title ].
+	metaInterpreter ifNotNil: [
+		self typecheck.
+		self isValidated ifTrue: [
+			metaInterpreter setupSimulation.
+			metaInterpreter guard: [ :interpreter |
+				self canProceed: interpreter ].
+			currentPopulation := Dictionary new.
+			maxPopulation := Dictionary new.
+			minPopulation := Dictionary new.
+			populationByTime := Dictionary new.
+			metaInterpreter interpretersDo: [ :i |
+				| runId |
+				runId := i runId.
+				currentPopulation at: runId put: Dictionary new.
+				maxPopulation at: runId put: Dictionary new.
+				minPopulation at: runId put: Dictionary new.
+				populationByTime at: runId put: (OrderedCollection new: 1024).
+				i announcer weak
+					when: RMDSimulationStarted send: #simulationStarted: to: self;
+					when: RMDTimeChanged send: #timeChanged: to: self;
+					when: RMDSimulationPaused send: #simulationPaused: to: self ].
+			interpreterDropList
+				items: metaInterpreter runIds;
+				selectIndex: 1;
+				enable.
+			metaInterpreter fastForward.
+			self
+				updateTableItems;
+				updateDisplay ] ].
 	self updateButtons
 ]
 
@@ -472,7 +523,7 @@ RMDExperimentarium >> timeChanged: aRMDTimeChanged [
 			self updateDisplay ] ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDExperimentarium >> title [
 
 	^ 'Experimentarium'
@@ -502,7 +553,24 @@ RMDExperimentarium >> typecheck [
 { #category : #updating }
 RMDExperimentarium >> updateButtons [
 
-	self updateOpenAnalysisButtons
+	metaInterpreter
+		ifNil: [
+			stepButton disable.
+			runButton disable.
+			saveRunAsButton disable.
+			removeRunButton disable.
+			limitsNumberOfIndividualsCheckBox disable.
+			numberOfIndividualField disable.
+			interpreterDropList disable.
+			populationTable disable.
+			showPopulationChartRadioButton disable.
+			showVisualMapRadioButton disable.
+			openTabularButton disable.
+			openObservatoryButton disable ]
+		ifNotNil: [
+			saveRunAsButton enabled: metaInterpreter modelPath notNil.
+			removeRunButton enabled: metaInterpreter modelPath notNil.
+			self updateOpenAnalysisButtons ]
 ]
 
 { #category : #updating }
