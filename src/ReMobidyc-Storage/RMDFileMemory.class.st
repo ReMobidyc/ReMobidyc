@@ -47,11 +47,14 @@ RMDFileMemory class >> initialize [
 RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
 
 	| modelPath |
-	[ 
+	[
 	modelPath := RMDRunsRepository runsDirectory
 	             /
 		             ((aRMDSimulationModel name ifEmpty: [ 'noname' ]) , '-'
-		              , DateAndTime now printString).
+		              ,
+		              (DateAndTime now printString
+			               copyReplaceAll: ':'
+			               with: '-')).
 	modelPath exists ] whileTrue: [ 100 milliSecond wait ].
 	^ modelPath
 ]
