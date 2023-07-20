@@ -137,6 +137,12 @@ RMDMetaInterpreter >> memoryName [
 	^ context ifNotNil: #memoryName ifNil: [ '' ]
 ]
 
+{ #category : #'context controls' }
+RMDMetaInterpreter >> modelPath [
+
+	^ context ifNotNil: #modelPath
+]
+
 { #category : #'accessing-interpreters' }
 RMDMetaInterpreter >> nameAt: anInteger ifAbsent: errorBlock [
 

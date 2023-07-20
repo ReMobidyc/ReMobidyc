@@ -37,6 +37,12 @@ RMDMetaContextForDryRun >> memoryName [
 	^ 'dry-run'
 ]
 
+{ #category : #accessing }
+RMDMetaContextForDryRun >> modelPath [
+
+	^ nil
+]
+
 { #category : #enumerating }
 RMDMetaContextForDryRun >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 
