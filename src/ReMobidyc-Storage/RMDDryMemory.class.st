@@ -23,6 +23,12 @@ RMDDryMemory >> readAnimatsForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDDryMemory >> readCreationTimesForTime: anInteger [
+
+	^ Dictionary new
+]
+
+{ #category : #'accessing-storage' }
 RMDDryMemory >> readReproductionLinksForTime: anInteger [
 
 	^ Dictionary new
@@ -63,6 +69,12 @@ RMDDryMemory >> sunrise [
 
 { #category : #'accessing-storage' }
 RMDDryMemory >> writeAnimats: aDictionary forTime: anInteger [
+
+	
+]
+
+{ #category : #'accessing-storage' }
+RMDDryMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 
 	
 ]

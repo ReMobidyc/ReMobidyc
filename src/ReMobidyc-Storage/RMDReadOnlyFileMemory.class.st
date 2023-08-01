@@ -13,6 +13,13 @@ RMDReadOnlyFileMemory >> animats [
 	^ animats ifNil: [ animats := self readAnimatsForTime: time ]
 ]
 
+{ #category : #private }
+RMDReadOnlyFileMemory >> creationTimes [
+
+	^ creationTimes ifNil: [
+		  creationTimes := self readCreationTimesForTime: time ]
+]
+
 { #category : #timing }
 RMDReadOnlyFileMemory >> fastSunrise [
 
@@ -128,6 +135,10 @@ RMDReadOnlyFileMemory >> writeAllocation [
 
 { #category : #'accessing-storage' }
 RMDReadOnlyFileMemory >> writeAnimats: aDictionary forTime: anInteger [
+]
+
+{ #category : #'accessing-storage' }
+RMDReadOnlyFileMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }

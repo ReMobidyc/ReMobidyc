@@ -7,7 +7,8 @@ Class {
 		'stagesStorage',
 		'seedsStorage',
 		'stageLinksStorage',
-		'reproductionLinksStorage'
+		'reproductionLinksStorage',
+		'creationTimesStorage'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -53,7 +54,13 @@ RMDOnMemory >> changeStorageCapacityTo: anInteger [
 		                            (anInteger min:
 			                             reproductionLinksStorage size)
 		                            with: reproductionLinksStorage
-		                            startingAt: 1
+		                            startingAt: 1.
+	creationTimesStorage := (Array new: anInteger)
+		                        replaceFrom: 1
+		                        to:
+		                        (anInteger min: creationTimesStorage size)
+		                        with: creationTimesStorage
+		                        startingAt: 1
 ]
 
 { #category : #private }
@@ -75,7 +82,8 @@ RMDOnMemory >> initialize [
 	stagesStorage := Array new: 1024.
 	seedsStorage := Array new: 1024.
 	stageLinksStorage := Array new: 1024.
-	reproductionLinksStorage := Array new: 1024
+	reproductionLinksStorage := Array new: 1024.
+	creationTimesStorage := Array new: 1024
 ]
 
 { #category : #accessing }
@@ -91,6 +99,16 @@ RMDOnMemory >> readAnimatsForTime: anInteger [
 		self changeStorageCapacityTo: anInteger + 1024 ].
 	^ (animatsStorage at: anInteger + 1 ifAbsent: [ nil ])
 		  ifNotNil: [ :dict | self deepCopyAnimats: dict ]
+		  ifNil: [ Dictionary new ]
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> readCreationTimesForTime: anInteger [
+
+	anInteger >= creationTimesStorage size ifTrue: [
+		self changeStorageCapacityTo: anInteger + 1024 ].
+	^ (creationTimesStorage at: anInteger + 1 ifAbsent: [ nil ])
+		  ifNotNil: [ :dict | dict copy ]
 		  ifNil: [ Dictionary new ]
 ]
 
@@ -141,6 +159,14 @@ RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
 	^ animatsStorage
 		  at: anInteger + 1
 		  put: (self deepCopyAnimats: aDictionary)
+]
+
+{ #category : #'accessing-storage' }
+RMDOnMemory >> writeCreationTimes: aDictionary forTime: anInteger [
+
+	anInteger >= creationTimesStorage size ifTrue: [
+		self changeStorageCapacityTo: anInteger + 1024 ].
+	^ creationTimesStorage at: anInteger + 1 put: aDictionary copy
 ]
 
 { #category : #'accessing-storage' }
