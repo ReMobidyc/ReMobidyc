@@ -39,18 +39,19 @@ RMDVariabilityPresenter >> initializePresenters [
 	seedOrMultiplicityDropList := self newDropList
 		                              disable;
 		                              items: #( seed multiplicity );
-		                              display: [ :symbol | 
+		                              display: [ :symbol |
 			                              symbol = #seed
 				                              ifTrue: [ 'reproduce random' ]
 				                              ifFalse: [ 'multiple runs' ] ];
-		                              whenSelectedItemChangedDo: [ 
+		                              whenSelectedItemChangedDo: [
 			                              self seedOrMultiplicityChanged ];
 		                              yourself.
 	naturalNumberField := self newNumberInput
 		                      disable;
 		                      beInteger;
+		                      bePositive;
 		                      number: 1;
-		                      whenNumberChangedDo: [ 
+		                      whenNumberChangedDo: [
 			                      self naturalNumberChanged ];
 		                      yourself.
 	metaParameterSequencePresenters := #(  )

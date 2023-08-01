@@ -10,6 +10,7 @@ Class {
 		'nextAvailableSlot',
 		'stageLinks',
 		'reproductionLinks',
+		'creationTimes',
 		'world',
 		'animats',
 		'animatsInPatch',
@@ -157,33 +158,54 @@ RMDMemory >> at: anInteger put: aNumber [
 { #category : #allocating }
 RMDMemory >> commitIns [
 
-	ins keysAndValuesDo: [ :animatName :individuals | 
-		(self animats at: animatName ifAbsentPut: [ Set new: 1024 ]) 
-			addAll: individuals ].
+	ins keysAndValuesDo: [ :animatName :individuals |
+		(self animats at: animatName ifAbsentPut: [ Set new: 1024 ])
+			addAll: individuals.
+		individuals do: [ :individual |
+			creationTimes at: individual put: time + 1 ] ].
 	ins removeAll
 ]
 
 { #category : #allocating }
 RMDMemory >> commitOuts [
 
-	self animats keysAndValuesDo: [ :animatName :individuals | 
-		individuals asArray do: [ :individual | 
-			(outs includes: individual) ifTrue: [ 
+	self animats keysAndValuesDo: [ :animatName :individuals |
+		individuals asArray do: [ :individual |
+			(outs includes: individual) ifTrue: [
 				individuals remove: individual ifAbsent: [  ].
 				self seeds removeKey: individual ifAbsent: [  ].
 				self stageLinks removeKey: individual ifAbsent: [  ].
-				self reproductionLinks removeKey: individual ifAbsent: [  ] ] ].
-		individuals size * 10 < individuals capacity ifTrue: [ 
+				self reproductionLinks removeKey: individual ifAbsent: [  ].
+				self creationTimes removeKey: individual ifAbsent: [  ] ] ].
+		individuals size * 10 < individuals capacity ifTrue: [
 			individuals compact ] ].
 	outs size * 10 < outs capacity
 		ifTrue: [ outs := Set new: outs size * 4 // 3 + 2 ]
 		ifFalse: [ outs removeAll ].
-	self seeds size * 10 < self seeds capacity ifTrue: [ 
+	self seeds size * 10 < self seeds capacity ifTrue: [
 		self seeds compact ].
-	self stageLinks size * 10 < self stageLinks capacity ifTrue: [ 
+	self stageLinks size * 10 < self stageLinks capacity ifTrue: [
 		self stageLinks compact ].
-	self reproductionLinks size * 10 < self reproductionLinks capacity 
+	self reproductionLinks size * 10 < self reproductionLinks capacity
 		ifTrue: [ self reproductionLinks compact ]
+]
+
+{ #category : #'accessing-creation times' }
+RMDMemory >> creationTimeAt: anInteger [
+
+	^ self creationTimeAt: anInteger ifAbsent: [ nil ]
+]
+
+{ #category : #'accessing-creation times' }
+RMDMemory >> creationTimeAt: anInteger ifAbsent: errorBlock [
+
+	^ creationTimes at: anInteger ifAbsent: errorBlock
+]
+
+{ #category : #private }
+RMDMemory >> creationTimes [
+
+	^ creationTimes
 ]
 
 { #category : #'accessing-individuals' }
@@ -245,6 +267,7 @@ RMDMemory >> initialize [
 	patch := nil.
 	stageLinks := Dictionary new.
 	reproductionLinks := Dictionary new.
+	creationTimes := Dictionary new.
 	animats := Dictionary new.
 	seeds := Dictionary new.
 	ins := Dictionary new.
@@ -450,6 +473,12 @@ RMDMemory >> readAnimatsForTime: anInteger [
 ]
 
 { #category : #'accessing-storage' }
+RMDMemory >> readCreationTimesForTime: anInteger [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
 RMDMemory >> readReproductionLinksForTime: anInteger [
 
 	^ self subclassResponsibility
@@ -575,6 +604,7 @@ RMDMemory >> sunrise [
 	seeds := self readSeedsForTime: time.
 	stageLinks := self readStageLinksForTime: time.
 	reproductionLinks := self readReproductionLinksForTime: time.
+	creationTimes := self readCreationTimesForTime: time.
 	animatsInPatch := nil
 ]
 
@@ -584,22 +614,23 @@ RMDMemory >> sunset [
 	self
 		commitOuts;
 		commitIns.
-	self nextDeltas keysAndValuesDo: [ :id :delta | 
+	self nextDeltas keysAndValuesDo: [ :id :delta |
 		| nextValue |
 		nextValue := self nextValues at: id ifAbsent: [ self values at: id ].
 		nextValue ifNotNil: [ self nextValues at: id put: nextValue + delta ] ].
-	self nextValues keysAndValuesRemove: [ :id :value | 
-		value isNil and: [ 
+	self nextValues keysAndValuesRemove: [ :id :value |
+		value isNil and: [
 			self nextDeltas removeKey: id ifAbsent: [  ].
 			true ] ].
-	latestTime = time ifTrue: [ 
+	latestTime = time ifTrue: [
 		self writeValues: self nextValues forTime: time + 1.
 		self writeAnimats: self animats forTime: time + 1.
 		self writeSeeds: self seeds forTime: time + 1.
 		self
 			writeReproductionLinks: self reproductionLinks
 			forTime: time + 1.
-		self writeStageLinks: self stageLinks forTime: time + 1 ]
+		self writeStageLinks: self stageLinks forTime: time + 1.
+		self writeCreationTimes: self creationTimes forTime: time + 1 ]
 ]
 
 { #category : #timing }
@@ -652,6 +683,12 @@ RMDMemory >> worldDo: aBlock [
 
 { #category : #'accessing-storage' }
 RMDMemory >> writeAnimats: aDictionary forTime: anInteger [
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing-storage' }
+RMDMemory >> writeCreationTimes: aDictionary forTime: anInteger [
+
 	^ self subclassResponsibility
 ]
 

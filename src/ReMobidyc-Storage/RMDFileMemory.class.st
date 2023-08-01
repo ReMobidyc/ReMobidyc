@@ -112,6 +112,11 @@ RMDFileMemory >> basePath: aFileReference [
 		initializeAllocation
 ]
 
+{ #category : #'accessing-creation times' }
+RMDFileMemory >> creationTimesFileBasename [
+	^ 'creationtime.raw'
+]
+
 { #category : #defaults }
 RMDFileMemory >> defaultDigitsForTime [
 	^ 6
@@ -289,6 +294,21 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 			len timesRepeat: [ ids add: stream uint32 ].
 			vals at: animat put: ids ].
 		^ vals ]
+]
+
+{ #category : #'accessing-creation times' }
+RMDFileMemory >> readCreationTimesForTime: anInteger [
+
+	| ref |
+	ref := (self directoryForTime: anInteger)
+	       / self creationTimesFileBasename.
+	ref exists ifFalse: [ ^ Dictionary new ].
+	ref binaryReadStreamDo: [ :stream |
+		| params |
+		params := Dictionary new.
+		[ stream atEnd ] whileFalse: [
+			params at: stream uint32 put: stream uint32 ].
+		^ params ]
 ]
 
 { #category : #'accessing-meta parameters' }
@@ -510,6 +530,22 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 				stream nextPutAll: utf8animat.
 				stream uint32: individuals size.
 				individuals do: [ :id | stream uint32: id ] ].
+			stream close ] ]
+]
+
+{ #category : #'accessing-creation times' }
+RMDFileMemory >> writeCreationTimes: aDictionary forTime: anInteger [
+
+	| ref |
+	ref := (self directoryForTime: anInteger) ensureCreateDirectory
+	       / self creationTimesFileBasename.
+	self writeCritical: [
+		ref binaryWriteStreamDo: [ :stream |
+			stream truncate.
+			aDictionary keysAndValuesDo: [ :key :value |
+				stream
+					uint32: key;
+					uint32: value ].
 			stream close ] ]
 ]
 
