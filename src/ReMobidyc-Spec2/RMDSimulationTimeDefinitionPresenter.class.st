@@ -45,15 +45,16 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 	super initializePresenters.
 	durationField := self newNumberInput
 		                 beFloat;
+		                 bePositive;
 		                 autoAccept: true;
-		                 whenLastValidNumberChangedDo: [ :val | 
-			                 node ifNotNil: [ 
+		                 whenLastValidNumberChangedDo: [ :val |
+			                 node ifNotNil: [
 					                 node duration: (RMDLiteralNode
 								                  literal: val printString
 								                  unit: durationUnitDropList selectedItem) ] ];
 		                 yourself.
 	durationUnitDropList := self newDropList
-		                        items: { 
+		                        items: {
 				                        RMDUnit year.
 				                        RMDUnit month.
 				                        RMDUnit week.
@@ -62,8 +63,8 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 				                        RMDUnit minute.
 				                        RMDUnit second };
 		                        selectIndex: 4;
-		                        whenSelectedItemChangedDo: [ :newUnit | 
-			                        node ifNotNil: [ 
+		                        whenSelectedItemChangedDo: [ :newUnit |
+			                        node ifNotNil: [
 					                        node duration: (RMDLiteralNode
 								                         literal:
 									                         (newUnit fromSI:
@@ -74,15 +75,16 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 		                        yourself.
 	stepField := self newNumberInput
 		             beFloat;
+		             bePositive;
 		             autoAccept: true;
-		             whenLastValidNumberChangedDo: [ :val | 
-			             node ifNotNil: [ 
+		             whenLastValidNumberChangedDo: [ :val |
+			             node ifNotNil: [
 					             node step: (RMDLiteralNode
 								              literal: val printString
 								              unit: stepUnitDropList selectedItem) ] ];
 		             yourself.
 	stepUnitDropList := self newDropList
-		                    items: { 
+		                    items: {
 				                    RMDUnit year.
 				                    RMDUnit month.
 				                    RMDUnit week.
@@ -92,8 +94,8 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 				                    RMDUnit second.
 				                    RMDUnit msec };
 		                    selectIndex: 4;
-		                    whenSelectedItemChangedDo: [ :newUnit | 
-			                    node ifNotNil: [ 
+		                    whenSelectedItemChangedDo: [ :newUnit |
+			                    node ifNotNil: [
 					                    node step: (RMDLiteralNode
 								                     literal:
 									                     (newUnit fromSI: node step numeric)

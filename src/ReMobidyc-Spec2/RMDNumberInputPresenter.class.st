@@ -5,7 +5,9 @@ Class {
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
 		'#number => ObservableSlot',
-		'#lastValidNumber => ObservableSlot'
+		'#lastValidNumber => ObservableSlot',
+		'#isNonZero',
+		'#isNonNegative'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -16,15 +18,48 @@ RMDNumberInputPresenter >> acceptNumber: aNumber [
 	number := self isInteger
 		          ifTrue: [ aNumber asInteger ]
 		          ifFalse: [ aNumber asFloat ].
-	lastValidNumber := number.
-	self beOk
+	(self isValidNumber: number)
+		ifTrue: [
+			lastValidNumber := number.
+			self beOk ]
+		ifFalse: [ self beError ]
+]
+
+{ #category : #api }
+RMDNumberInputPresenter >> beNonNegative [
+
+	isNonNegative := true
+]
+
+{ #category : #api }
+RMDNumberInputPresenter >> beNonZero [
+
+	isNonZero := true
+]
+
+{ #category : #api }
+RMDNumberInputPresenter >> bePositive [
+
+	isNonZero := true.
+	isNonNegative := true
 ]
 
 { #category : #initialization }
 RMDNumberInputPresenter >> initialize [
 
 	super initialize.
+	isNonZero := false.
+	isNonNegative := false.
 	self whenSubmitDo: [:t | self prettyPrint ]
+]
+
+{ #category : #private }
+RMDNumberInputPresenter >> isValidNumber: aNumber [
+
+	(aNumber isKindOf: self numberType) ifFalse: [ ^ false ].
+	(isNonZero and: [ aNumber = 0 ]) ifTrue: [ ^ false ].
+	(isNonNegative and: [ aNumber < 0 ]) ifTrue: [ ^ false ].
+	^ true
 ]
 
 { #category : #api }
@@ -40,12 +75,15 @@ RMDNumberInputPresenter >> number [
 { #category : #api }
 RMDNumberInputPresenter >> number: aNumber [
 
-	number := aNumber ifNil: [ 0 ] ifNotNil: [ 
+	number := aNumber ifNil: [ 0 ] ifNotNil: [
 		          self isInteger
 			          ifTrue: [ aNumber asInteger ]
 			          ifFalse: [ aNumber asFloat ] ].
-	lastValidNumber := number.
-	self beOk.
+	(self isValidNumber: number)
+		ifTrue: [
+			lastValidNumber := number.
+			self beOk ]
+		ifFalse: [ self beError ].
 	super text: aNumber printString
 ]
 
@@ -58,14 +96,17 @@ RMDNumberInputPresenter >> prettyPrint [
 { #category : #api }
 RMDNumberInputPresenter >> text: aString [
 
-	[ 
+	[
 	number := self isInteger
 		          ifTrue: [ aString asNumber asInteger ]
 		          ifFalse: [ aString asNumber asFloat ].
-	self beOk.
-	lastValidNumber := number ]
+	(self isValidNumber: number)
+		ifTrue: [
+			self beOk.
+			lastValidNumber := number ]
+		ifFalse: [ self beError ] ]
 		on: Error
-		do: [ :ex | 
+		do: [ :ex |
 			self beError.
 			number := nil ].
 	^ super text: aString
