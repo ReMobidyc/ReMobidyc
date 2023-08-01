@@ -187,14 +187,14 @@ RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 { #category : #accessing }
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 
-	^ action ifNil: [ 
+	^ action ifNil: [
 		  action := ((aRMDSimulationModel
 			              actionDefinitionAt: actionIdentifier
-			              ifAbsent: [ 
-				              ^ (RMDUnresolvedReferenceError on: self) signal ])
-			             copy
+			              ifAbsent: [
+				              ^ (RMDUndefinedActionError on: self) signal ]) copy
 			             taskGuard: guard;
-			             copyReplace: (parameterInstantiations collect: [ :bind | 
+			             copyReplace:
+				             (parameterInstantiations collect: [ :bind |
 						              bind placeholder -> bind replacement ])
 					             asDictionary)
 			            identifier: verbIdentifier;

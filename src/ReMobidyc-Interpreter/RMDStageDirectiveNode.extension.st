@@ -10,14 +10,14 @@ RMDStageDirectiveNode >> evalIn: aRMDInterpreter [
 RMDStageDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| animatDefinition |
-	animatIdentifier ifNil: [ 
-		^ (RMDUnresolvedReferenceError on: self) signal ].
+	animatIdentifier ifNil: [
+		^ (RMDUndefinedAnimatError on: self) signal ].
 	animatDefinition := aRMDInterpreter simulationModel
 		                    animatDefinitionAt: animatIdentifier
-		                    ifAbsent: [ 
+		                    ifAbsent: [
 		                    ^ RMDUndefinedAnimatError on: animatIdentifier ].
 	animatDefinition species
-	= aRMDInterpreter context subjectDefinition species ifFalse: [ 
+	= aRMDInterpreter context subjectDefinition species ifFalse: [
 		^ RMDSpeciesError
 			  on: self
 			  animatDefinition1: aRMDInterpreter context subjectDefinition

@@ -69,18 +69,18 @@ RMDLiteralNode >> numericFrom: aString [
 
 	| sign decimal |
 	aString first = $-
-		ifTrue: [ 
+		ifTrue: [
 			sign := -1.
 			decimal := aString copyWithoutFirst trim ]
-		ifFalse: [ 
+		ifFalse: [
 			sign := 1.
 			decimal := aString trim ].
 	^ sign * (decimal first isDigit
 		   ifTrue: [ decimal asNumber asFloat ]
-		   ifFalse: [ 
+		   ifFalse: [
 			   decimal = 'π'
 				   ifTrue: [ Float pi ]
-				   ifFalse: [ (RMDUnresolvedReferenceError on: self) signal ] ])
+				   ifFalse: [ (RMDUndefinedLiteralError on: self) signal ] ])
 ]
 
 { #category : #copying }

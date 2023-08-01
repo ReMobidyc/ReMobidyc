@@ -3,8 +3,8 @@ Extension { #name : #RMDNewDirectiveNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 
-	animatIdentifier ifNil: [ 
-		^ (RMDUnresolvedReferenceError on: self) signal ].
+	animatIdentifier ifNil: [
+		^ (RMDUndefinedAnimatError on: self) signal ].
 
 	aRMDInterpreter newIndividual: animatIdentifier quantity: (quantity
 			 ifNil: [ 1 ]

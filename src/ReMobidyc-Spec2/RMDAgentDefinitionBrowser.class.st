@@ -818,11 +818,13 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateSourceText [
 
-	self simulationModel ifNotNil: [ :model | 
+	self simulationModel ifNotNil: [ :model |
 		taskList selection selectedItem
-			ifNotNil: [ :taskDefinition | 
+			ifNotNil: [ :taskDefinition |
 				sourceText text:
-					(taskDefinition actionWith: model) printString asText ]
+					([ (taskDefinition actionWith: model) printString asText ]
+						 on: RMDUnresolvedReferenceError
+						 do: [ :ex | '' ]) ]
 			ifNil: [ sourceText text: '' ] ]
 ]
 

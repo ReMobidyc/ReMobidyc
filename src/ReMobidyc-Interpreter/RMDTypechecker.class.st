@@ -23,8 +23,7 @@ RMDTypechecker >> changeStage: animatString [
 	| animatDefinition |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
-		                    ifAbsent: [ 
-		                    ^ RMDUnresolvedReferenceError on: self ].
+		                    ifAbsent: [ ^ RMDUndefinedAnimatError on: self ].
 	context newDefinition: animatDefinition.
 	^ animatString
 ]
@@ -62,8 +61,7 @@ RMDTypechecker >> newIndividual: animatString [
 	| animatDefinition |
 	animatDefinition := simulationModel
 		                    animatDefinitionAt: animatString
-		                    ifAbsent: [ 
-		                    ^ RMDUnresolvedReferenceError on: self ].
+		                    ifAbsent: [ ^ RMDUndefinedAnimatError on: self ].
 	context newDefinition: animatDefinition.
 	^ animatString
 ]
