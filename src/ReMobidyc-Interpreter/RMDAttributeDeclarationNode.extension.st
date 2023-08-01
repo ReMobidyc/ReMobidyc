@@ -3,7 +3,7 @@ Extension { #name : #RMDAttributeDeclarationNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 
-	initializerExpression ifNotNil: [ 
+	initializerExpression ifNotNil: [
 		aRMDInterpreter
 			writeNext: ([ initializerExpression evalIn: aRMDInterpreter ]
 					 on: RMDSemanticError
@@ -11,7 +11,7 @@ RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 			to: aRMDInterpreter context subject
 				+ (aRMDInterpreter context subjectDefinition
 						 offsetAt: identifier
-						 ifAbsent: [ ^ RMDUnresolvedReferenceError signal: self ]) ]
+						 ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ]) ]
 ]
 
 { #category : #'*ReMobidyc-Interpreter' }

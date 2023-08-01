@@ -657,12 +657,12 @@ RMDTaskDefinitionBrowser >> updateRangeField [
 { #category : #updating }
 RMDTaskDefinitionBrowser >> updateSourceText [
 
-	simulationModel ifNotNil: [ 
-		self taskDefinition ifNotNil: [ :taskDefinition | 
-			sourceText text: ([ 
+	simulationModel ifNotNil: [
+		self taskDefinition ifNotNil: [ :taskDefinition |
+			sourceText text: ([
 				 (taskDefinitionNode actionWith: simulationModel) printString
 					 asText ]
-					 on: RMDUndefinedAnimatError
+					 on: RMDUnresolvedReferenceError
 					 do: [ :ex | String new ]) ] ]
 ]
 
