@@ -10,13 +10,14 @@ Class {
 { #category : #running }
 RMDDataSourceTest >> setUp [
 
-	dataSource := RMDDataSource new.
-	dataSource dataFrame: ((DataFrame withRows:
-				  #( #( 0.0 30.0 30.0 30.0 ) #( 1.0 30.1 30.1 30.1 )
-				     #( 2.0 30.2 30.2 30.2 ) #( 4.0 30.4 30.4 30.4 )
-				     #( 5.0 30.5 30.5 30.5 ) ))
-			 columnNames: #( 'time[s]' 't1[℃]' 't2[℃] nearest' 't3[℃] linear' );
-			 yourself)
+	dataSource := RMDDataSource dataFrame: ((DataFrame withRows:
+				                #( #( 0.0 30.0 30.0 30.0 ) #( 1.0 30.1 30.1 30.1 )
+				                   #( 2.0 30.2 30.2 30.2 ) #( 4.0 30.4 30.4 30.4 )
+				                   #( 5.0 30.5 30.5 30.5 ) ))
+			               columnNames:
+				               #( 'time[s]' 't1[℃]' 't2[℃] nearest'
+				                  't3[℃] linear' );
+			               yourself)
 ]
 
 { #category : #'tests-interpolation' }

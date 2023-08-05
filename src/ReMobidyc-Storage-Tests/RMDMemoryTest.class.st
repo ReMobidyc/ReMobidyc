@@ -164,6 +164,64 @@ RMDMemoryTest >> testEastOfDo [
 ]
 
 { #category : #tests }
+RMDMemoryTest >> testLoadInputsIntoNextAt [
+
+	| interpreter goatDef oldGoats newGoats |
+	interpreter := RMDInterpreter new.
+	interpreter setMemory: memory.
+	interpreter
+		load: ((parser worldDefinition end parse: 'World with
+	temperature [DegreeC].')
+				 dataSource: (RMDDataSource dataFrame: (DataFrame
+								   withRows: #( #( 0.0 30.0 ) #( 10.0 30.1 ) )
+								   columnNames: #( 'time[s]' 'temperature[DegreeC] linear' )));
+				 yourself);
+		load: ((parser patchDefinition end parse: 'Patch with
+	grass [m].')
+				 dataSource: (RMDDataSource dataFrame: (DataFrame
+								   withRows: #( #( 0.0 1.0 ) #( 10.0 0.0 ) )
+								   columnNames: #( 'time[s]' 'grass[m] linear' )));
+				 yourself);
+		load:
+			(goatDef := (parser animatDefinition parse: 'Goat is Animat with
+	body [kg].')
+				            dataSource: (RMDDataSource dataFrame: (DataFrame
+								              withRows: #( #( 0.0 100.0 ) #( 10.0 200.0 ) )
+								              columnNames: #( 'time[s]' 'body[kg] linear' )));
+				            yourself);
+		load: (parser simulationDefinition parse: 'Simulation with
+	during 10 [s] by 2 [s]
+	World
+	5 x 6 of 10 [m] Patch
+	2 Goat.').
+	interpreter setupSimulation.
+	self assert: (memory at: memory world) closeTo: 30.0.
+	memory patchesDo: [ :patch |
+		self assert: (memory at: patch) closeTo: 1.0 ].
+	oldGoats := memory animatsOf: 'Goat'.
+	oldGoats do: [ :goat |
+		self assert: (memory at: goat + 2) closeTo: 100.0 ].
+	newGoats := Array streamContents: [ :stream |
+		            oldGoats do: [ :goat |
+			            stream nextPut:
+				            (memory reproduceAnimat: goatDef with: goat) ] ].
+	memory tick.
+	self assert: (memory at: memory world) closeTo: 30.02.
+	memory patchesDo: [ :patch |
+		self assert: (memory at: patch) closeTo: 0.8 ].
+	oldGoats do: [ :goat |
+		self assert: (memory at: goat + 2) closeTo: 120.0 ].
+	newGoats do: [ :goat |
+		self assert: (memory at: goat + 2) closeTo: 100.0 ].
+	memory time: 0.
+	self assert: (memory at: memory world) closeTo: 30.0.
+	memory patchesDo: [ :patch |
+		self assert: (memory at: patch) closeTo: 1.0 ].
+	oldGoats do: [ :goat |
+		self assert: (memory at: goat + 2) closeTo: 100.0 ]
+]
+
+{ #category : #tests }
 RMDMemoryTest >> testNextAt [
 	memory nextAt: 1 put: 2.
 	self assert: (memory nextAt: 1) equals: 2.

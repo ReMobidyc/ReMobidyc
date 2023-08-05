@@ -60,6 +60,52 @@ RMDInterpreterTest >> testAddLibrary [
 ]
 
 { #category : #tests }
+RMDInterpreterTest >> testLoadDataSources [
+
+	| parser memory inputs |
+	parser := RMDGrammar new.
+	memory := interpreter memory.
+	interpreter
+		load: ((parser worldDefinition end parse: 'World with
+	temperature [DegreeC].')
+				 dataSource: (RMDDataSource dataFrame: (DataFrame
+								   withRows: #( #( 0.0 30.0 ) #( 10.0 30.1 ) )
+								   columnNames: #( 'time[s]' 'temperature[DegreeC] linear' )));
+				 yourself);
+		load: ((parser patchDefinition end parse: 'Patch with
+	grass [m].')
+				 dataSource: (RMDDataSource dataFrame: (DataFrame
+								   withRows: #( #( 0.0 1.0 ) #( 10.0 0.0 ) )
+								   columnNames: #( 'time[s]' 'grass[m] linear' )));
+				 yourself);
+		load: ((parser animatDefinition parse: 'Goat is Animat with
+	body [kg].')
+				 dataSource: (RMDDataSource dataFrame: (DataFrame
+								   withRows: #( #( 0.0 100.0 ) #( 10.0 200.0 ) )
+								   columnNames: #( 'time[s]' 'body[kg] linear' )));
+				 yourself);
+		load: (parser simulationDefinition parse: 'Simulation with
+	during 10 [s] by 2 [s]
+	World
+	5 x 6 of 10 [m] Patch
+	10 Goat.').
+	interpreter loadDataSources.
+	inputs := memory instVarNamed: 'inputs'.
+	self
+		assert: inputs keys asSet
+		equals: #( 'World' 'Patch' 'Goat' ) asSet.
+	self
+		assert: (((inputs at: 'World') at: 0) collect: [ :n | n round: 3 ])
+		equals: #( 30.0 30.02 30.04 30.06 30.08 30.1 ).
+	self
+		assert: (((inputs at: 'Patch') at: 0) collect: [ :n | n round: 3 ])
+		equals: #( 1.0 0.8 0.6 0.4 0.2 0.0 ).
+	self
+		assert: (((inputs at: 'Goat') at: 2) collect: [ :n | n round: 3 ])
+		equals: #( 100.0 120.0 140.0 160.0 180.0 200.0 )
+]
+
+{ #category : #tests }
 RMDInterpreterTest >> testReadUtilityIfAbsent [
 	| parser source |
 	parser := RMDGrammar new.

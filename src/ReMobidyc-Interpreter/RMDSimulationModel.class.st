@@ -1259,18 +1259,6 @@ RMDSimulationModel >> worldArea [
 	^ self patchArea * self patchXDivisions * self patchYDivisions
 ]
 
-{ #category : #'accessing - data source' }
-RMDSimulationModel >> worldDataSource [
-
-	^ self worldDefinition ifNotNil: #dataSource
-]
-
-{ #category : #'accessing - data source' }
-RMDSimulationModel >> worldDataSource: aRMDDataSource [
-
-	self worldDefinition dataSource: aRMDDataSource
-]
-
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> worldDefinition [
 	^ worldDefinition

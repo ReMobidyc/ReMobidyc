@@ -50,15 +50,16 @@ RMDMemory >> addInputForAgentDefinition: aRMDAgentDefinitionNode duration: aNumb
 					  put:
 					  (Array new:
 						   (aNumber + (anotherNumber / 2.0) / anotherNumber) rounded) ] ].
-		  0 to: (aNumber + (anotherNumber / 2.0) / anotherNumber) rounded
-			  do: [ :t |
-				  | data |
-				  data := dataSource atTime: t * anotherNumber.
-				  data keysAndValuesDo: [ :attribute :value |
-					  (aRMDAgentDefinitionNode
-						   attributeOffsetAt: attribute
-						   ifAbsent: [ nil ]) ifNotNil: [ :offset |
-						  (input at: offset) at: t + 1 put: value ] ] ].
+		  0 to:
+			  (aNumber + (anotherNumber / 2.0) / anotherNumber) rounded - 1 do: [
+			  :t |
+			  | data |
+			  data := dataSource atTime: t * anotherNumber.
+			  data keysAndValuesDo: [ :attribute :value |
+				  (aRMDAgentDefinitionNode
+					   attributeOffsetAt: attribute
+					   ifAbsent: [ nil ]) ifNotNil: [ :offset |
+					  (input at: offset) at: t + 1 put: value ] ] ].
 		  inputs at: aRMDAgentDefinitionNode name put: input.
 		  input ]
 ]
