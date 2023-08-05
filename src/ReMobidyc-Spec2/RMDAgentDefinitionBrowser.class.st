@@ -10,6 +10,9 @@ Class {
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
 		'editAttributeButton',
+		'addDataSourceButton',
+		'removeDataSourceButton',
+		'openDataSourceButton',
 		'utilityList',
 		'addUtilityButton',
 		'removeUtilityButton',
@@ -47,6 +50,13 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 								     add: #moveUpAttributeButton width: self buttonHeight;
 								     add: #moveDownAttributeButton width: self buttonHeight;
 								     add: #editAttributeButton width: self buttonHeight;
+								     yourself)
+						    height: self buttonHeight;
+						    add: 'Data source' expand: false;
+						    add: (SpBoxLayout newHorizontal
+								     add: #addDataSourceButton width: self buttonHeight;
+								     add: #removeDataSourceButton width: self buttonHeight;
+								     add: #openDataSourceButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
 						    yourself);
@@ -118,6 +128,16 @@ RMDAgentDefinitionBrowser >> addAttribute [
 					(definition attributeDeclarations copyWith: attributeNode).
 				self addInitializerWithAttribute: attributeNode animat: animat.
 				self updateAttributeList ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> addDataSource [
+
+	RMDRepositoryDataBrowser openToLoadDo: [ :fileReference |
+		| importer |
+		(importer := RMDCSVImporter on: fileReference) openDialog okAction: [
+			self agentDefinition dataSource: importer outputDataSource.
+			self updateDataSourceButtons ] ]
 ]
 
 { #category : #private }
@@ -375,6 +395,24 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			                       'Edit the definition of the selected attribute';
 		                       disable;
 		                       yourself.
+	openDataSourceButton := self newButton
+		                        icon: self tabularIcon;
+		                        action: [ self openDataSource ];
+		                        help: 'Preview data source';
+		                        disable;
+		                        yourself.
+	addDataSourceButton := self newButton
+		                       icon: self addIcon;
+		                       action: [ self addDataSource ];
+		                       help: 'Add data source';
+		                       enable;
+		                       yourself.
+	removeDataSourceButton := self newButton
+		                          icon: self removeIcon;
+		                          action: [ self removeDataSource ];
+		                          help: 'Remove data source';
+		                          disable;
+		                          yourself.
 	utilityList := self newTable
 		               beSingleSelection;
 		               beResizable;
@@ -670,6 +708,20 @@ RMDAgentDefinitionBrowser >> newSourceWith: aPP2Node [
 ]
 
 { #category : #operations }
+RMDAgentDefinitionBrowser >> openDataSource [
+
+	(self agentDefinition ifNotNil: #dataSource) ifNotNil: [ :dataSource |
+		dataSource originalDataFrame ifNotNil: [ :dataFrame |
+			(self newTable
+				 columns: (dataFrame columnNames collect: [ :name |
+							  SpStringTableColumn
+								  title: name
+								  evaluated: [ :row | row at: name ] ]);
+				 items: dataFrame rows;
+				 openDialog) title: self agentDefinition name , ' Data Source' ] ]
+]
+
+{ #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
@@ -684,6 +736,16 @@ RMDAgentDefinitionBrowser >> removeAttribute [
 						(definitionNode attributeDeclarations copyWithout: attributeNode).
 					self removeInitializerWithAttribute: attributeNode animat: animat.
 					self updateAttributeList ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> removeDataSource [
+
+	(UIManager default
+		 confirm: 'Remove the data source?'
+		 label: 'Confirmation') ifTrue: [
+		self agentDefinition dataSource: nil.
+		self nodeChanged ]
 ]
 
 { #category : #private }
@@ -740,7 +802,8 @@ RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 	modeler := aRMDSimulationModeler.
 	self updateAttributeList.
 	self updateRendererList.
-	self updateTaskList
+	self updateTaskList.
+	self updateDataSourceButtons
 ]
 
 { #category : #accessing }
@@ -802,6 +865,16 @@ RMDAgentDefinitionBrowser >> updateAttributeList [
 		attributeList items: definition attributeDeclarations.
 		definition complementUtilityDefinitions ].
 	self updateUtilityList
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> updateDataSourceButtons [
+
+	| hasDataSource |
+	hasDataSource := self agentDefinition dataSource notNil.
+	addDataSourceButton enabled: hasDataSource not.
+	removeDataSourceButton enabled: hasDataSource.
+	openDataSourceButton enabled: hasDataSource
 ]
 
 { #category : #updating }
