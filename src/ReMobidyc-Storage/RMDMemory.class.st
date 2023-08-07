@@ -23,7 +23,8 @@ Class {
 		'yPatches',
 		'runId',
 		'randomSeed',
-		'metaparameters'
+		'metaparameters',
+		'inputs'
 	],
 	#category : #'ReMobidyc-Storage'
 }
@@ -32,6 +33,35 @@ Class {
 RMDMemory class >> isAbstract [
 
 	^ self == RMDMemory
+]
+
+{ #category : #'accessing-inputs' }
+RMDMemory >> addInputForAgentDefinition: aRMDAgentDefinitionNode duration: aNumber timeStep: anotherNumber [
+
+	^ aRMDAgentDefinitionNode dataSource ifNotNil: [ :dataSource |
+		  | input |
+		  input := Dictionary new.
+		  (dataSource atTime: 0.0) keysDo: [ :attribute |
+			  (aRMDAgentDefinitionNode
+				   attributeOffsetAt: attribute
+				   ifAbsent: [ nil ]) ifNotNil: [ :offset |
+				  input
+					  at: offset
+					  put:
+					  (Array new:
+						   (aNumber + (anotherNumber / 2.0) / anotherNumber) rounded) ] ].
+		  0 to:
+			  (aNumber + (anotherNumber / 2.0) / anotherNumber) rounded - 1 do: [
+			  :t |
+			  | data |
+			  data := dataSource atTime: t * anotherNumber.
+			  data keysAndValuesDo: [ :attribute :value |
+				  (aRMDAgentDefinitionNode
+					   attributeOffsetAt: attribute
+					   ifAbsent: [ nil ]) ifNotNil: [ :offset |
+					  (input at: offset) at: t + 1 put: value ] ] ].
+		  inputs at: aRMDAgentDefinitionNode name put: input.
+		  input ]
 ]
 
 { #category : #allocating }
@@ -217,9 +247,10 @@ RMDMemory >> eastOf: anInteger do: aBlock [
 { #category : #timing }
 RMDMemory >> fastSunrise [
 
-	self nextValues size * 10 < nextValues capacity ifTrue: [ 
+	self nextValues size * 10 < nextValues capacity ifTrue: [
 		self nextValues compact ].
-	values := self nextValues copy.
+	values := self nextValues.
+	nextValues := values copy.
 	nextDeltas := Dictionary new.
 	animatsInPatch := nil
 ]
@@ -271,7 +302,8 @@ RMDMemory >> initialize [
 	animats := Dictionary new.
 	seeds := Dictionary new.
 	ins := Dictionary new.
-	outs := Set new: 1024
+	outs := Set new: 1024.
+	inputs := Dictionary new
 ]
 
 { #category : #testing }
@@ -288,6 +320,30 @@ RMDMemory >> latestTime [
 { #category : #accessing }
 RMDMemory >> latestTime: anInteger [
 	latestTime := anInteger
+]
+
+{ #category : #'accessing-inputs' }
+RMDMemory >> loadInputsIntoNextAt: anInteger [
+
+	inputs keysAndValuesDo: [ :agentName :dict |
+		dict keysAndValuesDo: [ :offset :timeSeries |
+			agentName = 'World'
+				ifTrue: [
+					(timeSeries at: anInteger + 1 ifAbsent: [ nil ]) ifNotNil: [
+						:value | self nextAt: world + offset put: value ] ]
+				ifFalse: [
+					agentName = 'Patch'
+						ifTrue: [
+							(timeSeries at: anInteger + 1 ifAbsent: [ nil ]) ifNotNil: [
+								:value |
+								self patchesDo: [ :p | self nextAt: p + offset put: value ] ] ]
+						ifFalse: [
+							self animatsOf: agentName do: [ :agent |
+								(timeSeries
+									 at:
+									 anInteger - (self creationTimeAt: agent ifAbsent: [ 0 ]) + 1
+									 ifAbsent: [ nil ]) ifNotNil: [ :value |
+									self nextAt: agent + offset put: value ] ] ] ] ] ]
 ]
 
 { #category : #'accessing-meta parameters' }
@@ -552,6 +608,20 @@ RMDMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInt
 	randomSeed := anotherInteger
 ]
 
+{ #category : #'accessing-storage' }
+RMDMemory >> saveSnapshot [
+
+	latestTime = time ifTrue: [
+		self writeValues: self nextValues forTime: time + 1.
+		self writeAnimats: self animats forTime: time + 1.
+		self writeSeeds: self seeds forTime: time + 1.
+		self
+			writeReproductionLinks: self reproductionLinks
+			forTime: time + 1.
+		self writeStageLinks: self stageLinks forTime: time + 1.
+		self writeCreationTimes: self creationTimes forTime: time + 1 ]
+]
+
 { #category : #'accessing-individuals' }
 RMDMemory >> seedAt: anInteger [
 
@@ -622,15 +692,8 @@ RMDMemory >> sunset [
 		value isNil and: [
 			self nextDeltas removeKey: id ifAbsent: [  ].
 			true ] ].
-	latestTime = time ifTrue: [
-		self writeValues: self nextValues forTime: time + 1.
-		self writeAnimats: self animats forTime: time + 1.
-		self writeSeeds: self seeds forTime: time + 1.
-		self
-			writeReproductionLinks: self reproductionLinks
-			forTime: time + 1.
-		self writeStageLinks: self stageLinks forTime: time + 1.
-		self writeCreationTimes: self creationTimes forTime: time + 1 ]
+	self loadInputsIntoNextAt: time + 1.
+	self saveSnapshot
 ]
 
 { #category : #timing }

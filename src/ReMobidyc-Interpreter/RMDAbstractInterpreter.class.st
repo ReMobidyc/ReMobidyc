@@ -126,9 +126,3 @@ RMDAbstractInterpreter >> withSubContext: aRMDContext do: aBlock [
 	^ [ aBlock cull: self cull: context ] ensure: [ 
 		  context := originalContext ]
 ]
-
-{ #category : #'accessing - data source' }
-RMDAbstractInterpreter >> worldDataSource [
-
-	^ simulationModel ifNotNil: #worldDataSource
-]

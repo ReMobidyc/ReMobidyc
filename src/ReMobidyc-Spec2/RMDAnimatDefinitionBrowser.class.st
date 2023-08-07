@@ -35,6 +35,13 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #editAttributeButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
+								     add: 'Data source' expand: false;
+								     add: (SpBoxLayout newHorizontal
+										      add: #addDataSourceButton width: self buttonHeight;
+										      add: #removeDataSourceButton width: self buttonHeight;
+										      add: #openDataSourceButton width: self buttonHeight;
+										      yourself)
+								     height: self buttonHeight;
 								     yourself);
 						    add: (SpBoxLayout newVertical
 								     add: 'where' expand: false;

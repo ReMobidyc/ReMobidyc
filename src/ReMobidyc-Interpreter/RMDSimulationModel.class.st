@@ -436,6 +436,19 @@ RMDSimulationModel >> exportAgents: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> exportDataSource: aFileReference [
+
+	self worldDefinition dataSource ifNotNil: [ :dataSource |
+		dataSource writeToCsv: aFileReference / 'World.csv' ].
+	self patchDefinition dataSource ifNotNil: [ :dataSource |
+		dataSource writeToCsv: aFileReference / 'Patch.csv' ].
+	self animatDefinitionsDo: [ :animatDefinition |
+		animatDefinition dataSource ifNotNil: [ :dataSource |
+			dataSource writeToCsv:
+				(aFileReference / animatDefinition identifier withExtension: 'csv') ] ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> exportIcons: aFileReference [
 
 	self removeUnusedIcons.
@@ -472,11 +485,10 @@ RMDSimulationModel >> exportModel: aFileReference [
 	self
 		exportMetadata: aFileReference / self class metadataFileName;
 		exportVariability: aFileReference / self class variabilityFileName;
-		exportWorldDataSource:
-			aFileReference / self class worldDataSourceFileName;
 		exportSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
 		exportAgents: aFileReference / self class agentsFileName;
+		exportDataSource: aFileReference;
 		exportActions: aFileReference / self class actionsFileName;
 		exportTasks: aFileReference / self class tasksFileName;
 		exportIcons:
@@ -515,13 +527,6 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 	aFileReference lfWriteStreamDo: [ :stream | 
 		renderers do: [ :renderer | 
 			renderer printOn: stream ] ]
-]
-
-{ #category : #'exporting/importing' }
-RMDSimulationModel >> exportWorldDataSource: aFileReference [
-
-	self worldDataSource ifNotNil: [ :dataSource |
-		dataSource writeToCsv: aFileReference ]
 ]
 
 { #category : #'accessing - icons' }
@@ -589,6 +594,23 @@ RMDSimulationModel >> importAgents: aFileReference [
 ]
 
 { #category : #'exporting/importing' }
+RMDSimulationModel >> importDataSource: aFileReference [
+
+	aFileReference / 'World.csv'
+		ifExists: [ :ref |
+			self worldDefinition dataSource: (RMDDataSource readFromCsv: ref) ]
+		ifAbsent: [ nil ].
+	aFileReference / 'Patch.csv'
+		ifExists: [ :ref |
+			self patchDefinition dataSource: (RMDDataSource readFromCsv: ref) ]
+		ifAbsent: [ nil ].
+	self animatDefinitionsDo: [ :animatDefinition |
+		(aFileReference / animatDefinition identifier withExtension: 'csv')
+			ifExists: [ :ref |
+				animatDefinition dataSource: (RMDDataSource readFromCsv: ref) ] ]
+]
+
+{ #category : #'exporting/importing' }
 RMDSimulationModel >> importIcons: aFileReference [
 
 	aFileReference isDirectory ifFalse: [ ^ self ].
@@ -636,9 +658,8 @@ RMDSimulationModel >> importModel: aFileReference [
 		importVariability: aFileReference / self class variabilityFileName;
 		importSimulationDefinition:
 			aFileReference / self class simulationDefinitionFileName;
-		importWorldDataSource:
-			aFileReference / self class worldDataSourceFileName;
 		importAgents: aFileReference / self class agentsFileName;
+		importDataSource: aFileReference;
 		importActions: aFileReference / self class actionsFileName;
 		importTasks: aFileReference / self class tasksFileName;
 		importIcons: aFileReference / self class iconsDirectoryName;
@@ -711,14 +732,6 @@ RMDSimulationModel >> importVisualization: aFileReference [
 			def := parser parse: source.
 			def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
 			self addRenderer: def ] ]
-]
-
-{ #category : #'exporting/importing' }
-RMDSimulationModel >> importWorldDataSource: aFileReference [
-
-	self worldDataSource: (aFileReference exists
-			 ifTrue: [ RMDDataSource readFromCsv: aFileReference ]
-			 ifFalse: [ nil ])
 ]
 
 { #category : #initialization }
@@ -1244,18 +1257,6 @@ RMDSimulationModel >> west [
 RMDSimulationModel >> worldArea [
 
 	^ self patchArea * self patchXDivisions * self patchYDivisions
-]
-
-{ #category : #'accessing - data source' }
-RMDSimulationModel >> worldDataSource [
-
-	^ simulationDefinition ifNotNil: #worldDataSource
-]
-
-{ #category : #'accessing - data source' }
-RMDSimulationModel >> worldDataSource: aRMDDataSource [
-
-	simulationDefinition worldDataSource: aRMDDataSource
 ]
 
 { #category : #'accessing - definitions' }

@@ -5,8 +5,7 @@ Class {
 		'timeDefinition',
 		'worldInitializer',
 		'patchInitializer',
-		'animatInitializers',
-		'worldDataSource'
+		'animatInitializers'
 	],
 	#category : #'ReMobidyc-Language-AST'
 }
@@ -171,18 +170,6 @@ RMDSimulationDefinitionNode >> timeDefinition: aRMDSimulationTimeDefinitionNode 
 RMDSimulationDefinitionNode >> timeStep [
 
 	^ timeDefinition step
-]
-
-{ #category : #accessing }
-RMDSimulationDefinitionNode >> worldDataSource [
-
-	^ worldDataSource
-]
-
-{ #category : #accessing }
-RMDSimulationDefinitionNode >> worldDataSource: aRMDDataSource [
-
-	worldDataSource := aRMDDataSource
 ]
 
 { #category : #accessing }

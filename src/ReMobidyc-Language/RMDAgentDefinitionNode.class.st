@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'attributeDeclarations',
 		'attributeOffsets',
-		'utilityDefinitions'
+		'utilityDefinitions',
+		'dataSource'
 	],
 	#classInstVars : [
 		'builtinAttributes'
@@ -192,6 +193,18 @@ RMDAgentDefinitionNode >> complementUtilityDefinitions [
 				                       (RMDUtilityVariableNode identifier:
 					                        identifier)
 				                       expression: RMDLiteralNode zero ])
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionNode >> dataSource [
+
+	^ dataSource
+]
+
+{ #category : #accessing }
+RMDAgentDefinitionNode >> dataSource: aRMDDataSource [
+
+	dataSource := aRMDDataSource
 ]
 
 { #category : #accessing }

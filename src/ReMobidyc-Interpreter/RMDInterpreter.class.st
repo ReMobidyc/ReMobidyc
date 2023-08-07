@@ -297,17 +297,22 @@ RMDInterpreter >> kindName [
 	^ 'interpreter'
 ]
 
-{ #category : #'accessing - data source' }
-RMDInterpreter >> loadNextValuesFromWorldDataSource [
+{ #category : #simulating }
+RMDInterpreter >> loadDataSources [
 
-	simulationModel worldDataSource ifNotNil: [ :dataSource |
-		| values world |
-		values := dataSource atTime: self time + self deltaTime.
-		world := memory world.
-		simulationModel worldDefinition ifNotNil: [ :worldDefinition |
-			values keysAndValuesDo: [ :attribute :value |
-				(worldDefinition attributeOffsetAt: attribute ifAbsent: [ nil ])
-					ifNotNil: [ :offset | self writeNext: value to: world + offset ] ] ] ]
+	memory
+		addInputForAgentDefinition: simulationModel worldDefinition
+		duration: self duration
+		timeStep: self deltaTime.
+	memory
+		addInputForAgentDefinition: simulationModel patchDefinition
+		duration: self duration
+		timeStep: self deltaTime.
+	simulationModel animatDefinitionsDo: [ :animatDefinition |
+		memory
+			addInputForAgentDefinition: animatDefinition
+			duration: self duration
+			timeStep: self deltaTime ]
 ]
 
 { #category : #private }
@@ -635,8 +640,8 @@ RMDInterpreter >> setupSimulation [
 	self critical: [
 		memory world ifNil: [
 			memory initialize.
+			self loadDataSources.
 			simulationModel worldInitializer evalIn: self.
-			self loadNextValuesFromWorldDataSource.
 			simulationModel patchInitializer evalIn: self.
 			simulationModel animatInitializersDo: [ :initializer |
 				initializer evalIn: self ] ].
@@ -698,7 +703,6 @@ RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 { #category : #timing }
 RMDInterpreter >> tick [
 
-	self loadNextValuesFromWorldDataSource.
 	memory tick
 ]
 
