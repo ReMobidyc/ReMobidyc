@@ -745,7 +745,7 @@ RMDAgentDefinitionBrowser >> removeDataSource [
 		 confirm: 'Remove the data source?'
 		 label: 'Confirmation') ifTrue: [
 		self agentDefinition dataSource: nil.
-		self nodeChanged ]
+		self updateDataSourceButtons ]
 ]
 
 { #category : #private }
