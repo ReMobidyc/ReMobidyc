@@ -4,20 +4,18 @@ Class {
 	#category : #'ReMobidyc-DataSource-Connectors'
 }
 
-{ #category : #testing }
-RMDTimeColumnConnector class >> isAbstract [
+{ #category : #'instance creation' }
+RMDTimeColumnConnector class >> columnName: aString attribute: anotherString unit: aRMDUnit interpolation: aRMDDataInterpolation [
 
-	^ self = RMDTimeColumnConnector
+	^ (self columnName: aString)
+		  attribute: anotherString;
+		  unit: aRMDUnit;
+		  interpolation: aRMDDataInterpolation;
+		  yourself
 ]
 
-{ #category : #controlling }
-RMDTimeColumnConnector >> ifRMDTimeColumnConnector: aBlock [
+{ #category : #accessing }
+RMDTimeColumnConnector >> installTo: aRMDTableConnector [
 
-	^ aBlock cull: self
-]
-
-{ #category : #evaluating }
-RMDTimeColumnConnector >> value: aDataFrame [
-
-	^ aDataFrame column: self columnName ifAbsent: [ nil ]
+	aRMDTableConnector timeConnector: self
 ]

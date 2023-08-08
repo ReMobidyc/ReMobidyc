@@ -118,7 +118,7 @@ RMDColumnConnectorPresenter >> initializePresenters [
 		             yourself.
 	interpolationDropList := self newDropList
 		                         items: RMDDataInterpolation choices;
-		                         selectItem: RMDLatestInterpolation current;
+		                         selectItem: RMDLinearInterpolation current;
 		                         yourself.
 	leftIcon := self newImage
 		            autoScale: false;

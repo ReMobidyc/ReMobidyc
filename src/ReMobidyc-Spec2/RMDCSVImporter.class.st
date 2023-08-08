@@ -10,6 +10,7 @@ Class {
 		'editConnectorButton',
 		'moveUpConnectorButton',
 		'moveDownConnectorButton',
+		'useCalendarDateButton',
 		'yearDropList',
 		'baseYearField',
 		'monthDropList',
@@ -23,10 +24,12 @@ Class {
 		'secondDropList',
 		'secondField',
 		'timeUnitDropList',
+		'timeDropList',
 		'table',
 		'tableConnector',
 		'connectorList',
-		'interpolateMissingValues'
+		'interpolateMissingValues',
+		'useElapsedTimeButton'
 	],
 	#category : #'ReMobidyc-Spec2-DataSource'
 }
@@ -42,8 +45,9 @@ RMDCSVImporter class >> defaultLayout [
 				   add: (SpGridLayout new
 						    beColumnNotHomogeneous;
 						    beRowNotHomogeneous;
-						    column: 2 expand: true;
+						    column: 1 expand: false;
 						    column: 3 expand: true;
+						    column: 4 expand: true;
 						    row: 1 expand: false;
 						    row: 2 expand: false;
 						    row: 3 expand: false;
@@ -51,7 +55,11 @@ RMDCSVImporter class >> defaultLayout [
 						    row: 5 expand: false;
 						    row: 6 expand: false;
 						    row: 7 expand: false;
-						    row: 8 expand: true;
+						    row: 8 expand: false;
+						    row: 9 expand: false;
+						    row: 10 expand: false;
+						    row: 11 expand: false;
+						    row: 12 expand: false;
 						    add: (SpBoxLayout newHorizontal
 								     vAlignEnd;
 								     add: '  unit of time  ' expand: false;
@@ -59,8 +67,13 @@ RMDCSVImporter class >> defaultLayout [
 										      add: #timeUnitDropList
 										      height: self buttonHeight);
 								     yourself)
-						    at: 1 @ 1 span: 3 @ 1;
-						    add: 'year' at: 1 @ 2;
+						    at: 1 @ 1 span: 4 @ 1;
+						    add: #useElapsedTimeButton at: 1 @ 2 span: 4 @ 1;
+						    add: '    ' asPresenter at: 1 @ 3;
+						    add: 'Elapsed time' at: 2 @ 3;
+						    add: #timeDropList at: 3 @ 3;
+						    add: #useCalendarDateButton at: 1 @ 4 span: 4 @ 1;
+						    add: 'year' at: 2 @ 5;
 						    add: (SpBoxLayout newHorizontal
 								     vAlignEnd;
 								     add:
@@ -68,45 +81,45 @@ RMDCSVImporter class >> defaultLayout [
 										      add: #yearDropList
 										      height: self buttonHeight);
 								     add: ' + ' expand: false)
-						    at: 2 @ 2;
-						    add: #baseYearField at: 3 @ 2;
-						    add: 'month' at: 1 @ 3;
+						    at: 3 @ 5;
+						    add: #baseYearField at: 4 @ 5;
+						    add: 'month' at: 2 @ 6;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #monthDropList
 							     height: self buttonHeight)
-						    at: 2 @ 3;
-						    add: #monthField at: 3 @ 3;
-						    add: 'day' at: 1 @ 4;
+						    at: 3 @ 6;
+						    add: #monthField at: 4 @ 6;
+						    add: 'day' at: 2 @ 7;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #dayDropList
 							     height: self buttonHeight)
-						    at: 2 @ 4;
-						    add: #dayField at: 3 @ 4;
-						    add: 'hour' at: 1 @ 5;
+						    at: 3 @ 7;
+						    add: #dayField at: 4 @ 7;
+						    add: 'hour' at: 2 @ 8;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #hourDropList
 							     height: self buttonHeight)
-						    at: 2 @ 5;
-						    add: #hourField at: 3 @ 5;
-						    add: 'minute' at: 1 @ 6;
+						    at: 3 @ 8;
+						    add: #hourField at: 4 @ 8;
+						    add: 'minute' at: 2 @ 9;
 						    add: (SpBoxLayout newVertical
 								     add: #minuteDropList
 								     height: self buttonHeight)
-						    at: 2 @ 6;
-						    add: #minuteField at: 3 @ 6;
-						    add: 'second' at: 1 @ 7;
+						    at: 3 @ 9;
+						    add: #minuteField at: 4 @ 9;
+						    add: 'second' at: 2 @ 10;
 						    add: (SpBoxLayout newVertical
 								     add: #secondDropList
 								     height: self buttonHeight)
-						    at: 2 @ 7;
-						    add: #secondField at: 3 @ 7;
+						    at: 3 @ 10;
+						    add: #secondField at: 4 @ 10;
 						    add:
 						    (SpBoxLayout newVertical add: #connectorList height: 100)
-						    at: 1 @ 8
-						    span: 3 @ 1;
+						    at: 1 @ 11
+						    span: 4 @ 1;
 						    add: (SpBoxLayout newHorizontal
 								     add: #addConnectorButton width: self buttonHeight;
 								     add: #removeConnectorButton width: self buttonHeight;
@@ -114,7 +127,7 @@ RMDCSVImporter class >> defaultLayout [
 								     add: #moveDownConnectorButton width: self buttonHeight;
 								     add: #editConnectorButton width: self buttonHeight;
 								     yourself)
-						    at: 1 @ 9 span: 3 @ 1;
+						    at: 1 @ 12 span: 4 @ 1;
 						    yourself);
 				   add: (SpBoxLayout newVertical
 						    add: #table;
@@ -316,6 +329,23 @@ RMDCSVImporter >> initializePresenters [
 		                    selectIndex: 3;
 		                    whenSelectedItemChangedDo: [ self updateTable ];
 		                    yourself.
+	timeDropList := self newDropList
+		                display: [ :string | string ifNil: [ '-' ] ];
+		                whenSelectedItemChangedDo: [
+			                self updateTimeConnector ];
+		                yourself.
+	useCalendarDateButton := self newRadioButton
+		                         label: 'Use calendar dates';
+		                         state: true;
+		                         whenActivatedDo: [ self useCalendarDates ];
+		                         yourself.
+	useElapsedTimeButton := self newRadioButton
+		                        label: 'Use elapsed time';
+		                        state: false;
+		                        whenActivatedDo: [ self useElapsedTime ];
+		                        associatedRadioButtons:
+			                        { useCalendarDateButton };
+		                        yourself.
 	table := self newTable
 		         whenBuiltDo: [ table color: table color ];
 		         yourself.
@@ -333,7 +363,7 @@ RMDCSVImporter >> initializePresenters [
 RMDCSVImporter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter initialExtent: 950 @ 500
+	aSpWindowPresenter initialExtent: 950 @ 560
 ]
 
 { #category : #operations }
@@ -435,29 +465,30 @@ RMDCSVImporter >> updateConnectors [
 		monthDropList selectIndex: 1 ].
 	monthField number ifNil: [
 		monthField number:
-			(tableConnector month ifRMDTimeColumnConnector: [ 1 ]) ].
+			(tableConnector month ifRMDCalendarColumnConnector: [ 1 ]) ].
 	dayDropList items: { nil } , dataFrame columnNames.
 	dayDropList selectedIndex = 0 ifTrue: [ dayDropList selectIndex: 1 ].
 	dayField number ifNil: [
 		dayField number:
-			(tableConnector day ifRMDTimeColumnConnector: [ 1 ]) ].
+			(tableConnector day ifRMDCalendarColumnConnector: [ 1 ]) ].
 	hourDropList items: { nil } , dataFrame columnNames.
 	hourDropList selectedIndex = 0 ifTrue: [ hourDropList selectIndex: 1 ].
 	hourField number ifNil: [
 		hourField number:
-			(tableConnector hour ifRMDTimeColumnConnector: [ 0 ]) ].
+			(tableConnector hour ifRMDCalendarColumnConnector: [ 0 ]) ].
 	minuteDropList items: { nil } , dataFrame columnNames.
 	minuteDropList selectedIndex = 0 ifTrue: [
 		minuteDropList selectIndex: 1 ].
 	minuteField number ifNil: [
 		minuteField number:
-			(tableConnector minute ifRMDTimeColumnConnector: [ 0 ]) ].
+			(tableConnector minute ifRMDCalendarColumnConnector: [ 0 ]) ].
 	secondDropList items: { nil } , dataFrame columnNames.
 	secondDropList selectedIndex = 0 ifTrue: [
 		secondDropList selectIndex: 1 ].
 	secondField number ifNil: [
 		secondField number:
-			(tableConnector second ifRMDTimeColumnConnector: [ 0 ]) ].
+			(tableConnector second ifRMDCalendarColumnConnector: [ 0 ]) ].
+	timeDropList items: { nil } , dataFrame columnNames.
 	self updateButtons
 ]
 
@@ -602,6 +633,14 @@ RMDCSVImporter >> updateTable [
 ]
 
 { #category : #updating }
+RMDCSVImporter >> updateTimeConnector [
+
+	tableConnector timeConnector:
+		(RMDTimeColumnConnector columnName: timeDropList selectedItem).
+	self updateTable
+]
+
+{ #category : #updating }
 RMDCSVImporter >> updateYearConnector [
 
 	yearDropList selectedItem
@@ -619,6 +658,46 @@ RMDCSVImporter >> updateYearConnector [
 			baseYearField number ifNil: [ baseYearField number: 2000 ].
 			tableConnector year: baseYearField number ].
 	self updateTable
+]
+
+{ #category : #operations }
+RMDCSVImporter >> useCalendarDates [
+
+	tableConnector usesCalendarConnectors: true.
+	timeDropList disable.
+	{
+		yearDropList.
+		baseYearField.
+		monthDropList.
+		monthField.
+		dayDropList.
+		dayField.
+		hourDropList.
+		hourField.
+		minuteDropList.
+		minuteField.
+		secondDropList.
+		secondField } do: #enable
+]
+
+{ #category : #operations }
+RMDCSVImporter >> useElapsedTime [
+
+	tableConnector usesCalendarConnectors: false.
+	timeDropList enable.
+	{
+		yearDropList.
+		baseYearField.
+		monthDropList.
+		monthField.
+		dayDropList.
+		dayField.
+		hourDropList.
+		hourField.
+		minuteDropList.
+		minuteField.
+		secondDropList.
+		secondField } do: #disable
 ]
 
 { #category : #validating }

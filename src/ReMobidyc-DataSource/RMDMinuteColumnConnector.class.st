@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDMinuteColumnConnector,
-	#superclass : #RMDTimeColumnConnector,
+	#superclass : #RMDCalendarColumnConnector,
 	#category : #'ReMobidyc-DataSource-Connectors'
 }
 
