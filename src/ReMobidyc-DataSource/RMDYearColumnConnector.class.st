@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDYearColumnConnector,
-	#superclass : #RMDTimeColumnConnector,
+	#superclass : #RMDCalendarColumnConnector,
 	#instVars : [
 		'baseYear'
 	],

@@ -8,7 +8,9 @@ Class {
 		'day',
 		'hour',
 		'minute',
-		'second'
+		'second',
+		'usesCalendarConnectors',
+		'timeConnector'
 	],
 	#category : #'ReMobidyc-DataSource-Connectors'
 }
@@ -110,6 +112,7 @@ RMDTableConnector >> initialize [
 
 	super initialize.
 	attributeConnectors := Array new.
+	usesCalendarConnectors := false.
 	year := 2000.
 	month := 1.
 	day := 1.
@@ -192,13 +195,28 @@ RMDTableConnector >> second: anIntegerOrStringOrRMDSecondColumnConnectorOrNil [
 { #category : #evaluating }
 RMDTableConnector >> timeColumnFrom: aDataFrame baseTime: aDateAndTimeOrNil timeUnit: aRMDUnitOrNil [
 
+	^ self usesCalendarConnectors
+		  ifTrue: [
+			  self
+				  timeColumnWithCalendarConnectorsFrom: aDataFrame
+				  baseTime: aDateAndTimeOrNil
+				  timeUnit: aRMDUnitOrNil ]
+		  ifFalse: [
+			  self
+				  timeColumnWithTimeConnectorFrom: aDataFrame
+				  timeUnit: aRMDUnitOrNil ]
+]
+
+{ #category : #evaluating }
+RMDTableConnector >> timeColumnWithCalendarConnectorsFrom: aDataFrame baseTime: aDateAndTimeOrNil timeUnit: aRMDUnitOrNil [
+
 	| y mo d h mi s epoch unit |
-	y := year ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
-	mo := month ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
-	d := day ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
-	h := hour ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
-	mi := minute ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
-	s := second ifRMDTimeColumnConnector: [ :c | c value: aDataFrame ].
+	y := year ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
+	mo := month ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
+	d := day ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
+	h := hour ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
+	mi := minute ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
+	s := second ifRMDCalendarColumnConnector: [ :c | c value: aDataFrame ].
 	epoch := aDateAndTimeOrNil.
 	unit := aRMDUnitOrNil ifNil: [ self inferTimeUnit ].
 	^ [
@@ -230,6 +248,43 @@ RMDTableConnector >> timeColumnFrom: aDataFrame baseTime: aDateAndTimeOrNil time
 		  yourself ]
 		  on: Error
 		  do: [ :ex | ^ nil ]
+]
+
+{ #category : #evaluating }
+RMDTableConnector >> timeColumnWithTimeConnectorFrom: aDataFrame timeUnit: aRMDUnitOrNil [
+
+	^ (aDataFrame column: timeConnector columnName ifAbsent: [ nil ])
+		  ifNotNil: [ :timeColumn |
+			  (DataSeries newFrom:
+					   ((1 to: aDataFrame size) collect: [ :index |
+							    timeColumn at: index ]))
+				  name:
+					  'time['
+					  , (aRMDUnitOrNil ifNotNil: #printString ifNil: [ 'day' ]) , ']';
+				  yourself ]
+]
+
+{ #category : #accessing }
+RMDTableConnector >> timeConnector [
+
+	^ timeConnector
+]
+
+{ #category : #accessing }
+RMDTableConnector >> timeConnector: aRMDTimeColumnConnector [
+	timeConnector := aRMDTimeColumnConnector
+]
+
+{ #category : #accessing }
+RMDTableConnector >> usesCalendarConnectors [
+
+	^ usesCalendarConnectors or: [ timeConnector isNil ]
+]
+
+{ #category : #accessing }
+RMDTableConnector >> usesCalendarConnectors: aBoolean [
+
+	usesCalendarConnectors := aBoolean
 ]
 
 { #category : #evaluating }

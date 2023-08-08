@@ -1,7 +1,7 @@
 Extension { #name : #Object }
 
 { #category : #'*ReMobidyc-DataSource' }
-Object >> ifRMDTimeColumnConnector: aBlock [
+Object >> ifRMDCalendarColumnConnector: aBlock [
 
 	^ self
 ]
