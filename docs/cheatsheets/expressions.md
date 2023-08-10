@@ -87,8 +87,10 @@ The attributes of the object can be accessed in the following ways.
 ## Population Expressions
 | name | syntax | description |
 | -----|------- | ----------- |
+| number of agents in radius | `number of ` _agent_ `in` _expression_ `radius` | the number of individual agents in the given radius |
 | number of local agents | `number of ` _agent_ `here` | the number of individual agents in the same patch |
 | number of agents | `number of ` _agent_ `in world` | the number of individual agents in the simulation |
+| density of agents in radius | `number of ` _agent_ `in` _expression_ `radius` | the number of individual agents per area in the given radius |
 | density of local agents | `density of ` _agent_ `here` | the number of individual agents per area in the patch |
 | density of agents | `density of ` _agent_ `in world` | the number of individual agents per area in the simulation |
 
