@@ -864,6 +864,16 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger definition: aRMDAgen
 ]
 
 { #category : #'context controls' }
+RMDInterpreter >> withObserverSubContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
+
+	^ self
+		  withSubContext: (RMDObserverContext
+				   subject: anInteger
+				   definition: aRMDAgentDefinitionNode)
+		  do: aBlock
+]
+
+{ #category : #'context controls' }
 RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self

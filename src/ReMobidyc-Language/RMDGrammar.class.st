@@ -102,8 +102,10 @@ RMDGrammar >> agentDirective [
 
 	^ self numberOfIndividualsInPatchDirective
 	  / self numberOfIndividualsInWorldDirective
+	  / self numberOfIndividualsInRadiusDirective
 	  / self densityOfIndividualsInPatchDirective
 	  / self densityOfIndividualsInWorldDirective
+	  / self densityOfIndividualsInRadiusDirective
 	  / self directionOfGradientDirective / self distanceDirective
 	  / self directionDirective / self timeDirective
 ]
@@ -593,6 +595,24 @@ RMDGrammar >> densityOfIndividualsInPatchDirective [
 RMDGrammar >> densityOfIndividualsInPatchDirectiveNodeClass [
 
 	^ RMDDensityOfIndividualsInPatchDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> densityOfIndividualsInRadiusDirective [
+
+	^ 'density' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier , ('in' asPParser trimBlanks , expression
+	   , 'radius' asPParser trimBlanks ==> #second) ==> [ :triple |
+	  self densityOfIndividualsInRadiusDirectiveNodeClass
+		  animatName: triple second
+		  radius: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> densityOfIndividualsInRadiusDirectiveNodeClass [
+
+	^ RMDDensityOfIndividualsInRadiusDirectiveNode
 ]
 
 { #category : #'parsers-directives' }
@@ -1092,6 +1112,24 @@ RMDGrammar >> numberOfIndividualsInPatchDirective [
 { #category : #'class access' }
 RMDGrammar >> numberOfIndividualsInPatchDirectiveNodeClass [
 	^ RMDNumberOfIndividualsInPatchDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> numberOfIndividualsInRadiusDirective [
+
+	^ 'number' asPParser trimLeft , #blank asPParser plus
+	  , 'of' asPParser , #blank asPParser plus ==> [ :array | nil ]
+	  , agentIdentifier , ('in' asPParser trimBlanks , expression
+	   , 'radius' asPParser trimBlanks ==> #second) ==> [ :triple |
+	  self numberOfIndividualsInRadiusDirectiveNodeClass
+		  animatName: triple second
+		  radius: triple third ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> numberOfIndividualsInRadiusDirectiveNodeClass [
+
+	^ RMDNumberOfIndividualsInRadiusDirectiveNode
 ]
 
 { #category : #'parsers-directives' }

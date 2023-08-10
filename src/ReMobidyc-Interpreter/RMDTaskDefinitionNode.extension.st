@@ -84,7 +84,6 @@ RMDTaskDefinitionNode >> evalWithNearestObjectsIn: aRMDInterpreter [
 		                    width: aRMDInterpreter simulationModel north
 		                    height: aRMDInterpreter simulationModel east
 		                    range: range numeric.
-	range numeric.
 	aRMDInterpreter individualsOf: objectAgent do: [ :objectAnimat | 
 		aRMDInterpreter
 			withObserverContextWithSubject: objectAnimat

@@ -743,6 +743,17 @@ RMDGrammarTest >> testDensityOfIndividualsInPatchDirective [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testDensityOfIndividualsInRadiusDirective [
+
+	| expr |
+	expr := grammar expression parse: 'density of A in x + y radius'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isDensityOfIndividualsInRadiusDirective.
+	self assert: expr animatName equals: 'A'.
+	self assert: expr radius equals: (grammar expression parse: 'x + y')
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testDensityOfIndividualsInWorldDirective [
 
 	| expr |
@@ -1154,6 +1165,17 @@ RMDGrammarTest >> testNumberOfIndividualsInPatchDirective [
 	self deny: expr isPetit2Failure.
 	self assert: expr isNumberOfIndividualsInPatchDirective.
 	self assert: expr animatName equals: 'A'
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testNumberOfIndividualsInRadiusDirective [
+
+	| expr |
+	expr := grammar expression parse: 'number of A in x + y radius'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isNumberOfIndividualsInRadiusDirective.
+	self assert: expr animatName equals: 'A'.
+	self assert: expr radius equals: (grammar expression parse: 'x + y')
 ]
 
 { #category : #tests }
