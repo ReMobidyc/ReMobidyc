@@ -10,7 +10,7 @@ RMDNumberOfIndividualsInPatchDirectiveNode >> evalIn: aRMDInterpreter [
 RMDNumberOfIndividualsInPatchDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel
-		animatDefinitionAt: animatName
-		ifAbsent: [ ^ RMDUndefinedAnimatError on: animatName ].
-	^ RMDType noDimension
+		stagesOf: animatName
+		do: [ :animatDef | ^ RMDType noDimension ].
+	^ RMDUndefinedAnimatError on: animatName
 ]

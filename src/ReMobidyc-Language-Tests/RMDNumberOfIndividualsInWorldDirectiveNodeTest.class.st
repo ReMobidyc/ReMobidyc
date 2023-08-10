@@ -60,7 +60,7 @@ RMDNumberOfIndividualsInWorldDirectiveNodeTest >> testEvalIn [
 		do: [ 
 			self
 				assert:
-				('number of Goat in world' asRMDExpression evalIn: interpreter)
+				('number of Animat in world' asRMDExpression evalIn: interpreter)
 				equals: 9 ]
 ]
 

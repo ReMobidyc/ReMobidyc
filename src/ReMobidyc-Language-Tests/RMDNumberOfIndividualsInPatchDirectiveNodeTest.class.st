@@ -57,7 +57,7 @@ RMDNumberOfIndividualsInPatchDirectiveNodeTest >> testEvalIn [
 		do: [ 
 			self
 				assert:
-				('number of Goat here' asRMDExpression evalIn: interpreter)
+				('number of Animat here' asRMDExpression evalIn: interpreter)
 				equals: 4 ]
 ]
 
