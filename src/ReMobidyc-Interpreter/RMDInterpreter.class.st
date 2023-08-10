@@ -433,24 +433,32 @@ RMDInterpreter >> numberOfIndividuals [
 { #category : #directives }
 RMDInterpreter >> numberOfIndividualsInPatch: animatName [
 
-	^ memory
-		  numberOfAnimats: animatName
-		  patch: context location
-		  patchBlock: [ :x :y | 
-			  | patchX patchY |
-			  patchX := (self patchX: x) floor + 1
-				            min: simulationModel patchXDivisions
-				            max: 1.
-			  patchY := (self patchY: y) floor + 1
-				            min: simulationModel patchYDivisions
-				            max: 1.
-			  memory patchAtXIndex: patchX yIndex: patchY ]
+	| total |
+	total := 0.
+	simulationModel stagesOf: animatName do: [ :animatDef |
+		total := total + (memory
+			          numberOfAnimats: animatDef identifier
+			          patch: context location
+			          patchBlock: [ :x :y |
+				          | patchX patchY |
+				          patchX := (self patchX: x) floor + 1
+					                    min: simulationModel patchXDivisions
+					                    max: 1.
+				          patchY := (self patchY: y) floor + 1
+					                    min: simulationModel patchYDivisions
+					                    max: 1.
+				          memory patchAtXIndex: patchX yIndex: patchY ]) ].
+	^ total
 ]
 
 { #category : #directives }
 RMDInterpreter >> numberOfIndividualsInWorld: animatName [
 
-	^ memory numberOfAnimats: animatName
+	| total |
+	total := 0.
+	simulationModel stagesOf: animatName do: [ :animatDef |
+		total := total + (memory numberOfAnimats: animatDef identifier) ].
+	^ total
 ]
 
 { #category : #'animat operations' }

@@ -15,7 +15,7 @@ RMDDensityOfIndividualsInWorldDirectiveNode >> evalIn: aRMDInterpreter [
 RMDDensityOfIndividualsInWorldDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel
-		animatDefinitionAt: animatName
-		ifAbsent: [ ^ RMDUndefinedAnimatError on: animatName ].
-	^ RMDType noDimension / RMDType area
+		stagesOf: animatName
+		do: [ :animatDef | ^ RMDType noDimension / RMDType area ].
+	^ RMDUndefinedAnimatError on: animatName
 ]
