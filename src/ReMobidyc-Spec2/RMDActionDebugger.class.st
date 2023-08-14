@@ -2,7 +2,6 @@ Class {
 	#name : #RMDActionDebugger,
 	#superclass : #RMDPresenter,
 	#instVars : [
-		'interpreter',
 		'exception',
 		'sourceText',
 		'exceptionLabel',
@@ -37,10 +36,9 @@ RMDActionDebugger class >> defaultLayout [
 ]
 
 { #category : #'instance creation' }
-RMDActionDebugger class >> on: aRMDInterpreter exception: aRMDSemanticError [
+RMDActionDebugger class >> exception: aRMDSemanticError [
 
 	^ self new
-		  interpreter: aRMDInterpreter;
 		  exception: aRMDSemanticError;
 		  yourself
 ]
@@ -74,7 +72,11 @@ RMDActionDebugger >> exceptionChanged [
 
 	self
 		updateExceptionLabel;
-		updateSourceText
+		updateSubjectLabel;
+		updateActionLabel;
+		updateObjectLabel;
+		updateSourceText;
+		updateVariableList
 ]
 
 { #category : #initialization }
@@ -115,14 +117,7 @@ RMDActionDebugger >> initializePresenters [
 { #category : #accessing }
 RMDActionDebugger >> interpreter [
 
-	^ interpreter
-]
-
-{ #category : #accessing }
-RMDActionDebugger >> interpreter: aRMDInterpreter [
-
-	interpreter := aRMDInterpreter.
-	self interpreterChanged
+	^ exception interpreter
 ]
 
 { #category : #updating }
@@ -139,10 +134,10 @@ RMDActionDebugger >> interpreterChanged [
 { #category : #updating }
 RMDActionDebugger >> updateActionLabel [
 
-	actionLabel ifNotNil: [ 
-		actionLabel label: (interpreter
-				 ifNotNil: [ 
-				 interpreter context action ifNotNil: #identifier ifNil: [ '?' ] ]
+	actionLabel ifNotNil: [
+		actionLabel label: (self interpreter
+				 ifNotNil: [ :interpreter |
+					 interpreter context action ifNotNil: #identifier ifNil: [ '?' ] ]
 				 ifNil: [ 'N/A' ]) ]
 ]
 
@@ -159,11 +154,11 @@ RMDActionDebugger >> updateExceptionLabel [
 { #category : #updating }
 RMDActionDebugger >> updateObjectLabel [
 
-	objectLabel ifNotNil: [ 
-		objectLabel label: (interpreter
-				 ifNotNil: [ 
+	objectLabel ifNotNil: [
+		objectLabel label: (self interpreter
+				 ifNotNil: [ :interpreter |
 					 interpreter context objectDefinition
-						 ifNotNil: [ :agent | 
+						 ifNotNil: [ :agent |
 							 agent name , '(' , interpreter context object printString
 							 , ')' ]
 						 ifNil: [ '' ] ]
@@ -173,22 +168,22 @@ RMDActionDebugger >> updateObjectLabel [
 { #category : #updating }
 RMDActionDebugger >> updateSourceText [
 
-	sourceText ifNotNil: [ 
+	sourceText ifNotNil: [
 		sourceText
 			highlights: (exception
 					 ifNil: [ #(  ) ]
 					 ifNotNil: [ { exception originalSemanticError node } ]);
-			syntaxNode: interpreter context action ]
+			syntaxNode: self interpreter context action ]
 ]
 
 { #category : #updating }
 RMDActionDebugger >> updateSubjectLabel [
 
-	subjectLabel ifNotNil: [ 
-		subjectLabel label: (interpreter
-				 ifNotNil: [ 
+	subjectLabel ifNotNil: [
+		subjectLabel label: (self interpreter
+				 ifNotNil: [ :interpreter |
 					 interpreter context subjectDefinition
-						 ifNotNil: [ :agent | 
+						 ifNotNil: [ :agent |
 							 agent name , '(' , interpreter context subject printString
 							 , ')' ]
 						 ifNil: [ '' ] ]
@@ -198,36 +193,36 @@ RMDActionDebugger >> updateSubjectLabel [
 { #category : #updating }
 RMDActionDebugger >> updateVariableList [
 
-	variableList items: (Array streamContents: [ :stream | 
-			 interpreter ifNotNil: [ 
-				 interpreter context subjectDefinition ifNotNil: [ :subjectDef | 
-					 subjectDef attributeDeclarations do: [ :attributeDecl | 
+	variableList items: (Array streamContents: [ :stream |
+			 self interpreter ifNotNil: [ :interpreter |
+				 interpreter context subjectDefinition ifNotNil: [ :subjectDef |
+					 subjectDef attributeDeclarations do: [ :attributeDecl |
 						 stream nextPut: 'my ' , attributeDecl identifier
 							 -> (interpreter my: attributeDecl identifier) ] ].
-				 interpreter context objectDefinition ifNotNil: [ :objectDef | 
-					 objectDef attributeDeclarations do: [ :attributeDecl | 
+				 interpreter context objectDefinition ifNotNil: [ :objectDef |
+					 objectDef attributeDeclarations do: [ :attributeDecl |
 						 stream nextPut:
 							 objectDef agentName uncapitalized , '''s '
 							 , attributeDecl identifier
 							 -> (interpreter objects: attributeDecl identifier) ] ].
-				 interpreter simulationModel patchDefinition ifNotNil: [ :patchDef | 
-					 patchDef attributeDeclarations do: [ :attributeDecl | 
+				 interpreter simulationModel patchDefinition ifNotNil: [ :patchDef |
+					 patchDef attributeDeclarations do: [ :attributeDecl |
 						 stream nextPut: 'here''s ' , attributeDecl identifier
 							 -> (interpreter heres: attributeDecl identifier) ] ].
-				 interpreter simulationModel worldDefinition ifNotNil: [ :worldDef | 
-					 worldDef attributeDeclarations do: [ :attributeDecl | 
+				 interpreter simulationModel worldDefinition ifNotNil: [ :worldDef |
+					 worldDef attributeDeclarations do: [ :attributeDecl |
 						 stream nextPut: 'world''s ' , attributeDecl identifier
 							 -> (interpreter worlds: attributeDecl identifier) ] ].
-				 interpreter context action ifNotNil: [ :action | 
-					 action utilityDefinitions do: [ :utilityDef | 
+				 interpreter context action ifNotNil: [ :action |
+					 action utilityDefinitions do: [ :utilityDef |
 						 | utilityName utilityValue |
 						 utilityName := utilityDef variable identifier.
 						 utilityValue := (interpreter context
 							                  utilityAt: utilityName
-							                  ifAbsent: [ nil ]) ifNotNil: [ :value | 
+							                  ifAbsent: [ nil ]) ifNotNil: [ :value |
 							                 value isNumber
 								                 ifTrue: [ value ]
-								                 ifFalse: [ 
+								                 ifFalse: [
 								                 '{ ' , value definitionBody asString , ' }' ] ].
 						 stream nextPut:
 							 utilityName

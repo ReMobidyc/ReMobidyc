@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDSpeciesError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#instVars : [
 		'animatDefinition1',
 		'animatDefinition2'

@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDScopedSemanticError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#instVars : [
 		'exception'
 	],

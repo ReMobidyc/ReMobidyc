@@ -898,11 +898,11 @@ RMDInterpreter >> world [
 RMDInterpreter >> worlds: aString [
 
 	^ memory
-		  at: context world
-			  + (context worldDefinition offsetAt: aString ifAbsent: [ 
+		  at: self world
+			  + (simulationModel worldDefinition offsetAt: aString ifAbsent: [
 					   RMDUndefinedAttributeError signal:
 						   (RMDAttributeVariableNode identifier: aString agent: nil) ])
-		  ifAbsent: [ 
+		  ifAbsent: [
 			  RMDAddressError signal:
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]

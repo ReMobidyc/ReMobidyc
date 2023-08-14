@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDAddressError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#instVars : [
 		'address'
 	],
