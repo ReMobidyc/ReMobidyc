@@ -385,7 +385,7 @@ RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
 		metaInterpreter runSimulationOnError: [ :ex | 
-			(RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
+			(RMDActionDebugger exception: ex) open ] ]
 ]
 
 { #category : #operations }
@@ -505,7 +505,7 @@ RMDExperimentarium >> stepSimulation [
 	self isValidated ifTrue: [ 
 		[ metaInterpreter stepSimulation ]
 			on: RMDSemanticError
-			do: [ :ex | (RMDActionDebugger on: metaInterpreter exception: ex) open ] ]
+			do: [ :ex | (RMDActionDebugger exception: ex) open ] ]
 ]
 
 { #category : #updating }

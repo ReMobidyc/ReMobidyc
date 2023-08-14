@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDNotComputableError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 

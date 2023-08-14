@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDNumArgsError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#instVars : [
 		'expectedNumArgs',
 		'actualNumArgs'

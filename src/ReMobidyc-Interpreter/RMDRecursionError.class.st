@@ -1,6 +1,6 @@
 Class {
 	#name : #RMDRecursionError,
-	#superclass : #RMDSemanticError,
+	#superclass : #RMDRuntimeError,
 	#category : #'ReMobidyc-Interpreter-Exceptions'
 }
 
