@@ -29,7 +29,7 @@ There are three ways to install reːmobidyc.
 
 The following pre-built packages are available.
 
-The latest release: [<kbd> <br> Thonon <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
+The latest release: [<kbd> <br> Avignon <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
 * macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
 * macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
 * Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
