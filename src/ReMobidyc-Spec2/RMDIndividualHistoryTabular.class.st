@@ -97,12 +97,13 @@ RMDIndividualHistoryTabular >> initializeWithRunId: runId animat: animatId time:
 { #category : #charts }
 RMDIndividualHistoryTabular >> openChart [
 
-	table columns ifNotEmpty: [ :columns | 
+	table columns ifNotEmpty: [ :columns |
 		| canvas time |
-		canvas := RSCanvas new @ RSCanvasController.
+		canvas := RSCanvas new.
+		canvas @ RMDMultiChartInteraction.
 		time := table items collect: [ :row | columns first value: row ].
-		columns do: [ :column | 
-			column ifOnChartDo: [ 
+		columns do: [ :column |
+			column ifOnChartDo: [
 				| chart |
 				chart := RSChart new.
 				chart
@@ -130,6 +131,20 @@ RMDIndividualHistoryTabular >> openChart [
 			 , (metaInterpreter
 					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
 					  ifNil: [ '' ])) extent: 800 @ 800 ]
+]
+
+{ #category : #charts }
+RMDIndividualHistoryTabular >> processKeyDown: event [
+	| keyName keyInteraction |
+	
+	keyName := event keyName.
+	keyInteraction := RSKeyNavigationCanvasInteraction new.
+	keyName = #I ifTrue: [ ^ keyInteraction zoomIn: event canvas ].
+	keyName = #O ifTrue: [ ^ keyInteraction zoomOut: event canvas ].
+]
+
+{ #category : #charts }
+RMDIndividualHistoryTabular >> processKeyUp: evt [
 ]
 
 { #category : #private }

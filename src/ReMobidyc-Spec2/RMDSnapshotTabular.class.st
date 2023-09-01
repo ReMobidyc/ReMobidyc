@@ -79,7 +79,7 @@ RMDSnapshotTabular >> openChart [
 
 	table columns ifNotEmpty: [ :columns | 
 		| canvas |
-		canvas := RSCanvas new @ RSCanvasController.
+		canvas := RSCanvas new @ RMDMultiChartInteraction.
 		columns do: [ :column | 
 			column ifOnChartDo: [ 
 				| chart |
