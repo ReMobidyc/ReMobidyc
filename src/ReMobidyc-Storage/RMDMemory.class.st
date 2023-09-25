@@ -76,7 +76,7 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 	inputs at: aRMDAnimatDefinitionNode identifier ifPresent: [ :dict |
 		dict keysAndValuesDo: [ :offset :timeSeries |
 			(timeSeries at: 1 ifAbsent: [ nil ]) ifNotNil: [ :value |
-				self nextAt: animat + offset put: value ] ] ].
+				self nextAt: individual + offset put: value ] ] ].
 	^ individual
 ]
 
