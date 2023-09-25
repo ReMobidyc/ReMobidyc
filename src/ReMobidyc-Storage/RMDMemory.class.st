@@ -73,37 +73,48 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 	animat := aRMDAnimatDefinitionNode identifier.
 	(self animats at: animat ifAbsentPut: [ Set new: 1024 ]) add:
 		individual.
+	inputs at: aRMDAnimatDefinitionNode identifier ifPresent: [ :dict |
+		dict keysAndValuesDo: [ :offset :timeSeries |
+			(timeSeries at: 1 ifAbsent: [ nil ]) ifNotNil: [ :value |
+				self nextAt: animat + offset put: value ] ] ].
 	^ individual
 ]
 
 { #category : #allocating }
 RMDMemory >> allocatePatches: aRMDPatchDefinitionNode x: anInteger1 y: anInteger2 [
-	self
-		nextAvailableSlot:
-			(self
-				patchSize: (aRMDPatchDefinitionNode totalNumberOfAttributes max: 1);
-				patchSize)
-				*
-					(self
-						xPatches: anInteger1;
-						xPatches)
-				*
-					(self
-						yPatches: anInteger2;
-						yPatches)
-				+
-					(self
-						patch: self nextAvailableSlot;
-						patch).
+
+	self nextAvailableSlot: (self
+			 patchSize:
+				 (aRMDPatchDefinitionNode totalNumberOfAttributes max: 1);
+			 patchSize) * (self
+			 xPatches: anInteger1;
+			 xPatches) * (self
+			 yPatches: anInteger2;
+			 yPatches) + (self
+			 patch: self nextAvailableSlot;
+			 patch).
+	inputs at: 'Patch' ifPresent: [ :dict |
+		self patchesDo: [ :p |
+			dict keysAndValuesDo: [ :offset :timeSeries |
+				(timeSeries at: 1 ifAbsent: [ nil ]) ifNotNil: [ :value |
+					self
+						nextAt: p + offset put: value;
+						at: p + offset put: value ] ] ] ].
 	^ self patch
 ]
 
 { #category : #allocating }
 RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
-	self
-		nextAvailableSlot:
-			aRMDWorldDefinitionNode totalNumberOfAttributes
-				+ (world := self nextAvailableSlot).
+
+	self nextAvailableSlot:
+		aRMDWorldDefinitionNode totalNumberOfAttributes
+		+ (world := self nextAvailableSlot).
+	inputs at: 'World' ifPresent: [ :dict |
+		dict keysAndValuesDo: [ :offset :timeSeries |
+			(timeSeries at: 1 ifAbsent: [ nil ]) ifNotNil: [ :value |
+				self
+					nextAt: world + offset put: value;
+					at: world + offset put: value ] ] ].
 	^ world
 ]
 
@@ -326,19 +337,21 @@ RMDMemory >> latestTime: anInteger [
 RMDMemory >> loadInputsIntoNextAt: anInteger [
 
 	inputs keysAndValuesDo: [ :agentName :dict |
-		dict keysAndValuesDo: [ :offset :timeSeries |
-			agentName = 'World'
-				ifTrue: [
+		agentName = 'World'
+			ifTrue: [
+				dict keysAndValuesDo: [ :offset :timeSeries |
 					(timeSeries at: anInteger + 1 ifAbsent: [ nil ]) ifNotNil: [
-						:value | self nextAt: world + offset put: value ] ]
-				ifFalse: [
-					agentName = 'Patch'
-						ifTrue: [
+						:value | self nextAt: world + offset put: value ] ] ]
+			ifFalse: [
+				agentName = 'Patch'
+					ifTrue: [
+						dict keysAndValuesDo: [ :offset :timeSeries |
 							(timeSeries at: anInteger + 1 ifAbsent: [ nil ]) ifNotNil: [
 								:value |
-								self patchesDo: [ :p | self nextAt: p + offset put: value ] ] ]
-						ifFalse: [
-							self animatsOf: agentName do: [ :agent |
+								self patchesDo: [ :p | self nextAt: p + offset put: value ] ] ] ]
+					ifFalse: [
+						self animatsOf: agentName do: [ :agent |
+							dict keysAndValuesDo: [ :offset :timeSeries |
 								(timeSeries
 									 at:
 									 anInteger - (self creationTimeAt: agent ifAbsent: [ 0 ]) + 1
