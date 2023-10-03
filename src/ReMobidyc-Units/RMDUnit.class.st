@@ -530,6 +530,12 @@ RMDUnit >> isTemperature [
 	^ false
 ]
 
+{ #category : #testing }
+RMDUnit >> isTime [
+
+	^ self siUnit = RMDUnit s
+]
+
 { #category : #accessing }
 RMDUnit >> scale [
 

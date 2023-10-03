@@ -549,8 +549,19 @@ RMDGrammar >> conjunctionNodeClass [
 { #category : #'parsers-files' }
 RMDGrammar >> csvColumnName [
 
-	^ ('time' asPParser / identifier) trimBlanks , self type
-	  , self interpolation optional
+	^ 'time' asPParser trimBlanks , self type , self cycle optional
+	  / (identifier , self type , self interpolation optional)
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> cycle [
+
+	^ 'cycle' asPParser trimBlanks , literal trimBlanks ==> [ :pair |
+	  | time |
+	  time := pair second.
+	  time unit isTime
+		  ifTrue: [ time ]
+		  ifFalse: [ PP2Failure message: 'cycle must be in time dimension' ] ]
 ]
 
 { #category : #'class access' }
