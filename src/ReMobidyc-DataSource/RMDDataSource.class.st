@@ -6,7 +6,8 @@ Class {
 		'dataFrame',
 		'units',
 		'interpolations',
-		'lastIndex'
+		'lastIndex',
+		'cycle'
 	],
 	#category : #'ReMobidyc-DataSource-Core'
 }
@@ -28,8 +29,9 @@ RMDDataSource class >> readFromCsv: aFileReference [
 { #category : #accessing }
 RMDDataSource >> atTime: aNumber [
 
-	| index data0 data1 data |
-	index := self indexAtTime: aNumber.
+	| t index data0 data1 data |
+	t := cycle ifNil: [ aNumber ] ifNotNil: [ aNumber \\ cycle ].
+	index := self indexAtTime: t.
 	data0 := (dataFrame rowAt: index) asDictionary.
 	data1 := (dataFrame rowAt: index + 1) asDictionary.
 	data := Dictionary new.
@@ -38,7 +40,7 @@ RMDDataSource >> atTime: aNumber [
 				 ifTrue: [ aNumber ]
 				 ifFalse: [
 					 (self interpolationAt: name)
-						 atTime: aNumber
+						 atTime: t
 						 at: name
 						 between: data0
 						 and: data1 ]) ].
@@ -48,18 +50,31 @@ RMDDataSource >> atTime: aNumber [
 { #category : #accessing }
 RMDDataSource >> atTime: aNumber at: aString [
 
-	| index data0 data1 |
-	index := self indexAtTime: aNumber.
+	| t index data0 data1 |
+	t := cycle ifNil: [ aNumber ] ifNotNil: [ aNumber \\ cycle ].
+	index := self indexAtTime: t.
 	data0 := (dataFrame rowAt: index) asDictionary.
 	data1 := (dataFrame rowAt: index + 1) asDictionary.
 	^ aString = 'time'
 		  ifTrue: [ aNumber ]
 		  ifFalse: [
 			  (self interpolationAt: aString)
-				  atTime: aNumber
+				  atTime: t
 				  at: aString
 				  between: data0
 				  and: data1 ]
+]
+
+{ #category : #accessing }
+RMDDataSource >> cycle [
+
+	^ cycle
+]
+
+{ #category : #accessing }
+RMDDataSource >> cycle: aNumberOrNil [
+
+	cycle := aNumberOrNil
 ]
 
 { #category : #accessing }
@@ -91,7 +106,8 @@ RMDDataSource >> flushDataFrame [
 	dataFrame := nil.
 	lastIndex := nil.
 	units := nil.
-	interpolations := nil
+	interpolations := nil.
+	cycle := nil
 ]
 
 { #category : #private }
@@ -196,13 +212,20 @@ RMDDataSource >> validateDataFrame [
 	units := Dictionary new: dataFrame numberOfColumns.
 	interpolations := Dictionary new: dataFrame numberOfColumns.
 	columnNames := OrderedCollection new: dataFrame numberOfColumns.
+	cycle := nil.
 	dataFrame columnNames do: [ :columnName |
 		| triple name unit interpolation |
 		triple := parser parse: columnName.
 		triple isPetit2Failure ifTrue: [ ^ false ].
 		name := triple first.
 		unit := triple second.
-		interpolation := triple third ifNil: [ RMDDataInterpolation default ].
+		name = 'time'
+			ifTrue: [
+				cycle := triple third ifNotNil: #numeric.
+				interpolation := RMDDataInterpolation default ]
+			ifFalse: [
+				interpolation := triple third ifNil: [
+					                 RMDDataInterpolation default ] ].
 		dataFrame column: columnName transform: [ :v |
 			(v allSatisfy: #isNumber) ifFalse: [ ^ false ].
 			unit toSI: v ].
@@ -216,6 +239,15 @@ RMDDataSource >> validateDataFrame [
 		1 to: times size - 1 do: [ :index |
 			(times atIndex: index) = (times atIndex: index + 1) ifTrue: [
 				^ false ] ] ].
+	cycle ifNotNil: [
+		| row |
+		row := dataFrame rowAt: 1.
+		dataFrame
+			removeRowsOfColumnElementsSatisfing: [ :t | t >= cycle ]
+			onColumnNamed: 'time'.
+		row at: 'time' put: cycle.
+		row name: dataFrame size + 1.
+		dataFrame addRow: row atPosition: dataFrame size + 1 ].
 	^ true
 ]
 
