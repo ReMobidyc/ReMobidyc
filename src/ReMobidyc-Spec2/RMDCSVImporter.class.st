@@ -574,7 +574,9 @@ RMDCSVImporter >> updateDataFrame [
 	| reader |
 	reader := DataFrameCsvReader new.
 	reader shouldInferTypes: false.
-	dataFrame := (reader readFrom: fileReference) forceNumericOrNil.
+	dataFrame := (reader readFrom: fileReference)
+		             forceNumericOrNil;
+		             removeRowsWithNils.
 	dataFrame ]
 		on: Error
 		do: [ :ex |
