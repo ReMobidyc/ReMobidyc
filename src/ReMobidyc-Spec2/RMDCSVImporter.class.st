@@ -179,6 +179,14 @@ RMDCSVImporter >> cycleFieldChanged [
 		self updateTable ]
 ]
 
+{ #category : #updating }
+RMDCSVImporter >> cyclicCheckBoxChanged [
+
+	self
+		updateCycleField;
+		updateTable
+]
+
 { #category : #accessing }
 RMDCSVImporter >> disableColor [
 
@@ -374,7 +382,7 @@ RMDCSVImporter >> initializePresenters [
 	cyclicCheckBox := self newCheckBox
 		                  label: 'cyclic';
 		                  state: false;
-		                  whenChangedDo: [ self updateCycleField ];
+		                  whenChangedDo: [ self cyclicCheckBoxChanged ];
 		                  yourself.
 	cycleField := self newSyntaxNodeTextInput
 		              parser: RMDGrammar new literal;
@@ -426,27 +434,27 @@ RMDCSVImporter >> moveUpConnector [
 { #category : #accessing }
 RMDCSVImporter >> outputDataFrame [
 
-	| data |
-	data := tableConnector
-		        value: dataFrame
-		        baseTime: nil
-		        timeUnit:
-		        (timeUnitDropList selectedItem ifNil: [ RMDUnit day ])
-		        withInterpolation: interpolateMissingValues state.
-	cyclicCheckBox state ifTrue: [
-		cycleField syntaxNode ifNotNil: [ :literal |
-			| seconds localTimeUnit t0 |
-			seconds := literal numeric.
-			localTimeUnit := timeUnitDropList selectedItem ifNil: [
-				                 RMDUnit day ].
-			t0 := localTimeUnit fromSI: seconds - 1.0e-8.
-			data
-				removeRowsOfColumnElementsSatisfing: [ :t | t >= t0 ]
-				onColumnNamed: data columnNames first.
-			data columnNames: (data columnNames copy
-					 at: 1 put: data columnNames first , 'cycle ' , cycleField text;
-					 yourself) ] ].
-	^ data
+	^ (tableConnector
+		   value: dataFrame
+		   baseTime: nil
+		   timeUnit: (timeUnitDropList selectedItem ifNil: [ RMDUnit day ])
+		   withInterpolation: interpolateMissingValues state) ifNotNil: [
+		  :data |
+		  cyclicCheckBox state ifTrue: [
+			  cycleField syntaxNode ifNotNil: [ :literal |
+				  | seconds localTimeUnit t0 |
+				  seconds := literal numeric.
+				  localTimeUnit := timeUnitDropList selectedItem ifNil: [
+					                   RMDUnit day ].
+				  t0 := localTimeUnit fromSI: seconds - 1.0e-8.
+				  data
+					  removeRowsOfColumnElementsSatisfing: [ :t | t >= t0 ]
+					  onColumnNamed: data columnNames first.
+				  data columnNames: (data columnNames copy
+						   at: 1
+						   put: data columnNames first , 'cycle ' , cycleField text;
+						   yourself) ] ].
+		  data ]
 ]
 
 { #category : #accessing }
