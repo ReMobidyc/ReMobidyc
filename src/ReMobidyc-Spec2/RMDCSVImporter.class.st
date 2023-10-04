@@ -29,7 +29,10 @@ Class {
 		'tableConnector',
 		'connectorList',
 		'interpolateMissingValues',
-		'useElapsedTimeButton'
+		'useElapsedTimeButton',
+		'cyclicCheckBox',
+		'cycleField',
+		'cycleUnitLabel'
 	],
 	#category : #'ReMobidyc-Spec2-DataSource'
 }
@@ -37,6 +40,7 @@ Class {
 { #category : #layout }
 RMDCSVImporter class >> defaultLayout [
 
+	<script: 'self new open'>
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 0.4;
 		  add: #sourceTable;
@@ -68,12 +72,17 @@ RMDCSVImporter class >> defaultLayout [
 										      height: self buttonHeight);
 								     yourself)
 						    at: 1 @ 1 span: 4 @ 1;
-						    add: #useElapsedTimeButton at: 1 @ 2 span: 4 @ 1;
-						    add: '    ' asPresenter at: 1 @ 3;
-						    add: 'Elapsed time' at: 2 @ 3;
-						    add: #timeDropList at: 3 @ 3;
-						    add: #useCalendarDateButton at: 1 @ 4 span: 4 @ 1;
-						    add: 'year' at: 2 @ 5;
+						    add: (SpBoxLayout newHorizontal
+								     vAlignEnd;
+								     add: #cyclicCheckBox width: 50;
+								     add: #cycleField expand: true)
+						    at: 1 @ 2 span: 4 @ 1;
+						    add: #useElapsedTimeButton at: 1 @ 3 span: 4 @ 1;
+						    add: '    ' asPresenter at: 1 @ 4;
+						    add: 'Elapsed time' at: 2 @ 4;
+						    add: #timeDropList at: 3 @ 4;
+						    add: #useCalendarDateButton at: 1 @ 5 span: 4 @ 1;
+						    add: 'year' at: 2 @ 6;
 						    add: (SpBoxLayout newHorizontal
 								     vAlignEnd;
 								     add:
@@ -81,44 +90,44 @@ RMDCSVImporter class >> defaultLayout [
 										      add: #yearDropList
 										      height: self buttonHeight);
 								     add: ' + ' expand: false)
-						    at: 3 @ 5;
-						    add: #baseYearField at: 4 @ 5;
-						    add: 'month' at: 2 @ 6;
+						    at: 3 @ 6;
+						    add: #baseYearField at: 4 @ 6;
+						    add: 'month' at: 2 @ 7;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #monthDropList
 							     height: self buttonHeight)
-						    at: 3 @ 6;
-						    add: #monthField at: 4 @ 6;
-						    add: 'day' at: 2 @ 7;
+						    at: 3 @ 7;
+						    add: #monthField at: 4 @ 7;
+						    add: 'day' at: 2 @ 8;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #dayDropList
 							     height: self buttonHeight)
-						    at: 3 @ 7;
-						    add: #dayField at: 4 @ 7;
-						    add: 'hour' at: 2 @ 8;
+						    at: 3 @ 8;
+						    add: #dayField at: 4 @ 8;
+						    add: 'hour' at: 2 @ 9;
 						    add:
 						    (SpBoxLayout newVertical
 							     add: #hourDropList
 							     height: self buttonHeight)
 						    at: 3 @ 8;
-						    add: #hourField at: 4 @ 8;
-						    add: 'minute' at: 2 @ 9;
+						    add: #hourField at: 4 @ 9;
+						    add: 'minute' at: 2 @ 10;
 						    add: (SpBoxLayout newVertical
 								     add: #minuteDropList
 								     height: self buttonHeight)
-						    at: 3 @ 9;
-						    add: #minuteField at: 4 @ 9;
-						    add: 'second' at: 2 @ 10;
+						    at: 3 @ 10;
+						    add: #minuteField at: 4 @ 10;
+						    add: 'second' at: 2 @ 11;
 						    add: (SpBoxLayout newVertical
 								     add: #secondDropList
 								     height: self buttonHeight)
-						    at: 3 @ 10;
-						    add: #secondField at: 4 @ 10;
+						    at: 3 @ 11;
+						    add: #secondField at: 4 @ 11;
 						    add:
 						    (SpBoxLayout newVertical add: #connectorList height: 100)
-						    at: 1 @ 11
+						    at: 1 @ 12
 						    span: 4 @ 1;
 						    add: (SpBoxLayout newHorizontal
 								     add: #addConnectorButton width: self buttonHeight;
@@ -127,7 +136,7 @@ RMDCSVImporter class >> defaultLayout [
 								     add: #moveDownConnectorButton width: self buttonHeight;
 								     add: #editConnectorButton width: self buttonHeight;
 								     yourself)
-						    at: 1 @ 12 span: 4 @ 1;
+						    at: 1 @ 13 span: 4 @ 1;
 						    yourself);
 				   add: (SpBoxLayout newVertical
 						    add: #table;
@@ -160,6 +169,14 @@ RMDCSVImporter >> addConnector [
 					 nil ]) ifNotNil: [
 					connectorList items: tableConnector attributeConnectors.
 					self updateTable ] ] ]
+]
+
+{ #category : #updating }
+RMDCSVImporter >> cycleFieldChanged [
+
+	cycleField syntaxNode ifNotNil: [ :literal |
+		literal isLiteralNode ifFalse: [ cycleField beError ].
+		self updateTable ]
 ]
 
 { #category : #accessing }
@@ -354,6 +371,15 @@ RMDCSVImporter >> initializePresenters [
 		                            state: false;
 		                            whenChangedDo: [ self updateTable ];
 		                            yourself.
+	cyclicCheckBox := self newCheckBox
+		                  label: 'cyclic';
+		                  state: false;
+		                  whenChangedDo: [ self updateCycleField ];
+		                  yourself.
+	cycleField := self newSyntaxNodeTextInput
+		              parser: RMDGrammar new literal;
+		              whenSyntaxNodeChangedDo: [ self cycleFieldChanged ];
+		              yourself.
 	self whenBuiltDo: [
 		(self window notNil and: [ self window isDialog ]) ifTrue: [
 			self window buttons first disable ] ]
@@ -363,7 +389,7 @@ RMDCSVImporter >> initializePresenters [
 RMDCSVImporter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter initialExtent: 950 @ 560
+	aSpWindowPresenter initialExtent: 950 @ 600
 ]
 
 { #category : #operations }
@@ -400,11 +426,27 @@ RMDCSVImporter >> moveUpConnector [
 { #category : #accessing }
 RMDCSVImporter >> outputDataFrame [
 
-	^ tableConnector
-		  value: dataFrame
-		  baseTime: nil
-		  timeUnit: (timeUnitDropList selectedItem ifNil: [ RMDUnit day ])
-		  withInterpolation: interpolateMissingValues state
+	| data |
+	data := tableConnector
+		        value: dataFrame
+		        baseTime: nil
+		        timeUnit:
+		        (timeUnitDropList selectedItem ifNil: [ RMDUnit day ])
+		        withInterpolation: interpolateMissingValues state.
+	cyclicCheckBox state ifTrue: [
+		cycleField syntaxNode ifNotNil: [ :literal |
+			| seconds localTimeUnit t0 |
+			seconds := literal numeric.
+			localTimeUnit := timeUnitDropList selectedItem ifNil: [
+				                 RMDUnit day ].
+			t0 := localTimeUnit fromSI: seconds - 1.0e-8.
+			data
+				removeRowsOfColumnElementsSatisfing: [ :t | t >= t0 ]
+				onColumnNamed: data columnNames first.
+			data columnNames: (data columnNames copy
+					 at: 1 put: data columnNames first , 'cycle ' , cycleField text;
+					 yourself) ] ].
+	^ data
 ]
 
 { #category : #accessing }
@@ -490,6 +532,31 @@ RMDCSVImporter >> updateConnectors [
 			(tableConnector second ifRMDCalendarColumnConnector: [ 0 ]) ].
 	timeDropList items: { nil } , dataFrame columnNames.
 	self updateButtons
+]
+
+{ #category : #updating }
+RMDCSVImporter >> updateCycleField [
+
+	cycleField enabled: cyclicCheckBox state.
+	cyclicCheckBox state
+		ifTrue: [
+			cycleField syntaxNode ifNil: [
+				table items ifNotEmpty: [ :rows |
+					rows size >= 2 ifTrue: [
+						| parser triple |
+						parser := RMDGrammar new csvTimeColumnName.
+						(rows first keys
+							 detect: [ :string |
+							 (triple := parser parse: string) isPetit2Success ]
+							 ifNone: [  ]) ifNotNil: [ :timeColumnName |
+							| pair t1 t2 |
+							pair := rows last: 2.
+							t1 := pair first at: timeColumnName.
+							t2 := pair second at: timeColumnName.
+							cycleField syntaxNode: (RMDLiteralNode
+									 literal: (t2 + (t2 - t1)) printString
+									 unit: triple second) ] ] ] ] ]
+		ifFalse: [ cycleField syntaxNode: nil ]
 ]
 
 { #category : #updating }

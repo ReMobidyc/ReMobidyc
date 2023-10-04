@@ -549,8 +549,14 @@ RMDGrammar >> conjunctionNodeClass [
 { #category : #'parsers-files' }
 RMDGrammar >> csvColumnName [
 
-	^ 'time' asPParser trimBlanks , self type , self cycle optional
+	^ self csvTimeColumnName
 	  / (identifier , self type , self interpolation optional)
+]
+
+{ #category : #'parsers-files' }
+RMDGrammar >> csvTimeColumnName [
+
+	^ 'time' asPParser trimBlanks , self type , self cycle optional
 ]
 
 { #category : #'parsers-files' }
