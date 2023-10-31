@@ -462,27 +462,27 @@ RMDSimulationModeler >> updatePages [
 
 	| selection |
 	selection := views selectedPageIndex.
-	views pages: (Array streamContents: [ :stream | 
+	views pages: (Array streamContents: [ :stream |
 			 stream
 				 nextPut:
 					 (SpNotebookPage
 						  title: 'Metadata'
 						  provider: [ metadataPresenter ]);
-				 nextPut: (SpNotebookPage title: 'Variability' provider: [ 
+				 nextPut: (SpNotebookPage title: 'Variability' provider: [
 							  variabilityPresenter := RMDVariabilityPresenter on:
 									                          (simulationModel
 										                           updateMetaParameters;
 										                           variability) ]);
 				 nextPut:
-					 (SpNotebookPage title: 'Simulation Conditions' provider: [ 
+					 (SpNotebookPage title: 'Simulation Conditions' provider: [
 						  RMDScrollPresenter with:
-							  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter 
+							  (simulationDefinitionPresenter := (RMDSimulationDefinitionPresenter
 								                                     on:
-									                                     (simulationModel 
+									                                     (simulationModel
 										                                      ifNotNil:
 											                                      #simulationDefinition))
-								                                    
-								                                    addAnimatInitializerAction: [ 
+								
+								                                    addAnimatInitializerAction: [
 									                                    self addAnimatInitializer ];
 								                                    yourself) ]);
 				 nextPut: (SpNotebookPage
@@ -491,21 +491,25 @@ RMDSimulationModeler >> updatePages [
 				 nextPut: (SpNotebookPage
 						  title: 'Patch'
 						  provider: [ RMDPatchDefinitionBrowser on: self ]).
-			 simulationModel speciesNames do: [ :speciesName | 
+			 simulationModel speciesNames do: [ :speciesName |
+				 | pageIndex |
+				 pageIndex := ((views pages
+					                detect: [ :page | page title = speciesName ]
+					                ifNone: [ nil ]) ifNotNil: #activePresenter)
+					              ifNotNil: #selectedPageIndex
+					              ifNil: [ 0 ].
 				 stream
-					 nextPut: (SpNotebookPage
-							  title: speciesName
-							  provider: [ 
-								  RMDSpeciesDefinitionBrowser on: self species: speciesName ])
-							 beCloseable;
+					 nextPut: (SpNotebookPage title: speciesName provider: [
+								  (RMDSpeciesDefinitionBrowser on: self species: speciesName)
+									  selectPageIndex: pageIndex ]) beCloseable;
 					 yourself ].
 			 stream nextPut:
-				 (SpNotebookPage title: '' icon: self addIcon provider: [ 
+				 (SpNotebookPage title: '' icon: self addIcon provider: [
 					  RMDAddSpeciesEditor new
-						  action: [ :speciesName :stageName | 
+						  action: [ :speciesName :stageName |
 							  self addAnimatNamed: stageName species: speciesName ];
 						  yourself ]) ]).
-	selection > 0 ifTrue: [ 
+	selection > 0 ifTrue: [
 		views selectPageIndex: (selection min: views pages size) ]
 ]
 

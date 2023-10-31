@@ -413,6 +413,12 @@ RMDPresenter >> saveIconWith: aString [
 ]
 
 { #category : #icons }
+RMDPresenter >> spreadIcon [
+
+	^ Smalltalk ui iconNamed: #exception
+]
+
+{ #category : #icons }
 RMDPresenter >> stepIcon [
 
 	| form |

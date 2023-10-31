@@ -1170,6 +1170,13 @@ RMDSimulationModel >> taskDefinitions [
 	^ Array withAll: taskDefinitions
 ]
 
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> taskDefinitions: aCollectionOfRMDTaskDefinitionNode [
+
+	taskDefinitions := OrderedCollection withAll:
+		                   aCollectionOfRMDTaskDefinitionNode
+]
+
 { #category : #enumerating }
 RMDSimulationModel >> taskDefinitionsDo: aBlock [
 	taskDefinitions do: aBlock

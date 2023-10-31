@@ -4,7 +4,10 @@ Class {
 	#instVars : [
 		'copyStageButton',
 		'renameStageButton',
-		'renameSpeciesButton'
+		'renameSpeciesButton',
+		'spreadAttributeButton',
+		'spreadUtilityButton',
+		'spreadTaskButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -33,6 +36,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #moveDownAttributeButton
 										      width: self buttonHeight;
 										      add: #editAttributeButton width: self buttonHeight;
+										      add: #spreadAttributeButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
 								     add: 'Data source' expand: false;
@@ -52,6 +56,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #moveUpUtilityButton width: self buttonHeight;
 										      add: #moveDownUtilityButton width: self buttonHeight;
 										      add: #editUtilityButton width: self buttonHeight;
+										      add: #spreadUtilityButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
 								     yourself);
@@ -71,6 +76,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 														        add: #moveDownTaskButton
 														        width: self buttonHeight;
 														        add: #editTaskButton width: self buttonHeight;
+														        add: #spreadTaskButton width: self buttonHeight;
 														        yourself)
 												       height: self buttonHeight;
 												       yourself);
@@ -202,23 +208,44 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 RMDAnimatDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
+	spreadAttributeButton := self newButton
+		                         icon: self spreadIcon;
+		                         action: [ self spreadAttribute ];
+		                         help:
+			                         'Spread the attribute definition over all stages of the species';
+		                         disable;
+		                         yourself.
+	spreadUtilityButton := self newButton
+		                       icon: self spreadIcon;
+		                       action: [ self spreadUtility ];
+		                       help:
+			                       'Spread the utility definition over all stages of the species';
+		                       disable;
+		                       yourself.
+	spreadTaskButton := self newButton
+		                    icon: self spreadIcon;
+		                    action: [ self spreadTask ];
+		                    help:
+			                    'Spread the task definition over all stages of the species';
+		                    disable;
+		                    yourself.
 	renameSpeciesButton := self newButton
-		                label: 'rename species';
-		                help:
-			                'Change the name of species.';
-		                action: [ self renameSpecies ];
-		                yourself.
+		                       label: 'rename species';
+		                       help: 'Change the name of species.';
+		                       action: [ self renameSpecies ];
+		                       yourself.
 	renameStageButton := self newButton
-		                label: 'rename stage';
-		                help:
-			                'Change the name of stage. All references to this stage will be modified.';
-		                action: [ self renameStage ];
-		                yourself.
+		                     label: 'rename stage';
+		                     help:
+			                     'Change the name of stage. All references to this stage will be modified.';
+		                     action: [ self renameStage ];
+		                     yourself.
 	copyStageButton := self newButton
-		              label: 'copy stage';
-		              help: 'Create a copy of this stage and rename it.';
-		              action: [ self copyStage ];
-		              yourself
+		                   label: 'copy stage';
+		                   help:
+			                   'Create a copy of this stage and rename it.';
+		                   action: [ self copyStage ];
+		                   yourself
 ]
 
 { #category : #private }
@@ -269,4 +296,139 @@ RMDAnimatDefinitionBrowser >> setSimulationModeler: aRMDSimulationModeler animat
 RMDAnimatDefinitionBrowser >> speciesName [
 
 	^ self definitionDo: [ :animatDefinition | animatDefinition species ]
+]
+
+{ #category : #operations }
+RMDAnimatDefinitionBrowser >> spreadAttribute [
+
+	attributeList selection selectedItem ifNotNil: [ :attributeNode |
+		(UIManager default
+			 confirm: 'Add/overwrite the attribute definition to all stages?'
+			 label: 'Spread attribute') ifTrue: [
+			| animatDefinition |
+			animatDefinition := self agentDefinition.
+			self stagesOfSpeciesDo: [ :stage |
+				| attributes |
+				attributes := stage attributeDeclarations.
+				(attributes
+					 detect: [ :attribute |
+					 attribute identifier = attributeNode identifier ]
+					 ifNone: [ nil ])
+					ifNil: [ attributes := attributes copyWith: attributeNode copy ]
+					ifNotNil: [ :attribute |
+						attribute ~= attributeNode ifTrue: [
+							(UIManager default
+								 confirm:
+								 'Overwrite ' , stage identifier , '''s '
+								 , attribute printString , '?'
+								 label: 'Overwrite') ifTrue: [
+								attributes
+									at: (attributes indexOf: attribute)
+									put: attributeNode copy ] ] ].
+				stage attributeDeclarations: attributes ].
+			self updateAttributeList.
+			modeler ifNotNil: #updatePages ] ]
+]
+
+{ #category : #operations }
+RMDAnimatDefinitionBrowser >> spreadTask [
+
+	taskList selection selectedItem ifNotNil: [ :taskNode |
+		(UIManager default
+			 confirm: 'Add/overwrite the task definition to all stages?'
+			 label: 'Spread task') ifTrue: [
+			| animatDefinition tasks |
+			animatDefinition := self agentDefinition.
+			tasks := self simulationModel taskDefinitions.
+			self stagesOfSpeciesDo: [ :stage |
+				(tasks
+					 detect: [ :task |
+						 task subjectIdentifier = stage identifier and: [
+							 task verbIdentifier = taskNode verbIdentifier ] ]
+					 ifNone: [ nil ])
+					ifNil: [
+						tasks := tasks copyWith: (taskNode copy
+								          subjectIdentifier: stage identifier;
+								          yourself) ]
+					ifNotNil: [ :task |
+						task ~= taskNode ifTrue: [
+							(UIManager default
+								 confirm:
+								 'Overwrite ' , stage identifier , '''s '
+								 , task verbIdentifier , '?'
+								 label: 'Overwrite') ifTrue: [
+								tasks at: (tasks indexOf: task) put: (task copy
+										 subjectIdentifier: stage identifier;
+										 yourself) ] ] ] ].
+			self simulationModel taskDefinitions: tasks.
+			self updateTaskList.
+			self updateSourceText.
+			modeler ifNotNil: #updatePages ] ]
+]
+
+{ #category : #operations }
+RMDAnimatDefinitionBrowser >> spreadUtility [
+
+	utilityList selection selectedItem ifNotNil: [ :utilityNode |
+		(UIManager default
+			 confirm: 'Add/overwrite the utility definition to all stages?'
+			 label: 'Spread utility') ifTrue: [
+			| animatDefinition |
+			animatDefinition := self agentDefinition.
+			self stagesOfSpeciesDo: [ :stage |
+				| utilities |
+				utilities := stage utilityDefinitions.
+				(utilities
+					 detect: [ :utility |
+						 utility variable identifier = utilityNode variable identifier ]
+					 ifNone: [ nil ])
+					ifNil: [ utilities := utilities copyWith: utilityNode copy ]
+					ifNotNil: [ :utility |
+						utility ~= utilityNode ifTrue: [
+							(UIManager default
+								 confirm:
+								 'Overwrite ' , stage identifier , '''s '
+								 , utility printString , '?'
+								 label: 'Overwrite') ifTrue: [
+								utilities
+									at: (utilities indexOf: utility)
+									put: utilityNode copy ] ] ].
+				stage utilityDefinitions: utilities ].
+			self updateUtilityList.
+			modeler ifNotNil: #updatePages ] ]
+]
+
+{ #category : #accessing }
+RMDAnimatDefinitionBrowser >> stagesOfSpeciesDo: aBlock [
+
+	(self simulationModel stageNamesOf: self speciesName) do: [ :name |
+		(self simulationModel animatDefinitionAt: name ifAbsent: [ nil ])
+			ifNotNil: aBlock ]
+]
+
+{ #category : #updating }
+RMDAnimatDefinitionBrowser >> updateAttributeButtons [
+
+	| selected |
+	super updateAttributeButtons.
+	selected := attributeList selection selectedItem notNil.
+	spreadAttributeButton enabled: selected
+]
+
+{ #category : #updating }
+RMDAnimatDefinitionBrowser >> updateTaskButtons [
+
+	| selected |
+	selected := taskList selection selectedItem notNil.
+	super updateTaskButtons.
+	spreadTaskButton enabled: selected
+]
+
+{ #category : #updating }
+RMDAnimatDefinitionBrowser >> updateUtilityButtons [
+
+	| selected |
+	super updateUtilityButtons.
+	selected := utilityList selection selectedItem notNil.
+	spreadUtilityButton enabled: selected
 ]

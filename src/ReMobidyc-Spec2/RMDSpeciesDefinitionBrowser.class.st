@@ -56,6 +56,19 @@ RMDSpeciesDefinitionBrowser >> modeler: aRMDSimulationModeler [
 ]
 
 { #category : #accessing }
+RMDSpeciesDefinitionBrowser >> selectPageIndex: anInteger [
+
+	(anInteger between: 1 and: stagesNotebook pages size) ifTrue: [
+		stagesNotebook selectPageIndex: anInteger ]
+]
+
+{ #category : #accessing }
+RMDSpeciesDefinitionBrowser >> selectedPageIndex [
+
+	^ stagesNotebook selectedPageIndex
+]
+
+{ #category : #accessing }
 RMDSpeciesDefinitionBrowser >> species [
 
 	^ species
@@ -72,24 +85,21 @@ RMDSpeciesDefinitionBrowser >> species: aString [
 RMDSpeciesDefinitionBrowser >> updateStages [
 
 	| selection |
-	(modeler isNil or: [ species isNil or: [ stagesNotebook isNil ] ]) 
+	(modeler isNil or: [ species isNil or: [ stagesNotebook isNil ] ])
 		ifTrue: [ ^ self ].
 	selection := stagesNotebook selectedPageIndex.
 	stagesNotebook pages:
-		(((modeler simulationModel stageNamesOf: species) collect: [ 
-			  :stageName | 
-			  (SpNotebookPage title: stageName provider: [ 
-					   RMDAnimatDefinitionBrowser
-						   on: modeler
-						   animat: stageName ])
+		(((modeler simulationModel stageNamesOf: species) collect: [
+			  :stageName |
+			  (SpNotebookPage
+				   title: stageName
+				   provider: [
+					   RMDAnimatDefinitionBrowser on: modeler animat: stageName ])
 				  beCloseable;
 				  yourself ]) copyWith:
-			 (SpNotebookPage
-				  title: ''
-				  icon: Smalltalk ui icons add
-				  provider: [ 
-					  RMDAddStageEditor new
-						  action: [ :stage | 
-							  modeler addAnimatNamed: stage species: species ];
-						  yourself ]))
+			 (SpNotebookPage title: '' icon: self addIcon provider: [
+				  RMDAddStageEditor new
+					  action: [ :stage |
+						  modeler addAnimatNamed: stage species: species ];
+					  yourself ]))
 ]
