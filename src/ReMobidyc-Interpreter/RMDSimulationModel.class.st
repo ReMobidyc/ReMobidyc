@@ -1146,8 +1146,9 @@ RMDSimulationModel >> stagesOf: aString [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString do: aBlock [
 
-	animatDefinitions valuesDo: [ :animat |
-		animat species = aString ifTrue: [ aBlock value: animat ] ]
+	animatDefinitions at: aString ifPresent: aBlock ifAbsent: [
+		animatDefinitions valuesDo: [ :animat |
+			animat species = aString ifTrue: [ aBlock value: animat ] ] ]
 ]
 
 { #category : #'accessing - definitions' }

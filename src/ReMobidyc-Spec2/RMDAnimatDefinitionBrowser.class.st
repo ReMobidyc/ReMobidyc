@@ -401,7 +401,9 @@ RMDAnimatDefinitionBrowser >> spreadUtility [
 { #category : #accessing }
 RMDAnimatDefinitionBrowser >> stagesOfSpeciesDo: aBlock [
 
-	self simulationModel stagesOf: self speciesName do: aBlock
+	(self simulationModel stageNamesOf: self speciesName) do: [ :name |
+		(self simulationModel animatDefinitionAt: name ifAbsent: [ nil ])
+			ifNotNil: aBlock ]
 ]
 
 { #category : #updating }
