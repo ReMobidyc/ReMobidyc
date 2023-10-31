@@ -1146,9 +1146,8 @@ RMDSimulationModel >> stagesOf: aString [
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString do: aBlock [
 
-	animatDefinitions at: aString ifPresent: aBlock ifAbsent: [
-		animatDefinitions valuesDo: [ :animat |
-			animat species = aString ifTrue: [ aBlock value: animat ] ] ]
+	animatDefinitions valuesDo: [ :animat |
+		animat species = aString ifTrue: [ aBlock value: animat ] ]
 ]
 
 { #category : #'accessing - definitions' }
@@ -1168,6 +1167,13 @@ RMDSimulationModel >> swapTasks: aRMDTaskDefinitionNode and: anotherRMDTaskDefin
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> taskDefinitions [
 	^ Array withAll: taskDefinitions
+]
+
+{ #category : #'accessing - definitions' }
+RMDSimulationModel >> taskDefinitions: aCollectionOfRMDTaskDefinitionNode [
+
+	taskDefinitions := OrderedCollection withAll:
+		                   aCollectionOfRMDTaskDefinitionNode
 ]
 
 { #category : #enumerating }

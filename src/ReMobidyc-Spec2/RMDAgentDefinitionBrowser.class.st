@@ -352,17 +352,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 whenModelChangedDo: [
 		                 attributeList selectItem: nil ];
 		                 whenSelectionChangedDo: [
-			                 | selected index |
-			                 selected := attributeList selection selectedItem
-				                             notNil.
-			                 index := attributeList selection selectedIndex.
-			                 removeAttributeButton enabled: selected.
-			                 moveUpAttributeButton enabled:
-				                 (selected and: [ index > 1 ]).
-			                 moveDownAttributeButton enabled:
-				                 (selected and: [
-					                  index < attributeList items size ]).
-			                 editAttributeButton enabled: selected ];
+		                 self updateAttributeButtons ];
 		                 contextMenu: [ self attributeListMenu ];
 		                 yourself.
 	addAttributeButton := self newButton
@@ -430,17 +420,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 					                expr := item definitionBody.
 					                expr ifNotNil: [ expr printString ] ifNil: [ '' ] ]);
 		               whenModelChangedDo: [ utilityList selectItem: nil ];
-		               whenSelectionChangedDo: [
-			               | selected index |
-			               selected := utilityList selection selectedItem
-				                           notNil.
-			               index := utilityList selection selectedIndex.
-			               removeUtilityButton enabled: selected.
-			               moveUpUtilityButton enabled:
-				               (selected and: [ index > 1 ]).
-			               moveDownUtilityButton enabled:
-				               (selected and: [ index < utilityList items size ]).
-			               editUtilityButton enabled: selected ];
+		               whenSelectionChangedDo: [ self updateUtilityButtons ];
 		               contextMenu: [ self utilityListMenu ];
 		               yourself.
 	addUtilityButton := self newButton
@@ -529,14 +509,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 				             onDeactivation: #beDisabled);
 		            whenModelChangedDo: [ taskList selectItem: nil ];
 		            whenSelectionChangedDo: [
-			            | selected index |
-			            selected := taskList selection selectedItem notNil.
-			            index := taskList selection selectedIndex.
-			            removeTaskButton enabled: selected.
-			            moveUpTaskButton enabled: (selected and: [ index > 1 ]).
-			            moveDownTaskButton enabled:
-				            (selected and: [ index < taskList items size ]).
-			            editTaskButton enabled: selected.
+			            self updateTaskButtons.
 			            self updateSourceText ];
 		            contextMenu: [ self taskListMenu ];
 		            yourself.
@@ -859,6 +832,19 @@ RMDAgentDefinitionBrowser >> typechecker [
 ]
 
 { #category : #updating }
+RMDAgentDefinitionBrowser >> updateAttributeButtons [
+
+	| selected index |
+	selected := attributeList selection selectedItem notNil.
+	index := attributeList selection selectedIndex.
+	removeAttributeButton enabled: selected.
+	moveUpAttributeButton enabled: (selected and: [ index > 1 ]).
+	moveDownAttributeButton enabled:
+		(selected and: [ index < attributeList items size ]).
+	editAttributeButton enabled: selected
+]
+
+{ #category : #updating }
 RMDAgentDefinitionBrowser >> updateAttributeList [
 
 	self definitionDo: [ :definition | 
@@ -902,6 +888,19 @@ RMDAgentDefinitionBrowser >> updateSourceText [
 ]
 
 { #category : #updating }
+RMDAgentDefinitionBrowser >> updateTaskButtons [
+
+	| selected index |
+	selected := taskList selection selectedItem notNil.
+	index := taskList selection selectedIndex.
+	removeTaskButton enabled: selected.
+	moveUpTaskButton enabled: (selected and: [ index > 1 ]).
+	moveDownTaskButton enabled:
+		(selected and: [ index < taskList items size ]).
+	editTaskButton enabled: selected
+]
+
+{ #category : #updating }
 RMDAgentDefinitionBrowser >> updateTaskList [
 
 	self simulationModel ifNotNil: [ :model | 
@@ -911,6 +910,19 @@ RMDAgentDefinitionBrowser >> updateTaskList [
 			items: (model taskDefinitions select: [ :behavior | 
 						 behavior subjectIdentifier = self agentName ]);
 			selectItem: selectedBehavior ]
+]
+
+{ #category : #updating }
+RMDAgentDefinitionBrowser >> updateUtilityButtons [
+
+	| selected index |
+	selected := utilityList selection selectedItem notNil.
+	index := utilityList selection selectedIndex.
+	removeUtilityButton enabled: selected.
+	moveUpUtilityButton enabled: (selected and: [ index > 1 ]).
+	moveDownUtilityButton enabled:
+		(selected and: [ index < utilityList items size ]).
+	editUtilityButton enabled: selected
 ]
 
 { #category : #updating }
