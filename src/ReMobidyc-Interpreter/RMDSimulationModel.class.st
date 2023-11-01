@@ -259,6 +259,12 @@ RMDSimulationModel >> actionDefinitions [
 	^ actionDefinitions
 ]
 
+{ #category : #enumerating }
+RMDSimulationModel >> actionDefinitionsDo: aBlock [
+
+	self actionDefinitions do: aBlock
+]
+
 { #category : #'accessing - definitions' }
 RMDSimulationModel >> actionNames [
 	^ actionDefinitions keys asSortedCollection
@@ -300,6 +306,22 @@ RMDSimulationModel >> agentDefinitionAt: aString ifAbsent: errorBlock [
 	aString = 'World' ifTrue: [ ^ self worldDefinition ].
 	aString = 'Patch' ifTrue: [ ^ self patchDefinition ].
 	^ self animatDefinitionAt: aString ifAbsent: errorBlock
+]
+
+{ #category : #enumerating }
+RMDSimulationModel >> agentDefinitionsDo: aBlock [
+
+	worldDefinition ifNotNil: aBlock.
+	patchDefinition ifNotNil: aBlock.
+	self animatDefinitionsDo: aBlock
+]
+
+{ #category : #enumerating }
+RMDSimulationModel >> agentInitializersDo: aBlock [
+
+	self worldInitializer ifNotNil: aBlock.
+	self patchInitializer ifNotNil: aBlock.
+	self animatInitializersDo: aBlock
 ]
 
 { #category : #'accessing - definitions' }
@@ -739,6 +761,19 @@ RMDSimulationModel >> initialize [
 
 	super initialize.
 	self resetDefinitions
+]
+
+{ #category : #'accessing - initializers' }
+RMDSimulationModel >> initializersFor: aString do: aBlock [
+
+	aString = 'World' ifTrue: [
+		aBlock cull: self worldInitializer.
+		^ self ].
+	aString = 'Patch' ifTrue: [
+		aBlock cull: self patchInitializer.
+		^ self ].
+	self animatInitializers do: [ :initializer |
+		initializer agentName = aString ifTrue: [ aBlock cull: initializer ] ]
 ]
 
 { #category : #'accessing - meta parameters' }

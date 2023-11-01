@@ -285,3 +285,9 @@ RMDAgentDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinitionNode 
 
 	utilityDefinitions := anArrayOfRMDUtilityDefinitionNode
 ]
+
+{ #category : #enumerating }
+RMDAgentDefinitionNode >> utilityDefinitionsDo: aBlock [
+
+	utilityDefinitions do: aBlock
+]
