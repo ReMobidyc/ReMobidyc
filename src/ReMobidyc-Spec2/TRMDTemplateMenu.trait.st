@@ -571,7 +571,7 @@ TRMDTemplateMenu >> simulationTimes [
 { #category : #'templates-expressions' }
 TRMDTemplateMenu >> spatialExpressions [
 
-	^ Array streamContents: [ :stream | 
+	^ Array streamContents: [ :stream |
 		  stream
 			  nextPut: (RMDSourceTemplate
 					   name: 'direction of an animat'
@@ -598,7 +598,18 @@ TRMDTemplateMenu >> spatialExpressions [
 						   , 'where the east is 0 [degree], the north is 90 [degree],'
 						   , String cr
 						   , 'the west is 180 [degree] and the south is 270 [degree]'
-					   sourceText: 'direction neighbor''s _patch_attribute_') ]
+					   sourceText: 'direction neighbor''s _patch_attribute_');
+			  nextPut: (RMDSourceTemplate
+					   name: 'length of the patch'
+					   description:
+						   'Usage: length of here' , String cr
+						   , 'the length of the patch'
+					   sourceText: 'length of here');
+			  nextPut: (RMDSourceTemplate
+					   name: 'area of the patch'
+					   description:
+						   'Usage: area of here' , String cr , 'the area of the patch'
+					   sourceText: 'area of here') ]
 ]
 
 { #category : #'templates-units' }

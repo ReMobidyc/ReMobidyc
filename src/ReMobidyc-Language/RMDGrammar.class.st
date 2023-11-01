@@ -108,6 +108,7 @@ RMDGrammar >> agentDirective [
 	  / self densityOfIndividualsInRadiusDirective
 	  / self directionOfGradientDirective / self distanceDirective
 	  / self directionDirective / self timeDirective
+	  / self lengthDirective / self areaDirective
 ]
 
 { #category : #'parsers-atoms' }
@@ -274,6 +275,20 @@ RMDGrammar >> apply [
 { #category : #'class access' }
 RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> areaDirective [
+
+	^ ('area' asPParser , #blank asPParser plus , 'of' asPParser
+	   , #blank asPParser plus , 'here' asPParser) trimBlanks
+	  ==> [ :array | self areaDirectiveNodeClass new ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> areaDirectiveNodeClass [
+
+	^ RMDAreaDirectiveNode
 ]
 
 { #category : #'parsers-atoms' }
@@ -941,6 +956,20 @@ RMDGrammar >> killDirective [
 RMDGrammar >> killDirectiveNodeClass [
 
 	^ RMDKillDirectiveNode
+]
+
+{ #category : #'parsers-directives' }
+RMDGrammar >> lengthDirective [
+
+	^ ('length' asPParser , #blank asPParser plus , 'of' asPParser
+	   , #blank asPParser plus , 'here' asPParser) trimBlanks
+	  ==> [ :array | self lengthDirectiveNodeClass new ]
+]
+
+{ #category : #'class access' }
+RMDGrammar >> lengthDirectiveNodeClass [
+
+	^ RMDLengthDirectiveNode
 ]
 
 { #category : #units }
