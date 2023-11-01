@@ -483,9 +483,21 @@ RMDInterpreter >> objects: aString [
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
+{ #category : #directives }
+RMDInterpreter >> patchArea [
+
+	^ self simulationModel patchLength squared
+]
+
 { #category : #'space access' }
 RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
 	^ memory patchAtXIndex: anInteger yIndex: anotherInteger
+]
+
+{ #category : #directives }
+RMDInterpreter >> patchLength [
+
+	^ self simulationModel patchLength
 ]
 
 { #category : #'space access' }

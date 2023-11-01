@@ -145,6 +145,11 @@ RMDSyntaxNode >> isApplyNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isAreaDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isAssignableAttributeVariableNode [
 	^ false
 ]

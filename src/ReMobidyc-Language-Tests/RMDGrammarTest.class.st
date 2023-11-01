@@ -429,6 +429,15 @@ RMDGrammarTest >> testApply [
 ]
 
 { #category : #tests }
+RMDGrammarTest >> testAreaDirective [
+
+	| expr |
+	expr := grammar expression parse: 'area  of		here'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isAreaDirectiveNode
+]
+
+{ #category : #tests }
 RMDGrammarTest >> testAssignableDeltaAttributeVariable [
 
 	| variable |
@@ -995,6 +1004,15 @@ RMDGrammarTest >> testInt [
 	self assert: (grammar int end parse: '321') equals: 321.
 	self assert: (grammar int end parse: '-123') equals: -123.
 	self assert: (grammar int end parse: '3.14') isPetit2Failure
+]
+
+{ #category : #tests }
+RMDGrammarTest >> testLengthDirective [
+
+	| expr |
+	expr := grammar expression parse: 'length  of	here'.
+	self deny: expr isPetit2Failure.
+	self assert: expr isLengthDirectiveNode
 ]
 
 { #category : #tests }
