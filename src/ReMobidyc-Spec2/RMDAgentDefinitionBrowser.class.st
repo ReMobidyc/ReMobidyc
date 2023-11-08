@@ -764,6 +764,71 @@ RMDAgentDefinitionBrowser >> removeUtility [
 				self updateUtilityList ] ] ]
 ]
 
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString [
+
+	self agentDefinition
+		attributeDeclarationsDo: [ :attribute |
+			attribute identifier = aString ifTrue: [
+					attribute identifier: anotherString ] ];
+		utilityDefinitionsDo: [ :utility |
+			utility definitionBody attributeVariableNodesDo: [ :attribute |
+					(attribute agent = self agentName and: [
+							 attribute identifier = aString ]) ifTrue: [
+							attribute identifier: anotherString ] ] ].
+	self simulationModel
+		initializersFor: self agentName do: [ :agentInitializer |
+			agentInitializer attributeInitializers do: [ :attributeInitializer |
+					attributeInitializer identifier = aString ifTrue: [
+							attributeInitializer identifier: anotherString ] ] ];
+		taskDefinitionsDo: [ :task |
+			task subjectIdentifier = self agentName ifTrue: [
+					task parameterInstantiations do: [ :instantiation |
+							instantiation replacement attributeVariableNodesDo: [
+									:attribute |
+									(attribute agent isNil and: [ attribute identifier = aString ])
+										ifTrue: [
+											attribute identifier: anotherString.
+											task resetAction ] ] ] ].
+			task objectIdentifier = self agentName ifTrue: [
+					| agentRef |
+					agentRef := self agentName uncapitalized.
+					task parameterInstantiations do: [ :instantiation |
+							instantiation replacement attributeVariableNodesDo: [
+									:attribute |
+									(attribute agent = agentRef and: [
+											 attribute identifier = aString ]) ifTrue: [
+											attribute identifier: anotherString.
+											task resetAction ] ] ] ] ]
+]
+
+{ #category : #operations }
+RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString agentRef: agentRef [
+
+	self simulationModel
+		agentDefinitionsDo: [ :agent |
+			agent attributeVariableNodesDo: [ :attribute |
+					(attribute agent = agentRef and: [
+							 attribute identifier = aString ]) ifTrue: [
+							attribute identifier: anotherString ] ] ];
+		agentInitializersDo: [ :initializer |
+			initializer attributeVariableNodesDo: [ :attribute |
+					(attribute agent = agentRef and: [
+							 attribute identifier = aString ]) ifTrue: [
+							attribute identifier: anotherString ] ] ];
+		taskDefinitionsDo: [ :task |
+			task
+				attributeVariableNodesDo: [ :attribute |
+					(attribute agent = agentRef and: [
+							 attribute identifier = aString ]) ifTrue: [
+							attribute identifier: anotherString ] ];
+				resetAction ];
+		actionDefinitionsDo: [ :action |
+			action attributeVariableNodesDo: [ :attribute |
+				(attribute agent = agentRef and: [ attribute identifier = aString ])
+					ifTrue: [ attribute identifier: anotherString ] ] ]
+]
+
 { #category : #enumerating }
 RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 	^ self subclassResponsibility

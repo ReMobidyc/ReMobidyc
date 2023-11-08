@@ -59,6 +59,13 @@ RMDWorldDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode a
 				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
 ]
 
+{ #category : #operations }
+RMDWorldDefinitionBrowser >> renameAttribute: aString to: anotherString [
+
+	super renameAttribute: aString to: anotherString.
+	self renameAttribute: aString to: anotherString agentRef: 'world'
+]
+
 { #category : #enumerating }
 RMDWorldDefinitionBrowser >> renderersDo: aBlock [
 

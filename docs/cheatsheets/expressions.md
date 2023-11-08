@@ -83,6 +83,8 @@ The attributes of the object can be accessed in the following ways.
 | direction of agent | `direction` _agent_ | the direction of the _agent_ from the individual |
 | distance to agent | `distance` _agent_ | the distance between the individual and the _agent_ |
 | direction of spatial gradient | `direction neighbor's` _attribute_ | the direction of the gradient of _attribute_ at the current patch |
+| length of a patch | `length of here` | the length of the current patch |
+| area of a patch | `area of here` | the area of the current patch |
 
 ## Population Expressions
 | name | syntax | description |

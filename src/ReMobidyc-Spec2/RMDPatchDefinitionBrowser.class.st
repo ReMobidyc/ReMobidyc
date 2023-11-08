@@ -71,6 +71,13 @@ RMDPatchDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode a
 				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
 ]
 
+{ #category : #operations }
+RMDPatchDefinitionBrowser >> renameAttribute: aString to: anotherString [
+
+	super renameAttribute: aString to: anotherString.
+	self renameAttribute: aString to: anotherString agentRef: 'here'
+]
+
 { #category : #enumerating }
 RMDPatchDefinitionBrowser >> renderersDo: aBlock [
 
