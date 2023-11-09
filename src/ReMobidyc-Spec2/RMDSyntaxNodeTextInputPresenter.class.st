@@ -75,13 +75,15 @@ RMDSyntaxNodeTextInputPresenter >> beCondition [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beExpression [
-	self parser: RMDGrammar new expression end
+	self parser: RMDGrammar new expression end.
+	self text: self text asString
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beFreeText [
 
-	self parser: nil
+	self parser: nil.
+	self text: self text asString
 ]
 
 { #category : #api }
