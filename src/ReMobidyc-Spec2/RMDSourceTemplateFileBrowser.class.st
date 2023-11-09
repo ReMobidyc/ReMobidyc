@@ -160,7 +160,7 @@ RMDSourceTemplateFileBrowser >> initializePresenters [
 	super initializePresenters.
 	fileList := self newList
 		            display: [ :ref | ref basenameWithoutExtension: 'json' ];
-		            whenSelectionChangedDo: [ 
+		            whenSelectionChangedDo: [
 			            self
 				            updateFileButtons;
 				            updateTemplateList ];
@@ -175,7 +175,7 @@ RMDSourceTemplateFileBrowser >> initializePresenters [
 		                    yourself.
 	templateList := self newList
 		                display: [ :item | item name ];
-		                whenSelectionChangedDo: [ 
+		                whenSelectionChangedDo: [
 			                self
 				                updateTemplateButtons;
 				                updateSourceTemplate ];
@@ -202,17 +202,16 @@ RMDSourceTemplateFileBrowser >> initializePresenters [
 	expressionCheckBox := self newCheckBox
 		                      label: 'is expression';
 		                      state: false;
-		                      whenChangedDo: [ 
+		                      whenChangedDo: [
 			                      expressionCheckBox state
 				                      ifTrue: [ sourceTextField beExpression ]
-				                      ifFalse: [ sourceTextField beFreeText ].
-			                      self updateSourceTemplate ];
+				                      ifFalse: [ sourceTextField beFreeText ] ];
 		                      yourself.
 	acceptTemplateButton := self newButton
 		                        icon: self acceptIcon;
 		                        action: [ self acceptSourceTemplate ].
-	self whenBuiltDo: [ 
-		templateList withAdapterDo: [ :a | 
+	self whenBuiltDo: [
+		templateList withAdapterDo: [ :a |
 			a widgetDo: [ :w | w allowsDeselection: true ] ].
 		self updateFileList ]
 ]
@@ -221,7 +220,7 @@ RMDSourceTemplateFileBrowser >> initializePresenters [
 RMDSourceTemplateFileBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
-	aSpWindowPresenter initialExtent: self initialExtent; title: 'User-defined Template Browser'
+	aSpWindowPresenter initialExtent: self initialExtent
 ]
 
 { #category : #operations }
@@ -268,6 +267,12 @@ RMDSourceTemplateFileBrowser >> templateDirectory [
 
 	^ (FileLocator documents / 'ReMobidyc' / 'templates')
 		  ensureCreateDirectory
+]
+
+{ #category : #accessing }
+RMDSourceTemplateFileBrowser >> title [
+
+	^ 'User-defined Template Browser'
 ]
 
 { #category : #updating }
