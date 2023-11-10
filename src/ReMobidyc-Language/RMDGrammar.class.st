@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'definition',
 		'expression',
+		'expr5',
 		'identifier',
 		'agentIdentifier',
 		'agentReference',
@@ -838,8 +839,7 @@ RMDGrammar >> expr5 [
 RMDGrammar >> expr6 [
 
 	^ self uniformDistribution / self normalDistribution
-	  / self gammaDistribution / self logLogisticDistribution
-	  / self expr5
+	  / self gammaDistribution / self logLogisticDistribution / expr5
 ]
 
 { #category : #'parsers-expressions' }
@@ -860,17 +860,20 @@ RMDGrammar >> fractionNodeClass [
 { #category : #'parsers-expressions' }
 RMDGrammar >> gammaDistribution [
 
-	^ 'gamma' asPParser trimBlanks , self expr5
-	  , 'scale' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	^ 'gamma' asPParser trimBlanks , expr5 , 'scale' asPParser trimBlanks
+	  , expr5 ==> [ :quad |
 	  self gammaDistributionNodeClass
 		  shape: quad second
-		  scale: quad fourth ] / ('gamma' asPParser trimBlanks , self expr5
-	   , 'rate' asPParser trimBlanks , self expr5 ==> [ :quad | 
-	   self gammaDistributionNodeClass
-		   shape: quad second
-		   rate: quad fourth ])
-	  / ('gamma' asPParser trimBlanks , self expr5
-		   , 'mean' asPParser trimBlanks , self expr5 ==> [ :quad | 
+		  scale: quad fourth ]
+	  /
+		  ('gamma' asPParser trimBlanks , expr5
+		   , 'rate' asPParser trimBlanks , expr5 ==> [ :quad |
+		   self gammaDistributionNodeClass
+			   shape: quad second
+			   rate: quad fourth ])
+	  /
+		  ('gamma' asPParser trimBlanks , expr5
+		   , 'mean' asPParser trimBlanks , expr5 ==> [ :quad |
 		   self gammaDistributionNodeClass
 			   shape: quad second
 			   mean: quad fourth ])
@@ -1009,12 +1012,11 @@ RMDGrammar >> literalSequence [
 { #category : #'parsers-expressions' }
 RMDGrammar >> logLogisticDistribution [
 
-	^ ('loglogistic' asPParser / 'fisk' asPParser) trimBlanks
-	  , self expr5 , 'shape' asPParser trimBlanks , self expr5
-	  ==> [ :quad | 
-		  self logLogisticDistributionNodeClass
-			  scale: quad second
-			  shape: quad fourth ]
+	^ ('loglogistic' asPParser / 'fisk' asPParser) trimBlanks , expr5
+	  , 'shape' asPParser trimBlanks , expr5 ==> [ :quad |
+	  self logLogisticDistributionNodeClass
+		  scale: quad second
+		  shape: quad fourth ]
 ]
 
 { #category : #'class access' }
@@ -1133,10 +1135,12 @@ RMDGrammar >> newDirectiveNodeClass [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> normalDistribution [
-	^ ('normal' asPParser trimBlanks , self expr5
-		, 'sigma' asPParser trimBlanks , self expr5)
-		==>
-			[ :quad | self normalDistributionNodeClass mean: quad second sigma: quad fourth ]
+
+	^ 'normal' asPParser trimBlanks , expr5
+	  , 'sigma' asPParser trimBlanks , expr5 ==> [ :quad |
+	  self normalDistributionNodeClass
+		  mean: quad second
+		  sigma: quad fourth ]
 ]
 
 { #category : #'class access' }
@@ -1624,15 +1628,17 @@ RMDGrammar >> unaryMinusNodeClass [
 { #category : #'parsers-expressions' }
 RMDGrammar >> uniformDistribution [
 
-	^ 'uniform_integer' asPParser trimBlanks , self expr5
-	  , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
+	^ 'uniform_integer' asPParser trimBlanks , expr5
+	  , 'to' asPParser trimBlanks , expr5 ==> [ :quad |
 	  self uniformIntegerDistributionNodeClass
 		  from: quad second
-		  to: quad fourth ] / ('uniform' asPParser trimBlanks , self expr5
-	   , 'to' asPParser trimBlanks , self expr5 ==> [ :quad | 
-	   self uniformDistributionNodeClass
-		   from: quad second
-		   to: quad fourth ])
+		  to: quad fourth ]
+	  /
+		  ('uniform' asPParser trimBlanks , expr5
+		   , 'to' asPParser trimBlanks , expr5 ==> [ :quad |
+		   self uniformDistributionNodeClass
+			   from: quad second
+			   to: quad fourth ])
 ]
 
 { #category : #'class access' }

@@ -47,7 +47,7 @@ RMDSyntaxNodeTextInputPresenter class >> on: aParser [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> allowEmpty [
-	parser := parser optional end
+	parser := parser ifNotNil: [parser optional end]
 ]
 
 { #category : #private }
@@ -75,6 +75,7 @@ RMDSyntaxNodeTextInputPresenter >> beCondition [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beExpression [
+
 	self parser: RMDGrammar new expression end.
 	self text: self text asString
 ]
