@@ -31,12 +31,8 @@ RMDSpeciesDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	stagesNotebook := self newNotebook
-		                  whenSelectedPageChangedDo: [ 
-			                  modeler ifNotNil: [ 
-					                  modeler simulationDefinitionPresenter 
-						                  ifNotNil: #nodeChanged ] ];
-		                  whenPageRemovedDo: [ :page | 
-			                  modeler ifNotNil: [ 
+		                  whenPageRemovedDo: [ :page |
+			                  modeler ifNotNil: [
 					                  modeler removeAnimatNamed: page title ] ];
 		                  yourself.
 	self updateStages
