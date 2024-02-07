@@ -928,7 +928,7 @@ RMDGrammarTest >> testExpression [
 	self assert: expr isAdditionNode.
 	self assert: expr expression1 isGuardedChoiceNode.
 	expr := grammar expression end parse: '1 if x = y, 2 if x = z, 3'.
-	self assert: expr isPetit2Failure
+	self assert: expr isGuardedChoiceNode.
 ]
 
 { #category : #tests }

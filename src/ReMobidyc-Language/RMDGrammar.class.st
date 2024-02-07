@@ -10,7 +10,8 @@ Class {
 		'agentReference',
 		'condition',
 		'guardedChoice',
-		'literal'
+		'literal',
+		'expr6'
 	],
 	#classVars : [
 		'Builtins',
@@ -844,7 +845,8 @@ RMDGrammar >> expr6 [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> expression [
-	^ self expr6
+
+	^ self guardedChoice
 ]
 
 { #category : #'class access' }
@@ -893,7 +895,7 @@ RMDGrammar >> guard [
 
 { #category : #'parsers-expressions' }
 RMDGrammar >> guardedChoice [
-	^ (expression separatedBy: self guard)
+	^ (expr6 separatedBy: self guard)
 		==> [ :array | 
 			array size = 1
 				ifTrue: [ array first ]
