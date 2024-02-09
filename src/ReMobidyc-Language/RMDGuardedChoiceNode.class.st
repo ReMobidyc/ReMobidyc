@@ -22,11 +22,10 @@ RMDGuardedChoiceNode >> = anObject [
 
 { #category : #enumerating }
 RMDGuardedChoiceNode >> childrenDo: aBlock [
-	guardsAndChoices
-		do: [ :assoc | 
-			aBlock
-				value: assoc key;
-				value: assoc value ]
+
+	guardsAndChoices do: [ :assoc |
+		assoc key = true ifFalse: [ aBlock value: assoc key ].
+		aBlock value: assoc value ]
 ]
 
 { #category : #private }
