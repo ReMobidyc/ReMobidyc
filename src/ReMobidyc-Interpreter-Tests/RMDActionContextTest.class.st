@@ -15,7 +15,7 @@ RMDActionContextTest >> setUp [
 { #category : #tests }
 RMDActionContextTest >> testAction [
 	| parser source |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	source := '
 to test is
 	my delta x'' = two
@@ -35,7 +35,7 @@ where
 RMDActionContextTest >> testLoadUtilityDefinitions [
 
 	| parser sources |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	sources := #( 'one = 1' 'two = one + 1' ).
 	context loadUtilityDefinitions: (sources collect: [ :source | 
 			 parser utilityDefinition end parse: source ]).
@@ -50,7 +50,7 @@ RMDActionContextTest >> testLoadUtilityDefinitions [
 { #category : #tests }
 RMDActionContextTest >> testObject [
 	| parser foo bar eat |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	foo := parser animatDefinition
 		parse:
 			'

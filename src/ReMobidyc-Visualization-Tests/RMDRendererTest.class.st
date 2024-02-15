@@ -22,7 +22,7 @@ RMDRendererTest >> renderer [
 
 { #category : #running }
 RMDRendererTest >> setUp [
-	parser := RMDGrammar new renderer end.
+	parser := RMDGrammar current renderer end.
 	renderer := self renderer
 ]
 

@@ -32,9 +32,9 @@ RMDAttributeDefinitionBrowser class >> example1 [
 
 	| browser |
 	(browser := self on:
-		            (RMDGrammar new attributeDefinition end parse:
-			             'my delta x'' = 10 [m]')) openDialogWithSpec 
-		okAction: [ browser node inspect ]
+		            (RMDGrammar current attributeDefinition end parse:
+			             'my delta x'' = 10 [m]')) openDialog okAction: [
+		browser node inspect ]
 ]
 
 { #category : #private }
@@ -108,7 +108,7 @@ RMDAttributeDefinitionBrowser >> initializePresenters [
 		                yourself.
 	identifierField := self newSyntaxNodeTextInput
 		                   placeholder: 'attribute';
-		                   parser: RMDGrammar new identifier end;
+		                   parser: RMDGrammar current identifier end;
 		                   whenLastValidSyntaxNodeChangedDo: [ 
 			                   self identifierChanged ];
 		                   yourself.

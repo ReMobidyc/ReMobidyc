@@ -542,7 +542,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                  help: 'Edit the definition of the selected task';
 		                  disable;
 		                  yourself.
-	sourceText := (self newSourceWith: RMDGrammar new actionDefinition)
+	sourceText := (self newSourceWith: RMDGrammar current actionDefinition)
 		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself

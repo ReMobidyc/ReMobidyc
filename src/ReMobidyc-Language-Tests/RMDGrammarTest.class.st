@@ -116,7 +116,7 @@ RMDGrammarTest >> notEqualTest [
 
 { #category : #running }
 RMDGrammarTest >> setUp [
-	grammar := RMDGrammar new
+	grammar := RMDGrammar current
 ]
 
 { #category : #tests }
@@ -1461,7 +1461,7 @@ where
 { #category : #tests }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
-	node := RMDGrammar new taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
+	node := grammar taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
 when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
 ]

@@ -26,8 +26,8 @@ RMDUtilityDefinitionBrowser class >> example1 [
 
 	| browser |
 	(browser := self on:
-		            (RMDGrammar new utilityDefinition end parse:
-			             'foo = 10 [m]')) openDialogWithSpec okAction: [ 
+		            (RMDGrammar current utilityDefinition end parse:
+			             'foo = 10 [m]')) openDialog okAction: [
 		browser node inspect ]
 ]
 
@@ -68,7 +68,7 @@ RMDUtilityDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	identifierField := self newSyntaxNodeTextInput
-		                   parser: RMDGrammar new identifier end;
+		                   parser: RMDGrammar current identifier end;
 		                   whenLastValidSyntaxNodeChangedDo: [ 
 			                   self identifierChanged ];
 		                   yourself.

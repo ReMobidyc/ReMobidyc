@@ -18,19 +18,19 @@ RMDLifeDirectiveNodeTest >> setUpInterpreter [
 
 	super setUpInterpreter.
 	interpreter simulationModel
-		load: (RMDGrammar new patchDefinition parse: 'Patch.');
+		load: (RMDGrammar current patchDefinition parse: 'Patch.');
 		load:
-			(aDef := RMDGrammar new animatDefinition parse: 'A is Animat.');
+			(aDef := RMDGrammar current animatDefinition parse: 'A is Animat.');
 		load:
-			(bDef := RMDGrammar new animatDefinition parse: 'B is Animat.').
+			(bDef := RMDGrammar current animatDefinition parse: 'B is Animat.').
 	interpreter load: (RMDSimulationDefinitionNode
 			 timeDefinition:
 			 (RMDSimulationTimeDefinitionNode during: '2[year]' by: '0.5[day]')
 			 worldInitializer: RMDWorldInitializerNode empty
 			 patchInitializer:
-			 (RMDGrammar new patchInitializer parse: '1x1 of 1[m] Patch')
-			 animatInitializers: { 
-					 (RMDGrammar new animatInitializer parse: '1 A').
-					 (RMDGrammar new animatInitializer parse: '1 B') }).
+			 (RMDGrammar current patchInitializer parse: '1x1 of 1[m] Patch')
+			 animatInitializers: {
+					 (RMDGrammar current animatInitializer parse: '1 A').
+					 (RMDGrammar current animatInitializer parse: '1 B') }).
 	interpreter setupSimulation
 ]

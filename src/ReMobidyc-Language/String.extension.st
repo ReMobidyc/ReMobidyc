@@ -4,7 +4,7 @@ Extension { #name : #String }
 String >> asRMDActionDefinition [
 
 	| node |
-	node := RMDGrammar new actionDefinition end parse: self.
+	node := RMDGrammar current actionDefinition end parse: self.
 	^ node isPetit2Failure
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]
@@ -14,7 +14,7 @@ String >> asRMDActionDefinition [
 String >> asRMDAnimatDefinition [
 
 	| node |
-	node := RMDGrammar new animatDefinition end parse: self.
+	node := RMDGrammar current animatDefinition end parse: self.
 	^ node isPetit2Failure
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]
@@ -36,7 +36,7 @@ String >> asRMDExpressionDo: aBlock [
 { #category : #'*ReMobidyc-Language' }
 String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 	| node |
-	node := RMDGrammar new expression end parse: self.
+	node := RMDGrammar current expression end parse: self.
 	^ (node isPetit2Failure
 		ifTrue: [ errorBlock ]
 		ifFalse: [ aBlock ]) cull: node
@@ -46,7 +46,7 @@ String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 String >> asRMDSimulationDefinition [
 
 	| node |
-	node := RMDGrammar new simulationDefinition end parse: self.
+	node := RMDGrammar current simulationDefinition end parse: self.
 	^ node isPetit2Failure
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]
@@ -56,7 +56,7 @@ String >> asRMDSimulationDefinition [
 String >> asRMDTaskDefinition [
 
 	| node |
-	node := RMDGrammar new taskDefinition end parse: self.
+	node := RMDGrammar current taskDefinition end parse: self.
 	^ node isPetit2Failure
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]
@@ -67,7 +67,7 @@ String >> asRMDUnit [
 
 	^ self ifEmpty: [ RMDUnit noDimension ] ifNotEmpty: [ 
 		  | node |
-		  node := RMDGrammar new unit end parse: self.
+		  node := RMDGrammar current unit end parse: self.
 		  node isPetit2Failure
 			  ifTrue: [ RMDSyntaxError signal: node ]
 			  ifFalse: [ node ] ]
@@ -77,7 +77,7 @@ String >> asRMDUnit [
 String >> asRMDWorldDefinition [
 
 	| node |
-	node := RMDGrammar new worldDefinition end parse: self trim.
+	node := RMDGrammar current worldDefinition end parse: self trim.
 	^ node isPetit2Failure
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]

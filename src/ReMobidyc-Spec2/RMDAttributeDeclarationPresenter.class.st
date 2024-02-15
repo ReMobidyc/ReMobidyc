@@ -55,7 +55,7 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 	unitField := self newValidatedTextInput
 		             placeholder: 'unit';
 		             validation: [ :text |
-			             (RMDGrammar new unit optional end parse:
+			             (RMDGrammar current unit optional end parse:
 					              text asString trim) isPetit2Failure not ];
 		             contextMenu: [
 			             | menu |
@@ -66,7 +66,7 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 						             subMenu: unitField unitTemplateMenu ] ];
 		             whenLastValidTextChangedDo: [ :text |
 			             node unit:
-				             ((RMDGrammar new unit optional end parse:
+				             ((RMDGrammar current unit optional end parse:
 					               text asString trim) ifNil: [ RMDUnit noDimension ]).
 			             initializerExpressionField
 				             expectedType: (RMDType unit: node unit);

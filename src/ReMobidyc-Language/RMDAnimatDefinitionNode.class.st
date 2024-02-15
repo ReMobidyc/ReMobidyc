@@ -19,7 +19,7 @@ RMDAnimatDefinitionNode class >> createBuiltinAttributes [
 { #category : #'typical instances' }
 RMDAnimatDefinitionNode class >> goat [
 	<script: 'RMDAnimatDefinitionNode goat inspect'>
-	^ RMDGrammar new animatDefinition end parse: 'Goat is Goat with
+	^ RMDGrammar current animatDefinition end parse: 'Goat is Goat with
 	blood_sugar [kcal].'
 ]
 
@@ -37,7 +37,7 @@ RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attr
 { #category : #'typical instances' }
 RMDAnimatDefinitionNode class >> wolf [
 	<script: 'RMDAnimatDefinitionNode wolf inspect'>
-	^ RMDGrammar new animatDefinition end parse: 'Wolf is Wolf with
+	^ RMDGrammar current animatDefinition end parse: 'Wolf is Wolf with
 	blood_sugar [kcal].'
 ]
 

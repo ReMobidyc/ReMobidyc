@@ -27,7 +27,7 @@ RMDPresenter >> addIcon [
 RMDPresenter >> agentNameValidation [
 
 	^ [ :name | 
-	  (RMDGrammar new agentIdentifier parse: name) isPetit2Success ]
+	  (RMDGrammar current agentIdentifier parse: name) isPetit2Success ]
 ]
 
 { #category : #icons }

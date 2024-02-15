@@ -385,7 +385,7 @@ RMDCSVImporter >> initializePresenters [
 		                  whenChangedDo: [ self cyclicCheckBoxChanged ];
 		                  yourself.
 	cycleField := self newSyntaxNodeTextInput
-		              parser: RMDGrammar new literal;
+		              parser: RMDGrammar current literal;
 		              whenSyntaxNodeChangedDo: [ self cycleFieldChanged ];
 		              yourself.
 	self whenBuiltDo: [
@@ -552,7 +552,7 @@ RMDCSVImporter >> updateCycleField [
 				table items ifNotEmpty: [ :rows |
 					rows size >= 2 ifTrue: [
 						| parser triple |
-						parser := RMDGrammar new csvTimeColumnName.
+						parser := RMDGrammar current csvTimeColumnName.
 						(rows first keys
 							 detect: [ :string |
 							 (triple := parser parse: string) isPetit2Success ]

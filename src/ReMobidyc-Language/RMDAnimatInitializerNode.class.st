@@ -12,7 +12,7 @@ Class {
 RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString1 to: aString2 [
 	<script:
 		'(RMDAnimatInitializerNode goatInitializer: 100 bloodSugar: ''10000[kcal]'' to: ''100000[kcal]'') inspect'>
-	^ RMDGrammar new animatInitializer end
+	^ RMDGrammar current animatInitializer end
 		parse:
 			(String
 				streamContents: [ :stream | 
@@ -42,7 +42,7 @@ RMDAnimatInitializerNode class >> population: anInteger animat: aString attribut
 RMDAnimatInitializerNode class >> wolfInitializer: anInteger bloodSugar: aString1 to: aString2 [
 	<script:
 		'(RMDAnimatInitializerNode wolfInitializer: 20 bloodSugar: ''10000[kcal]'' to: ''50000[kcal]'') inspect'>
-	^ RMDGrammar new animatInitializer end
+	^ RMDGrammar current animatInitializer end
 		parse:
 			(String
 				streamContents: [ :stream | 

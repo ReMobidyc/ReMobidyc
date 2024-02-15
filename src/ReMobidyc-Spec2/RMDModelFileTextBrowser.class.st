@@ -89,13 +89,13 @@ RMDModelFileTextBrowser >> acceptSourceTextAt: fileReference [
 { #category : #parsers }
 RMDModelFileTextBrowser >> actionsFileParser [
 
-	^ RMDGrammar new actionsFile end
+	^ RMDGrammar current actionsFile end
 ]
 
 { #category : #parsers }
 RMDModelFileTextBrowser >> agentsFileParser [
 
-	^ RMDGrammar new agentsFile end
+	^ RMDGrammar current agentsFile end
 ]
 
 { #category : #menu }
@@ -237,7 +237,7 @@ RMDModelFileTextBrowser >> saveAll [
 { #category : #parsers }
 RMDModelFileTextBrowser >> simulationFileParser [
 
-	^ RMDGrammar new simulationFile end
+	^ RMDGrammar current simulationFile end
 ]
 
 { #category : #accessing }
@@ -267,7 +267,7 @@ RMDModelFileTextBrowser >> sourceTextContextMenu [
 { #category : #parsers }
 RMDModelFileTextBrowser >> tasksFileParser [
 
-	^ RMDGrammar new tasksFile end
+	^ RMDGrammar current tasksFile end
 ]
 
 { #category : #private }
@@ -376,11 +376,11 @@ RMDModelFileTextBrowser >> updateWindowTitle [
 { #category : #parsers }
 RMDModelFileTextBrowser >> variabilityFileParser [
 
-	^ RMDGrammar new variability end
+	^ RMDGrammar current variability end
 ]
 
 { #category : #parsers }
 RMDModelFileTextBrowser >> visualizationFileParser [
 
-	^ RMDGrammar new visualizationFile end
+	^ RMDGrammar current visualizationFile end
 ]

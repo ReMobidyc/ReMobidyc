@@ -208,7 +208,7 @@ RMDDataSource >> validateDataFrame [
 
 	| parser columnNames |
 	dataFrame isNil ifTrue: [ ^ false ].
-	parser := RMDGrammar new csvColumnName end.
+	parser := RMDGrammar current csvColumnName end.
 	units := Dictionary new: dataFrame numberOfColumns.
 	interpolations := Dictionary new: dataFrame numberOfColumns.
 	columnNames := OrderedCollection new: dataFrame numberOfColumns.

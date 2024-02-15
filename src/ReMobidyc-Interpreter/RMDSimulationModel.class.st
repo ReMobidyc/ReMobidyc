@@ -574,7 +574,7 @@ RMDSimulationModel >> importActions: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
 		| parser |
-		parser := RMDGrammar new actionDefinition end.
+		parser := RMDGrammar current actionDefinition end.
 		[ stream atEnd ] whileFalse: [ 
 			| source def |
 			source := (String streamContents: [ :wstream | 
@@ -597,7 +597,7 @@ RMDSimulationModel >> importAgents: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
 		| parser |
-		parser := RMDGrammar new agentDefinition end.
+		parser := RMDGrammar current agentDefinition end.
 		[ stream atEnd ] whileFalse: [ 
 			| source def |
 			source := (String streamContents: [ :wstream | 
@@ -694,7 +694,7 @@ RMDSimulationModel >> importSimulationDefinition: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
 		| def |
-		def := RMDGrammar new simulationDefinition end parse:
+		def := RMDGrammar current simulationDefinition end parse:
 			       stream contents.
 		def isPetit2Failure ifTrue: [ ^ RMDSyntaxError signal: def ].
 		self load: def ]
@@ -705,7 +705,7 @@ RMDSimulationModel >> importTasks: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
 		| parser |
-		parser := RMDGrammar new taskDefinition end.
+		parser := RMDGrammar current taskDefinition end.
 		[ stream atEnd ] whileFalse: [ 
 			| source def |
 			source := (String streamContents: [ :wstream | 
@@ -729,7 +729,7 @@ RMDSimulationModel >> importVariability: aFileReference [
 	aFileReference isFile ifTrue: [ 
 		aFileReference readStreamDo: [ :stream | 
 			| node |
-			node := RMDGrammar new variability end parse: stream contents.
+			node := RMDGrammar current variability end parse: stream contents.
 			node isPetit2Success ifTrue: [ self variability: node ] ] ]
 ]
 
@@ -738,7 +738,7 @@ RMDSimulationModel >> importVisualization: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
 		| parser |
-		parser := RMDGrammar new renderer end.
+		parser := RMDGrammar current renderer end.
 		[ stream atEnd ] whileFalse: [ 
 			| source def |
 			source := (String streamContents: [ :wstream | 

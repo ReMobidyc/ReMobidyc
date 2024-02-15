@@ -63,7 +63,7 @@ RMDInterpreterTest >> testAddLibrary [
 RMDInterpreterTest >> testLoadDataSources [
 
 	| parser memory inputs |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	memory := interpreter memory.
 	interpreter
 		load: ((parser worldDefinition end parse: 'World with
@@ -108,7 +108,7 @@ RMDInterpreterTest >> testLoadDataSources [
 { #category : #tests }
 RMDInterpreterTest >> testReadUtilityIfAbsent [
 	| parser source |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	source := '
 to test is
 	my delta x'' = two
@@ -128,7 +128,7 @@ where
 { #category : #tests }
 RMDInterpreterTest >> testSetUpSimulation [
 	| parser memory kcal celsius |
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	memory := interpreter memory.
 	interpreter
 		load:

@@ -4,9 +4,9 @@ Extension { #name : #RMDActionDefinitionNodeTest }
 RMDActionDefinitionNodeTest >> testEvalIn [
 
 	| agent script |
-	agent := RMDGrammar new agentDefinition end parse: 'World with
+	agent := RMDGrammar current agentDefinition end parse: 'World with
 	energy [kcal].'.
-	script := RMDGrammar new actionDefinition parse: 'to metabolize is
+	script := RMDGrammar current actionDefinition parse: 'to metabolize is
     my delta energy'' = -basal_metabolism * 0.5 [day]
 where
     basal_metabolism = 1500 [kcal/day].'.

@@ -107,12 +107,12 @@ RMDColumnConnectorPresenter >> initializePresenters [
 	super initializePresenters.
 	columnDropList := self newDropList.
 	attributeField := self newSyntaxNodeTextInput
-		                  parser: RMDGrammar new identifier end;
+		                  parser: RMDGrammar current identifier end;
 		                  placeholder: 'attribute';
 		                  autoAccept: true;
 		                  yourself.
 	unitField := self newSyntaxNodeTextInput
-		             parser: RMDGrammar new unit;
+		             parser: RMDGrammar current unit;
 		             placeholder: 'unit';
 		             autoAccept: true;
 		             yourself.

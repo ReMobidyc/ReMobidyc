@@ -119,11 +119,11 @@ RMDSimulationModeler >> addAnimatInitializer [
 RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 
 	| stageName speciesName animatDefinitionNode |
-	stageName := RMDGrammar new agentIdentifier end parse: aString.
+	stageName := RMDGrammar current agentIdentifier end parse: aString.
 	stageName isPetit2Failure ifTrue: [ 
 		UIManager default alert: 'Invalid animat name: ' , aString.
 		^ nil ].
-	speciesName := RMDGrammar new agentIdentifier end parse:
+	speciesName := RMDGrammar current agentIdentifier end parse:
 		               anotherString.
 	speciesName isPetit2Failure ifTrue: [ 
 		UIManager default alert: 'Invalid animat name: ' , anotherString.
