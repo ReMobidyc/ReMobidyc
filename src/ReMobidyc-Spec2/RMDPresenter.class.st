@@ -240,6 +240,12 @@ RMDPresenter >> newSyntaxNodeTextInput [
 ]
 
 { #category : #widgets }
+RMDPresenter >> newTableWithHorizontalScrollbar [
+
+	^ self instantiate: RMDTableWithHBarPresenter
+]
+
+{ #category : #widgets }
 RMDPresenter >> newValidatedTextInput [
 	^ self instantiate: RMDValidatedTextInputPresenter
 ]
