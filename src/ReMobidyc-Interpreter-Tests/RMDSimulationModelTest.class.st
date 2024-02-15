@@ -10,7 +10,7 @@ Class {
 
 { #category : #running }
 RMDSimulationModelTest >> setUp [
-	parser := RMDGrammar new.
+	parser := RMDGrammar current.
 	model := RMDSimulationModel new
 ]
 

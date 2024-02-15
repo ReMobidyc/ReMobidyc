@@ -38,5 +38,5 @@ RMDSyntaxNodeTest >> setUp [
 
 { #category : #running }
 RMDSyntaxNodeTest >> setUpParser [
-	parser := RMDGrammar new
+	parser := RMDGrammar current
 ]

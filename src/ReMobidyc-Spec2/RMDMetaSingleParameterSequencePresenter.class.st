@@ -27,7 +27,7 @@ RMDMetaSingleParameterSequencePresenter >> initializePresenters [
 		                    label: '-';
 		                    yourself.
 	literalsField := self newSyntaxNodeTextInput
-		                 parser: RMDGrammar new literalSequence;
+		                 parser: RMDGrammar current literalSequence;
 		                 display: [ :syntaxNode | 
 			                 ', ' join: (syntaxNode collect: #printString) ];
 		                 whenLastValidSyntaxNodeChangedDo: [ 

@@ -28,7 +28,7 @@ RMDMetaParameterSetSequencePresenter >> initializePresenters [
 		                     label: '-';
 		                     yourself.
 	tuplesField := self newSyntaxNodeTextInput
-		               parser: RMDGrammar new tupleSequence;
+		               parser: RMDGrammar current tupleSequence;
 		               display: [ :syntaxNode | 
 			               ',' , String cr join:
 					               (syntaxNode collect: [ :tuple | 

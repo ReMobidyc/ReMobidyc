@@ -16,7 +16,7 @@ RMDTaskDefinitionPresenter class >> defaultLayout [
 { #category : #initialization }
 RMDTaskDefinitionPresenter >> initializePresenters [
 	super initializePresenters.
-	source := (self newSourceWith: RMDGrammar new taskDefinition)
+	source := (self newSourceWith: RMDGrammar current taskDefinition)
 		whenLastValidSyntaxNodeChangedDo: [ :newNode | 
 			node
 				ifNotNil: [ node subjectIdentifier: newNode subjectIdentifier.

@@ -110,9 +110,9 @@ RMDTabular >> initializePresenters [
 		                   action: [ self exportAsCSV ];
 		                   yourself.
 	runDropList := self newDropList
-		               display: [ :runId | 
+		               display: [ :runId |
 			               runId
-				               ifNotNil: [ 
+				               ifNotNil: [
 					               (metaInterpreter
 						                interpreterAt: runId
 						                ifAbsent: [ nil ])
@@ -121,7 +121,8 @@ RMDTabular >> initializePresenters [
 				               ifNil: 'all' ];
 		               whenSelectedItemChangedDo: [ self runChanged ];
 		               yourself.
-	table := self newTable
+	table := self newTableWithHorizontalScrollbar
+		         enableHorizontalScrollbar;
 		         beResizable;
 		         contextMenu: [ self analysisMenu ];
 		         yourself

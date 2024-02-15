@@ -15,27 +15,27 @@ Class {
 
 { #category : #'instance creation' }
 RMDSyntaxNodeTextInputPresenter class >> forAgentIdentifier [
-	^ self on: RMDGrammar new agentIdentifier end
+	^ self on: RMDGrammar current agentIdentifier end
 ]
 
 { #category : #'instance creation' }
 RMDSyntaxNodeTextInputPresenter class >> forAgentReference [
-	^ self on: RMDGrammar new agentReference end
+	^ self on: RMDGrammar current agentReference end
 ]
 
 { #category : #'instance creation' }
 RMDSyntaxNodeTextInputPresenter class >> forExpression [
-	^ self on: RMDGrammar new expression end
+	^ self on: RMDGrammar current expression end
 ]
 
 { #category : #'instance creation' }
 RMDSyntaxNodeTextInputPresenter class >> forIdentifier [
-	^ self on: RMDGrammar new identifier end
+	^ self on: RMDGrammar current identifier end
 ]
 
 { #category : #'instance creation' }
 RMDSyntaxNodeTextInputPresenter class >> forLiteral [
-	^ self on: RMDGrammar new literal end
+	^ self on: RMDGrammar current literal end
 ]
 
 { #category : #'instance creation' }
@@ -60,23 +60,23 @@ RMDSyntaxNodeTextInputPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beAgentIdentifier [
-	self parser: RMDGrammar new agentIdentifier end
+	self parser: RMDGrammar current agentIdentifier end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beAgentReference [
-	self parser: RMDGrammar new agentReference end
+	self parser: RMDGrammar current agentReference end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beCondition [
-	self parser: RMDGrammar new condition end
+	self parser: RMDGrammar current condition end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beExpression [
 
-	self parser: RMDGrammar new expression end.
+	self parser: RMDGrammar current expression end.
 	self text: self text asString
 ]
 
@@ -89,24 +89,24 @@ RMDSyntaxNodeTextInputPresenter >> beFreeText [
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beIdentifier [
-	self parser: RMDGrammar new identifier end
+	self parser: RMDGrammar current identifier end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beLiteral [
-	self parser: RMDGrammar new literal end
+	self parser: RMDGrammar current literal end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beNewDirective [
 
-	self parser: RMDGrammar new newDirective end
+	self parser: RMDGrammar current newDirective end
 ]
 
 { #category : #api }
 RMDSyntaxNodeTextInputPresenter >> beStageDirective [
 
-	self parser: RMDGrammar new stageDirective end
+	self parser: RMDGrammar current stageDirective end
 ]
 
 { #category : #accessing }

@@ -27,7 +27,7 @@ RMDPresenter >> addIcon [
 RMDPresenter >> agentNameValidation [
 
 	^ [ :name | 
-	  (RMDGrammar new agentIdentifier parse: name) isPetit2Success ]
+	  (RMDGrammar current agentIdentifier parse: name) isPetit2Success ]
 ]
 
 { #category : #icons }
@@ -237,6 +237,12 @@ RMDPresenter >> newSourceWith: aParser [
 { #category : #widgets }
 RMDPresenter >> newSyntaxNodeTextInput [
 	^ self instantiate: RMDSyntaxNodeTextInputPresenter
+]
+
+{ #category : #widgets }
+RMDPresenter >> newTableWithHorizontalScrollbar [
+
+	^ self instantiate: RMDTableWithHBarPresenter
 ]
 
 { #category : #widgets }

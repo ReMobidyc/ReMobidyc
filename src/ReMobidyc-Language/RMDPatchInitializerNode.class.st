@@ -24,7 +24,7 @@ RMDPatchInitializerNode class >> empty [
 RMDPatchInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: lengthString grass: minString to: maxString [
 	<script:
 		'(RMDPatchInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') inspect'>
-	^ RMDGrammar new patchInitializer end
+	^ RMDGrammar current patchInitializer end
 		parse:
 			(String
 				streamContents: [ :stream | 

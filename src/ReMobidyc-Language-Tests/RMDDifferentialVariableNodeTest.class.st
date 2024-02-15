@@ -8,7 +8,7 @@ Class {
 RMDDifferentialVariableNodeTest >> testAssignIn [
 
 	| animatDef animat address dt |
-	animatDef := RMDGrammar new animatDefinition end parse:
+	animatDef := RMDGrammar current animatDefinition end parse:
 		             'Animat is Animat.'.
 	animat := 1.
 	address := 1 + (animatDef offsetAt: 'x' ifAbsent: [ self fail ]).

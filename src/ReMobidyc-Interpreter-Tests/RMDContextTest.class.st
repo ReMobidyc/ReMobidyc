@@ -11,7 +11,7 @@ Class {
 { #category : #running }
 RMDContextTest >> setUp [
 	context := RMDActionContext new.
-	parser := RMDGrammar new
+	parser := RMDGrammar current
 ]
 
 { #category : #tests }

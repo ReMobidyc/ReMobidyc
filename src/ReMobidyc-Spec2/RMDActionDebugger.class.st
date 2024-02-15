@@ -83,7 +83,7 @@ RMDActionDebugger >> exceptionChanged [
 RMDActionDebugger >> initializePresenters [
 
 	sourceText := (self newSourceWith:
-			               RMDGrammar new actionDefinition end)
+			               RMDGrammar current actionDefinition end)
 		              disable;
 		              disableAutoTypechecking;
 		              yourself.

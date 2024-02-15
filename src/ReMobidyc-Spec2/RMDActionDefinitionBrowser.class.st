@@ -251,7 +251,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	identifierField := self newSyntaxNodeTextInput
-		                   parser: RMDGrammar new identifier end;
+		                   parser: RMDGrammar current identifier end;
 		                   placeholder: 'verb';
 		                   autoAccept: true;
 		                   whenLastValidSyntaxNodeChangedDo: [ :identifier |
@@ -259,7 +259,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                   yourself.
 	objectField := self newHighlightingSyntaxNodeTextInput
 		               parser:
-			               RMDGrammar new agentIdentifier optional trimBlanks
+			               RMDGrammar current agentIdentifier optional trimBlanks
 				               end;
 		               placeholder: '(object)';
 		               autoAccept: true;
@@ -268,7 +268,7 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		               yourself.
 	guardField := self newHighlightingSyntaxNodeTextInput
 		              parser:
-			              RMDGrammar new condition optional trimBlanks end;
+			              RMDGrammar current condition optional trimBlanks end;
 		              placeholder: 'guard condition';
 		              autoAccept: false;
 		              whenLastValidSyntaxNodeChangedDo: [ :guard |
@@ -534,7 +534,7 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 RMDActionDefinitionBrowser >> requestQuantityForNewDirective [
 
 	| parser |
-	parser := RMDGrammar new expression end.
+	parser := RMDGrammar current expression end.
 
 	^ ((UIManager default
 		    request: 'Quantity of new borns'

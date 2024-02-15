@@ -26,7 +26,8 @@ RMDTabularColumn >> ifOnChartDo: aBlock [
 RMDTabularColumn >> initialize [
 
 	super initialize.
-	evaluation := self defaultEvaluation
+	evaluation := self defaultEvaluation.
+	self width: 150
 ]
 
 { #category : #printing }

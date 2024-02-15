@@ -4,7 +4,7 @@ Extension { #name : #RMDVariableNodeTest }
 RMDVariableNodeTest >> testAssignIn [
 
 	| animatDef animat address |
-	animatDef := RMDGrammar new animatDefinition end parse:
+	animatDef := RMDGrammar current animatDefinition end parse:
 		             'Animat is Animat.'.
 	animat := 1.
 	address := 1 + (animatDef offsetAt: 'x' ifAbsent: [ self fail ]).
@@ -13,7 +13,7 @@ RMDVariableNodeTest >> testAssignIn [
 		tick.
 	interpreter
 		withActionContextWith:
-		(RMDGrammar new actionDefinition end parse: 'to do_nothing is.')
+		(RMDGrammar current actionDefinition end parse: 'to do_nothing is.')
 		subject: animat
 		definition: animatDef
 		taskHash: 1
@@ -33,7 +33,7 @@ RMDVariableNodeTest >> testAssignIn [
 RMDVariableNodeTest >> testEvalIn [
 
 	| animatDef animat address |
-	animatDef := RMDGrammar new animatDefinition end parse:
+	animatDef := RMDGrammar current animatDefinition end parse:
 		             'Animat is Animat.'.
 	animat := 1.
 	address := 1 + (animatDef offsetAt: 'x' ifAbsent: [ self fail ]).

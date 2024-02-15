@@ -13,14 +13,14 @@ RMDPatchDefinitionNode class >> createBuiltinAttributes [
 { #category : #'typical instances' }
 RMDPatchDefinitionNode class >> grassField [
 	<script: 'RMDPatchDefinitionNode grassField inspect'>
-	^ RMDGrammar new patchDefinition end parse: 'Patch with
+	^ RMDGrammar current patchDefinition end parse: 'Patch with
 	grass [kcal].'
 ]
 
 { #category : #'typical instances' }
 RMDPatchDefinitionNode class >> sugarField [
 	<script: 'RMDPatchDefinitionNode sugarField inspect'>
-	^ RMDGrammar new patchDefinition end parse: 'Patch with
+	^ RMDGrammar current patchDefinition end parse: 'Patch with
 	sugar [kcal].'
 ]
 

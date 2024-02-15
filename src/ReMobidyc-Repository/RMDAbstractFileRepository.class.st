@@ -32,7 +32,7 @@ RMDAbstractFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 	^ self
 		  actionFileNamed: aString
 		  ifPresent: [ :ref | 
-			  action := RMDGrammar new actionDefinition end parse: ref contents.
+			  action := RMDGrammar current actionDefinition end parse: ref contents.
 			  action isPetit2Failure
 				  ifTrue: errorBlock
 				  ifFalse: [ action ] ]

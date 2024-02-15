@@ -26,7 +26,7 @@ RMDMemoryTest >> destroyMemory [
 { #category : #running }
 RMDMemoryTest >> setUp [
 	memory := self createMemory.
-	parser := RMDGrammar new
+	parser := RMDGrammar current
 ]
 
 { #category : #running }
