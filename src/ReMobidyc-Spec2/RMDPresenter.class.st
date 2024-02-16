@@ -20,7 +20,7 @@ RMDPresenter >> acceptIcon [
 
 { #category : #icons }
 RMDPresenter >> addIcon [
-	^ Smalltalk ui icons add
+	^ Smalltalk ui icons iconNamed: #add
 ]
 
 { #category : #private }
@@ -102,6 +102,26 @@ RMDPresenter >> experimentariumIcon [
 RMDPresenter >> exportIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallExport
+]
+
+{ #category : #icons }
+RMDPresenter >> filterIcon [
+
+	| form fillColor |
+	fillColor := Color gray: 0.3.
+	form := Form extent: 24 @ 24 depth: 32.
+	form getCanvas
+		fillColor: Color white;
+		drawPolygon: {
+				(7 @ 5).
+				(16 @ 5).
+				(11 @ 15) }
+		color: fillColor
+		borderWidth: 0
+		borderColor: fillColor;
+		fillRectangle: (10 @ 11 corner: 13 @ 20) color: fillColor;
+		flush.
+	^ form
 ]
 
 { #category : #icons }

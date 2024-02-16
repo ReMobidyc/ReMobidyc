@@ -9,6 +9,7 @@ Class {
 		'table',
 		'exportCSVButton',
 		'reloadButton',
+		'columnFilterButton',
 		'baseRowIndex'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
@@ -105,6 +106,10 @@ RMDTabular >> initializePresenters [
 		                icon: self updateIcon;
 		                action: [ self reloadInterpreter ];
 		                yourself.
+	columnFilterButton := self newButton
+		                      icon: self filterIcon;
+		                      action: [ self openColumnFilter ];
+		                      yourself.
 	exportCSVButton := self newButton
 		                   icon: (self saveIconWith: 'CSV');
 		                   action: [ self exportAsCSV ];
