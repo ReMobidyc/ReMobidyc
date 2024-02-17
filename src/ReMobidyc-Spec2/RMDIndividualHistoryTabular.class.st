@@ -125,7 +125,7 @@ RMDIndividualHistoryTabular >> openChart [
 		RSFlowLayout on: canvas shapes.
 		(canvas openWithTitle:
 			 stageDropList selectedItem value first , ' ('
-			 , stageDropList selectedItem value first printString , ')'
+			 , stageDropList selectedItem value second printString , ')'
 			 ,
 			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
 			 , (metaInterpreter

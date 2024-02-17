@@ -3,6 +3,7 @@ Class {
 	#superclass : #RMDTimeSeriesTabular,
 	#instVars : [
 		'agentDropList',
+		'openLineChartsButton',
 		'openBoxChartButton'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
@@ -35,6 +36,7 @@ RMDAttributeByTimeTabular class >> defaultLayout [
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
 				   add: '    ' expand: false;
+				   add: #openLineChartsButton width: self buttonHeight;
 				   add: #openBoxChartButton width: self buttonHeight;
 				   add: #exportCSVButton width: self buttonHeight;
 				   yourself)
@@ -53,10 +55,15 @@ RMDAttributeByTimeTabular >> initializePresenters [
 
 	super initializePresenters.
 	agentDropList := self newDropList
-		                 display: [ :agentDefinition | 
+		                 display: [ :agentDefinition |
 			                 agentDefinition fullName ];
 		                 whenSelectedItemChangedDo: [ self agentChanged ];
 		                 yourself.
+	openLineChartsButton := self newButton
+		                        icon: self lineChartIcon;
+		                        action: [ self openChartMenu ];
+		                        help: 'Open line charts';
+		                        yourself.
 	openBoxChartButton := self newButton
 		                      icon: self boxChartIcon;
 		                      action: [ self openBoxChart ];
@@ -73,7 +80,7 @@ RMDAttributeByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateTable
 ]
 
-{ #category : #accessing }
+{ #category : #charts }
 RMDAttributeByTimeTabular >> openBoxChart [
 
 	table columns ifNotEmpty: [ :columns |
@@ -101,6 +108,55 @@ RMDAttributeByTimeTabular >> openBoxChart [
 			 , (metaInterpreter
 					  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
 					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
+]
+
+{ #category : #charts }
+RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
+
+	| chart radius |
+	chart := RSChart new.
+	chart
+		extent: 400 @ 400;
+		title: aRMDTabularColumn title.
+	radius := table items size > 1000
+		          ifTrue: [ 0.5 ]
+		          ifFalse: [ 1 ].
+	chart
+		addPlot: (RMDScatterPlot new
+				 shape: (RSBox new
+						  extent: radius @ radius;
+						  paint: Color gray);
+				 x: (table items collect: table columns first)
+				 y: (table items collect: aRMDTabularColumn));
+		addDecoration: (RSHorizontalTick new fontSize: 8);
+		addDecoration: (RSVerticalTick new fontSize: 8);
+		addDecoration: (RSXLabelDecoration new
+				 title: table columns first title;
+				 fontSize: 10);
+		addDecoration: (RSYLabelDecoration new
+				 title: aRMDTabularColumn title;
+				 fontSize: 10).
+	(chart build openWithTitle:
+		 agentDropList selectedItem fullName , '''s '
+		 , aRMDTabularColumn title
+		 , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+		 , (metaInterpreter
+				  ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+				  ifNil: [ '' ])) extent: 800 @ 800
+]
+
+{ #category : #charts }
+RMDAttributeByTimeTabular >> openChartMenu [
+
+	| menu |
+	menu := self newMenu.
+	table columns do: [ :column |
+		column ifOnChartDo: [
+			menu addItem: [ :item |
+				item
+					name: column title;
+					action: [ self openChart: column ] ] ] ].
+	menu openWithSpecAtPointer
 ]
 
 { #category : #private }
