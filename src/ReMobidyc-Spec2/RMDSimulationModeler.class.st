@@ -11,7 +11,8 @@ Class {
 		'saveButton',
 		'openExperimentariumButton',
 		'openExperimentariumMenuButton',
-		'variabilityPresenter'
+		'variabilityPresenter',
+		'canDiscardEdits'
 	],
 	#category : #'ReMobidyc-Spec2-Browsers'
 }
@@ -284,8 +285,20 @@ RMDSimulationModeler >> initializePresenters [
 { #category : #initialization }
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 
+	| cachedAns |
+	cachedAns := nil.
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 1000 @ 600
+	aWindowPresenter initialExtent: 1000 @ 600.
+	aWindowPresenter whenWillCloseDo: [ :willCloseAnnouncement |
+		cachedAns ifNil: [
+			cachedAns := true.
+			(willCloseAnnouncement canClose and: [
+				 UIManager default
+					 confirm: 'Export the spec before close?'
+					 orCancel: [
+						 willCloseAnnouncement denyClose.
+						 cachedAns := nil.
+						 false ] ]) ifTrue: [ self save ] ] ]
 ]
 
 { #category : #private }
@@ -407,10 +420,10 @@ RMDSimulationModeler >> renameStage: aString to: anotherString [
 { #category : #operations }
 RMDSimulationModeler >> save [
 
-	modelFileReference ifNil: [ 
+	modelFileReference ifNil: [
 		RMDRepositoryModelsBrowser
 			openForSave: simulationModel
-			do: [ :model :repBrowser | 
+			do: [ :model :repBrowser |
 			self modelFileReference: repBrowser file ] ].
 	modelFileReference ifNil: [ ^ self ].
 	simulationModel updateMetadata.
@@ -422,10 +435,10 @@ RMDSimulationModeler >> save [
 RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 
 	simulationModel := aRMDSimulationModel.
-	metadataPresenter ifNotNil: [ 
-		simulationModel ifNotNil: [ 
+	metadataPresenter ifNotNil: [
+		simulationModel ifNotNil: [
 			metadataPresenter metadata: simulationModel metadata ] ].
-	simulationDefinitionPresenter ifNotNil: [ 
+	simulationDefinitionPresenter ifNotNil: [
 		simulationDefinitionPresenter node:
 			(simulationModel ifNotNil: #simulationDefinition) ].
 	self updatePages
