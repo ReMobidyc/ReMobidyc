@@ -36,10 +36,20 @@ RMDTraceableActionPresenter >> actionChanged [
 
 	action
 		ifNotNil: [
-			guardField text:
-				(action guard ifNotNil: #printString ifNil: [ '' ]).
-			directiveField text: (',' join: action lifeDirectives).
-			attributeDefinitionTable items: action attributeDefinitions.
+			| guard |
+			guard := true.
+			guardField text: (action guard
+					 ifNotNil: [ :node |
+						 guard := node value.
+						 node printCondition , ' = ' , node printValue ]
+					 ifNil: [ '' ]).
+			guard
+				ifTrue: [
+					directiveField text: (',' join: action lifeDirectives).
+					attributeDefinitionTable items: action attributeDefinitions ]
+				ifFalse: [
+					directiveField text: ''.
+					attributeDefinitionTable items: #(  ) ].
 			attributeReferenceTable items: action traceReferences ]
 		ifNil: [
 			guardField text: ''.
@@ -91,22 +101,26 @@ RMDTraceableActionPresenter >> layout [
 	| box |
 	box := SpBoxLayout newVertical.
 	action ifNotNil: [
+		| guard |
+		guard := true.
 		action guard ifNotNil: [
+			guard := action guard value.
 			box
 				add: (SpBoxLayout newHorizontal
 						 add: 'when ' expand: false;
 						 add: #guardField)
 				expand: false ].
-		action lifeDirectives ifNotEmpty: [
-			box
-				add: (SpBoxLayout newHorizontal
-						 add: 'with ' expand: false;
-						 add: #directiveField)
-				expand: false ].
-		action attributeDefinitions ifNotEmpty: [
-			box
-				add: '' asPresenter expand: false;
-				add: #attributeDefinitionTable ].
+		guard ifTrue: [
+			action lifeDirectives ifNotEmpty: [
+				box
+					add: (SpBoxLayout newHorizontal
+							 add: 'with ' expand: false;
+							 add: #directiveField)
+					expand: false ].
+			action attributeDefinitions ifNotEmpty: [
+				box
+					add: '' asPresenter expand: false;
+					add: #attributeDefinitionTable ] ].
 		attributeReferenceTable items ifNotEmpty: [
 			box
 				add: 'where' expand: false;

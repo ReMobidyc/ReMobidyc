@@ -83,6 +83,12 @@ RMDTraceNode >> precedence [
 ]
 
 { #category : #printing }
+RMDTraceNode >> printCondition [
+
+	^ node printCondition
+]
+
+{ #category : #printing }
 RMDTraceNode >> printExpression [
 
 	^ node printExpression
@@ -116,12 +122,17 @@ RMDTraceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSec
 { #category : #printing }
 RMDTraceNode >> printValue [
 
-	^ value ifNotNil: [
-		  (type notNil and: [ type originalUnit hasDimension ])
-			  ifTrue: [
-				  (type originalUnit fromSI: value) printString , '['
-				  , type originalUnit printString , ']' ]
-			  ifFalse: [ value printString ] ]
+	^ value
+		  ifNotNil: [
+			  (value = true or: [ value = false ])
+				  ifTrue: [ value printString ]
+				  ifFalse: [
+					  (type notNil and: [ type originalUnit hasDimension ])
+						  ifTrue: [
+							  (type originalUnit fromSI: value) printString , '['
+							  , type originalUnit printString , ']' ]
+						  ifFalse: [ value printString ] ] ]
+		  ifNil: [ '' ]
 ]
 
 { #category : #private }

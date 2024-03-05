@@ -463,7 +463,8 @@ RMDActionDefinitionNode >> traceReferences [
 	^ (Array streamContents: [ :stream |
 		   self
 			   nodesSuchThat: [ :node |
-			   node isTraceNode and: [ node node isReferenceNode ] ]
+				   node isTraceNode and: [
+					   node value notNil and: [ node node isReferenceNode ] ] ]
 			   do: [ :node | stream nextPut: node ] ]) asSet sorted:
 		  #printString ascending
 ]
