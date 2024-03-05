@@ -29,6 +29,12 @@ RMDAttributeInitializerNode >> childrenDo: aBlock [
 	expression ifNotNil: [ aBlock value: expression ]
 ]
 
+{ #category : #enumerating }
+RMDAttributeInitializerNode >> childrenTransform: aBlock [
+
+	expression ifNotNil: [ expression := aBlock value: expression ]
+]
+
 { #category : #accessing }
 RMDAttributeInitializerNode >> expression [
 	^ expression

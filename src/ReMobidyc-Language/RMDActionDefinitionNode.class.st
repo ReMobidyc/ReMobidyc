@@ -182,6 +182,15 @@ RMDActionDefinitionNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDActionDefinitionNode >> childrenTransform: aBlock [
+
+	guard ifNotNil: [ guard := aBlock value: guard ].
+	lifeDirectives := lifeDirectives collect: aBlock.
+	attributeDefinitions := attributeDefinitions collect: aBlock.
+	utilityDefinitions := utilityDefinitions collect: aBlock
+]
+
 { #category : #accessing }
 RMDActionDefinitionNode >> guard [
 	^ guard

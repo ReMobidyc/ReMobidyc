@@ -41,8 +41,8 @@ RMDAttributeVariableNode >> offsetIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  typeOfVariable: identifier
-		  agent: self agent
-		  ifAbsent: [ RMDUndefinedAttributeError signal: self ]
+	^ type := aRMDInterpreter
+		          typeOfVariable: identifier
+		          agent: self agent
+		          ifAbsent: [ RMDUndefinedAttributeError signal: self ]
 ]

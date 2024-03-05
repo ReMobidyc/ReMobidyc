@@ -7,5 +7,6 @@ RMDUnaryMinusNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUnaryMinusNode >> typecheckIn: aRMDInterpreter [
-	^ expression typecheckIn: aRMDInterpreter
+
+	^ type := expression typecheckIn: aRMDInterpreter
 ]

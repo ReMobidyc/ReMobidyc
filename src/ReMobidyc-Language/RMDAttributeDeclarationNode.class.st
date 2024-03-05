@@ -46,6 +46,13 @@ RMDAttributeDeclarationNode >> childrenDo: aBlock [
 		aBlock value: initializerExpression ]
 ]
 
+{ #category : #enumerating }
+RMDAttributeDeclarationNode >> childrenTransform: aBlock [
+
+	initializerExpression ifNotNil: [
+		initializerExpression := aBlock value: initializerExpression ]
+]
+
 { #category : #testing }
 RMDAttributeDeclarationNode >> hasInitializer [
 

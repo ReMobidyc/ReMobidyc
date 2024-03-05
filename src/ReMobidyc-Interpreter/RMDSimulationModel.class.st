@@ -408,6 +408,12 @@ RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
 ]
 
+{ #category : #'accessing - time' }
+RMDSimulationModel >> deltaTimeUnit [
+
+	^ simulationDefinition timeDefinition step unit
+]
+
 { #category : #'accessing - metadata' }
 RMDSimulationModel >> description [
 

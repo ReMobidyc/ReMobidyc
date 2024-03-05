@@ -32,6 +32,13 @@ RMDParameterInstantiationNode >> childrenDo: aBlock [
 	replacement ifNotNil: [ aBlock value: replacement ]
 ]
 
+{ #category : #enumerating }
+RMDParameterInstantiationNode >> childrenTransform: aBlock [
+
+	placeholder ifNotNil: [ placeholder := aBlock value: placeholder ].
+	replacement ifNotNil: [ replacement := aBlock value: replacement ]
+]
+
 { #category : #comparing }
 RMDParameterInstantiationNode >> hash [
 

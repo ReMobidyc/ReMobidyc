@@ -63,6 +63,15 @@ RMDSimulationDefinitionNode >> childrenDo: aBlock [
 	animatInitializers ifNotNil: [ animatInitializers do: aBlock ]
 ]
 
+{ #category : #enumerating }
+RMDSimulationDefinitionNode >> childrenTransform: aBlock [
+
+	patchInitializer := aBlock value: patchInitializer.
+	timeDefinition := aBlock value: timeDefinition.
+	animatInitializers ifNotNil: [
+		animatInitializers := animatInitializers collect: aBlock ]
+]
+
 { #category : #accessing }
 RMDSimulationDefinitionNode >> duration [
 	^ timeDefinition duration

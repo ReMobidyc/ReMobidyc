@@ -10,5 +10,6 @@ RMDUniformDistributionXNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionXNode >> typecheckIn: aRMDInterpreter [
-	^ RMDType length
+
+	^ type := RMDType unit: aRMDInterpreter patchLengthUnit
 ]

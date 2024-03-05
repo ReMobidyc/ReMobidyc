@@ -20,6 +20,11 @@ RMDLifeDirectiveNode >> childrenDo: aBlock [
 
 ]
 
+{ #category : #enumerating }
+RMDLifeDirectiveNode >> childrenTransform: aBlock [
+
+]
+
 { #category : #comparing }
 RMDLifeDirectiveNode >> hash [
 	^ self class hash

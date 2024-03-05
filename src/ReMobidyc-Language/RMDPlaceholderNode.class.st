@@ -33,6 +33,12 @@ RMDPlaceholderNode >> childrenDo: aBlock [
 	
 ]
 
+{ #category : #enumerating }
+RMDPlaceholderNode >> childrenTransform: aBlock [
+
+	
+]
+
 { #category : #comparing }
 RMDPlaceholderNode >> hash [
 

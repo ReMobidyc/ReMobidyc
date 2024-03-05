@@ -16,6 +16,11 @@ RMDUtilityVariableNode >> childrenDo: aBlock [
 
 ]
 
+{ #category : #enumerating }
+RMDUtilityVariableNode >> childrenTransform: aBlock [
+
+]
+
 { #category : #testing }
 RMDUtilityVariableNode >> isUtilityVariableNode [
 	^ true

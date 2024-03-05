@@ -53,6 +53,12 @@ RMDNewDirectiveNode >> childrenDo: aBlock [
 	quantity ifNotNil: [ aBlock value: quantity ]
 ]
 
+{ #category : #enumerating }
+RMDNewDirectiveNode >> childrenTransform: aBlock [
+
+	quantity ifNotNil: [ quantity := aBlock value: quantity ]
+]
+
 { #category : #comparing }
 RMDNewDirectiveNode >> hash [
 

@@ -45,6 +45,13 @@ RMDAgentInitializerNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDAgentInitializerNode >> childrenTransform: aBlock [
+
+	attributeInitializers := attributeInitializers collect: aBlock.
+	utilityDefinitions := utilityDefinitions collect: aBlock
+]
+
 { #category : #accessing }
 RMDAgentInitializerNode >> complementUtilityDefinitions [
 

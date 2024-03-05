@@ -7,11 +7,11 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 	patchDefinition := aRMDInterpreter simulationModel patchDefinition.
 	aRMDInterpreter memory
 		allocatePatches: patchDefinition x: xDivisions y: yDivisions;
-		patchesDo: [ :patch | 
+		patchesDo: [ :patch |
 			aRMDInterpreter
 				withInitializerContextWithSubject: patch
 				definition: patchDefinition
-				do: [ 
+				do: [
 					patchDefinition evalIn: aRMDInterpreter.
 					super evalIn: aRMDInterpreter ] ]
 ]

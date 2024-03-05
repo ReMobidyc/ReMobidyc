@@ -6,9 +6,9 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 	| animatDefinition |
 	animatDefinition := aRMDInterpreter simulationModel
 		                    animatDefinitionAt: animat
-		                    ifAbsent: [ 
+		                    ifAbsent: [
 		                    ^ (RMDUndefinedAnimatError on: self) signal ].
-	self population timesRepeat: [ 
+	self population timesRepeat: [
 		| individual xOffset yOffset |
 		individual := aRMDInterpreter memory allocateAnimat:
 			              animatDefinition.
@@ -21,7 +21,7 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 		aRMDInterpreter
 			withInitializerContextWithSubject: individual
 			definition: animatDefinition
-			do: [ 
+			do: [
 				aRMDInterpreter
 					writeNext:
 						(RMDUniformDistributionXNode current evalIn: aRMDInterpreter)

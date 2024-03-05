@@ -31,6 +31,13 @@ RMDUniformDistributionNode >> childrenDo: aBlock [
 		value: toExpression
 ]
 
+{ #category : #enumerating }
+RMDUniformDistributionNode >> childrenTransform: aBlock [
+
+	fromExpression := aBlock value: fromExpression.
+	toExpression := aBlock value: toExpression
+]
+
 { #category : #accessing }
 RMDUniformDistributionNode >> fromExpression [
 	^ fromExpression

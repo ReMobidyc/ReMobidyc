@@ -20,6 +20,13 @@ RMDGammaRateDistributionNode >> childrenDo: aBlock [
 	aBlock value: rateExpression
 ]
 
+{ #category : #enumerating }
+RMDGammaRateDistributionNode >> childrenTransform: aBlock [
+
+	super childrenTransform: aBlock.
+	rateExpression := aBlock value: rateExpression
+]
+
 { #category : #comparing }
 RMDGammaRateDistributionNode >> hash [
 

@@ -24,7 +24,7 @@ RMDAttributeDefinitionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 
-	^ [ 
+	^ [
 	  ([ definitionBody typecheckIn: aRMDInterpreter ]
 		   on: RMDSemanticError
 		   do: [ :ex | ex signalWithScope: self ]) unify:
@@ -32,7 +32,7 @@ RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 			   on: RMDSemanticError
 			   do: [ :ex | ex signalWithScope: self ]) ]
 		  on: RMDTypeUnificationError
-		  do: [ :ex | 
+		  do: [ :ex |
 			  ex resignalAs: (RMDTypeError
 					   on: self
 					   subnode: definitionBody

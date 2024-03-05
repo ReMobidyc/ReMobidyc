@@ -48,6 +48,12 @@ RMDAbstractAssignableAttributeVariableNode >> childrenDo: aBlock [
 	aBlock value: attributeVariable
 ]
 
+{ #category : #enumerating }
+RMDAbstractAssignableAttributeVariableNode >> childrenTransform: aBlock [
+
+	attributeVariable := aBlock value: attributeVariable
+]
+
 { #category : #comparing }
 RMDAbstractAssignableAttributeVariableNode >> hash [
 	^ self class hash bitXor: attributeVariable hash
@@ -56,6 +62,10 @@ RMDAbstractAssignableAttributeVariableNode >> hash [
 { #category : #accessing }
 RMDAbstractAssignableAttributeVariableNode >> identifier [
 	^ attributeVariable identifier
+]
+
+{ #category : #private }
+RMDAbstractAssignableAttributeVariableNode >> insertTrace [
 ]
 
 { #category : #accessing }

@@ -16,6 +16,7 @@ RMDDensityOfIndividualsInPatchDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel
 		stagesOf: animatName
-		do: [ :animatDef | ^ RMDType noDimension / RMDType area ].
+		do: [ :animatDef |
+			^ type := RMDType unit: aRMDInterpreter patchLengthUnit ** -2 ].
 	^ RMDUndefinedAnimatError on: animatName
 ]

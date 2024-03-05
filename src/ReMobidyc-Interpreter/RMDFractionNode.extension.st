@@ -14,6 +14,6 @@ RMDFractionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDFractionNode >> typecheckIn: aRMDInterpreter [
 
-	^ (expression1 typecheckIn: aRMDInterpreter)
-	  / (expression2 typecheckIn: aRMDInterpreter)
+	^ type := (expression1 typecheckIn: aRMDInterpreter)
+	          / (expression2 typecheckIn: aRMDInterpreter)
 ]

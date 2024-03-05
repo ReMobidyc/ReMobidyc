@@ -29,6 +29,12 @@ RMDDirectionOfGradientDirectiveNode >> childrenDo: aBlock [
 	aBlock value: patchAttributeVariable
 ]
 
+{ #category : #enumerating }
+RMDDirectionOfGradientDirectiveNode >> childrenTransform: aBlock [
+
+	patchAttributeVariable := aBlock value: patchAttributeVariable
+]
+
 { #category : #comparing }
 RMDDirectionOfGradientDirectiveNode >> hash [
 	^ self class hash bitXor: patchAttributeVariable hash

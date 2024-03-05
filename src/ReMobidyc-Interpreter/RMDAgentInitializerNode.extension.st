@@ -3,9 +3,9 @@ Extension { #name : #RMDAgentInitializerNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAgentInitializerNode >> evalIn: aRMDInterpreter [
 
-	[ 
+	[
 	aRMDInterpreter context loadUtilityDefinitions: utilityDefinitions.
-	attributeInitializers do: [ :initializer | 
+	attributeInitializers do: [ :initializer |
 		initializer evalIn: aRMDInterpreter ] ]
 		on: RMDSemanticError
 		do: [ :ex | ex signalWithScope: self ]

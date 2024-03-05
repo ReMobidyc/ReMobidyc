@@ -45,6 +45,13 @@ RMDSimulationTimeDefinitionNode >> childrenDo: aBlock [
 		value: step
 ]
 
+{ #category : #enumerating }
+RMDSimulationTimeDefinitionNode >> childrenTransform: aBlock [
+
+	duration := aBlock value: duration.
+	step := aBlock value: step
+]
+
 { #category : #accessing }
 RMDSimulationTimeDefinitionNode >> duration [
 	^ duration

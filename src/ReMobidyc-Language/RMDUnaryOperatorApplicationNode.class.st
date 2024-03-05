@@ -31,6 +31,12 @@ RMDUnaryOperatorApplicationNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
+{ #category : #enumerating }
+RMDUnaryOperatorApplicationNode >> childrenTransform: aBlock [
+
+	expression := aBlock value: expression
+]
+
 { #category : #accessing }
 RMDUnaryOperatorApplicationNode >> expression [
 	^ expression

@@ -234,6 +234,14 @@ RMDTaskDefinitionNode >> childrenDo: aBlock [
 	parameterInstantiations do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDTaskDefinitionNode >> childrenTransform: aBlock [
+
+	guard ifNotNil: [ guard := aBlock value: guard ].
+	range ifNotNil: [ range := aBlock value: range ].
+	parameterInstantiations := parameterInstantiations collect: aBlock
+]
+
 { #category : #private }
 RMDTaskDefinitionNode >> createName [
 

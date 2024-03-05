@@ -149,12 +149,6 @@ RMDInterpreter >> duration [
 	^ simulationModel duration
 ]
 
-{ #category : #timing }
-RMDInterpreter >> durationUnit [
-
-	^ simulationModel durationUnit
-]
-
 { #category : #'variable access' }
 RMDInterpreter >> easts: aString ifAbsent: errorBlock [
 
@@ -701,12 +695,20 @@ RMDInterpreter >> stepSimulation [
 	self critical: [ ^ self basicStepSimulation ]
 ]
 
+{ #category : #'random numbers' }
+RMDInterpreter >> taskHashFor: aRMDTaskDefinitionNode [
+
+	^ simulationModel taskDefinitions indexOf: aRMDTaskDefinitionNode
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: aString [
-	aString
-		ifNil:
-			[ ^ self terminate: context subject animat: context subjectDefinition ].
-	^ self terminate: context object animat: context objectDefinition
+
+	^ aString
+		  ifNotNil: [
+		  self terminate: context object animat: context objectDefinition ]
+		  ifNil: [
+		  self terminate: context subject animat: context subjectDefinition ]
 ]
 
 { #category : #'animat operations' }

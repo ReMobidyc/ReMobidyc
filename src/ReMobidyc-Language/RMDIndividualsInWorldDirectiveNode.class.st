@@ -46,6 +46,12 @@ RMDIndividualsInWorldDirectiveNode >> childrenDo: aBlock [
 	
 ]
 
+{ #category : #enumerating }
+RMDIndividualsInWorldDirectiveNode >> childrenTransform: aBlock [
+
+	
+]
+
 { #category : #comparing }
 RMDIndividualsInWorldDirectiveNode >> hash [
 

@@ -17,6 +17,12 @@ RMDModelFileNode >> childrenDo: aBlock [
 ]
 
 { #category : #enumerating }
+RMDModelFileNode >> childrenTransform: aBlock [
+
+	
+]
+
+{ #category : #enumerating }
 RMDModelFileNode >> contentsDo: aBlock [
 
 	^ self subclassResponsibility

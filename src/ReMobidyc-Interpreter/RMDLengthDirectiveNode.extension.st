@@ -9,5 +9,5 @@ RMDLengthDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDLengthDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	^ RMDType length
+	^ type := RMDType unit: aRMDInterpreter patchLengthUnit
 ]
