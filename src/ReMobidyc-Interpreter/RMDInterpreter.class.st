@@ -40,6 +40,13 @@ RMDInterpreter >> announceTimeChanged [
 		(RMDTimeChanged interpreter: self time: self time)
 ]
 
+{ #category : #private }
+RMDInterpreter >> applyMeta [
+
+	simulationModel := simulationModel instantiateWithMetaParameters:
+		                   memory metaparameters
+]
+
 { #category : #simulating }
 RMDInterpreter >> basicStepSimulation [
 
@@ -622,7 +629,8 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 
-	memory := aRMDMemory
+	memory := aRMDMemory.
+	self applyMeta
 ]
 
 { #category : #'random numbers' }

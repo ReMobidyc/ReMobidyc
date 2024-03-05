@@ -33,7 +33,7 @@ RMDMetaInterpreter >> openInReplayObservatory [
 { #category : #'*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInSnapshotTabular [
 
-	^ (RMDSnapshotTabular on: self)
+	^ (RMDSnapshotValidatorium on: self)
 		  open;
 		  yourself
 ]

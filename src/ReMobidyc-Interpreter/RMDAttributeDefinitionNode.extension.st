@@ -27,8 +27,11 @@ RMDAttributeDefinitionNode >> typecheckIn: aRMDInterpreter [
 	^ [
 	  ([ definitionBody typecheckIn: aRMDInterpreter ]
 		   on: RMDSemanticError
-		   do: [ :ex | ex signalWithScope: self ]) unify:
-		  ([ variable typecheckIn: aRMDInterpreter ]
+		   do: [ :ex | ex signalWithScope: self ]) unify: ([
+		   | t |
+		   t := variable typecheckIn: aRMDInterpreter.
+		   definitionBody isTraceNode ifTrue: [ definitionBody type: t ].
+		   t ]
 			   on: RMDSemanticError
 			   do: [ :ex | ex signalWithScope: self ]) ]
 		  on: RMDTypeUnificationError

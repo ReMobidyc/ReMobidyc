@@ -10,6 +10,12 @@ RMDDirectiveNode class >> isAbstract [
 	^ self = RMDDirectiveNode
 ]
 
+{ #category : #testing }
+RMDDirectiveNode >> isReferenceNode [
+
+	^ true
+]
+
 { #category : #accessing }
 RMDDirectiveNode >> precedence [
 	^ 1

@@ -21,6 +21,12 @@ RMDUtilityDefinitionNode >> asPresenter [
 	^ RMDUtilityDefinitionPresenter on: self
 ]
 
+{ #category : #enumerating }
+RMDUtilityDefinitionNode >> childrenTransform: aBlock [
+
+	definitionBody := aBlock value: definitionBody
+]
+
 { #category : #testing }
 RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 	^ true

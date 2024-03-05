@@ -46,6 +46,12 @@ RMDTraceNode >> insertTrace [
 	
 ]
 
+{ #category : #testing }
+RMDTraceNode >> isTraceNode [
+
+	^ true
+]
+
 { #category : #accessing }
 RMDTraceNode >> node [
 
@@ -77,18 +83,15 @@ RMDTraceNode >> precedence [
 ]
 
 { #category : #printing }
+RMDTraceNode >> printExpression [
+
+	^ node printExpression
+]
+
+{ #category : #printing }
 RMDTraceNode >> printOn: aStream [
 
-	value
-		ifNotNil: [
-			type
-				ifNotNil: [
-					(type originalUnit fromSI: value) printOn: aStream.
-					aStream nextPut: $[.
-					type originalUnit printOn: aStream.
-					aStream nextPut: $] ]
-				ifNil: [ value printOn: aStream ] ]
-		ifNil: [ node printOn: aStream ]
+	node printOn: aStream
 ]
 
 { #category : #printing }
@@ -110,6 +113,17 @@ RMDTraceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSec
 				addSectionTo: aCollection ]
 ]
 
+{ #category : #printing }
+RMDTraceNode >> printValue [
+
+	^ value ifNotNil: [
+		  (type notNil and: [ type originalUnit hasDimension ])
+			  ifTrue: [
+				  (type originalUnit fromSI: value) printString , '['
+				  , type originalUnit printString , ']' ]
+			  ifFalse: [ value printString ] ]
+]
+
 { #category : #private }
 RMDTraceNode >> removeTrace [
 
@@ -120,6 +134,12 @@ RMDTraceNode >> removeTrace [
 RMDTraceNode >> replaceChildren: aDictionary [
 
 	node replaceChildren: aDictionary
+]
+
+{ #category : #accessing }
+RMDTraceNode >> type: aRMDType [
+
+	type := aRMDType
 ]
 
 { #category : #accessing }

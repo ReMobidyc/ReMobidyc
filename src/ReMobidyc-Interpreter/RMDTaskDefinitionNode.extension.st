@@ -153,6 +153,10 @@ RMDTaskDefinitionNode >> validateWithSubject: anInteger in: aRMDInterpreter [
 		                agentDefinitionAt: subjectIdentifier
 		                ifAbsent: [
 		                ^ RMDUndefinedAnimatError signal: subjectIdentifier ].
+	aRMDInterpreter simulationModel typechecker
+		typecheck: traceableAction
+		subject: subjectAgent
+		object: nil.
 	aRMDInterpreter
 		withActionContextWith: traceableAction
 		subject: anInteger
@@ -177,6 +181,10 @@ RMDTaskDefinitionNode >> validateWithSubject: anInteger object: anotherInteger i
 		               animatDefinitionAt: objectIdentifier
 		               ifAbsent: [
 		               ^ RMDUndefinedAnimatError signal: objectIdentifier ].
+	aRMDInterpreter simulationModel typechecker
+		typecheck: traceableAction
+		subject: subjectAgent
+		object: objectAgent.
 	aRMDInterpreter
 		withActionContextWith: traceableAction
 		subject: anInteger

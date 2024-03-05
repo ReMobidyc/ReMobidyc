@@ -214,6 +214,12 @@ RMDTabular >> selectTime: anInteger [
 ]
 
 { #category : #private }
+RMDTabular >> selectedInterpreter [
+
+	^ metaInterpreter interpreterAt: self selectedRunId ifAbsent: [  ]
+]
+
+{ #category : #private }
 RMDTabular >> selectedRunId [
 
 	^ runDropList selectedItem ifNotNil: [ :runId | 

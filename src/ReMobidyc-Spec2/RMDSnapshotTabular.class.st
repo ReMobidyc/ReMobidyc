@@ -43,6 +43,31 @@ RMDSnapshotTabular class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : #layout }
+RMDSnapshotTabular class >> withoutButtons [
+
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: #reloadButton width: self buttonHeight;
+				   yourself)
+		  height: self buttonHeight;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.2;
+				   add: (SpBoxLayout newVertical
+						    add: 'Run' expand: false;
+						    add: #runDropList expand: false;
+						    add: 'Time' expand: false;
+						    add: #timeList;
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Agent' expand: false;
+						    add: #agentDropList expand: false;
+						    add: #table;
+						    yourself);
+				   yourself);
+		  yourself
+]
+
 { #category : #updating }
 RMDSnapshotTabular >> agentChanged [
 

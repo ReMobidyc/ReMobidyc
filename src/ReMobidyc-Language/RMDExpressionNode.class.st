@@ -49,6 +49,18 @@ RMDExpressionNode >> precedence [
 	^ self subclassResponsibility
 ]
 
+{ #category : #printing }
+RMDExpressionNode >> printExpression [
+
+	^ self printString
+]
+
+{ #category : #printing }
+RMDExpressionNode >> printValue [
+
+	^ '-'
+]
+
 { #category : #accessing }
 RMDExpressionNode >> type [
 

@@ -800,9 +800,9 @@ RMDSimulationModel >> interpreterForDryRun [
 RMDSimulationModel >> interpreterOn: aRMDMemory [
 
 	^ RMDInterpreter new
+		  simulationModel: self;
 		  setMemory: aRMDMemory;
 		  setContext: RMDActionContext new;
-		  simulationModel: self;
 		  yourself
 ]
 

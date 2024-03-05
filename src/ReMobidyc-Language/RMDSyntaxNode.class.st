@@ -476,6 +476,12 @@ RMDSyntaxNode >> isProductNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isReferenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isRemainderNode [
 
 	^ false
@@ -525,6 +531,12 @@ RMDSyntaxNode >> isTasksFileNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isTimeDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isTraceNode [
+
 	^ false
 ]
 

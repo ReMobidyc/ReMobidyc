@@ -396,6 +396,15 @@ RMDActionDefinitionNode >> printShortOn: aStream [
 			nextPutAll: object ]
 ]
 
+{ #category : #accessing }
+RMDActionDefinitionNode >> references [
+
+	^ (Array streamContents: [ :stream |
+		   self
+			   nodesSuchThat: #isReferenceNode
+			   do: [ :node | stream nextPut: node ] ]) asSet
+]
+
 { #category : #rewriting }
 RMDActionDefinitionNode >> renameAnimat: aString to: anotherString [
 
@@ -446,6 +455,17 @@ RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
 	guard := guard
 		         ifNil: [ aRMDConditionNode ]
 		         ifNotNil: [ guard & aRMDConditionNode ]
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> traceReferences [
+
+	^ (Array streamContents: [ :stream |
+		   self
+			   nodesSuchThat: [ :node |
+			   node isTraceNode and: [ node node isReferenceNode ] ]
+			   do: [ :node | stream nextPut: node ] ]) asSet sorted:
+		  #printString ascending
 ]
 
 { #category : #accessing }

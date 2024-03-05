@@ -9,10 +9,11 @@ Class {
 
 { #category : #running }
 RMDInterpreterTest >> setUp [
+
 	interpreter := RMDInterpreter new
-		setMemory: RMDOnMemory new;
-		setContext: RMDActionContext new;
-		yourself
+		               setMemory: RMDOnMemory new;
+		               setContext: RMDActionContext new;
+		               yourself
 ]
 
 { #category : #tests }
