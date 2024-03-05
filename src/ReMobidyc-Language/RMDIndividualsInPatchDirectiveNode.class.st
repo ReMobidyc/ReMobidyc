@@ -46,12 +46,6 @@ RMDIndividualsInPatchDirectiveNode >> childrenDo: aBlock [
 	
 ]
 
-{ #category : #enumerating }
-RMDIndividualsInPatchDirectiveNode >> childrenTransform: aBlock [
-
-	
-]
-
 { #category : #comparing }
 RMDIndividualsInPatchDirectiveNode >> hash [
 

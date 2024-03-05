@@ -130,8 +130,17 @@ RMDSnapshotTabular >> openChart [
 ]
 
 { #category : #private }
+RMDSnapshotTabular >> selectedAgent [
+
+	^ agentDropList selectedItem
+]
+
+{ #category : #private }
 RMDSnapshotTabular >> selectedIndividual [
 
+	self selectedAgent ifNotNil: [ :agent |
+		agent isWorldDefinitionNode ifTrue: [
+			^ self selectedInterpreter world ] ].
 	^ table selectedItem ifNotNil: [ :item |
 		  (item at: #id ifAbsent: [ nil ]) ifNotNil: [ :id |
 			  id isInteger ifTrue: [ id ] ] ]
@@ -182,40 +191,41 @@ RMDSnapshotTabular >> updateColumns [
 RMDSnapshotTabular >> updateRows [
 
 	table
-		items: (Array streamContents: [ :stream | 
+		items: (Array streamContents: [ :stream |
 					 (metaInterpreter
 						  interpreterAt: runDropList selectedItem
-						  ifAbsent: [ nil ]) ifNotNil: [ :interpreter | 
+						  ifAbsent: [ nil ]) ifNotNil: [ :interpreter |
 							 | memory |
 							 memory := interpreter memory.
-							 timeList selectedItem ifNotNil: [ :time | 
-									 agentDropList selectedItem ifNotNil: [ :agentDefinition | 
+							 timeList selectedItem ifNotNil: [ :time |
+									 agentDropList selectedItem ifNotNil: [ :agentDefinition |
 											 memory time: time.
-											 agentDefinition isWorldDefinitionNode ifTrue: [ 
+											 agentDefinition isWorldDefinitionNode ifTrue: [
 													 | row |
 													 row := Dictionary new.
-													 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+													 agentDefinition attributeOffsetsDo: [ :attribute :offset |
 															 row
 																 at: attribute
 																 put: (memory at: memory world + offset) ].
 													 stream nextPut: row ].
-											 agentDefinition isPatchDefinitionNode ifTrue: [ 
-													 memory patchesDo: [ :patch | 
+											 agentDefinition isPatchDefinitionNode ifTrue: [
+													 memory patchesDo: [ :patch |
 															 | row |
 															 row := Dictionary new.
 															 row
+																 at: 'id' put: patch;
 																 at: 'x' put: (interpreter centerXOfPatch: patch);
 																 at: 'y' put: (interpreter centerYOfPatch: patch).
-															 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+															 agentDefinition attributeOffsetsDo: [ :attribute :offset |
 																 row at: attribute put: (memory at: patch + offset) ].
 															 stream nextPut: row ] ].
-											 agentDefinition isAnimatDefinitionNode ifTrue: [ 
+											 agentDefinition isAnimatDefinitionNode ifTrue: [
 												 (memory animatsOf: agentDefinition identifier)
-													 asSortedCollection do: [ :individual | 
+													 asSortedCollection do: [ :individual |
 													 | row |
 													 row := Dictionary new.
 													 row at: #id put: individual.
-													 agentDefinition attributeOffsetsDo: [ :attribute :offset | 
+													 agentDefinition attributeOffsetsDo: [ :attribute :offset |
 														 row at: attribute put: (memory at: individual + offset) ].
 													 stream nextPut: row ] ] ] ] ] ]);
 		refresh

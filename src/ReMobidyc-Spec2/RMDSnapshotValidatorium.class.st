@@ -67,11 +67,14 @@ RMDSnapshotValidatorium >> initializePresenters [
 { #category : #updating }
 RMDSnapshotValidatorium >> updateTaskList [
 
+	| selection |
+	selection := taskList selectedItem.
 	self selectedInterpreter ifNotNil: [ :interpreter |
 		agentDropList selectedItem ifNotNil: [ :agent |
 			taskList items:
 				(interpreter simulationModel taskDefinitions select: [ :task |
 					 task enabled and: [ task subjectIdentifier = agent name ] ]).
+			selection ifNotNil: [ taskList selectItem: selection ].
 			^ self ] ].
 	taskList items: Array new
 ]
@@ -82,5 +85,7 @@ RMDSnapshotValidatorium >> updateTraceableAction [
 	taskList selectedItem ifNotNil: [ :task |
 		self selectedIndividual ifNotNil: [ :subject |
 			traceableAction action:
-				(task validateWithSubject: subject in: self selectedInterpreter) ] ]
+				(task validateWithSubject: subject in: self selectedInterpreter).
+			^ self ] ].
+	traceableAction action: nil
 ]

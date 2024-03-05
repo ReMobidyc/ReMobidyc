@@ -34,10 +34,18 @@ RMDTraceableActionPresenter >> action: aRMDActionNode [
 { #category : #updating }
 RMDTraceableActionPresenter >> actionChanged [
 
-	guardField text: (action guard ifNotNil: #printString ifNil: [ '' ]).
-	directiveField text: (',' join: action lifeDirectives).
-	attributeDefinitionTable items: action attributeDefinitions.
-	attributeReferenceTable items: action traceReferences.
+	action
+		ifNotNil: [
+			guardField text:
+				(action guard ifNotNil: #printString ifNil: [ '' ]).
+			directiveField text: (',' join: action lifeDirectives).
+			attributeDefinitionTable items: action attributeDefinitions.
+			attributeReferenceTable items: action traceReferences ]
+		ifNil: [
+			guardField text: ''.
+			directiveField text: ''.
+			attributeDefinitionTable items: #(  ).
+			attributeReferenceTable items: #(  ) ].
 	self layout: self layout
 ]
 
@@ -54,37 +62,25 @@ RMDTraceableActionPresenter >> initializePresenters [
 			                            (SpStringTableColumn evaluated: [ :node |
 					                             node variable printString , '''' ]);
 		                            addColumn:
-			                            ((SpStringTableColumn evaluated: [
-					                              :item | '=' ])
-				                             width: 10;
-				                             beNotExpandable);
+			                            (SpStringTableColumn evaluated: [ :node |
+					                             '= '
+					                             ,
+						                             node definitionBody printExpression ]);
 		                            addColumn:
 			                            (SpStringTableColumn evaluated: [ :node |
-				                             node definitionBody printExpression ]);
-		                            addColumn:
-			                            ((SpStringTableColumn evaluated: [
-					                              :item | '=' ])
-				                             width: 10;
-				                             beNotExpandable);
-		                            addColumn:
-			                            (SpStringTableColumn evaluated: [ :node |
-				                             node definitionBody printValue ]);
+					                             '= '
+					                             , node definitionBody printValue ]);
 		                            hideColumnHeaders;
 		                            yourself.
 	attributeReferenceTable := self newTableWithHorizontalScrollbar
 		                           enableHorizontalScrollbar;
 		                           beResizable;
 		                           addColumn:
-			                           (SpStringTableColumn evaluated:
-					                            #printExpression);
+			                           (SpStringTableColumn evaluated: [ :node |
+					                            node printExpression ]);
 		                           addColumn:
-			                           ((SpStringTableColumn evaluated: [ :item |
-					                             '=' ])
-				                            width: 10;
-				                            beNotExpandable);
-		                           addColumn:
-		                           (SpStringTableColumn evaluated:
-			                            #printValue);
+			                           (SpStringTableColumn evaluated: [ :node |
+					                            '= ' , node printValue ]);
 		                           hideColumnHeaders;
 		                           yourself
 ]
@@ -108,7 +104,9 @@ RMDTraceableActionPresenter >> layout [
 						 add: #directiveField)
 				expand: false ].
 		action attributeDefinitions ifNotEmpty: [
-			box add: #attributeDefinitionTable ].
+			box
+				add: '' asPresenter expand: false;
+				add: #attributeDefinitionTable ].
 		attributeReferenceTable items ifNotEmpty: [
 			box
 				add: 'where' expand: false;

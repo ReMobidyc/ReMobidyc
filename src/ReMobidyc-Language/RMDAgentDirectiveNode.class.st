@@ -43,11 +43,6 @@ RMDAgentDirectiveNode >> childrenDo: aBlock [
 	
 ]
 
-{ #category : #enumerating }
-RMDAgentDirectiveNode >> childrenTransform: aBlock [
-	
-]
-
 { #category : #comparing }
 RMDAgentDirectiveNode >> hash [
 	^ self class hash bitXor: agentIdentifier hash

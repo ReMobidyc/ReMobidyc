@@ -10,6 +10,12 @@ RMDDirectiveNode class >> isAbstract [
 	^ self = RMDDirectiveNode
 ]
 
+{ #category : #enumerating }
+RMDDirectiveNode >> childrenTransform: aBlock [
+
+	
+]
+
 { #category : #testing }
 RMDDirectiveNode >> isReferenceNode [
 

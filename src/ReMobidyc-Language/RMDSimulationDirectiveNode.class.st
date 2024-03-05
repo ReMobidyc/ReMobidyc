@@ -20,10 +20,6 @@ RMDSimulationDirectiveNode >> = anObject [
 RMDSimulationDirectiveNode >> childrenDo: aBlock [
 ]
 
-{ #category : #enumerating }
-RMDSimulationDirectiveNode >> childrenTransform: aBlock [
-]
-
 { #category : #comparing }
 RMDSimulationDirectiveNode >> hash [
 
