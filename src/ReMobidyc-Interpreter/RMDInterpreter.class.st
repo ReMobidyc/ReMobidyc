@@ -43,8 +43,9 @@ RMDInterpreter >> announceTimeChanged [
 { #category : #private }
 RMDInterpreter >> applyMeta [
 
-	simulationModel := simulationModel instantiateWithMetaParameters:
-		                   memory metaparameters
+	memory metaparameters ifNotNil: [ :meta |
+		simulationModel := simulationModel instantiateWithMetaParameters:
+			                   meta ]
 ]
 
 { #category : #simulating }
