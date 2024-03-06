@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSnapshotValidatorium,
-	#superclass : #RMDSnapshotTabular,
+	#name : #RMDAttributeByTimeValidatorium,
+	#superclass : #RMDAttributeByTimeTabular,
 	#instVars : [
 		'taskList',
 		'traceableAction'
@@ -9,48 +9,46 @@ Class {
 }
 
 { #category : #layout }
-RMDSnapshotValidatorium class >> defaultLayout [
+RMDAttributeByTimeValidatorium class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
-				   add: #reloadButton width: self buttonHeight;
-				   yourself)
-		  height: self buttonHeight;
-		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.2;
+				   vAlignEnd;
+				   add:
+					   (SpBoxLayout newVertical
+						    add: #reloadButton
+						    height: self buttonHeight)
+				   width: self buttonHeight;
+				   addSpace;
 				   add: (SpBoxLayout newVertical
 						    add: 'Run' expand: false;
 						    add: #runDropList expand: false;
-						    add: 'Time' expand: false;
-						    add: #timeList;
-						    add: (SpBoxLayout newHorizontal
-								     add: #openTabularButton width: self buttonHeight;
-								     add: #openObservatoryButton width: self buttonHeight;
-								     yourself)
-						    height: self buttonHeight;
 						    yourself);
 				   add: (SpBoxLayout newVertical
-						    add: 'Agent' expand: false;
-						    add: #agentDropList expand: false;
-						    add: (SpPanedLayout newVertical
-								     positionOfSlider: 0.8;
-								     add: #table;
-								     add: (SpPanedLayout newHorizontal
-										      positionOfSlider: 0.3;
-										      add: #taskList;
-										      add: #traceableAction));
-						    add: (SpBoxLayout newHorizontal
-								     add: #openBoxChartButton width: self buttonHeight;
-								     add: #exportCSVButton width: self buttonHeight;
-								     yourself)
-						    height: self buttonHeight;
+						    add: 'Agent';
+						    add: #agentDropList;
 						    yourself);
-				   yourself);
+				   yourself)
+		  expand: false;
+		  add: #table;
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.3;
+				   add: #taskList;
+				   add: #traceableAction);
+		  add: (SpBoxLayout newHorizontal
+				   add: #openTabularButton width: self buttonHeight;
+				   add: #openObservatoryButton width: self buttonHeight;
+				   add: '    ' expand: false;
+				   add: #openLineChartsButton width: self buttonHeight;
+				   add: #openBoxChartButton width: self buttonHeight;
+				   add: #exportCSVButton width: self buttonHeight;
+				   yourself)
+		  expand: false;
 		  yourself
 ]
 
 { #category : #initialization }
-RMDSnapshotValidatorium >> initializePresenters [
+RMDAttributeByTimeValidatorium >> initializePresenters [
 
 	super initializePresenters.
 	table whenSelectedItemChangedDo: [ self updateTaskList ].
@@ -65,7 +63,7 @@ RMDSnapshotValidatorium >> initializePresenters [
 ]
 
 { #category : #updating }
-RMDSnapshotValidatorium >> updateTaskList [
+RMDAttributeByTimeValidatorium >> updateTaskList [
 
 	| selection |
 	selection := taskList selectedItem.
@@ -82,7 +80,7 @@ RMDSnapshotValidatorium >> updateTaskList [
 ]
 
 { #category : #updating }
-RMDSnapshotValidatorium >> updateTraceableAction [
+RMDAttributeByTimeValidatorium >> updateTraceableAction [
 
 	taskList selectedItem ifNotNil: [ :task |
 		self selectedIndividual ifNotNil: [ :subject |

@@ -3,7 +3,7 @@ Extension { #name : #RMDMetaInterpreter }
 { #category : #'*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInAttributeTabular [
 
-	^ (RMDAttributeByTimeTabular on: self)
+	^ (RMDAttributeByTimeValidatorium on: self)
 		  open;
 		  yourself
 ]

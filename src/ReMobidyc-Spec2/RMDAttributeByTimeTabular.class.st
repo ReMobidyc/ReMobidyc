@@ -259,6 +259,7 @@ RMDAttributeByTimeTabular >> updateRows [
 																		 put:
 																			 time * metaInterpreter simulationModel deltaTime.
 																	 row
+																		 at: 'id' put: patch;
 																		 at: 'x' put: (interpreter centerXOfPatch: patch);
 																		 at: 'y' put: (interpreter centerYOfPatch: patch).
 																	 agentDefinition attributeOffsetsDo: [
