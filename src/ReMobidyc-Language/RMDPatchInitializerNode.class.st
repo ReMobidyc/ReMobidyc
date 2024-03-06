@@ -76,6 +76,13 @@ RMDPatchInitializerNode >> childrenDo: aBlock [
 	super childrenDo: aBlock
 ]
 
+{ #category : #enumerating }
+RMDPatchInitializerNode >> childrenTransform: aBlock [
+
+	size ifNotNil: [ size := aBlock value: size ].
+	super childrenTransform: aBlock
+]
+
 { #category : #comparing }
 RMDPatchInitializerNode >> hash [
 	^ (((super hash bitXor: xDivisions hash) bitXor: yDivisions hash)

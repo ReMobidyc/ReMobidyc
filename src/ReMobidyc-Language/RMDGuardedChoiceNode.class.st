@@ -28,6 +28,16 @@ RMDGuardedChoiceNode >> childrenDo: aBlock [
 		aBlock value: assoc value ]
 ]
 
+{ #category : #enumerating }
+RMDGuardedChoiceNode >> childrenTransform: aBlock [
+
+	guardsAndChoices := guardsAndChoices collect: [ :assoc |
+		                    (assoc key = true
+			                     ifTrue: [ true ]
+			                     ifFalse: [ aBlock value: assoc key ])
+		                    -> (aBlock value: assoc value) ]
+]
+
 { #category : #private }
 RMDGuardedChoiceNode >> guardsAndChoices [
 	^ guardsAndChoices

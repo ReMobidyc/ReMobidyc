@@ -52,8 +52,20 @@ RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
 				ifTrue: [ aBlock cull: node ] ]
 ]
 
+{ #category : #converting }
+RMDSyntaxNode >> beTraceable [
+
+	^ self copy insertTrace
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> childrenDo: aBlock [
+	^ self subclassResponsibility
+]
+
+{ #category : #enumerating }
+RMDSyntaxNode >> childrenTransform: aBlock [
+
 	^ self subclassResponsibility
 ]
 
@@ -90,6 +102,12 @@ RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
 			node = aRMDSyntaxNode
 				ifTrue: [ ^ true ] ].
 	^ false
+]
+
+{ #category : #private }
+RMDSyntaxNode >> insertTrace [
+
+	self childrenTransform: [ :node | node insertTrace ]
 ]
 
 { #category : #testing }
@@ -458,6 +476,12 @@ RMDSyntaxNode >> isProductNode [
 ]
 
 { #category : #testing }
+RMDSyntaxNode >> isReferenceNode [
+
+	^ false
+]
+
+{ #category : #testing }
 RMDSyntaxNode >> isRemainderNode [
 
 	^ false
@@ -507,6 +531,12 @@ RMDSyntaxNode >> isTasksFileNode [
 
 { #category : #testing }
 RMDSyntaxNode >> isTimeDirectiveNode [
+	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isTraceNode [
+
 	^ false
 ]
 
@@ -576,6 +606,12 @@ RMDSyntaxNode >> nodesSuchThat: condition do: aBlock [
 	self childrenDo: [ :node | node nodesSuchThat: condition do: aBlock ]
 ]
 
+{ #category : #private }
+RMDSyntaxNode >> pealTrace [
+
+	self childrenTransform: [ :node | node pealTrace ]
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> placeholderNodesDo: aBlock [
 
@@ -602,6 +638,12 @@ RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSe
 RMDSyntaxNode >> printShortOn: aStream [
 
 	self printOn: aStream
+]
+
+{ #category : #private }
+RMDSyntaxNode >> removeTrace [
+
+	self childrenTransform: [ :node | node removeTrace ]
 ]
 
 { #category : #rewriting }

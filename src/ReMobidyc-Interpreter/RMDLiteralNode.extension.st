@@ -7,5 +7,6 @@ RMDLiteralNode >> evalIn: aRMDInterpreter [
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDLiteralNode >> typecheckIn: aRMDInterpreter [
-	^ RMDType unit: unit
+
+	^ type := RMDType unit: unit
 ]

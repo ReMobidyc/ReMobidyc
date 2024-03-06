@@ -22,6 +22,11 @@ RMDUniformDistributionYNode >> childrenDo: aBlock [
 	
 ]
 
+{ #category : #enumerating }
+RMDUniformDistributionYNode >> childrenTransform: aBlock [
+	
+]
+
 { #category : #comparing }
 RMDUniformDistributionYNode >> hash [
 	^ self class hash

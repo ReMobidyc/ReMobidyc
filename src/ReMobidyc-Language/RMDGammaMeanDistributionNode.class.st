@@ -20,6 +20,13 @@ RMDGammaMeanDistributionNode >> childrenDo: aBlock [
 	aBlock value: meanExpression
 ]
 
+{ #category : #enumerating }
+RMDGammaMeanDistributionNode >> childrenTransform: aBlock [
+
+	super childrenTransform: aBlock.
+	meanExpression := aBlock value: meanExpression
+]
+
 { #category : #comparing }
 RMDGammaMeanDistributionNode >> hash [
 

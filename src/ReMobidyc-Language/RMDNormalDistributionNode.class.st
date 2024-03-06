@@ -31,6 +31,13 @@ RMDNormalDistributionNode >> childrenDo: aBlock [
 		value: sigmaExpression
 ]
 
+{ #category : #enumerating }
+RMDNormalDistributionNode >> childrenTransform: aBlock [
+
+	meanExpression := aBlock value: meanExpression.
+	sigmaExpression := aBlock value: sigmaExpression
+]
+
 { #category : #comparing }
 RMDNormalDistributionNode >> hash [
 	^ (self class hash bitXor: meanExpression hash) bitXor: sigmaExpression hash

@@ -14,24 +14,24 @@ RMDLogLogisticDistributionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDLogLogisticDistributionNode >> typecheckIn: aRMDInterpreter [
 
-	[ 
+	[
 	(shapeExpression typecheckIn: aRMDInterpreter) unify:
 		RMDType noDimension ]
 		on: RMDTypeUnificationError
-		do: [ :ex | 
+		do: [ :ex |
 			ex resignalAs: (RMDTypeError
 					 on: self
 					 subnode: shapeExpression
 					 type: ex type1
 					 subnode: self
 					 type: ex type2) ].
-	^ [ scaleExpression typecheckIn: aRMDInterpreter ]
-		  on: RMDTypeUnificationError
-		  do: [ :ex | 
-			  ex resignalAs: (RMDTypeError
-					   on: self
-					   subnode: scaleExpression
-					   type: ex type1
-					   subnode: self
-					   type: ex type2) ]
+	^ type := [ scaleExpression typecheckIn: aRMDInterpreter ]
+		          on: RMDTypeUnificationError
+		          do: [ :ex |
+			          ex resignalAs: (RMDTypeError
+					           on: self
+					           subnode: scaleExpression
+					           type: ex type1
+					           subnode: self
+					           type: ex type2) ]
 ]

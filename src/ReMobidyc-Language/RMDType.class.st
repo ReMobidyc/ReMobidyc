@@ -95,3 +95,9 @@ RMDType >> isAny [
 RMDType >> unify: aRMDType [
 	^ self subclassResponsibility
 ]
+
+{ #category : #accessing }
+RMDType >> unit [
+
+	^ self subclassResponsibility
+]

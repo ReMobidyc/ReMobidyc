@@ -14,7 +14,9 @@ RMDTimeSeriesTabular class >> isAbstract [
 RMDTimeSeriesTabular >> initializePresenters [
 
 	super initializePresenters.
-	table contextMenu: [ self analysisMenu ]
+	table
+		whenSelectedItemChangedDo: [ self updateTime ];
+		contextMenu: [ self analysisMenu ]
 ]
 
 { #category : #updating }
@@ -44,4 +46,13 @@ RMDTimeSeriesTabular >> selectedTime [
 	^ index >= 0
 		  ifTrue: [ index * metaInterpreter simulationModel deltaTime ]
 		  ifFalse: [ nil ]
+]
+
+{ #category : #updating }
+RMDTimeSeriesTabular >> updateTime [
+
+	table selectedItem ifNotNil: [ :item |
+		item at: #time ifPresent: [ :time |
+			self selectedInterpreter ifNotNil: [ :interpreter |
+				interpreter time: time ] ] ]
 ]

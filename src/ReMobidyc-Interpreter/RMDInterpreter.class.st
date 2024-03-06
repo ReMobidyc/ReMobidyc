@@ -40,6 +40,14 @@ RMDInterpreter >> announceTimeChanged [
 		(RMDTimeChanged interpreter: self time: self time)
 ]
 
+{ #category : #private }
+RMDInterpreter >> applyMeta [
+
+	memory metaparameters ifNotNil: [ :meta |
+		simulationModel := simulationModel instantiateWithMetaParameters:
+			                   meta ]
+]
+
 { #category : #simulating }
 RMDInterpreter >> basicStepSimulation [
 
@@ -147,12 +155,6 @@ RMDInterpreter >> deltaTime [
 { #category : #timing }
 RMDInterpreter >> duration [
 	^ simulationModel duration
-]
-
-{ #category : #timing }
-RMDInterpreter >> durationUnit [
-
-	^ simulationModel durationUnit
 ]
 
 { #category : #'variable access' }
@@ -628,7 +630,8 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 { #category : #private }
 RMDInterpreter >> setMemory: aRMDMemory [
 
-	memory := aRMDMemory
+	memory := aRMDMemory.
+	self applyMeta
 ]
 
 { #category : #'random numbers' }
@@ -701,12 +704,20 @@ RMDInterpreter >> stepSimulation [
 	self critical: [ ^ self basicStepSimulation ]
 ]
 
+{ #category : #'random numbers' }
+RMDInterpreter >> taskHashFor: aRMDTaskDefinitionNode [
+
+	^ simulationModel taskDefinitions indexOf: aRMDTaskDefinitionNode
+]
+
 { #category : #'animat operations' }
 RMDInterpreter >> terminate: aString [
-	aString
-		ifNil:
-			[ ^ self terminate: context subject animat: context subjectDefinition ].
-	^ self terminate: context object animat: context objectDefinition
+
+	^ aString
+		  ifNotNil: [
+		  self terminate: context object animat: context objectDefinition ]
+		  ifNil: [
+		  self terminate: context subject animat: context subjectDefinition ]
 ]
 
 { #category : #'animat operations' }

@@ -2,7 +2,7 @@ Class {
 	#name : #RMDUnitType,
 	#superclass : #RMDType,
 	#instVars : [
-		'unit'
+		'originalUnit'
 	],
 	#category : #'ReMobidyc-Language-Type'
 }
@@ -18,52 +18,64 @@ RMDUnitType class >> unit: aRMDUnit [
 RMDUnitType >> * aRMDType [
 
 	aRMDType isAny ifTrue: [ ^ aRMDType ].
-	^ RMDType unit: unit * aRMDType unit
+	^ RMDType unit: originalUnit * aRMDType originalUnit
 ]
 
 { #category : #arithmetics }
 RMDUnitType >> ** aNumber [
 
-	^ RMDType unit: unit ** aNumber
+	^ RMDType unit: originalUnit ** aNumber
 ]
 
 { #category : #arithmetics }
 RMDUnitType >> / aRMDType [
 
 	aRMDType isAny ifTrue: [ ^ aRMDType ].
-	^ RMDType unit: unit / aRMDType unit
+	^ RMDType unit: originalUnit / aRMDType originalUnit
 ]
 
 { #category : #comparing }
 RMDUnitType >> = anObject [
-	^ self class = anObject class and: [ unit = anObject unit ]
+
+	^ self class = anObject class and: [
+		  originalUnit = anObject originalUnit ]
 ]
 
 { #category : #comparing }
 RMDUnitType >> hash [
-	^ self class hash bitXor: unit hash
+
+	^ self class hash bitXor: originalUnit hash
+]
+
+{ #category : #accessing }
+RMDUnitType >> originalUnit [
+
+	^ originalUnit
 ]
 
 { #category : #printing }
 RMDUnitType >> printOn: aStream [
+
 	aStream nextPut: $[.
-	unit printOn: aStream.
+	self unit printOn: aStream.
 	aStream nextPut: $]
 ]
 
 { #category : #'type checking' }
 RMDUnitType >> unify: aRMDType [
 
-	(aRMDType isAny or: [ unit = aRMDType unit ]) ifTrue: [ ^ self ].
+	(aRMDType isAny or: [ self unit = aRMDType unit ]) ifTrue: [ ^ self ].
 	^ (RMDTypeUnificationError on: self and: aRMDType) signal
 ]
 
 { #category : #accessing }
 RMDUnitType >> unit [
-	^ unit
+
+	^ originalUnit siUnit
 ]
 
 { #category : #accessing }
 RMDUnitType >> unit: aRMDUnit [
-	unit := aRMDUnit siUnit
+
+	originalUnit := aRMDUnit
 ]

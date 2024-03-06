@@ -37,6 +37,18 @@ RMDAbstractInterpreter >> context [
 	^ context
 ]
 
+{ #category : #timing }
+RMDAbstractInterpreter >> deltaTimeUnit [
+
+	^ simulationModel deltaTimeUnit
+]
+
+{ #category : #timing }
+RMDAbstractInterpreter >> durationUnit [
+
+	^ simulationModel durationUnit
+]
+
 { #category : #initialization }
 RMDAbstractInterpreter >> initialize [
 
@@ -83,6 +95,12 @@ RMDAbstractInterpreter >> name [
 			  nextPutAll: '[';
 			  nextPutAll: self metaparametersString;
 			  nextPutAll: ']' ]
+]
+
+{ #category : #'accessing - definitions' }
+RMDAbstractInterpreter >> patchLengthUnit [
+
+	^ simulationModel patchLengthUnit
 ]
 
 { #category : #private }

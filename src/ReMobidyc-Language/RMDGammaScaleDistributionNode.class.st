@@ -20,6 +20,13 @@ RMDGammaScaleDistributionNode >> childrenDo: aBlock [
 	aBlock value: scaleExpression
 ]
 
+{ #category : #enumerating }
+RMDGammaScaleDistributionNode >> childrenTransform: aBlock [
+
+	super childrenTransform: aBlock.
+	scaleExpression := aBlock value: scaleExpression
+]
+
 { #category : #comparing }
 RMDGammaScaleDistributionNode >> hash [
 

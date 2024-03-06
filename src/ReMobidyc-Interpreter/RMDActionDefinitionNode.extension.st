@@ -2,7 +2,8 @@ Extension { #name : #RMDActionDefinitionNode }
 
 { #category : #'*ReMobidyc-Interpreter' }
 RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
-(guard isNil or: [ guard evalIn: aRMDInterpreter ]) ifTrue: [ 
+
+	(guard isNil or: [ guard evalIn: aRMDInterpreter ]) ifTrue: [
 		lifeDirectives do: [ :directive | directive evalIn: aRMDInterpreter ].
 		attributeDefinitions do: [ :def | def evalIn: aRMDInterpreter ] ]
 ]

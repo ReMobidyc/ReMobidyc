@@ -12,15 +12,15 @@ RMDNormalDistributionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDNormalDistributionNode >> typecheckIn: aRMDInterpreter [
 
-	^ [ 
-	  (meanExpression typecheckIn: aRMDInterpreter) unify:
-		  (sigmaExpression typecheckIn: aRMDInterpreter) ]
-		  on: RMDTypeUnificationError
-		  do: [ :ex | 
-			  ex resignalAs: (RMDTypeError
-					   on: self
-					   subnode: meanExpression
-					   type: ex type1
-					   subnode: sigmaExpression
-					   type: ex type2) ]
+	^ type := [
+	          (meanExpression typecheckIn: aRMDInterpreter) unify:
+		          (sigmaExpression typecheckIn: aRMDInterpreter) ]
+		          on: RMDTypeUnificationError
+		          do: [ :ex |
+			          ex resignalAs: (RMDTypeError
+					           on: self
+					           subnode: meanExpression
+					           type: ex type1
+					           subnode: sigmaExpression
+					           type: ex type2) ]
 ]

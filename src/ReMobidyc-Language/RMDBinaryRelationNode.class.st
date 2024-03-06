@@ -31,6 +31,12 @@ RMDBinaryRelationNode >> childrenDo: aBlock [
 	expressions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDBinaryRelationNode >> childrenTransform: aBlock [
+
+	expressions := expressions collect: aBlock
+]
+
 { #category : #accessing }
 RMDBinaryRelationNode >> expressions [
 	^ expressions

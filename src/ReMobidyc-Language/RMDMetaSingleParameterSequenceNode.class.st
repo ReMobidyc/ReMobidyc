@@ -32,6 +32,13 @@ RMDMetaSingleParameterSequenceNode >> childrenDo: aBlock [
 	literals do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDMetaSingleParameterSequenceNode >> childrenTransform: aBlock [
+
+	placeholder := aBlock value: placeholder.
+	literals := literals collect: aBlock
+]
+
 { #category : #accessing }
 RMDMetaSingleParameterSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock [
 

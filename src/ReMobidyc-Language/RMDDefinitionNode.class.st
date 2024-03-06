@@ -36,6 +36,13 @@ RMDDefinitionNode >> childrenDo: aBlock [
 		value: definitionBody
 ]
 
+{ #category : #enumerating }
+RMDDefinitionNode >> childrenTransform: aBlock [
+
+	variable := aBlock value: variable.
+	definitionBody := aBlock value: definitionBody
+]
+
 { #category : #accessing }
 RMDDefinitionNode >> definitionBody [
 	^ definitionBody

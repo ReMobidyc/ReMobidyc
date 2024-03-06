@@ -3,12 +3,12 @@ Extension { #name : #RMDAgentDefinitionNode }
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAgentDefinitionNode >> evalIn: aRMDInterpreter [
 
-	[ 
+	[
 	| address |
 	aRMDInterpreter context loadUtilityDefinitions: utilityDefinitions.
 	address := aRMDInterpreter context subject.
-	self allAttributeDeclarations do: [ :attributeDecl | 
-		attributeDecl initializerExpression ifNotNil: [ :expr | 
+	self allAttributeDeclarations do: [ :attributeDecl |
+		attributeDecl initializerExpression ifNotNil: [ :expr |
 			aRMDInterpreter
 				writeNext: ([ expr evalIn: aRMDInterpreter ]
 						 on: RMDSemanticError

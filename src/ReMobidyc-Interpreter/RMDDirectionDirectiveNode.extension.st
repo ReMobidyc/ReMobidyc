@@ -14,25 +14,25 @@ RMDDirectionDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDDirectionDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	| type |
-	type := RMDType length.
+	| t |
+	t := RMDType length.
 	self
 		typecheck: (RMDAttributeVariableNode identifier: 'x' agent: nil)
-		with: type
+		with: t
 		in: aRMDInterpreter.
 	self
 		typecheck: (RMDAttributeVariableNode identifier: 'y' agent: nil)
-		with: type
+		with: t
 		in: aRMDInterpreter.
 	self
 		typecheck:
 		(RMDAttributeVariableNode identifier: 'x' agent: agentIdentifier)
-		with: type
+		with: t
 		in: aRMDInterpreter.
 	self
 		typecheck:
 		(RMDAttributeVariableNode identifier: 'y' agent: agentIdentifier)
-		with: type
+		with: t
 		in: aRMDInterpreter.
-	^ RMDType angle
+	^ type := RMDType angle
 ]

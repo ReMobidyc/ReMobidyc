@@ -65,6 +65,12 @@ RMDVariabilityNode >> childrenDo: aBlock [
 ]
 
 { #category : #enumerating }
+RMDVariabilityNode >> childrenTransform: aBlock [
+
+	metaParameterSequences := metaParameterSequences collect: aBlock
+]
+
+{ #category : #enumerating }
 RMDVariabilityNode >> dictionariesDo: aBlock [
 
 	| numParams |

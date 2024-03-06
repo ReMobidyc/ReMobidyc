@@ -11,7 +11,7 @@ RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUtilityVariableNode >> typecheckIn: aRMDInterpreter [
 
-	^ aRMDInterpreter
-		  typeOfUtilityVariable: identifier
-		  ifAbsent: [ RMDUndefinedUtilityError signal: self ]
+	^ type := aRMDInterpreter
+		          typeOfUtilityVariable: identifier
+		          ifAbsent: [ RMDUndefinedUtilityError signal: self ]
 ]

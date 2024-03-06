@@ -163,6 +163,13 @@ RMDAgentDefinitionNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDAgentDefinitionNode >> childrenTransform: aBlock [
+
+	attributeDeclarations := attributeDeclarations collect: aBlock.
+	utilityDefinitions := utilityDefinitions collect: aBlock
+]
+
 { #category : #accessing }
 RMDAgentDefinitionNode >> complementUtilityDefinitions [
 

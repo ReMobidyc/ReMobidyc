@@ -636,10 +636,10 @@ RMDExperimentarium >> updateObservation: aRMDTimeChanged [
 { #category : #updating }
 RMDExperimentarium >> updatePopulationChart [
 
-	(showPopulationChartRadioButton state and: [ 
-		 visualizationImage adapter notNil ]) ifTrue: [ 
+	(showPopulationChartRadioButton state and: [
+		 visualizationImage adapter notNil ]) ifTrue: [
 		| form |
-		self interpreterDo: [ :interpreter | 
+		self interpreterDo: [ :interpreter |
 			| runId canvas byTime |
 			runId := interpreter runId.
 			form := Form extent: visualizationImage adapter extent depth: 32.
@@ -647,7 +647,7 @@ RMDExperimentarium >> updatePopulationChart [
 			canvas fillColor: Color white.
 			byTime := populationByTime at: runId ifAbsent: [ ^ self ].
 			byTime ifEmpty: [ ^ self ].
-			populationTable selectedItem ifNotNil: [ :animat | 
+			populationTable selectedItem ifNotNil: [ :animat |
 				| chartWidth chartHeight font fontHeight min max |
 				font := TextStyle defaultFont.
 				fontHeight := font height.
@@ -659,7 +659,7 @@ RMDExperimentarium >> updatePopulationChart [
 				max := (maxPopulation at: runId ifAbsent: [ ^ self ])
 					       at: animat
 					       ifAbsent: [ ^ self ].
-				min < max ifTrue: [ 
+				min < max ifTrue: [
 					| xScale yScale minString maxString |
 					xScale := chartWidth
 					          /
@@ -682,7 +682,7 @@ RMDExperimentarium >> updatePopulationChart [
 						to: interpreter time * xScale @ chartHeight
 						width: 1
 						color: Color red.
-					1 to: byTime size - 1 do: [ :time1 | 
+					1 to: byTime size - 1 do: [ :time1 |
 						| time2 value1 value2 |
 						time2 := time1 + 1.
 						value1 := (byTime at: time1) at: animat.
@@ -699,12 +699,11 @@ RMDExperimentarium >> updatePopulationChart [
 					at: 0 @ chartHeight
 					font: font
 					color: Color gray.
-				byTime size > 1 ifTrue: [ 
+				byTime size > 1 ifTrue: [
 					| time timeUnit timeString |
 					time := byTime size - 1 * interpreter deltaTime.
-					timeUnit := interpreter simulationModel simulationDefinition
-						            timeDefinition duration unit.
-					timeString := ((timeUnit fromSI: time) 
+					timeUnit := interpreter durationUnit.
+					timeString := ((timeUnit fromSI: time)
 						               printShowingDecimalPlaces: 1) , ' ['
 					              , timeUnit printString , ']'.
 					canvas

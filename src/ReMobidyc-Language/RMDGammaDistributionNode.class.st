@@ -109,6 +109,12 @@ RMDGammaDistributionNode >> childrenDo: aBlock [
 	aBlock value: shapeExpression
 ]
 
+{ #category : #enumerating }
+RMDGammaDistributionNode >> childrenTransform: aBlock [
+
+	shapeExpression := aBlock value: shapeExpression
+]
+
 { #category : #accessing }
 RMDGammaDistributionNode >> gamma: aNumber in: aRMDInterpreter [
 

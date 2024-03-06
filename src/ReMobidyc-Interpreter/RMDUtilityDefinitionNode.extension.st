@@ -14,7 +14,7 @@ RMDUtilityDefinitionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUtilityDefinitionNode >> typecheckIn: aRMDInterpreter [
 
-	^ [ 
+	^ [
 	  aRMDInterpreter
 		  typeUtilityVariable: variable identifier
 		  as: (definitionBody typecheckIn: aRMDInterpreter) ]

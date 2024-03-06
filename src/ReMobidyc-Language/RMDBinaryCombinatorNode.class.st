@@ -31,6 +31,12 @@ RMDBinaryCombinatorNode >> childrenDo: aBlock [
 	conditions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDBinaryCombinatorNode >> childrenTransform: aBlock [
+
+	conditions := conditions collect: aBlock
+]
+
 { #category : #accessing }
 RMDBinaryCombinatorNode >> conditions [
 	^ conditions

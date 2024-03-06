@@ -48,3 +48,9 @@ RMDAnyType >> printOn: aStream [
 RMDAnyType >> unify: aRMDType [
 	^ aRMDType
 ]
+
+{ #category : #accessing }
+RMDAnyType >> unit [
+
+	^ nil
+]

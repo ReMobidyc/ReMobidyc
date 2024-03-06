@@ -30,11 +30,11 @@ RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDDirectionOfGradientDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	patchAttributeVariable isPlaceholderNode ifTrue: [ 
+	patchAttributeVariable isPlaceholderNode ifTrue: [
 		^ RMDUnresolvedPlaceholderError signal: patchAttributeVariable ].
 	self
 		typecheck: patchAttributeVariable
 		with: RMDType any
 		in: aRMDInterpreter.
-	^ RMDType angle
+	^ type := RMDType angle
 ]

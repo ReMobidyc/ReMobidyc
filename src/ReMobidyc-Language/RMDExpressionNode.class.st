@@ -1,6 +1,9 @@
 Class {
 	#name : #RMDExpressionNode,
 	#superclass : #RMDSyntaxNode,
+	#instVars : [
+		'type'
+	],
 	#category : #'ReMobidyc-Language-AST'
 }
 
@@ -30,6 +33,12 @@ RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]
 
+{ #category : #private }
+RMDExpressionNode >> insertTrace [
+
+	^ RMDTraceNode on: super insertTrace
+]
+
 { #category : #testing }
 RMDExpressionNode >> isExpressionNode [
 	^ true
@@ -38,4 +47,22 @@ RMDExpressionNode >> isExpressionNode [
 { #category : #accessing }
 RMDExpressionNode >> precedence [
 	^ self subclassResponsibility
+]
+
+{ #category : #printing }
+RMDExpressionNode >> printExpression [
+
+	^ self printString
+]
+
+{ #category : #printing }
+RMDExpressionNode >> printValue [
+
+	^ '-'
+]
+
+{ #category : #accessing }
+RMDExpressionNode >> type [
+
+	^ type
 ]

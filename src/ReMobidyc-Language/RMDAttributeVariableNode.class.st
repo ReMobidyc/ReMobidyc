@@ -46,6 +46,11 @@ RMDAttributeVariableNode >> childrenDo: aBlock [
 
 ]
 
+{ #category : #enumerating }
+RMDAttributeVariableNode >> childrenTransform: aBlock [
+
+]
+
 { #category : #testing }
 RMDAttributeVariableNode >> isAttributeVariableNode [
 	^ true

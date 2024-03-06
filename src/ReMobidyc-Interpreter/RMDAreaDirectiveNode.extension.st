@@ -9,5 +9,5 @@ RMDAreaDirectiveNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDAreaDirectiveNode >> typecheckIn: aRMDInterpreter [
 
-	^ RMDType area
+	^ type := RMDType unit: aRMDInterpreter patchLengthUnit ** 2
 ]

@@ -32,6 +32,14 @@ RMDMetaParameterSetSequenceNode >> childrenDo: aBlock [
 	literalTuples do: [ :tuple | tuple do: aBlock ]
 ]
 
+{ #category : #enumerating }
+RMDMetaParameterSetSequenceNode >> childrenTransform: aBlock [
+
+	placeholders := placeholders collect: aBlock.
+	literalTuples := literalTuples collect: [ :tuple |
+		                 tuple collect: aBlock ]
+]
+
 { #category : #accessing }
 RMDMetaParameterSetSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock [
 

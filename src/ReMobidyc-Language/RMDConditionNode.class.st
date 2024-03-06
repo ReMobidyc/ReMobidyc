@@ -18,6 +18,12 @@ RMDConditionNode >> & aRMDConditionNode [
 			  (Array with: self with: aRMDConditionNode) ]
 ]
 
+{ #category : #private }
+RMDConditionNode >> insertTrace [
+
+	^ RMDTraceNode on: super insertTrace
+]
+
 { #category : #testing }
 RMDConditionNode >> isConditionNode [
 	^ true
@@ -26,4 +32,16 @@ RMDConditionNode >> isConditionNode [
 { #category : #accessing }
 RMDConditionNode >> precedence [
 	^ self subclassResponsibility
+]
+
+{ #category : #printing }
+RMDConditionNode >> printCondition [
+
+	^ self printString
+]
+
+{ #category : #printing }
+RMDConditionNode >> printValue [
+
+	^ '-'
 ]

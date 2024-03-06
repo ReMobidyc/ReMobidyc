@@ -12,15 +12,15 @@ RMDUniformDistributionNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDUniformDistributionNode >> typecheckIn: aRMDInterpreter [
 
-	^ [ 
-	  (fromExpression typecheckIn: aRMDInterpreter) unify:
-		  (toExpression typecheckIn: aRMDInterpreter) ]
-		  on: RMDTypeUnificationError
-		  do: [ :ex | 
-			  ex resignalAs: (RMDTypeError
-					   on: self
-					   subnode: fromExpression
-					   type: ex type1
-					   subnode: toExpression
-					   type: ex type2) ]
+	^ type := [
+	          (fromExpression typecheckIn: aRMDInterpreter) unify:
+		          (toExpression typecheckIn: aRMDInterpreter) ]
+		          on: RMDTypeUnificationError
+		          do: [ :ex |
+			          ex resignalAs: (RMDTypeError
+					           on: self
+					           subnode: fromExpression
+					           type: ex type1
+					           subnode: toExpression
+					           type: ex type2) ]
 ]

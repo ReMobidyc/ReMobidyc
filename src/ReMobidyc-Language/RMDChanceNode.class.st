@@ -28,6 +28,12 @@ RMDChanceNode >> childrenDo: aBlock [
 	aBlock value: probability
 ]
 
+{ #category : #enumerating }
+RMDChanceNode >> childrenTransform: aBlock [
+
+	probability := aBlock value: probability
+]
+
 { #category : #comparing }
 RMDChanceNode >> hash [
 

@@ -11,6 +11,6 @@ RMDProductNode >> evalIn: aRMDInterpreter [
 { #category : #'*ReMobidyc-Interpreter' }
 RMDProductNode >> typecheckIn: aRMDInterpreter [
 
-	^ (expression1 typecheckIn: aRMDInterpreter)
-	  * (expression2 typecheckIn: aRMDInterpreter)
+	^ type := (expression1 typecheckIn: aRMDInterpreter)
+	          * (expression2 typecheckIn: aRMDInterpreter)
 ]

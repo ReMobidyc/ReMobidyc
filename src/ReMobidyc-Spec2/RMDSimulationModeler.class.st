@@ -294,7 +294,7 @@ RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 			cachedAns := true.
 			(willCloseAnnouncement canClose and: [
 				 UIManager default
-					 confirm: 'Export the spec before close?'
+					 confirm: 'Export the model before close?'
 					 orCancel: [
 						 willCloseAnnouncement denyClose.
 						 cachedAns := nil.

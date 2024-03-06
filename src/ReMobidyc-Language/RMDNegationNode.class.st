@@ -24,6 +24,12 @@ RMDNegationNode >> childrenDo: aBlock [
 	aBlock value: condition
 ]
 
+{ #category : #enumerating }
+RMDNegationNode >> childrenTransform: aBlock [
+
+	condition := aBlock value: condition
+]
+
 { #category : #accessing }
 RMDNegationNode >> condition [
 	^ condition

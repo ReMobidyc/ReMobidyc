@@ -38,6 +38,12 @@ RMDAbstractVariableNode >> identifier: aString [
 	identifier := aString
 ]
 
+{ #category : #testing }
+RMDAbstractVariableNode >> isReferenceNode [
+
+	^ true
+]
+
 { #category : #copying }
 RMDAbstractVariableNode >> postCopy [
 	

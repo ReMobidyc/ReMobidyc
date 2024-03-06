@@ -11,6 +11,6 @@ RMDNumberOfIndividualsInWorldDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel
 		stagesOf: animatName
-		do: [ :animatDef | ^ RMDType noDimension ].
+		do: [ :animatDef | ^ type := RMDType noDimension ].
 	^ RMDUndefinedAnimatError on: animatName
 ]

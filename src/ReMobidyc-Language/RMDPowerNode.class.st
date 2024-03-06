@@ -28,6 +28,12 @@ RMDPowerNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
+{ #category : #enumerating }
+RMDPowerNode >> childrenTransform: aBlock [
+
+	expression := aBlock value: expression
+]
+
 { #category : #accessing }
 RMDPowerNode >> expression [
 	^ expression

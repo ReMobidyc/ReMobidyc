@@ -182,6 +182,15 @@ RMDActionDefinitionNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDActionDefinitionNode >> childrenTransform: aBlock [
+
+	guard ifNotNil: [ guard := aBlock value: guard ].
+	lifeDirectives := lifeDirectives collect: aBlock.
+	attributeDefinitions := attributeDefinitions collect: aBlock.
+	utilityDefinitions := utilityDefinitions collect: aBlock
+]
+
 { #category : #accessing }
 RMDActionDefinitionNode >> guard [
 	^ guard
@@ -387,6 +396,15 @@ RMDActionDefinitionNode >> printShortOn: aStream [
 			nextPutAll: object ]
 ]
 
+{ #category : #accessing }
+RMDActionDefinitionNode >> references [
+
+	^ (Array streamContents: [ :stream |
+		   self
+			   nodesSuchThat: #isReferenceNode
+			   do: [ :node | stream nextPut: node ] ]) asSet
+]
+
 { #category : #rewriting }
 RMDActionDefinitionNode >> renameAnimat: aString to: anotherString [
 
@@ -437,6 +455,18 @@ RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
 	guard := guard
 		         ifNil: [ aRMDConditionNode ]
 		         ifNotNil: [ guard & aRMDConditionNode ]
+]
+
+{ #category : #accessing }
+RMDActionDefinitionNode >> traceReferences [
+
+	^ (Array streamContents: [ :stream |
+		   self
+			   nodesSuchThat: [ :node |
+				   node isTraceNode and: [
+					   node value notNil and: [ node node isReferenceNode ] ] ]
+			   do: [ :node | stream nextPut: node ] ]) asSet sorted:
+		  #printString ascending
 ]
 
 { #category : #accessing }

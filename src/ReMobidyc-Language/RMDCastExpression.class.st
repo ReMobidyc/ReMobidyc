@@ -36,6 +36,12 @@ RMDCastExpression >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
+{ #category : #enumerating }
+RMDCastExpression >> childrenTransform: aBlock [
+
+	expression := aBlock value: expression
+]
+
 { #category : #accessing }
 RMDCastExpression >> expression [
 

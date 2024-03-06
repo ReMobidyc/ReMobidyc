@@ -33,6 +33,11 @@ RMDLiteralNode >> childrenDo: aBlock [
 	
 ]
 
+{ #category : #enumerating }
+RMDLiteralNode >> childrenTransform: aBlock [
+	
+]
+
 { #category : #private }
 RMDLiteralNode >> computeNumeric [
 

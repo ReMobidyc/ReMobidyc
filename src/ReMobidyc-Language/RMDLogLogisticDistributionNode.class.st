@@ -32,6 +32,13 @@ RMDLogLogisticDistributionNode >> childrenDo: aBlock [
 		value: scaleExpression
 ]
 
+{ #category : #enumerating }
+RMDLogLogisticDistributionNode >> childrenTransform: aBlock [
+
+	shapeExpression := aBlock value: shapeExpression.
+	scaleExpression := aBlock value: scaleExpression
+]
+
 { #category : #comparing }
 RMDLogLogisticDistributionNode >> hash [
 	^ (self class hash bitXor: shapeExpression hash) bitXor: scaleExpression hash

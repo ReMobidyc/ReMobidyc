@@ -408,6 +408,12 @@ RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
 ]
 
+{ #category : #'accessing - time' }
+RMDSimulationModel >> deltaTimeUnit [
+
+	^ simulationDefinition timeDefinition step unit
+]
+
 { #category : #'accessing - metadata' }
 RMDSimulationModel >> description [
 
@@ -794,9 +800,9 @@ RMDSimulationModel >> interpreterForDryRun [
 RMDSimulationModel >> interpreterOn: aRMDMemory [
 
 	^ RMDInterpreter new
+		  simulationModel: self;
 		  setMemory: aRMDMemory;
 		  setContext: RMDActionContext new;
-		  simulationModel: self;
 		  yourself
 ]
 

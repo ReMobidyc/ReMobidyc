@@ -38,6 +38,12 @@ RMDApplyNode >> childrenDo: aBlock [
 	arguments do: aBlock
 ]
 
+{ #category : #enumerating }
+RMDApplyNode >> childrenTransform: aBlock [
+
+	arguments := arguments collect: aBlock
+]
+
 { #category : #accessing }
 RMDApplyNode >> function [
 	^ function
