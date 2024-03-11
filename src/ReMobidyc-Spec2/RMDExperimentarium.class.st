@@ -406,19 +406,19 @@ RMDExperimentarium >> saveRunAs [
 				self setMetaInterpreter: (RMDMetaInterpreter onModelPath: ref) ] ] ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDExperimentarium >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDExperimentarium >> selectedRunId [
 
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDExperimentarium >> selectedTime [
 
 	| time |

@@ -3,7 +3,7 @@ Class {
 	#superclass : #RMDIndividualHistoryTabular,
 	#instVars : [
 		'taskList',
-		'traceableAction'
+		'traceableActionContext'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -34,7 +34,7 @@ RMDIndividualHistoryValidatorium class >> defaultLayout [
 				   add: (SpPanedLayout newHorizontal
 						    positionOfSlider: 0.3;
 						    add: #taskList;
-						    add: #traceableAction));
+						    add: #traceableActionContext));
 		  add: (SpBoxLayout newHorizontal
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
@@ -58,11 +58,11 @@ RMDIndividualHistoryValidatorium >> initializePresenters [
 	taskList := self newTable
 		            addColumn:
 			            (SpStringTableColumn
-				             title: 'verb'
-				             evaluated: #verbIdentifier);
+				             title: 'task'
+				             evaluated: #printString);
 		            whenSelectedItemChangedDo: [ self updateTraceableAction ];
 		            yourself.
-	traceableAction := self instantiate: RMDTraceableActionPresenter
+	traceableActionContext := self instantiate: RMDTraceableActionContextPresenter
 ]
 
 { #category : #updating }
@@ -71,27 +71,23 @@ RMDIndividualHistoryValidatorium >> updateTaskList [
 	| selection |
 	selection := taskList selectedItem.
 	self selectedInterpreter ifNotNil: [ :interpreter |
-		stageDropList selectedItem ifNotNil: [ :assoc |
-			(interpreter simulationModel
-				 animatDefinitionAt: assoc value first
-				 ifAbsent: [ nil ]) ifNotNil: [ :agent |
-				taskList items:
-					(interpreter simulationModel taskDefinitions select: [ :task |
-						 task enabled and: [
-							 task subjectIdentifier = agent name and: [
-								 task objectIdentifier isNil ] ] ]) ].
-			selection ifNotNil: [ taskList selectItem: selection ].
-			^ self ] ].
+		self selectedAgent ifNotNil: [ :agent |
+			self selectedIndividual ifNotNil: [ :subject |
+				taskList items: (Array streamContents: [ :stream |
+						 interpreter simulationModel taskDefinitions do: [ :task |
+							 (task enabled and: [ task subjectIdentifier = agent name ])
+								 ifTrue: [
+									 task
+										 validate: subject
+										 in: self selectedInterpreter
+										 do: [ :context | stream nextPut: context ] ] ] ]).
+				selection ifNotNil: [ taskList selectItem: selection ].
+				^ self ] ] ].
 	taskList items: Array new
 ]
 
 { #category : #updating }
 RMDIndividualHistoryValidatorium >> updateTraceableAction [
 
-	taskList selectedItem ifNotNil: [ :task |
-		self selectedIndividual ifNotNil: [ :subject |
-			traceableAction action:
-				(task validateWithSubject: subject in: self selectedInterpreter).
-			^ self ] ].
-	traceableAction action: nil
+	traceableActionContext context: taskList selectedItem
 ]

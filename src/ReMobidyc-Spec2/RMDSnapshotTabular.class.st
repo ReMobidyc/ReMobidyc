@@ -129,13 +129,13 @@ RMDSnapshotTabular >> openChart [
 					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDSnapshotTabular >> selectedAgent [
 
 	^ agentDropList selectedItem
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDSnapshotTabular >> selectedIndividual [
 
 	self selectedAgent ifNotNil: [ :agent |

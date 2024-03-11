@@ -227,6 +227,16 @@ RMDIndividualHistoryTabular >> selectTime: anInteger [
 			 ifNone: [ nil ])
 ]
 
+{ #category : #accessing }
+RMDIndividualHistoryTabular >> selectedAgent [
+
+	^ stageDropList selectedItem ifNotNil: [ :assoc |
+		  self selectedInterpreter ifNotNil: [ :interpreter |
+			  interpreter simulationModel
+				  animatDefinitionAt: assoc value first
+				  ifAbsent: [ nil ] ] ]
+]
+
 { #category : #private }
 RMDIndividualHistoryTabular >> selectedIndividual [
 

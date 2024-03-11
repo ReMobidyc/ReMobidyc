@@ -213,13 +213,19 @@ RMDTabular >> selectTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #accessing }
+RMDTabular >> selectedAgent [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
 RMDTabular >> selectedInterpreter [
 
 	^ metaInterpreter interpreterAt: self selectedRunId ifAbsent: [  ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDTabular >> selectedRunId [
 
 	^ runDropList selectedItem ifNotNil: [ :runId | 

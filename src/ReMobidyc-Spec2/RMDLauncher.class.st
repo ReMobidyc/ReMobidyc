@@ -283,19 +283,19 @@ RMDLauncher >> removeItem [
 			ifFalse: [ super removeItem ] ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDLauncher >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDLauncher >> selectedRunId [
 
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDLauncher >> selectedTime [
 
 	^ nil
