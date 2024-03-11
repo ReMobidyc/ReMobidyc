@@ -120,19 +120,19 @@ TRMDLaunchAnalysisTools >> replayObservatoryMenu: aSpMenuPresenter [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 TRMDLaunchAnalysisTools >> selectedIndividual [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 TRMDLaunchAnalysisTools >> selectedRunId [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 TRMDLaunchAnalysisTools >> selectedTime [
 
 	^ self subclassResponsibility

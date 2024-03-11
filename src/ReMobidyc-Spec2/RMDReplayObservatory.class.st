@@ -242,19 +242,19 @@ RMDReplayObservatory >> selectTime: aNumber [
 				asFloat / (interpreter memory latestTime max: 1) ]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDReplayObservatory >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDReplayObservatory >> selectedRunId [
 
 	^ runDropList selectedItem
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 RMDReplayObservatory >> selectedTime [
 
 	^ (metaInterpreter

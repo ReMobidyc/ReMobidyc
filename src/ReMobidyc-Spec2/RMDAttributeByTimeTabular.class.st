@@ -44,7 +44,7 @@ RMDAttributeByTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : #updating }
 RMDAttributeByTimeTabular >> agentChanged [
 
 	self updateTable
@@ -159,7 +159,13 @@ RMDAttributeByTimeTabular >> openChartMenu [
 	menu openWithSpecAtPointer
 ]
 
-{ #category : #private }
+{ #category : #accessing }
+RMDAttributeByTimeTabular >> selectedAgent [
+
+	^ agentDropList selectedItem
+]
+
+{ #category : #accessing }
 RMDAttributeByTimeTabular >> selectedIndividual [
 
 	^ table selectedItem ifNotNil: [ :row |

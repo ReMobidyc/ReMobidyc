@@ -59,6 +59,12 @@ RMDActionContext >> createPatchAttributeDict: anInteger [
 		  assoc value: anInteger + assoc value ]
 ]
 
+{ #category : #testing }
+RMDActionContext >> hasObject [
+
+	^ object notNil
+]
+
 { #category : #accessing }
 RMDActionContext >> location [
 
@@ -112,6 +118,31 @@ RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 { #category : #accessing }
 RMDActionContext >> objectDefinition [
 	^ objectDefinition
+]
+
+{ #category : #printing }
+RMDActionContext >> printOn: aStream [
+
+	subjectDefinition
+		ifNotNil: [ aStream nextPutAll: subjectDefinition name ]
+		ifNil: [ aStream nextPut: $- ].
+	aStream nextPut: $(.
+	subject
+		ifNotNil: [ subject printOn: aStream ]
+		ifNil: [ aStream nextPut: $- ].
+	aStream
+		nextPut: $);
+		space.
+	action
+		ifNotNil: [ aStream nextPutAll: action identifier ]
+		ifNil: [ aStream nextPut: $- ].
+	aStream space.
+	objectDefinition ifNotNil: [
+		aStream nextPutAll: objectDefinition identifier ].
+	object ifNotNil: [
+		aStream nextPut: $(.
+		object printOn: aStream.
+		aStream nextPut: $) ]
 ]
 
 { #category : #accessing }
