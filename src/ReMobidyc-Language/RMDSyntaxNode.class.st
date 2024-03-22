@@ -25,22 +25,29 @@ RMDSyntaxNode >> asString [
 { #category : #converting }
 RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
 
+	^ self
+		  asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode
+		  color: Color red
+]
+
+{ #category : #converting }
+RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode color: aColor [
+
 	| sections nodes newText |
 	sections := OrderedCollection new:
 		            aCollectionOfIntervalOrRMDSyntaxNode size + 10.
-	nodes := Set new:
-		         aCollectionOfIntervalOrRMDSyntaxNode size + 1.
-	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight | 
+	nodes := Set new: aCollectionOfIntervalOrRMDSyntaxNode size + 1.
+	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight |
 		highlight isInterval
 			ifTrue: [ sections add: highlight ]
 			ifFalse: [ nodes add: highlight ] ].
-	newText := (String streamContents: [ :stream | 
+	newText := (String streamContents: [ :stream |
 		            self
 			            printOn: stream
 			            ifIncludedIn: nodes
 			            addSectionTo: sections ]) asText.
-	sections do: [ :section | 
-		newText makeColor: Color red from: section first to: section last ].
+	sections do: [ :section |
+		newText makeColor: aColor from: section first to: section last ].
 	^ newText
 ]
 
@@ -93,6 +100,62 @@ RMDSyntaxNode >> hasPlaceholder [
 { #category : #comparing }
 RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDSimulationModel [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: nil
+		  in: aRMDSimulationModel
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDSimulationModel [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: nil
+		  in: aRMDSimulationModel
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString in: aRMDSimulationModel [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: anotherString
+		  utilities: nil
+		  in: aRMDSimulationModel
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDSimulationModel [
+
+	| errorNodes |
+	errorNodes := OrderedCollection new: 10.
+	[
+	[
+	[
+	aRMDType unify: (aRMDSimulationModel typechecker
+			 typecheck: self
+			 subject: aString
+			 object: anotherString
+			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | errorNodes add: self ] ]
+		on: RMDTypeError
+		do: [ :ex |
+			errorNodes add: ex node.
+			ex resume: ex type2 ] ]
+		on: RMDUnresolvedReferenceError
+		do: [ :ex |
+			errorNodes add: ex node.
+			ex resume: RMDType any ].
+	^ self asTextWithHighlights: errorNodes color: (Color yellow mixed: 0.7 with: Color black)
 ]
 
 { #category : #enumerating }

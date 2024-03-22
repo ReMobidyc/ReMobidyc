@@ -43,6 +43,12 @@ String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 ]
 
 { #category : #'*ReMobidyc-Language' }
+String >> asRMDExpressionOrNil [
+
+	^ self asRMDExpressionDo: [ :node | node ] ifError: [  ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
 String >> asRMDSimulationDefinition [
 
 	| node |
@@ -71,6 +77,16 @@ String >> asRMDUnit [
 		  node isPetit2Failure
 			  ifTrue: [ RMDSyntaxError signal: node ]
 			  ifFalse: [ node ] ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> asRMDUnitOrNoDimension [
+
+	| node |
+	node := RMDGrammar current unit end parse: self.
+	^ node isPetit2Failure
+		  ifTrue: [ RMDUnit noDimension ]
+		  ifFalse: [ node ]
 ]
 
 { #category : #'*ReMobidyc-Language' }

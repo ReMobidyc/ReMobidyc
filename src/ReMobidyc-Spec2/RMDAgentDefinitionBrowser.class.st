@@ -327,6 +327,17 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 addColumn: ((SpStringTableColumn
 				                   title: 'name'
 				                   evaluated: [ :item | item identifier ])
+				                  displayColor: [ :item |
+					                  (attributeList items select: [ :attrDecl |
+							                   attrDecl identifier = item identifier ])
+						                  size = 1
+						                  ifTrue: [ Color black ]
+						                  ifFalse: [ Color red ] ];
+				                  beEditable;
+				                  onAcceptEdition: [ :item :string |
+					                  string asString trim ifNotEmpty: [ :identifier |
+							                  item identifier: identifier uncapitalized ].
+					                  attributeList refresh ];
 				                  width: 150;
 				                  yourself);
 		                 addColumn:
@@ -338,17 +349,30 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 					                   unit hasDimension
 						                   ifTrue: [ unit printString ]
 						                   ifFalse: [ '' ] ])
+				                  beEditable;
+				                  onAcceptEdition: [ :item :string |
+					                  item unit:
+							                  string asString trim asRMDUnitOrNoDimension.
+					                  attributeList refresh ];
 				                  width: 100;
 				                  yourself);
 		                 addColumn:
-			                 (SpStringTableColumn
-				                  title: 'initial value'
-				                  evaluated: [ :item |
-					                  | expr |
-					                  expr := item initializerExpression.
-					                  expr
-						                  ifNotNil: [ expr printString ]
-						                  ifNil: [ '' ] ]);
+			                 ((SpStringTableColumn
+				                   title: 'initial value'
+				                   evaluated: [ :item |
+					                   item initializerExpression
+						                   ifNotNil: [ :expr |
+							                   expr
+								                   highlightedSourceTyped:
+									                   (RMDType unit: item unit)
+								                   in: self simulationModel ]
+						                   ifNil: [ '' ] ])
+				                  beEditable;
+				                  onAcceptEdition: [ :item :str |
+					                  item initializerExpression:
+							                  str asString asRMDExpressionOrNil.
+					                  attributeList refresh ];
+				                  yourself);
 		                 whenModelChangedDo: [
 		                 attributeList selectItem: nil ];
 		                 whenSelectionChangedDo: [
@@ -542,7 +566,8 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                  help: 'Edit the definition of the selected task';
 		                  disable;
 		                  yourself.
-	sourceText := (self newSourceWith: RMDGrammar current actionDefinition)
+	sourceText := (self newSourceWith:
+			               RMDGrammar current actionDefinition)
 		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself
