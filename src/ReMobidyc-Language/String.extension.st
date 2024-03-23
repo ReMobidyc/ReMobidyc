@@ -80,6 +80,15 @@ String >> asRMDUnit [
 ]
 
 { #category : #'*ReMobidyc-Language' }
+String >> asRMDUnitOrNil [
+
+	| node |
+	^ (node := RMDGrammar current unit end parse: self) isPetit2Success
+		  ifTrue: [ node ]
+		  ifFalse: [ nil ]
+]
+
+{ #category : #'*ReMobidyc-Language' }
 String >> asRMDUnitOrNoDimension [
 
 	| node |

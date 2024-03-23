@@ -268,71 +268,36 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 beSingleSelection;
 		                 beResizable;
 		                 showColumnHeaders;
+		                 addColumn: (RMDColorTriangleTableColumn
+				                  subjectBlock: [ self agentName ]
+				                  utilitiesBlock: [
+					                  self definitionDo: #utilityDefinitions ]
+				                  simulationModel: [ self simulationModel ]);
 		                 addColumn:
-			                 ((SpImageTableColumn evaluated: [ :item |
-					                   item isCorrectSyntax
-						                   ifTrue: [
-							                   (item
-								                    isCorrectTypeWithSubject: self agentName
-								                    in: self simulationModel)
-								                   ifTrue: [ self greenTriangleIcon ]
-								                   ifFalse: [ self yellowTriangleIcon ] ]
-						                   ifFalse: [ self redTriangleIcon ] ]) width:
-					                  14);
-		                 addColumn: ((SpStringTableColumn
-				                   title: 'name'
-				                   evaluated: [ :item |
-					                   item identifier ifEmpty: [ '-' ] ])
-				                  displayColor: [ :item |
-					                  item identifier isCorrectRMDIdentifier
-						                  ifTrue: [
-							                  (attributeList items select: [ :attrDecl |
-									                   attrDecl identifier = item identifier ])
-								                  size > 1
-								                  ifTrue: [ Color yellow muchDarker ]
-								                  ifFalse: [ Color black ] ]
-						                  ifFalse: [ Color red ] ];
-				                  beEditable;
-				                  onAcceptEdition: [ :item :string |
-					                  string asString trim ifNotEmpty: [ :identifier |
-							                  identifier isCorrectRMDIdentifier ifTrue: [
-									                  item identifier: identifier ] ].
-					                  attributeList refresh ];
+			                 ((RMDIdentifierTableColumn title: 'name')
+				                  validationBlock: [ :item |
+					                  (attributeList items select: [ :attrDecl |
+							                   attrDecl identifier = item identifier ])
+						                  size = 1 ];
+				                  extraAcceptAction: [ attributeList refresh ];
 				                  width: 150;
 				                  yourself);
-		                 addColumn:
-			                 ((SpStringTableColumn
-				                   title: 'unit'
-				                   evaluated: [ :item |
-					                   | unit |
-					                   unit := item unit.
-					                   unit hasDimension
-						                   ifTrue: [ unit printString ]
-						                   ifFalse: [ '' ] ])
+		                 addColumn: ((RMDUnitTableColumn title: 'unit')
 				                  beEditable;
-				                  onAcceptEdition: [ :item :string |
-					                  item unit:
-							                  string asString trim asRMDUnitOrNoDimension.
-					                  attributeList refresh ];
+				                  extraAcceptAction: [ attributeList refresh ];
 				                  width: 100;
 				                  yourself);
-		                 addColumn:
-			                 ((SpStringTableColumn
+		                 addColumn: ((RMDExpressionTableColumn
 				                   title: 'initial value'
 				                   evaluated: [ :item |
-					                   item initializerExpression
-						                   ifNotNil: [ :expr |
-							                   expr
-								                   highlightedSourceTyped:
-									                   (RMDType unit: item unit)
-								                   utilities:
-									                   (self definitionDo: #utilityDefinitions)
-								                   in: self simulationModel ]
-						                   ifNil: [ '' ] ])
-				                  beEditable;
-				                  onAcceptEdition: [ :item :str |
-					                  item initializerExpression:
-							                  str asString asRMDExpressionOrNil.
+					                   item initializerExpression ])
+				                  unitBlock: [ :item | item unit ];
+				                  simulationModelBlock: [ self simulationModel ];
+				                  subjectBlock: [ self agentName ];
+				                  utilitiesBlock: [
+					                  self definitionDo: #utilityDefinitions ];
+				                  onAcceptEdition: [ :item :expr |
+					                  item initializerExpression: expr.
 					                  attributeList refresh ];
 				                  yourself);
 		                 whenModelChangedDo: [
@@ -386,51 +351,30 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		               beSingleSelection;
 		               beResizable;
 		               showColumnHeaders;
-		               addColumn: ((SpImageTableColumn evaluated: [ :item |
-					                 item isCorrectSyntax
-						                 ifTrue: [
-							                 (item
-								                  isCorrectTypeWithSubject: self agentName
-								                  in: self simulationModel)
-								                 ifTrue: [ self greenTriangleIcon ]
-								                 ifFalse: [ self yellowTriangleIcon ] ]
-						                 ifFalse: [ self redTriangleIcon ] ]) width: 14);
-		               addColumn: ((SpStringTableColumn
-				                 title: 'name'
-				                 evaluated: [ :item |
-					                 item identifier ifEmpty: [ '-' ] ])
-				                displayColor: [ :item |
-					                item identifier isCorrectRMDIdentifier
-						                ifTrue: [
-							                (utilityList items select: [ :utilityDef |
-									                 utilityDef identifier = item identifier ])
-								                size > 1
-								                ifTrue: [ Color yellow muchDarker ]
-								                ifFalse: [ Color black ] ]
-						                ifFalse: [ Color red ] ];
-				                beEditable;
-				                onAcceptEdition: [ :item :string |
-					                string asString trim ifNotEmpty: [ :identifier |
-							                identifier isCorrectRMDIdentifier ifTrue: [
-									                item identifier: identifier ] ].
+		               addColumn: (RMDColorTriangleTableColumn
+				                subjectBlock: [ self agentName ]
+				                utilitiesBlock: [
+					                self definitionDo: #utilityDefinitions ]
+				                simulationModel: [ self simulationModel ]);
+		               addColumn: ((RMDIdentifierTableColumn title: 'name')
+				                validationBlock: [ :item |
+					                (utilityList items select: [ :utilDef |
+							                 utilDef identifier = item identifier ]) size
+					                = 1 ];
+				                extraAcceptAction: [
 					                attributeList refresh.
 					                utilityList refresh ];
 				                width: 150;
 				                yourself);
-		               addColumn:
-			               ((SpStringTableColumn
+		               addColumn: ((RMDExpressionTableColumn
 				                 title: 'value'
-				                 evaluated: [ :item |
-					                 item definitionBody
-						                 ifNotNil: [ :expr |
-							                 expr
-								                 highlightedSourceTyped: RMDType any
-								                 in: self simulationModel ]
-						                 ifNil: [ '' ] ])
-				                beEditable;
-				                onAcceptEdition: [ :item :str |
-					                item definitionBody:
-							                str asString asRMDExpressionOrNil.
+				                 evaluated: [ :item | item definitionBody ])
+				                simulationModelBlock: [ self simulationModel ];
+				                subjectBlock: [ self agentName ];
+				                utilitiesBlock: [
+					                self definitionDo: #utilityDefinitions ];
+				                onAcceptEdition: [ :item :expr |
+					                item definitionBody: expr.
 					                attributeList refresh.
 					                utilityList refresh ];
 				                yourself);
@@ -847,10 +791,12 @@ RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 
 	modeler := aRMDSimulationModeler.
-	self updateAttributeList.
-	self updateRendererList.
-	self updateTaskList.
-	self updateDataSourceButtons
+	self
+		updateAttributeList;
+		updateUtilityList;
+		updateRendererList;
+		updateTaskList;
+		updateDataSourceButtons
 ]
 
 { #category : #accessing }

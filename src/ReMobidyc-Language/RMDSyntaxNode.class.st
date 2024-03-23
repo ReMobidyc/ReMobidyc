@@ -151,11 +151,13 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 		do: [ :ex |
 			errorNodes add: ex node.
 			ex resume: ex type2 ] ]
-		on: RMDUnresolvedReferenceError
+		on: RMDSemanticError
 		do: [ :ex |
 			errorNodes add: ex node.
 			ex resume: RMDType any ].
-	^ self asTextWithHighlights: errorNodes color: (Color yellow mixed: 0.7 with: Color black)
+	^ self
+		  asTextWithHighlights: errorNodes
+		  color: (Color yellow mixed: 0.7 with: Color black)
 ]
 
 { #category : #printing }
@@ -305,6 +307,26 @@ RMDSyntaxNode >> isConditionNode [
 { #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isCorrectTypeWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: anotherString
+		utilities: anArrayOfRMDUtilityDefinition ]
+		on: RMDError
+		do: [ :ex | ^ false ].
+	^ aString isNil or: [
+		  ((aRMDSimulationModel
+			    agentDefinitionAt: aString
+			    ifAbsent: [ ^ false ]) attributeDeclarations contains: [
+			   :attributeDeclaration |
+			   attributeDeclaration ~~ self and: [
+				   attributeDeclaration identifier = self identifier ] ]) not ]
 ]
 
 { #category : #testing }
