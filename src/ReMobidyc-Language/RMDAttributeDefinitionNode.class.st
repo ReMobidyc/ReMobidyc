@@ -25,6 +25,13 @@ RMDAttributeDefinitionNode >> isAttributeDefinitionNode [
 	^ true
 ]
 
+{ #category : #testing }
+RMDAttributeDefinitionNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current attributeDefinition end parse: self printString)
+	  = self
+]
+
 { #category : #accessing }
 RMDAttributeDefinitionNode >> operator [
 	^ '='

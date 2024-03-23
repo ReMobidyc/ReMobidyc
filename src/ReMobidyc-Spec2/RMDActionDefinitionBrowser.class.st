@@ -80,7 +80,6 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 								     add: #removeUtilityButton expand: false;
 								     add: #moveUpUtilityButton expand: false;
 								     add: #moveDownUtilityButton expand: false;
-								     add: #editUtilityButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
 		  expand: true

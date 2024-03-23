@@ -90,6 +90,13 @@ RMDPatchInitializerNode >> hash [
 ]
 
 { #category : #testing }
+RMDPatchInitializerNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current patchInitializer end parse: self printString)
+	  = self
+]
+
+{ #category : #testing }
 RMDPatchInitializerNode >> isPatchInitializerNode [
 	^ true
 ]

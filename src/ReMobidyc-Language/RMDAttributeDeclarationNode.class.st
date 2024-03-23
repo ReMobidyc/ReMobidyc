@@ -25,6 +25,12 @@ RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit initiali
 		  yourself
 ]
 
+{ #category : #'typical instances' }
+RMDAttributeDeclarationNode class >> template [
+
+	^ self identifier: '' unit: nil
+]
+
 { #category : #comparing }
 RMDAttributeDeclarationNode >> = anObject [
 
@@ -91,6 +97,34 @@ RMDAttributeDeclarationNode >> initializerExpression: aRMDExpression [
 { #category : #testing }
 RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 	^ true
+]
+
+{ #category : #testing }
+RMDAttributeDeclarationNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current attributeDeclaration end parse:
+		   self printString) = self
+]
+
+{ #category : #testing }
+RMDAttributeDeclarationNode >> isCorrectTypeWithSubject: aString in: aRMDSimulationModel [
+
+	| agentDefinition |
+	agentDefinition := aRMDSimulationModel
+		                   agentDefinitionAt: aString
+		                   ifAbsent: [ ^ false ].
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: nil
+		utilities: agentDefinition utilityDefinitions ]
+		on: RMDError
+		do: [ :ex | ^ false ].
+	^ (agentDefinition attributeDeclarations contains: [
+		   :attributeDeclaration |
+		   attributeDeclaration ~~ self and: [
+			   attributeDeclaration identifier = self identifier ] ]) not
 ]
 
 { #category : #accessing }

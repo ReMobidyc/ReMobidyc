@@ -98,3 +98,9 @@ String >> asRMDWorldDefinition [
 		  ifTrue: [ RMDSyntaxError signal: node ]
 		  ifFalse: [ node ]
 ]
+
+{ #category : #'*ReMobidyc-Language' }
+String >> isCorrectRMDIdentifier [
+
+	^ (RMDGrammar current identifier end parse: self) = self
+]

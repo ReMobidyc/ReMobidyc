@@ -40,6 +40,12 @@ RMDExpressionNode >> insertTrace [
 ]
 
 { #category : #testing }
+RMDExpressionNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current expression end parse: self printString) = self
+]
+
+{ #category : #testing }
 RMDExpressionNode >> isExpressionNode [
 	^ true
 ]

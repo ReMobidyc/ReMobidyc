@@ -27,6 +27,13 @@ RMDWorldInitializerNode >> agentName [
 ]
 
 { #category : #testing }
+RMDWorldInitializerNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current worldInitializer end parse: self printString)
+	  = self
+]
+
+{ #category : #testing }
 RMDWorldInitializerNode >> isWorldInitializerNode [
 	^ true
 ]

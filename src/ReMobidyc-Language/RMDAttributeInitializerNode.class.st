@@ -65,6 +65,13 @@ RMDAttributeInitializerNode >> isAttributeInitializerNode [
 	^ true
 ]
 
+{ #category : #testing }
+RMDAttributeInitializerNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current attributeInitializer end parse:
+		   self printString) = self
+]
+
 { #category : #copying }
 RMDAttributeInitializerNode >> postCopy [
 

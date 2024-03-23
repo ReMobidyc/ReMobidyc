@@ -88,6 +88,13 @@ RMDAnimatInitializerNode >> isAnimatInitializerNode [
 	^ true
 ]
 
+{ #category : #testing }
+RMDAnimatInitializerNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current animatInitializer end parse: self printString)
+	  = self
+]
+
 { #category : #accessing }
 RMDAnimatInitializerNode >> population [
 	^ population

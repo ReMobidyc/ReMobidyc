@@ -35,7 +35,6 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #moveUpAttributeButton width: self buttonHeight;
 										      add: #moveDownAttributeButton
 										      width: self buttonHeight;
-										      add: #editAttributeButton width: self buttonHeight;
 										      add: #spreadAttributeButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -55,7 +54,6 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #removeUtilityButton width: self buttonHeight;
 										      add: #moveUpUtilityButton width: self buttonHeight;
 										      add: #moveDownUtilityButton width: self buttonHeight;
-										      add: #editUtilityButton width: self buttonHeight;
 										      add: #spreadUtilityButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -123,19 +121,6 @@ RMDAnimatDefinitionBrowser >> addIconRendererMenu [
 						  action: [ 
 							  self addRenderer:
 									  (RMDAnimatIconRenderer on: animat iconName: iconName) ] ] ] ]
-]
-
-{ #category : #private }
-RMDAnimatDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: aString [
-
-	self simulationModel simulationDefinition animatInitializers do: [ 
-		:animatInitializer | 
-		animatInitializer animat = aString ifTrue: [ 
-			animatInitializer attributeInitializers:
-				(animatInitializer attributeInitializers copyWith:
-					 (RMDAttributeInitializerNode
-						  identifier: aRMDAttributeNode identifier
-						  expression: nil)) ] ]
 ]
 
 { #category : #operations }

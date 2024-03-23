@@ -158,6 +158,27 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 	^ self asTextWithHighlights: errorNodes color: (Color yellow mixed: 0.7 with: Color black)
 ]
 
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: nil
+		  utilities: anArrayOfRMDUtilityDefinition
+		  in: aRMDSimulationModel
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: nil
+		  utilities: anArrayOfRMDUtilityDefinition
+		  in: aRMDSimulationModel
+]
+
 { #category : #enumerating }
 RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
 	self

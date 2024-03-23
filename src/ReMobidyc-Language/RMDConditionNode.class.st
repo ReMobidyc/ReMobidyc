@@ -29,6 +29,12 @@ RMDConditionNode >> isConditionNode [
 	^ true
 ]
 
+{ #category : #testing }
+RMDConditionNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current condition end parse: self printString) = self
+]
+
 { #category : #accessing }
 RMDConditionNode >> precedence [
 	^ self subclassResponsibility
