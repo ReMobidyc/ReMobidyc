@@ -37,16 +37,6 @@ RMDWorldDefinitionBrowser >> initializePresenters [
 	addRendererButton disable
 ]
 
-{ #category : #private }
-RMDWorldDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-
-	self simulationModel simulationDefinition worldInitializer ifNotNil: [ 
-		:initializer | 
-		initializer attributeInitializers:
-			(initializer attributeInitializers reject: [ :attributeInitializer | 
-				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
-]
-
 { #category : #operations }
 RMDWorldDefinitionBrowser >> renameAttribute: aString to: anotherString [
 

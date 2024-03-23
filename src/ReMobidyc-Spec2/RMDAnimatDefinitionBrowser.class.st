@@ -233,17 +233,6 @@ RMDAnimatDefinitionBrowser >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #private }
-RMDAnimatDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: aString [
-
-	self simulationModel simulationDefinition animatInitializers do: [ 
-		:animatInitializer | 
-		animatInitializer animat = aString ifTrue: [ 
-			animatInitializer attributeInitializers:
-				(animatInitializer attributeInitializers reject: [ :initializer | 
-					 initializer identifier = aRMDAttributeNode identifier ]) ] ]
-]
-
 { #category : #operations }
 RMDAnimatDefinitionBrowser >> renameSpecies [
 

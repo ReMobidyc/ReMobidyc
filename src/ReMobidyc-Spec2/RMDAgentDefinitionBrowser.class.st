@@ -712,17 +712,16 @@ RMDAgentDefinitionBrowser >> redTriangleIcon [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
-	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
+	attributeList selection selectedItem ifNotNil: [ :attributeNode |
 		(self newLabel
 			 label: 'OK to remove ' , attributeNode identifier , '?';
 			 yourself) openDialog
 			title: 'Remove attribute from ' , self agentName;
 			extent: 400 @ (self class buttonHeight * 3.5);
-			okAction: [ 
-				self definitionDo: [ :definitionNode | 
+			okAction: [
+				self definitionDo: [ :definitionNode |
 					definitionNode attributeDeclarations:
 						(definitionNode attributeDeclarations copyWithout: attributeNode).
-					self removeInitializerWithAttribute: attributeNode animat: animat.
 					self updateAttributeList ] ] ]
 ]
 
@@ -734,11 +733,6 @@ RMDAgentDefinitionBrowser >> removeDataSource [
 		 label: 'Confirmation') ifTrue: [
 		self agentDefinition dataSource: nil.
 		self updateDataSourceButtons ]
-]
-
-{ #category : #private }
-RMDAgentDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	^ self subclassResponsibility 
 ]
 
 { #category : #operations }

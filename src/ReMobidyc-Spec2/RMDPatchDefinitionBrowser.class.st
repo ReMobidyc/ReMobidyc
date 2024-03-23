@@ -49,16 +49,6 @@ RMDPatchDefinitionBrowser >> definitionDo: aBlock [
 		  model patchDefinition ifNotNil: aBlock ]
 ]
 
-{ #category : #private }
-RMDPatchDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-
-	self simulationModel simulationDefinition patchInitializer ifNotNil: [ 
-		:initializer | 
-		initializer attributeInitializers:
-			(initializer attributeInitializers reject: [ :attributeInitializer | 
-				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
-]
-
 { #category : #operations }
 RMDPatchDefinitionBrowser >> renameAttribute: aString to: anotherString [
 
