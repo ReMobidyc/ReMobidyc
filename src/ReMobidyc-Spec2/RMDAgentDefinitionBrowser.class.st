@@ -27,10 +27,7 @@ Class {
 		'removeTaskButton',
 		'moveUpTaskButton',
 		'moveDownTaskButton',
-		'editTaskButton',
-		'greenTriangleIcon',
-		'yellowTriangleIcon',
-		'redTriangleIcon'
+		'editTaskButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -251,13 +248,6 @@ RMDAgentDefinitionBrowser >> editTask [
 					self updateTaskList.
 					taskList selectItem: taskDefinition.
 					self updateSourceText ] ] ] ]
-]
-
-{ #category : #icons }
-RMDAgentDefinitionBrowser >> greenTriangleIcon [
-
-	^ greenTriangleIcon ifNil: [
-		  greenTriangleIcon := super greenTriangleIcon ]
 ]
 
 { #category : #initialization }
@@ -647,12 +637,6 @@ RMDAgentDefinitionBrowser >> openDataSource [
 				 openDialog) title: self agentDefinition name , ' Data Source' ] ]
 ]
 
-{ #category : #icons }
-RMDAgentDefinitionBrowser >> redTriangleIcon [
-
-	^ redTriangleIcon ifNil: [ redTriangleIcon := super redTriangleIcon ]
-]
-
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
@@ -983,11 +967,4 @@ RMDAgentDefinitionBrowser >> utilityListMenu [
 						  enabled: moveDownUtilityButton isEnabled;
 						  action: [ self moveDownUtility ] ] ];
 		  yourself
-]
-
-{ #category : #icons }
-RMDAgentDefinitionBrowser >> yellowTriangleIcon [
-
-	^ yellowTriangleIcon ifNil: [
-		  yellowTriangleIcon := super yellowTriangleIcon ]
 ]
