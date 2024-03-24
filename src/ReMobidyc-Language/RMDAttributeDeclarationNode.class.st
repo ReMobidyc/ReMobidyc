@@ -28,7 +28,7 @@ RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit initiali
 { #category : #'typical instances' }
 RMDAttributeDeclarationNode class >> template [
 
-	^ self identifier: '' unit: nil
+	^ self identifier: '' unit: RMDUnit noDimension
 ]
 
 { #category : #comparing }

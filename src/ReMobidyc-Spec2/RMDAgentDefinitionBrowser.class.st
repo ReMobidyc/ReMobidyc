@@ -258,11 +258,14 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 beSingleSelection;
 		                 beResizable;
 		                 showColumnHeaders;
-		                 addColumn: (RMDColorTriangleTableColumn
-				                  subjectBlock: [ self agentName ]
-				                  utilitiesBlock: [
-					                  self definitionDo: #utilityDefinitions ]
-				                  simulationModel: [ self simulationModel ]);
+		                 addColumn: ((RMDColorTriangleTableColumn
+				                   subjectBlock: [ self agentName ]
+				                   utilitiesBlock: [
+					                   self definitionDo: #utilityDefinitions ]
+				                   simulationModel: [ self simulationModel ])
+				                  namecrashBlock: [ :adef |
+					                  (attributeList items select: [ :a |
+							                   a identifier = adef identifier ]) size = 1 ]);
 		                 addColumn:
 			                 ((RMDIdentifierTableColumn title: 'name')
 				                  validationBlock: [ :item |
@@ -341,11 +344,14 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		               beSingleSelection;
 		               beResizable;
 		               showColumnHeaders;
-		               addColumn: (RMDColorTriangleTableColumn
-				                subjectBlock: [ self agentName ]
-				                utilitiesBlock: [
-					                self definitionDo: #utilityDefinitions ]
-				                simulationModel: [ self simulationModel ]);
+		               addColumn: ((RMDColorTriangleTableColumn
+				                 subjectBlock: [ self agentName ]
+				                 utilitiesBlock: [
+					                 self definitionDo: #utilityDefinitions ]
+				                 simulationModel: [ self simulationModel ])
+				                namecrashBlock: [ :adef |
+					                (utilityList items select: [ :a |
+							                 a identifier = adef identifier ]) size = 1 ]);
 		               addColumn: ((RMDIdentifierTableColumn title: 'name')
 				                validationBlock: [ :item |
 					                (utilityList items select: [ :utilDef |

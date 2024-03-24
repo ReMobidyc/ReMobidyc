@@ -11,9 +11,9 @@ Class {
 RMDIdentifierTableColumn >> defaultAcceptAction [
 
 	^ [ :item :string |
-	  item identifier: string trim.
+	  item identifier: string asString trim.
 	  extraAcceptAction ifNotNil: [
-		  extraAcceptAction cull: item cull: string trim ] ]
+		  extraAcceptAction cull: item cull: string asString trim ] ]
 ]
 
 { #category : #defaults }

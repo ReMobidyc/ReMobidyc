@@ -20,6 +20,17 @@ RMDAttributeDefinitionNode >> asPresenter [
 	^ RMDAttributeDefinitionBrowser on: self
 ]
 
+{ #category : #accessing }
+RMDAttributeDefinitionNode >> identifier [
+
+	^ self variable identifier
+]
+
+{ #category : #accessing }
+RMDAttributeDefinitionNode >> identifier: aString [ 
+	self variable identifier: aString
+]
+
 { #category : #testing }
 RMDAttributeDefinitionNode >> isAttributeDefinitionNode [
 	^ true
@@ -74,4 +85,16 @@ RMDAttributeDefinitionNode >> printShortOn: aStream [
 
 	super printShortOn: aStream.
 	aStream nextPut: $'
+]
+
+{ #category : #accessing }
+RMDAttributeDefinitionNode >> variableOperator [
+
+	^ variable operator
+]
+
+{ #category : #accessing }
+RMDAttributeDefinitionNode >> variableOperator: aString [
+
+	variable := variable operator: aString
 ]

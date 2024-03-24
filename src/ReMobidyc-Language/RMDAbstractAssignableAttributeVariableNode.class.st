@@ -15,11 +15,40 @@ RMDAbstractAssignableAttributeVariableNode class >> attributeVariable: aRMDAttri
 		  yourself
 ]
 
+{ #category : #accessing }
+RMDAbstractAssignableAttributeVariableNode class >> classForOperator: aString [
+
+	aString = self deltaOperator ifTrue: [
+		^ RMDAssignableDeltaAttributeVariableNode ].
+	aString = self differentialOperator ifTrue: [
+		^ RMDAssignableDifferentialAttributeVariableNode ].
+	^ RMDAssignableAttributeVariableNode
+]
+
+{ #category : #accessing }
+RMDAbstractAssignableAttributeVariableNode class >> deltaOperator [
+
+	^ 'Δ'
+]
+
+{ #category : #accessing }
+RMDAbstractAssignableAttributeVariableNode class >> differentialOperator [
+
+	^ 'd/dt '
+]
+
 { #category : #'instance creation' }
 RMDAbstractAssignableAttributeVariableNode class >> identifier: aString agent: anotherString [
 	^ self new
 		attributeVariable: (RMDAttributeVariableNode identifier: aString agent: anotherString);
 		yourself
+]
+
+{ #category : #'instance creation' }
+RMDAbstractAssignableAttributeVariableNode class >> operator: aString attributeVariable: aRMDAttributeVariableNode [
+
+	^ (self classForOperator: aString) attributeVariable:
+		  aRMDAttributeVariableNode
 ]
 
 { #category : #comparing }
@@ -31,6 +60,13 @@ RMDAbstractAssignableAttributeVariableNode >> = anObject [
 { #category : #accessing }
 RMDAbstractAssignableAttributeVariableNode >> agent [
 	^ attributeVariable agent
+]
+
+{ #category : #accessing }
+RMDAbstractAssignableAttributeVariableNode >> agent: aString [
+
+	self attributeVariable:
+		(RMDAttributeVariableNode identifier: self identifier agent: aString)
 ]
 
 { #category : #accessing }
@@ -71,6 +107,12 @@ RMDAbstractAssignableAttributeVariableNode >> insertTrace [
 { #category : #accessing }
 RMDAbstractAssignableAttributeVariableNode >> operator [
 	^ self subclassResponsibility
+]
+
+{ #category : #converting }
+RMDAbstractAssignableAttributeVariableNode >> operator: aString [
+
+	^ self class operator: aString attributeVariable: attributeVariable
 ]
 
 { #category : #copying }

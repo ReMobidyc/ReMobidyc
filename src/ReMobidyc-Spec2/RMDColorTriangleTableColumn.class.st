@@ -5,7 +5,9 @@ Class {
 		'subjectBlock',
 		'objectBlock',
 		'utilitiesBlock',
-		'simulationModelBlock'
+		'simulationModelBlock',
+		'namecrashBlock',
+		'permitsUnresolvedAttributeReference'
 	],
 	#classVars : [
 		'GreenTriangleIcon',
@@ -99,11 +101,14 @@ RMDColorTriangleTableColumn >> defaultEvaluation [
 	^ [ :item |
 	  item isCorrectSyntax
 		  ifTrue: [
-			  (item
-				   isCorrectTypeWithSubject: self subject
-				   object: self object
-				   utilities: self utilities
-				   in: self simulationModel)
+			  ((item
+				    isWellTypedWithSubject: self subject
+				    object: self object
+				    utilities: self utilities
+				    in: self simulationModel
+				    permitsUnresolvedAttributeReference:
+				    self permitsUnresolvedAttributeReference) and: [
+				   namecrashBlock isNil or: [ namecrashBlock cull: item ] ])
 				  ifTrue: [ self greenTriangleIcon ]
 				  ifFalse: [ self yellowTriangleIcon ] ]
 		  ifFalse: [ self redTriangleIcon ] ]
@@ -124,6 +129,18 @@ RMDColorTriangleTableColumn >> initialize [
 ]
 
 { #category : #accessing }
+RMDColorTriangleTableColumn >> namecrashBlock [
+
+	^ namecrashBlock
+]
+
+{ #category : #accessing }
+RMDColorTriangleTableColumn >> namecrashBlock: aBlock [
+
+	namecrashBlock := aBlock
+]
+
+{ #category : #accessing }
 RMDColorTriangleTableColumn >> object [
 
 	^ objectBlock ifNotNil: #value
@@ -139,6 +156,24 @@ RMDColorTriangleTableColumn >> objectBlock [
 RMDColorTriangleTableColumn >> objectBlock: aBlock [
 
 	objectBlock := aBlock
+]
+
+{ #category : #accessing }
+RMDColorTriangleTableColumn >> permitUnresolvedAttributeReference [
+
+	permitsUnresolvedAttributeReference := true
+]
+
+{ #category : #accessing }
+RMDColorTriangleTableColumn >> permitsUnresolvedAttributeReference [
+
+	^ permitsUnresolvedAttributeReference = true
+]
+
+{ #category : #accessing }
+RMDColorTriangleTableColumn >> permitsUnresolvedAttributeReference: aBoolean [
+
+	permitsUnresolvedAttributeReference := aBoolean
 ]
 
 { #category : #icons }

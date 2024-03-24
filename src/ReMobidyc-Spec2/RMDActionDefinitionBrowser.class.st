@@ -11,12 +11,10 @@ Class {
 		'removeUtilityButton',
 		'moveUpUtilityButton',
 		'moveDownUtilityButton',
-		'editUtilityButton',
 		'attributeDefinitionList',
 		'addAttributeButton',
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
-		'editAttributeButton',
 		'removeAttributeButton',
 		'subjectAgent'
 	],
@@ -64,7 +62,6 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 								     add: #removeAttributeButton expand: false;
 								     add: #moveUpAttributeButton expand: false;
 								     add: #moveDownAttributeButton expand: false;
-								     add: #editAttributeButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
 		  expand: true
@@ -93,14 +90,9 @@ RMDActionDefinitionBrowser >> addAttributeDefinition [
 
 	| newDefinition |
 	newDefinition := RMDAttributeDefinitionNode template.
-	(newDefinition asPresenter
-		 simulationModel: self simulationModel;
-		 subjectAgent: subjectAgent;
-		 objectAgent: node object;
-		 yourself) openDialog okAction: [ 
-		node attributeDefinitions:
-			(node attributeDefinitions copyWith: newDefinition).
-		self nodeChanged ]
+	node attributeDefinitions:
+		(node attributeDefinitions copyWith: newDefinition).
+	self nodeChanged
 ]
 
 { #category : #operations }
@@ -108,10 +100,17 @@ RMDActionDefinitionBrowser >> addUtilityDefinition [
 
 	| newDefinition |
 	newDefinition := RMDUtilityDefinitionNode template.
-	newDefinition asPresenter openDialog okAction: [ 
-		node utilityDefinitions:
-			(node utilityDefinitions copyWith: newDefinition).
-		self nodeChanged ]
+	node utilityDefinitions:
+		(node utilityDefinitions copyWith: newDefinition).
+	self nodeChanged
+]
+
+{ #category : #accessing }
+RMDActionDefinitionBrowser >> agentDefinition [
+
+	^ self simulationModel
+		  agentDefinitionAt: self subjectAgent
+		  ifAbsent: [ nil ]
 ]
 
 { #category : #menus }
@@ -126,12 +125,6 @@ RMDActionDefinitionBrowser >> attributeDefinitionListMenu [
 						  icon: self addIcon;
 						  enabled: addAttributeButton isEnabled;
 						  action: [ self addAttributeDefinition ] ];
-				  addItem: [ :item |
-					  item
-						  name: 'Edit...';
-						  icon: self editIcon;
-						  enabled: editAttributeButton isEnabled;
-						  action: [ self editAttributeDefinition ] ];
 				  addItem: [ :item |
 					  item
 						  name: 'Remove';
@@ -258,8 +251,8 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                   yourself.
 	objectField := self newHighlightingSyntaxNodeTextInput
 		               parser:
-			               RMDGrammar current agentIdentifier optional trimBlanks
-				               end;
+			               RMDGrammar current agentIdentifier optional
+				               trimBlanks end;
 		               placeholder: '(object)';
 		               autoAccept: true;
 		               whenLastValidSyntaxNodeChangedDo: [ :animat |
@@ -280,13 +273,74 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		                    help:
 			                    'Edit directives such as new, stage, die and kill';
 		                    yourself.
-	attributeDefinitionList := self newList
-		                           display: [ :attributeDef |
-			                           attributeDef printString ];
+	attributeDefinitionList := self newTable
+		                           addColumn: ((RMDColorTriangleTableColumn
+				                             subjectBlock: [ self subjectAgent ]
+				                             objectBlock: [ node object ]
+				                             utilitiesBlock: [
+					                             node utilityDefinitions ]
+				                             simulationModel: [
+					                             self simulationModel ])
+				                            permitUnresolvedAttributeReference;
+				                            namecrashBlock: [ :attrDef |
+					                            (attributeDefinitionList items
+						                             select: [ :a |
+							                             a identifier = attrDef identifier ])
+						                            size = 1 ]);
+		                           addColumn:
+			                           (RMDPossessionalAgentDropListTableColumn
+				                            new
+				                            objectBlock: [ node object ];
+				                            directiveBlock: [ node lifeDirectives ];
+				                            yourself);
+		                           addColumn:
+		                           RMDVariableOperatorDropListTableColumn
+			                           new;
+		                           addColumn:
+			                           ((RMDIdentifierTableColumn evaluated: [
+					                             :attrDef |
+					                             attrDef variable identifier ])
+				                            validationBlock: [ :item |
+					                            (attributeDefinitionList items
+						                             select: [ :attrDecl |
+							                             attrDecl identifier
+							                             = item identifier ]) size = 1 ];
+				                            extraAcceptAction: [
+					                            attributeDefinitionList refresh ];
+				                            width: 150);
+		                           addColumn:
+		                           ((SpStringTableColumn evaluated: [
+			                             ''' = ' ]) width: 20);
+		                           addColumn:
+			                           ((RMDExpressionTableColumn evaluated: [
+					                             :item | item definitionBody ])
+				                            permitUnresolvedAttributeReference;
+				                            unitBlock: [ :def |
+					                            (self simulationModel
+						                             agentDefinitionAt:
+							                             self subjectAgent
+						                             ifAbsent: [ nil ]) ifNotNil: [
+							                            :agentDef |
+							                            agentDef
+								                            unitOfAttribute: def identifier
+								                            ifAbsent: [ nil ] ] ];
+				                            simulationModelBlock: [
+					                            self simulationModel ];
+				                            subjectBlock: [ self subjectAgent ];
+				                            objectBlock: [ node object ];
+				                            utilitiesBlock: [
+					                            node utilityDefinitions ];
+				                            onAcceptEdition: [ :item :expr |
+					                            item definitionBody: expr.
+					                            attributeDefinitionList refresh.
+					                            utilityDefinitionList refresh ];
+				                            yourself);
+		                           hideColumnHeaders;
+		                           beResizable;
 		                           whenSelectionChangedDo: [
-			                           self updateAttributeButtons ];
+		                           self updateAttributeButtons ];
 		                           contextMenu: [
-			                           self attributeDefinitionListMenu ];
+		                           self attributeDefinitionListMenu ];
 		                           yourself.
 	addAttributeButton := self newButton
 		                      label: '';
@@ -315,21 +369,57 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                           'Move the selected attribute definition down';
 		                           disable;
 		                           yourself.
-	editAttributeButton := self newButton
-		                       label: '';
-		                       icon: self editIcon;
-		                       action: [ self editAttributeDefinition ];
-		                       help:
-			                       'Edit the definition of the selected attribute';
-		                       disable;
-		                       yourself.
-	utilityDefinitionList := self newList
-		                         display: [ :utilityDef |
-			                         utilityDef printString ];
+	utilityDefinitionList := self newTable
+		                         beResizable;
+		                         hideColumnHeaders;
+		                         addColumn: ((RMDColorTriangleTableColumn
+				                           subjectBlock: [ self subjectAgent ]
+				                           objectBlock: [ node object ]
+				                           utilitiesBlock: [
+					                           node utilityDefinitions ]
+				                           simulationModel: [
+					                           self simulationModel ])
+				                          permitUnresolvedAttributeReference;
+				                          namecrashBlock: [ :utilDef |
+					                          (utilityDefinitionList items select: [
+							                           :udef |
+							                           udef identifier = utilDef identifier ])
+						                          size = 1 ]);
+		                         addColumn: (RMDIdentifierTableColumn new
+				                          validationBlock: [ :item |
+					                          (utilityDefinitionList items select: [
+							                           :utilDef |
+							                           utilDef identifier = item identifier ])
+						                          size = 1 ];
+				                          extraAcceptAction: [
+					                          attributeDefinitionList refresh.
+					                          utilityDefinitionList refresh ];
+				                          width: 150;
+				                          yourself);
+		                         addColumn:
+		                         ((SpStringTableColumn evaluated: [ ' = ' ])
+			                          width: 20);
+		                         addColumn:
+			                         ((RMDExpressionTableColumn evaluated: [
+					                           :item | item definitionBody ])
+				                          permitUnresolvedAttributeReference;
+				                          simulationModelBlock: [
+					                          self simulationModel ];
+				                          subjectBlock: [ self subjectAgent ];
+				                          objectBlock: [ node object ];
+				                          utilitiesBlock: [
+					                          node utilityDefinitions ];
+				                          onAcceptEdition: [ :item :expr |
+					                          item definitionBody: expr.
+					                          attributeDefinitionList refresh.
+					                          utilityDefinitionList refresh ];
+				                          yourself);
+		                         whenModelChangedDo: [
+		                         utilityDefinitionList selectItem: nil ];
 		                         whenSelectionChangedDo: [
-			                         self updateUtilityButtons ];
+		                         self updateUtilityButtons ];
 		                         contextMenu: [
-			                         self utilityDefinitionListMenu ];
+		                         self utilityDefinitionListMenu ];
 		                         yourself.
 	addUtilityButton := self newButton
 		                    label: '';
@@ -358,14 +448,6 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                         'Move the selected utility definition down';
 		                         disable;
 		                         yourself.
-	editUtilityButton := self newButton
-		                     label: '';
-		                     icon: self editIcon;
-		                     action: [ self editUtilityDefinition ];
-		                     help:
-			                     'Edit the definition of the selected utility variable';
-		                     disable;
-		                     yourself.
 	self whenBuiltDo: [
 		self withWidgetDo: [ :w |
 			w
@@ -478,6 +560,12 @@ RMDActionDefinitionBrowser >> nodeChanged [
 ]
 
 { #category : #accessing }
+RMDActionDefinitionBrowser >> objectAgent [
+
+	^ objectField text asString trim
+]
+
+{ #category : #accessing }
 RMDActionDefinitionBrowser >> preferredHeight [
 	^ 600
 ]
@@ -577,12 +665,11 @@ RMDActionDefinitionBrowser >> updateAttributeButtons [
 	| hasSelection |
 	hasSelection := attributeDefinitionList selectedItem notNil.
 	removeAttributeButton enabled: hasSelection.
-	moveUpAttributeButton enabled: (hasSelection and: [ 
+	moveUpAttributeButton enabled: (hasSelection and: [
 			 attributeDefinitionList selection selectedIndex >= 2 ]).
-	moveDownAttributeButton enabled: (hasSelection and: [ 
+	moveDownAttributeButton enabled: (hasSelection and: [
 			 attributeDefinitionList selection selectedIndex
-			 < attributeDefinitionList items size ]).
-	editAttributeButton enabled: hasSelection
+			 < attributeDefinitionList items size ])
 ]
 
 { #category : #updating }
@@ -597,12 +684,11 @@ RMDActionDefinitionBrowser >> updateUtilityButtons [
 	| hasSelection |
 	hasSelection := utilityDefinitionList selectedItem notNil.
 	removeUtilityButton enabled: hasSelection.
-	moveUpUtilityButton enabled: (hasSelection and: [ 
+	moveUpUtilityButton enabled: (hasSelection and: [
 			 utilityDefinitionList selection selectedIndex >= 2 ]).
-	moveDownUtilityButton enabled: (hasSelection and: [ 
+	moveDownUtilityButton enabled: (hasSelection and: [
 			 utilityDefinitionList selection selectedIndex
-			 < utilityDefinitionList items size ]).
-	editUtilityButton enabled: hasSelection
+			 < utilityDefinitionList items size ])
 ]
 
 { #category : #menus }
@@ -617,12 +703,6 @@ RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
 						  icon: self addIcon;
 						  enabled: addUtilityButton isEnabled;
 						  action: [ self addUtilityDefinition ] ];
-				  addItem: [ :item |
-					  item
-						  name: 'Edit...';
-						  icon: self editIcon;
-						  enabled: editUtilityButton isEnabled;
-						  action: [ self editUtilityDefinition ] ];
 				  addItem: [ :item |
 					  item
 						  name: 'Remove';

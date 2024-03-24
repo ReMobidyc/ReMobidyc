@@ -8,7 +8,8 @@ Class {
 		'subjectBlock',
 		'objectBlock',
 		'utilitiesBlock',
-		'simulationModelBlock'
+		'simulationModelBlock',
+		'permitsUnresolvedAttributeReference'
 	],
 	#category : #'ReMobidyc-Spec2-Columns'
 }
@@ -51,8 +52,11 @@ RMDExpressionTableColumn >> defaultEvaluationBlock [
 							  ((unitBlock ifNotNil: [ unitBlock cull: item ])
 								   ifNotNil: [ :unit | RMDType unit: unit ]
 								   ifNil: [ RMDType any ])
+						  subject: self subject
+						  object: self object
 						  utilities: self utilities
-						  in: self simulationModel ]
+						  in: self simulationModel
+						  permitUnresolvedAttributeReference: self permitsUnresolvedAttributeReference ]
 				  ifNil: [ '' ] ]
 		  ifNil: [ '' ] ]
 ]
@@ -85,6 +89,24 @@ RMDExpressionTableColumn >> objectBlock: aBlock [
 RMDExpressionTableColumn >> onAcceptEdition: aBlock [
 
 	basicAcceptAction := aBlock
+]
+
+{ #category : #accessing }
+RMDExpressionTableColumn >> permitUnresolvedAttributeReference [
+
+	permitsUnresolvedAttributeReference := true
+]
+
+{ #category : #accessing }
+RMDExpressionTableColumn >> permitsUnresolvedAttributeReference [
+
+	^ permitsUnresolvedAttributeReference = true
+]
+
+{ #category : #accessing }
+RMDExpressionTableColumn >> permitsUnresolvedAttributeReference: aBool [
+
+	permitsUnresolvedAttributeReference = aBool = true
 ]
 
 { #category : #accessing }

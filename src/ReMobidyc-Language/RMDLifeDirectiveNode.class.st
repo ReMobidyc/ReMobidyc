@@ -25,6 +25,12 @@ RMDLifeDirectiveNode >> childrenTransform: aBlock [
 
 ]
 
+{ #category : #testing }
+RMDLifeDirectiveNode >> hasNewAgents [
+
+	^ false
+]
+
 { #category : #comparing }
 RMDLifeDirectiveNode >> hash [
 	^ self class hash

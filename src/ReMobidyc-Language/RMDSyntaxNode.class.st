@@ -135,6 +135,18 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 { #category : #printing }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDSimulationModel [
 
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: anotherString
+		  utilities: anArrayOfRMDUtilityDefinitionNode
+		  in: aRMDSimulationModel
+		  permitUnresolvedAttributeReference: false
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDSimulationModel permitUnresolvedAttributeReference: aBool [
+
 	| errorNodes |
 	errorNodes := OrderedCollection new: 10.
 	[
@@ -147,10 +159,10 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
 		on: RMDTypeUnificationError
 		do: [ :ex | errorNodes add: self ] ]
-		on: RMDTypeError
+		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError
 		do: [ :ex |
-			errorNodes add: ex node.
-			ex resume: ex type2 ] ]
+			aBool = true ifFalse: [ errorNodes add: ex node ].
+			ex resume: RMDType any ] ]
 		on: RMDSemanticError
 		do: [ :ex |
 			errorNodes add: ex node.
@@ -320,13 +332,7 @@ RMDSyntaxNode >> isCorrectTypeWithSubject: aString object: anotherString utiliti
 		utilities: anArrayOfRMDUtilityDefinition ]
 		on: RMDError
 		do: [ :ex | ^ false ].
-	^ aString isNil or: [
-		  ((aRMDSimulationModel
-			    agentDefinitionAt: aString
-			    ifAbsent: [ ^ false ]) attributeDeclarations contains: [
-			   :attributeDeclaration |
-			   attributeDeclaration ~~ self and: [
-				   attributeDeclaration identifier = self identifier ] ]) not ]
+	^ true
 ]
 
 { #category : #testing }
@@ -675,6 +681,31 @@ RMDSyntaxNode >> isUtilityVariableNode [
 RMDSyntaxNode >> isVisualizationFileNode [
 
 	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isWellTypedWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel permitsUnresolvedAttributeReference: aBool [
+
+	[
+	[
+	[
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: anotherString
+		utilities: anArrayOfRMDUtilityDefinition ]
+		on: RMDScopedSemanticError
+		do: [ :ex | ex resume: ex exception outer ] ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ^ false ] ]
+		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError
+		do: [ :ex |
+			aBool = true ifFalse: [ ^ false ].
+			ex resume: RMDType any ] ]
+		on: RMDSemanticError
+		do: [ :ex | ^ false ].
+	^ true
 ]
 
 { #category : #testing }
