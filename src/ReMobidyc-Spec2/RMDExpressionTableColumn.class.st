@@ -55,7 +55,7 @@ RMDExpressionTableColumn >> defaultEvaluationBlock [
 						  subject: self subject
 						  object: self object
 						  utilities: self utilities
-						  in: self simulationModel
+						  in: self simulationModel typechecker
 						  permitUnresolvedAttributeReference: self permitsUnresolvedAttributeReference ]
 				  ifNil: [ '' ] ]
 		  ifNil: [ '' ] ]
@@ -106,7 +106,7 @@ RMDExpressionTableColumn >> permitsUnresolvedAttributeReference [
 { #category : #accessing }
 RMDExpressionTableColumn >> permitsUnresolvedAttributeReference: aBool [
 
-	permitsUnresolvedAttributeReference = aBool = true
+	permitsUnresolvedAttributeReference := aBool = true
 ]
 
 { #category : #accessing }

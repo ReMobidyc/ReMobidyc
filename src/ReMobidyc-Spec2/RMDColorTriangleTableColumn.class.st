@@ -102,12 +102,13 @@ RMDColorTriangleTableColumn >> defaultEvaluation [
 	  item isCorrectSyntax
 		  ifTrue: [
 			  ((item
-				    isWellTypedWithSubject: self subject
+				    errorNodesInTypecheck: RMDType any
+				    subject: self subject
 				    object: self object
 				    utilities: self utilities
-				    in: self simulationModel
-				    permitsUnresolvedAttributeReference:
-				    self permitsUnresolvedAttributeReference) and: [
+				    in: self simulationModel typechecker
+				    permitUnresolvedAttributeReference:
+				    self permitsUnresolvedAttributeReference) isEmpty and: [
 				   namecrashBlock isNil or: [ namecrashBlock cull: item ] ])
 				  ifTrue: [ self greenTriangleIcon ]
 				  ifFalse: [ self yellowTriangleIcon ] ]

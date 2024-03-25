@@ -82,6 +82,35 @@ RMDSyntaxNode >> copyReplace: aDictionary [
 	^ self shallowCopy replaceChildren: aDictionary
 ]
 
+{ #category : #printing }
+RMDSyntaxNode >> errorNodesInTypecheck: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
+
+	| errorNodes |
+	errorNodes := OrderedCollection new: 10.
+	[
+	[
+	[
+	[
+	aRMDType unify: (aRMDTypechecker
+			 typecheck: self
+			 subject: aString
+			 object: anotherString
+			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | errorNodes add: self ] ]
+		on: RMDUnresolvedPlaceholderError
+		do: [ :ex | ex resume: RMDType any ] ]
+		on: RMDUndefinedAttributeError , RMDUndefinedAnimatError
+		do: [ :ex |
+			aBool = true ifFalse: [ errorNodes add: ex node ].
+			ex resume: RMDType any ] ]
+		on: RMDSemanticError
+		do: [ :ex |
+			errorNodes add: ex node.
+			ex resume: RMDType any ].
+	^ errorNodes
+]
+
 { #category : #testing }
 RMDSyntaxNode >> hasConditionPlaceholder: aRMDPlaceholder [
 
@@ -103,94 +132,80 @@ RMDSyntaxNode >> hash [
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: nil
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: aString
 		  object: nil
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: aString
 		  object: anotherString
 		  utilities: nil
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: aString
 		  object: anotherString
 		  utilities: anArrayOfRMDUtilityDefinitionNode
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 		  permitUnresolvedAttributeReference: false
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDSimulationModel permitUnresolvedAttributeReference: aBool [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
 
-	| errorNodes |
-	errorNodes := OrderedCollection new: 10.
-	[
-	[
-	[
-	aRMDType unify: (aRMDSimulationModel typechecker
-			 typecheck: self
-			 subject: aString
-			 object: anotherString
-			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
-		on: RMDTypeUnificationError
-		do: [ :ex | errorNodes add: self ] ]
-		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError, RMDUndefinedAnimatError
-		do: [ :ex |
-			aBool = true ifFalse: [ errorNodes add: ex node ].
-			ex resume: RMDType any ] ]
-		on: RMDSemanticError
-		do: [ :ex |
-			errorNodes add: ex node.
-			ex resume: RMDType any ].
 	^ self
-		  asTextWithHighlights: errorNodes
+		  asTextWithHighlights: (self
+				   errorNodesInTypecheck: aRMDType
+				   subject: aString
+				   object: anotherString
+				   utilities: anArrayOfRMDUtilityDefinitionNode
+				   in: aRMDTypechecker
+				   permitUnresolvedAttributeReference: aBool)
 		  color: (Color yellow mixed: 0.7 with: Color black)
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: aString
 		  object: nil
 		  utilities: anArrayOfRMDUtilityDefinition
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 ]
 
 { #category : #printing }
-RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
 
 	^ self
 		  highlightedSourceTyped: aRMDType
 		  subject: nil
 		  utilities: anArrayOfRMDUtilityDefinition
-		  in: aRMDSimulationModel
+		  in: aRMDTypechecker
 ]
 
 { #category : #enumerating }
