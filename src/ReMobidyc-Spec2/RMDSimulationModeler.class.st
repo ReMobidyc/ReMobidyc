@@ -285,20 +285,8 @@ RMDSimulationModeler >> initializePresenters [
 { #category : #initialization }
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 
-	| cachedAns |
-	cachedAns := nil.
 	super initializeWindow: aWindowPresenter.
-	aWindowPresenter initialExtent: 1000 @ 600.
-	aWindowPresenter whenWillCloseDo: [ :willCloseAnnouncement |
-		cachedAns ifNil: [
-			cachedAns := true.
-			(willCloseAnnouncement canClose and: [
-				 UIManager default
-					 confirm: 'Export the model before close?'
-					 orCancel: [
-						 willCloseAnnouncement denyClose.
-						 cachedAns := nil.
-						 false ] ]) ifTrue: [ self save ] ] ]
+	aWindowPresenter initialExtent: 1000 @ 600
 ]
 
 { #category : #private }
@@ -317,6 +305,15 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 
 	modelFileReference := aFileReferenceOrNil.
 	self updateWindowTitle
+]
+
+{ #category : #controlling }
+RMDSimulationModeler >> okToClose [
+
+	(UIManager default
+		 confirm: 'Export the model before close?'
+		 orCancel: [ ^ false ]) ifTrue: [ self save ].
+	^ true
 ]
 
 { #category : #operations }

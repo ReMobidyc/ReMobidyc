@@ -159,7 +159,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
 		on: RMDTypeUnificationError
 		do: [ :ex | errorNodes add: self ] ]
-		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError
+		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError, RMDUndefinedAnimatError
 		do: [ :ex |
 			aBool = true ifFalse: [ errorNodes add: ex node ].
 			ex resume: RMDType any ] ]
@@ -700,6 +700,7 @@ RMDSyntaxNode >> isWellTypedWithSubject: aString object: anotherString utilities
 		on: RMDTypeUnificationError
 		do: [ :ex | ^ false ] ]
 		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError
+			, RMDUndefinedAnimatError
 		do: [ :ex |
 			aBool = true ifFalse: [ ^ false ].
 			ex resume: RMDType any ] ]
