@@ -352,7 +352,9 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 			                    'Edit the definition of the selected action';
 		                    disable;
 		                    yourself.
-	templateText := (self newSourceWith: RMDGrammar current actionDefinition)
+	templateText := (self newSourceWith:
+			                 RMDGrammar current actionDefinition)
+		                permitUnresolvedAttributeReference;
 		                enabled: false;
 		                beNotEditable;
 		                yourself.
@@ -453,7 +455,8 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 			                                    'Edit the selected replacement rule';
 		                                    disable;
 		                                    yourself.
-	sourceText := (self newSourceWith: RMDGrammar current actionDefinition)
+	sourceText := (self newSourceWith:
+			               RMDGrammar current actionDefinition)
 		              enabled: false;
 		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];

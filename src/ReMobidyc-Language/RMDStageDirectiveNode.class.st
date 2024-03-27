@@ -36,6 +36,12 @@ RMDStageDirectiveNode >> animatIdentifier: aString [
 		                    ifFalse: [ aString ]
 ]
 
+{ #category : #testing }
+RMDStageDirectiveNode >> hasNewAgents [
+
+	^ true
+]
+
 { #category : #comparing }
 RMDStageDirectiveNode >> hash [
 

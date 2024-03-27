@@ -150,7 +150,7 @@ RMDGrammar >> _identifier [
 { #category : #'parsers-atoms' }
 RMDGrammar >> _literal [
 
-	^ self numberString , self type optional ==> [ :pair | 
+	^ self decimalString / self pi , self type optional ==> [ :pair |
 	  self literalNodeClass
 		  literal: pair first
 		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
@@ -1341,7 +1341,10 @@ RMDGrammar >> numberOfIndividualsInWorldDirectiveNodeClass [
 { #category : #'parsers-atoms' }
 RMDGrammar >> numberString [
 
-	^ self decimalString / self pi
+	^ self decimalString , self type optional ==> [ :pair |
+	  self literalNodeClass
+		  literal: pair first
+		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
 { #category : #'parsers-definitions' }

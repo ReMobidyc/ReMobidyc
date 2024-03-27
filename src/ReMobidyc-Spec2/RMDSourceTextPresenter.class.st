@@ -12,7 +12,8 @@ Class {
 		'#parser',
 		'#simulationModelBlock',
 		'#subjectBlock',
-		'#objectBlock'
+		'#objectBlock',
+		'#permitsUnresolvedAttributeReference'
 	],
 	#category : #'ReMobidyc-Spec2-Widgets'
 }
@@ -140,6 +141,24 @@ RMDSourceTextPresenter >> parser: aPP2Node [
 ]
 
 { #category : #api }
+RMDSourceTextPresenter >> permitUnresolvedAttributeReference [
+
+	permitsUnresolvedAttributeReference := true
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> permitsUnresolvedAttributeReference [
+
+	^ permitsUnresolvedAttributeReference
+]
+
+{ #category : #api }
+RMDSourceTextPresenter >> permitsUnresolvedAttributeReference: aBool [
+
+	permitsUnresolvedAttributeReference := aBool = true
+]
+
+{ #category : #api }
 RMDSourceTextPresenter >> prettyPrint [
 
 	self syntaxNode: self lastValidSyntaxNode
@@ -211,27 +230,26 @@ RMDSourceTextPresenter >> typechecker [
 { #category : #private }
 RMDSourceTextPresenter >> updateHighlights: aString [
 
-	| errorNodes |
-	errorNodes := OrderedCollection new: 10.
-	syntaxNode
-		ifNotNil: [ 
-			[ 
-			[ self typechecker typecheck: syntaxNode subject: self subject object: self object]
-				on: RMDTypeError
-				do: [ :ex | 
-					errorNodes add: ex node.
-					ex resume: ex type2 ] ]
-				on: RMDError
-				do: [ :ex | 
-					errorNodes add: ex node.
-					ex resume: RMDType any ] ]
-		ifNil: [ 
-			parser ifNotNil: [ 
-				| node |
-				node := parser end parse: aString.
-				node isPetit2Failure ifTrue: [ 
-					errorNodes add: ((node position max: 1) to: aString size) ] ] ].
-	highlights := errorNodes
+	highlights := syntaxNode
+		              ifNotNil: [
+			              syntaxNode
+				              errorNodesInTypecheck: RMDType any
+				              subject: self subject
+				              object: self object
+				              utilities: #(  )
+				              in: self typechecker
+				              permitUnresolvedAttributeReference:
+				              self permitsUnresolvedAttributeReference ]
+		              ifNil: [
+			              | errorNodes |
+			              errorNodes := OrderedCollection new: 10.
+			              parser ifNotNil: [
+				              | node |
+				              node := parser end parse: aString.
+				              node isPetit2Failure ifTrue: [
+					              errorNodes add:
+						              ((node position max: 1) to: aString size) ] ].
+			              errorNodes ]
 ]
 
 { #category : #'api-events' }

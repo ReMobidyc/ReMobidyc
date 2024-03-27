@@ -125,6 +125,24 @@ RMDPresenter >> filterIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> greenTriangleIcon [
+
+	| form canvas |
+	form := Form extent: 11 @ 11 depth: 32.
+	canvas := form getCanvas.
+	canvas fillColor: Color transparent.
+	canvas
+		drawPolygon: {
+				(2 @ 2).
+				(10 @ 5).
+				(2 @ 9) }
+		color: Color green
+		borderWidth: 1
+		borderColor: Color darkGray.
+	^ form
+]
+
+{ #category : #icons }
 RMDPresenter >> historyIcon [
 
 	^ Smalltalk ui iconNamed: #history
@@ -350,6 +368,24 @@ RMDPresenter >> pushIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> redTriangleIcon [
+
+	| form canvas |
+	form := Form extent: 11 @ 11 depth: 32.
+	canvas := form getCanvas.
+	canvas fillColor: Color transparent.
+	canvas
+		drawPolygon: {
+				(1 @ 1).
+				(10 @ 5).
+				(1 @ 10) }
+		color: Color red
+		borderWidth: 1
+		borderColor: Color lightGray.
+	^ form
+]
+
+{ #category : #icons }
 RMDPresenter >> removeIcon [
 	^ Smalltalk ui icons remove
 ]
@@ -415,7 +451,7 @@ RMDPresenter >> saveIcon [
 { #category : #icons }
 RMDPresenter >> saveIconWith: aString [
 
-	| form label font x y |
+	| form label font |
 	form := Form extent: 24 @ 24 depth: 32.
 	font := TextStyle defaultFont.
 	label := Form
@@ -470,7 +506,8 @@ RMDPresenter >> tabularIcon [
 
 { #category : #icons }
 RMDPresenter >> upIcon [
-	^ Smalltalk ui icons up
+
+	^ Smalltalk ui iconNamed: #up
 ]
 
 { #category : #icons }
@@ -482,4 +519,22 @@ RMDPresenter >> updateIcon [
 { #category : #icons }
 RMDPresenter >> versionsIcon [
 	^ Smalltalk ui icons iconNamed: #smallProfile
+]
+
+{ #category : #icons }
+RMDPresenter >> yellowTriangleIcon [
+
+	| form canvas |
+	form := Form extent: 11 @ 11 depth: 32.
+	canvas := form getCanvas.
+	canvas fillColor: Color transparent.
+	canvas
+		drawPolygon: {
+				(1 @ 1).
+				(10 @ 5).
+				(1 @ 10) }
+		color: Color yellow
+		borderWidth: 1
+		borderColor: Color darkGray.
+	^ form
 ]

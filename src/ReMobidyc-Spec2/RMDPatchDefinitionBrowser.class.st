@@ -12,18 +12,6 @@ RMDPatchDefinitionBrowser class >> on: aRMDSimulationModeler [
 		  yourself
 ]
 
-{ #category : #private }
-RMDPatchDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-
-	self simulationModel simulationDefinition patchInitializer ifNotNil: [ 
-		:initializer | 
-		initializer attributeInitializers:
-			(initializer attributeInitializers copyWith:
-				 (RMDAttributeInitializerNode
-					  identifier: aRMDAttributeNode identifier
-					  expression: nil)) ]
-]
-
 { #category : #menus }
 RMDPatchDefinitionBrowser >> addRendererMenu [
 
@@ -57,18 +45,8 @@ RMDPatchDefinitionBrowser >> agentName [
 { #category : #accessing }
 RMDPatchDefinitionBrowser >> definitionDo: aBlock [
 
-	self simulationModel ifNotNil: [ :model | 
-		model patchDefinition ifNotNil: aBlock ]
-]
-
-{ #category : #private }
-RMDPatchDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-
-	self simulationModel simulationDefinition patchInitializer ifNotNil: [ 
-		:initializer | 
-		initializer attributeInitializers:
-			(initializer attributeInitializers reject: [ :attributeInitializer | 
-				 attributeInitializer identifier = aRMDAttributeNode identifier ]) ]
+	^ self simulationModel ifNotNil: [ :model |
+		  model patchDefinition ifNotNil: aBlock ]
 ]
 
 { #category : #operations }

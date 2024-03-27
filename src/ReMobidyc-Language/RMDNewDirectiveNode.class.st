@@ -59,6 +59,12 @@ RMDNewDirectiveNode >> childrenTransform: aBlock [
 	quantity ifNotNil: [ quantity := aBlock value: quantity ]
 ]
 
+{ #category : #testing }
+RMDNewDirectiveNode >> hasNewAgents [
+
+	^ true
+]
+
 { #category : #comparing }
 RMDNewDirectiveNode >> hash [
 

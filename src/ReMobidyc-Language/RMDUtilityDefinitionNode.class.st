@@ -27,6 +27,46 @@ RMDUtilityDefinitionNode >> childrenTransform: aBlock [
 	definitionBody := aBlock value: definitionBody
 ]
 
+{ #category : #accessing }
+RMDUtilityDefinitionNode >> identifier [
+
+	^ self variable identifier
+]
+
+{ #category : #accessing }
+RMDUtilityDefinitionNode >> identifier: aString [
+
+	self variable identifier: aString
+]
+
+{ #category : #testing }
+RMDUtilityDefinitionNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current utilityDefinition end parse: self printString)
+	  = self
+]
+
+{ #category : #testing }
+RMDUtilityDefinitionNode >> isCorrectTypeWithSubject: aString in: aRMDSimulationModel [
+
+	| agentDefinition |
+	agentDefinition := aRMDSimulationModel
+		                   agentDefinitionAt: aString
+		                   ifAbsent: [ ^ false ].
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: nil
+		utilities: agentDefinition utilityDefinitions ]
+		on: RMDError
+		do: [ :ex | ^ false ].
+	^ (agentDefinition utilityDefinitions contains: [
+		   :attributeDeclaration |
+		   attributeDeclaration ~~ self and: [
+			   attributeDeclaration identifier = self identifier ] ]) not
+]
+
 { #category : #testing }
 RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 	^ true

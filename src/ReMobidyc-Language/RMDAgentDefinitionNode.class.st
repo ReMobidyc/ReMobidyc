@@ -232,6 +232,13 @@ RMDAgentDefinitionNode >> isAgentDefinitionNode [
 	^ true
 ]
 
+{ #category : #testing }
+RMDAgentDefinitionNode >> isCorrectSyntax [
+
+	^ (RMDGrammar current agentDefinition end parse: self printString)
+	  = self
+]
+
 { #category : #accessing }
 RMDAgentDefinitionNode >> name [
 

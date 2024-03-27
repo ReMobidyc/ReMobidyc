@@ -9,7 +9,6 @@ Class {
 		'removeAttributeButton',
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
-		'editAttributeButton',
 		'addDataSourceButton',
 		'removeDataSourceButton',
 		'openDataSourceButton',
@@ -18,7 +17,6 @@ Class {
 		'removeUtilityButton',
 		'moveUpUtilityButton',
 		'moveDownUtilityButton',
-		'editUtilityButton',
 		'rendererList',
 		'addRendererButton',
 		'removeRendererButton',
@@ -49,7 +47,6 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 								     add: #removeAttributeButton width: self buttonHeight;
 								     add: #moveUpAttributeButton width: self buttonHeight;
 								     add: #moveDownAttributeButton width: self buttonHeight;
-								     add: #editAttributeButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
 						    add: 'Data source' expand: false;
@@ -68,7 +65,6 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 								     add: #removeUtilityButton width: self buttonHeight;
 								     add: #moveUpUtilityButton width: self buttonHeight;
 								     add: #moveDownUtilityButton width: self buttonHeight;
-								     add: #editUtilityButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
 						    yourself);
@@ -114,20 +110,11 @@ RMDAgentDefinitionBrowser class >> isAbstract [
 RMDAgentDefinitionBrowser >> addAttribute [
 
 	| attributeNode |
-	((attributeNode := RMDAttributeDeclarationNode
-		                   identifier: ''
-		                   unit: RMDUnit noDimension) asPresenter
-		 simulationModel: self simulationModel;
-		 agentName: self agentName;
-		 utilities: self agentDefinition utilityDefinitions;
-		 yourself) openDialog
-		title: 'Add attribute to ' , self agentName;
-		okAction: [
-			self definitionDo: [ :definition |
-				definition attributeDeclarations:
-					(definition attributeDeclarations copyWith: attributeNode).
-				self addInitializerWithAttribute: attributeNode animat: animat.
-				self updateAttributeList ] ]
+	attributeNode := RMDAttributeDeclarationNode template.
+	self definitionDo: [ :definition |
+		definition attributeDeclarations:
+			(definition attributeDeclarations copyWith: attributeNode).
+		self updateAttributeList ]
 ]
 
 { #category : #operations }
@@ -138,11 +125,6 @@ RMDAgentDefinitionBrowser >> addDataSource [
 		(importer := RMDCSVImporter on: fileReference) openDialog okAction: [
 			self agentDefinition dataSource: importer outputDataSource.
 			self updateDataSourceButtons ] ]
-]
-
-{ #category : #private }
-RMDAgentDefinitionBrowser >> addInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	^ self subclassResponsibility 
 ]
 
 { #category : #operations }
@@ -184,11 +166,10 @@ RMDAgentDefinitionBrowser >> addUtility [
 
 	| newDefinition |
 	newDefinition := RMDUtilityDefinitionNode template.
-	newDefinition asPresenter openDialog okAction: [ 
-		self definitionDo: [ :definition | 
-			definition utilityDefinitions:
-				(definition utilityDefinitions copyWith: newDefinition).
-			self updateUtilityList ] ]
+	self definitionDo: [ :definition |
+		definition utilityDefinitions:
+			(definition utilityDefinitions copyWith: newDefinition) ].
+	self updateUtilityList
 ]
 
 { #category : #accessing }
@@ -215,12 +196,6 @@ RMDAgentDefinitionBrowser >> attributeListMenu [
 						  icon: self addIcon;
 						  enabled: addAttributeButton isEnabled;
 						  action: [ self addAttribute ] ];
-				  addItem: [ :item |
-					  item
-						  name: 'Edit';
-						  icon: self editIcon;
-						  enabled: editAttributeButton isEnabled;
-						  action: [ self editAttribute ] ];
 				  addItem: [ :item |
 					  item
 						  name: 'Remove';
@@ -250,31 +225,6 @@ RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #operations }
-RMDAgentDefinitionBrowser >> editAttribute [
-
-	attributeList selection selectedItem ifNotNil: [
-		:originalAttributeNode |
-		| newAttributeNode |
-		newAttributeNode := originalAttributeNode copy.
-		(newAttributeNode asPresenter
-			 simulationModel: self simulationModel;
-			 agentName: self agentName;
-			 utilities: self agentDefinition utilityDefinitions;
-			 yourself) openDialog
-			title: 'Edit attribute of ' , self agentName;
-			okAction: [
-				self definitionDo: [ :definition |
-					definition attributeDeclarations:
-						((definition attributeDeclarations copyWithout:
-							  originalAttributeNode) copyWith: newAttributeNode).
-					self
-						removeInitializerWithAttribute: originalAttributeNode
-						animat: animat;
-						addInitializerWithAttribute: newAttributeNode animat: animat.
-					self updateAttributeList ] ] ]
-]
-
-{ #category : #operations }
 RMDAgentDefinitionBrowser >> editRenderer [
 	^ self notYetImplemented
 ]
@@ -300,22 +250,6 @@ RMDAgentDefinitionBrowser >> editTask [
 					self updateSourceText ] ] ] ]
 ]
 
-{ #category : #operations }
-RMDAgentDefinitionBrowser >> editUtility [
-
-	utilityList selectedItem ifNotNil: [ :oldDefinition | 
-		| newDefinition index |
-		newDefinition := oldDefinition copy.
-		newDefinition asPresenter openDialog okAction: [ 
-			self definitionDo: [ :definition | 
-				definition utilityDefinitions
-					at:
-					(index := definition utilityDefinitions indexOf: oldDefinition)
-					put: newDefinition.
-				self updateUtilityList.
-				utilityList selectIndex: index ] ] ]
-]
-
 { #category : #initialization }
 RMDAgentDefinitionBrowser >> initializePresenters [
 
@@ -324,31 +258,41 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                 beSingleSelection;
 		                 beResizable;
 		                 showColumnHeaders;
-		                 addColumn: ((SpStringTableColumn
-				                   title: 'name'
-				                   evaluated: [ :item | item identifier ])
+		                 addColumn: ((RMDColorTriangleTableColumn
+				                   subjectBlock: [ self agentName ]
+				                   utilitiesBlock: [
+					                   self definitionDo: #utilityDefinitions ]
+				                   simulationModel: [ self simulationModel ])
+				                  namecrashBlock: [ :adef |
+					                  (attributeList items select: [ :a |
+							                   a identifier = adef identifier ]) size = 1 ]);
+		                 addColumn:
+			                 ((RMDIdentifierTableColumn title: 'name')
+				                  validationBlock: [ :item |
+					                  (attributeList items select: [ :attrDecl |
+							                   attrDecl identifier = item identifier ])
+						                  size = 1 ];
+				                  extraAcceptAction: [ attributeList refresh ];
 				                  width: 150;
 				                  yourself);
-		                 addColumn:
-			                 ((SpStringTableColumn
-				                   title: 'unit'
-				                   evaluated: [ :item |
-					                   | unit |
-					                   unit := item unit.
-					                   unit hasDimension
-						                   ifTrue: [ unit printString ]
-						                   ifFalse: [ '' ] ])
+		                 addColumn: ((RMDUnitTableColumn title: 'unit')
+				                  beEditable;
+				                  extraAcceptAction: [ attributeList refresh ];
 				                  width: 100;
 				                  yourself);
-		                 addColumn:
-			                 (SpStringTableColumn
-				                  title: 'initial value'
-				                  evaluated: [ :item |
-					                  | expr |
-					                  expr := item initializerExpression.
-					                  expr
-						                  ifNotNil: [ expr printString ]
-						                  ifNil: [ '' ] ]);
+		                 addColumn: ((RMDExpressionTableColumn
+				                   title: 'initial value'
+				                   evaluated: [ :item |
+					                   item initializerExpression ])
+				                  unitBlock: [ :item | item unit ];
+				                  simulationModelBlock: [ self simulationModel ];
+				                  subjectBlock: [ self agentName ];
+				                  utilitiesBlock: [
+					                  self definitionDo: #utilityDefinitions ];
+				                  onAcceptEdition: [ :item :expr |
+					                  item initializerExpression: expr.
+					                  attributeList refresh ];
+				                  yourself);
 		                 whenModelChangedDo: [
 		                 attributeList selectItem: nil ];
 		                 whenSelectionChangedDo: [
@@ -378,13 +322,6 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                           help: 'Move the selected attribute down';
 		                           disable;
 		                           yourself.
-	editAttributeButton := self newButton
-		                       icon: self editIcon;
-		                       action: [ self editAttribute ];
-		                       help:
-			                       'Edit the definition of the selected attribute';
-		                       disable;
-		                       yourself.
 	openDataSourceButton := self newButton
 		                        icon: self tabularIcon;
 		                        action: [ self openDataSource ];
@@ -407,18 +344,36 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		               beSingleSelection;
 		               beResizable;
 		               showColumnHeaders;
-		               addColumn: ((SpStringTableColumn
-				                 title: 'name'
-				                 evaluated: [ :item | item variable identifier ])
+		               addColumn: ((RMDColorTriangleTableColumn
+				                 subjectBlock: [ self agentName ]
+				                 utilitiesBlock: [
+					                 self definitionDo: #utilityDefinitions ]
+				                 simulationModel: [ self simulationModel ])
+				                namecrashBlock: [ :adef |
+					                (utilityList items select: [ :a |
+							                 a identifier = adef identifier ]) size = 1 ]);
+		               addColumn: ((RMDIdentifierTableColumn title: 'name')
+				                validationBlock: [ :item |
+					                (utilityList items select: [ :utilDef |
+							                 utilDef identifier = item identifier ]) size
+					                = 1 ];
+				                extraAcceptAction: [
+					                attributeList refresh.
+					                utilityList refresh ];
 				                width: 150;
 				                yourself);
-		               addColumn:
-			               (SpStringTableColumn
-				                title: 'value'
-				                evaluated: [ :item |
-					                | expr |
-					                expr := item definitionBody.
-					                expr ifNotNil: [ expr printString ] ifNil: [ '' ] ]);
+		               addColumn: ((RMDExpressionTableColumn
+				                 title: 'value'
+				                 evaluated: [ :item | item definitionBody ])
+				                simulationModelBlock: [ self simulationModel ];
+				                subjectBlock: [ self agentName ];
+				                utilitiesBlock: [
+					                self definitionDo: #utilityDefinitions ];
+				                onAcceptEdition: [ :item :expr |
+					                item definitionBody: expr.
+					                attributeList refresh.
+					                utilityList refresh ];
+				                yourself);
 		               whenModelChangedDo: [ utilityList selectItem: nil ];
 		               whenSelectionChangedDo: [ self updateUtilityButtons ];
 		               contextMenu: [ self utilityListMenu ];
@@ -449,13 +404,6 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 			                         'Move the selected utility definition down';
 		                         disable;
 		                         yourself.
-	editUtilityButton := self newButton
-		                     icon: self editIcon;
-		                     action: [ self editUtility ];
-		                     help:
-			                     'Edit the definition of the selected utility definition';
-		                     disable;
-		                     yourself.
 	rendererList := self newComponentList
 		                beSingleSelection;
 		                whenModelChangedDo: [ rendererList selectItem: nil ];
@@ -542,7 +490,8 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		                  help: 'Edit the definition of the selected task';
 		                  disable;
 		                  yourself.
-	sourceText := (self newSourceWith: RMDGrammar current actionDefinition)
+	sourceText := (self newSourceWith:
+			               RMDGrammar current actionDefinition)
 		              beNotEditable;
 		              whenLastValidSyntaxNodeChangedDo: [ :syntaxNode |  ];
 		              yourself
@@ -697,17 +646,16 @@ RMDAgentDefinitionBrowser >> openDataSource [
 { #category : #operations }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
-	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
+	attributeList selection selectedItem ifNotNil: [ :attributeNode |
 		(self newLabel
 			 label: 'OK to remove ' , attributeNode identifier , '?';
 			 yourself) openDialog
 			title: 'Remove attribute from ' , self agentName;
 			extent: 400 @ (self class buttonHeight * 3.5);
-			okAction: [ 
-				self definitionDo: [ :definitionNode | 
+			okAction: [
+				self definitionDo: [ :definitionNode |
 					definitionNode attributeDeclarations:
 						(definitionNode attributeDeclarations copyWithout: attributeNode).
-					self removeInitializerWithAttribute: attributeNode animat: animat.
 					self updateAttributeList ] ] ]
 ]
 
@@ -719,11 +667,6 @@ RMDAgentDefinitionBrowser >> removeDataSource [
 		 label: 'Confirmation') ifTrue: [
 		self agentDefinition dataSource: nil.
 		self updateDataSourceButtons ]
-]
-
-{ #category : #private }
-RMDAgentDefinitionBrowser >> removeInitializerWithAttribute: aRMDAttributeNode animat: anotherString [
-	^ self subclassResponsibility 
 ]
 
 { #category : #operations }
@@ -838,10 +781,12 @@ RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 
 	modeler := aRMDSimulationModeler.
-	self updateAttributeList.
-	self updateRendererList.
-	self updateTaskList.
-	self updateDataSourceButtons
+	self
+		updateAttributeList;
+		updateUtilityList;
+		updateRendererList;
+		updateTaskList;
+		updateDataSourceButtons
 ]
 
 { #category : #accessing }
@@ -905,17 +850,15 @@ RMDAgentDefinitionBrowser >> updateAttributeButtons [
 	removeAttributeButton enabled: selected.
 	moveUpAttributeButton enabled: (selected and: [ index > 1 ]).
 	moveDownAttributeButton enabled:
-		(selected and: [ index < attributeList items size ]).
-	editAttributeButton enabled: selected
+		(selected and: [ index < attributeList items size ])
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateAttributeList [
 
-	self definitionDo: [ :definition | 
-		attributeList items: definition attributeDeclarations.
-		definition complementUtilityDefinitions ].
-	self updateUtilityList
+	self definitionDo: [ :definition |
+		attributeList items: definition attributeDeclarations ].
+	utilityList refresh
 ]
 
 { #category : #updating }
@@ -986,15 +929,15 @@ RMDAgentDefinitionBrowser >> updateUtilityButtons [
 	removeUtilityButton enabled: selected.
 	moveUpUtilityButton enabled: (selected and: [ index > 1 ]).
 	moveDownUtilityButton enabled:
-		(selected and: [ index < utilityList items size ]).
-	editUtilityButton enabled: selected
+		(selected and: [ index < utilityList items size ])
 ]
 
 { #category : #updating }
 RMDAgentDefinitionBrowser >> updateUtilityList [
 
-	self definitionDo: [ :definition | 
-		utilityList items: definition utilityDefinitions ]
+	self definitionDo: [ :definition |
+		utilityList items: definition utilityDefinitions ].
+	attributeList refresh
 ]
 
 { #category : #menus }
@@ -1009,12 +952,6 @@ RMDAgentDefinitionBrowser >> utilityListMenu [
 						  icon: self addIcon;
 						  enabled: addUtilityButton isEnabled;
 						  action: [ self addUtility ] ];
-				  addItem: [ :item |
-					  item
-						  name: 'Edit';
-						  icon: self editIcon;
-						  enabled: editUtilityButton isEnabled;
-						  action: [ self editUtility ] ];
 				  addItem: [ :item |
 					  item
 						  name: 'Remove';

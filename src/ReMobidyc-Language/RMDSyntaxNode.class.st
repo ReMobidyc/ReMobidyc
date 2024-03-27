@@ -25,22 +25,29 @@ RMDSyntaxNode >> asString [
 { #category : #converting }
 RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
 
+	^ self
+		  asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode
+		  color: Color red
+]
+
+{ #category : #converting }
+RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode color: aColor [
+
 	| sections nodes newText |
 	sections := OrderedCollection new:
 		            aCollectionOfIntervalOrRMDSyntaxNode size + 10.
-	nodes := Set new:
-		         aCollectionOfIntervalOrRMDSyntaxNode size + 1.
-	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight | 
+	nodes := Set new: aCollectionOfIntervalOrRMDSyntaxNode size + 1.
+	aCollectionOfIntervalOrRMDSyntaxNode do: [ :highlight |
 		highlight isInterval
 			ifTrue: [ sections add: highlight ]
 			ifFalse: [ nodes add: highlight ] ].
-	newText := (String streamContents: [ :stream | 
+	newText := (String streamContents: [ :stream |
 		            self
 			            printOn: stream
 			            ifIncludedIn: nodes
 			            addSectionTo: sections ]) asText.
-	sections do: [ :section | 
-		newText makeColor: Color red from: section first to: section last ].
+	sections do: [ :section |
+		newText makeColor: aColor from: section first to: section last ].
 	^ newText
 ]
 
@@ -75,6 +82,35 @@ RMDSyntaxNode >> copyReplace: aDictionary [
 	^ self shallowCopy replaceChildren: aDictionary
 ]
 
+{ #category : #printing }
+RMDSyntaxNode >> errorNodesInTypecheck: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
+
+	| errorNodes |
+	errorNodes := OrderedCollection new: 10.
+	[
+	[
+	[
+	[
+	aRMDType unify: (aRMDTypechecker
+			 typecheck: self
+			 subject: aString
+			 object: anotherString
+			 utilities: anArrayOfRMDUtilityDefinitionNode) ]
+		on: RMDTypeUnificationError
+		do: [ :ex | errorNodes add: self ] ]
+		on: RMDUnresolvedPlaceholderError
+		do: [ :ex | ex resume: RMDType any ] ]
+		on: RMDUndefinedAttributeError , RMDUndefinedAnimatError
+		do: [ :ex |
+			aBool = true ifFalse: [ errorNodes add: ex node ].
+			ex resume: RMDType any ] ]
+		on: RMDSemanticError
+		do: [ :ex |
+			errorNodes add: ex node.
+			ex resume: RMDType any ].
+	^ errorNodes
+]
+
 { #category : #testing }
 RMDSyntaxNode >> hasConditionPlaceholder: aRMDPlaceholder [
 
@@ -93,6 +129,83 @@ RMDSyntaxNode >> hasPlaceholder [
 { #category : #comparing }
 RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: nil
+		  in: aRMDTypechecker
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: nil
+		  in: aRMDTypechecker
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: anotherString
+		  utilities: nil
+		  in: aRMDTypechecker
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: anotherString
+		  utilities: anArrayOfRMDUtilityDefinitionNode
+		  in: aRMDTypechecker
+		  permitUnresolvedAttributeReference: false
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
+
+	^ self
+		  asTextWithHighlights: (self
+				   errorNodesInTypecheck: aRMDType
+				   subject: aString
+				   object: anotherString
+				   utilities: anArrayOfRMDUtilityDefinitionNode
+				   in: aRMDTypechecker
+				   permitUnresolvedAttributeReference: aBool)
+		  color: (Color yellow mixed: 0.7 with: Color black)
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: aString
+		  object: nil
+		  utilities: anArrayOfRMDUtilityDefinition
+		  in: aRMDTypechecker
+]
+
+{ #category : #printing }
+RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
+
+	^ self
+		  highlightedSourceTyped: aRMDType
+		  subject: nil
+		  utilities: anArrayOfRMDUtilityDefinition
+		  in: aRMDTypechecker
 ]
 
 { #category : #enumerating }
@@ -221,6 +334,20 @@ RMDSyntaxNode >> isConditionNode [
 { #category : #testing }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isCorrectTypeWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
+
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: anotherString
+		utilities: anArrayOfRMDUtilityDefinition ]
+		on: RMDError
+		do: [ :ex | ^ false ].
+	^ true
 ]
 
 { #category : #testing }
@@ -569,6 +696,32 @@ RMDSyntaxNode >> isUtilityVariableNode [
 RMDSyntaxNode >> isVisualizationFileNode [
 
 	^ false
+]
+
+{ #category : #testing }
+RMDSyntaxNode >> isWellTypedWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel permitsUnresolvedAttributeReference: aBool [
+
+	[
+	[
+	[
+	[
+	aRMDSimulationModel typechecker
+		typecheck: self
+		subject: aString
+		object: anotherString
+		utilities: anArrayOfRMDUtilityDefinition ]
+		on: RMDScopedSemanticError
+		do: [ :ex | ex resume: ex exception outer ] ]
+		on: RMDTypeUnificationError
+		do: [ :ex | ^ false ] ]
+		on: RMDUndefinedAttributeError , RMDUnresolvedPlaceholderError
+			, RMDUndefinedAnimatError
+		do: [ :ex |
+			aBool = true ifFalse: [ ^ false ].
+			ex resume: RMDType any ] ]
+		on: RMDSemanticError
+		do: [ :ex | ^ false ].
+	^ true
 ]
 
 { #category : #testing }
