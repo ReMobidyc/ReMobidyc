@@ -17,10 +17,11 @@ Class {
 { #category : #defaults }
 RMDExpressionTableColumn >> defaultAcceptAction [
 
-	^ [ :item :string |
-	  | expression |
+	^ [ :item :stringOrText |
+	  | string expression |
+	  string := stringOrText asString trimRight.
 	  expression := RMDGrammar current expression end parse:
-		                string asString trimRight.
+		                string trimRight.
 	  expression isPetit2Success
 		  ifTrue: [
 			  basicAcceptAction ifNotNil: [
@@ -59,6 +60,22 @@ RMDExpressionTableColumn >> defaultEvaluationBlock [
 						  permitUnresolvedAttributeReference: self permitsUnresolvedAttributeReference ]
 				  ifNil: [ '' ] ]
 		  ifNil: [ '' ] ]
+]
+
+{ #category : #defaults }
+RMDExpressionTableColumn >> defaultTextChangedAction [
+
+	^ [ :item :string :widget |
+	  | result |
+	  result := RMDGrammar current expression end parse:
+		            string asString trimRight.
+	  result isPetit2Failure ifTrue: [
+		  widget text runs: (string asString asText
+				   addAttribute: TextColor red
+				   from: (result position + 1 min: string size max: 1)
+				   to: string size;
+				   yourself) runs.
+		  widget textArea compose ] ]
 ]
 
 { #category : #accessing }

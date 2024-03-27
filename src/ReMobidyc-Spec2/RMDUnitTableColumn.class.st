@@ -10,12 +10,12 @@ Class {
 { #category : #defaults }
 RMDUnitTableColumn >> defaultAcceptAction [
 
-	^ [ :item :string |
-	  | unit |
-	  unit := string asString trimRight
+	^ [ :item :stringOrText |
+	  | string unit |
+	  string := stringOrText asString trimRight.
+	  unit := string
 		          ifEmpty: [ RMDUnit noDimension ]
-		          ifNotEmpty: [ :str |
-		          RMDGrammar current unit end parse: str ].
+		          ifNotEmpty: [ RMDGrammar current unit end parse: string ].
 	  unit isPetit2Success
 		  ifTrue: [
 			  item unit: unit.
@@ -43,4 +43,23 @@ RMDUnitTableColumn >> defaultEvaluationBlock [
 	  unit hasDimension
 		  ifTrue: [ unit printString ]
 		  ifFalse: [ '' ] ]
+]
+
+{ #category : #defaults }
+RMDUnitTableColumn >> defaultTextChangedAction [
+
+	^ [ :item :stringOrText :widget |
+	  | string result |
+	  string := stringOrText asString trimRight.
+	  result := string
+		            ifEmpty: [ RMDUnit noDimension ]
+		            ifNotEmpty: [ :str |
+		            RMDGrammar current unit end parse: str ].
+	  result isPetit2Failure ifTrue: [
+		  widget text runs: (string asText
+				   addAttribute: TextColor red
+				   from: (result position + 1 min: string size max: 1)
+				   to: string size;
+				   yourself) runs.
+		  widget textArea compose ] ]
 ]

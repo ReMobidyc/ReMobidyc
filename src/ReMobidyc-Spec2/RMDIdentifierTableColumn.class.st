@@ -10,10 +10,12 @@ Class {
 { #category : #defaults }
 RMDIdentifierTableColumn >> defaultAcceptAction [
 
-	^ [ :item :string |
-	  item identifier: string asString trim.
+	^ [ :item :stringOrText |
+	  | string |
+	  string := stringOrText asString trim.
+	  item identifier: string.
 	  extraAcceptAction ifNotNil: [
-		  extraAcceptAction cull: item cull: string asString trim ] ]
+		  extraAcceptAction cull: item cull: string ] ]
 ]
 
 { #category : #defaults }
@@ -32,6 +34,22 @@ RMDIdentifierTableColumn >> defaultColorAction [
 RMDIdentifierTableColumn >> defaultEvaluationBlock [
 
 	^ [ :item | item identifier ifEmpty: [ '-' ] ]
+]
+
+{ #category : #defaults }
+RMDIdentifierTableColumn >> defaultTextChangedAction [
+
+	^ [ :item :string :widget |
+	  | result |
+	  result := RMDGrammar current identifier end parse:
+		            string asString trimRight.
+	  result isPetit2Failure ifTrue: [
+		  widget text runs: (string asString asText
+				   addAttribute: TextColor red
+				   from: (result position + 1 min: string size max: 1)
+				   to: string size;
+				   yourself) runs.
+		  widget textArea compose ] ]
 ]
 
 { #category : #accessing }

@@ -2,10 +2,17 @@ Class {
 	#name : #RMDSyntaxTableColumn,
 	#superclass : #SpStringTableColumn,
 	#instVars : [
+		'textChangedAction',
 		'extraAcceptAction'
 	],
 	#category : #'ReMobidyc-Spec2-Columns'
 }
+
+{ #category : #visiting }
+RMDSyntaxTableColumn >> acceptColumnVisitor: aBuilder [
+
+	^ aBuilder visitRMDSyntaxColumn: self
+]
 
 { #category : #defaults }
 RMDSyntaxTableColumn >> defaultAcceptAction [
@@ -21,6 +28,12 @@ RMDSyntaxTableColumn >> defaultColorAction [
 
 { #category : #defaults }
 RMDSyntaxTableColumn >> defaultEvaluationBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #defaults }
+RMDSyntaxTableColumn >> defaultTextChangedAction [
 
 	^ self subclassResponsibility
 ]
@@ -42,9 +55,22 @@ RMDSyntaxTableColumn >> initialize [
 
 	super initialize.
 	evaluation := self defaultEvaluationBlock.
+	textChangedAction := self defaultTextChangedAction.
 	acceptAction := self defaultAcceptAction.
 	colorAction := self defaultColorAction.
 	self beEditable
+]
+
+{ #category : #accessing }
+RMDSyntaxTableColumn >> textChangedAction [
+
+	^ textChangedAction
+]
+
+{ #category : #accessing }
+RMDSyntaxTableColumn >> textChangedAction: aBlock [
+
+	textChangedAction := aBlock
 ]
 
 { #category : #private }
