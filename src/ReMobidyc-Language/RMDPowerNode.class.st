@@ -23,6 +23,12 @@ RMDPowerNode >> = anObject [
 				and: [ order = anObject order ] ]
 ]
 
+{ #category : #converting }
+RMDPowerNode >> asPresenter [
+
+	^ RMDPowerExpressionPresenter on: self
+]
+
 { #category : #enumerating }
 RMDPowerNode >> childrenDo: aBlock [
 	aBlock value: expression

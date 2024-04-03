@@ -3,7 +3,9 @@ Class {
 	#superclass : #RMDAbstractSnapshotTabular,
 	#instVars : [
 		'openBoxChartButton',
-		'agentDropList'
+		'agentDropList',
+		'traceableActionContext',
+		'taskList'
 	],
 	#category : #'ReMobidyc-Spec2-Tabulars'
 }
@@ -32,37 +34,18 @@ RMDSnapshotTabular class >> defaultLayout [
 				   add: (SpBoxLayout newVertical
 						    add: 'Agent' expand: false;
 						    add: #agentDropList expand: false;
-						    add: #table;
+						    add: (SpPanedLayout newVertical
+								     positionOfSlider: 0.8;
+								     add: #table;
+								     add: (SpPanedLayout newHorizontal
+										      positionOfSlider: 0.3;
+										      add: #taskList;
+										      add: #traceableActionContext));
 						    add: (SpBoxLayout newHorizontal
 								     add: #openBoxChartButton width: self buttonHeight;
 								     add: #exportCSVButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
-						    yourself);
-				   yourself);
-		  yourself
-]
-
-{ #category : #layout }
-RMDSnapshotTabular class >> withoutButtons [
-
-	^ SpBoxLayout newVertical
-		  add: (SpBoxLayout newHorizontal
-				   add: #reloadButton width: self buttonHeight;
-				   yourself)
-		  height: self buttonHeight;
-		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.2;
-				   add: (SpBoxLayout newVertical
-						    add: 'Run' expand: false;
-						    add: #runDropList expand: false;
-						    add: 'Time' expand: false;
-						    add: #timeList;
-						    yourself);
-				   add: (SpBoxLayout newVertical
-						    add: 'Agent' expand: false;
-						    add: #agentDropList expand: false;
-						    add: #table;
 						    yourself);
 				   yourself);
 		  yourself
@@ -79,7 +62,7 @@ RMDSnapshotTabular >> initializePresenters [
 
 	super initializePresenters.
 	agentDropList := self newDropList
-		                 display: [ :agentDefinition | 
+		                 display: [ :agentDefinition |
 			                 agentDefinition fullName ];
 		                 whenSelectedItemChangedDo: [ self agentChanged ];
 		                 yourself.
@@ -87,7 +70,17 @@ RMDSnapshotTabular >> initializePresenters [
 		                      icon: self boxChartIcon;
 		                      action: [ self openChart ];
 		                      help: 'Open box charts';
-		                      yourself
+		                      yourself.
+	table whenSelectedItemChangedDo: [ self updateTaskList ].
+	taskList := self newTable
+		            addColumn:
+			            (SpStringTableColumn
+				             title: 'task'
+				             evaluated: #printString);
+		            whenSelectedItemChangedDo: [ self updateTraceableAction ];
+		            yourself.
+	traceableActionContext := self instantiate:
+		                          RMDTraceableActionContextPresenter
 ]
 
 { #category : #private }
@@ -242,4 +235,31 @@ RMDSnapshotTabular >> updateRunDropList [
 		selectItem: ((items includes: selection)
 				 ifTrue: [ selection ]
 				 ifFalse: [ items ifEmpty: [ nil ] ifNotEmpty: #first ])
+]
+
+{ #category : #updating }
+RMDSnapshotTabular >> updateTaskList [
+
+	| selection |
+	selection := taskList selectedItem.
+	self selectedInterpreter ifNotNil: [ :interpreter |
+		self selectedAgent ifNotNil: [ :agent |
+			self selectedIndividual ifNotNil: [ :subject |
+				taskList items: (Array streamContents: [ :stream |
+						 interpreter simulationModel taskDefinitions do: [ :task |
+							 (task enabled and: [ task subjectIdentifier = agent name ])
+								 ifTrue: [
+									 task
+										 validate: subject
+										 in: self selectedInterpreter
+										 do: [ :context | stream nextPut: context ] ] ] ]).
+				selection ifNotNil: [ taskList selectItem: selection ].
+				^ self ] ] ].
+	taskList items: Array new
+]
+
+{ #category : #updating }
+RMDSnapshotTabular >> updateTraceableAction [
+
+	traceableActionContext context: taskList selectedItem
 ]

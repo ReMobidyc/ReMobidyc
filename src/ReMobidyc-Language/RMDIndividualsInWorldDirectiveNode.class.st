@@ -40,16 +40,34 @@ RMDIndividualsInWorldDirectiveNode >> animatName: aString [
 	animatName := aString
 ]
 
+{ #category : #converting }
+RMDIndividualsInWorldDirectiveNode >> asPresenter [
+
+	^ RMDIndividualsInLocationDirectivePresenter on: self
+]
+
 { #category : #enumerating }
 RMDIndividualsInWorldDirectiveNode >> childrenDo: aBlock [
 
 	
 ]
 
+{ #category : #accessing }
+RMDIndividualsInWorldDirectiveNode >> directiveName [
+
+	^ self subclassResponsibility
+]
+
 { #category : #comparing }
 RMDIndividualsInWorldDirectiveNode >> hash [
 
 	^ self class hash bitXor: animatName hash
+]
+
+{ #category : #accessing }
+RMDIndividualsInWorldDirectiveNode >> locationName [
+
+	^ 'in world'
 ]
 
 { #category : #copying }

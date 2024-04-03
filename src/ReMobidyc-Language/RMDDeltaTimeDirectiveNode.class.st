@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #converting }
+RMDDeltaTimeDirectiveNode >> asPresenter [
+
+	^ RMDAtomicDirectivePresenter on: self
+]
+
 { #category : #testing }
 RMDDeltaTimeDirectiveNode >> isDeltaTimeDirectiveNode [
 	^ true

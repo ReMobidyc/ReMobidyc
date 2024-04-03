@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #converting }
+RMDAreaDirectiveNode >> asPresenter [
+
+	^ RMDAtomicDirectivePresenter on: self
+]
+
 { #category : #testing }
 RMDAreaDirectiveNode >> isAreaDirectiveNode [
 	^ true

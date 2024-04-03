@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #accessing }
+RMDDensityOfIndividualsInRadiusDirectiveNode >> directiveName [
+
+	^ 'density of'
+]
+
 { #category : #testing }
 RMDDensityOfIndividualsInRadiusDirectiveNode >> isDensityOfIndividualsInRadiusDirective [
 

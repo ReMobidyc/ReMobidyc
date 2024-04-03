@@ -7,7 +7,8 @@ Class {
 		'replacementIcon',
 		'expressionField',
 		'placeholderList',
-		'hasObject'
+		'hasObject',
+		'viewExpressionButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -29,6 +30,7 @@ RMDParameterInstantiationEditor class >> defaultLayout [
 				   add: #placeholderList width: 200;
 				   add: #replacementIcon width: 48;
 				   add: #expressionField;
+				   add: #viewExpressionButton width: self buttonHeight;
 				   yourself)
 		  height: self inputTextHeight;
 		  yourself
@@ -108,11 +110,17 @@ RMDParameterInstantiationEditor >> initializePresenters [
 	expressionField := self newSyntaxNodeTextInput
 		                   beExpression;
 		                   contextMenu: [ self expressionFieldMenu ];
-		                   whenSyntaxNodeChangedDo: [ 
-			                   self owner ifNotNil: [ :dialog | 
+		                   whenSyntaxNodeChangedDo: [
+			                   self owner ifNotNil: [ :dialog |
 					                   dialog buttons first enabled:
 							                   expressionField syntaxNode notNil ] ]
-				                   yourself
+				                   yourself.
+	viewExpressionButton := self newButton
+		                        icon: self validatoriumIcon;
+		                        action: [ self viewExpression ];
+		                        disable;
+		                        help: 'View the definition';
+		                        yourself
 ]
 
 { #category : #initialization }
@@ -156,18 +164,28 @@ RMDParameterInstantiationEditor >> paste: aString [
 RMDParameterInstantiationEditor >> updateExpressionFieldType [
 
 	placeholderList selectedItem
-		ifNotNil: [ :placeholder | 
+		ifNotNil: [ :placeholder |
 			expressionField enable.
 			placeholder isNewDirectiveNode
-				ifTrue: [ expressionField beNewDirective ]
-				ifFalse: [ 
+				ifTrue: [
+					expressionField beNewDirective.
+					viewExpressionButton disable ]
+				ifFalse: [
 					placeholder isStageDirectiveNode
-						ifTrue: [ expressionField beStageDirective ]
-						ifFalse: [ 
+						ifTrue: [
+							expressionField beStageDirective.
+							viewExpressionButton disable ]
+						ifFalse: [
 							(placeholder isConditionPlaceholderIn: actionDefinitionNode)
-								ifTrue: [ expressionField beCondition ]
-								ifFalse: [ expressionField beExpression ] ] ] ]
-		ifNil: [ expressionField disable ]
+								ifTrue: [
+									expressionField beCondition.
+									viewExpressionButton enable ]
+								ifFalse: [
+									expressionField beExpression.
+									viewExpressionButton enable ] ] ] ]
+		ifNil: [
+			expressionField disable.
+			viewExpressionButton disable ]
 ]
 
 { #category : #accessing }
@@ -182,4 +200,15 @@ RMDParameterInstantiationEditor >> updatePlaceholderDropList [
 					 ifFalse: [ 
 						 stream nextPut: node.
 						 done add: node ] ] ])
+]
+
+{ #category : #operations }
+RMDParameterInstantiationEditor >> viewExpression [
+
+	^ expressionField syntaxNode ifNotNil: [ :node |
+		  node asPresenter openDialog title: 'definition of '
+			  ,
+			  (placeholderList selectedItem
+				   ifNil: [ '-' ]
+				   ifNotNil: #printString) ]
 ]

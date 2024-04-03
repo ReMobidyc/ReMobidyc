@@ -22,6 +22,12 @@ RMDChanceNode >> = anObject [
 		  probability = anObject probability ]
 ]
 
+{ #category : #converting }
+RMDChanceNode >> asPresenter [
+
+	^ RMDChancePresenter on: self
+]
+
 { #category : #enumerating }
 RMDChanceNode >> childrenDo: aBlock [
 

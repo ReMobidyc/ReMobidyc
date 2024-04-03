@@ -31,9 +31,9 @@ RMDWorldDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #initialization }
-RMDWorldDefinitionBrowser >> initializePresenters [
+RMDWorldDefinitionBrowser >> initializeRendererPresenters [
 
-	super initializePresenters.
+	super initializeRendererPresenters.
 	addRendererButton disable
 ]
 

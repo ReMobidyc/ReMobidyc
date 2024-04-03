@@ -26,6 +26,12 @@ RMDUnaryOperatorApplicationNode >> = anObject [
 		and: [ expression = anObject expression ]
 ]
 
+{ #category : #converting }
+RMDUnaryOperatorApplicationNode >> asPresenter [
+
+	^ RMDUnaryOperatorExpressionPresenter on: self
+]
+
 { #category : #enumerating }
 RMDUnaryOperatorApplicationNode >> childrenDo: aBlock [
 	aBlock value: expression

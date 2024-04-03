@@ -22,6 +22,12 @@ RMDTraceNode >> = anObject [
 	^ anObject = node
 ]
 
+{ #category : #converting }
+RMDTraceNode >> asPresenter [
+
+	^ node asPresenter
+]
+
 { #category : #enumerating }
 RMDTraceNode >> childrenDo: aBlock [
 

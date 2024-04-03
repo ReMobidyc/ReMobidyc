@@ -35,6 +35,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #moveUpAttributeButton width: self buttonHeight;
 										      add: #moveDownAttributeButton
 										      width: self buttonHeight;
+										      add: #viewAttributeButton width: self buttonHeight;
 										      add: #spreadAttributeButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -54,6 +55,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 										      add: #removeUtilityButton width: self buttonHeight;
 										      add: #moveUpUtilityButton width: self buttonHeight;
 										      add: #moveDownUtilityButton width: self buttonHeight;
+										      add: #viewUtilityButton width: self buttonHeight;
 										      add: #spreadUtilityButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
@@ -190,30 +192,28 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 ]
 
 { #category : #initialization }
-RMDAnimatDefinitionBrowser >> initializePresenters [
+RMDAnimatDefinitionBrowser >> initializeAttributePresenters [
 
-	super initializePresenters.
+	super initializeAttributePresenters.
 	spreadAttributeButton := self newButton
 		                         icon: self spreadIcon;
 		                         action: [ self spreadAttribute ];
 		                         help:
 			                         'Spread the attribute definition over all stages of the species';
 		                         disable;
-		                         yourself.
-	spreadUtilityButton := self newButton
-		                       icon: self spreadIcon;
-		                       action: [ self spreadUtility ];
-		                       help:
-			                       'Spread the utility definition over all stages of the species';
-		                       disable;
-		                       yourself.
-	spreadTaskButton := self newButton
-		                    icon: self spreadIcon;
-		                    action: [ self spreadTask ];
-		                    help:
-			                    'Spread the task definition over all stages of the species';
-		                    disable;
-		                    yourself.
+		                         yourself
+]
+
+{ #category : #initialization }
+RMDAnimatDefinitionBrowser >> initializePresenters [
+
+	super initializePresenters.
+	self initializeStagePresenters
+]
+
+{ #category : #initialization }
+RMDAnimatDefinitionBrowser >> initializeStagePresenters [
+
 	renameSpeciesButton := self newButton
 		                       label: 'rename species';
 		                       help: 'Change the name of species.';
@@ -231,6 +231,32 @@ RMDAnimatDefinitionBrowser >> initializePresenters [
 			                   'Create a copy of this stage and rename it.';
 		                   action: [ self copyStage ];
 		                   yourself
+]
+
+{ #category : #initialization }
+RMDAnimatDefinitionBrowser >> initializeTaskPresenters [
+
+	super initializeTaskPresenters.
+	spreadTaskButton := self newButton
+		                    icon: self spreadIcon;
+		                    action: [ self spreadTask ];
+		                    help:
+			                    'Spread the task definition over all stages of the species';
+		                    disable;
+		                    yourself
+]
+
+{ #category : #initialization }
+RMDAnimatDefinitionBrowser >> initializeUtilityPresenters [
+
+	super initializeUtilityPresenters.
+	spreadUtilityButton := self newButton
+		                       icon: self spreadIcon;
+		                       action: [ self spreadUtility ];
+		                       help:
+			                       'Spread the utility definition over all stages of the species';
+		                       disable;
+		                       yourself
 ]
 
 { #category : #operations }

@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #accessing }
+RMDUniformIntegerDistributionNode >> distributionName [
+
+	^ 'uniform_integer'
+]
+
 { #category : #testing }
 RMDUniformIntegerDistributionNode >> isUniformIntegerDistributionNode [
 

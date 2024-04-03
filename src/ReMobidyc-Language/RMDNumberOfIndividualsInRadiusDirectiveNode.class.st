@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #accessing }
+RMDNumberOfIndividualsInRadiusDirectiveNode >> directiveName [
+
+	^ 'number of'
+]
+
 { #category : #testing }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> isNumberOfIndividualsInRadiusDirective [
 

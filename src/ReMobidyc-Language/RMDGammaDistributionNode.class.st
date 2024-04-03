@@ -116,6 +116,12 @@ RMDGammaDistributionNode >> childrenTransform: aBlock [
 ]
 
 { #category : #accessing }
+RMDGammaDistributionNode >> distributionName [
+
+	^ 'gamma'
+]
+
+{ #category : #accessing }
 RMDGammaDistributionNode >> gamma: aNumber in: aRMDInterpreter [
 
 	^ aNumber <= 1.0
@@ -139,6 +145,12 @@ RMDGammaDistributionNode >> normalIn: aRMDInterpreter [
 
 	^ (aRMDInterpreter random ln * -2.0) sqrt
 	  * (aRMDInterpreter random * Float pi * 2.0) cos
+]
+
+{ #category : #accessing }
+RMDGammaDistributionNode >> parameter1Expression [
+
+	^ self shapeExpression
 ]
 
 { #category : #copying }

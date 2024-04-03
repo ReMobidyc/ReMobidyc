@@ -26,6 +26,12 @@ RMDBinaryCombinatorNode >> = anObject [
 		and: [ conditions = anObject conditions ]
 ]
 
+{ #category : #converting }
+RMDBinaryCombinatorNode >> asPresenter [
+
+	^ RMDBinaryCombinatorPresenter on: self
+]
+
 { #category : #enumerating }
 RMDBinaryCombinatorNode >> childrenDo: aBlock [
 	conditions do: aBlock

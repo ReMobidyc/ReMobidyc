@@ -517,6 +517,12 @@ RMDPresenter >> updateIcon [
 ]
 
 { #category : #icons }
+RMDPresenter >> validatoriumIcon [
+
+	^ Smalltalk ui iconNamed: #smallInspectIt
+]
+
+{ #category : #icons }
 RMDPresenter >> versionsIcon [
 	^ Smalltalk ui icons iconNamed: #smallProfile
 ]

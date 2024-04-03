@@ -26,6 +26,12 @@ RMDBinaryRelationNode >> = anObject [
 		and: [ expressions = anObject expressions ]
 ]
 
+{ #category : #converting }
+RMDBinaryRelationNode >> asPresenter [
+
+	^ RMDBinaryRelationPresenter on: self
+]
+
 { #category : #enumerating }
 RMDBinaryRelationNode >> childrenDo: aBlock [
 	expressions do: aBlock

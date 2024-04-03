@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #converting }
+RMDTimeDirectiveNode >> asPresenter [
+
+	^ RMDAtomicDirectivePresenter on: self
+]
+
 { #category : #testing }
 RMDTimeDirectiveNode >> isTimeDirectiveNode [
 

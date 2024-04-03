@@ -23,6 +23,12 @@ RMDDirectionOfGradientDirectiveNode >> = anObject [
 		  patchAttributeVariable = anObject patchAttributeVariable ]
 ]
 
+{ #category : #converting }
+RMDDirectionOfGradientDirectiveNode >> asPresenter [
+
+	^ RMDDirectionOfGradientDirectivePresenter on: self
+]
+
 { #category : #enumerating }
 RMDDirectionOfGradientDirectiveNode >> childrenDo: aBlock [
 

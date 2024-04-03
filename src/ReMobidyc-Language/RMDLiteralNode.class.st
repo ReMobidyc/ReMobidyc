@@ -28,6 +28,12 @@ RMDLiteralNode >> = anObject [
 	^ self class = anObject class and: [ literal = anObject literal ]
 ]
 
+{ #category : #converting }
+RMDLiteralNode >> asPresenter [
+
+	^ RMDLiteralPresenter on: self
+]
+
 { #category : #enumerating }
 RMDLiteralNode >> childrenDo: aBlock [
 	

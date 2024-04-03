@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #printing }
+RMDDensityOfIndividualsInPatchDirectiveNode >> directiveName [
+
+	^ 'density of'
+]
+
 { #category : #testing }
 RMDDensityOfIndividualsInPatchDirectiveNode >> isDensityOfIndividualsInPatchDirective [
 

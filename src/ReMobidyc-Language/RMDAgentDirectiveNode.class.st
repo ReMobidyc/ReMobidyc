@@ -38,9 +38,21 @@ RMDAgentDirectiveNode >> agentIdentifier: aString [
 	agentIdentifier := aString
 ]
 
+{ #category : #converting }
+RMDAgentDirectiveNode >> asPresenter [
+
+	^ RMDAgentDirectivePresenter on: self
+]
+
 { #category : #enumerating }
 RMDAgentDirectiveNode >> childrenDo: aBlock [
 	
+]
+
+{ #category : #accessing }
+RMDAgentDirectiveNode >> directiveName [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #comparing }

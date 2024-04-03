@@ -33,6 +33,12 @@ RMDApplyNode >> arguments: anArrayOfRMDExpressionNode [
 	arguments := anArrayOfRMDExpressionNode
 ]
 
+{ #category : #converting }
+RMDApplyNode >> asPresenter [
+
+	^ RMDApplyExpressionPresenter on: self
+]
+
 { #category : #enumerating }
 RMDApplyNode >> childrenDo: aBlock [
 	arguments do: aBlock
