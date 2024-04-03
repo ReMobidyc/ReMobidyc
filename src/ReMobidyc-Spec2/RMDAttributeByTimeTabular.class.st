@@ -33,7 +33,13 @@ RMDAttributeByTimeTabular class >> defaultLayout [
 						    yourself);
 				   yourself)
 		  expand: false;
-		  add: #table;
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 0.7;
+				   add: #table;
+				   add: (SpPanedLayout newHorizontal
+						    positionOfSlider: 0.3;
+						    add: #taskList;
+						    add: #traceableActionContext));
 		  add: (SpBoxLayout newHorizontal
 				   add: #openTabularButton width: self buttonHeight;
 				   add: #openObservatoryButton width: self buttonHeight;
