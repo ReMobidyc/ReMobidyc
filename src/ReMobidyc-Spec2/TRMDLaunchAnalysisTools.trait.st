@@ -59,7 +59,7 @@ TRMDLaunchAnalysisTools >> openInAttributeTabular [
 TRMDLaunchAnalysisTools >> openInIndividualHistoryTabularWithRunId: runId individual: individual time: time [
 
 	self metaInterpreterForTabularDo: [ :metaInterpreter |
-		^ (RMDIndividualHistoryValidatorium
+		^ (RMDIndividualHistoryTabular
 			   on: metaInterpreter
 			   runId: runId
 			   individual: individual

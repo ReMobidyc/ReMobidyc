@@ -3,7 +3,7 @@ Extension { #name : #RMDMetaInterpreter }
 { #category : #'*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInAttributeTabular [
 
-	^ (RMDAttributeByTimeValidatorium on: self)
+	^ (RMDAttributeByTimeTabular on: self)
 		  open;
 		  yourself
 ]
@@ -33,7 +33,7 @@ RMDMetaInterpreter >> openInReplayObservatory [
 { #category : #'*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInSnapshotTabular [
 
-	^ (RMDSnapshotValidatorium on: self)
+	^ (RMDSnapshotTabular on: self)
 		  open;
 		  yourself
 ]
