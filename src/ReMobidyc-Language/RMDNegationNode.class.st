@@ -19,6 +19,12 @@ RMDNegationNode >> = anObject [
 	^ self class = anObject class and: [ condition = anObject condition ]
 ]
 
+{ #category : #converting }
+RMDNegationNode >> asPresenter [
+
+	^ RMDNegationPresenter on: self
+]
+
 { #category : #enumerating }
 RMDNegationNode >> childrenDo: aBlock [
 	aBlock value: condition

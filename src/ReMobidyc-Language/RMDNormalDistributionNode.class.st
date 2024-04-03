@@ -38,6 +38,12 @@ RMDNormalDistributionNode >> childrenTransform: aBlock [
 	sigmaExpression := aBlock value: sigmaExpression
 ]
 
+{ #category : #accessing }
+RMDNormalDistributionNode >> distributionName [
+
+	^ 'normal'
+]
+
 { #category : #comparing }
 RMDNormalDistributionNode >> hash [
 	^ (self class hash bitXor: meanExpression hash) bitXor: sigmaExpression hash
@@ -58,6 +64,24 @@ RMDNormalDistributionNode >> meanExpression [
 RMDNormalDistributionNode >> meanExpression: aRMDExpressionNode [
 
 	meanExpression := aRMDExpressionNode
+]
+
+{ #category : #accessing }
+RMDNormalDistributionNode >> parameter1Expression [
+
+	^ self meanExpression
+]
+
+{ #category : #accessing }
+RMDNormalDistributionNode >> parameter2Expression [
+
+	^ self sigmaExpression
+]
+
+{ #category : #accessing }
+RMDNormalDistributionNode >> parameterName [
+
+	^ 'sigma'
 ]
 
 { #category : #copying }

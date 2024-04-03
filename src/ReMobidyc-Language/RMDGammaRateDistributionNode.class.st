@@ -39,6 +39,18 @@ RMDGammaRateDistributionNode >> isGammaRateDistributionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDGammaRateDistributionNode >> parameter2Expression [
+
+	^ self rateExpression
+]
+
+{ #category : #accessing }
+RMDGammaRateDistributionNode >> parameterName [
+
+	^ 'rate'
+]
+
 { #category : #copying }
 RMDGammaRateDistributionNode >> postCopy [
 

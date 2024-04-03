@@ -35,6 +35,24 @@ RMDIndividualsInRadiusDirectiveNode >> animatName: aString [
 	animatName := aString
 ]
 
+{ #category : #converting }
+RMDIndividualsInRadiusDirectiveNode >> asPresenter [
+
+	^ RMDIndividualsInRadiusDirectivePresenter on: self
+]
+
+{ #category : #accessing }
+RMDIndividualsInRadiusDirectiveNode >> directiveName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+RMDIndividualsInRadiusDirectiveNode >> locationName [
+
+	^ 'radius'
+]
+
 { #category : #utilities }
 RMDIndividualsInRadiusDirectiveNode >> numberOfIndividualsIn: aNumber with: aRMDInterpreter [
 

@@ -12,6 +12,12 @@ RMDDirectionDirectiveNode class >> agent: anotherString [
 		  yourself
 ]
 
+{ #category : #accessing }
+RMDDirectionDirectiveNode >> directiveName [
+
+	^ 'direction'
+]
+
 { #category : #testing }
 RMDDirectionDirectiveNode >> isDirectionDirectiveNode [
 

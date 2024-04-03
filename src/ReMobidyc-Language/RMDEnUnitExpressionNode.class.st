@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #converting }
+RMDEnUnitExpressionNode >> asPresenter [
+
+	^ RMDEnUnitExpressionPresenter on: self
+]
+
 { #category : #testing }
 RMDEnUnitExpressionNode >> isEnUnitExpressionNode [
 

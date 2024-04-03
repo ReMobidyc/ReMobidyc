@@ -39,6 +39,12 @@ RMDUniformDistributionNode >> childrenTransform: aBlock [
 ]
 
 { #category : #accessing }
+RMDUniformDistributionNode >> distributionName [
+
+	^ 'uniform'
+]
+
+{ #category : #accessing }
 RMDUniformDistributionNode >> fromExpression [
 	^ fromExpression
 ]
@@ -56,6 +62,24 @@ RMDUniformDistributionNode >> hash [
 { #category : #testing }
 RMDUniformDistributionNode >> isUniformDistributionNode [
 	^ true
+]
+
+{ #category : #accessing }
+RMDUniformDistributionNode >> parameter1Expression [
+
+	^ self fromExpression
+]
+
+{ #category : #accessing }
+RMDUniformDistributionNode >> parameter2Expression [
+
+	^ self toExpression
+]
+
+{ #category : #accessing }
+RMDUniformDistributionNode >> parameterName [
+
+	^ 'to'
 ]
 
 { #category : #copying }

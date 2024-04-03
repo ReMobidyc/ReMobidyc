@@ -40,16 +40,34 @@ RMDIndividualsInPatchDirectiveNode >> animatName: aString [
 	animatName := aString
 ]
 
+{ #category : #converting }
+RMDIndividualsInPatchDirectiveNode >> asPresenter [
+
+	^ RMDIndividualsInLocationDirectivePresenter on: self
+]
+
 { #category : #enumerating }
 RMDIndividualsInPatchDirectiveNode >> childrenDo: aBlock [
 
 	
 ]
 
+{ #category : #accessing }
+RMDIndividualsInPatchDirectiveNode >> directiveName [
+
+	^ self subclassResponsibility
+]
+
 { #category : #comparing }
 RMDIndividualsInPatchDirectiveNode >> hash [
 
 	^ self class hash bitXor: animatName hash
+]
+
+{ #category : #accessing }
+RMDIndividualsInPatchDirectiveNode >> locationName [
+
+	^ 'here'
 ]
 
 { #category : #copying }

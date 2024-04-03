@@ -33,6 +33,12 @@ RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]
 
+{ #category : #converting }
+RMDExpressionNode >> asPresenter [
+
+	^ RMDAtomicExpressionPresenter on: self
+]
+
 { #category : #private }
 RMDExpressionNode >> insertTrace [
 

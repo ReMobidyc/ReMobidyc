@@ -19,7 +19,8 @@ Class {
 		'nearestCheckBox',
 		'addParameterInstantiationButton',
 		'editParameterInstantiationButton',
-		'removeParameterInstantiationButton'
+		'removeParameterInstantiationButton',
+		'viewParameterInstantiationButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -67,6 +68,7 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 										      add: #removeParameterInstantiationButton
 										      width: self buttonHeight;
 										      add: #editParameterInstantiationButton width: self buttonHeight;
+										      add: #viewParameterInstantiationButton width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
 								     yourself);
@@ -427,6 +429,8 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 			                              removeParameterInstantiationButton
 				                              enabled: selected.
 			                              editParameterInstantiationButton
+				                              enabled: selected.
+			                              viewParameterInstantiationButton
 				                              enabled: selected ];
 		                              contextMenu: [
 		                              self parameterInstiationListMenu ];
@@ -454,6 +458,13 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                                    help:
 			                                    'Edit the selected replacement rule';
 		                                    disable;
+		                                    yourself.
+	viewParameterInstantiationButton := self newButton
+		                                    icon: self validatoriumIcon;
+		                                    action: [
+			                                    self viewParameterInstantiation ];
+		                                    disable;
+		                                    help: 'View the definition';
 		                                    yourself.
 	sourceText := (self newSourceWith:
 			               RMDGrammar current actionDefinition)
@@ -731,4 +742,16 @@ RMDTaskDefinitionBrowser >> updateVerbIdentifierField [
 		self taskDefinition ifNotNil: [ :taskDefinition | 
 			verbIdentifierField text:
 				(taskDefinition verbIdentifier ifNil: [ String new ]) ] ]
+]
+
+{ #category : #operations }
+RMDTaskDefinitionBrowser >> viewParameterInstantiation [
+
+	self simulationModel ifNotNil: [ :model |
+		parameterInstantiationList selection selectedItem ifNotNil: [ :bind |
+			| n |
+			n := bind replacement.
+			(n isExpressionNode or: [ n isConditionNode ]) ifTrue: [
+				n asPresenter openDialog title:
+					'definition of ' , bind placeholder printString ] ] ]
 ]

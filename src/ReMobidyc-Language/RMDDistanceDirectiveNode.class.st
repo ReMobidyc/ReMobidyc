@@ -12,6 +12,12 @@ RMDDistanceDirectiveNode class >> agent: anotherString [
 		  yourself
 ]
 
+{ #category : #accessing }
+RMDDistanceDirectiveNode >> directiveName [
+
+	^ 'distance'
+]
+
 { #category : #testing }
 RMDDistanceDirectiveNode >> isDistanceDirectiveNode [
 

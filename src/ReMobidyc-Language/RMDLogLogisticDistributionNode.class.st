@@ -39,6 +39,12 @@ RMDLogLogisticDistributionNode >> childrenTransform: aBlock [
 	scaleExpression := aBlock value: scaleExpression
 ]
 
+{ #category : #accessing }
+RMDLogLogisticDistributionNode >> distributionName [
+
+	^ 'loglogistic'
+]
+
 { #category : #comparing }
 RMDLogLogisticDistributionNode >> hash [
 	^ (self class hash bitXor: shapeExpression hash) bitXor: scaleExpression hash
@@ -47,6 +53,24 @@ RMDLogLogisticDistributionNode >> hash [
 { #category : #testing }
 RMDLogLogisticDistributionNode >> isLogLogisticDistributionNode [
 	^ true
+]
+
+{ #category : #accessing }
+RMDLogLogisticDistributionNode >> parameter1Expression [
+
+	^ self scale
+]
+
+{ #category : #accessing }
+RMDLogLogisticDistributionNode >> parameter2Expression [
+
+	^ self shape
+]
+
+{ #category : #accessing }
+RMDLogLogisticDistributionNode >> parameterName [
+
+	^ 'shape'
 ]
 
 { #category : #copying }
@@ -63,10 +87,11 @@ RMDLogLogisticDistributionNode >> precedence [
 
 { #category : #printing }
 RMDLogLogisticDistributionNode >> printOn: aStream [
+
 	aStream nextPutAll: 'loglogistic '.
-	shapeExpression printOn: aStream.
+	scaleExpression printOn: aStream.
 	aStream nextPutAll: ' shape '.
-	scaleExpression printOn: aStream
+	shapeExpression printOn: aStream
 ]
 
 { #category : #printing }

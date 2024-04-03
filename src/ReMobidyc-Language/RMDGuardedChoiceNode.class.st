@@ -20,6 +20,12 @@ RMDGuardedChoiceNode >> = anObject [
 		and: [ guardsAndChoices = anObject guardsAndChoices ]
 ]
 
+{ #category : #converting }
+RMDGuardedChoiceNode >> asPresenter [
+
+	^ RMDGuardedChoicePresenter on: self
+]
+
 { #category : #enumerating }
 RMDGuardedChoiceNode >> childrenDo: aBlock [
 

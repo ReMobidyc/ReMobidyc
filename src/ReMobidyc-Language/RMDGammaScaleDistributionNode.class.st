@@ -39,6 +39,18 @@ RMDGammaScaleDistributionNode >> isGammaScaleDistributionNode [
 	^ true
 ]
 
+{ #category : #accessing }
+RMDGammaScaleDistributionNode >> parameter2Expression [
+
+	^ self scaleExpression
+]
+
+{ #category : #accessing }
+RMDGammaScaleDistributionNode >> parameterName [
+
+	^ 'scale'
+]
+
 { #category : #copying }
 RMDGammaScaleDistributionNode >> postCopy [
 

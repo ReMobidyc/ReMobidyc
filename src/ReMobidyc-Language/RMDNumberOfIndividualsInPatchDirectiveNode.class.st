@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #accessing }
+RMDNumberOfIndividualsInPatchDirectiveNode >> directiveName [
+
+	^ 'number of'
+]
+
 { #category : #testing }
 RMDNumberOfIndividualsInPatchDirectiveNode >> isNumberOfIndividualsInPatchDirective [
 

@@ -4,6 +4,12 @@ Class {
 	#category : #'ReMobidyc-Language-AST'
 }
 
+{ #category : #converting }
+RMDLengthDirectiveNode >> asPresenter [
+
+	^ RMDAtomicDirectivePresenter on: self
+]
+
 { #category : #testing }
 RMDLengthDirectiveNode >> isLengthDirectiveNode [
 	^ true

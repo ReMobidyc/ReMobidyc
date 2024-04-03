@@ -27,9 +27,33 @@ RMDUniformDistributionYNode >> childrenTransform: aBlock [
 	
 ]
 
+{ #category : #accessing }
+RMDUniformDistributionYNode >> distributionName [
+
+	^ 'uniform'
+]
+
 { #category : #comparing }
 RMDUniformDistributionYNode >> hash [
 	^ self class hash
+]
+
+{ #category : #accessing }
+RMDUniformDistributionYNode >> parameter1Expression [
+
+	^ 'south'
+]
+
+{ #category : #accessing }
+RMDUniformDistributionYNode >> parameter2Expression [
+
+	^ 'north'
+]
+
+{ #category : #accessing }
+RMDUniformDistributionYNode >> parameterName [
+
+	^ 'to'
 ]
 
 { #category : #copying }

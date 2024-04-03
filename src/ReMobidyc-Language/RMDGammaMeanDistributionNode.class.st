@@ -51,6 +51,18 @@ RMDGammaMeanDistributionNode >> meanExpression: aRMDExpressionNode [
 	meanExpression := aRMDExpressionNode
 ]
 
+{ #category : #accessing }
+RMDGammaMeanDistributionNode >> parameter2Expression [
+
+	^ self meanExpression
+]
+
+{ #category : #accessing }
+RMDGammaMeanDistributionNode >> parameterName [
+
+	^ 'mean'
+]
+
 { #category : #copying }
 RMDGammaMeanDistributionNode >> postCopy [
 

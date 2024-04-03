@@ -16,7 +16,10 @@ Class {
 		'moveUpAttributeButton',
 		'moveDownAttributeButton',
 		'removeAttributeButton',
-		'subjectAgent'
+		'subjectAgent',
+		'viewAttributeButton',
+		'viewUtilityButton',
+		'viewGuardButton'
 	],
 	#category : #'ReMobidyc-Spec2-Components'
 }
@@ -38,6 +41,7 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 		  add: (SpBoxLayout newHorizontal
 				   add: '    when ' expand: false;
 				   add: #guardField;
+				   add: #viewGuardButton width: self buttonHeight;
 				   yourself)
 		  expand: false
 		  fill: true
@@ -62,6 +66,7 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 								     add: #removeAttributeButton expand: false;
 								     add: #moveUpAttributeButton expand: false;
 								     add: #moveDownAttributeButton expand: false;
+								     add: #viewAttributeButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
 		  expand: true
@@ -77,6 +82,7 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 								     add: #removeUtilityButton expand: false;
 								     add: #moveUpUtilityButton expand: false;
 								     add: #moveDownUtilityButton expand: false;
+								     add: #viewUtilityButton expand: false;
 								     yourself)
 						    height: self inputTextHeight))
 		  expand: true
@@ -239,40 +245,8 @@ RMDActionDefinitionBrowser >> editUtilityDefinition [
 ]
 
 { #category : #initialization }
-RMDActionDefinitionBrowser >> initializePresenters [
+RMDActionDefinitionBrowser >> initializeAttributePresenters [
 
-	super initializePresenters.
-	identifierField := self newSyntaxNodeTextInput
-		                   parser: RMDGrammar current identifier end;
-		                   placeholder: 'verb';
-		                   autoAccept: true;
-		                   whenLastValidSyntaxNodeChangedDo: [ :identifier |
-			                   node identifier: identifier ];
-		                   yourself.
-	objectField := self newHighlightingSyntaxNodeTextInput
-		               parser:
-			               RMDGrammar current agentIdentifier optional
-				               trimBlanks end;
-		               placeholder: '(object)';
-		               autoAccept: true;
-		               whenLastValidSyntaxNodeChangedDo: [ :animat |
-			               node object: animat ];
-		               yourself.
-	guardField := self newHighlightingSyntaxNodeTextInput
-		              parser:
-			              RMDGrammar current condition optional trimBlanks end;
-		              placeholder: 'guard condition';
-		              autoAccept: false;
-		              whenLastValidSyntaxNodeChangedDo: [ :guard |
-			              node guard: guard ];
-		              yourself.
-	directivesButton := self newButton
-		                    color: Color white;
-		                    label: 'no directive';
-		                    action: [ self editDirectives ];
-		                    help:
-			                    'Edit directives such as new, stage, die and kill';
-		                    yourself.
 	attributeDefinitionList := self newTable
 		                           addColumn: ((RMDColorTriangleTableColumn
 				                             subjectBlock: [ self subjectAgent ]
@@ -369,6 +343,68 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                           'Move the selected attribute definition down';
 		                           disable;
 		                           yourself.
+	viewAttributeButton := self newButton
+		                       icon: self validatoriumIcon;
+		                       action: [ self viewAttribute ];
+		                       help: 'View the definition expression';
+		                       disable;
+		                       yourself
+]
+
+{ #category : #initialization }
+RMDActionDefinitionBrowser >> initializePresenters [
+
+	super initializePresenters.
+	identifierField := self newSyntaxNodeTextInput
+		                   parser: RMDGrammar current identifier end;
+		                   placeholder: 'verb';
+		                   autoAccept: true;
+		                   whenLastValidSyntaxNodeChangedDo: [ :identifier |
+			                   node identifier: identifier ];
+		                   yourself.
+	objectField := self newHighlightingSyntaxNodeTextInput
+		               parser:
+			               RMDGrammar current agentIdentifier optional
+				               trimBlanks end;
+		               placeholder: '(object)';
+		               autoAccept: true;
+		               whenLastValidSyntaxNodeChangedDo: [ :animat |
+			               node object: animat ];
+		               yourself.
+	guardField := self newHighlightingSyntaxNodeTextInput
+		              parser:
+			              RMDGrammar current condition optional trimBlanks end;
+		              placeholder: 'guard condition';
+		              autoAccept: false;
+		              whenLastValidSyntaxNodeChangedDo: [ :guard |
+			              node guard: guard ];
+		              yourself.
+	viewGuardButton := self newButton
+		                       icon: self validatoriumIcon;
+		                       action: [ self viewGuard ];
+		                       help: 'View the guard condition';
+		                       yourself.
+	directivesButton := self newButton
+		                    color: Color white;
+		                    label: 'no directive';
+		                    action: [ self editDirectives ];
+		                    help:
+			                    'Edit directives such as new, stage, die and kill';
+		                    yourself.
+	self
+		initializeAttributePresenters;
+		initializeUtilityPresenters.
+	self whenBuiltDo: [
+		self withWidgetDo: [ :w |
+			w
+				update: #color: with: { Color white };
+				update: #borderColor: with: { Color darkGray };
+				update: #borderWidth: with: { 1 } ] ]
+]
+
+{ #category : #initialization }
+RMDActionDefinitionBrowser >> initializeUtilityPresenters [
+
 	utilityDefinitionList := self newTable
 		                         beResizable;
 		                         hideColumnHeaders;
@@ -448,12 +484,12 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			                         'Move the selected utility definition down';
 		                         disable;
 		                         yourself.
-	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				update: #color: with: { Color white };
-				update: #borderColor: with: { Color darkGray };
-				update: #borderWidth: with: { 1 } ] ]
+	viewUtilityButton := self newButton
+		                     icon: self validatoriumIcon;
+		                     action: [ self viewUtility ];
+		                     help: 'View the definition expression';
+		                     disable;
+		                     yourself
 ]
 
 { #category : #initialization }
@@ -669,7 +705,8 @@ RMDActionDefinitionBrowser >> updateAttributeButtons [
 			 attributeDefinitionList selection selectedIndex >= 2 ]).
 	moveDownAttributeButton enabled: (hasSelection and: [
 			 attributeDefinitionList selection selectedIndex
-			 < attributeDefinitionList items size ])
+			 < attributeDefinitionList items size ]).
+	viewAttributeButton enabled: hasSelection
 ]
 
 { #category : #updating }
@@ -688,7 +725,8 @@ RMDActionDefinitionBrowser >> updateUtilityButtons [
 			 utilityDefinitionList selection selectedIndex >= 2 ]).
 	moveDownUtilityButton enabled: (hasSelection and: [
 			 utilityDefinitionList selection selectedIndex
-			 < utilityDefinitionList items size ])
+			 < utilityDefinitionList items size ]).
+	viewUtilityButton enabled: hasSelection
 ]
 
 { #category : #menus }
@@ -724,4 +762,27 @@ RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
 						  enabled: moveDownUtilityButton isEnabled;
 						  action: [ self moveDownUtility ] ] ];
 		  yourself
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> viewAttribute [
+
+	attributeDefinitionList selectedItem ifNotNil: [ :attributeDefinition |
+		attributeDefinition definitionBody asPresenter openDialog title:
+			'definition body of ' , attributeDefinition identifier ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> viewGuard [
+
+	node guard ifNotNil: [ :guard |
+		guard asPresenter openDialog title: 'Engaging condition' ]
+]
+
+{ #category : #operations }
+RMDActionDefinitionBrowser >> viewUtility [
+
+	utilityDefinitionList selectedItem ifNotNil: [ :utilityDefinition |
+		utilityDefinition definitionBody asPresenter openDialog title:
+			'definition of ' , utilityDefinition identifier ]
 ]
