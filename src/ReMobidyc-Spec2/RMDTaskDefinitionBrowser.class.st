@@ -752,6 +752,6 @@ RMDTaskDefinitionBrowser >> viewParameterInstantiation [
 			| n |
 			n := bind replacement.
 			(n isExpressionNode or: [ n isConditionNode ]) ifTrue: [
-				n asPresenter openDialog title:
+				n asPrettyPrintNode openTitle:
 					'definition of ' , bind placeholder printString ] ] ]
 ]
