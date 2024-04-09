@@ -768,7 +768,7 @@ RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
 RMDActionDefinitionBrowser >> viewAttribute [
 
 	attributeDefinitionList selectedItem ifNotNil: [ :attributeDefinition |
-		attributeDefinition definitionBody asPresenter openDialog title:
+		attributeDefinition definitionBody asPrettyPrintNode openTitle:
 			'definition body of ' , attributeDefinition identifier ]
 ]
 
@@ -776,13 +776,13 @@ RMDActionDefinitionBrowser >> viewAttribute [
 RMDActionDefinitionBrowser >> viewGuard [
 
 	node guard ifNotNil: [ :guard |
-		guard asPresenter openDialog title: 'Engaging condition' ]
+		guard asPrettyPrintNode openTitle: 'Engaging condition' ]
 ]
 
 { #category : #operations }
 RMDActionDefinitionBrowser >> viewUtility [
 
 	utilityDefinitionList selectedItem ifNotNil: [ :utilityDefinition |
-		utilityDefinition definitionBody asPresenter openDialog title:
+		utilityDefinition definitionBody asPrettyPrintNode openTitle:
 			'definition of ' , utilityDefinition identifier ]
 ]

@@ -1031,14 +1031,14 @@ RMDAgentDefinitionBrowser >> utilityListMenu [
 RMDAgentDefinitionBrowser >> viewAttribute [
 
 	attributeList selectedItem ifNotNil: [ :attributeDeclaration |
-		attributeDeclaration initializerExpression asPresenter openDialog
-			title: 'initial value of ' , attributeDeclaration identifier ]
+		attributeDeclaration initializerExpression asPrettyPrintNode
+			openTitle: 'initial value of ' , attributeDeclaration identifier ]
 ]
 
 { #category : #operations }
 RMDAgentDefinitionBrowser >> viewUtility [
 
 	utilityList selectedItem ifNotNil: [ :utilityDefinition |
-		utilityDefinition definitionBody asPresenter openDialog title:
+		utilityDefinition definitionBody asPrettyPrintNode openTitle:
 			'definition of ' , utilityDefinition identifier ]
 ]

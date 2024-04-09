@@ -27,6 +27,12 @@ RMDPlaceholderNode >> agent [
 	^ #the
 ]
 
+{ #category : #converting }
+RMDPlaceholderNode >> asPrettyPrintNode [
+
+	^ RMDPrettyPrintNode agent: 'the' attribute: self identifier
+]
+
 { #category : #enumerating }
 RMDPlaceholderNode >> childrenDo: aBlock [
 
