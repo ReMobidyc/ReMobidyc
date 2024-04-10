@@ -245,18 +245,33 @@ RMDPrettyPrintNode class >> withAll: anArrayOfRMDPrettyPrintNode [
 ]
 
 { #category : #arithmetics }
-RMDPrettyPrintNode >> ** anInteger [
+RMDPrettyPrintNode >> ** anIntegerOrPrettyPrintNode [
 
-	^ self class
-		  with: self
-		  with: ((RMDPrettyPrintText literal: anInteger printString)
-				   scaleBy: 0.7;
-				   translateMiddleLeftTo: self encompassingRectangle topRight;
-				   yourself)
-		  with: ((RMDPrettyPrintText literal: ' ')
-				   scaleBy: 0.7;
-				   translateMiddleLeftTo: self encompassingRectangle bottomRight;
-				   yourself)
+	^ anIntegerOrPrettyPrintNode isInteger
+		  ifTrue: [
+			  self class
+				  with: self
+				  with:
+					  ((RMDPrettyPrintText literal:
+							    anIntegerOrPrettyPrintNode printString)
+						   scaleBy: 0.7;
+						   translateMiddleLeftTo: self encompassingRectangle topRight;
+						   yourself)
+				  with: ((RMDPrettyPrintText literal: ' ')
+						   scaleBy: 0.7;
+						   translateMiddleLeftTo: self encompassingRectangle bottomRight;
+						   yourself) ]
+		  ifFalse: [
+			  self class
+				  with: self
+				  with: (anIntegerOrPrettyPrintNode
+						   scaleBy: 0.7;
+						   translateMiddleLeftTo: self encompassingRectangle topRight;
+						   yourself)
+				  with: ((RMDPrettyPrintText literal: ' ')
+						   scaleBy: 0.7;
+						   translateMiddleLeftTo: self encompassingRectangle bottomRight;
+						   yourself) ]
 ]
 
 { #category : #arithmetics }
