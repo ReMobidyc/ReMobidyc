@@ -27,6 +27,7 @@ BaselineOfReMobidyc class >> deploy [
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
+	self new postLoad.
 	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
