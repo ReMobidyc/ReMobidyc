@@ -30,7 +30,7 @@ RMDAbout class >> remobidycMenuOn: aBuilder [
 
 { #category : #accessing }
 RMDAbout >> codename [
-	^ 'Avignon'
+	^ 'Wimereux'
 ]
 
 { #category : #initialization }
