@@ -22,10 +22,11 @@ RMDBinaryRelationPresenter >> initializePresenters [
 	super initializePresenters.
 	expressionPresenters := {  }.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				borderColor: self borderColor;
-				borderWidth: 2 ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					borderColor: self borderColor;
+					borderWidth: 2 ] ] ]
 ]
 
 { #category : 'accessing' }

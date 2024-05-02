@@ -382,10 +382,10 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			              node guard: guard ];
 		              yourself.
 	viewGuardButton := self newButton
-		                       icon: self validatoriumIcon;
-		                       action: [ self viewGuard ];
-		                       help: 'View the guard condition';
-		                       yourself.
+		                   icon: self validatoriumIcon;
+		                   action: [ self viewGuard ];
+		                   help: 'View the guard condition';
+		                   yourself.
 	directivesButton := self newButton
 		                    color: Color white;
 		                    label: 'no directive';
@@ -397,11 +397,12 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		initializeAttributePresenters;
 		initializeUtilityPresenters.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				update: #color: with: { Color white };
-				update: #borderColor: with: { Color darkGray };
-				update: #borderWidth: with: { 1 } ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					update: #color: with: { Color white };
+					update: #borderColor: with: { Color darkGray };
+					update: #borderWidth: with: { 1 } ] ] ]
 ]
 
 { #category : 'initialization' }

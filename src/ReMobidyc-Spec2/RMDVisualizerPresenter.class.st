@@ -98,12 +98,13 @@ RMDVisualizerPresenter >> timeChanged: aRMDTimeChanged [
 
 { #category : 'updating' }
 RMDVisualizerPresenter >> updateImage [
+
 	interpreter ifNil: [ ^ self ].
 	visualizer ifNil: [ ^ self ].
-	image
-		withWidgetDo: [ :w | 
+	image withAdapterDo: [ :a |
+		a widgetDo: [ :w |
 			visualizer extent: w extent.
-			image image: (visualizer visualize: interpreter) ]
+			image image: (visualizer visualize: interpreter) ] ]
 ]
 
 { #category : 'updating' }

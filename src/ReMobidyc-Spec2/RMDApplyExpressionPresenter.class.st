@@ -28,10 +28,11 @@ RMDApplyExpressionPresenter >> initializePresenters [
 		                 yourself.
 	argumentPresenters := Array new.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				borderColor: self borderColor;
-				borderWidth: 2 ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					borderColor: self borderColor;
+					borderWidth: 2 ] ] ]
 ]
 
 { #category : 'layouting' }

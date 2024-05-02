@@ -54,7 +54,9 @@ RMDExpressionPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 RMDExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
-	self whenBuiltDo: [ self withWidgetDo: [ :w | w color: Color white ] ]
+	self whenBuiltDo: [
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w | w color: Color white ] ] ]
 ]
 
 { #category : 'initialization' }

@@ -49,12 +49,13 @@ RMDAgentInitializerPresenter >> attributesAndUtilitiesToNewLayout: newLayout [
 RMDAgentInitializerPresenter >> initializePresenters [
 
 	super initializePresenters.
-	self whenBuiltDo: [ 
-		self withWidgetDo: [ :w | 
-			w
-				color: Color white;
-				borderColor: Color darkGray;
-				borderWidth: 1 ].
+	self whenBuiltDo: [
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					color: Color white;
+					borderColor: Color darkGray;
+					borderWidth: 1 ] ].
 		self updateLayout ]
 ]
 
