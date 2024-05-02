@@ -77,7 +77,8 @@ SpMorphicTableCellBuilder >> visitRMDSyntaxColumnEditable: aTableColumn on: cont
 		presenter whenSubmitDo: [ :text | action cull: self item cull: text ].
 		morph announcer
 			when: MorphLostFocus
-			do: [ action cull: self item cull: morph text ] ].
+			do: [ action cull: self item cull: morph text ]
+			for: self ].
 	presenter adapter applyStyle.
 	self addCellMorph: morph column: aTableColumn
 ]

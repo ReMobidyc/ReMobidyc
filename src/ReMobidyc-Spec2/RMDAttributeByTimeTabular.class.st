@@ -109,17 +109,12 @@ RMDAttributeByTimeTabular >> openBoxChart [
 		columns do: [ :column |
 			column ifOnChartDo: [
 				| chart |
-				chart := RSChart new.
+				chart := (RSBoxPlot data:
+					          { (table items collect: [ :row | column value: row ]) })
+					         chart.
 				chart
 					extent: 150 @ 400;
 					title: column title.
-				chart
-					addPlot: (RSBoxPlot new y:
-								 { (table items collect: [ :row | column value: row ]) });
-					addDecoration: (RSVerticalTick new
-							 numberOfTicks: 10;
-							 fontSize: 10;
-							 asFloat).
 				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSHorizontalLineLayout on: canvas shapes.
 		(canvas openWithTitle: 'Attributes Chart'
@@ -134,7 +129,7 @@ RMDAttributeByTimeTabular >> openBoxChart [
 RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
 
 	| chart radius |
-	chart := RSChart new.
+	chart := RSCompositeChart new.
 	chart
 		extent: 400 @ 400;
 		title: aRMDTabularColumn title.
@@ -142,14 +137,12 @@ RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
 		          ifTrue: [ 0.5 ]
 		          ifFalse: [ 1 ].
 	chart
-		addPlot: (RMDScatterPlot new
+		add: (RMDScatterPlot new
 				 shape: (RSBox new
 						  extent: radius @ radius;
 						  paint: Color gray);
 				 x: (table items collect: table columns first)
 				 y: (table items collect: aRMDTabularColumn));
-		addDecoration: (RSHorizontalTick new fontSize: 8);
-		addDecoration: (RSVerticalTick new fontSize: 8);
 		addDecoration: (RSXLabelDecoration new
 				 title: table columns first title;
 				 fontSize: 10);

@@ -111,13 +111,6 @@ RMDSyntaxNodeTextInputPresenter >> beStageDirective [
 	self parser: RMDGrammar current stageDirective end
 ]
 
-{ #category : 'accessing' }
-RMDSyntaxNodeTextInputPresenter >> color: aColor [
-
-	super color: aColor.
-	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
-]
-
 { #category : 'api' }
 RMDSyntaxNodeTextInputPresenter >> display [
 

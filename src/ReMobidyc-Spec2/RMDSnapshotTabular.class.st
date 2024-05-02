@@ -97,23 +97,18 @@ RMDSnapshotTabular >> metaInterpreter: aRMDMetaInterpreter [
 { #category : 'charts' }
 RMDSnapshotTabular >> openChart [
 
-	table columns ifNotEmpty: [ :columns | 
+	table columns ifNotEmpty: [ :columns |
 		| canvas |
 		canvas := RSCanvas new @ RMDMultiChartInteraction.
-		columns do: [ :column | 
-			column ifOnChartDo: [ 
+		columns do: [ :column |
+			column ifOnChartDo: [
 				| chart |
-				chart := RSChart new.
+				chart := (RSBoxPlot data:
+					          { (table items collect: [ :row | column value: row ]) })
+					         chart.
 				chart
 					extent: 150 @ 400;
 					title: column title.
-				chart
-					addPlot: (RSBoxPlot new y:
-								 { (table items collect: [ :row | column value: row ]) });
-					addDecoration: (RSVerticalTick new
-							 numberOfTicks: 10;
-							 fontSize: 10;
-							 asFloat).
 				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSHorizontalLineLayout on: canvas shapes.
 		(canvas openWithTitle: 'Attributes Chart'

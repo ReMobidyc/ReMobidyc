@@ -209,21 +209,18 @@ RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 { #category : 'charts' }
 RMDPopulationByTimeTabular >> openChart [
 
-	table columns ifNotEmpty: [ :columns | 
+	table columns ifNotEmpty: [ :columns |
 		| chart time canvas legend |
-		chart := RSChart new.
+		chart := RSCompositeChart new.
 		chart extent: 800 @ 400.
 		time := table items collect: [ :row | columns first value: row ].
-		columns do: [ :column | 
-			column ifOnChartDo: [ 
+		columns do: [ :column |
+			column ifOnChartDo: [
 				| y |
 				y := (table items collect: [ :row | column value: row ]) reject:
 					     #isNil.
-				chart addPlot:
-					(RSLinePlot new x: (time copyFrom: 1 to: y size) y: y) ] ].
+				chart add: (RSLinePlot new x: (time copyFrom: 1 to: y size) y: y) ] ].
 		chart
-			addDecoration: RSHorizontalTick new;
-			addDecoration: RSVerticalTick new;
 			addDecoration: (RSChartTitleDecoration new
 					 title:
 						 (runDropList selectedItem ifNotNil: #key ifNil: [ 'all' ])
@@ -243,7 +240,7 @@ RMDPopulationByTimeTabular >> openChart [
 		canvas := chart build.
 		legend := RSLegend new.
 		legend container: canvas.
-		1 to: chart plots size do: [ :plotIndex | 
+		1 to: chart plots size do: [ :plotIndex |
 			legend
 				text: (columns at: plotIndex + 1) title
 				withBoxColor: (chart plots at: plotIndex) color ].
@@ -259,6 +256,12 @@ RMDPopulationByTimeTabular >> openChart [
 { #category : 'updating' }
 RMDPopulationByTimeTabular >> runAggregationChanged [
 	self updateRunDropList
+]
+
+{ #category : 'accessing' }
+RMDPopulationByTimeTabular >> selectedAgent [
+
+	^ nil
 ]
 
 { #category : 'private' }

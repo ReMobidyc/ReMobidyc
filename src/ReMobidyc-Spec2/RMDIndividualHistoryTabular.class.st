@@ -129,16 +129,14 @@ RMDIndividualHistoryTabular >> openChart [
 		columns do: [ :column |
 			column ifOnChartDo: [
 				| chart |
-				chart := RSChart new.
+				chart := RSCompositeChart new.
 				chart
 					extent: 400 @ 400;
 					title: column title.
 				chart
-					addPlot: (RSLinePlot new
+					add: (RSLinePlot new
 							 x: time
 							 y: (table items collect: [ :row | column value: row ]));
-					addDecoration: (RSHorizontalTick new fontSize: 8);
-					addDecoration: (RSVerticalTick new fontSize: 8);
 					addDecoration: (RSXLabelDecoration new
 							 title: columns first title;
 							 fontSize: 10);

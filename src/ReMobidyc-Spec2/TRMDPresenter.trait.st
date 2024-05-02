@@ -23,8 +23,10 @@ TRMDPresenter >> beWarning [
 
 { #category : 'accessing' }
 TRMDPresenter >> color: aColor [
+
 	super color: aColor.
-	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
+	self withAdapterDo: [ :a |
+		a widgetDo: [ :w | w ifNotNil: [ w color: aColor ] ] ]
 ]
 
 { #category : 'accessing' }
