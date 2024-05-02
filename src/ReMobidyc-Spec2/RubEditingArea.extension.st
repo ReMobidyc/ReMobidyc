@@ -1,6 +1,6 @@
-Extension { #name : #RubEditingArea }
+Extension { #name : 'RubEditingArea' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RubEditingArea >> beForReMobidyc [
 
 	self editingMode: RMDRubSourceMode new

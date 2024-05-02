@@ -1,32 +1,35 @@
 Class {
-	#name : #RMDBinaryCombinatorPresenter,
-	#superclass : #RMDConditionPresenter,
+	#name : 'RMDBinaryCombinatorPresenter',
+	#superclass : 'RMDConditionPresenter',
 	#instVars : [
 		'conditionPresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorPresenter >> conditionChanged [
 
 	conditionPresenters := condition conditions collect: #asPresenter.
 	super conditionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDBinaryCombinatorPresenter >> initializePresenters [
 
 	super initializePresenters.
 	conditionPresenters := {  }.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				borderColor: self borderColor;
-				borderWidth: 2 ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					borderColor: self borderColor;
+					borderWidth: 2 ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorPresenter >> layout [
 
 	| newLayout |

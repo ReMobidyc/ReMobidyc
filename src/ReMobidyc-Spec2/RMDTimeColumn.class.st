@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDTimeColumn,
-	#superclass : #RMDTabularColumn,
+	#name : 'RMDTimeColumn',
+	#superclass : 'RMDTabularColumn',
 	#instVars : [
 		'unit'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDTimeColumn class >> unit: aRMDUnit [
 
 	^ self new
@@ -15,26 +17,26 @@ RMDTimeColumn class >> unit: aRMDUnit [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTimeColumn >> ifOnChartDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeColumn >> unit [
 
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeColumn >> unit: aRMDUnit [
 
 	unit := aRMDUnit.
 	title := 'time [' , unit printString , ']'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeColumn >> value: aRow [
 
 	^ aRow

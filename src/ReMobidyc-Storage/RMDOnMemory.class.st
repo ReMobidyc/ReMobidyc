@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDOnMemory,
-	#superclass : #RMDMemory,
+	#name : 'RMDOnMemory',
+	#superclass : 'RMDMemory',
 	#instVars : [
 		'valuesStorage',
 		'animatsStorage',
@@ -10,17 +10,18 @@ Class {
 		'reproductionLinksStorage',
 		'creationTimesStorage'
 	],
-	#category : #'ReMobidyc-Storage'
+	#category : 'ReMobidyc-Storage',
+	#package : 'ReMobidyc-Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDOnMemory class >> new: anInteger [
 	^ self new
 		changeStorageCapacityTo: anInteger;
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDOnMemory >> changeStorageCapacityTo: anInteger [
 
 	valuesStorage := (Array new: anInteger)
@@ -63,7 +64,7 @@ RMDOnMemory >> changeStorageCapacityTo: anInteger [
 		                        startingAt: 1
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDOnMemory >> deepCopyAnimats: aDictionary [
 
 	| copy |
@@ -73,7 +74,7 @@ RMDOnMemory >> deepCopyAnimats: aDictionary [
 	^ copy
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDOnMemory >> initialize [
 
 	super initialize.
@@ -86,13 +87,13 @@ RMDOnMemory >> initialize [
 	creationTimesStorage := Array new: 1024
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDOnMemory >> name [
 
 	^ 'on memory'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readAnimatsForTime: anInteger [
 
 	anInteger >= animatsStorage size ifTrue: [ 
@@ -102,7 +103,7 @@ RMDOnMemory >> readAnimatsForTime: anInteger [
 		  ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readCreationTimesForTime: anInteger [
 
 	anInteger >= creationTimesStorage size ifTrue: [
@@ -112,7 +113,7 @@ RMDOnMemory >> readCreationTimesForTime: anInteger [
 		  ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readReproductionLinksForTime: anInteger [
 
 	anInteger >= reproductionLinksStorage size ifTrue: [ 
@@ -122,7 +123,7 @@ RMDOnMemory >> readReproductionLinksForTime: anInteger [
 		  ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readSeedsForTime: anInteger [
 
 	anInteger >= seedsStorage size ifTrue: [ 
@@ -132,7 +133,7 @@ RMDOnMemory >> readSeedsForTime: anInteger [
 		  ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readStageLinksForTime: anInteger [
 
 	anInteger >= stageLinksStorage size ifTrue: [ 
@@ -142,7 +143,7 @@ RMDOnMemory >> readStageLinksForTime: anInteger [
 		  ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> readValuesForTime: anInteger [
 	anInteger >= valuesStorage size
 		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].
@@ -151,7 +152,7 @@ RMDOnMemory >> readValuesForTime: anInteger [
 		ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
 
 	anInteger >= animatsStorage size ifTrue: [ 
@@ -161,7 +162,7 @@ RMDOnMemory >> writeAnimats: aDictionary forTime: anInteger [
 		  put: (self deepCopyAnimats: aDictionary)
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 
 	anInteger >= creationTimesStorage size ifTrue: [
@@ -169,7 +170,7 @@ RMDOnMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 	^ creationTimesStorage at: anInteger + 1 put: aDictionary copy
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 
 	anInteger >= reproductionLinksStorage size ifTrue: [ 
@@ -177,7 +178,7 @@ RMDOnMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 	^ reproductionLinksStorage at: anInteger + 1 put: aDictionary copy
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeSeeds: aDictionary forTime: anInteger [
 
 	anInteger >= seedsStorage size ifTrue: [ 
@@ -185,7 +186,7 @@ RMDOnMemory >> writeSeeds: aDictionary forTime: anInteger [
 	^ seedsStorage at: anInteger + 1 put: aDictionary copy
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeStageLinks: aDictionary forTime: anInteger [
 
 	anInteger >= stageLinksStorage size ifTrue: [ 
@@ -193,7 +194,7 @@ RMDOnMemory >> writeStageLinks: aDictionary forTime: anInteger [
 	^ stageLinksStorage at: anInteger + 1 put: aDictionary copy
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDOnMemory >> writeValues: aDictionary forTime: anInteger [
 	anInteger >= valuesStorage size
 		ifTrue: [ self changeStorageCapacityTo: anInteger + 1024 ].

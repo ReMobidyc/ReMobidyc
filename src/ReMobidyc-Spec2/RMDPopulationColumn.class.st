@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDPopulationColumn,
-	#superclass : #RMDTabularColumn,
+	#name : 'RMDPopulationColumn',
+	#superclass : 'RMDTabularColumn',
 	#instVars : [
 		'runIds',
 		'stages'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPopulationColumn >> defaultEvaluation [
 
 	^ [ :row | 
@@ -18,36 +20,36 @@ RMDPopulationColumn >> defaultEvaluation [
 			  ifFalse: [ value ] ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPopulationColumn >> ifOnChartDo: aBlock [
 	^ aBlock cull: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPopulationColumn >> runIds [
 
 	^ runIds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPopulationColumn >> runIds: anArrayOfInteger [
 
 	runIds := anArrayOfInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPopulationColumn >> stages [
 
 	^ stages
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPopulationColumn >> stages: anArrayOfRMDAnimatDefinitionNode [
 
 	stages := anArrayOfRMDAnimatDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPopulationColumn >> value: aRow [
 
 	^ ((runIds

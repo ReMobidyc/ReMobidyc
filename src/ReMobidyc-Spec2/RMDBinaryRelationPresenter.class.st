@@ -1,32 +1,35 @@
 Class {
-	#name : #RMDBinaryRelationPresenter,
-	#superclass : #RMDConditionPresenter,
+	#name : 'RMDBinaryRelationPresenter',
+	#superclass : 'RMDConditionPresenter',
 	#instVars : [
 		'expressionPresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryRelationPresenter >> conditionChanged [
 
 	expressionPresenters := condition expressions collect: #asPresenter.
 	super conditionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDBinaryRelationPresenter >> initializePresenters [
 
 	super initializePresenters.
 	expressionPresenters := {  }.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				borderColor: self borderColor;
-				borderWidth: 2 ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					borderColor: self borderColor;
+					borderWidth: 2 ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryRelationPresenter >> layout [
 
 	| newLayout |

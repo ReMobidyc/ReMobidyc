@@ -1,6 +1,6 @@
-Extension { #name : #RMDEnUnitExpressionNode }
+Extension { #name : 'RMDEnUnitExpressionNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDEnUnitExpressionNode >> asPrettyPrintNode [
 
 	| unitNode expressionNode |

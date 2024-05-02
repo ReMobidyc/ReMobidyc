@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDModelFileTextBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDModelFileTextBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'#runOnMemoryButton',
 		'#runOnFileButton',
@@ -14,10 +14,12 @@ Class {
 		'#saveButton',
 		'#exportButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDModelFileTextBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -36,7 +38,7 @@ RMDModelFileTextBrowser class >> defaultLayout [
 				   yourself)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDModelFileTextBrowser class >> on: aFileReference [
 
 	^ self new
@@ -44,7 +46,7 @@ RMDModelFileTextBrowser class >> on: aFileReference [
 		  yourself
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDModelFileTextBrowser class >> openFromRepository [
 
 	<script: 'RMDModelFileTextBrowser openFromRepository'>
@@ -53,7 +55,7 @@ RMDModelFileTextBrowser class >> openFromRepository [
 	browser openDialog okAction: [ (self on: browser file) open ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -65,14 +67,14 @@ RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 		help: 'Open a text-based browser on a local repository'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDModelFileTextBrowser >> acceptSourceText [
 
 	fileList selectedItem ifNotNil: [ :ref | 
 		self acceptSourceTextAt: ref ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDModelFileTextBrowser >> acceptSourceTextAt: fileReference [
 
 	editingTexts at: fileReference ifPresent: [ :text | 
@@ -86,19 +88,19 @@ RMDModelFileTextBrowser >> acceptSourceTextAt: fileReference [
 	self updateMetadata
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> actionsFileParser [
 
 	^ RMDGrammar current actionsFile end
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> agentsFileParser [
 
 	^ RMDGrammar current agentsFile end
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDModelFileTextBrowser >> fileMenu [
 
 	^ self newMenu
@@ -131,25 +133,25 @@ RMDModelFileTextBrowser >> fileMenu [
 		  yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDModelFileTextBrowser >> forgetEditingTextAt: ref [
 
 	editingTexts removeKey: ref ifAbsent: [  ]
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> freeTextParser [
 
 	^ #any asPParser star flatten end
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDModelFileTextBrowser >> initialize [
 	super initialize.
 	editingTexts := Dictionary new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDModelFileTextBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -191,26 +193,26 @@ RMDModelFileTextBrowser >> initializePresenters [
 		self updateFileList ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDModelFileTextBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> jsonParser [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDModelFileTextBrowser >> modelFileReference [
 
 	^ modelFileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDModelFileTextBrowser >> modelFileReference: aFileReference [
 
 	editingTexts removeAll.
@@ -218,14 +220,14 @@ RMDModelFileTextBrowser >> modelFileReference: aFileReference [
 	self updateWindowTitle
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDModelFileTextBrowser >> openInModeler [
 
 	self simulationModel ifNotNil: [ :model | 
 		model openInModeler modelFileReference: self modelFileReference ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDModelFileTextBrowser >> saveAll [
 
 	editingTexts keysAndValuesDo: [ :ref :text | 
@@ -234,19 +236,19 @@ RMDModelFileTextBrowser >> saveAll [
 	editingTexts removeAll
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> simulationFileParser [
 
 	^ RMDGrammar current simulationFile end
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDModelFileTextBrowser >> simulationModel [
 
 	^ RMDSimulationModel importModel: modelFileReference ifError: [ nil ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDModelFileTextBrowser >> sourceTextContextMenu [
 
 	^ self newMenu
@@ -264,13 +266,13 @@ RMDModelFileTextBrowser >> sourceTextContextMenu [
 		  yourself
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> tasksFileParser [
 
 	^ RMDGrammar current tasksFile end
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDModelFileTextBrowser >> title [
 
 	^ 'Modeler' , (modelFileReference
@@ -278,7 +280,7 @@ RMDModelFileTextBrowser >> title [
 		   ifNotNil: [ ' @ ' , modelFileReference basename ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDModelFileTextBrowser >> updateEditingText [
 
 	fileList selectedItem ifNotNil: [ :ref | 
@@ -295,7 +297,7 @@ RMDModelFileTextBrowser >> updateEditingText [
 			selectItem: ref ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDModelFileTextBrowser >> updateFileList [
 
 	(modelFileReference isNil or: [ modelFileReference isDirectory not ]) 
@@ -308,7 +310,7 @@ RMDModelFileTextBrowser >> updateFileList [
 			 :basename | (modelFileReference / basename) ensureCreateFile ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDModelFileTextBrowser >> updateMetadata [
 
 	| metadataRef metadata |
@@ -329,7 +331,7 @@ RMDModelFileTextBrowser >> updateMetadata [
 	fileList selectedItem = metadataRef ifTrue: [ self updateSourceText ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDModelFileTextBrowser >> updateParser [
 
 	fileList selectedItem ifNotNil: [ :ref | 
@@ -359,7 +361,7 @@ RMDModelFileTextBrowser >> updateParser [
 	sourceText parser: self freeTextParser
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDModelFileTextBrowser >> updateSourceText [
 
 	self updateParser.
@@ -367,19 +369,19 @@ RMDModelFileTextBrowser >> updateSourceText [
 		sourceText text: (editingTexts at: item ifAbsent: [ item contents ]) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDModelFileTextBrowser >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> variabilityFileParser [
 
 	^ RMDGrammar current variability end
 ]
 
-{ #category : #parsers }
+{ #category : 'parsers' }
 RMDModelFileTextBrowser >> visualizationFileParser [
 
 	^ RMDGrammar current visualizationFile end

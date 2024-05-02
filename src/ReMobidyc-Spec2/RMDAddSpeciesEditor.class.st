@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDAddSpeciesEditor,
-	#superclass : #RMDPresenter,
+	#name : 'RMDAddSpeciesEditor',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'speciesField',
 		'stageField',
 		'action',
 		'createButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAddSpeciesEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -33,25 +35,25 @@ RMDAddSpeciesEditor class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAddSpeciesEditor >> action [
 
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAddSpeciesEditor >> action: aBlock [
 
 	action := aBlock
 ]
 
-{ #category : #'api - focus' }
+{ #category : 'api - focus' }
 RMDAddSpeciesEditor >> defaultKeyboardFocus [
 
 	^ speciesField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAddSpeciesEditor >> initializePresenters [
 
 	super initializePresenters.
@@ -73,7 +75,7 @@ RMDAddSpeciesEditor >> initializePresenters [
 			createButton } asOrderedCollection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAddSpeciesEditor >> whenActionChangedDo: aBlock [
 
 	self property: #action whenChangedDo: aBlock

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDAnimatIconRendererPresenter,
-	#superclass : #RMDAnimatRendererPresenter,
+	#name : 'RMDAnimatIconRendererPresenter',
+	#superclass : 'RMDAnimatRendererPresenter',
 	#instVars : [
 		'iconNameButton',
 		'scaleField',
 		'iconImage',
 		'simulationModel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDAnimatIconRendererPresenter class >> defaultLayout [
 
 	<spec>
@@ -27,7 +29,7 @@ RMDAnimatIconRendererPresenter class >> defaultLayout [
 		  height: self inputTextHeight
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatIconRendererPresenter >> addNewIconToSimulationModelDo: aBlock [
 
 	| icons |
@@ -50,7 +52,7 @@ RMDAnimatIconRendererPresenter >> addNewIconToSimulationModelDo: aBlock [
 		aBlock value: iconName ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatIconRendererPresenter >> changeIconName [
 
 	simulationModel ifNil: [ ^ self ].
@@ -71,7 +73,7 @@ RMDAnimatIconRendererPresenter >> changeIconName [
 		openWithSpecAtPointer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatIconRendererPresenter >> iconName: aString [
 
 	renderer iconName: aString.
@@ -80,7 +82,7 @@ RMDAnimatIconRendererPresenter >> iconName: aString [
 		updateScaleField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatIconRendererPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -101,12 +103,12 @@ RMDAnimatIconRendererPresenter >> initializePresenters [
 		             yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatIconRendererPresenter >> preferredHeight [
 	^ self class buttonHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatIconRendererPresenter >> rendererChanged [
 
 	super rendererChanged.
@@ -115,13 +117,13 @@ RMDAnimatIconRendererPresenter >> rendererChanged [
 		updateScaleField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatIconRendererPresenter >> simulationModel [
 
 	^ simulationModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatIconRendererPresenter >> simulationModel: aRMDSimulationModel [
 
 	simulationModel := aRMDSimulationModel.
@@ -130,7 +132,7 @@ RMDAnimatIconRendererPresenter >> simulationModel: aRMDSimulationModel [
 		updateScaleField
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatIconRendererPresenter >> updateIconNameButton [
 
 	renderer ifNotNil: [ 
@@ -140,7 +142,7 @@ RMDAnimatIconRendererPresenter >> updateIconNameButton [
 					 magnifyBy: renderer scale ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatIconRendererPresenter >> updateScaleField [
 
 	renderer ifNotNil: [ scaleField number: renderer scale ]

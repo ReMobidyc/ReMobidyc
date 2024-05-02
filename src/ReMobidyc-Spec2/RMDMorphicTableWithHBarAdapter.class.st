@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDMorphicTableWithHBarAdapter,
-	#superclass : #SpMorphicTableAdapter,
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#name : 'RMDMorphicTableWithHBarAdapter',
+	#superclass : 'SpMorphicTableAdapter',
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #factory }
+{ #category : 'factory' }
 RMDMorphicTableWithHBarAdapter >> buildWidget [
 
 	widget := (self hasHorizontalScrollbar
@@ -22,7 +24,7 @@ RMDMorphicTableWithHBarAdapter >> buildWidget [
 	^ widget
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMorphicTableWithHBarAdapter >> hasHorizontalScrollbar [
 
 	^ self model ifNotNil: #hasHorizontalScrollbar ifNil: [ false ]

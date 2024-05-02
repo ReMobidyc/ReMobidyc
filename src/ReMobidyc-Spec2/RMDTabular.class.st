@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDTabular,
-	#superclass : #RMDPresenter,
+	#name : 'RMDTabular',
+	#superclass : 'RMDPresenter',
 	#traits : 'TRMDLaunchAnalysisTools',
 	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
@@ -11,28 +11,30 @@ Class {
 		'reloadButton',
 		'baseRowIndex'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTabular class >> isAbstract [
 
 	^ self == RMDTabular
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTabular class >> on: aRMDMetaInterpreter [
 
 	^ self new metaInterpreter: aRMDMetaInterpreter
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTabular class >> openOn: aRMDMetaInterpreter [
 
 	^ (self on: aRMDMetaInterpreter) open
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> agentsDo: aBlock [
 
 	self simulationModelDo: [ :simulationModel | 
@@ -41,35 +43,35 @@ RMDTabular >> agentsDo: aBlock [
 		simulationModel animatDefinitionsDo: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> allAgents [
 
 	^ Array streamContents: [ :stream | 
 		  self agentsDo: [ :stage | stream nextPut: stage ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> allSpecies [
 
 	^ Array streamContents: [ :stream | 
 		  self speciesDo: [ :species | stream nextPut: species ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> allStages [
 
 	^ Array streamContents: [ :stream | 
 		  self stagesDo: [ :stage | stream nextPut: stage ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTabular >> canOpenAnalysis [
 
 	^ metaInterpreter notNil and: [ 
 		  metaInterpreter context isForFileMemory ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTabular >> csvQuote: aString [
 
 	^ '"' , (((aString copyReplaceAll: '"' with: '\"')
@@ -77,7 +79,7 @@ RMDTabular >> csvQuote: aString [
 		    with: '\,') copyReplaceAll: String cr with: '\n') , '"'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTabular >> exportAsCSV [
 
 	(UIManager default
@@ -89,14 +91,14 @@ RMDTabular >> exportAsCSV [
 		self writeCSVInto: fileRef ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTabular >> initialize [
 
 	super initialize.
 	baseRowIndex := 1
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -128,14 +130,14 @@ RMDTabular >> initializePresenters [
 		         yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTabular >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 700 @ 800
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> latestTime [
 
 	| latestTime |
@@ -145,7 +147,7 @@ RMDTabular >> latestTime [
 	^ latestTime
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	aRMDMetaInterpreter setupSimulation.
@@ -154,7 +156,7 @@ RMDTabular >> metaInterpreter: aRMDMetaInterpreter [
 	self updateOpenAnalysisButtons 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTabular >> metaInterpreterForTabularDo: aBlock [
 
 	^ (metaInterpreter notNil and: [ 
@@ -165,13 +167,13 @@ RMDTabular >> metaInterpreterForTabularDo: aBlock [
 				   metaInterpreter context modelPath) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> metaInterpreterReloaded [
 
 	self updateTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> modelName [
 
 	^ metaInterpreter
@@ -179,14 +181,14 @@ RMDTabular >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTabular >> reloadInterpreter [
 
 	metaInterpreter reloadMemory.
 	self metaInterpreterReloaded
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTabular >> reloadTable [
 
 	metaInterpreter reloadMemory.
@@ -194,57 +196,57 @@ RMDTabular >> reloadTable [
 	table refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> runChanged [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectRunId: anInteger [
 
 	(runDropList items includes: anInteger) ifTrue: [ 
 		runDropList selectItem: anInteger ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectedAgent [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectedInterpreter [
 
 	^ metaInterpreter interpreterAt: self selectedRunId ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectedRunId [
 
 	^ runDropList selectedItem ifNotNil: [ :runId | 
 		  runId isInteger ifTrue: [ runId ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> selectedTime [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabular >> simulationModelDo: aBlock [
 
 	(metaInterpreter ifNotNil: #simulationModel) ifNotNil: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> speciesDo: aBlock [
 
 	| done |
@@ -257,7 +259,7 @@ RMDTabular >> speciesDo: aBlock [
 			aBlock value: species ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> speciesNamesDo: aBlock [
 
 	| done |
@@ -270,7 +272,7 @@ RMDTabular >> speciesNamesDo: aBlock [
 			aBlock value: species ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> stageNamesDo: aBlock [
 
 	self simulationModelDo: [ :simulationModel | 
@@ -278,14 +280,14 @@ RMDTabular >> stageNamesDo: aBlock [
 			aBlock value: animatDefinition identifier ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> stagesDo: aBlock [
 
 	self simulationModelDo: [ :simulationModel | 
 		simulationModel animatDefinitionsDo: aBlock ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTabular >> stagesOf: aString do: aBlock [
 
 	self stagesDo: [ :animatDefinition | 
@@ -293,19 +295,19 @@ RMDTabular >> stagesOf: aString do: aBlock [
 			aBlock value: animatDefinition ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> updateColumns [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> updateRows [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> updateRunDropList [
 
 	runDropList
@@ -313,7 +315,7 @@ RMDTabular >> updateRunDropList [
 		selectIndex: 1
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTabular >> updateTable [
 
 	self
@@ -322,7 +324,7 @@ RMDTabular >> updateTable [
 	table refresh
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTabular >> writeCSVInto: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 

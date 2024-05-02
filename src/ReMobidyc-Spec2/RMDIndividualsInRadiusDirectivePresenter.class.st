@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDIndividualsInRadiusDirectivePresenter,
-	#superclass : #RMDIndividualsInLocationDirectivePresenter,
+	#name : 'RMDIndividualsInRadiusDirectivePresenter',
+	#superclass : 'RMDIndividualsInLocationDirectivePresenter',
 	#instVars : [
 		'radiusPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectivePresenter >> expressionChanged [
 
 	radiusPresenter := expression radius asPresenter.
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIndividualsInRadiusDirectivePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -24,7 +26,7 @@ RMDIndividualsInRadiusDirectivePresenter >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDIndividualsInRadiusDirectivePresenter >> layout [
 
 	| newLayout |

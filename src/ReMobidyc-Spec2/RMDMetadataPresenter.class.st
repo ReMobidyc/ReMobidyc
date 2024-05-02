@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDMetadataPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDMetadataPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'metadata',
 		'nameField',
@@ -8,10 +8,12 @@ Class {
 		'descriptionText',
 		'authorsField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDMetadataPresenter class >> defaultLayout [
 
 	^ SpBoxLayout newHorizontal
@@ -43,7 +45,7 @@ RMDMetadataPresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetadataPresenter class >> on: aRMDMetadata [
 
 	^ self new
@@ -51,7 +53,7 @@ RMDMetadataPresenter class >> on: aRMDMetadata [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMetadataPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -85,19 +87,19 @@ RMDMetadataPresenter >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadataPresenter >> metadata [
 	^ metadata
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadataPresenter >> metadata: aRMDMetadata [
 
 	metadata := aRMDMetadata.
 	self metadataChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDMetadataPresenter >> metadataChanged [
 
 	metadata ifNotNil: [ 
@@ -107,7 +109,7 @@ RMDMetadataPresenter >> metadataChanged [
 		descriptionText text: metadata description ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetadataPresenter >> whenNameChangedDo: aBlock [
 
 	nameField whenTextChangedDo: aBlock

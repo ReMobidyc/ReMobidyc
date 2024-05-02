@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDCSVImporter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDCSVImporter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'fileReference',
 		'dataFrame',
@@ -34,10 +34,12 @@ Class {
 		'cycleField',
 		'cycleUnitLabel'
 	],
-	#category : #'ReMobidyc-Spec2-DataSource'
+	#category : 'ReMobidyc-Spec2-DataSource',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'DataSource'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDCSVImporter class >> defaultLayout [
 
 	<script: 'self new open'>
@@ -146,7 +148,7 @@ RMDCSVImporter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDCSVImporter class >> on: aFileReference [
 
 	^ self new
@@ -154,7 +156,7 @@ RMDCSVImporter class >> on: aFileReference [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> addConnector [
 
 	RMDColumnConnectorPresenter
@@ -171,7 +173,7 @@ RMDCSVImporter >> addConnector [
 					self updateTable ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> cycleFieldChanged [
 
 	cycleField syntaxNode ifNotNil: [ :literal |
@@ -179,7 +181,7 @@ RMDCSVImporter >> cycleFieldChanged [
 		self updateTable ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> cyclicCheckBoxChanged [
 
 	self
@@ -187,13 +189,13 @@ RMDCSVImporter >> cyclicCheckBoxChanged [
 		updateTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> disableColor [
 
 	^ Color gray: 0.8
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> editConnector [
 
 	connectorList selectedItem ifNotNil: [ :connector |
@@ -214,19 +216,19 @@ RMDCSVImporter >> editConnector [
 							self updateTable ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> errorColor [
 
 	^ self theme backgroundColor mixed: 0.9 with: Color red
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> fileReference [
 
 	^ fileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> fileReference: aFileReference [
 
 	fileReference = aFileReference ifTrue: [ ^ self ].
@@ -234,7 +236,7 @@ RMDCSVImporter >> fileReference: aFileReference [
 	self updateDataFrame
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDCSVImporter >> initializePresenters [
 
 	super initializePresenters.
@@ -393,14 +395,14 @@ RMDCSVImporter >> initializePresenters [
 			self window buttons first disable ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDCSVImporter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter initialExtent: 950 @ 600
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> moveDownConnector [
 
 	| index connector1 connector2 |
@@ -416,7 +418,7 @@ RMDCSVImporter >> moveDownConnector [
 		selectIndex: index + 1
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> moveUpConnector [
 
 	| index connector1 connector2 |
@@ -431,7 +433,7 @@ RMDCSVImporter >> moveUpConnector [
 		selectIndex: index - 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> outputDataFrame [
 
 	^ (tableConnector
@@ -457,13 +459,13 @@ RMDCSVImporter >> outputDataFrame [
 		  data ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> outputDataSource [
 
 	^ RMDDataSource dataFrame: self outputDataFrame
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> removeConnector [
 
 	connectorList selectedItem ifNotNil: [ :connector |
@@ -476,13 +478,13 @@ RMDCSVImporter >> removeConnector [
 		self updateTable ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCSVImporter >> title [
 
 	^ 'Data Table Importer'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateButtons [
 
 	dataFrame
@@ -505,7 +507,7 @@ RMDCSVImporter >> updateButtons [
 			editConnectorButton enabled: connectorList selectedItem notNil ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateConnectors [
 
 	yearDropList items: { nil } , dataFrame columnNames.
@@ -542,7 +544,7 @@ RMDCSVImporter >> updateConnectors [
 	self updateButtons
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateCycleField [
 
 	cycleField enabled: cyclicCheckBox state.
@@ -567,7 +569,7 @@ RMDCSVImporter >> updateCycleField [
 		ifFalse: [ cycleField syntaxNode: nil ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateDataFrame [
 
 	[
@@ -589,7 +591,7 @@ RMDCSVImporter >> updateDataFrame [
 	self updateSourceTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateDayConnector [
 
 	tableConnector day:
@@ -606,7 +608,7 @@ RMDCSVImporter >> updateDayConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateHourConnector [
 
 	tableConnector hour:
@@ -623,7 +625,7 @@ RMDCSVImporter >> updateHourConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateMinuteConnector [
 
 	tableConnector minute:
@@ -640,7 +642,7 @@ RMDCSVImporter >> updateMinuteConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateMonthConnector [
 
 	tableConnector month:
@@ -657,7 +659,7 @@ RMDCSVImporter >> updateMonthConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateSecondConnector [
 
 	tableConnector second:
@@ -674,7 +676,7 @@ RMDCSVImporter >> updateSecondConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateSourceTable [
 
 	dataFrame
@@ -689,7 +691,7 @@ RMDCSVImporter >> updateSourceTable [
 	self updateConnectors
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateTable [
 
 	(dataFrame notNil and: [ tableConnector notNil ]) ifTrue: [
@@ -710,7 +712,7 @@ RMDCSVImporter >> updateTable [
 			ifNil: [ table color: self errorColor ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateTimeConnector [
 
 	tableConnector timeConnector:
@@ -718,7 +720,7 @@ RMDCSVImporter >> updateTimeConnector [
 	self updateTable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDCSVImporter >> updateYearConnector [
 
 	yearDropList selectedItem
@@ -738,7 +740,7 @@ RMDCSVImporter >> updateYearConnector [
 	self updateTable
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> useCalendarDates [
 
 	tableConnector usesCalendarConnectors: true.
@@ -758,7 +760,7 @@ RMDCSVImporter >> useCalendarDates [
 		secondField } do: #enable
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDCSVImporter >> useElapsedTime [
 
 	tableConnector usesCalendarConnectors: false.
@@ -778,7 +780,7 @@ RMDCSVImporter >> useElapsedTime [
 		secondField } do: #disable
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 RMDCSVImporter >> validateTable [
 
 	table items inject: Float negativeInfinity into: [ :last :row |

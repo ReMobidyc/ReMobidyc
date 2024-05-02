@@ -1,6 +1,6 @@
-Extension { #name : #RMDMetaInterpreter }
+Extension { #name : 'RMDMetaInterpreter' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInAttributeTabular [
 
 	^ (RMDAttributeByTimeTabular on: self)
@@ -8,13 +8,13 @@ RMDMetaInterpreter >> openInAttributeTabular [
 		  yourself
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInExperimentarium [
 
 	^ (RMDExperimentarium metaInterpreter: self) open
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInPopulationTabular [
 
 	^ (RMDPopulationByTimeTabular on: self)
@@ -22,7 +22,7 @@ RMDMetaInterpreter >> openInPopulationTabular [
 		  yourself
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInReplayObservatory [
 
 	^ (RMDReplayObservatory metaInterpreter: self)
@@ -30,7 +30,7 @@ RMDMetaInterpreter >> openInReplayObservatory [
 		  yourself
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaInterpreter >> openInSnapshotTabular [
 
 	^ (RMDSnapshotTabular on: self)

@@ -1,6 +1,6 @@
-Extension { #name : #RMDAgentDirectiveNode }
+Extension { #name : 'RMDAgentDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDAgentDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode

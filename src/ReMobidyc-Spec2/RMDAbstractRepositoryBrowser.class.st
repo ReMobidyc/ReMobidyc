@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAbstractRepositoryBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDAbstractRepositoryBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'addRepositoryButton',
 		'editRepositoryButton',
@@ -16,10 +16,12 @@ Class {
 		'updateItemListButton',
 		'updateRepositoryListButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAbstractRepositoryBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -51,13 +53,13 @@ RMDAbstractRepositoryBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractRepositoryBrowser class >> isAbstract [
 
 	^ self = RMDAbstractRepositoryBrowser 
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAbstractRepositoryBrowser class >> openForSave: anObject [
 
 	| browser |
@@ -65,7 +67,7 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject [
 	browser openDialog okAction: [ browser save: anObject ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAbstractRepositoryBrowser class >> openForSave: anObject do: aBlock [
 
 	| browser |
@@ -75,7 +77,7 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject do: aBlock [
 		aBlock cull: anObject cull: browser ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAbstractRepositoryBrowser class >> openForSave: anObject ifAccepted: aBlock [
 
 	| browser |
@@ -85,7 +87,7 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject ifAccepted: aBlock [
 		aBlock cull: browser file cull: browser ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString [
 
 	| browser |
@@ -95,7 +97,7 @@ RMDAbstractRepositoryBrowser class >> openForSave: anObject title: aString [
 		okAction: [ browser save: anObject ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 
 	| browser |
@@ -104,7 +106,7 @@ RMDAbstractRepositoryBrowser class >> openToLoadDo: aBlock [
 		aBlock cull: browser load cull: browser ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> addIcebergRepository [
 
 	| repos |
@@ -136,13 +138,13 @@ RMDAbstractRepositoryBrowser >> addIcebergRepository [
 					self updateRepositoryList ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> addItem [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> addLocalDirectory [
 
 	(UIManager default
@@ -159,13 +161,13 @@ RMDAbstractRepositoryBrowser >> addLocalDirectory [
 			self updateRepositoryList ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> addRepository [
 
 	self addRepositoryMenu openWithSpecAtPointer
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 
 	^ self newMenu
@@ -191,7 +193,7 @@ RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> disableOk [
 
 	self withWindowDo: [ :window | 
@@ -199,20 +201,20 @@ RMDAbstractRepositoryBrowser >> disableOk [
 			window buttons ifNotEmpty: [ :buttons | buttons first disable ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> editItem [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> editRepository [
 
 	self repository ifNotNil: #edit.
 	repositoryList refresh
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> enableOk [
 
 	self withWindowDo: [ :window | 
@@ -220,45 +222,45 @@ RMDAbstractRepositoryBrowser >> enableOk [
 			window buttons ifNotEmpty: [ :buttons | buttons first enable ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> exportItem [
 
 	self load ifNotNil: [ :item | 
 		self class openForSave: item title: 'Export ' , self item , 'to...' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> file [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> forLoad [
 
 	self isForSave: false
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> forSave [
 
 	self isForSave: true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> getRepositories [
 
 	^ self repositoryDirectory repositories
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbstractRepositoryBrowser >> initialize [
 
 	super initialize.
 	isForSave := false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbstractRepositoryBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -345,26 +347,26 @@ RMDAbstractRepositoryBrowser >> initializePresenters [
 	self updateRepositoryList
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbstractRepositoryBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 800 @ 400
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> isForSave [
 	^ isForSave
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> isForSave: aBoolean [
 
 	isForSave := aBoolean = true.
 	self updateButtons
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> isValidGitLocalForNewRepository: aFileReference [
 
 	^ ((aFileReference / 'models') exists or: [ 
@@ -374,7 +376,7 @@ RMDAbstractRepositoryBrowser >> isValidGitLocalForNewRepository: aFileReference 
 			   iceRepogitory location = aFileReference ]) not ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> isValidNewRepository: anIceRepository [
 
 	^ anIceRepository isReMobidycRepository and: [ 
@@ -383,13 +385,13 @@ RMDAbstractRepositoryBrowser >> isValidNewRepository: anIceRepository [
 				   repo icebergRepository = anIceRepository ] ]) not ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> item [
 
 	^ itemList selection selectedItem
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAbstractRepositoryBrowser >> itemListMenu [
 
 	| selectedItem |
@@ -422,38 +424,38 @@ RMDAbstractRepositoryBrowser >> itemListMenu [
 					  action: [ self exportItem ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> itemsInRepository [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> load [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDAbstractRepositoryBrowser >> newItemList [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractRepositoryBrowser >> performOK [
 
 	self withWindowDo: [ :window | 
 		window buttons ifNotEmpty: [ :buttons | buttons first click ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> removeItem [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> removeRepository [
 
 	self repository ifNotNil: [ :repository | 
@@ -463,7 +465,7 @@ RMDAbstractRepositoryBrowser >> removeRepository [
 				self updateRepositoryList ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> repository [
 
 	^ [ repositoryList selection selectedItem ]
@@ -471,13 +473,13 @@ RMDAbstractRepositoryBrowser >> repository [
 		  do: [ :ex | ex return: nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> repositoryDirectory [
 
 	^ RMDRepositoryDirectory current
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAbstractRepositoryBrowser >> repositoryListMenu [
 
 	| repository |
@@ -505,19 +507,19 @@ RMDAbstractRepositoryBrowser >> repositoryListMenu [
 					  action: [ self removeRepository ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAbstractRepositoryBrowser >> save: anObject [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractRepositoryBrowser >> title [
 
 	^ 'Repository Browser'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateButtons [
 
 	self repository
@@ -553,19 +555,19 @@ RMDAbstractRepositoryBrowser >> updateButtons [
 					self disableOk ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateDescriptionText [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateItemList [
 
 	itemList items: self itemsInRepository
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateRepositoryList [
 
 	| repository |
@@ -577,7 +579,7 @@ RMDAbstractRepositoryBrowser >> updateRepositoryList [
 		repositoryList selectItem: repository ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateSourceText [
 
 	self item

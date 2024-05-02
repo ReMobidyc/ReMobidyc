@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDWorldInitializerPresenter,
-	#superclass : #RMDAgentInitializerPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDWorldInitializerPresenter',
+	#superclass : 'RMDAgentInitializerPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDWorldInitializerPresenter class >> defaultLayout [
 	<spec>
 	^ super defaultLayout
@@ -12,7 +14,7 @@ RMDWorldInitializerPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDWorldInitializerPresenter >> newLayout [
 
 	| newLayout |
@@ -30,7 +32,7 @@ RMDWorldInitializerPresenter >> newLayout [
 	^ newLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldInitializerPresenter >> preferredHeight [
 	^ (node attributeInitializers size + 1) * self class inputTextHeight
 ]

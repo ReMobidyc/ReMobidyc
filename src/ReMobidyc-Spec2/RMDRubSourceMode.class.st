@@ -1,28 +1,30 @@
 Class {
-	#name : #RMDRubSourceMode,
-	#superclass : #RubPlainTextMode,
-	#category : #'ReMobidyc-Spec2-Utilities'
+	#name : 'RMDRubSourceMode',
+	#superclass : 'RubPlainTextMode',
+	#category : 'ReMobidyc-Spec2-Utilities',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Utilities'
 }
 
-{ #category : #shout }
+{ #category : 'shout' }
 RMDRubSourceMode >> shoutAboutToStyle: aRubShoutStylerDecorator [
 
 	^ true
 ]
 
-{ #category : #shout }
+{ #category : 'shout' }
 RMDRubSourceMode >> updateStyler [
 
 	
 ]
 
-{ #category : #shout }
+{ #category : 'shout' }
 RMDRubSourceMode >> withShoutStyler [
 	self textArea withDecoratorNamed: #shoutStyler.
 	self updateStyler.
 ]
 
-{ #category : #shout }
+{ #category : 'shout' }
 RMDRubSourceMode >> withoutShoutStyler [
 	self textArea withoutDecoratorNamed: #shoutStyler
 ]

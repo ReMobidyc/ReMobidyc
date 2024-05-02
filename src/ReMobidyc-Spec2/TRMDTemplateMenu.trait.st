@@ -1,9 +1,11 @@
 Trait {
-	#name : #TRMDTemplateMenu,
-	#category : #'ReMobidyc-Spec2-Traits'
+	#name : 'TRMDTemplateMenu',
+	#category : 'ReMobidyc-Spec2-Traits',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Traits'
 }
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> amounts [
 
 	^ Array streamContents: [ :stream | 
@@ -13,7 +15,7 @@ TRMDTemplateMenu >> amounts [
 				   sourceText: 'mol') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> angles [
 
 	^ Array streamContents: [ :stream | 
@@ -30,7 +32,7 @@ TRMDTemplateMenu >> angles [
 					   sourceText: 'degree') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> areas [
 
 	^ Array streamContents: [ :stream | 
@@ -61,7 +63,7 @@ TRMDTemplateMenu >> areas [
 					   sourceText: 'ac') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> arithmetics [
 
 	^ Array streamContents: [ :stream |
@@ -166,7 +168,7 @@ TRMDTemplateMenu >> arithmetics [
 					   sourceText: 'gaussian(_a_, _b_, _c_ , _x_)') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> carbonmasses [
 
 	^ Array streamContents: [ :stream |
@@ -205,7 +207,7 @@ TRMDTemplateMenu >> carbonmasses [
 					   sourceText: 'fgC') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> energies [
 
 	^ Array streamContents: [ :stream | 
@@ -224,7 +226,7 @@ TRMDTemplateMenu >> energies [
 					   sourceText: 'kcal') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> estimations [
 
 	^ Array streamContents: [ :stream | 
@@ -259,7 +261,7 @@ TRMDTemplateMenu >> estimations [
 						   '(_max_temperature_ - _base_temperature_) / _base_temperature_') ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 TRMDTemplateMenu >> expressionTemplateMenu [
 
 	| menu |
@@ -282,7 +284,7 @@ TRMDTemplateMenu >> expressionTemplateMenu [
 	^ menu
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> forces [
 
 	^ Array streamContents: [ :stream | 
@@ -305,7 +307,7 @@ TRMDTemplateMenu >> forces [
 					   sourceText: 'lbf') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> lengths [
 
 	^ Array streamContents: [ :stream | 
@@ -352,7 +354,7 @@ TRMDTemplateMenu >> lengths [
 					   sourceText: 'in') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> masses [
 
 	^ Array streamContents: [ :stream | 
@@ -399,7 +401,7 @@ TRMDTemplateMenu >> masses [
 					   sourceText: 'oz') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> powers [
 
 	^ Array streamContents: [ :stream | 
@@ -430,7 +432,7 @@ TRMDTemplateMenu >> powers [
 					   sourceText: 'HP') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> pressures [
 
 	^ Array streamContents: [ :stream | 
@@ -461,7 +463,7 @@ TRMDTemplateMenu >> pressures [
 					   sourceText: 'psi') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> probabilities [
 
 	^ Array streamContents: [ :stream | 
@@ -472,7 +474,7 @@ TRMDTemplateMenu >> probabilities [
 				   sourceText: '%') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> randomDistributions [
 
 	^ Array streamContents: [ :stream | 
@@ -528,7 +530,7 @@ TRMDTemplateMenu >> randomDistributions [
 					   sourceText: 'loglogistic _scale_ shape _shape_') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> roundings [
 
 	^ Array streamContents: [ :stream | 
@@ -550,7 +552,7 @@ TRMDTemplateMenu >> roundings [
 					   sourceText: 'ceiling(_expression_)') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> simulationTimes [
 
 	^ Array streamContents: [ :stream | 
@@ -568,7 +570,7 @@ TRMDTemplateMenu >> simulationTimes [
 					   sourceText: 'Δtime') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> spatialExpressions [
 
 	^ Array streamContents: [ :stream |
@@ -612,7 +614,7 @@ TRMDTemplateMenu >> spatialExpressions [
 					   sourceText: 'area of here') ]
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> temperatures [
 
 	^ Array streamContents: [ :stream | 
@@ -632,14 +634,14 @@ TRMDTemplateMenu >> temperatures [
 					   sourceText: '°F') ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDTemplateMenu >> templateDirectory [
 
 	^ (FileLocator documents / 'ReMobidyc' / 'templates')
 		  ensureCreateDirectory
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 TRMDTemplateMenu >> templateMenu [
 
 	| menu |
@@ -660,7 +662,7 @@ TRMDTemplateMenu >> templateMenu [
 	^ menu
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> times [
 
 	^ Array streamContents: [ :stream | 
@@ -708,7 +710,7 @@ TRMDTemplateMenu >> times [
 					   sourceText: 'μs') ]
 ]
 
-{ #category : #'templates-expressions' }
+{ #category : 'templates-expressions' }
 TRMDTemplateMenu >> unitConversions [
 
 	^ Array streamContents: [ :stream | 
@@ -730,7 +732,7 @@ TRMDTemplateMenu >> unitConversions [
 					   sourceText: '(_unit_) _expression_') ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 TRMDTemplateMenu >> unitTemplateMenu [
 
 	| menu |
@@ -761,7 +763,7 @@ TRMDTemplateMenu >> unitTemplateMenu [
 	^ menu
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 TRMDTemplateMenu >> userDefinedTemplateMenu [
 
 	| menu |
@@ -784,7 +786,7 @@ TRMDTemplateMenu >> userDefinedTemplateMenu [
 	^ menu
 ]
 
-{ #category : #'templates-units' }
+{ #category : 'templates-units' }
 TRMDTemplateMenu >> volumes [
 
 	^ Array streamContents: [ :stream | 

@@ -1,27 +1,29 @@
 Class {
-	#name : #RMDChancePresenter,
-	#superclass : #RMDConditionPresenter,
+	#name : 'RMDChancePresenter',
+	#superclass : 'RMDConditionPresenter',
 	#instVars : [
 		'expressionPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDChancePresenter >> conditionChanged [
 
 	expressionPresenter := condition probability asPresenter.
 	super conditionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDChancePresenter >> initializePresenters [
 
 	super initializePresenters.
 	expressionPresenter := self newLabel label: '-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDChancePresenter >> layout [
 
 	^ SpBoxLayout newVertical

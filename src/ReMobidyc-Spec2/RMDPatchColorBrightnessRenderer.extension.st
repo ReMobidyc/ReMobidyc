@@ -1,6 +1,6 @@
-Extension { #name : #RMDPatchColorBrightnessRenderer }
+Extension { #name : 'RMDPatchColorBrightnessRenderer' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDPatchColorBrightnessRenderer >> asPresenter [
 	^ RMDPatchColorBrightnessRendererPresenter on: self
 ]

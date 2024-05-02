@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDIdentifierTableColumn,
-	#superclass : #RMDSyntaxTableColumn,
+	#name : 'RMDIdentifierTableColumn',
+	#superclass : 'RMDSyntaxTableColumn',
 	#instVars : [
 		'validationBlock'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDIdentifierTableColumn >> defaultAcceptAction [
 
 	^ [ :item :stringOrText |
@@ -18,7 +20,7 @@ RMDIdentifierTableColumn >> defaultAcceptAction [
 		  extraAcceptAction cull: item cull: string ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDIdentifierTableColumn >> defaultColorAction [
 
 	^ [ :item |
@@ -30,13 +32,13 @@ RMDIdentifierTableColumn >> defaultColorAction [
 		  ifFalse: [ Color red ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDIdentifierTableColumn >> defaultEvaluationBlock [
 
 	^ [ :item | item identifier ifEmpty: [ '-' ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDIdentifierTableColumn >> defaultTextChangedAction [
 
 	^ [ :item :string :widget |
@@ -52,13 +54,13 @@ RMDIdentifierTableColumn >> defaultTextChangedAction [
 		  widget textArea compose ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIdentifierTableColumn >> validationBlock [
 
 	^ validationBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIdentifierTableColumn >> validationBlock: aBlock [
 
 	validationBlock := aBlock

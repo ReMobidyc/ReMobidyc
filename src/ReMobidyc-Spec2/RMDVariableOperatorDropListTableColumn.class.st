@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDVariableOperatorDropListTableColumn,
-	#superclass : #SpDropListTableColumn,
+	#name : 'RMDVariableOperatorDropListTableColumn',
+	#superclass : 'SpDropListTableColumn',
 	#instVars : [
 		'initialSelectionBlock'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDVariableOperatorDropListTableColumn class >> example [
 
 	^ SpTablePresenter new
@@ -21,69 +23,69 @@ RMDVariableOperatorDropListTableColumn class >> example [
 		open
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RMDVariableOperatorDropListTableColumn >> acceptColumnVisitor: aBuilder [
 
 	^ aBuilder visitRMDVariableOperatorDropListColumn: self
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultDisplay [
 
 	^ [ :operator | operator ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultEvaluation [
 
 	^ [ self possibleOperators ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultInitialSelectionBlock [
 
 	^ [ :attributeDefinition | attributeDefinition variableOperator ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultSelectedItemChangedAction [
 
 	^ [ :attributeDefinition :operator |
 	  attributeDefinition variableOperator: operator ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultStartWithSelection [
 
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDVariableOperatorDropListTableColumn >> defaultWidth [
 
 	^ 50
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> initialSelection: aRMDAttributeDefinitionNode [
 
 	^ initialSelectionBlock ifNotNil: [
 		  initialSelectionBlock cull: aRMDAttributeDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> initialSelectionBlock [
 
 	^ initialSelectionBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> initialSelectionBlock: aBlock [
 
 	initialSelectionBlock := aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDVariableOperatorDropListTableColumn >> initialize [
 
 	super initialize.
@@ -94,7 +96,7 @@ RMDVariableOperatorDropListTableColumn >> initialize [
 	self width: self defaultWidth
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> possibleOperators [
 
 	^ {
@@ -103,7 +105,7 @@ RMDVariableOperatorDropListTableColumn >> possibleOperators [
 		  RMDAbstractAssignableAttributeVariableNode differentialOperator }
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> startWithSelection [
 
 	initialSelectionBlock ifNil: [
@@ -111,14 +113,14 @@ RMDVariableOperatorDropListTableColumn >> startWithSelection [
 	super startWithSelection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> startWithSelection: aBlock [
 
 	initialSelectionBlock ifNil: [ initialSelectionBlock := aBlock ].
 	super startWithSelection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariableOperatorDropListTableColumn >> startWithoutSelection [
 
 	initialSelectionBlock := nil.

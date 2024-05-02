@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSourceTemplateFileBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDSourceTemplateFileBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'fileList',
 		'addFileButton',
@@ -14,10 +14,12 @@ Class {
 		'descriptionText',
 		'acceptTemplateButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDSourceTemplateFileBrowser class >> defaultLayout [
 
 	<script: 'RMDSourceTemplateFileBrowser new open'>
@@ -77,7 +79,7 @@ RMDSourceTemplateFileBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDSourceTemplateFileBrowser class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -89,7 +91,7 @@ RMDSourceTemplateFileBrowser class >> remobidycMenuOn: aBuilder [
 		help: 'Browse and edit user defined template files'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> acceptSourceTemplate [
 
 	self fileReference ifNotNil: [ :fileReference | 
@@ -102,7 +104,7 @@ RMDSourceTemplateFileBrowser >> acceptSourceTemplate [
 			templateList selectItem: sourceTemplate ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> addFile [
 
 	(UIManager default
@@ -125,7 +127,7 @@ RMDSourceTemplateFileBrowser >> addFile [
 			fileList selectItem: newFileRef ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> addTemplate [
 
 	| templates index newTemplate |
@@ -142,19 +144,19 @@ RMDSourceTemplateFileBrowser >> addTemplate [
 		selectItem: newTemplate
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplateFileBrowser >> fileReference [
 
 	^ fileList selectedItem
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSourceTemplateFileBrowser >> initialExtent [
 
 	^ 900 @ 400
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSourceTemplateFileBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -216,14 +218,14 @@ RMDSourceTemplateFileBrowser >> initializePresenters [
 		self updateFileList ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSourceTemplateFileBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter initialExtent: self initialExtent
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> removeFile [
 
 	self fileReference ifNotNil: [ :fileReference | 
@@ -234,7 +236,7 @@ RMDSourceTemplateFileBrowser >> removeFile [
 				self updateFileList ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> removeTemplate [
 
 	templateList selectedItem ifNotNil: [ :item | 
@@ -245,7 +247,7 @@ RMDSourceTemplateFileBrowser >> removeTemplate [
 			self saveTemplateFile ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSourceTemplateFileBrowser >> saveTemplateFile [
 
 	self fileReference ifNotNil: [ :fileReference | 
@@ -256,32 +258,32 @@ RMDSourceTemplateFileBrowser >> saveTemplateFile [
 		self updateTemplateList ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplateFileBrowser >> sourceTemplate [
 
 	^ templateList selectedItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplateFileBrowser >> templateDirectory [
 
 	^ (FileLocator documents / 'ReMobidyc' / 'templates')
 		  ensureCreateDirectory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplateFileBrowser >> title [
 
 	^ 'User-defined Template Browser'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSourceTemplateFileBrowser >> updateFileButtons [
 
 	removeFileButton enabled: self fileReference notNil
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSourceTemplateFileBrowser >> updateFileList [
 
 	fileList
@@ -289,7 +291,7 @@ RMDSourceTemplateFileBrowser >> updateFileList [
 		items: (self templateDirectory filesMatching: '*.json')
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSourceTemplateFileBrowser >> updateSourceTemplate [
 
 	self sourceTemplate
@@ -303,14 +305,14 @@ RMDSourceTemplateFileBrowser >> updateSourceTemplate [
 			sourceTextField text: '' ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSourceTemplateFileBrowser >> updateTemplateButtons [
 
 	addTemplateButton enabled: self fileReference notNil.
 	removeTemplateButton enabled: self sourceTemplate notNil
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSourceTemplateFileBrowser >> updateTemplateList [
 
 	templateList

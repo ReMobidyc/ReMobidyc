@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDSourceTemplate,
-	#superclass : #Object,
+	#name : 'RMDSourceTemplate',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'sourceText',
 		'description'
 	],
-	#category : #'ReMobidyc-Spec2-Utilities'
+	#category : 'ReMobidyc-Spec2-Utilities',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Utilities'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourceTemplate class >> fromJsonObject: aDictionaryOrArray [
 
 	^ self
@@ -19,7 +21,7 @@ RMDSourceTemplate class >> fromJsonObject: aDictionaryOrArray [
 		  sourceText: (aDictionaryOrArray at: 'sourceText' ifAbsent: [ '' ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourceTemplate class >> fromJsonStream: aString [
 
 	^ self fromJsonObject: ([ STONJSON fromStream: aString ]
@@ -27,7 +29,7 @@ RMDSourceTemplate class >> fromJsonStream: aString [
 			   do: [ :ex | Array new ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourceTemplate class >> fromJsonString: aString [
 
 	^ self fromJsonObject: ([ STONJSON fromString: aString ]
@@ -35,7 +37,7 @@ RMDSourceTemplate class >> fromJsonString: aString [
 			   do: [ :ex | Array new ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourceTemplate class >> name: nameString description: descriptionString sourceText: sourceTextString [
 
 	^ self basicNew
@@ -45,13 +47,13 @@ RMDSourceTemplate class >> name: nameString description: descriptionString sourc
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourceTemplate class >> new [
 
 	^ self name: '' description: '' sourceText: ''
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSourceTemplate >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -60,7 +62,7 @@ RMDSourceTemplate >> = anObject [
 				  sourceText = anObject sourceText ] ] ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDSourceTemplate >> addToMenu: aSpMenuPresenter for: aSpAbstractTextPresenter [
 
 	aSpMenuPresenter addItem: [ :item | 
@@ -72,7 +74,7 @@ RMDSourceTemplate >> addToMenu: aSpMenuPresenter for: aSpAbstractTextPresenter [
 				aSpAbstractTextPresenter doTextPaste ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDSourceTemplate >> asJsonObject [
 
 	^ OrderedDictionary new
@@ -82,44 +84,44 @@ RMDSourceTemplate >> asJsonObject [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> description [
 
 	^ description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> description: aString [
 
 	description := aString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSourceTemplate >> hash [
 
 	^ ((self class hash bitXor: name hash) bitXor: description hash) 
 		  bitXor: sourceText hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> name: aString [
 
 	name := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> sourceText [
 
 	^ sourceText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTemplate >> sourceText: aString [
 
 	sourceText := aString

@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAnimatDefinitionBrowser,
-	#superclass : #RMDAgentDefinitionBrowser,
+	#name : 'RMDAnimatDefinitionBrowser',
+	#superclass : 'RMDAgentDefinitionBrowser',
 	#instVars : [
 		'copyStageButton',
 		'renameStageButton',
@@ -9,10 +9,12 @@ Class {
 		'spreadUtilityButton',
 		'spreadTaskButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAnimatDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -95,7 +97,7 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModeler animat: aString [
 
 	^ self new
@@ -103,7 +105,7 @@ RMDAnimatDefinitionBrowser class >> on: aRMDSimulationModeler animat: aString [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAnimatDefinitionBrowser >> addIconRendererMenu [
 
 	^ self newMenu
@@ -125,13 +127,13 @@ RMDAnimatDefinitionBrowser >> addIconRendererMenu [
 									  (RMDAnimatIconRenderer on: animat iconName: iconName) ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> addNewIconToSimulationModelDo: aBlock [
 
 	^ modeler addNewIconDo: aBlock
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAnimatDefinitionBrowser >> addRendererMenu [
 
 	^ self newMenu addGroup: [ :group | 
@@ -169,12 +171,12 @@ RMDAnimatDefinitionBrowser >> addRendererMenu [
 					  subMenu: self addIconRendererMenu ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionBrowser >> agentName [
 	^ animat
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> copyStage [
 
 	(UIManager default request: 'New name?' initialAnswer: self agentName) 
@@ -182,7 +184,7 @@ RMDAnimatDefinitionBrowser >> copyStage [
 		modeler copyStage: self agentName to: name capitalized ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 
 	self simulationModel ifNil: [ ^ nil ].
@@ -191,7 +193,7 @@ RMDAnimatDefinitionBrowser >> definitionDo: aBlock [
 		  ifNotNil: aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionBrowser >> initializeAttributePresenters [
 
 	super initializeAttributePresenters.
@@ -204,14 +206,14 @@ RMDAnimatDefinitionBrowser >> initializeAttributePresenters [
 		                         yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
 	self initializeStagePresenters
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionBrowser >> initializeStagePresenters [
 
 	renameSpeciesButton := self newButton
@@ -233,7 +235,7 @@ RMDAnimatDefinitionBrowser >> initializeStagePresenters [
 		                   yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionBrowser >> initializeTaskPresenters [
 
 	super initializeTaskPresenters.
@@ -246,7 +248,7 @@ RMDAnimatDefinitionBrowser >> initializeTaskPresenters [
 		                    yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionBrowser >> initializeUtilityPresenters [
 
 	super initializeUtilityPresenters.
@@ -259,7 +261,7 @@ RMDAnimatDefinitionBrowser >> initializeUtilityPresenters [
 		                       yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> renameSpecies [
 
 	(UIManager default request: 'New name?' initialAnswer: self speciesName) 
@@ -267,7 +269,7 @@ RMDAnimatDefinitionBrowser >> renameSpecies [
 		modeler renameSpecies: self speciesName to: name capitalized ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> renameStage [
 
 	(UIManager default request: 'New name?' initialAnswer: self agentName) 
@@ -275,7 +277,7 @@ RMDAnimatDefinitionBrowser >> renameStage [
 		modeler renameStage: self agentName to: name capitalized ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionBrowser >> renderersDo: aBlock [
 
 	self simulationModel ifNil: [ ^ self ].
@@ -285,20 +287,20 @@ RMDAnimatDefinitionBrowser >> renderersDo: aBlock [
 			aBlock cull: renderer ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAnimatDefinitionBrowser >> setSimulationModeler: aRMDSimulationModeler animat: aString [
 
 	animat := aString.
 	self setModeler: aRMDSimulationModeler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionBrowser >> speciesName [
 
 	^ self definitionDo: [ :animatDefinition | animatDefinition species ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> spreadAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode |
@@ -330,7 +332,7 @@ RMDAnimatDefinitionBrowser >> spreadAttribute [
 			modeler ifNotNil: #updatePages ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> spreadTask [
 
 	taskList selection selectedItem ifNotNil: [ :taskNode |
@@ -366,7 +368,7 @@ RMDAnimatDefinitionBrowser >> spreadTask [
 			modeler ifNotNil: #updatePages ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAnimatDefinitionBrowser >> spreadUtility [
 
 	utilityList selection selectedItem ifNotNil: [ :utilityNode |
@@ -398,7 +400,7 @@ RMDAnimatDefinitionBrowser >> spreadUtility [
 			modeler ifNotNil: #updatePages ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionBrowser >> stagesOfSpeciesDo: aBlock [
 
 	(self simulationModel stageNamesOf: self speciesName) do: [ :name |
@@ -406,7 +408,7 @@ RMDAnimatDefinitionBrowser >> stagesOfSpeciesDo: aBlock [
 			ifNotNil: aBlock ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatDefinitionBrowser >> updateAttributeButtons [
 
 	| selected |
@@ -415,7 +417,7 @@ RMDAnimatDefinitionBrowser >> updateAttributeButtons [
 	spreadAttributeButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatDefinitionBrowser >> updateTaskButtons [
 
 	| selected |
@@ -424,7 +426,7 @@ RMDAnimatDefinitionBrowser >> updateTaskButtons [
 	spreadTaskButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatDefinitionBrowser >> updateUtilityButtons [
 
 	| selected |

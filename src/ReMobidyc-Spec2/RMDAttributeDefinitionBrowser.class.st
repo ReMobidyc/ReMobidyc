@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAttributeDefinitionBrowser,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDAttributeDefinitionBrowser',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'subjectAgent',
 		'objectAgent',
@@ -9,10 +9,12 @@ Class {
 		'identifierField',
 		'definitionBodyField'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAttributeDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -27,7 +29,7 @@ RMDAttributeDefinitionBrowser class >> defaultLayout [
 		  height: self buttonHeight
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDAttributeDefinitionBrowser class >> example1 [
 
 	| browser |
@@ -37,7 +39,7 @@ RMDAttributeDefinitionBrowser class >> example1 [
 		browser node inspect ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeDefinitionBrowser >> agentChanged [
 
 	node ifNil: [ ^ self ].
@@ -46,7 +48,7 @@ RMDAttributeDefinitionBrowser >> agentChanged [
 		node variable: v ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeDefinitionBrowser >> definitionBodyChanged [
 
 	node ifNil: [ ^ self ].
@@ -56,7 +58,7 @@ RMDAttributeDefinitionBrowser >> definitionBodyChanged [
 		node definitionBody: expression ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDAttributeDefinitionBrowser >> definitionBodyFieldMenu [
 
 	^ self newMenu
@@ -68,7 +70,7 @@ RMDAttributeDefinitionBrowser >> definitionBodyFieldMenu [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeDefinitionBrowser >> identifierChanged [
 
 	node ifNil: [ ^ self ].
@@ -78,7 +80,7 @@ RMDAttributeDefinitionBrowser >> identifierChanged [
 		node variable: v ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -120,7 +122,7 @@ RMDAttributeDefinitionBrowser >> initializePresenters [
 		                       yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -129,7 +131,7 @@ RMDAttributeDefinitionBrowser >> initializeWindow: aWindowPresenter [
 		600 @ (self preferredHeight + self class buttonHeight * 3)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeDefinitionBrowser >> modifierChanged [
 
 	node ifNil: [ ^ self ].
@@ -139,7 +141,7 @@ RMDAttributeDefinitionBrowser >> modifierChanged [
 		node variable: v ]
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDAttributeDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 
 	^ super newHighlightingSyntaxNodeTextInput
@@ -148,7 +150,7 @@ RMDAttributeDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> nodeChanged [
 
 	node ifNil: [ ^ self ].
@@ -165,18 +167,18 @@ RMDAttributeDefinitionBrowser >> nodeChanged [
 		definitionBodyField syntaxNode: expression ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> objectAgent [
 	^ objectAgent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> objectAgent: aString [
 
 	objectAgent := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> possibleAgents [
 
 	^ Array streamContents: [ :stream | 
@@ -190,19 +192,19 @@ RMDAttributeDefinitionBrowser >> possibleAgents [
 			  nextPut: 'new' -> #new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> preferredHeight [
 
 	^ self class buttonHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> selectedAgent [
 
 	^ agentList selectedItem ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> selectedAssignableVariableNode [
 
 	self selectedAgent ifNotNil: [ :agent | 
@@ -212,24 +214,24 @@ RMDAttributeDefinitionBrowser >> selectedAssignableVariableNode [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> selectedIdentifier [
 
 	^ identifierField syntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> selectedModifierBlock [
 
 	^ modifierList selectedItem ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> subjectAgent [
 	^ subjectAgent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionBrowser >> subjectAgent: aString [
 
 	subjectAgent := aString

@@ -1,49 +1,51 @@
 Class {
-	#name : #RMDTableWithHBarPresenter,
-	#superclass : #SpTablePresenter,
+	#name : 'RMDTableWithHBarPresenter',
+	#superclass : 'SpTablePresenter',
 	#instVars : [
 		'hasHorizontalScrollbar'
 	],
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDTableWithHBarPresenter class >> adapterName [
 
 	^ #RMDMorphicTableWithHBarAdapter
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDTableWithHBarPresenter >> disableHorizontalScrollbar [
 
 	self hasHorizontalScrollbar: false
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDTableWithHBarPresenter >> enableHorizontalScrollbar [
 
 	self hasHorizontalScrollbar: true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDTableWithHBarPresenter >> enableHorizontalScrollbar: aBoolean [
 
 	self hasHorizontalScrollbar: aBoolean = true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTableWithHBarPresenter >> hasHorizontalScrollbar [
 
 	^ hasHorizontalScrollbar = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTableWithHBarPresenter >> hasHorizontalScrollbar: aBoolean [
 
 	hasHorizontalScrollbar := aBoolean = true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTableWithHBarPresenter >> initialize [
 
 	super initialize.

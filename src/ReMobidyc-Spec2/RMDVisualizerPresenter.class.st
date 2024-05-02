@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDVisualizerPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDVisualizerPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'visualizer',
 		'interpreter',
 		'image'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDVisualizerPresenter class >> defaultLayout [
 	<spec>
 	^ SpPanedLayout newHorizontal
@@ -23,7 +25,7 @@ RMDVisualizerPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDVisualizerPresenter class >> defaultSpec0 [
 	<spec>
 	^ SpPanedLayout newHorizontal
@@ -40,14 +42,14 @@ RMDVisualizerPresenter class >> defaultSpec0 [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVisualizerPresenter class >> on: aRMDVisualizer [
 	^ self new
 		visualizer: aRMDVisualizer;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVisualizerPresenter class >> on: aRMDVisualizer interpreter: aRMDInterpreter [
 	^ self new
 		visualizer: aRMDVisualizer;
@@ -55,7 +57,7 @@ RMDVisualizerPresenter class >> on: aRMDVisualizer interpreter: aRMDInterpreter 
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDVisualizerPresenter >> initializePresenters [
 	super initializePresenters.
 	image := self newImage
@@ -64,7 +66,7 @@ RMDVisualizerPresenter >> initializePresenters [
 	self whenBuiltDo: [ self updateRendererPresenters ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDVisualizerPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
@@ -72,12 +74,12 @@ RMDVisualizerPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 600 @ 400
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizerPresenter >> interpreter [
 	^ interpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizerPresenter >> interpreter: aRMDInterpreter [
 	interpreter ifNotNil: [ interpreter announcer unsubscribe: self ].
 	interpreter := aRMDInterpreter.
@@ -88,23 +90,24 @@ RMDVisualizerPresenter >> interpreter: aRMDInterpreter [
 				to: self ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizerPresenter >> timeChanged: aRMDTimeChanged [
 
 	self updateImage
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDVisualizerPresenter >> updateImage [
+
 	interpreter ifNil: [ ^ self ].
 	visualizer ifNil: [ ^ self ].
-	image
-		withWidgetDo: [ :w | 
+	image withAdapterDo: [ :a |
+		a widgetDo: [ :w |
 			visualizer extent: w extent.
-			image image: (visualizer visualize: interpreter) ]
+			image image: (visualizer visualize: interpreter) ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDVisualizerPresenter >> updateRendererPresenters [
 	layout
 		ifNotNil: [ | theLayout |
@@ -119,12 +122,12 @@ RMDVisualizerPresenter >> updateRendererPresenters [
 							theLayout add: presenter height: presenter preferredHeight ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizerPresenter >> visualizer [
 	^ visualizer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizerPresenter >> visualizer: aRMDVisualizer [
 	visualizer := aRMDVisualizer.
 	self updateImage.

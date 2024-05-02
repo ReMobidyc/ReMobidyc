@@ -1,6 +1,6 @@
-Extension { #name : #FileDialogWindow }
+Extension { #name : 'FileDialogWindow' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 FileDialogWindow >> getText [
 
 	^ self openSelectedFile
@@ -9,7 +9,7 @@ FileDialogWindow >> getText [
 		  ifNil: [ '' ]
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 FileDialogWindow >> updateImagePreview [
 	"Update the image preview."
 

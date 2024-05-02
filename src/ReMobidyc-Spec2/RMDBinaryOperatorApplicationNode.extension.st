@@ -1,6 +1,6 @@
-Extension { #name : #RMDBinaryOperatorApplicationNode }
+Extension { #name : 'RMDBinaryOperatorApplicationNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryOperatorApplicationNode >> asPrettyPrintNode [
 
 	| node1 node2 |
@@ -17,7 +17,7 @@ RMDBinaryOperatorApplicationNode >> asPrettyPrintNode [
 				  node2 }
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryOperatorApplicationNode >> prettyOperator [
 
 	^ self operator

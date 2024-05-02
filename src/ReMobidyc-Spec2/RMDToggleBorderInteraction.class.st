@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDToggleBorderInteraction,
-	#superclass : #RSInteraction,
-	#category : #'ReMobidyc-Spec2-PrettyPrint'
+	#name : 'RMDToggleBorderInteraction',
+	#superclass : 'RSInteraction',
+	#category : 'ReMobidyc-Spec2-PrettyPrint',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'PrettyPrint'
 }
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 RMDToggleBorderInteraction >> leftClicked: event [
 
 	| shape |
@@ -20,7 +22,7 @@ RMDToggleBorderInteraction >> leftClicked: event [
 		event signalUpdate ]
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 RMDToggleBorderInteraction >> onShape: aShape [
 
 	aShape removeInteractionIfPresent: self class.

@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDConditionPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDConditionPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'condition'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDConditionPresenter class >> on: aRMDConditionNode [
 
 	^ self new
@@ -15,32 +17,32 @@ RMDConditionPresenter class >> on: aRMDConditionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConditionPresenter >> borderColor [
 
 	^ Color lightGray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConditionPresenter >> condition [
 
 	^ condition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConditionPresenter >> condition: aRMDConditionNode [
 
 	condition := aRMDConditionNode.
 	self conditionChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConditionPresenter >> conditionChanged [
 
 	self layout: self layout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDConditionPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 
 	aDialogWindowPresenter addButton: 'Ok' do: [ :presenter |
@@ -48,14 +50,16 @@ RMDConditionPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 		presenter close ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDConditionPresenter >> initializePresenters [
 
 	super initializePresenters.
-	self whenBuiltDo: [ self withWidgetDo: [ :w | w color: Color white ] ]
+	self whenBuiltDo: [
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w | w color: Color white ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDConditionPresenter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.

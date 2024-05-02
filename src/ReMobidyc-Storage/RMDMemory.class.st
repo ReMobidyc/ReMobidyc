@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDMemory,
-	#superclass : #Object,
+	#name : 'RMDMemory',
+	#superclass : 'Object',
 	#instVars : [
 		'time',
 		'latestTime',
@@ -26,16 +26,17 @@ Class {
 		'metaparameters',
 		'inputs'
 	],
-	#category : #'ReMobidyc-Storage'
+	#category : 'ReMobidyc-Storage',
+	#package : 'ReMobidyc-Storage'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMemory class >> isAbstract [
 
 	^ self == RMDMemory
 ]
 
-{ #category : #'accessing-inputs' }
+{ #category : 'accessing-inputs' }
 RMDMemory >> addInputForAgentDefinition: aRMDAgentDefinitionNode duration: aNumber timeStep: anotherNumber [
 
 	^ aRMDAgentDefinitionNode dataSource ifNotNil: [ :dataSource |
@@ -64,7 +65,7 @@ RMDMemory >> addInputForAgentDefinition: aRMDAgentDefinitionNode duration: aNumb
 		  input ]
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 
 	| individual animat |
@@ -80,7 +81,7 @@ RMDMemory >> allocateAnimat: aRMDAnimatDefinitionNode [
 	^ individual
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> allocatePatches: aRMDPatchDefinitionNode x: anInteger1 y: anInteger2 [
 
 	self nextAvailableSlot: (self
@@ -103,7 +104,7 @@ RMDMemory >> allocatePatches: aRMDPatchDefinitionNode x: anInteger1 y: anInteger
 	^ self patch
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 
 	self nextAvailableSlot:
@@ -118,14 +119,14 @@ RMDMemory >> allocateWorld: aRMDWorldDefinitionNode [
 	^ world
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> animat: aString includes: anInteger [
 
 	^ (self animats at: aString ifAbsent: [ ^ false ]) includes:
 		  anInteger
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> animatOfIndividual: anInteger ifAbsent: errorBlock [
 
 	self animats keysAndValuesDo: [ :animat :inds | 
@@ -133,13 +134,13 @@ RMDMemory >> animatOfIndividual: anInteger ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> animats [
 
 	^ animats
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> animatsInPatch: aBlock [
 
 	^ animatsInPatch ifNil: [ 
@@ -157,25 +158,25 @@ RMDMemory >> animatsInPatch: aBlock [
 		  animatsInPatch := dict ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> animatsOf: aString [
 
 	^ (self animats at: aString ifAbsent: [ Array new ]) asArray
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> animatsOf: aString do: aBlock [
 
 	(self animats at: aString ifAbsent: [ ^ self ]) asArray do: [ 
 		:individual | aBlock cull: individual ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> at: anInteger [
 	^ self at: anInteger ifAbsent: [ ^ KeyNotFound signal ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> at: anInteger ifAbsent: aBlock [
 
 	^ self values
@@ -183,20 +184,20 @@ RMDMemory >> at: anInteger ifAbsent: aBlock [
 		  ifAbsent: [ self nextValues at: anInteger ifAbsent: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> at: anInteger ifAbsentPut: aBlock [
 	^ self
 		at: anInteger
 		ifAbsent: [ self at: anInteger put: aBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> at: anInteger put: aNumber [
 
 	^ self values at: anInteger put: aNumber
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> commitIns [
 
 	ins keysAndValuesDo: [ :animatName :individuals |
@@ -207,7 +208,7 @@ RMDMemory >> commitIns [
 	ins removeAll
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> commitOuts [
 
 	self animats keysAndValuesDo: [ :animatName :individuals |
@@ -231,31 +232,31 @@ RMDMemory >> commitOuts [
 		ifTrue: [ self reproductionLinks compact ]
 ]
 
-{ #category : #'accessing-creation times' }
+{ #category : 'accessing-creation times' }
 RMDMemory >> creationTimeAt: anInteger [
 
 	^ self creationTimeAt: anInteger ifAbsent: [ nil ]
 ]
 
-{ #category : #'accessing-creation times' }
+{ #category : 'accessing-creation times' }
 RMDMemory >> creationTimeAt: anInteger ifAbsent: errorBlock [
 
 	^ creationTimes at: anInteger ifAbsent: errorBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> creationTimes [
 
 	^ creationTimes
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> eastOf: anInteger do: aBlock [
 	(self xPatchOf: anInteger) < self xPatches
 		ifTrue: [ aBlock value: anInteger + self patchSize ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> fastSunrise [
 
 	self nextValues size * 10 < nextValues capacity ifTrue: [
@@ -266,12 +267,12 @@ RMDMemory >> fastSunrise [
 	animatsInPatch := nil
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> fastSunset [
 	^ self sunset
 ]
 
-{ #category : #'accessing-links' }
+{ #category : 'accessing-links' }
 RMDMemory >> findCurrentOf: anInteger ifPresent: aBlock ifAbsent: errorBlock [
 
 	| individual |
@@ -292,7 +293,7 @@ RMDMemory >> findCurrentOf: anInteger ifPresent: aBlock ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMemory >> initialize [
 
 	super initialize.
@@ -317,23 +318,23 @@ RMDMemory >> initialize [
 	inputs := Dictionary new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMemory >> isRewindable [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> latestTime [
 	^ latestTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> latestTime: anInteger [
 	latestTime := anInteger
 ]
 
-{ #category : #'accessing-inputs' }
+{ #category : 'accessing-inputs' }
 RMDMemory >> loadInputsIntoNextAt: anInteger [
 
 	inputs keysAndValuesDo: [ :agentName :dict |
@@ -359,13 +360,13 @@ RMDMemory >> loadInputsIntoNextAt: anInteger [
 									self nextAt: agent + offset put: value ] ] ] ] ] ]
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDMemory >> metaparameters [
 
 	^ metaparameters
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDMemory >> metaparametersString [
 
 	^ String streamContents: [ :stream | 
@@ -378,13 +379,13 @@ RMDMemory >> metaparametersString [
 			  separatedBy: [ stream nextPutAll: ', ' ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> name [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAndDeltaAt: anInteger between: aFloat and: anotherFloat [
 
 	| v |
@@ -397,41 +398,41 @@ RMDMemory >> nextAndDeltaAt: anInteger between: aFloat and: anotherFloat [
 		self nextDeltaAt: anInteger add: anotherFloat - v ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAt: anInteger [
 	^ self nextAt: anInteger ifAbsent: [ ^ KeyNotFound signal ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAt: anInteger ifAbsent: aBlock [
 
 	^ self nextValues at: anInteger ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAt: anInteger ifAbsentPut: aBlock [
 	^ self
 		nextAt: anInteger
 		ifAbsent: [ self nextAt: anInteger put: aBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAt: anInteger put: aNumber [
 
 	^ self nextValues at: anInteger put: aNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAvailableSlot [
 	^ nextAvailableSlot
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextAvailableSlot: anInteger [
 	nextAvailableSlot := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 
 	^ self nextDeltas
@@ -439,37 +440,37 @@ RMDMemory >> nextDeltaAt: anInteger add: aNumber [
 		  put: (self nextDeltas at: anInteger ifAbsent: [ 0 ]) + aNumber
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> nextDeltas [
 
 	^ nextDeltas
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> nextValues [
 
 	^ nextValues
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> northOf: anInteger do: aBlock [
 	(self yPatchOf: anInteger) < self yPatches
 		ifTrue: [ aBlock value: anInteger + (self patchSize * self xPatches) ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> numberOfAnimats [
 
 	^ self animats inject: 0 into: [ :sum :inds | sum + inds size ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> numberOfAnimats: aString [
 
 	^ (self animats at: aString ifAbsent: [ ^ 0 ]) size
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> numberOfAnimats: animatName patch: anInteger patchBlock: aBlock [
 
 	^ (((self animatsInPatch: aBlock) at: anInteger ifAbsent: [ ^ 0 ])
@@ -477,39 +478,39 @@ RMDMemory >> numberOfAnimats: animatName patch: anInteger patchBlock: aBlock [
 		   ifAbsent: [ ^ 0 ]) size
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> parentOf: anInteger [
 
 	^ self reproductionLinks at: anInteger ifAbsent: [ nil ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patch [
 	^ patch
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patch: anInteger [
 	patch := anInteger
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patchAtXIndex: anInteger yIndex: anotherInteger [
 	^ ((anotherInteger - 1) * self xPatches + anInteger - 1)
 		* self patchSize + self patch
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patchSize [
 	^ patchSize
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patchSize: anInteger [
 	patchSize := anInteger
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> patchesDo: aBlock [
 
 	self patchSize > 0 ifTrue: [ 
@@ -518,70 +519,70 @@ RMDMemory >> patchesDo: aBlock [
 		self patchSize do: [ :c | aBlock cull: c ] ]
 ]
 
-{ #category : #'accessing-links' }
+{ #category : 'accessing-links' }
 RMDMemory >> previousStageOf: anInteger [
 
 	^ self stageLinks at: anInteger ifAbsent: [ nil ]
 ]
 
-{ #category : #'accessing-links' }
+{ #category : 'accessing-links' }
 RMDMemory >> previously: anInteger [
 
 	^ self stageLinks keyAtValue: anInteger ifAbsent: [ nil ]
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDMemory >> randomSeed [
 
 	^ randomSeed ifNil: [ 1 ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readAnimatsForTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readCreationTimesForTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readReproductionLinksForTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readSeedsForTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readStageLinksForTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> readValuesForTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> reload [
 
 	
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> removeAnimat: anInteger [
 
 	^ outs add: anInteger
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> removeSeedAt: anInteger [
 
 	^ self seeds
@@ -589,7 +590,7 @@ RMDMemory >> removeSeedAt: anInteger [
 		  ifAbsent: []
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
 	| individual animat |
@@ -601,19 +602,19 @@ RMDMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 	^ individual
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> reproductionLinks [
 
 	^ reproductionLinks
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDMemory >> runId [
 
 	^ runId ifNil: [ 1 ]
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger [
 
 	runId := anInteger.
@@ -621,7 +622,7 @@ RMDMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInt
 	randomSeed := anotherInteger
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> saveSnapshot [
 
 	latestTime = time ifTrue: [
@@ -635,31 +636,31 @@ RMDMemory >> saveSnapshot [
 		self writeCreationTimes: self creationTimes forTime: time + 1 ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> seedAt: anInteger [
 
 	^ self seeds at: anInteger ifAbsent: [ anInteger ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> seedAt: anInteger put: anotherInteger [
 
 	^ self seeds at: anInteger put: anotherInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> seeds [
 
 	^ seeds
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> southOf: anInteger do: aBlock [
 	(self yPatchOf: anInteger) > 1
 		ifTrue: [ aBlock value: anInteger - (self patchSize * self xPatches) ]
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
 	| individual animat |
@@ -667,17 +668,17 @@ RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
 	animat := aRMDAnimatDefinitionNode identifier.
 	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
-	stageLinks at: individual put: anInteger.
+	self stageLinks at: individual put: anInteger.
 	^ individual
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> stageLinks [
 
 	^ stageLinks
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> sunrise [
 
 	values := self readValuesForTime: time.
@@ -691,7 +692,7 @@ RMDMemory >> sunrise [
 	animatsInPatch := nil
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> sunset [
 
 	self
@@ -709,7 +710,7 @@ RMDMemory >> sunset [
 	self saveSnapshot
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> tick [
 
 	self fastSunset.
@@ -718,12 +719,12 @@ RMDMemory >> tick [
 	self fastSunrise
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> time [
 	^ time
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDMemory >> time: anInteger [
 
 	(anInteger isInteger and: [ 
@@ -735,87 +736,87 @@ RMDMemory >> time: anInteger [
 	self sunrise
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMemory >> values [
 	^ values
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> westOf: anInteger do: aBlock [
 	(self xPatchOf: anInteger) > 1
 		ifTrue: [ aBlock value: anInteger - self patchSize ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> world [
 	^ world
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> worldDo: aBlock [
 
 	aBlock cull: world
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeAnimats: aDictionary forTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeSeeds: aDictionary forTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeStageLinks: aDictionary forTime: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDMemory >> writeValues: aDictionary forTime: anInteger [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> xPatchOf: anInteger [
 	^ (anInteger - self patch) // self patchSize \\ self xPatches + 1
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> xPatches [
 	^ xPatches
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> xPatches: anInteger [
 	xPatches := anInteger
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> yPatchOf: anInteger [
 	^ (anInteger - self patch) // self patchSize // self xPatches + 1
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> yPatches [
 	^ yPatches
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDMemory >> yPatches: anInteger [
 	yPatches := anInteger
 ]

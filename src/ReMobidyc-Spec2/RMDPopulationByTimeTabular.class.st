@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDPopulationByTimeTabular,
-	#superclass : #RMDTimeSeriesTabular,
+	#name : 'RMDPopulationByTimeTabular',
+	#superclass : 'RMDTimeSeriesTabular',
 	#instVars : [
 		'runAggregationDropList',
 		'animatAggregationDropList',
@@ -9,10 +9,12 @@ Class {
 		'stageDropList',
 		'openLineChartButton'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDPopulationByTimeTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -50,7 +52,7 @@ RMDPopulationByTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateAllAnimats [
 
 	^ Array streamContents: [ :stream | 
@@ -61,14 +63,14 @@ RMDPopulationByTimeTabular >> aggregateAllAnimats [
 						    #identifier)) } ]
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateAllRuns [
 
 	^ Array streamContents: [ :stream | 
 		  stream nextPut: 'all' -> { ('' -> metaInterpreter runIds) } ]
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateByMetaparameters [
 
 	| groups |
@@ -84,7 +86,7 @@ RMDPopulationByTimeTabular >> aggregateByMetaparameters [
 			  stream nextPut: metaparameters -> { (metaparameters -> runIds) } ] ]
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateByRuns [
 
 	| groups lister |
@@ -108,7 +110,7 @@ RMDPopulationByTimeTabular >> aggregateByRuns [
 			  stream nextPut: metaparameters -> (lister value: runIds) ] ]
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateBySpecies [
 
 	| simulationModel groups |
@@ -123,7 +125,7 @@ RMDPopulationByTimeTabular >> aggregateBySpecies [
 			  stream nextPut: species -> { (species -> stages) } ] ]
 ]
 
-{ #category : #aggregating }
+{ #category : 'aggregating' }
 RMDPopulationByTimeTabular >> aggregateByStages [
 
 	| simulationModel groups |
@@ -142,18 +144,18 @@ RMDPopulationByTimeTabular >> aggregateByStages [
 				  species -> (stages collect: [ :stage | stage -> { stage } ]) ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> animatAggregationChanged [
 	self updateAnimatDropList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> animatChanged [
 
 	self updateColumns
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPopulationByTimeTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -193,7 +195,7 @@ RMDPopulationByTimeTabular >> initializePresenters [
 		                      yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
@@ -204,24 +206,21 @@ RMDPopulationByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateRows
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDPopulationByTimeTabular >> openChart [
 
-	table columns ifNotEmpty: [ :columns | 
+	table columns ifNotEmpty: [ :columns |
 		| chart time canvas legend |
-		chart := RSChart new.
+		chart := RSCompositeChart new.
 		chart extent: 800 @ 400.
 		time := table items collect: [ :row | columns first value: row ].
-		columns do: [ :column | 
-			column ifOnChartDo: [ 
+		columns do: [ :column |
+			column ifOnChartDo: [
 				| y |
 				y := (table items collect: [ :row | column value: row ]) reject:
 					     #isNil.
-				chart addPlot:
-					(RSLinePlot new x: (time copyFrom: 1 to: y size) y: y) ] ].
+				chart add: (RSLinePlot new x: (time copyFrom: 1 to: y size) y: y) ] ].
 		chart
-			addDecoration: RSHorizontalTick new;
-			addDecoration: RSVerticalTick new;
 			addDecoration: (RSChartTitleDecoration new
 					 title:
 						 (runDropList selectedItem ifNotNil: #key ifNil: [ 'all' ])
@@ -241,7 +240,7 @@ RMDPopulationByTimeTabular >> openChart [
 		canvas := chart build.
 		legend := RSLegend new.
 		legend container: canvas.
-		1 to: chart plots size do: [ :plotIndex | 
+		1 to: chart plots size do: [ :plotIndex |
 			legend
 				text: (columns at: plotIndex + 1) title
 				withBoxColor: (chart plots at: plotIndex) color ].
@@ -254,18 +253,24 @@ RMDPopulationByTimeTabular >> openChart [
 					  ifNil: [ '' ])) extent: 1000 @ 600 ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> runAggregationChanged [
 	self updateRunDropList
 ]
 
-{ #category : #private }
+{ #category : 'accessing' }
+RMDPopulationByTimeTabular >> selectedAgent [
+
+	^ nil
+]
+
+{ #category : 'private' }
 RMDPopulationByTimeTabular >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPopulationByTimeTabular >> title [
 
 	^ 'Population Tabular'
@@ -275,7 +280,7 @@ RMDPopulationByTimeTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> updateAnimatDropList [
 
 	| selectedItem |
@@ -290,7 +295,7 @@ RMDPopulationByTimeTabular >> updateAnimatDropList [
 		animatDropList selectItem: selectedItem ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> updateColumns [
 
 	metaInterpreter ifNil: [ ^ self ].
@@ -324,7 +329,7 @@ RMDPopulationByTimeTabular >> updateColumns [
 		refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> updateRows [
 
 	| latestTime |
@@ -357,7 +362,7 @@ RMDPopulationByTimeTabular >> updateRows [
 						 progress value: time ] ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPopulationByTimeTabular >> updateRunDropList [
 
 	| selectedItem |

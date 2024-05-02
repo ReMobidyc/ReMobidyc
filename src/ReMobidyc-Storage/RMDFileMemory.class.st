@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDFileMemory,
-	#superclass : #RMDMemory,
+	#name : 'RMDFileMemory',
+	#superclass : 'RMDMemory',
 	#instVars : [
 		'digitsPerDirectoryLevel',
 		'basePath',
@@ -14,16 +14,17 @@ Class {
 	#classVars : [
 		'WriteSemaphore'
 	],
-	#category : #'ReMobidyc-Storage'
+	#category : 'ReMobidyc-Storage',
+	#package : 'ReMobidyc-Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel [
 
 	^ self for: aRMDSimulationModel runId: 1
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFileMemory class >> for: aRMDSimulationModel runId: anInteger [
 
 	| modelPath basePath |
@@ -32,7 +33,7 @@ RMDFileMemory class >> for: aRMDSimulationModel runId: anInteger [
 	^ self on: basePath modelPath: modelPath
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDFileMemory class >> initialize [
 
 	WriteSemaphore := Semaphore new
@@ -43,7 +44,7 @@ RMDFileMemory class >> initialize [
 		                  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
 
 	| modelPath |
@@ -59,20 +60,20 @@ RMDFileMemory class >> modelPathFor: aRMDSimulationModel [
 	^ modelPath
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFileMemory class >> on: aFileReference [
 	^ self new
 		basePath: aFileReference asFileReference;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFileMemory class >> on: basePath modelPath: modelPath [
 
 	^ (self on: basePath) modelPath: modelPath
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDFileMemory >> allocateWorld: aRMDWorldDefinitionNode [
 
 	| id |
@@ -81,27 +82,27 @@ RMDFileMemory >> allocateWorld: aRMDWorldDefinitionNode [
 	^ id
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> allocationFile [
 	^ self basePath / self allocationFileBasename
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> allocationFileBasename [
 	^ 'allocation.csv'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> animatsFileBasename [
 	^ 'animats.raw'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> basePath [
 	^ basePath
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> basePath: aFileReference [
 
 	basePath := aFileReference
@@ -112,42 +113,42 @@ RMDFileMemory >> basePath: aFileReference [
 		initializeAllocation
 ]
 
-{ #category : #'accessing-creation times' }
+{ #category : 'accessing-creation times' }
 RMDFileMemory >> creationTimesFileBasename [
 	^ 'creationtime.raw'
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDFileMemory >> defaultDigitsForTime [
 	^ 6
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDFileMemory >> defaultDigitsPerDirectoryLevel [
 	^ 3
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> digitsForTime [
 	^ digitsForTime
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> digitsForTime: anInteger [
 	digitsForTime := anInteger asInteger
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> digitsPerDirectoryLevel [
 	^ digitsPerDirectoryLevel
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> digitsPerDirectoryLevel: anInteger [
 	digitsPerDirectoryLevel := anInteger asInteger
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> directoryForTime: anInteger [
 	| stringId |
 	stringId := anInteger asString.
@@ -162,7 +163,7 @@ RMDFileMemory >> directoryForTime: anInteger [
 			^ ref ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDFileMemory >> initialize [
 	super initialize.
 	digitsForTime := self defaultDigitsForTime.
@@ -173,7 +174,7 @@ RMDFileMemory >> initialize [
 	reproductionLinksDirty := false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDFileMemory >> initializeAllocation [
 
 	self readAllocation
@@ -183,7 +184,7 @@ RMDFileMemory >> initializeAllocation [
 	allocationDirty := false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDFileMemory >> initializeSpace [
 	self readSpace
 		at: 'patch' ifPresent: [ :v | patch := v ];
@@ -193,7 +194,7 @@ RMDFileMemory >> initializeSpace [
 	spaceDirty := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFileMemory >> latestTime: anInteger [
 	| oldLatestTime |
 	oldLatestTime := self latestTime.
@@ -202,37 +203,37 @@ RMDFileMemory >> latestTime: anInteger [
 		ifFalse: [ allocationDirty := true ]
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> metaparameterJsonBasename [
 	^ 'meta-parameters.json'
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> metaparameters [
 
 	metaparameters ifNil: [ self readMetaparameters ].
 	^ super metaparameters
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> modelPath [
 
 	^ modelPath ifNil: [ self basePath ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> modelPath: aFileReference [
 
 	modelPath := aFileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFileMemory >> name [
 
 	^ 'on ' , basePath pathString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFileMemory >> nextAvailableSlot: anInteger [
 	| oldSlot |
 	oldSlot := self nextAvailableSlot.
@@ -241,26 +242,26 @@ RMDFileMemory >> nextAvailableSlot: anInteger [
 		ifTrue: [ allocationDirty := true ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDFileMemory >> patch: anInteger [
 	super patch: anInteger.
 	spaceDirty := true
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDFileMemory >> patchSize: anInteger [
 	super patchSize: anInteger.
 	spaceDirty := true
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> randomSeed [
 
 	randomSeed ifNil: [ self readMetaparameters ].
 	^ super randomSeed
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readAllocation [
 
 	self writeCritical: [ 
@@ -276,7 +277,7 @@ RMDFileMemory >> readAllocation [
 				^ params ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readAnimatsForTime: anInteger [
 
 	| ref |
@@ -296,7 +297,7 @@ RMDFileMemory >> readAnimatsForTime: anInteger [
 		^ vals ]
 ]
 
-{ #category : #'accessing-creation times' }
+{ #category : 'accessing-creation times' }
 RMDFileMemory >> readCreationTimesForTime: anInteger [
 
 	| ref |
@@ -311,7 +312,7 @@ RMDFileMemory >> readCreationTimesForTime: anInteger [
 		^ params ]
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> readMetaparameters [
 
 	| path jsonObject |
@@ -333,7 +334,7 @@ RMDFileMemory >> readMetaparameters [
 	randomSeed := jsonObject at: 'randomSeed' ifAbsent: [ 1 ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readReproductionLinksForTime: anInteger [
 
 	| ref |
@@ -348,7 +349,7 @@ RMDFileMemory >> readReproductionLinksForTime: anInteger [
 		^ params ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readSeedsForTime: anInteger [
 
 	| ref |
@@ -362,7 +363,7 @@ RMDFileMemory >> readSeedsForTime: anInteger [
 		^ vals ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readSpace [
 	self spaceFile
 		ensureCreateFile;
@@ -377,7 +378,7 @@ RMDFileMemory >> readSpace [
 			^ params ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readStageLinksForTime: anInteger [
 
 	| ref |
@@ -391,7 +392,7 @@ RMDFileMemory >> readStageLinksForTime: anInteger [
 		^ params ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> readValuesForTime: anInteger [
 
 	| ref |
@@ -411,75 +412,75 @@ RMDFileMemory >> readValuesForTime: anInteger [
 		^ vals ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> reload [
 
 	self initializeAllocation
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDFileMemory >> reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
 	reproductionLinksDirty := true.
 	^ super reproduceAnimat: aRMDAnimatDefinitionNode with: anInteger
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> reproductionLinksFileBasename [
 	^ 'reproductionLinks.raw'
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> runId [
 
 	runId ifNil: [ self readMetaparameters ].
 	^ super runId
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger [
 	super runId: anInteger metaparameters: aDictionary randomSeed: anotherInteger.
 	self writeMetaparameters
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> seedsFileBasename [
 	^ 'seeds.raw'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> spaceFile [
 	^ self basePath / self spaceFileBasename
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> spaceFileBasename [
 	^ 'space.csv'
 ]
 
-{ #category : #allocating }
+{ #category : 'allocating' }
 RMDFileMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 
 	stageLinksDirty := true.
 	^ super stageAnimat: aRMDAnimatDefinitionNode with: anInteger
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> stageLinksFileBasename [
 	^ 'stageLinks.raw'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> stagesFile [
 	^ self basePath / self stagesFileBasename
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> stagesFileBasename [
 	^ 'stages.csv'
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDFileMemory >> sunset [
 
 	super sunset.
@@ -491,12 +492,12 @@ RMDFileMemory >> sunset [
 		allocationDirty := false ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> valuesFileBasename [
 	^ 'values.raw'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeAllocation [
 
 	self writeCritical: [ 
@@ -514,7 +515,7 @@ RMDFileMemory >> writeAllocation [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 
 	| ref |
@@ -533,7 +534,7 @@ RMDFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-creation times' }
+{ #category : 'accessing-creation times' }
 RMDFileMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 
 	| ref |
@@ -549,7 +550,7 @@ RMDFileMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDFileMemory >> writeCritical: aBlock [
 
 	(WriteSemaphore ifNil: [ 
@@ -560,7 +561,7 @@ RMDFileMemory >> writeCritical: aBlock [
 			                   yourself ]) critical: aBlock
 ]
 
-{ #category : #'accessing-meta parameters' }
+{ #category : 'accessing-meta parameters' }
 RMDFileMemory >> writeMetaparameters [
 
 	| jsonObject |
@@ -585,7 +586,7 @@ RMDFileMemory >> writeMetaparameters [
 			ex retry ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 
 	| ref |
@@ -601,7 +602,7 @@ RMDFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 
 	self writeCritical: [ 
@@ -615,7 +616,7 @@ RMDFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeSpace [
 
 	self writeCritical: [ 
@@ -636,7 +637,7 @@ RMDFileMemory >> writeSpace [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 
 	| ref |
@@ -652,7 +653,7 @@ RMDFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 
 	self writeCritical: [ 
@@ -667,13 +668,13 @@ RMDFileMemory >> writeValues: aDictionary forTime: anInteger [
 			stream close ] ]
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDFileMemory >> xPatches: anInteger [
 	super xPatches: anInteger.
 	spaceDirty := true
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDFileMemory >> yPatches: anInteger [
 	super yPatches: anInteger.
 	spaceDirty := true

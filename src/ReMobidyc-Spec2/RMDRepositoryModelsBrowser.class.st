@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDRepositoryModelsBrowser,
-	#superclass : #RMDAbstractRepositoryBrowser,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#name : 'RMDRepositoryModelsBrowser',
+	#superclass : 'RMDAbstractRepositoryBrowser',
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDRepositoryModelsBrowser class >> openForSave: aRMDSimulationModel [
 
 	<script:
@@ -12,7 +14,7 @@ RMDRepositoryModelsBrowser class >> openForSave: aRMDSimulationModel [
 	super openForSave: aRMDSimulationModel
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDRepositoryModelsBrowser class >> openToLoadDo: aBlock [
 
 	<script:
@@ -20,7 +22,7 @@ RMDRepositoryModelsBrowser class >> openToLoadDo: aBlock [
 	super openToLoadDo: aBlock
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> addItem [
 
 	(UIManager default request: 'Enter a new name of the model') 
@@ -41,7 +43,7 @@ RMDRepositoryModelsBrowser >> addItem [
 				ifNil: [ ^ self ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> editItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -64,7 +66,7 @@ RMDRepositoryModelsBrowser >> editItem [
 					self updateItemList ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -72,26 +74,26 @@ RMDRepositoryModelsBrowser >> file [
 			  repo modelFileNamed: item ifPresent: #yourself ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDRepositoryModelsBrowser >> getModel: aString [
 
 	^ self repository ifNotNil: [ :repo | 
 		  repo modelNamed: aString ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryModelsBrowser >> initialize [
 
 	super initialize
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryModelsBrowser >> itemsInRepository [
 
 	^ self repository ifNotNil: #modelNames ifNil: [ #(  ) ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> load [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -99,7 +101,7 @@ RMDRepositoryModelsBrowser >> load [
 			  repo modelNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDRepositoryModelsBrowser >> newItemList [
 
 	^ self newTable
@@ -110,7 +112,7 @@ RMDRepositoryModelsBrowser >> newItemList [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> removeItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -123,7 +125,7 @@ RMDRepositoryModelsBrowser >> removeItem [
 					self updateItemList ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -135,12 +137,12 @@ RMDRepositoryModelsBrowser >> save: aRMDSimulationModel [
 				  repo addModel: aRMDSimulationModel named: item ifPresent: [  ] ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDRepositoryModelsBrowser >> title [
 	^ 'Models'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryModelsBrowser >> updateDescriptionText [
 
 	^ self repository ifNotNil: [ :repo | 

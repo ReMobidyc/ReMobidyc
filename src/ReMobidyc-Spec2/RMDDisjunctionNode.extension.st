@@ -1,6 +1,6 @@
-Extension { #name : #RMDDisjunctionNode }
+Extension { #name : 'RMDDisjunctionNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDDisjunctionNode >> prettyOperator [
 
 	^ String with: (Character codePoint: 16r2228)

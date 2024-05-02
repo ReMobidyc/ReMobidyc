@@ -1,6 +1,6 @@
-Extension { #name : #RMDMetaSingleParameterSequenceNode }
+Extension { #name : 'RMDMetaSingleParameterSequenceNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDMetaSingleParameterSequenceNode >> asPresenter [
 
 	^ RMDMetaSingleParameterSequencePresenter on: self

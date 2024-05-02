@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDAtomicExpressionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDAtomicExpressionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'label'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAtomicExpressionPresenter >> expressionChanged [
 
 	label label: expression printString.
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAtomicExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -23,7 +25,7 @@ RMDAtomicExpressionPresenter >> initializePresenters [
 		         yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAtomicExpressionPresenter >> layout [
 
 	^ SpBoxLayout newHorizontal

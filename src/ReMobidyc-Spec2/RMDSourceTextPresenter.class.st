@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSourceTextPresenter,
-	#superclass : #SpTextPresenter,
+	#name : 'RMDSourceTextPresenter',
+	#superclass : 'SpTextPresenter',
 	#traits : 'TRMDPresenter + TRMDTemplateMenu',
 	#classTraits : 'TRMDPresenter classTrait + TRMDTemplateMenu classTrait',
 	#instVars : [
@@ -15,10 +15,12 @@ Class {
 		'#objectBlock',
 		'#permitsUnresolvedAttributeReference'
 	],
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
 
 	syntaxNode := aRMDSyntaxNode.
@@ -30,19 +32,19 @@ RMDSourceTextPresenter >> acceptSyntaxNode: aRMDSyntaxNode [
 	self text: aRMDSyntaxNode printString
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> autoTypecheckingEnabled [
 
 	^ autoTypecheckingEnabled
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> autoTypecheckingEnabled: aBoolean [
 
 	autoTypecheckingEnabled := aBoolean ~= false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
 	syntaxNode := aRMDSyntaxNode.
@@ -54,29 +56,29 @@ RMDSourceTextPresenter >> basicSyntaxNode: aRMDSyntaxNode [
 
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> disableAutoTypechecking [
 	self autoTypecheckingEnabled: false
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> enableAutoTypechecking [
 	self autoTypecheckingEnabled: true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> highlightColor [
 
 	^ highlightColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> highlightColor: aColor [
 
 	highlightColor := aColor
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> highlightedText [
 
 	^ syntaxNode
@@ -84,7 +86,7 @@ RMDSourceTextPresenter >> highlightedText [
 		  ifNil: [ Text new ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
 
 	| t |
@@ -94,7 +96,7 @@ RMDSourceTextPresenter >> highlights: aCollectionOfRMDSyntaxNode [
 	super text: t
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSourceTextPresenter >> initialize [
 
 	super initialize.
@@ -113,86 +115,86 @@ RMDSourceTextPresenter >> initialize [
 	self whenSubmitDo: [ :t | self prettyPrint ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> lastValidSyntaxNode [
 	^ lastValidSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> object [
 
 	^ objectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> objectBlock: aBlock [
 
 	objectBlock := aBlock
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> parser [
 	^ parser
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> parser: aPP2Node [
 	parser := aPP2Node
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> permitUnresolvedAttributeReference [
 
 	permitsUnresolvedAttributeReference := true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> permitsUnresolvedAttributeReference [
 
 	^ permitsUnresolvedAttributeReference
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> permitsUnresolvedAttributeReference: aBool [
 
 	permitsUnresolvedAttributeReference := aBool = true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> prettyPrint [
 
 	self syntaxNode: self lastValidSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> simulationModel [
 	^ simulationModelBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> simulationModelBlock: aBlock [
 
 	simulationModelBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> subject [
 
 	^ subjectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> subjectBlock: aBlock [
 
 	subjectBlock := aBlock
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> syntaxNode [
 	^ syntaxNode
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	syntaxNode == aRMDSyntaxNode ifTrue: [ ^ self ].
@@ -203,7 +205,7 @@ RMDSourceTextPresenter >> syntaxNode: aRMDSyntaxNode [
 				 ifFalse: [ aRMDSyntaxNode printString ] ])
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDSourceTextPresenter >> text: aString [
 
 	text = aString ifTrue: [ ^ self ].
@@ -219,7 +221,7 @@ RMDSourceTextPresenter >> text: aString [
 	^ super text: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourceTextPresenter >> typechecker [
 
 	^ self simulationModel
@@ -227,7 +229,7 @@ RMDSourceTextPresenter >> typechecker [
 		  ifNil: [ RMDTypechecker new ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSourceTextPresenter >> updateHighlights: aString [
 
 	highlights := syntaxNode
@@ -252,22 +254,22 @@ RMDSourceTextPresenter >> updateHighlights: aString [
 			              errorNodes ]
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDSourceTextPresenter >> whenAutoTypecheckingEnabledChangedDo: aBlock [
 	self property: #autoTypecheckingEnabled whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDSourceTextPresenter >> whenLastValidSyntaxNodeChangedDo: aBlock [
 	self property: #lastValidSyntaxNode whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDSourceTextPresenter >> whenParserChangedDo: aBlock [
 	self property: #parser whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDSourceTextPresenter >> whenSyntaxNodeChangedDo: aBlock [
 	self property: #syntaxNode whenChangedDo: aBlock
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #RMDDeltaTimeDirectiveNode }
+Extension { #name : 'RMDDeltaTimeDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDDeltaTimeDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode directive: self printString

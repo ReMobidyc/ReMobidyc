@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDAbstractSnapshotTabular,
-	#superclass : #RMDTabular,
+	#name : 'RMDAbstractSnapshotTabular',
+	#superclass : 'RMDTabular',
 	#instVars : [
 		'timeList'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractSnapshotTabular class >> isAbstract [
 
 	^ self == RMDAbstractSnapshotTabular
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbstractSnapshotTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -34,21 +36,21 @@ RMDAbstractSnapshotTabular >> initializePresenters [
 		            yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractSnapshotTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
 	self updateTimeDropList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractSnapshotTabular >> metaInterpreterReloaded [
 
 	self updateTimeDropList.
 	super metaInterpreterReloaded
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractSnapshotTabular >> runChanged [
 
 	self
@@ -56,7 +58,7 @@ RMDAbstractSnapshotTabular >> runChanged [
 		updateTable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractSnapshotTabular >> selectTime: aNumber [
 
 	timeList
@@ -68,20 +70,20 @@ RMDAbstractSnapshotTabular >> selectTime: aNumber [
 		scrollToSelection: true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractSnapshotTabular >> selectedTime [
 
 	^ timeList selectedItem ifNotNil: [ :time | 
 		  time * metaInterpreter simulationModel deltaTime ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractSnapshotTabular >> timeChanged [
 
 	self updateRows
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAbstractSnapshotTabular >> updateTimeDropList [
 
 	| item items |

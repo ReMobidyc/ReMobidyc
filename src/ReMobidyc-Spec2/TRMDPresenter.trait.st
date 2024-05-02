@@ -1,41 +1,45 @@
 Trait {
-	#name : #TRMDPresenter,
-	#category : #'ReMobidyc-Spec2-Traits'
+	#name : 'TRMDPresenter',
+	#category : 'ReMobidyc-Spec2-Traits',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Traits'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 TRMDPresenter >> beError [
 
 	self color: self errorColor
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TRMDPresenter >> beOk [
 	self color: self okColor
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TRMDPresenter >> beWarning [
 	self color: self warningColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDPresenter >> color: aColor [
+
 	super color: aColor.
-	self withWidgetDo: [ :w | w notNil ifTrue: [ w color: aColor ] ]
+	self withAdapterDo: [ :a |
+		a widgetDo: [ :w | w ifNotNil: [ w color: aColor ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDPresenter >> errorColor [
 	^ self theme backgroundColor mixed: 0.9 with: Color red
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDPresenter >> okColor [
 	^ self theme backgroundColor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDPresenter >> warningColor [
 	^ self theme backgroundColor mixed: 0.9 with: Color yellow
 ]

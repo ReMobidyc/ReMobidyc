@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDExpressionPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDExpressionPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'expression'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDExpressionPresenter class >> on: aRMDExpressionNode [
 
 	^ self new
@@ -15,32 +17,32 @@ RMDExpressionPresenter class >> on: aRMDExpressionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionPresenter >> borderColor [
 
 	^ Color lightGray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionPresenter >> expression [
 
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionPresenter >> expression: aRMDExpressionNode [
 
 	expression := aRMDExpressionNode.
 	self expressionChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionPresenter >> expressionChanged [
 
 	self layout: self layout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExpressionPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 
 	aDialogWindowPresenter addButton: 'Ok' do: [ :presenter |
@@ -48,14 +50,16 @@ RMDExpressionPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 		presenter close ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
-	self whenBuiltDo: [ self withWidgetDo: [ :w | w color: Color white ] ]
+	self whenBuiltDo: [
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w | w color: Color white ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExpressionPresenter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.

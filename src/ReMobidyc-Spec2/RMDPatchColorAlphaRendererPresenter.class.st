@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPatchColorAlphaRendererPresenter,
-	#superclass : #RMDPatchColorRangeRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDPatchColorAlphaRendererPresenter',
+	#superclass : 'RMDPatchColorRangeRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDPatchColorAlphaRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -43,7 +45,7 @@ RMDPatchColorAlphaRendererPresenter class >> defaultLayout [
 			height: self inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorAlphaRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight * 3
 ]

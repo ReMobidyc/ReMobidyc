@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDLauncher,
-	#superclass : #RMDRepositoryModelsBrowser,
+	#name : 'RMDLauncher',
+	#superclass : 'RMDRepositoryModelsBrowser',
 	#traits : 'TRMDLaunchAnalysisTools',
 	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
@@ -9,10 +9,12 @@ Class {
 		'experimentariumButton',
 		'modelerMenuButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDLauncher class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
@@ -58,7 +60,7 @@ RMDLauncher class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDLauncher class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -70,19 +72,19 @@ RMDLauncher class >> remobidycMenuOn: aBuilder [
 		help: 'Open a model launcher'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLauncher >> canOpenAnalysis [
 
 	^ self item notNil and: [ self repository isRunsRepository ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDLauncher >> getRepositories [
 
 	^ super getRepositories copyWith: RMDRunsRepository current
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLauncher >> initializePresenters [
 
 	self initializeOpenAnalysisButtonsPresenters.
@@ -116,7 +118,7 @@ RMDLauncher >> initializePresenters [
 	super initializePresenters
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDLauncher >> itemListMenu [
 
 	| selectedItem |
@@ -176,7 +178,7 @@ RMDLauncher >> itemListMenu [
 						  action: [ self exportItem ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDLauncher >> metaInterpreterForTabularDo: aBlock [
 
 	^ self load ifNotNil: [ :model | 
@@ -185,7 +187,7 @@ RMDLauncher >> metaInterpreterForTabularDo: aBlock [
 				  aBlock ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInExperimentarium [
 
 	self repository isRunsRepository
@@ -193,14 +195,14 @@ RMDLauncher >> openInExperimentarium [
 		ifFalse: [ self openInExperimentariumMenu openWithSpecAtPointer ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInExperimentariumForDryRun [
 
 	self load ifNotNil: [ :model | 
 		model metaInterpreterForDryRun ifNotNil: #openInExperimentarium ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInExperimentariumMenu [
 
 	^ self newMenu
@@ -217,7 +219,7 @@ RMDLauncher >> openInExperimentariumMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInExperimentariumOnFile [
 
 	self load ifNotNil: [ :model | 
@@ -229,7 +231,7 @@ RMDLauncher >> openInExperimentariumOnFile [
 			model metaInterpreterOnFile ifNotNil: #openInExperimentarium ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInModeler [
 
 	self load
@@ -242,7 +244,7 @@ RMDLauncher >> openInModeler [
 				(RMDModelFileTextBrowser on: fileRef) open ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openInTextModeler [
 
 	self repository isRunsRepository ifFalse: [ 
@@ -250,7 +252,7 @@ RMDLauncher >> openInTextModeler [
 			(RMDModelFileTextBrowser on: fileRef) open ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> openModelerMenu [
 
 	^ self newMenu addGroup: [ :group |
@@ -265,7 +267,7 @@ RMDLauncher >> openModelerMenu [
 					  action: [ self openInTextModeler ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDLauncher >> removeItem [
 
 	| items |
@@ -283,30 +285,30 @@ RMDLauncher >> removeItem [
 			ifFalse: [ super removeItem ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLauncher >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLauncher >> selectedRunId [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLauncher >> selectedTime [
 
 	^ nil
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLauncher >> title [
 	^ 'Launcher'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDLauncher >> updateButtons [
 
 	super updateButtons.
@@ -325,7 +327,7 @@ RMDLauncher >> updateButtons [
 	self updateOpenAnalysisButtons
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDLauncher >> updateItemList [
 
 	super updateItemList.

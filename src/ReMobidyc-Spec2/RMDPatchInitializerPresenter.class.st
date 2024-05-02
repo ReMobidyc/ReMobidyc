@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPatchInitializerPresenter,
-	#superclass : #RMDAgentInitializerPresenter,
+	#name : 'RMDPatchInitializerPresenter',
+	#superclass : 'RMDAgentInitializerPresenter',
 	#instVars : [
 		'xDivisionsField',
 		'yDivisionsField',
 		'sizeField',
 		'sizeUnitDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDPatchInitializerPresenter class >> defaultLayout [
 
 	<spec>
@@ -29,7 +31,7 @@ RMDPatchInitializerPresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPatchInitializerPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -87,7 +89,7 @@ RMDPatchInitializerPresenter >> initializePresenters [
 		                    yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchInitializerPresenter >> newLayout [
 
 	| newLayout |
@@ -111,7 +113,7 @@ RMDPatchInitializerPresenter >> newLayout [
 	^ newLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> nodeChanged [
 	super nodeChanged.
 	self
@@ -121,47 +123,47 @@ RMDPatchInitializerPresenter >> nodeChanged [
 		updateSizeUnitField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> preferredHeight [
 	^ (node attributeInitializers size + 1) * self class inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> sizeField [
 	^ sizeField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> sizeUnitDropList [
 	^ sizeUnitDropList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchInitializerPresenter >> updateSizeField [
 	node ifNotNil: [ sizeField text: node size literal ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchInitializerPresenter >> updateSizeUnitField [
 	node ifNotNil: [ sizeUnitDropList selectItem: node size unit ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchInitializerPresenter >> updateXDivisionsField [
 	node ifNotNil: [ xDivisionsField text: node xDivisions printString ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchInitializerPresenter >> updateYDivisionsField [
 	node ifNotNil: [ yDivisionsField text: node yDivisions printString ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> xDivisionsField [
 	^ xDivisionsField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerPresenter >> yDivisionsField [
 	^ yDivisionsField
 ]

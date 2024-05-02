@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDEnUnitExpressionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDEnUnitExpressionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'unitPresenter',
 		'expressionPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDEnUnitExpressionPresenter >> expressionChanged [
 
 	unitPresenter label: '[' , expression unit printString , ']'.
@@ -16,7 +18,7 @@ RMDEnUnitExpressionPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDEnUnitExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -29,7 +31,7 @@ RMDEnUnitExpressionPresenter >> initializePresenters [
 		                       yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDEnUnitExpressionPresenter >> layout [
 
 	^ SpBoxLayout newVertical

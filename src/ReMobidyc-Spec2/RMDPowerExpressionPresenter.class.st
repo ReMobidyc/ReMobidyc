@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDPowerExpressionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDPowerExpressionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'operatorLabel',
 		'argumentPresenter1',
 		'argumentPresenter2'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerExpressionPresenter >> expressionChanged [
 
 	operatorLabel label: expression operator.
@@ -18,7 +20,7 @@ RMDPowerExpressionPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPowerExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -34,13 +36,14 @@ RMDPowerExpressionPresenter >> initializePresenters [
 		                      displayBold: [ true ];
 		                      yourself.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				borderColor: self borderColor;
-				borderWidth: 2 ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					borderColor: self borderColor;
+					borderWidth: 2 ] ] ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDPowerExpressionPresenter >> layout [
 
 	^ SpBoxLayout newVertical

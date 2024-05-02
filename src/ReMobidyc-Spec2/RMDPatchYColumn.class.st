@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDPatchYColumn,
-	#superclass : #RMDTabularColumn,
+	#name : 'RMDPatchYColumn',
+	#superclass : 'RMDTabularColumn',
 	#instVars : [
 		'unit'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchYColumn class >> unit: aRMDUnit [
 
 	^ self new
@@ -15,26 +17,26 @@ RMDPatchYColumn class >> unit: aRMDUnit [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPatchYColumn >> ifOnChartDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchYColumn >> unit [
 
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchYColumn >> unit: aRMDUnit [
 
 	unit := aRMDUnit.
 	title := 'center y [' , unit printString , ']'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchYColumn >> value: aRow [
 
 	^ aRow

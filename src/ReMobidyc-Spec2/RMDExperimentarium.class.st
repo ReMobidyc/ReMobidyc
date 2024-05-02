@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDExperimentarium,
-	#superclass : #RMDPresenter,
+	#name : 'RMDExperimentarium',
+	#superclass : 'RMDPresenter',
 	#traits : 'TRMDLaunchAnalysisTools',
 	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
@@ -26,10 +26,12 @@ Class {
 		'showPopulationChartRadioButton',
 		'showVisualMapRadioButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDExperimentarium class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -81,14 +83,14 @@ RMDExperimentarium class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDExperimentarium class >> metaInterpreter: aRMDInterpreter [
 	^ self new
 		setMetaInterpreter: aRMDInterpreter;
 		yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> basicInformServer [
 
 	lastServerUpdate := DateAndTime now.
@@ -99,21 +101,21 @@ RMDExperimentarium >> basicInformServer [
 			from: self ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> basicUpdateTimeProgressBar [
 
 	metaInterpreter ifNotNil: [ 
 		timeProgressBar fixedAt: metaInterpreter progress ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExperimentarium >> canOpenAnalysis [
 
 	^ metaInterpreter notNil and: [ 
 		  metaInterpreter context isForFileMemory ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExperimentarium >> canProceed: aRMDInterpreter [
 
 	^ limitsNumberOfIndividualsCheckBox state not or: [ 
@@ -121,20 +123,20 @@ RMDExperimentarium >> canProceed: aRMDInterpreter [
 		  <= numberOfIndividualField number ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDExperimentarium >> ifValidated: aBlock [
 
 	^ validated = true ifTrue: [ aBlock cull: self ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> informServer [
 	(lastServerUpdate isNil
 		or: [ DateAndTime now - lastServerUpdate >= self serverUpdateInterval ])
 		ifTrue: [ self basicInformServer ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExperimentarium >> initialize [
 
 	super initialize.
@@ -145,7 +147,7 @@ RMDExperimentarium >> initialize [
 	populationByTime := Dictionary new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExperimentarium >> initializePresenters [
 
 	super initializePresenters.
@@ -264,32 +266,32 @@ RMDExperimentarium >> initializePresenters [
 	self whenDisplayDo: [ self updateDisplay ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExperimentarium >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 700 @ 480
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> interpreterDo: aBlock [
 
 	(metaInterpreter interpreterAt: self runId ifAbsent: [ nil ]) 
 		ifNotNil: aBlock
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDExperimentarium >> isRunningSimulation [
 
 	^ metaInterpreter isRunningSimulation
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExperimentarium >> isValidated [
 	^ validated = true
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> limitsNumberOfIndividualsChanged [
 
 	limitsNumberOfIndividualsCheckBox state
@@ -303,7 +305,7 @@ RMDExperimentarium >> limitsNumberOfIndividualsChanged [
 				color: (Color gray: 0.75) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDExperimentarium >> metaInterpreterForTabularDo: aBlock [
 
 	^ (metaInterpreter notNil and: [ 
@@ -314,7 +316,7 @@ RMDExperimentarium >> metaInterpreterForTabularDo: aBlock [
 				   metaInterpreter context modelPath) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> modelName [
 
 	^ metaInterpreter
@@ -322,13 +324,13 @@ RMDExperimentarium >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDExperimentarium >> pauseSimulation [
 
 	metaInterpreter pauseSimulation
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDExperimentarium >> printNat: anInteger [
 
 	^ anInteger
@@ -354,7 +356,7 @@ RMDExperimentarium >> printNat: anInteger [
 		  ifNil: [ '-' ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDExperimentarium >> removeRun [
 
 	(metaInterpreter ifNotNil: #modelPath) ifNotNil: [ :modelPath |
@@ -366,7 +368,7 @@ RMDExperimentarium >> removeRun [
 			self updateButtons ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDExperimentarium >> runButtonPressed [
 
 	metaInterpreter isRunningSimulation
@@ -374,13 +376,13 @@ RMDExperimentarium >> runButtonPressed [
 		ifFalse: [ self runSimulation ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> runId [
 
 	^ interpreterDropList selectedItem ifNil: [ 1 ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDExperimentarium >> runSimulation [
 
 	self isValidated ifTrue: [ 
@@ -388,7 +390,7 @@ RMDExperimentarium >> runSimulation [
 			(RMDActionDebugger exception: ex) open ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDExperimentarium >> saveRunAs [
 
 	(metaInterpreter ifNotNil: #modelPath) ifNotNil: [ :modelPath |
@@ -406,19 +408,19 @@ RMDExperimentarium >> saveRunAs [
 				self setMetaInterpreter: (RMDMetaInterpreter onModelPath: ref) ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> selectedRunId [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> selectedTime [
 
 	| time |
@@ -430,12 +432,12 @@ RMDExperimentarium >> selectedTime [
 	^ time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> serverUpdateInterval [
 	^ 10 seconds
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 
 	metaInterpreter ifNotNil: [
@@ -476,7 +478,7 @@ RMDExperimentarium >> setMetaInterpreter: aRMDMetaInterpreter [
 	self updateButtons
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 
 	metaInterpreter isRunningSimulation ifFalse: [ 
@@ -486,7 +488,7 @@ RMDExperimentarium >> simulationPaused: aRMDSimulationPaused [
 		lastDisplayUpdate := nil ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
 
 	runButton state: true.
@@ -494,12 +496,12 @@ RMDExperimentarium >> simulationStarted: aRMDSimulationStarted [
 	lastDisplayUpdate := DateAndTime now
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> stagePrefix [
 	^ '  '
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDExperimentarium >> stepSimulation [
 
 	self isValidated ifTrue: [ 
@@ -508,7 +510,7 @@ RMDExperimentarium >> stepSimulation [
 			do: [ :ex | (RMDActionDebugger exception: ex) open ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> timeChanged: aRMDTimeChanged [
 
 	| now |
@@ -523,7 +525,7 @@ RMDExperimentarium >> timeChanged: aRMDTimeChanged [
 			self updateDisplay ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExperimentarium >> title [
 
 	^ 'Experimentarium'
@@ -536,7 +538,7 @@ RMDExperimentarium >> title [
 		   ifNil: [ '' ])
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDExperimentarium >> typecheck [
 
 	[ 
@@ -550,7 +552,7 @@ RMDExperimentarium >> typecheck [
 			^ validated := false ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateButtons [
 
 	metaInterpreter
@@ -573,7 +575,7 @@ RMDExperimentarium >> updateButtons [
 			self updateOpenAnalysisButtons ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateDisplay [
 
 	metaInterpreter ifNil: [ ^ self ].
@@ -585,7 +587,7 @@ RMDExperimentarium >> updateDisplay [
 		updateTimeLabel
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateObservation: aRMDTimeChanged [
 
 	| interpreter model runId speciesPopulations |
@@ -633,7 +635,7 @@ RMDExperimentarium >> updateObservation: aRMDTimeChanged [
 			ifPresent: [ :current | byTime add: current copy ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updatePopulationChart [
 
 	(showPopulationChartRadioButton state and: [
@@ -714,7 +716,7 @@ RMDExperimentarium >> updatePopulationChart [
 				visualizationImage image: form ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateTableItems [
 
 	populationTable items: (Array streamContents: [ :stream | 
@@ -729,7 +731,7 @@ RMDExperimentarium >> updateTableItems [
 	populationTable items ifNotEmpty: [ populationTable selectIndex: 1 ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateTimeLabel [
 
 	self interpreterDo: [ :interpreter | 
@@ -750,7 +752,7 @@ RMDExperimentarium >> updateTimeLabel [
 				 stream nextPutAll: ' steps.' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateTimeProgressBar [
 
 	| now |
@@ -761,7 +763,7 @@ RMDExperimentarium >> updateTimeProgressBar [
 		self basicUpdateTimeProgressBar ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDExperimentarium >> updateVisualMap [
 
 	(showVisualMapRadioButton state and: [ 
@@ -775,7 +777,7 @@ RMDExperimentarium >> updateVisualMap [
 			visualizationImage image: (visualizer visualize: interpreter) ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDExperimentarium >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]

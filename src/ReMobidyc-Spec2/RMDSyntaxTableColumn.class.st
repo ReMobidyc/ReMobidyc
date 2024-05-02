@@ -1,56 +1,58 @@
 Class {
-	#name : #RMDSyntaxTableColumn,
-	#superclass : #SpStringTableColumn,
+	#name : 'RMDSyntaxTableColumn',
+	#superclass : 'SpStringTableColumn',
 	#instVars : [
 		'textChangedAction',
 		'extraAcceptAction'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RMDSyntaxTableColumn >> acceptColumnVisitor: aBuilder [
 
 	^ aBuilder visitRMDSyntaxColumn: self
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDSyntaxTableColumn >> defaultAcceptAction [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDSyntaxTableColumn >> defaultColorAction [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDSyntaxTableColumn >> defaultEvaluationBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDSyntaxTableColumn >> defaultTextChangedAction [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxTableColumn >> extraAcceptAction [
 
 	^ extraAcceptAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxTableColumn >> extraAcceptAction: aBlock [
 
 	extraAcceptAction := aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSyntaxTableColumn >> initialize [
 
 	super initialize.
@@ -61,19 +63,19 @@ RMDSyntaxTableColumn >> initialize [
 	self beEditable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxTableColumn >> textChangedAction [
 
 	^ textChangedAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxTableColumn >> textChangedAction: aBlock [
 
 	textChangedAction := aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSyntaxTableColumn >> textWidgetContent: aText [
 
 	| context presenter |

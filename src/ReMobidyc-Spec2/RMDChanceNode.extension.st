@@ -1,6 +1,6 @@
-Extension { #name : #RMDChanceNode }
+Extension { #name : 'RMDChanceNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDChanceNode >> asPrettyPrintNode [
 
 	| probNode chanceNode |

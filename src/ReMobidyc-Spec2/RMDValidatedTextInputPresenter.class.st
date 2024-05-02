@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDValidatedTextInputPresenter,
-	#superclass : #SpTextInputFieldPresenter,
+	#name : 'RMDValidatedTextInputPresenter',
+	#superclass : 'SpTextInputFieldPresenter',
 	#traits : 'TRMDPresenter + TRMDTemplateMenu',
 	#classTraits : 'TRMDPresenter classTrait + TRMDTemplateMenu classTrait',
 	#instVars : [
@@ -8,43 +8,45 @@ Class {
 		'#lastValidText => ObservableSlot',
 		'#invalidIsWarning => ObservableSlot'
 	],
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> beInvalid [
 	self color: self invalidColor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDValidatedTextInputPresenter >> initialize [
 	super initialize.
 	invalidIsWarning := false
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> invalidColor [
 	^ invalidIsWarning
 		ifTrue: [ self warningColor ]
 		ifFalse: [ self errorColor ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> invalidIsWarning [
 	^ invalidIsWarning
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> invalidIsWarning: aBoolean [
 	invalidIsWarning := aBoolean = true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> lastValidText [
 	^ lastValidText
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> text: aStringOrText [
 	(validation notNil and: [ (validation cull: aStringOrText) ~= true ])
 		ifTrue: [ self beInvalid.
@@ -54,22 +56,22 @@ RMDValidatedTextInputPresenter >> text: aStringOrText [
 	^ super text: aStringOrText
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> validation [
 	^ validation
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDValidatedTextInputPresenter >> validation: aBlock [
 	validation := aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDValidatedTextInputPresenter >> whenLastValidTextChangedDo: aBlock [
 	self property: #lastValidText whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDValidatedTextInputPresenter >> whenValidationChangedDo: aBlock [
 	self property: #validation whenChangedDo: aBlock
 ]

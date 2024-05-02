@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDPatchXColumn,
-	#superclass : #RMDTabularColumn,
+	#name : 'RMDPatchXColumn',
+	#superclass : 'RMDTabularColumn',
 	#instVars : [
 		'unit'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchXColumn class >> unit: aRMDUnit [
 
 	^ self new
@@ -15,26 +17,26 @@ RMDPatchXColumn class >> unit: aRMDUnit [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPatchXColumn >> ifOnChartDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchXColumn >> unit [
 
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchXColumn >> unit: aRMDUnit [
 
 	unit := aRMDUnit.
 	title := 'center x [' , unit printString , ']'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchXColumn >> value: aRow [
 
 	^ aRow

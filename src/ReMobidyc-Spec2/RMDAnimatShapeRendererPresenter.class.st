@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDAnimatShapeRendererPresenter,
-	#superclass : #RMDAnimatRendererPresenter,
+	#name : 'RMDAnimatShapeRendererPresenter',
+	#superclass : 'RMDAnimatRendererPresenter',
 	#instVars : [
 		'shapeSizeField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAnimatShapeRendererPresenter class >> isAbstract [
 
 	^ self == RMDAnimatShapeRendererPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatShapeRendererPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -27,18 +29,18 @@ RMDAnimatShapeRendererPresenter >> initializePresenters [
 		                 yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatShapeRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatShapeRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateShapeSizeField
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatShapeRendererPresenter >> updateShapeSizeField [
 
 	renderer ifNotNil: [ shapeSizeField number: renderer shapeSize ]

@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDAnimatRectangleRendererPresenter,
-	#superclass : #RMDAnimatShapeRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDAnimatRectangleRendererPresenter',
+	#superclass : 'RMDAnimatShapeRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDAnimatRectangleRendererPresenter class >> defaultLayout [
 
 	<spec>

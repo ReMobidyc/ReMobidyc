@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDAnimatTriangleRendererPresenter,
-	#superclass : #RMDAnimatShapeRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDAnimatTriangleRendererPresenter',
+	#superclass : 'RMDAnimatShapeRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDAnimatTriangleRendererPresenter class >> defaultLayout [
 
 	<spec>

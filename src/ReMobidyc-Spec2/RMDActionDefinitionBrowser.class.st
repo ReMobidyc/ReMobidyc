@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDActionDefinitionBrowser,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDActionDefinitionBrowser',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'identifierField',
 		'objectField',
@@ -21,10 +21,12 @@ Class {
 		'viewUtilityButton',
 		'viewGuardButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDActionDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -91,7 +93,7 @@ RMDActionDefinitionBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> addAttributeDefinition [
 
 	| newDefinition |
@@ -101,7 +103,7 @@ RMDActionDefinitionBrowser >> addAttributeDefinition [
 	self nodeChanged
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> addUtilityDefinition [
 
 	| newDefinition |
@@ -111,7 +113,7 @@ RMDActionDefinitionBrowser >> addUtilityDefinition [
 	self nodeChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> agentDefinition [
 
 	^ self simulationModel
@@ -119,7 +121,7 @@ RMDActionDefinitionBrowser >> agentDefinition [
 		  ifAbsent: [ nil ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDActionDefinitionBrowser >> attributeDefinitionListMenu [
 
 	^ self newMenu
@@ -154,7 +156,7 @@ RMDActionDefinitionBrowser >> attributeDefinitionListMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> editAttributeDefinition [
 
 	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
@@ -172,7 +174,7 @@ RMDActionDefinitionBrowser >> editAttributeDefinition [
 			attributeDefinitionList selectIndex: index ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> editDirectives [
 
 	| directives chooser |
@@ -230,7 +232,7 @@ RMDActionDefinitionBrowser >> editDirectives [
 		self nodeChanged ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> editUtilityDefinition [
 
 	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
@@ -244,7 +246,7 @@ RMDActionDefinitionBrowser >> editUtilityDefinition [
 			utilityDefinitionList selectIndex: index ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDActionDefinitionBrowser >> initializeAttributePresenters [
 
 	attributeDefinitionList := self newTable
@@ -351,7 +353,7 @@ RMDActionDefinitionBrowser >> initializeAttributePresenters [
 		                       yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDActionDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -380,10 +382,10 @@ RMDActionDefinitionBrowser >> initializePresenters [
 			              node guard: guard ];
 		              yourself.
 	viewGuardButton := self newButton
-		                       icon: self validatoriumIcon;
-		                       action: [ self viewGuard ];
-		                       help: 'View the guard condition';
-		                       yourself.
+		                   icon: self validatoriumIcon;
+		                   action: [ self viewGuard ];
+		                   help: 'View the guard condition';
+		                   yourself.
 	directivesButton := self newButton
 		                    color: Color white;
 		                    label: 'no directive';
@@ -395,14 +397,15 @@ RMDActionDefinitionBrowser >> initializePresenters [
 		initializeAttributePresenters;
 		initializeUtilityPresenters.
 	self whenBuiltDo: [
-		self withWidgetDo: [ :w |
-			w
-				update: #color: with: { Color white };
-				update: #borderColor: with: { Color darkGray };
-				update: #borderWidth: with: { 1 } ] ]
+		self withAdapterDo: [ :a |
+			a widgetDo: [ :w |
+				w
+					update: #color: with: { Color white };
+					update: #borderColor: with: { Color darkGray };
+					update: #borderWidth: with: { 1 } ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDActionDefinitionBrowser >> initializeUtilityPresenters [
 
 	utilityDefinitionList := self newTable
@@ -492,7 +495,7 @@ RMDActionDefinitionBrowser >> initializeUtilityPresenters [
 		                     yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -501,7 +504,7 @@ RMDActionDefinitionBrowser >> initializeWindow: aWindowPresenter [
 		initialExtent: 600 @ self preferredHeight
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> moveDownAttribute [
 
 	attributeDefinitionList selection selectedItem ifNotNil: [ 
@@ -521,7 +524,7 @@ RMDActionDefinitionBrowser >> moveDownAttribute [
 			attributeDefinitionList selectIndex: index + 1 ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> moveDownUtility [
 
 	utilityDefinitionList selection selectedItem ifNotNil: [ :utilityNode | 
@@ -540,7 +543,7 @@ RMDActionDefinitionBrowser >> moveDownUtility [
 			utilityDefinitionList selectIndex: index + 1 ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> moveUpAttribute [
 
 	attributeDefinitionList selection selectedItem ifNotNil: [ 
@@ -558,7 +561,7 @@ RMDActionDefinitionBrowser >> moveUpAttribute [
 			attributeDefinitionList selectIndex: index - 1 ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> moveUpUtility [
 
 	utilityDefinitionList selection selectedItem ifNotNil: [ 
@@ -576,7 +579,7 @@ RMDActionDefinitionBrowser >> moveUpUtility [
 			utilityDefinitionList selectIndex: index - 1 ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> nodeChanged [
 
 	node ifNil: [ ^ self ].
@@ -595,18 +598,18 @@ RMDActionDefinitionBrowser >> nodeChanged [
 	self updateTitle
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> objectAgent [
 
 	^ objectField text asString trim
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> preferredHeight [
 	^ 600
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> removeAttributeDefinition [
 
 	attributeDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
@@ -617,7 +620,7 @@ RMDActionDefinitionBrowser >> removeAttributeDefinition [
 			self nodeChanged ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> removeUtilityDefinition [
 
 	utilityDefinitionList selectedItem ifNotNil: [ :oldDefinition | 
@@ -628,7 +631,7 @@ RMDActionDefinitionBrowser >> removeUtilityDefinition [
 			self nodeChanged ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> requestAnimatIdentifierForNewDirective [
 
 	^ ((UIManager default
@@ -640,7 +643,7 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForNewDirective [
 				     ifNil: [ '-' ])) ifNil: [ '-' ]) trim ifEmpty: [ '-' ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 
 	^ (UIManager default
@@ -653,7 +656,7 @@ RMDActionDefinitionBrowser >> requestAnimatIdentifierForStageDirective [
 		  name trim ifEmpty: [ '-' ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> requestQuantityForNewDirective [
 
 	| parser |
@@ -676,26 +679,26 @@ RMDActionDefinitionBrowser >> requestQuantityForNewDirective [
 				  ifFalse: [ n ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> subjectAgent [
 
 	^ subjectAgent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> subjectAgent: aString [
 
 	subjectAgent := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionBrowser >> title [
 
 	^ 'Action definition'
 	  , (node ifNil: [ '' ] ifNotNil: [ :action | ' of ' , action name ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDefinitionBrowser >> updateAttributeButtons [
 
 	| hasSelection |
@@ -709,13 +712,13 @@ RMDActionDefinitionBrowser >> updateAttributeButtons [
 	viewAttributeButton enabled: hasSelection
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDefinitionBrowser >> updateTitle [
 
 	self window ifNotNil: [ :w | w title: self title ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDefinitionBrowser >> updateUtilityButtons [
 
 	| hasSelection |
@@ -729,7 +732,7 @@ RMDActionDefinitionBrowser >> updateUtilityButtons [
 	viewUtilityButton enabled: hasSelection
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
 
 	^ self newMenu
@@ -764,7 +767,7 @@ RMDActionDefinitionBrowser >> utilityDefinitionListMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> viewAttribute [
 
 	attributeDefinitionList selectedItem ifNotNil: [ :attributeDefinition |
@@ -772,14 +775,14 @@ RMDActionDefinitionBrowser >> viewAttribute [
 			'definition body of ' , attributeDefinition identifier ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> viewGuard [
 
 	node guard ifNotNil: [ :guard |
 		guard asPrettyPrintNode openTitle: 'Engaging condition' ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDActionDefinitionBrowser >> viewUtility [
 
 	utilityDefinitionList selectedItem ifNotNil: [ :utilityDefinition |

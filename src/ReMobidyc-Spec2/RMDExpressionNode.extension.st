@@ -1,6 +1,6 @@
-Extension { #name : #RMDExpressionNode }
+Extension { #name : 'RMDExpressionNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDExpressionNode >> asPrettyPrintNode [
 
 	^ self subclassResponsibility 

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDIndividualHistoryTabular,
-	#superclass : #RMDTimeSeriesTabular,
+	#name : 'RMDIndividualHistoryTabular',
+	#superclass : 'RMDTimeSeriesTabular',
 	#instVars : [
 		'stageDropList',
 		'openLineChartsButton',
 		'taskList',
 		'traceableActionContext'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDIndividualHistoryTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -48,7 +50,7 @@ RMDIndividualHistoryTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIndividualHistoryTabular class >> on: aRMDMetaInterpreter runId: runId individual: id time: secondsSinceEpoch [
 
 	^ (self on: aRMDMetaInterpreter)
@@ -57,7 +59,7 @@ RMDIndividualHistoryTabular class >> on: aRMDMetaInterpreter runId: runId indivi
 		  time: secondsSinceEpoch
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIndividualHistoryTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -90,7 +92,7 @@ RMDIndividualHistoryTabular >> initializePresenters [
 		                          RMDTraceableActionContextPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIndividualHistoryTabular >> initializeWithRunId: runId animat: animatId time: secondsSinceEpoch [
 
 	(metaInterpreter interpreterAt: runId ifAbsent: [ nil ]) ifNotNil: [ 
@@ -116,7 +118,7 @@ RMDIndividualHistoryTabular >> initializeWithRunId: runId animat: animatId time:
 					 ifNone: [ nil ]) ]
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDIndividualHistoryTabular >> openChart [
 
 	table columns ifNotEmpty: [ :columns |
@@ -127,16 +129,14 @@ RMDIndividualHistoryTabular >> openChart [
 		columns do: [ :column |
 			column ifOnChartDo: [
 				| chart |
-				chart := RSChart new.
+				chart := RSCompositeChart new.
 				chart
 					extent: 400 @ 400;
 					title: column title.
 				chart
-					addPlot: (RSLinePlot new
+					add: (RSLinePlot new
 							 x: time
 							 y: (table items collect: [ :row | column value: row ]));
-					addDecoration: (RSHorizontalTick new fontSize: 8);
-					addDecoration: (RSVerticalTick new fontSize: 8);
 					addDecoration: (RSXLabelDecoration new
 							 title: columns first title;
 							 fontSize: 10);
@@ -155,7 +155,7 @@ RMDIndividualHistoryTabular >> openChart [
 					  ifNil: [ '' ])) extent: 800 @ 800 ]
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDIndividualHistoryTabular >> processKeyDown: event [
 	| keyName keyInteraction |
 	
@@ -165,11 +165,11 @@ RMDIndividualHistoryTabular >> processKeyDown: event [
 	keyName = #O ifTrue: [ ^ keyInteraction zoomOut: event canvas ].
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDIndividualHistoryTabular >> processKeyUp: evt [
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDIndividualHistoryTabular >> searchHistoryBackward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
 
 	| t animat id prevId |
@@ -205,7 +205,7 @@ RMDIndividualHistoryTabular >> searchHistoryBackward: anOrderedCollectionOfTimeI
 				id } ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDIndividualHistoryTabular >> searchHistoryForward: anOrderedCollectionOfTimeIntervalAndAnimatId memory: memory [
 
 	| t animat id |
@@ -239,7 +239,7 @@ RMDIndividualHistoryTabular >> searchHistoryForward: anOrderedCollectionOfTimeIn
 				id } ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualHistoryTabular >> selectTime: anInteger [
 
 	| t |
@@ -249,7 +249,7 @@ RMDIndividualHistoryTabular >> selectTime: anInteger [
 			 ifNone: [ nil ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualHistoryTabular >> selectedAgent [
 
 	^ stageDropList selectedItem ifNotNil: [ :assoc |
@@ -259,13 +259,13 @@ RMDIndividualHistoryTabular >> selectedAgent [
 				  ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDIndividualHistoryTabular >> selectedIndividual [
 
 	^ stageDropList selectedItem ifNotNil: [ :assoc | assoc value second ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDIndividualHistoryTabular >> selectedTime [
 
 	| t0 t |
@@ -276,14 +276,14 @@ RMDIndividualHistoryTabular >> selectedTime [
 	^ t0 + t * metaInterpreter simulationModel deltaTime
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIndividualHistoryTabular >> stageChanged [
 
 	self
 		updateTable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIndividualHistoryTabular >> title [
 
 	^ 'Individual History Tabular'
@@ -293,7 +293,7 @@ RMDIndividualHistoryTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIndividualHistoryTabular >> updateColumns [
 
 	table columns: (Array streamContents: [ :stream | 
@@ -310,7 +310,7 @@ RMDIndividualHistoryTabular >> updateColumns [
 							 stream nextPut: (RMDAttributeColumn attribute: attribute) ] ] ] ] ])
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDIndividualHistoryTabular >> updateRows [
 
 	table
@@ -347,7 +347,7 @@ RMDIndividualHistoryTabular >> updateRows [
 		refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIndividualHistoryTabular >> updateTaskList [
 
 	| selection |
@@ -368,7 +368,7 @@ RMDIndividualHistoryTabular >> updateTaskList [
 	taskList items: Array new
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIndividualHistoryTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem

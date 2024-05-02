@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPrettyPrintNode,
-	#superclass : #RSComposite,
-	#category : #'ReMobidyc-Spec2-PrettyPrint'
+	#name : 'RMDPrettyPrintNode',
+	#superclass : 'RSComposite',
+	#category : 'ReMobidyc-Spec2-PrettyPrint',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'PrettyPrint'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> agent: aString attribute: anotherString [
 	"RMDPrettyPrintNode agent: 'my' attribute: 'x'"
 
@@ -17,7 +19,7 @@ RMDPrettyPrintNode class >> agent: aString attribute: anotherString [
 			  attribute }
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> binaryOperator: aString arguments: aCollectionOfRMDPrettyPrintNode [
 
 	^ self new shapes: ((Array streamContents: [ :stream |
@@ -29,7 +31,7 @@ RMDPrettyPrintNode class >> binaryOperator: aString arguments: aCollectionOfRMDP
 			   yourself)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString [
 
 	^ self new
@@ -37,7 +39,7 @@ RMDPrettyPrintNode class >> directive: aString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString agent: anotherString [
 
 	| directiveNode agentNode |
@@ -51,7 +53,7 @@ RMDPrettyPrintNode class >> directive: aString agent: anotherString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString agent: anotherString keyword: suffixString [
 
 	| directiveNode agentNode suffixNode |
@@ -67,7 +69,7 @@ RMDPrettyPrintNode class >> directive: aString agent: anotherString keyword: suf
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString agent: anotherString keyword: infixString expression: aRMDPrettyPrintNode keyword: suffixString [
 
 	| directiveNode agentNode infixNode suffixNode |
@@ -87,7 +89,7 @@ RMDPrettyPrintNode class >> directive: aString agent: anotherString keyword: inf
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString attribute: anotherString [
 
 	| directiveNode agentNode |
@@ -101,7 +103,7 @@ RMDPrettyPrintNode class >> directive: aString attribute: anotherString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> directive: aString node: aRMDPrettyPrintNode1 suffix: anotherString node: aRMDPrettyPrintNode2 [
 
 	| directiveNode suffixNode |
@@ -118,7 +120,7 @@ RMDPrettyPrintNode class >> directive: aString node: aRMDPrettyPrintNode1 suffix
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> fraction: aRMDPrettyPrintNode over: anotherRMDPrettyPrintNode [
 
 	| rect hline |
@@ -139,7 +141,7 @@ RMDPrettyPrintNode class >> fraction: aRMDPrettyPrintNode over: anotherRMDPretty
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> function: aString arguments: anArrayOfRMDPrettyPrintNode [
 
 	^ self new shapes: ((Array streamContents: [ :stream |
@@ -155,7 +157,7 @@ RMDPrettyPrintNode class >> function: aString arguments: anArrayOfRMDPrettyPrint
 			   yourself)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> literal: aString unit: anotherString [
 
 	| literalNode unitNode |
@@ -167,13 +169,13 @@ RMDPrettyPrintNode class >> literal: aString unit: anotherString [
 			  unitNode }
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPrettyPrintNode class >> margin [
 
 	^ 2
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> parenthesis: aRMDPrettyPrintNode [
 	"RMDPrettyPrintNode agent: 'my' attribute: 'x'"
 
@@ -187,7 +189,7 @@ RMDPrettyPrintNode class >> parenthesis: aRMDPrettyPrintNode [
 			  rparen }
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> utility: aString [
 
 	| utility |
@@ -195,7 +197,7 @@ RMDPrettyPrintNode class >> utility: aString [
 	^ self new shapes: { utility }
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode [
 
 	^ self new
@@ -203,7 +205,7 @@ RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode with: anotherRMDPrettyPrintNode [
 
 	^ self new
@@ -213,7 +215,7 @@ RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode with: anotherRMDPrettyPrin
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode1 with: aRMDPrettyPrintNode2 with: aRMDPrettyPrintNode3 [
 
 	^ self new
@@ -224,7 +226,7 @@ RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode1 with: aRMDPrettyPrintNode
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode1 with: aRMDPrettyPrintNode2 with: aRMDPrettyPrintNode3 with: aRMDPrettyPrintNode4 [
 
 	^ self new
@@ -236,7 +238,7 @@ RMDPrettyPrintNode class >> with: aRMDPrettyPrintNode1 with: aRMDPrettyPrintNode
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintNode class >> withAll: anArrayOfRMDPrettyPrintNode [
 
 	^ self new
@@ -244,7 +246,7 @@ RMDPrettyPrintNode class >> withAll: anArrayOfRMDPrettyPrintNode [
 		  yourself
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDPrettyPrintNode >> ** anIntegerOrPrettyPrintNode [
 
 	^ anIntegerOrPrettyPrintNode isInteger
@@ -274,7 +276,7 @@ RMDPrettyPrintNode >> ** anIntegerOrPrettyPrintNode [
 						   yourself) ]
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDPrettyPrintNode >> , aRMDPrettyPrintNode [
 
 	aRMDPrettyPrintNode translateMiddleLeftTo:
@@ -282,30 +284,30 @@ RMDPrettyPrintNode >> , aRMDPrettyPrintNode [
 	^ aRMDPrettyPrintNode
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDPrettyPrintNode >> / aRMDPrettyPrintNode [
 
 	^ self class fraction: self over: aRMDPrettyPrintNode
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDPrettyPrintNode >> enclosedByParenthesis [
 
 	^ self class parenthesis: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPrettyPrintNode >> isPrettyPrintNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPrettyPrintNode >> margin [
 	^ self class margin
 ]
 
-{ #category : #'user interface' }
+{ #category : 'user interface' }
 RMDPrettyPrintNode >> openTitle: aString [
 
 	| canvas interaction |
