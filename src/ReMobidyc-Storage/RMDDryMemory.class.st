@@ -1,103 +1,104 @@
 Class {
-	#name : #RMDDryMemory,
-	#superclass : #RMDMemory,
-	#category : #'ReMobidyc-Storage'
+	#name : 'RMDDryMemory',
+	#superclass : 'RMDMemory',
+	#category : 'ReMobidyc-Storage',
+	#package : 'ReMobidyc-Storage'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDryMemory >> isRewindable [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDryMemory >> name [
 
 	^ 'no storage'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readAnimatsForTime: anInteger [
 
 	^ Dictionary new 
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readCreationTimesForTime: anInteger [
 
 	^ Dictionary new
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readReproductionLinksForTime: anInteger [
 
 	^ Dictionary new
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readSeedsForTime: anInteger [
 
 	^ Dictionary new 
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readStageLinksForTime: anInteger [
 
 	^ Dictionary new
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> readValuesForTime: anInteger [
 
 	^  Dictionary new 
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> recordError [
 	^ RMDStorageError signal: 'Unable to record timed data on this storage.'
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> rewindError [
 	^ RMDStorageError signal: 'Unable to rewind time on this storage.'
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDDryMemory >> sunrise [
 	self fastSunrise
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeAnimats: aDictionary forTime: anInteger [
 
 	
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 
 	
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 
 	
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeSeeds: aDictionary forTime: anInteger [
 
 	
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeStageLinks: aDictionary forTime: anInteger [
 
 	
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDDryMemory >> writeValues: aDictionary forTime: anInteger [
 
 	
