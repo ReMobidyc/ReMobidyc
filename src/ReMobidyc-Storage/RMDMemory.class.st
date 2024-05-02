@@ -667,7 +667,7 @@ RMDMemory >> stageAnimat: aRMDAnimatDefinitionNode with: anInteger [
 		+ aRMDAnimatDefinitionNode totalNumberOfAttributes.
 	animat := aRMDAnimatDefinitionNode identifier.
 	(ins at: animat ifAbsentPut: [ Set new ]) add: individual.
-	stageLinks at: individual put: anInteger.
+	self stageLinks at: individual put: anInteger.
 	^ individual
 ]
 
