@@ -1,6 +1,6 @@
-Extension { #name : #SpMorphicTableCellBuilder }
+Extension { #name : 'SpMorphicTableCellBuilder' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpMorphicTableCellBuilder >> visitRMDPossessionalAgentDropListColumn: aDropListTableColumn [
 
 	| presenter morph |
@@ -26,7 +26,7 @@ SpMorphicTableCellBuilder >> visitRMDPossessionalAgentDropListColumn: aDropListT
 	self addCellMorph: morph column: aDropListTableColumn
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpMorphicTableCellBuilder >> visitRMDSyntaxColumn: aTableColumn [
 
 	| content item |
@@ -59,7 +59,7 @@ SpMorphicTableCellBuilder >> visitRMDSyntaxColumn: aTableColumn [
 				toMorph: cell ]
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpMorphicTableCellBuilder >> visitRMDSyntaxColumnEditable: aTableColumn on: content [
 
 	| presenter morph |
@@ -82,7 +82,7 @@ SpMorphicTableCellBuilder >> visitRMDSyntaxColumnEditable: aTableColumn on: cont
 	self addCellMorph: morph column: aTableColumn
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpMorphicTableCellBuilder >> visitRMDVariableOperatorDropListColumn: aDropListTableColumn [
 
 	| presenter morph |

@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDMetaSingleParameterSequencePresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDMetaSingleParameterSequencePresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'placeholderLabel',
 		'literalsField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDMetaSingleParameterSequencePresenter class >> defaultLayout [
 
 	^ SpBoxLayout newHorizontal
@@ -19,7 +21,7 @@ RMDMetaSingleParameterSequencePresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMetaSingleParameterSequencePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -35,14 +37,14 @@ RMDMetaSingleParameterSequencePresenter >> initializePresenters [
 		                 yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDMetaSingleParameterSequencePresenter >> literalsChanged [
 
 	literalsField lastValidSyntaxNode ifNotNil: [ :literals | 
 		node literals: literals ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequencePresenter >> nodeChanged [
 
 	node ifNotNil: [ 
@@ -50,7 +52,7 @@ RMDMetaSingleParameterSequencePresenter >> nodeChanged [
 		literalsField syntaxNode: node literals ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequencePresenter >> preferredHeight [
 
 	^ self class inputTextHeight * 1.5

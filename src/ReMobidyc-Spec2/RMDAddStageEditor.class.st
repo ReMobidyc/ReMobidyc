@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDAddStageEditor,
-	#superclass : #RMDPresenter,
+	#name : 'RMDAddStageEditor',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'nameField',
 		'action',
 		'createButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAddStageEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -27,25 +29,25 @@ RMDAddStageEditor class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAddStageEditor >> action [
 
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAddStageEditor >> action: aBlock [
 
 	action := aBlock
 ]
 
-{ #category : #'api - focus' }
+{ #category : 'api - focus' }
 RMDAddStageEditor >> defaultKeyboardFocus [
 
 	^ nameField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAddStageEditor >> initializePresenters [
 
 	super initializePresenters.
@@ -62,7 +64,7 @@ RMDAddStageEditor >> initializePresenters [
 			createButton } asOrderedCollection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAddStageEditor >> whenActionChangedDo: aBlock [
 
 	self property: #action whenChangedDo: aBlock

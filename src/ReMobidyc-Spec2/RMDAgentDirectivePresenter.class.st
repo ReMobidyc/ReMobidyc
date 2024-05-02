@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAgentDirectivePresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDAgentDirectivePresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'directiveLabel',
 		'agentLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDirectivePresenter >> expressionChanged [
 
 	directiveLabel label: expression directiveName , ' '.
@@ -16,7 +18,7 @@ RMDAgentDirectivePresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDirectivePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -29,7 +31,7 @@ RMDAgentDirectivePresenter >> initializePresenters [
 		              yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAgentDirectivePresenter >> layout [
 
 	| newLayout |

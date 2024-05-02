@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDAgentInitializerPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDAgentInitializerPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDAgentInitializerPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -13,13 +15,13 @@ RMDAgentInitializerPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentInitializerPresenter class >> isAbstract [
 
 	^ self == RMDAgentInitializerPresenter
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAgentInitializerPresenter >> attributesAndUtilitiesToNewLayout: newLayout [
 
 	node ifNotNil: [ 
@@ -43,7 +45,7 @@ RMDAgentInitializerPresenter >> attributesAndUtilitiesToNewLayout: newLayout [
 	^ newLayout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentInitializerPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -56,18 +58,18 @@ RMDAgentInitializerPresenter >> initializePresenters [
 		self updateLayout ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAgentInitializerPresenter >> newLayout [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentInitializerPresenter >> nodeChanged [
 	self updateLayout
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentInitializerPresenter >> updateLayout [
 
 	self layout: self newLayout".

@@ -1,6 +1,6 @@
-Extension { #name : #RMDLocalFileRepository }
+Extension { #name : 'RMDLocalFileRepository' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDLocalFileRepository >> changeDirectory [
 
 	(UIManager default
@@ -11,7 +11,7 @@ RMDLocalFileRepository >> changeDirectory [
 				 absolutePath) ifNotNil: [ :ref | self directory: ref ]
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDLocalFileRepository >> editMenu [
 
 	^ SpMenuPresenter new

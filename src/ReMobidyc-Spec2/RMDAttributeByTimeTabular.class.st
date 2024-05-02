@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAttributeByTimeTabular,
-	#superclass : #RMDTimeSeriesTabular,
+	#name : 'RMDAttributeByTimeTabular',
+	#superclass : 'RMDTimeSeriesTabular',
 	#instVars : [
 		'agentDropList',
 		'openLineChartsButton',
@@ -8,10 +8,12 @@ Class {
 		'taskList',
 		'traceableActionContext'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAttributeByTimeTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -52,13 +54,13 @@ RMDAttributeByTimeTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> agentChanged [
 
 	self updateTable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeByTimeTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -89,7 +91,7 @@ RMDAttributeByTimeTabular >> initializePresenters [
 		                          RMDTraceableActionContextPresenter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
@@ -98,7 +100,7 @@ RMDAttributeByTimeTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateTable
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDAttributeByTimeTabular >> openBoxChart [
 
 	table columns ifNotEmpty: [ :columns |
@@ -128,7 +130,7 @@ RMDAttributeByTimeTabular >> openBoxChart [
 					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
 
 	| chart radius |
@@ -163,7 +165,7 @@ RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
 				  ifNil: [ '' ])) extent: 800 @ 800
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDAttributeByTimeTabular >> openChartMenu [
 
 	| menu |
@@ -177,13 +179,13 @@ RMDAttributeByTimeTabular >> openChartMenu [
 	menu openWithSpecAtPointer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeByTimeTabular >> selectedAgent [
 
 	^ agentDropList selectedItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeByTimeTabular >> selectedIndividual [
 
 	^ table selectedItem ifNotNil: [ :row |
@@ -191,14 +193,14 @@ RMDAttributeByTimeTabular >> selectedIndividual [
 			  id isInteger ifTrue: [ id ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeByTimeTabular >> selectedTime [
 
 	^ table selectedItem ifNotNil: [ :item |
 		  item at: #time ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeByTimeTabular >> title [
 
 	^ 'Attribute Tabular'
@@ -208,7 +210,7 @@ RMDAttributeByTimeTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateAgentDropList [
 
 	| selection items |
@@ -222,7 +224,7 @@ RMDAttributeByTimeTabular >> updateAgentDropList [
 				 ifFalse: [ items ifNotEmpty: #first ifEmpty: [ nil ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateColumns [
 
 	table columns: (Array streamContents: [ :stream |
@@ -240,7 +242,7 @@ RMDAttributeByTimeTabular >> updateColumns [
 							 stream nextPut: (RMDAttributeColumn attribute: attributeDecl) ] ] ] ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateRows [
 
 	| latestTime |
@@ -309,7 +311,7 @@ RMDAttributeByTimeTabular >> updateRows [
 				refresh ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateRunDropList [
 
 	runDropList
@@ -317,7 +319,7 @@ RMDAttributeByTimeTabular >> updateRunDropList [
 		selectIndex: 1
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateTaskList [
 
 	| selection |
@@ -338,7 +340,7 @@ RMDAttributeByTimeTabular >> updateTaskList [
 	taskList items: Array new
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeByTimeTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem

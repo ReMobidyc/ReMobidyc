@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDSimulationDefinitionPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDSimulationDefinitionPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'addInitializerButton',
 		'addAnimatInitializerAction'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDSimulationDefinitionPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -17,25 +19,25 @@ RMDSimulationDefinitionPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationDefinitionPresenter >> addAnimatInitializer [
 	addAnimatInitializerAction ifNotNil: #value.
 	self nodeChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationDefinitionPresenter >> addAnimatInitializerAction [
 
 	^ addAnimatInitializerAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationDefinitionPresenter >> addAnimatInitializerAction: aBlock [
 
 	addAnimatInitializerAction := aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationDefinitionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -48,7 +50,7 @@ RMDSimulationDefinitionPresenter >> initializePresenters [
 	self whenBuiltDo: [ self nodeChanged ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationDefinitionPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
@@ -56,7 +58,7 @@ RMDSimulationDefinitionPresenter >> initializeWindow: aWindowPresenter [
 		initialExtent: 600 @ 400
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationDefinitionPresenter >> newLayout [
 
 	| newLayout |
@@ -78,18 +80,18 @@ RMDSimulationDefinitionPresenter >> newLayout [
 	^ newLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationDefinitionPresenter >> nodeChanged [
 
 	self layout: self newLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationDefinitionPresenter >> preferredHeight [
 	^ (layout presenters collect: #preferredHeight) sum
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationDefinitionPresenter >> removeAnimatInitializer: aRMDAnimatInitializerNode [
 
 	node animatInitializers:

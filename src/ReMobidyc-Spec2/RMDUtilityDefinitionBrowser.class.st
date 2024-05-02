@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDUtilityDefinitionBrowser,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDUtilityDefinitionBrowser',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'identifierField',
 		'definitionBodyField'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDUtilityDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -21,7 +23,7 @@ RMDUtilityDefinitionBrowser class >> defaultLayout [
 		  height: self buttonHeight
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDUtilityDefinitionBrowser class >> example1 [
 
 	| browser |
@@ -31,7 +33,7 @@ RMDUtilityDefinitionBrowser class >> example1 [
 		browser node inspect ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUtilityDefinitionBrowser >> definitionBodyChanged [
 
 	node ifNil: [ ^ self ].
@@ -41,7 +43,7 @@ RMDUtilityDefinitionBrowser >> definitionBodyChanged [
 		node definitionBody: expression ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDUtilityDefinitionBrowser >> definitionBodyFieldMenu [
 
 	^ self newMenu
@@ -53,7 +55,7 @@ RMDUtilityDefinitionBrowser >> definitionBodyFieldMenu [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUtilityDefinitionBrowser >> identifierChanged [
 
 	node ifNil: [ ^ self ].
@@ -63,7 +65,7 @@ RMDUtilityDefinitionBrowser >> identifierChanged [
 		node variable identifier: identifier ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDUtilityDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -80,7 +82,7 @@ RMDUtilityDefinitionBrowser >> initializePresenters [
 		                       yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDUtilityDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -89,7 +91,7 @@ RMDUtilityDefinitionBrowser >> initializeWindow: aWindowPresenter [
 		600 @ (self preferredHeight + self class buttonHeight * 3)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionBrowser >> nodeChanged [
 
 	node ifNil: [ ^ self ].
@@ -99,7 +101,7 @@ RMDUtilityDefinitionBrowser >> nodeChanged [
 		definitionBodyField syntaxNode: expression ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionBrowser >> preferredHeight [
 
 	^ self class buttonHeight

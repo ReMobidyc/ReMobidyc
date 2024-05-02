@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDMultiChartInteraction,
-	#superclass : #RSKeyNavigationCanvasInteraction,
+	#name : 'RMDMultiChartInteraction',
+	#superclass : 'RSKeyNavigationCanvasInteraction',
 	#instVars : [
 		'currentShapeIndex'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMultiChartInteraction >> initialize [
 	super initialize.
 	currentShapeIndex :=1
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 RMDMultiChartInteraction >> moveFrom: fromShape to: toShape [
 	| canvas camera oldPosition newPosition |
 	canvas := toShape canvas.
@@ -37,13 +39,13 @@ RMDMultiChartInteraction >> moveFrom: fromShape to: toShape [
 	
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 RMDMultiChartInteraction >> onShape: aCanvas [
 	super onShape: aCanvas.
 	aCanvas when: RSExtentChangedEvent send: #zoomToFit to: aCanvas.
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 RMDMultiChartInteraction >> processKeyDown: evt [
 	| keyName |
 	keyName := evt keyName.
@@ -69,7 +71,7 @@ RMDMultiChartInteraction >> processKeyDown: evt [
 	self processStepsOn: evt canvas
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 RMDMultiChartInteraction >> processKeyDownWithShift: evt [
 	| newIndex keyName shapes |
 	newIndex := nil.

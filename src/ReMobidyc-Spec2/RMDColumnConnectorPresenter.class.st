@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDColumnConnectorPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDColumnConnectorPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'columnDropList',
 		'attributeField',
@@ -8,10 +8,12 @@ Class {
 		'interpolationDropList',
 		'leftIcon'
 	],
-	#category : #'ReMobidyc-Spec2-DataSource'
+	#category : 'ReMobidyc-Spec2-DataSource',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'DataSource'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDColumnConnectorPresenter class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -29,7 +31,7 @@ RMDColumnConnectorPresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDColumnConnectorPresenter class >> openDialogWithColumns: anArrayOfString connector: aRMDAttributeColumnConnector onAccept: aBlock [
 
 	| presenter |
@@ -40,7 +42,7 @@ RMDColumnConnectorPresenter class >> openDialogWithColumns: anArrayOfString conn
 	^ presenter
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDColumnConnectorPresenter class >> openDialogWithColumns: anArrayOfString onAccept: aBlock [
 
 	| presenter |
@@ -50,7 +52,7 @@ RMDColumnConnectorPresenter class >> openDialogWithColumns: anArrayOfString onAc
 	^ presenter
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDColumnConnectorPresenter class >> withColumns: anArrayOfColumns [
 
 	^ self new
@@ -58,19 +60,19 @@ RMDColumnConnectorPresenter class >> withColumns: anArrayOfColumns [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> attribute: aString [
 
 	attributeField text: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> column: aString [
 
 	columnDropList selectItem: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> columnConnector [
 
 	| column attribute unit interpolation |
@@ -86,7 +88,7 @@ RMDColumnConnectorPresenter >> columnConnector [
 		  interpolation: interpolation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> columnConnector: aRMDAttributeColumnConnector [
 
 	self column: aRMDAttributeColumnConnector columnName.
@@ -95,13 +97,13 @@ RMDColumnConnectorPresenter >> columnConnector: aRMDAttributeColumnConnector [
 	self interpolation: aRMDAttributeColumnConnector interpolation
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> columns: anArrayOfString [
 
 	columnDropList items: anArrayOfString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDColumnConnectorPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -126,26 +128,26 @@ RMDColumnConnectorPresenter >> initializePresenters [
 		            yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDColumnConnectorPresenter >> initializeWindow: aSpWindow [
 
 	super initializeWindow: aSpWindow.
 	aSpWindow initialExtent: 550 @ 150
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> interpolation: aRMDDataInterpolation [
 
 	interpolationDropList selectItem: aRMDDataInterpolation
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDColumnConnectorPresenter >> leftIcon [
 
 	^ Smalltalk ui iconNamed: #smallForward
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColumnConnectorPresenter >> unit: aRMDUnit [
 
 	unitField syntaxNode: aRMDUnit

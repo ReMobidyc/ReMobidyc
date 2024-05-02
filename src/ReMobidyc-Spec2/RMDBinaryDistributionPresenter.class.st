@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDBinaryDistributionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDBinaryDistributionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'distributionLabel',
 		'parameterLabel',
 		'parameter1Presenter',
 		'parameter2Presenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryDistributionPresenter >> expressionChanged [
 
 	distributionLabel label: expression distributionName.
@@ -20,7 +22,7 @@ RMDBinaryDistributionPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDBinaryDistributionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -45,7 +47,7 @@ RMDBinaryDistributionPresenter >> initializePresenters [
 				borderWidth: 2 ] ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDBinaryDistributionPresenter >> layout [
 
 	^ SpBoxLayout newVertical

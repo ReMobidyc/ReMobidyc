@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAgentDefinitionBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDAgentDefinitionBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'modeler',
 		'animat',
@@ -31,10 +31,12 @@ Class {
 		'viewAttributeButton',
 		'viewUtilityButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAgentDefinitionBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
@@ -104,13 +106,13 @@ RMDAgentDefinitionBrowser class >> defaultLayout [
 				   yourself) yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentDefinitionBrowser class >> isAbstract [
 
 	^ self = RMDAgentDefinitionBrowser
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addAttribute [
 
 	| attributeNode |
@@ -121,7 +123,7 @@ RMDAgentDefinitionBrowser >> addAttribute [
 		self updateAttributeList ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addDataSource [
 
 	RMDRepositoryDataBrowser openToLoadDo: [ :fileReference |
@@ -131,26 +133,26 @@ RMDAgentDefinitionBrowser >> addDataSource [
 			self updateDataSourceButtons ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addRenderer [
 
 	self addRendererMenu openWithSpecAtPointer
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addRenderer: aRMDRenderer [
 
 	modeler simulationModel addRenderer: aRMDRenderer.
 	self updateRendererList
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAgentDefinitionBrowser >> addRendererMenu [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addTask [
 
 	| actionDefinitionBrowser |
@@ -165,7 +167,7 @@ RMDAgentDefinitionBrowser >> addTask [
 			self updateTaskList ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> addUtility [
 
 	| newDefinition |
@@ -176,19 +178,19 @@ RMDAgentDefinitionBrowser >> addUtility [
 	self updateUtilityList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionBrowser >> agentDefinition [
 
 	^ self simulationModel ifNotNil: [ :model |
 		  model agentDefinitionAt: self agentName ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionBrowser >> agentName [
 	^ self subclassResponsibility
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAgentDefinitionBrowser >> attributeListMenu [
 
 	^ self newMenu
@@ -223,17 +225,17 @@ RMDAgentDefinitionBrowser >> attributeListMenu [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionBrowser >> definitionDo: aBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> editRenderer [
 	^ self notYetImplemented
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> editTask [
 
 	taskList selection selectedItem ifNotNil: [ :oldTaskDefinition | 
@@ -254,7 +256,7 @@ RMDAgentDefinitionBrowser >> editTask [
 					self updateSourceText ] ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeAttributePresenters [
 
 	attributeList := self newTable
@@ -336,7 +338,7 @@ RMDAgentDefinitionBrowser >> initializeAttributePresenters [
 		                                     yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeDataSourcePresenters [
 
 	openDataSourceButton := self newButton
@@ -359,7 +361,7 @@ RMDAgentDefinitionBrowser >> initializeDataSourcePresenters [
 		                          yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -371,7 +373,7 @@ RMDAgentDefinitionBrowser >> initializePresenters [
 		initializeTaskPresenters
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeRendererPresenters [
 
 	rendererList := self newComponentList
@@ -403,7 +405,7 @@ RMDAgentDefinitionBrowser >> initializeRendererPresenters [
 		                      yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeTaskPresenters [
 
 	taskList := self newTable
@@ -472,7 +474,7 @@ RMDAgentDefinitionBrowser >> initializeTaskPresenters [
 		              yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeUtilityPresenters [
 
 	utilityList := self newTable
@@ -547,14 +549,14 @@ RMDAgentDefinitionBrowser >> initializeUtilityPresenters [
 		                     yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAgentDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: self agentName.
 	aWindowPresenter initialExtent: 800 @ 600
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveDownAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
@@ -574,7 +576,7 @@ RMDAgentDefinitionBrowser >> moveDownAttribute [
 				attributeList selectIndex: index + 1 ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveDownTask [
 
 	self simulationModel ifNotNil: [ :simulationModel | 
@@ -589,7 +591,7 @@ RMDAgentDefinitionBrowser >> moveDownTask [
 			taskList selectIndex: selectionIndex + 1 ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveDownUtility [
 
 	utilityList selection selectedItem ifNotNil: [ :utilityNode | 
@@ -609,7 +611,7 @@ RMDAgentDefinitionBrowser >> moveDownUtility [
 				utilityList selectIndex: index + 1 ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveUpAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode | 
@@ -627,7 +629,7 @@ RMDAgentDefinitionBrowser >> moveUpAttribute [
 				attributeList selectIndex: index - 1 ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveUpTask [
 
 	self simulationModel ifNotNil: [ :simulationModel | 
@@ -642,7 +644,7 @@ RMDAgentDefinitionBrowser >> moveUpTask [
 			taskList selectIndex: selectionIndex - 1 ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> moveUpUtility [
 
 	utilityList selection selectedItem ifNotNil: [ :utilityNode | 
@@ -660,7 +662,7 @@ RMDAgentDefinitionBrowser >> moveUpUtility [
 				utilityList selectIndex: index - 1 ] ] ]
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDAgentDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 
 	^ super newHighlightingSyntaxNodeTextInput
@@ -668,7 +670,7 @@ RMDAgentDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 		  yourself
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDAgentDefinitionBrowser >> newSourceWith: aPP2Node [
 
 	^ (super newSourceWith: aPP2Node)
@@ -679,7 +681,7 @@ RMDAgentDefinitionBrowser >> newSourceWith: aPP2Node [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> openDataSource [
 
 	(self agentDefinition ifNotNil: #dataSource) ifNotNil: [ :dataSource |
@@ -693,7 +695,7 @@ RMDAgentDefinitionBrowser >> openDataSource [
 				 openDialog) title: self agentDefinition name , ' Data Source' ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> removeAttribute [
 
 	attributeList selection selectedItem ifNotNil: [ :attributeNode |
@@ -709,7 +711,7 @@ RMDAgentDefinitionBrowser >> removeAttribute [
 					self updateAttributeList ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> removeDataSource [
 
 	(UIManager default
@@ -719,7 +721,7 @@ RMDAgentDefinitionBrowser >> removeDataSource [
 		self updateDataSourceButtons ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> removeRenderer [
 
 	rendererList selection selectedItem ifNotNil: [ :rendererPresenter | 
@@ -735,7 +737,7 @@ RMDAgentDefinitionBrowser >> removeRenderer [
 				self updateRendererList ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> removeTask [
 
 	taskList selection selectedItem ifNotNil: [ :taskDefinition | 
@@ -745,7 +747,7 @@ RMDAgentDefinitionBrowser >> removeTask [
 		self updateTaskList ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> removeUtility [
 
 	utilityList selectedItem ifNotNil: [ :oldDefinition | 
@@ -757,7 +759,7 @@ RMDAgentDefinitionBrowser >> removeUtility [
 				self updateUtilityList ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString [
 
 	self agentDefinition
@@ -795,7 +797,7 @@ RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString [
 											task resetAction ] ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString agentRef: agentRef [
 
 	self simulationModel
@@ -822,12 +824,12 @@ RMDAgentDefinitionBrowser >> renameAttribute: aString to: anotherString agentRef
 					ifTrue: [ attribute identifier: anotherString ] ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionBrowser >> renderersDo: aBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 
 	modeler := aRMDSimulationModeler.
@@ -839,12 +841,12 @@ RMDAgentDefinitionBrowser >> setModeler: aRMDSimulationModeler [
 		updateDataSourceButtons
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionBrowser >> simulationModel [
 	^ modeler ifNotNil: #simulationModel
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAgentDefinitionBrowser >> taskListMenu [
 
 	^ self newMenu
@@ -885,13 +887,13 @@ RMDAgentDefinitionBrowser >> taskListMenu [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionBrowser >> typechecker [
 
 	^ self simulationModel ifNotNil: #typechecker
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateAttributeButtons [
 
 	| selected index |
@@ -904,7 +906,7 @@ RMDAgentDefinitionBrowser >> updateAttributeButtons [
 	viewAttributeButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateAttributeList [
 
 	self definitionDo: [ :definition |
@@ -912,7 +914,7 @@ RMDAgentDefinitionBrowser >> updateAttributeList [
 	utilityList refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateDataSourceButtons [
 
 	| hasDataSource |
@@ -922,7 +924,7 @@ RMDAgentDefinitionBrowser >> updateDataSourceButtons [
 	openDataSourceButton enabled: hasDataSource
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateRendererList [
 
 	rendererList items: (Array streamContents: [ :stream | 
@@ -933,7 +935,7 @@ RMDAgentDefinitionBrowser >> updateRendererList [
 						  yourself) ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateSourceText [
 
 	self simulationModel ifNotNil: [ :model |
@@ -946,7 +948,7 @@ RMDAgentDefinitionBrowser >> updateSourceText [
 			ifNil: [ sourceText text: '' ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateTaskButtons [
 
 	| selected index |
@@ -959,7 +961,7 @@ RMDAgentDefinitionBrowser >> updateTaskButtons [
 	editTaskButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateTaskList [
 
 	self simulationModel ifNotNil: [ :model | 
@@ -971,7 +973,7 @@ RMDAgentDefinitionBrowser >> updateTaskList [
 			selectItem: selectedBehavior ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateUtilityButtons [
 
 	| selected index |
@@ -984,7 +986,7 @@ RMDAgentDefinitionBrowser >> updateUtilityButtons [
 	viewUtilityButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAgentDefinitionBrowser >> updateUtilityList [
 
 	self definitionDo: [ :definition |
@@ -992,7 +994,7 @@ RMDAgentDefinitionBrowser >> updateUtilityList [
 	attributeList refresh
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAgentDefinitionBrowser >> utilityListMenu [
 
 	^ self newMenu
@@ -1027,7 +1029,7 @@ RMDAgentDefinitionBrowser >> utilityListMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> viewAttribute [
 
 	attributeList selectedItem ifNotNil: [ :attributeDeclaration |
@@ -1035,7 +1037,7 @@ RMDAgentDefinitionBrowser >> viewAttribute [
 			openTitle: 'initial value of ' , attributeDeclaration identifier ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDAgentDefinitionBrowser >> viewUtility [
 
 	utilityList selectedItem ifNotNil: [ :utilityDefinition |

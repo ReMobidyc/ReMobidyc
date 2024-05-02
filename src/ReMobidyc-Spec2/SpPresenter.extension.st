@@ -1,5 +1,5 @@
-Extension { #name : #SpPresenter }
+Extension { #name : 'SpPresenter' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpPresenter >> color: aColor [
 ]

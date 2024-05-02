@@ -1,6 +1,6 @@
-Extension { #name : #RMDUnaryMinusNode }
+Extension { #name : 'RMDUnaryMinusNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDUnaryMinusNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode withAll: {

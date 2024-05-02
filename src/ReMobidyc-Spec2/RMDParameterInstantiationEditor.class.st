@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDParameterInstantiationEditor,
-	#superclass : #RMDPresenter,
+	#name : 'RMDParameterInstantiationEditor',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'exceptVariableNodes',
 		'actionDefinitionNode',
@@ -10,10 +10,12 @@ Class {
 		'hasObject',
 		'viewExpressionButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDParameterInstantiationEditor class >> actionDefinition: aRMDActionDefinitionNode except: aCollectionOfRMDSyntaxNode [
 	^ self new
 		actionDefinitionNode: aRMDActionDefinitionNode;
@@ -21,7 +23,7 @@ RMDParameterInstantiationEditor class >> actionDefinition: aRMDActionDefinitionN
 		yourself
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDParameterInstantiationEditor class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -36,18 +38,18 @@ RMDParameterInstantiationEditor class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> actionDefinitionNode [
 	^ actionDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> actionDefinitionNode: aRMDActionDefinitionNode [
 	actionDefinitionNode := aRMDActionDefinitionNode.
 	self updatePlaceholderDropList
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDParameterInstantiationEditor >> agentDirectiveMenu [
 
 	| menu |
@@ -73,18 +75,18 @@ RMDParameterInstantiationEditor >> agentDirectiveMenu [
 	^ menu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> exceptVariableNodes [
 	^ exceptVariableNodes 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> exceptVariableNodes: aCollectionOfRMDSyntaxNode [
 	exceptVariableNodes := aCollectionOfRMDSyntaxNode.
 	self updatePlaceholderDropList
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDParameterInstantiationEditor >> expressionFieldMenu [
 
 	| menu |
@@ -96,7 +98,7 @@ RMDParameterInstantiationEditor >> expressionFieldMenu [
 	^ menu
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDParameterInstantiationEditor >> initializePresenters [
 
 	super initializePresenters.
@@ -123,7 +125,7 @@ RMDParameterInstantiationEditor >> initializePresenters [
 		                        yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDParameterInstantiationEditor >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter title: 'Bindings for Adaptation'.
@@ -131,7 +133,7 @@ RMDParameterInstantiationEditor >> initializeWindow: aWindowPresenter [
 		initialExtent: 600 @ 150
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> parameterInstantiationNode [
 
 	^ placeholderList selectedItem ifNotNil: [ :placeholder | 
@@ -141,7 +143,7 @@ RMDParameterInstantiationEditor >> parameterInstantiationNode [
 				  replacement: replacement ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> parameterInstantiationNode: aRMDParameterInstantiationNode [
 
 	aRMDParameterInstantiationNode
@@ -153,14 +155,14 @@ RMDParameterInstantiationEditor >> parameterInstantiationNode: aRMDParameterInst
 			expressionField text: '' ]
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDParameterInstantiationEditor >> paste: aString [
 
 	Clipboard clipboardText: aString.
 	expressionField withAdapterDo: [ :a | a widget textArea editor paste ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDParameterInstantiationEditor >> updateExpressionFieldType [
 
 	placeholderList selectedItem
@@ -188,7 +190,7 @@ RMDParameterInstantiationEditor >> updateExpressionFieldType [
 			viewExpressionButton disable ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDParameterInstantiationEditor >> updatePlaceholderDropList [
 
 	| done |
@@ -202,7 +204,7 @@ RMDParameterInstantiationEditor >> updatePlaceholderDropList [
 						 done add: node ] ] ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDParameterInstantiationEditor >> viewExpression [
 
 	^ expressionField syntaxNode ifNotNil: [ :node |

@@ -1,6 +1,6 @@
-Extension { #name : #RMDPatchColorAlphaRenderer }
+Extension { #name : 'RMDPatchColorAlphaRenderer' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDPatchColorAlphaRenderer >> asPresenter [
 	^ RMDPatchColorAlphaRendererPresenter on: self
 ]

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDAnimatInitializerPresenter,
-	#superclass : #RMDAgentInitializerPresenter,
+	#name : 'RMDAnimatInitializerPresenter',
+	#superclass : 'RMDAgentInitializerPresenter',
 	#instVars : [
 		'populationField',
 		'animatField',
 		'removeButton',
 		'removeButtonAction'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAnimatInitializerPresenter class >> defaultLayout [
 
 	<spec>
@@ -25,27 +27,27 @@ RMDAnimatInitializerPresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAnimatInitializerPresenter >> animatEnabled: aBoolean [
 	animatField enabled: aBoolean = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerPresenter >> animatField [
 	^ animatField
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAnimatInitializerPresenter >> disableAnimat [
 	animatField disable
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAnimatInitializerPresenter >> enableAnimat [
 	animatField enable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatInitializerPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -72,7 +74,7 @@ RMDAnimatInitializerPresenter >> initializePresenters [
 	self color: Color white
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAnimatInitializerPresenter >> newLayout [
 
 	| newLayout |
@@ -94,7 +96,7 @@ RMDAnimatInitializerPresenter >> newLayout [
 	^ newLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerPresenter >> nodeChanged [
 	super nodeChanged.
 	self
@@ -102,40 +104,40 @@ RMDAnimatInitializerPresenter >> nodeChanged [
 		updateAnimatField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerPresenter >> populationField [
 	^ populationField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerPresenter >> preferredHeight [
 
 	^ node attributeInitializers size + 1 * self class inputTextHeight
 	  + self class buttonHeight
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAnimatInitializerPresenter >> removeButtonAction [
 	^ removeButtonAction
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAnimatInitializerPresenter >> removeButtonAction: aBlock [
 
 	removeButtonAction := aBlock
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatInitializerPresenter >> updateAnimatField [
 	node ifNotNil: [ animatField text: node animat ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatInitializerPresenter >> updatePopulationField [
 	node ifNotNil: [ populationField text: node population printString ]
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDAnimatInitializerPresenter >> whenAnimatEnabledChangedDo: aBlock [
 	animatField whenEnabledChangedDo: aBlock
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #SpBoxLayout }
+Extension { #name : 'SpBoxLayout' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpBoxLayout >> addButton: aSymbol dropdownButton: anotherSymbol [
 
 	self
@@ -14,13 +14,13 @@ SpBoxLayout >> addButton: aSymbol dropdownButton: anotherSymbol [
 		add: ' ' width: 4
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpBoxLayout >> addSpace [
 
 	self add: ' ' width: 4
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpBoxLayout >> removeAll [
 	"Remove all presenters added to this layout."
 

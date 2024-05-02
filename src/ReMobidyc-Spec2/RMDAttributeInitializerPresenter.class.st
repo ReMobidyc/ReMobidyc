@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAttributeInitializerPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDAttributeInitializerPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'identifierField',
 		'expressionField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAttributeInitializerPresenter class >> defaultLayout [
 
 	<spec>
@@ -23,32 +25,32 @@ RMDAttributeInitializerPresenter class >> defaultLayout [
 		  height: self inputTextHeight
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAttributeInitializerPresenter >> disableIdentifier [
 	identifierField disable
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAttributeInitializerPresenter >> enableIdentifier [
 	identifierField enable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerPresenter >> expressionField [
 	^ expressionField
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDAttributeInitializerPresenter >> identifierEnabled [
 	^ identifierField enabled
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerPresenter >> identifierField [
 	^ identifierField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeInitializerPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -74,37 +76,37 @@ RMDAttributeInitializerPresenter >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeInitializerPresenter >> nodeChanged [
 	self
 		updateIdentifierField;
 		updateExpressionField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeInitializerPresenter >> updateExpressionField [
 
 	expressionField text:
 		(node expression ifNotNil: #printString ifNil: [ '' ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeInitializerPresenter >> updateIdentifierField [
 	identifierField text: node identifier
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDAttributeInitializerPresenter >> whenExpressionSubmitDo: aBlock [
 
 	expressionField whenSubmitDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDAttributeInitializerPresenter >> whenIdentifierEnabledChangedDo: aBlock [
 	identifierField whenEnabledChangedDo: aBlock
 ]

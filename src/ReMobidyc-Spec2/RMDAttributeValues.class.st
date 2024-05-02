@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDAttributeValues,
-	#superclass : #Object,
+	#name : 'RMDAttributeValues',
+	#superclass : 'Object',
 	#instVars : [
 		'ids',
 		'values',
 		'stats',
 		'attributeDeclarations'
 	],
-	#category : #'ReMobidyc-Spec2-Utilities'
+	#category : 'ReMobidyc-Spec2-Utilities',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Utilities'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDefinitionNode [
 
 	| attributeDeclarations attributeValues ids individualIndex attributeStats |
@@ -68,7 +70,7 @@ RMDAttributeValues class >> fromInterpreter: aRMDInterpreter animat: aRMDAgentDe
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeValues >> attribute: anIntegerOrRMDPropertyDeclaration at: anIntegerOrSymbol ifAbsent: errorBlock [
 	^ anIntegerOrRMDPropertyDeclaration = #id
 		ifTrue: [ ids at: anIntegerOrSymbol ]
@@ -86,7 +88,7 @@ RMDAttributeValues >> attribute: anIntegerOrRMDPropertyDeclaration at: anInteger
 				ifAbsent: errorBlock ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeValues >> attributesDo: aBlock [
 	1 to: attributeDeclarations size do: [ :index | 
 		aBlock
@@ -95,27 +97,27 @@ RMDAttributeValues >> attributesDo: aBlock [
 			value: (stats at: index) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeValues >> ids [
 	^ ids
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeValues >> idsWithIndexDo: aBlock [
 	ids withIndexDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeValues >> numberOfAttributes [
 	^ attributeDeclarations size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeValues >> numberOfValues [
 	^ values first size
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAttributeValues >> setAttributeDeclarations: anArrayOfRMDAttributeDefinition ids: anArrayOfInteger values: anArrayOfArrayOfFloat stats: anArrayOfDictionary [
 	attributeDeclarations := anArrayOfRMDAttributeDefinition.
 	ids := anArrayOfInteger.
@@ -123,7 +125,7 @@ RMDAttributeValues >> setAttributeDeclarations: anArrayOfRMDAttributeDefinition 
 	stats := anArrayOfDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeValues >> valuesAt: anIntegerOrRMDAttributeDeclaration ifAbsent: errorBlock [
 	^ values
 		at:

@@ -1,45 +1,47 @@
 Class {
-	#name : #RMDRendererPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDRendererPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'renderer',
 		'colorDropList',
 		'agentFieldEnabled'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDRendererPresenter class >> isAbstract [
 
 	^ self == RMDRendererPresenter
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDRendererPresenter class >> on: aRMDRenderer [
 	^ self new
 		renderer: aRMDRenderer;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> disableAgentFields [
 
 	agentFieldEnabled := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> enableAgentFields [
 	agentFieldEnabled := true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDRendererPresenter >> initialize [
 	super initialize.
 	agentFieldEnabled := true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDRendererPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -51,32 +53,32 @@ RMDRendererPresenter >> initializePresenters [
 		                 yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> name [
 	^ renderer name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> renderer [
 	^ renderer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> renderer: aRMDRenderer [
 	renderer := aRMDRenderer.
 	self rendererChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> rendererChanged [
 	self updateColorDropList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRendererPresenter >> simulationModel: aRMDSimulationModel [
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRendererPresenter >> updateColorDropList [
 	renderer
 		ifNotNil: [ | color colors |

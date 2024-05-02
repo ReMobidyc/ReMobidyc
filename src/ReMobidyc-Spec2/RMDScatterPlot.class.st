@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDScatterPlot,
-	#superclass : #RSScatterPlot,
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#name : 'RMDScatterPlot',
+	#superclass : 'RSScatterPlot',
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #rendering }
+{ #category : 'rendering' }
 RMDScatterPlot >> renderIn: canvas [
 
 	| newPoint |

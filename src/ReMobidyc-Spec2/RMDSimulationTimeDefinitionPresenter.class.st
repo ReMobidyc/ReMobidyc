@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDSimulationTimeDefinitionPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDSimulationTimeDefinitionPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'durationField',
 		'stepField',
 		'durationUnitDropList',
 		'stepUnitDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDSimulationTimeDefinitionPresenter class >> defaultLayout [
 
 	<spec>
@@ -29,17 +31,17 @@ RMDSimulationTimeDefinitionPresenter class >> defaultLayout [
 		  expand: false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> durationField [
 	^ durationField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> durationUnitDropList [
 	^ durationUnitDropList
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -105,7 +107,7 @@ RMDSimulationTimeDefinitionPresenter >> initializePresenters [
 		                    yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> nodeChanged [
 	self updateDurationUnit.
 	self updateDurationField.
@@ -113,23 +115,23 @@ RMDSimulationTimeDefinitionPresenter >> nodeChanged [
 	self updateStepField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> preferredHeight [
 
 	^ self class buttonHeight * 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> stepField [
 	^ stepField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionPresenter >> stepUnitDropList [
 	^ stepUnitDropList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSimulationTimeDefinitionPresenter >> updateDurationField [
 	durationField
 		number:
@@ -138,13 +140,13 @@ RMDSimulationTimeDefinitionPresenter >> updateDurationField [
 				ifNotNil: [ node duration unit fromSI: node duration numeric ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSimulationTimeDefinitionPresenter >> updateDurationUnit [
 	node
 		ifNotNil: [ durationUnitDropList selectItem: node duration unit ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSimulationTimeDefinitionPresenter >> updateStepField [
 	stepField
 		number:
@@ -153,7 +155,7 @@ RMDSimulationTimeDefinitionPresenter >> updateStepField [
 				ifNotNil: [ node step unit fromSI: node step numeric ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSimulationTimeDefinitionPresenter >> updateStepUnit [
 	node ifNotNil: [ stepUnitDropList selectItem: node step unit ]
 ]

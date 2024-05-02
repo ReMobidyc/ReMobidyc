@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDRepositoryActionsBrowser,
-	#superclass : #RMDAbstractRepositoryBrowser,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#name : 'RMDRepositoryActionsBrowser',
+	#superclass : 'RMDAbstractRepositoryBrowser',
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDRepositoryActionsBrowser class >> openForSave: aRMDActionDefinitionNode [
 
 	<script:
@@ -12,7 +14,7 @@ RMDRepositoryActionsBrowser class >> openForSave: aRMDActionDefinitionNode [
 	super openForSave: aRMDActionDefinitionNode
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDRepositoryActionsBrowser class >> openToLoadDo: aBlock [
 
 	<script:
@@ -20,7 +22,7 @@ RMDRepositoryActionsBrowser class >> openToLoadDo: aBlock [
 	super openToLoadDo: aBlock
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryActionsBrowser >> addItem [
 
 	(UIManager default request: 'Enter a new name of the action') 
@@ -43,7 +45,7 @@ RMDRepositoryActionsBrowser >> addItem [
 			isForSave ifTrue: [ self performOK ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryActionsBrowser >> editItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -66,7 +68,7 @@ RMDRepositoryActionsBrowser >> editItem [
 					self updateItemList ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryActionsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -74,20 +76,20 @@ RMDRepositoryActionsBrowser >> file [
 			  repo actionFileNamed: item ifPresent: #yourself ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDRepositoryActionsBrowser >> getAction: aString [
 
 	^ self repository ifNotNil: [ :repo | 
 		  repo actionNamed: aString ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryActionsBrowser >> itemsInRepository [
 
 	^ self repository ifNotNil: #actionNames ifNil: [ #(  ) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDRepositoryActionsBrowser >> load [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -95,7 +97,7 @@ RMDRepositoryActionsBrowser >> load [
 			  repo actionNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDRepositoryActionsBrowser >> newItemList [
 
 	^ self newTable
@@ -118,7 +120,7 @@ RMDRepositoryActionsBrowser >> newItemList [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryActionsBrowser >> removeItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -130,7 +132,7 @@ RMDRepositoryActionsBrowser >> removeItem [
 					self updateItemList ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryActionsBrowser >> save: aRMDActionDefinitionNode [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -145,13 +147,13 @@ RMDRepositoryActionsBrowser >> save: aRMDActionDefinitionNode [
 						  ifPresent: [  ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryActionsBrowser >> title [
 
 	^ 'Actions'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryActionsBrowser >> updateDescriptionText [
 
 	descriptionText text: ((self item ifNotNil: [ :item | 

@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDRepositoryDataBrowser,
-	#superclass : #RMDAbstractRepositoryBrowser,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#name : 'RMDRepositoryDataBrowser',
+	#superclass : 'RMDAbstractRepositoryBrowser',
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDRepositoryDataBrowser class >> openToLoadDo: aBlock [
 
 	<script:
@@ -12,7 +14,7 @@ RMDRepositoryDataBrowser class >> openToLoadDo: aBlock [
 	super openToLoadDo: aBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDRepositoryDataBrowser >> addItem [
 
 	self repository ifNotNil: [ :repo |
@@ -34,7 +36,7 @@ RMDRepositoryDataBrowser >> addItem [
 			itemList selectItem: name ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryDataBrowser >> editItem [
 
 	self repository ifNotNil: [ :repo |
@@ -57,7 +59,7 @@ RMDRepositoryDataBrowser >> editItem [
 					self updateItemList ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryDataBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo |
@@ -65,13 +67,13 @@ RMDRepositoryDataBrowser >> file [
 			  repo dataFileNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryDataBrowser >> itemsInRepository [
 
 	^ self repository ifNotNil: #dataNames ifNil: [ #(  ) ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RMDRepositoryDataBrowser >> load [
 
 	^ self repository ifNotNil: [ :repo |
@@ -79,7 +81,7 @@ RMDRepositoryDataBrowser >> load [
 			  repo dataFileNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDRepositoryDataBrowser >> newItemList [
 
 	^ self newTable
@@ -90,7 +92,7 @@ RMDRepositoryDataBrowser >> newItemList [
 		  yourself
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 RMDRepositoryDataBrowser >> removeItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -102,7 +104,7 @@ RMDRepositoryDataBrowser >> removeItem [
 					self updateItemList ] ] ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RMDRepositoryDataBrowser >> save: aFileReference [
 
 	^ self repository ifNotNil: [ :repo |
@@ -114,13 +116,13 @@ RMDRepositoryDataBrowser >> save: aFileReference [
 				  repo addDataFile: aFileReference named: item ifPresent: [  ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryDataBrowser >> title [
 
 	^ 'Data'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryDataBrowser >> updateButtons [
 
 	self repository
@@ -140,7 +142,7 @@ RMDRepositoryDataBrowser >> updateButtons [
 	self item ifNotNil: [ self enableOk ] ifNil: [ self disableOk ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryDataBrowser >> updateDescriptionText [
 
 	descriptionText text: ((self repository ifNotNil: [ :repo |

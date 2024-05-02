@@ -1,6 +1,6 @@
-Extension { #name : #RMDBinaryCombinatorNode }
+Extension { #name : 'RMDBinaryCombinatorNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryCombinatorNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode
@@ -13,7 +13,7 @@ RMDBinaryCombinatorNode >> asPrettyPrintNode [
 				   node ])
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryCombinatorNode >> prettyOperator [
 
 	^ self operator

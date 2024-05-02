@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDSourcePresenterStyler,
-	#superclass : #SHTextStyler,
+	#name : 'RMDSourcePresenterStyler',
+	#superclass : 'SHRBTextStyler',
 	#instVars : [
 		'presenter'
 	],
-	#category : #'ReMobidyc-Spec2-Utilities'
+	#category : 'ReMobidyc-Spec2-Utilities',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Utilities'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSourcePresenterStyler class >> for: aSpPresenter [
 
 	^ self new
@@ -15,19 +17,19 @@ RMDSourcePresenterStyler class >> for: aSpPresenter [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourcePresenterStyler >> presenter [
 
 	^ presenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSourcePresenterStyler >> presenter: aPresenter [
 
 	presenter := aPresenter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSourcePresenterStyler >> privateStyle: aText [
 
 	(presenter respondsTo: #highlightedText) ifFalse: [ ^ aText ].

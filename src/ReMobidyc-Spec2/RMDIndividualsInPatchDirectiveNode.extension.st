@@ -1,6 +1,6 @@
-Extension { #name : #RMDIndividualsInPatchDirectiveNode }
+Extension { #name : 'RMDIndividualsInPatchDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDIndividualsInPatchDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode

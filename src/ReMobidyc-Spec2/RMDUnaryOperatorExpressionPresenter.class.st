@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDUnaryOperatorExpressionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDUnaryOperatorExpressionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'operatorLabel',
 		'argumentPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryOperatorExpressionPresenter >> expressionChanged [
 
 	operatorLabel label: expression operator.
@@ -16,7 +18,7 @@ RMDUnaryOperatorExpressionPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDUnaryOperatorExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -34,7 +36,7 @@ RMDUnaryOperatorExpressionPresenter >> initializePresenters [
 				borderWidth: 2 ] ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDUnaryOperatorExpressionPresenter >> layout [
 
 	^ SpBoxLayout newVertical

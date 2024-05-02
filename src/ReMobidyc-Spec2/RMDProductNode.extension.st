@@ -1,6 +1,6 @@
-Extension { #name : #RMDProductNode }
+Extension { #name : 'RMDProductNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDProductNode >> prettyOperator [
 
 	^ '•'

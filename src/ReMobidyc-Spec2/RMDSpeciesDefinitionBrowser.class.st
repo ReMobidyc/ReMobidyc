@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDSpeciesDefinitionBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDSpeciesDefinitionBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'stagesNotebook',
 		'species',
 		'modeler'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDSpeciesDefinitionBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -17,7 +19,7 @@ RMDSpeciesDefinitionBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSpeciesDefinitionBrowser class >> on: aRMDSimulationModeler species: aString [
 
 	^ self new
@@ -26,7 +28,7 @@ RMDSpeciesDefinitionBrowser class >> on: aRMDSimulationModeler species: aString 
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSpeciesDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -38,46 +40,46 @@ RMDSpeciesDefinitionBrowser >> initializePresenters [
 	self updateStages
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> modeler [
 
 	^ modeler
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> modeler: aRMDSimulationModeler [
 
 	modeler := aRMDSimulationModeler.
 	self updateStages
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> selectPageIndex: anInteger [
 
 	(anInteger between: 1 and: stagesNotebook pages size) ifTrue: [
 		stagesNotebook selectPageIndex: anInteger ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> selectedPageIndex [
 
 	^ stagesNotebook selectedPageIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> species [
 
 	^ species
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesDefinitionBrowser >> species: aString [
 
 	species := aString.
 	self updateStages
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSpeciesDefinitionBrowser >> updateStages [
 
 	| selection |

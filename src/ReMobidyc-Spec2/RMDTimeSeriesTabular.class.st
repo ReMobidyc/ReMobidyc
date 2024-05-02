@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDTimeSeriesTabular,
-	#superclass : #RMDTabular,
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#name : 'RMDTimeSeriesTabular',
+	#superclass : 'RMDTabular',
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTimeSeriesTabular class >> isAbstract [
 
 	^ self == RMDTimeSeriesTabular
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTimeSeriesTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -19,13 +21,13 @@ RMDTimeSeriesTabular >> initializePresenters [
 		contextMenu: [ self analysisMenu ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTimeSeriesTabular >> runChanged [
 
 	self updateColumns
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeSeriesTabular >> selectTime: aNumber [
 
 	| index |
@@ -38,7 +40,7 @@ RMDTimeSeriesTabular >> selectTime: aNumber [
 		ifFalse: [ table unselectAll ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeSeriesTabular >> selectedTime [
 
 	| index |
@@ -48,7 +50,7 @@ RMDTimeSeriesTabular >> selectedTime [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTimeSeriesTabular >> updateTime [
 
 	table selectedItem ifNotNil: [ :item |

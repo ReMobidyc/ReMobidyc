@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDApplyExpressionPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDApplyExpressionPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'functionLabel',
 		'argumentPresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyExpressionPresenter >> expressionChanged [
 
 	functionLabel label: expression function , '('.
@@ -16,7 +18,7 @@ RMDApplyExpressionPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDApplyExpressionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -32,7 +34,7 @@ RMDApplyExpressionPresenter >> initializePresenters [
 				borderWidth: 2 ] ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDApplyExpressionPresenter >> layout [
 
 	| newLayout |

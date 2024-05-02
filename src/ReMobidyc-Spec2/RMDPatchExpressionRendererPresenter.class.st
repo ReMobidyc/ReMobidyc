@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDPatchExpressionRendererPresenter,
-	#superclass : #RMDRendererPresenter,
+	#name : 'RMDPatchExpressionRendererPresenter',
+	#superclass : 'RMDRendererPresenter',
 	#instVars : [
 		'expressionField',
 		'minField',
@@ -8,16 +8,18 @@ Class {
 		'borderWidthField',
 		'borderColorDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchExpressionRendererPresenter class >> isAbstract [
 
 	^ self == RMDPatchExpressionRendererPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPatchExpressionRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	borderColorDropList := self newColorDropList
@@ -38,12 +40,12 @@ RMDPatchExpressionRendererPresenter >> initializePresenters [
 			self valueChanged ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchExpressionRendererPresenter >> preferredHeight [ 
 	^ self subclassResponsibility 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchExpressionRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
@@ -52,7 +54,7 @@ RMDPatchExpressionRendererPresenter >> rendererChanged [
 		updateBorderWidthField
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchExpressionRendererPresenter >> updateBorderColorDropList [
 	renderer
 		ifNotNil: [ | color colors |
@@ -63,12 +65,12 @@ RMDPatchExpressionRendererPresenter >> updateBorderColorDropList [
 			borderColorDropList selectItem: color ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchExpressionRendererPresenter >> updateBorderWidthField [
 	renderer ifNotNil: [ borderWidthField number: renderer borderWidth ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchExpressionRendererPresenter >> updateExpressionField [
 	renderer ifNotNil: [ expressionField syntaxNode: renderer expression ]
 ]

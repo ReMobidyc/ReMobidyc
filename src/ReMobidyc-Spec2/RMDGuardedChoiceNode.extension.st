@@ -1,6 +1,6 @@
-Extension { #name : #RMDGuardedChoiceNode }
+Extension { #name : 'RMDGuardedChoiceNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDGuardedChoiceNode >> asPrettyPrintNode [
 
 	| choices rect |

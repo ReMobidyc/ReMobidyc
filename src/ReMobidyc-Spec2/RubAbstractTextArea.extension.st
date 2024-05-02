@@ -1,6 +1,6 @@
-Extension { #name : #RubAbstractTextArea }
+Extension { #name : 'RubAbstractTextArea' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RubAbstractTextArea >> updateTextWith: aStringOrText [
 	self
 		handleEdit: [ self

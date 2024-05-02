@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDHoverBorderInteraction,
-	#superclass : #RSInteraction,
-	#category : #'ReMobidyc-Spec2-PrettyPrint'
+	#name : 'RMDHoverBorderInteraction',
+	#superclass : 'RSInteraction',
+	#category : 'ReMobidyc-Spec2-PrettyPrint',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'PrettyPrint'
 }
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 RMDHoverBorderInteraction >> mouseEntered: event [
 
 	| shape |
@@ -19,7 +21,7 @@ RMDHoverBorderInteraction >> mouseEntered: event [
 		event signalUpdate ]
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 RMDHoverBorderInteraction >> mouseLeft: event [
 
 	| shape |
@@ -31,7 +33,7 @@ RMDHoverBorderInteraction >> mouseLeft: event [
 		event signalUpdate ]
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 RMDHoverBorderInteraction >> onShape: aShape [
 
 	aShape removeInteractionIfPresent: self class.

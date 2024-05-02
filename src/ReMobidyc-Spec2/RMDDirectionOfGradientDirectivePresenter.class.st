@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDDirectionOfGradientDirectivePresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDDirectionOfGradientDirectivePresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'directiveLabel',
 		'attributeLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDirectionOfGradientDirectivePresenter >> expressionChanged [
 
 	attributeLabel label: expression patchAttributeVariable identifier.
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDDirectionOfGradientDirectivePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -28,7 +30,7 @@ RMDDirectionOfGradientDirectivePresenter >> initializePresenters [
 		                  yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDDirectionOfGradientDirectivePresenter >> layout [
 
 	| newLayout |

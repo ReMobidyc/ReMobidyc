@@ -1,6 +1,6 @@
-Extension { #name : #RMDIndividualsInRadiusDirectiveNode }
+Extension { #name : 'RMDIndividualsInRadiusDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDIndividualsInRadiusDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode

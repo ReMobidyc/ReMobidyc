@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDAnimatDotRendererPresenter,
-	#superclass : #RMDAnimatShapeRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDAnimatDotRendererPresenter',
+	#superclass : 'RMDAnimatShapeRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAnimatDotRendererPresenter class >> defaultLayout [
 
 	<spec>

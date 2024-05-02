@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDRepositoryIconsBrowser,
-	#superclass : #RMDAbstractRepositoryBrowser,
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#name : 'RMDRepositoryIconsBrowser',
+	#superclass : 'RMDAbstractRepositoryBrowser',
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDRepositoryIconsBrowser class >> openToLoadDo: aBlock [
 
 	<script:
@@ -12,7 +14,7 @@ RMDRepositoryIconsBrowser class >> openToLoadDo: aBlock [
 	super openToLoadDo: aBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDRepositoryIconsBrowser >> addItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -34,7 +36,7 @@ RMDRepositoryIconsBrowser >> addItem [
 				itemList selectItem: name ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDRepositoryIconsBrowser >> editItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -57,7 +59,7 @@ RMDRepositoryIconsBrowser >> editItem [
 					self updateItemList ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryIconsBrowser >> file [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -65,20 +67,20 @@ RMDRepositoryIconsBrowser >> file [
 			  repo iconFileNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDRepositoryIconsBrowser >> getIcon: aString [
 
 	^ self repository ifNotNil: [ :repo | 
 		  repo iconNamed: aString ifAbsent: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryIconsBrowser >> itemsInRepository [
 
 	^ self repository ifNotNil: #iconNames ifNil: [ #(  ) ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RMDRepositoryIconsBrowser >> load [
 
 	^ self repository ifNotNil: [ :repo | 
@@ -86,7 +88,7 @@ RMDRepositoryIconsBrowser >> load [
 			  repo iconNamed: item ifAbsent: [ nil ] ] ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDRepositoryIconsBrowser >> newItemList [
 
 	^ self newTable
@@ -106,7 +108,7 @@ RMDRepositoryIconsBrowser >> newItemList [
 		  yourself
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 RMDRepositoryIconsBrowser >> removeItem [
 
 	self repository ifNotNil: [ :repo | 
@@ -118,7 +120,7 @@ RMDRepositoryIconsBrowser >> removeItem [
 					self updateItemList ] ] ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RMDRepositoryIconsBrowser >> save: aForm [
 
 	^ self repository ifNotNil: [ :repo |
@@ -129,13 +131,13 @@ RMDRepositoryIconsBrowser >> save: aForm [
 				  ifTrue: [ repo addIcon: aForm named: item ifPresent: [  ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryIconsBrowser >> title [
 
 	^ 'Icons'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryIconsBrowser >> updateButtons [
 
 	self repository
@@ -155,7 +157,7 @@ RMDRepositoryIconsBrowser >> updateButtons [
 	self item ifNotNil: [ self enableOk ] ifNil: [ self disableOk ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDRepositoryIconsBrowser >> updateDescriptionText [
 
 	descriptionText text: ((self item ifNotNil: [ :item | 

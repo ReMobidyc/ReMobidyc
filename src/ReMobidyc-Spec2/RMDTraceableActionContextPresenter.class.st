@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDTraceableActionContextPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDTraceableActionContextPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'subjectField',
 		'verbField',
@@ -12,23 +12,25 @@ Class {
 		'guardField',
 		'context'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDTraceableActionContextPresenter class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceableActionContextPresenter >> context: aRMDActionContext [
 
 	context := aRMDActionContext.
 	self contextChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTraceableActionContextPresenter >> contextChanged [
 
 	context
@@ -68,7 +70,7 @@ RMDTraceableActionContextPresenter >> contextChanged [
 	self layout: self layout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTraceableActionContextPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -107,7 +109,7 @@ RMDTraceableActionContextPresenter >> initializePresenters [
 		                           yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceableActionContextPresenter >> layout [
 
 	| box |

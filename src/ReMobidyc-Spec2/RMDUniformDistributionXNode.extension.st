@@ -1,6 +1,6 @@
-Extension { #name : #RMDUniformDistributionXNode }
+Extension { #name : 'RMDUniformDistributionXNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDUniformDistributionXNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode directive: self printString

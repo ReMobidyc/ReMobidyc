@@ -1,28 +1,30 @@
 Class {
-	#name : #RMDTabularColumn,
-	#superclass : #SpStringTableColumn,
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#name : 'RMDTabularColumn',
+	#superclass : 'SpStringTableColumn',
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTabularColumn class >> isAbstract [
 
 	^ self == RMDTabularColumn
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTabularColumn >> defaultEvaluation [
 
 	^ [ :row | self value: row ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDTabularColumn >> ifOnChartDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTabularColumn >> initialize [
 
 	super initialize.
@@ -30,7 +32,7 @@ RMDTabularColumn >> initialize [
 	self width: 150
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTabularColumn >> printNat: anInteger [
 
 	^ anInteger
@@ -56,7 +58,7 @@ RMDTabularColumn >> printNat: anInteger [
 		  ifNil: [ '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTabularColumn >> value: aRow [
 
 	^ self subclassResponsibility

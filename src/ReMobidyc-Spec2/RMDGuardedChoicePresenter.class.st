@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDGuardedChoicePresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDGuardedChoicePresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'choicePresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGuardedChoicePresenter >> expressionChanged [
 
 	choicePresenters := expression guardsAndChoices collect: [ :assoc |
@@ -25,7 +27,7 @@ RMDGuardedChoicePresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDGuardedChoicePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -37,7 +39,7 @@ RMDGuardedChoicePresenter >> initializePresenters [
 				borderWidth: 2 ] ]
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDGuardedChoicePresenter >> layout [
 
 	| newLayout |

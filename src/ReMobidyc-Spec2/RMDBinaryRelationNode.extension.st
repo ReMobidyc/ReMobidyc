@@ -1,6 +1,6 @@
-Extension { #name : #RMDBinaryRelationNode }
+Extension { #name : 'RMDBinaryRelationNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryRelationNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode
@@ -8,7 +8,7 @@ RMDBinaryRelationNode >> asPrettyPrintNode [
 		  arguments: (expressions collect: #asPrettyPrintNode)
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBinaryRelationNode >> prettyOperator [
 
 	^ self operator

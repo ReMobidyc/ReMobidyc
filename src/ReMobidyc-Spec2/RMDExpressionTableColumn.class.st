@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDExpressionTableColumn,
-	#superclass : #RMDSyntaxTableColumn,
+	#name : 'RMDExpressionTableColumn',
+	#superclass : 'RMDSyntaxTableColumn',
 	#instVars : [
 		'basicEvaluation',
 		'basicAcceptAction',
@@ -11,10 +11,12 @@ Class {
 		'simulationModelBlock',
 		'permitsUnresolvedAttributeReference'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDExpressionTableColumn >> defaultAcceptAction [
 
 	^ [ :item :stringOrText |
@@ -34,13 +36,13 @@ RMDExpressionTableColumn >> defaultAcceptAction [
 					   yourself) ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDExpressionTableColumn >> defaultColorAction [
 
 	^ nil
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDExpressionTableColumn >> defaultEvaluationBlock [
 
 	^ [ :item |
@@ -62,7 +64,7 @@ RMDExpressionTableColumn >> defaultEvaluationBlock [
 		  ifNil: [ '' ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDExpressionTableColumn >> defaultTextChangedAction [
 
 	^ [ :item :string :widget |
@@ -78,115 +80,115 @@ RMDExpressionTableColumn >> defaultTextChangedAction [
 		  widget textArea compose ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> evaluated: aBlock [
 
 	basicEvaluation := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> object [
 
 	^ objectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> objectBlock [
 
 	^ objectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> objectBlock: aBlock [
 
 	objectBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> onAcceptEdition: aBlock [
 
 	basicAcceptAction := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> permitUnresolvedAttributeReference [
 
 	permitsUnresolvedAttributeReference := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> permitsUnresolvedAttributeReference [
 
 	^ permitsUnresolvedAttributeReference = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> permitsUnresolvedAttributeReference: aBool [
 
 	permitsUnresolvedAttributeReference := aBool = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> simulationModel [
 
 	^ simulationModelBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> simulationModelBlock [
 
 	^ simulationModelBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> simulationModelBlock: aBlock [
 
 	simulationModelBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> subject [
 
 	^ subjectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> subjectBlock [
 
 	^ subjectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> subjectBlock: aBlock [
 
 	subjectBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> unitBlock [
 
 	^ unitBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> unitBlock: aBlock [
 
 	unitBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> utilities [
 
 	^ utilitiesBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> utilitiesBlock [
 
 	^ utilitiesBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionTableColumn >> utilitiesBlock: aBlock [
 
 	utilitiesBlock := aBlock

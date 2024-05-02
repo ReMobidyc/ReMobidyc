@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDAtomicDirectivePresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDAtomicDirectivePresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'directiveLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAtomicDirectivePresenter >> expressionChanged [
 
 	directiveLabel label: expression printString.
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAtomicDirectivePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -24,7 +26,7 @@ RMDAtomicDirectivePresenter >> initializePresenters [
 		                  yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDAtomicDirectivePresenter >> layout [
 
 	| newLayout |

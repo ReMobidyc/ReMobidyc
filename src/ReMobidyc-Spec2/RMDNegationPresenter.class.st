@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDNegationPresenter,
-	#superclass : #RMDConditionPresenter,
+	#name : 'RMDNegationPresenter',
+	#superclass : 'RMDConditionPresenter',
 	#instVars : [
 		'conditionPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNegationPresenter >> conditionChanged [
 
 	conditionPresenter := condition condition asPresenter.
 	super conditionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDNegationPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -26,7 +28,7 @@ RMDNegationPresenter >> initializePresenters [
 				borderWidth: 2 ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNegationPresenter >> layout [
 
 	^ SpBoxLayout newVertical

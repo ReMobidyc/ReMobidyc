@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDIcebergRepositoryBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDIcebergRepositoryBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'icebergRepository',
 		'incomingCommitList',
@@ -11,10 +11,12 @@ Class {
 		'localChangeList',
 		'checkoutButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDIcebergRepositoryBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
@@ -42,7 +44,7 @@ RMDIcebergRepositoryBrowser class >> defaultLayout [
 						    yourself))
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIcebergRepositoryBrowser class >> on: anIceLibgitRepository [
 
 	^ self new
@@ -50,19 +52,19 @@ RMDIcebergRepositoryBrowser class >> on: anIceLibgitRepository [
 		  yourself
 ]
 
-{ #category : #'git-operations' }
+{ #category : 'git-operations' }
 RMDIcebergRepositoryBrowser >> basicPull [
 
 	self icebergRepositoryDo: #pull
 ]
 
-{ #category : #'git-operations' }
+{ #category : 'git-operations' }
 RMDIcebergRepositoryBrowser >> checkoutRemote: anIceRemoteCommit [
 	self icebergRepositoryDo: [:repository |
 		repository branch commit: anIceRemoteCommit]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDIcebergRepositoryBrowser >> commitAndPush [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -79,7 +81,7 @@ RMDIcebergRepositoryBrowser >> commitAndPush [
 			self icebergRepositoryChanged ] ]
 ]
 
-{ #category : #'git-operations' }
+{ #category : 'git-operations' }
 RMDIcebergRepositoryBrowser >> commitAndPushWithMessage: aString [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -90,7 +92,7 @@ RMDIcebergRepositoryBrowser >> commitAndPushWithMessage: aString [
 			push ]
 ]
 
-{ #category : #'git-testing' }
+{ #category : 'git-testing' }
 RMDIcebergRepositoryBrowser >> conflictsWith: aRemoteCommit [
 
 	^ (self incomingAdditions: aRemoteCommit)
@@ -99,19 +101,19 @@ RMDIcebergRepositoryBrowser >> conflictsWith: aRemoteCommit [
 		  self localAdditions , self localModifications
 ]
 
-{ #category : #'git-operations' }
+{ #category : 'git-operations' }
 RMDIcebergRepositoryBrowser >> fetch [
 
 	self icebergRepositoryDo: #fetch
 ]
 
-{ #category : #'git-testing' }
+{ #category : 'git-testing' }
 RMDIcebergRepositoryBrowser >> hasConflictsWith: aRemoteCommit [
 
 	^ (self conflictsWith: aRemoteCommit) notEmpty
 ]
 
-{ #category : #'git-testing' }
+{ #category : 'git-testing' }
 RMDIcebergRepositoryBrowser >> hasIncomingCommits [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -120,20 +122,20 @@ RMDIcebergRepositoryBrowser >> hasIncomingCommits [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepositoryBrowser >> icebergRepository [
 
 	^ icebergRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepositoryBrowser >> icebergRepository: aRMDIcebergRepository [
 
 	icebergRepository := aRMDIcebergRepository.
 	self icebergRepositoryChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> icebergRepositoryChanged [
 
 	self
@@ -145,19 +147,19 @@ RMDIcebergRepositoryBrowser >> icebergRepositoryChanged [
 		updateCheckoutButton
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepositoryBrowser >> icebergRepositoryDo: aBlock [
 
 	^ icebergRepository ifNotNil: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepositoryBrowser >> icebergRepositoryDo: aBlock ifNil: nilBlock [
 
 	^ icebergRepository ifNotNil: aBlock ifNil: nilBlock
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> incomingAdditions: aRemoteCommit [
 
 	^ Array streamContents: [ :changes | 
@@ -179,7 +181,7 @@ RMDIcebergRepositoryBrowser >> incomingAdditions: aRemoteCommit [
 											   basename }) ] ] ] ] ] ] ]
 ]
 
-{ #category : #'git-enumerating' }
+{ #category : 'git-enumerating' }
 RMDIcebergRepositoryBrowser >> incomingCommitsDo: aBlock [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -190,7 +192,7 @@ RMDIcebergRepositoryBrowser >> incomingCommitsDo: aBlock [
 			aBlock cull: commit ] ]
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> incomingDeletions: aRemoteCommit [
 
 	^ Array streamContents: [ :changes | 
@@ -212,7 +214,7 @@ RMDIcebergRepositoryBrowser >> incomingDeletions: aRemoteCommit [
 											   basename }) ] ] ] ] ] ] ]
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> incomingModifications: aRemoteCommit [
 
 	^ Array streamContents: [ :changes | 
@@ -258,7 +260,7 @@ RMDIcebergRepositoryBrowser >> incomingModifications: aRemoteCommit [
 									  changes nextPut: path ] ] ] ] ] ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIcebergRepositoryBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -330,14 +332,14 @@ RMDIcebergRepositoryBrowser >> initializePresenters [
 		                  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIcebergRepositoryBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter initialExtent: 500 @ 600
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> localAdditions [
 
 	^ Array streamContents: [ :changes | 
@@ -359,14 +361,14 @@ RMDIcebergRepositoryBrowser >> localAdditions [
 											   basename }) ] ] ] ] ] ] ]
 ]
 
-{ #category : #'git-enumerating' }
+{ #category : 'git-enumerating' }
 RMDIcebergRepositoryBrowser >> localCommitsDo: aBlock [
 
 	self icebergRepositoryDo: [ :repository | 
 		repository branch commits do: aBlock ]
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> localDeletions [
 
 	^ Array streamContents: [ :changes | 
@@ -388,7 +390,7 @@ RMDIcebergRepositoryBrowser >> localDeletions [
 											   basename }) ] ] ] ] ] ] ]
 ]
 
-{ #category : #'git-conflicts' }
+{ #category : 'git-conflicts' }
 RMDIcebergRepositoryBrowser >> localModifications [
 
 	^ Array streamContents: [ :changes | 
@@ -411,11 +413,11 @@ RMDIcebergRepositoryBrowser >> localModifications [
 												   basename }) ] ] ] ] ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDIcebergRepositoryBrowser >> openCommits [
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDIcebergRepositoryBrowser >> pull [
 
 	incomingCommitList selectedItem ifNotNil: [ :commit | 
@@ -430,14 +432,14 @@ RMDIcebergRepositoryBrowser >> pull [
 				self icebergRepositoryChanged ] ]
 ]
 
-{ #category : #'git-enumerating' }
+{ #category : 'git-enumerating' }
 RMDIcebergRepositoryBrowser >> remoteCommitsDo: aBlock [
 
 	self icebergRepositoryDo: [ :repository | 
 		repository branch upstream commits do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepositoryBrowser >> title [
 
 	^ icebergRepository
@@ -445,18 +447,18 @@ RMDIcebergRepositoryBrowser >> title [
 		  ifNil: [ 'IcebergRepositoryBrowser' ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateCheckoutButton [
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateCommitAndPushButton [
 
 	commitAndPushButton enabled:
 		(self hasIncomingCommits not and: [ localChangeList items notEmpty ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateIncomingChangeList [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -473,7 +475,7 @@ RMDIcebergRepositoryBrowser >> updateIncomingChangeList [
 	incomingChangeList items: #(  )
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateIncomingCommitList [
 
 	self
@@ -489,7 +491,7 @@ RMDIcebergRepositoryBrowser >> updateIncomingCommitList [
 		ifNil: [ incomingCommitList items: #(  ) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateLocalChangeList [
 
 	self icebergRepositoryDo: [ :repository | 
@@ -501,7 +503,7 @@ RMDIcebergRepositoryBrowser >> updateLocalChangeList [
 	localChangeList items: #(  )
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updatePullButton [
 
 	incomingCommitList selectedItem ifNotNil: [ :commit | 
@@ -511,13 +513,13 @@ RMDIcebergRepositoryBrowser >> updatePullButton [
 	pullButton disable
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDIcebergRepositoryBrowser >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIcebergRepositoryBrowser >> windowIcon [
 
 	^ self icebergIcon

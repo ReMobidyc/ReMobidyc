@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDActionDebugger,
-	#superclass : #RMDPresenter,
+	#name : 'RMDActionDebugger',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'exception',
 		'sourceText',
@@ -10,10 +10,12 @@ Class {
 		'objectLabel',
 		'variableList'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDActionDebugger class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -35,7 +37,7 @@ RMDActionDebugger class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDActionDebugger class >> exception: aRMDSemanticError [
 
 	^ self new
@@ -43,7 +45,7 @@ RMDActionDebugger class >> exception: aRMDSemanticError [
 		  yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> contextChanged [
 
 	self
@@ -54,20 +56,20 @@ RMDActionDebugger >> contextChanged [
 		updateVariableList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDebugger >> exception [
 
 	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDebugger >> exception: aRMDSemanticError [
 
 	exception := aRMDSemanticError.
 	self exceptionChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> exceptionChanged [
 
 	self
@@ -79,7 +81,7 @@ RMDActionDebugger >> exceptionChanged [
 		updateVariableList
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDActionDebugger >> initializePresenters [
 
 	sourceText := (self newSourceWith:
@@ -114,13 +116,13 @@ RMDActionDebugger >> initializePresenters [
 		                yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDebugger >> interpreter [
 
 	^ exception interpreter
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> interpreterChanged [
 
 	self
@@ -131,7 +133,7 @@ RMDActionDebugger >> interpreterChanged [
 		updateVariableList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateActionLabel [
 
 	actionLabel ifNotNil: [
@@ -141,7 +143,7 @@ RMDActionDebugger >> updateActionLabel [
 				 ifNil: [ 'N/A' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateExceptionLabel [
 
 	exceptionLabel ifNotNil: [ 
@@ -151,7 +153,7 @@ RMDActionDebugger >> updateExceptionLabel [
 				 ifNil: [ '' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateObjectLabel [
 
 	objectLabel ifNotNil: [
@@ -165,7 +167,7 @@ RMDActionDebugger >> updateObjectLabel [
 				 ifNil: [ 'N/A' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateSourceText [
 
 	sourceText ifNotNil: [
@@ -176,7 +178,7 @@ RMDActionDebugger >> updateSourceText [
 			syntaxNode: self interpreter context action ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateSubjectLabel [
 
 	subjectLabel ifNotNil: [
@@ -190,7 +192,7 @@ RMDActionDebugger >> updateSubjectLabel [
 				 ifNil: [ 'N/A' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDActionDebugger >> updateVariableList [
 
 	variableList items: (Array streamContents: [ :stream |

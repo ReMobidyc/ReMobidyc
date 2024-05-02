@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDWorldDefinitionBrowser,
-	#superclass : #RMDAgentDefinitionBrowser,
-	#category : #'ReMobidyc-Spec2-Components'
+	#name : 'RMDWorldDefinitionBrowser',
+	#superclass : 'RMDAgentDefinitionBrowser',
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDWorldDefinitionBrowser class >> on: aRMDSimulationModeler [
 
 	^ self new
@@ -12,39 +14,39 @@ RMDWorldDefinitionBrowser class >> on: aRMDSimulationModeler [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDWorldDefinitionBrowser >> addRendererMenu [
 
 	^ self newMenu
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldDefinitionBrowser >> agentName [
 	^ 'World'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldDefinitionBrowser >> definitionDo: aBlock [
 
 	^ self simulationModel ifNotNil: [ :model |
 		  model worldDefinition ifNotNil: aBlock ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDWorldDefinitionBrowser >> initializeRendererPresenters [
 
 	super initializeRendererPresenters.
 	addRendererButton disable
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDWorldDefinitionBrowser >> renameAttribute: aString to: anotherString [
 
 	super renameAttribute: aString to: anotherString.
 	self renameAttribute: aString to: anotherString agentRef: 'world'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDWorldDefinitionBrowser >> renderersDo: aBlock [
 
 	self simulationModel ifNotNil: [ :model | 

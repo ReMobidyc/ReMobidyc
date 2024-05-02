@@ -1,6 +1,6 @@
-Extension { #name : #RMDAnimatInitializerNode }
+Extension { #name : 'RMDAnimatInitializerNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDAnimatInitializerNode >> asPresenter [
 	^ RMDAnimatInitializerPresenter on: self
 ]

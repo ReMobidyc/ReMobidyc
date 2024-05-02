@@ -1,6 +1,6 @@
-Extension { #name : #SpMorphicScrollableAdapter }
+Extension { #name : 'SpMorphicScrollableAdapter' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 SpMorphicScrollableAdapter >> layout: aLayout [
 
 	layout := aLayout.
