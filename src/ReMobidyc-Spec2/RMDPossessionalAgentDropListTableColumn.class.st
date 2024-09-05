@@ -94,7 +94,7 @@ RMDPossessionalAgentDropListTableColumn >> displayAgent: agent [
 RMDPossessionalAgentDropListTableColumn >> ifNewDirective: aBlock [
 
 	(directiveBlock ifNotNil: #value) ifNotNil: [ :lifeDirectives |
-		lifeDirectives contains: #hasNewAgents ]
+		(lifeDirectives contains: #hasNewAgents) ifTrue: aBlock ]
 ]
 
 { #category : #controlling }
