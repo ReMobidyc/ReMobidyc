@@ -100,6 +100,12 @@ RMDAbstractAssignableAttributeVariableNode >> identifier [
 	^ attributeVariable identifier
 ]
 
+{ #category : #accessing }
+RMDAbstractAssignableAttributeVariableNode >> identifier: aString [
+
+	attributeVariable identifier: aString
+]
+
 { #category : #private }
 RMDAbstractAssignableAttributeVariableNode >> insertTrace [
 ]
