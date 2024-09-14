@@ -244,7 +244,7 @@ RMDPopulationByTimeTabular >> openChart [
 		1 to: chart plots size do: [ :plotIndex | 
 			legend
 				text: (columns at: plotIndex + 1) title
-				withBoxColor: (chart plots at: plotIndex) color ].
+				withBoxColor: (chart plots at: plotIndex) line color ].
 		legend build.
 		(canvas openWithTitle: 'Population Chart'
 			 ,
