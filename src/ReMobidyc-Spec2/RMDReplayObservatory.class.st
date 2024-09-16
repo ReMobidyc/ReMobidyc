@@ -202,7 +202,8 @@ RMDReplayObservatory >> resetSimulation [
 { #category : #updating }
 RMDReplayObservatory >> runDropListChanged [
 
-	self interpreterDo: [ :interpreter | 
+	self interpreterDo: [ :interpreter |
+		interpreter time: timeSlider value * interpreter duration.
 		timeSlider quantum: interpreter deltaTime / interpreter duration ].
 	self
 		updateTimeLabel;
@@ -228,7 +229,7 @@ RMDReplayObservatory >> runSimulation [
 { #category : #private }
 RMDReplayObservatory >> selectRunId: anInteger [
 
-	runDropList selectItem: anInteger
+	anInteger ifNotNil: [ runDropList selectItem: anInteger ]
 ]
 
 { #category : #private }
