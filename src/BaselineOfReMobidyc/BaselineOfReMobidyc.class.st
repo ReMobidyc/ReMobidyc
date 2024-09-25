@@ -110,10 +110,6 @@ BaselineOfReMobidyc >> baselineOf: spec [
 
 	<baseline>
 	spec for: #common do: [
-		spec baseline: 'Roassal3' with: [
-			spec
-				repository: 'github://ObjectProfile/Roassal3/';
-				loads: 'Full' ].
 		spec
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
@@ -135,8 +131,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			package: 'ReMobidyc-Repository'
 			with: [ spec requires: #( 'ReMobidyc-Language' ) ];
 			package: 'ReMobidyc-Spec2' with: [
-				spec requires:
-						#( 'Roassal3' 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
+				spec requires: #( 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
 						   'ReMobidyc-Units' 'ReMobidyc-Visualization'
 						   'ReMobidyc-Repository' ) ];
 			package: 'ReMobidyc-Storage-Tests'
@@ -163,7 +158,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
 				   'ReMobidyc-Visualization-Tests' ).
-		spec postLoadDoIt: #postLoad ]
+		spec postLoadDoIt: #postLoad ].
+	spec for: 'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
 ]
 
 { #category : #scripts }
@@ -185,6 +181,13 @@ BaselineOfReMobidyc >> installLogos [
 						and: [ response entity contentType sub = 'png' ])
 						ifTrue: [ self logoDirectoryPath / basename
 								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
+]
+
+{ #category : #scripts }
+BaselineOfReMobidyc >> installRoassal3 [
+
+	<script: 'BaselineOfReMobidyc new installRoassal3'>
+	RSWorldMenu loadFullVersion
 ]
 
 { #category : #scripts }
