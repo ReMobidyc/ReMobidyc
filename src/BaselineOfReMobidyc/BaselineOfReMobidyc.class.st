@@ -111,6 +111,9 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'Roassal3'
+			with: [ spec repository: 'github://ObjectProfile/Roassal3/' ].
+		spec
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
 			baseline: 'DataFrame'
@@ -131,7 +134,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			package: 'ReMobidyc-Repository'
 			with: [ spec requires: #( 'ReMobidyc-Language' ) ];
 			package: 'ReMobidyc-Spec2' with: [
-				spec requires: #( 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
+				spec requires:
+						#( 'Roassal3' 'ReMobidyc-Language' 'ReMobidyc-Interpreter'
 						   'ReMobidyc-Units' 'ReMobidyc-Visualization'
 						   'ReMobidyc-Repository' ) ];
 			package: 'ReMobidyc-Storage-Tests'
