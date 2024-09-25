@@ -1,6 +1,6 @@
-Extension { #name : #RMDFractionNode }
+Extension { #name : 'RMDFractionNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDFractionNode >> asPrettyPrintNode [
 
 	^ self expression1 asPrettyPrintNode

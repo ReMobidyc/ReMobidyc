@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDColorTriangleTableColumn,
-	#superclass : #SpImageTableColumn,
+	#name : 'RMDColorTriangleTableColumn',
+	#superclass : 'SpImageTableColumn',
 	#instVars : [
 		'subjectBlock',
 		'objectBlock',
@@ -14,10 +14,12 @@ Class {
 		'RedTriangleIcon',
 		'YellowTriangleIcon'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn class >> greenTriangleIcon [
 
 	^ GreenTriangleIcon ifNil: [
@@ -36,7 +38,7 @@ RMDColorTriangleTableColumn class >> greenTriangleIcon [
 		  GreenTriangleIcon := form ]
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn class >> redTriangleIcon [
 
 	^ RedTriangleIcon ifNil: [
@@ -55,7 +57,7 @@ RMDColorTriangleTableColumn class >> redTriangleIcon [
 		  RedTriangleIcon := form ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDColorTriangleTableColumn class >> subjectBlock: agentNameBlock objectBlock: objectBlock utilitiesBlock: utilitiesBlock simulationModel: simulationModelBlock [
 
 	^ self new
@@ -66,7 +68,7 @@ RMDColorTriangleTableColumn class >> subjectBlock: agentNameBlock objectBlock: o
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDColorTriangleTableColumn class >> subjectBlock: agentNameBlock utilitiesBlock: utilitiesBlock simulationModel: simulationModelBlock [
 
 	^ self new
@@ -76,7 +78,7 @@ RMDColorTriangleTableColumn class >> subjectBlock: agentNameBlock utilitiesBlock
 		  yourself
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn class >> yellowTriangleIcon [
 
 	^ YellowTriangleIcon ifNil: [
@@ -95,7 +97,7 @@ RMDColorTriangleTableColumn class >> yellowTriangleIcon [
 		  YellowTriangleIcon := form ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDColorTriangleTableColumn >> defaultEvaluation [
 
 	^ [ :item |
@@ -115,13 +117,13 @@ RMDColorTriangleTableColumn >> defaultEvaluation [
 		  ifFalse: [ self redTriangleIcon ] ]
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn >> greenTriangleIcon [
 
 	^ self class greenTriangleIcon
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 RMDColorTriangleTableColumn >> initialize [
 
 	super initialize.
@@ -129,115 +131,115 @@ RMDColorTriangleTableColumn >> initialize [
 	self width: 14
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> namecrashBlock [
 
 	^ namecrashBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> namecrashBlock: aBlock [
 
 	namecrashBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> object [
 
 	^ objectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> objectBlock [
 
 	^ objectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> objectBlock: aBlock [
 
 	objectBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> permitUnresolvedAttributeReference [
 
 	permitsUnresolvedAttributeReference := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> permitsUnresolvedAttributeReference [
 
 	^ permitsUnresolvedAttributeReference = true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> permitsUnresolvedAttributeReference: aBoolean [
 
 	permitsUnresolvedAttributeReference := aBoolean
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn >> redTriangleIcon [
 
 	^ self class redTriangleIcon
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> simulationModel [
 
 	^ simulationModelBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> simulationModelBlock [
 
 	^ simulationModelBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> simulationModelBlock: aBlock [
 
 	simulationModelBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> subject [
 
 	^ subjectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> subjectBlock [
 
 	^ subjectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> subjectBlock: aBlock [
 
 	subjectBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> utilities [
 
 	^ utilitiesBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> utilitiesBlock [
 
 	^ utilitiesBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDColorTriangleTableColumn >> utilitiesBlock: aBlock [
 
 	utilitiesBlock := aBlock
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDColorTriangleTableColumn >> yellowTriangleIcon [
 
 	^ self class yellowTriangleIcon

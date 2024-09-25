@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPossessionalAgentDropListTableColumn,
-	#superclass : #SpDropListTableColumn,
+	#name : 'RMDPossessionalAgentDropListTableColumn',
+	#superclass : 'SpDropListTableColumn',
 	#instVars : [
 		'subjectBlock',
 		'objectBlock',
 		'directiveBlock',
 		'initialSelectionBlock'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDPossessionalAgentDropListTableColumn class >> example [
 
 	^ SpTablePresenter new
@@ -24,62 +26,62 @@ RMDPossessionalAgentDropListTableColumn class >> example [
 		open
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RMDPossessionalAgentDropListTableColumn >> acceptColumnVisitor: aBuilder [
 
 	^ aBuilder visitRMDPossessionalAgentDropListColumn: self
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultDisplay [
 
 	^ [ :agent | self displayAgent: agent ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultEvaluation [
 
 	^ [ self possibleAgents ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultInitialSelectionBlock [
 
 	^ [ :attributeDefinition | attributeDefinition variable agent ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultSelectedItemChangedAction [
 
 	^ [ :attributeDefinition :agent |
 	  attributeDefinition variable agent: agent ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultStartWithSelection [
 
 	^ true
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDPossessionalAgentDropListTableColumn >> defaultWidth [
 
 	^ 80
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> directiveBlock [
 
 	^ directiveBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> directiveBlock: aBlock [
 
 	directiveBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> displayAgent: agent [
 
 	agent ifNil: [ ^ 'my' ].
@@ -90,20 +92,20 @@ RMDPossessionalAgentDropListTableColumn >> displayAgent: agent [
 	^ agent uncapitalized , '''s'
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDPossessionalAgentDropListTableColumn >> ifNewDirective: aBlock [
 
 	(directiveBlock ifNotNil: #value) ifNotNil: [ :lifeDirectives |
 		(lifeDirectives contains: #hasNewAgents) ifTrue: aBlock ]
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDPossessionalAgentDropListTableColumn >> ifObject: aBlock [
 
 	^ (objectBlock ifNotNil: #value) ifNotNil: aBlock
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDPossessionalAgentDropListTableColumn >> ifWorldSubject: worldBlock ifPatchSubject: patchBlock ifAnimatSubject: animatBlock [
 
 	self subject ifNotNil: [ :subject |
@@ -112,26 +114,26 @@ RMDPossessionalAgentDropListTableColumn >> ifWorldSubject: worldBlock ifPatchSub
 	^ animatBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> initialSelection: aRMDAttributeDefinitionNode [
 
 	^ initialSelectionBlock ifNotNil: [
 		  initialSelectionBlock cull: aRMDAttributeDefinitionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> initialSelectionBlock [
 
 	^ initialSelectionBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> initialSelectionBlock: aBlock [
 
 	initialSelectionBlock := aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPossessionalAgentDropListTableColumn >> initialize [
 
 	super initialize.
@@ -142,43 +144,43 @@ RMDPossessionalAgentDropListTableColumn >> initialize [
 	self width: self defaultWidth
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPossessionalAgentDropListTableColumn >> isAnimatSubject [
 
 	^ (self isWorldSubject or: [ self isPatchSubject ]) not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPossessionalAgentDropListTableColumn >> isPatchSubject [
 
 	^ (subjectBlock ifNotNil: #value) = 'Patch'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPossessionalAgentDropListTableColumn >> isWorldSubject [
 
 	^ (subjectBlock ifNotNil: #value) = 'World'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> object [
 
 	^ objectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> objectBlock [
 
 	^ objectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> objectBlock: aBlock [
 
 	objectBlock := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> possibleAgents [
 
 	^ Array streamContents: [ :stream |
@@ -195,7 +197,7 @@ RMDPossessionalAgentDropListTableColumn >> possibleAgents [
 		  stream nextPut: #the ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> startWithSelection [
 
 	initialSelectionBlock ifNil: [
@@ -203,33 +205,33 @@ RMDPossessionalAgentDropListTableColumn >> startWithSelection [
 	super startWithSelection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> startWithSelection: aBlock [
 
 	initialSelectionBlock ifNil: [ initialSelectionBlock := aBlock ].
 	super startWithSelection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> startWithoutSelection [
 
 	initialSelectionBlock := nil.
 	super startWithoutSelection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> subject [
 
 	^ subjectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> subjectBlock [
 
 	^ subjectBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPossessionalAgentDropListTableColumn >> subjectBlock: aBlock [
 
 	subjectBlock := aBlock

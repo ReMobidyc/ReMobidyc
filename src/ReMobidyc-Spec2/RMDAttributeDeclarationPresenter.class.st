@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAttributeDeclarationPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDAttributeDeclarationPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'identifierField',
 		'unitField',
@@ -8,10 +8,12 @@ Class {
 		'agentName',
 		'utilities'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAttributeDeclarationPresenter class >> defaultLayout [
 
 	<spec>
@@ -27,20 +29,20 @@ RMDAttributeDeclarationPresenter class >> defaultLayout [
 		  height: self inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationPresenter >> agentName [
 
 	^ agentName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationPresenter >> agentName: aString [
 
 	agentName := aString.
 	initializerExpressionField subjectBlock: [ agentName ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeDeclarationPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -97,13 +99,13 @@ RMDAttributeDeclarationPresenter >> initializePresenters [
 			initializerExpressionField } asOrderedCollection
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAttributeDeclarationPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 600 @ (self class buttonHeight * 3.5)
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeDeclarationPresenter >> nodeChanged [
 
 	self
@@ -112,32 +114,32 @@ RMDAttributeDeclarationPresenter >> nodeChanged [
 		updateInitializerExpressionField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationPresenter >> preferredHeight [
 
 	^ self class inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationPresenter >> simulationModel: aRMDSimulationModel [
 
 	super simulationModel: aRMDSimulationModel.
 	initializerExpressionField simulationModelBlock: [ simulationModel ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeDeclarationPresenter >> updateIdentifier [
 	node ifNotNil: [ identifierField text: node identifier ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeDeclarationPresenter >> updateInitializerExpressionField [
 
 	node ifNotNil: [ 
 		initializerExpressionField syntaxNode: node initializerExpression ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAttributeDeclarationPresenter >> updateUnit [
 	node
 		ifNotNil: [ | unit |
@@ -149,14 +151,14 @@ RMDAttributeDeclarationPresenter >> updateUnit [
 						ifFalse: [ '' ]) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationPresenter >> utilities: anArrayOfRMDUtilityDefinitionNode [
 
 	utilities := anArrayOfRMDUtilityDefinitionNode.
 	initializerExpressionField utilitiesBlock: [ utilities ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeDeclarationPresenter >> whenInitializerExpressionSubmitDo: aBlock [
 
 	initializerExpressionField whenSubmitDo: aBlock

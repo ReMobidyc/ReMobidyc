@@ -1,6 +1,6 @@
-Extension { #name : #RMDBackgroundColorRenderer }
+Extension { #name : 'RMDBackgroundColorRenderer' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDBackgroundColorRenderer >> asPresenter [
 	^ RMDBackgroundColorRendererPresenter on: self
 ]

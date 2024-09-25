@@ -1,6 +1,6 @@
-Extension { #name : #RMDIcebergRepository }
+Extension { #name : 'RMDIcebergRepository' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDIcebergRepository >> editMenu [
 
 	^ SpMenuPresenter new

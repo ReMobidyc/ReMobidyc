@@ -1,32 +1,33 @@
 Class {
-	#name : #RMDReadOnlyFileMemory,
-	#superclass : #RMDFileMemory,
+	#name : 'RMDReadOnlyFileMemory',
+	#superclass : 'RMDFileMemory',
 	#instVars : [
 		'numberOfAnimats'
 	],
-	#category : #'ReMobidyc-Storage'
+	#category : 'ReMobidyc-Storage',
+	#package : 'ReMobidyc-Storage'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> animats [
 
 	^ animats ifNil: [ animats := self readAnimatsForTime: time ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> creationTimes [
 
 	^ creationTimes ifNil: [
 		  creationTimes := self readCreationTimesForTime: time ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDReadOnlyFileMemory >> fastSunrise [
 
 	self sunrise
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> loadValues [
 
 	values := self readValuesForTime: time.
@@ -34,21 +35,21 @@ RMDReadOnlyFileMemory >> loadValues [
 	nextDeltas := Dictionary new
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> nextDeltas [
 
 	nextDeltas ifNil: [ self loadValues ].
 	^ nextDeltas
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> nextValues [
 
 	nextValues ifNil: [ self loadValues ].
 	^ nextValues
 ]
 
-{ #category : #'accessing-individuals' }
+{ #category : 'accessing-individuals' }
 RMDReadOnlyFileMemory >> numberOfAnimats: aString [
 
 	^ animats ifNotNil: [ super numberOfAnimats: aString ] ifNil: [ 
@@ -58,7 +59,7 @@ RMDReadOnlyFileMemory >> numberOfAnimats: aString [
 			  ifAbsent: [ 0 ] ]
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> readNumberOfAnimatsForTime: anInteger [
 
 	| ref |
@@ -77,26 +78,26 @@ RMDReadOnlyFileMemory >> readNumberOfAnimatsForTime: anInteger [
 		^ vals ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> reproductionLinks [
 
 	^ reproductionLinks ifNil: [ 
 		  reproductionLinks := self readReproductionLinksForTime: time ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> seeds [
 
 	^ seeds ifNil: [ seeds := self readSeedsForTime: time ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> stageLinks [
 
 	^ stageLinks ifNil: [ stageLinks := self readStageLinksForTime: time ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDReadOnlyFileMemory >> sunrise [
 
 	values := nil.
@@ -110,57 +111,57 @@ RMDReadOnlyFileMemory >> sunrise [
 	animatsInPatch := nil
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDReadOnlyFileMemory >> sunset [
 
 	
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDReadOnlyFileMemory >> time: anInteger [
 
 	time ~= anInteger ifTrue: [ super time: anInteger ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReadOnlyFileMemory >> values [
 
 	values ifNil: [ self loadValues ].
 	^ values
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeAllocation [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeAnimats: aDictionary forTime: anInteger [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeCreationTimes: aDictionary forTime: anInteger [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeMetaparameters [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeReproductionLinks: aDictionary forTime: anInteger [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeSeeds: aDictionary forTime: anInteger [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeSpace [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeStageLinks: aDictionary forTime: anInteger [
 ]
 
-{ #category : #'accessing-storage' }
+{ #category : 'accessing-storage' }
 RMDReadOnlyFileMemory >> writeValues: aDictionary forTime: anInteger [
 ]

@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDPatchColorMapEntryPresenter,
-	#superclass : #RMDPresenter,
+	#name : 'RMDPatchColorMapEntryPresenter',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'association',
 		'minValueField',
 		'colorDropList'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDPatchColorMapEntryPresenter class >> defaultLayout [
 	^ SpBoxLayout newHorizontal
 		borderWidth: 5;
@@ -22,26 +24,26 @@ RMDPatchColorMapEntryPresenter class >> defaultLayout [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchColorMapEntryPresenter class >> on: anAssociation [
 	^ self new
 		association: anAssociation;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapEntryPresenter >> association: anAssociation [
 	association := anAssociation.
 	self associationChanged
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapEntryPresenter >> associationChanged [
 	self updateColorDropList.
 	self updateMinValueField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPatchColorMapEntryPresenter >> initializePresenters [
 	super initializePresenters.
 	colorDropList := self newColorDropList
@@ -58,12 +60,12 @@ RMDPatchColorMapEntryPresenter >> initializePresenters [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapEntryPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapEntryPresenter >> updateColorDropList [
 	association
 		ifNotNil: [ | color colors |
@@ -74,7 +76,7 @@ RMDPatchColorMapEntryPresenter >> updateColorDropList [
 			colorDropList selectItem: color ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapEntryPresenter >> updateMinValueField [
 	association ifNotNil: [ minValueField syntaxNode: association key ]
 ]

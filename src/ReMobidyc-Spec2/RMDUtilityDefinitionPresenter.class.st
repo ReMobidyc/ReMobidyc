@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDUtilityDefinitionPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDUtilityDefinitionPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'identifierField',
 		'expressionField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDUtilityDefinitionPresenter class >> defaultLayout [
 
 	<spec>
@@ -23,7 +25,7 @@ RMDUtilityDefinitionPresenter class >> defaultLayout [
 		  height: self inputTextHeight
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDUtilityDefinitionPresenter >> definitionBodyFieldMenu [
 
 	^ self newMenu
@@ -35,32 +37,32 @@ RMDUtilityDefinitionPresenter >> definitionBodyFieldMenu [
 		  yourself
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDUtilityDefinitionPresenter >> disableIdentifier [
 	identifierField disable
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDUtilityDefinitionPresenter >> enableIdentifier [
 	identifierField enable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionPresenter >> expressionField [
 	^ expressionField
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDUtilityDefinitionPresenter >> identifierEnabled [
 	^ identifierField enabled
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionPresenter >> identifierField [
 	^ identifierField
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDUtilityDefinitionPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -81,7 +83,7 @@ RMDUtilityDefinitionPresenter >> initializePresenters [
 		                   yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDUtilityDefinitionPresenter >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -90,36 +92,36 @@ RMDUtilityDefinitionPresenter >> initializeWindow: aWindowPresenter [
 		600 @ (self preferredHeight + self class buttonHeight * 2)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionPresenter >> nodeChanged [
 	self
 		updateIdentifierField;
 		updateExpressionField
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDUtilityDefinitionPresenter >> updateExpressionField [
 
 	expressionField syntaxNode: node definitionBody
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDUtilityDefinitionPresenter >> updateIdentifierField [
 	identifierField text: node variable identifier
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDUtilityDefinitionPresenter >> whenExpressionSubmitDo: aBlock [
 
 	expressionField whenSubmitDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDUtilityDefinitionPresenter >> whenIdentifierEnabledChangedDo: aBlock [
 	identifierField whenEnabledChangedDo: aBlock
 ]

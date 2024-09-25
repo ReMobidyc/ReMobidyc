@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDReplayObservatory,
-	#superclass : #RMDPresenter,
+	#name : 'RMDReplayObservatory',
+	#superclass : 'RMDPresenter',
 	#traits : 'TRMDLaunchAnalysisTools',
 	#classTraits : 'TRMDLaunchAnalysisTools classTrait',
 	#instVars : [
@@ -15,10 +15,12 @@ Class {
 		'resetButton',
 		'reloadButton'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDReplayObservatory class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -64,7 +66,7 @@ RMDReplayObservatory class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDReplayObservatory class >> metaInterpreter: aRMDMetaInterpreter [
 
 	^ self new
@@ -72,20 +74,20 @@ RMDReplayObservatory class >> metaInterpreter: aRMDMetaInterpreter [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDReplayObservatory >> canOpenAnalysis [
 
 	^ metaInterpreter notNil and: [ 
 		  metaInterpreter context isForFileMemory ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> imageExtent [
 
 	^ 600 @ 600
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDReplayObservatory >> initializePresenters [
 
 	super initializePresenters.
@@ -131,14 +133,14 @@ RMDReplayObservatory >> initializePresenters [
 		         yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDReplayObservatory >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 510 @ 600
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> interpreterDo: aBlock [
 
 	(metaInterpreter
@@ -146,7 +148,7 @@ RMDReplayObservatory >> interpreterDo: aBlock [
 		 ifAbsent: [ nil ]) ifNotNil: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReplayObservatory >> metaInterpreter: aRMDMetaInterpreter [
 
 	metaInterpreter := aRMDMetaInterpreter.
@@ -154,7 +156,7 @@ RMDReplayObservatory >> metaInterpreter: aRMDMetaInterpreter [
 	self metaInterpreterChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> metaInterpreterChanged [
 
 	self
@@ -165,7 +167,7 @@ RMDReplayObservatory >> metaInterpreterChanged [
 		updateOpenAnalysisButtons
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReplayObservatory >> metaInterpreterForTabularDo: aBlock [
 
 	^ (metaInterpreter notNil and: [ 
@@ -176,7 +178,7 @@ RMDReplayObservatory >> metaInterpreterForTabularDo: aBlock [
 				   metaInterpreter context modelPath) ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> open [
 
 	^ super open
@@ -186,20 +188,20 @@ RMDReplayObservatory >> open [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> reloadMemory [
 
 	metaInterpreter reloadMemory.
 	self updateTimeSlider
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> resetSimulation [
 
 	self interpreterDo: [ :interpreter | timeSlider value: 0 ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> runDropListChanged [
 
 	self interpreterDo: [ :interpreter |
@@ -210,7 +212,7 @@ RMDReplayObservatory >> runDropListChanged [
 		updateVisual
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> runSimulation [
 
 	runButton state: true.
@@ -226,13 +228,13 @@ RMDReplayObservatory >> runSimulation [
 			              Processor userBackgroundPriority ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReplayObservatory >> selectRunId: anInteger [
 
 	anInteger ifNotNil: [ runDropList selectItem: anInteger ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDReplayObservatory >> selectTime: aNumber [
 
 	aNumber ifNil: [ ^ self ].
@@ -243,19 +245,19 @@ RMDReplayObservatory >> selectTime: aNumber [
 				asFloat / (interpreter memory latestTime max: 1) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> selectedIndividual [
 
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> selectedRunId [
 
 	^ runDropList selectedItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> selectedTime [
 
 	^ (metaInterpreter
@@ -263,7 +265,7 @@ RMDReplayObservatory >> selectedTime [
 		   ifAbsent: [ nil ]) ifNotNil: [ :interpreter | interpreter time ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> simulationModelDo: aBlock [
 
 	(metaInterpreter
@@ -272,7 +274,7 @@ RMDReplayObservatory >> simulationModelDo: aBlock [
 		aBlock value: interpreter simulationModel ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> stepSimulation [
 
 	self interpreterDo: [ :interpreter | 
@@ -284,13 +286,13 @@ RMDReplayObservatory >> stepSimulation [
 			ifFalse: [ self stopSimulation ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> stopSimulation [
 
 	runButton state: false
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> timeSliderChanged [
 
 	self interpreterDo: [ :interpreter | 
@@ -301,7 +303,7 @@ RMDReplayObservatory >> timeSliderChanged [
 		updateVisual
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDReplayObservatory >> title [
 
 	^ 'Replay Observatory' , ((metaInterpreter ifNotNil: #modelName)
@@ -311,7 +313,7 @@ RMDReplayObservatory >> title [
 		   ifNil: [ '' ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> toggleSimulation [
 
 	runButton state
@@ -319,7 +321,7 @@ RMDReplayObservatory >> toggleSimulation [
 		ifFalse: [ self runSimulation ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDReplayObservatory >> updateButtons [
 
 	runButton state
@@ -335,7 +337,7 @@ RMDReplayObservatory >> updateButtons [
 			timeSlider enable ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> updateRunDropList [
 
 	| selection items |
@@ -348,7 +350,7 @@ RMDReplayObservatory >> updateRunDropList [
 				 ifFalse: [ items ifNotEmpty: #first ifEmpty: [ nil ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> updateTimeLabel [
 
 	self interpreterDo: [ :interpreter | 
@@ -371,7 +373,7 @@ RMDReplayObservatory >> updateTimeLabel [
 				 stream nextPutAll: ' steps.' ]) ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> updateTimeSlider [
 
 	self interpreterDo: [ :interpreter | 
@@ -385,7 +387,7 @@ RMDReplayObservatory >> updateTimeSlider [
 		value: 0
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDReplayObservatory >> updateVisual [
 
 	self interpreterDo: [ :interpreter | 

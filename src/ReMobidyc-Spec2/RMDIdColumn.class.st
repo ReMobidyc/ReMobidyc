@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDIdColumn,
-	#superclass : #RMDTabularColumn,
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#name : 'RMDIdColumn',
+	#superclass : 'RMDTabularColumn',
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDIdColumn >> ifOnChartDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIdColumn >> title [
 
 	^ title ifNil: [ title := 'ID' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIdColumn >> value: aRow [
 
 	^ aRow at: #id ifAbsent: [ '' ]

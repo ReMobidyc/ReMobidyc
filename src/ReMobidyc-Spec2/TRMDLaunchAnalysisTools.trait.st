@@ -1,13 +1,15 @@
 Trait {
-	#name : #TRMDLaunchAnalysisTools,
+	#name : 'TRMDLaunchAnalysisTools',
 	#instVars : [
 		'openTabularButton',
 		'openObservatoryButton'
 	],
-	#category : #'ReMobidyc-Spec2-Traits'
+	#category : 'ReMobidyc-Spec2-Traits',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Traits'
 }
 
-{ #category : #menus }
+{ #category : 'menus' }
 TRMDLaunchAnalysisTools >> analysisMenu [
 
 	| menu |
@@ -17,13 +19,13 @@ TRMDLaunchAnalysisTools >> analysisMenu [
 	^ menu
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TRMDLaunchAnalysisTools >> canOpenAnalysis [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TRMDLaunchAnalysisTools >> initializeOpenAnalysisButtonsPresenters [
 
 	openTabularButton := self newButton
@@ -41,13 +43,13 @@ TRMDLaunchAnalysisTools >> initializeOpenAnalysisButtonsPresenters [
 		                         yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 TRMDLaunchAnalysisTools >> metaInterpreterForTabularDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openInAttributeTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInAttributeTabular)
@@ -55,7 +57,7 @@ TRMDLaunchAnalysisTools >> openInAttributeTabular [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openInIndividualHistoryTabularWithRunId: runId individual: individual time: time [
 
 	self metaInterpreterForTabularDo: [ :metaInterpreter |
@@ -69,7 +71,7 @@ TRMDLaunchAnalysisTools >> openInIndividualHistoryTabularWithRunId: runId indivi
 	^ nil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openInPopulationTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInPopulationTabular)
@@ -78,7 +80,7 @@ TRMDLaunchAnalysisTools >> openInPopulationTabular [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openInReplayObservatory [
 
 	^ (self metaInterpreterForTabularDo: #openInReplayObservatory)
@@ -87,7 +89,7 @@ TRMDLaunchAnalysisTools >> openInReplayObservatory [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openInSnapshotTabular [
 
 	^ (self metaInterpreterForTabularDo: #openInSnapshotTabular)
@@ -96,19 +98,19 @@ TRMDLaunchAnalysisTools >> openInSnapshotTabular [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 TRMDLaunchAnalysisTools >> openTabularMenu [
 
 	self tabularMenu openWithSpecAtPointer
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 TRMDLaunchAnalysisTools >> replayObservatoryMenu [
 
 	^ self replayObservatoryMenu: self newMenu
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 TRMDLaunchAnalysisTools >> replayObservatoryMenu: aSpMenuPresenter [
 
 	^ aSpMenuPresenter
@@ -120,31 +122,31 @@ TRMDLaunchAnalysisTools >> replayObservatoryMenu: aSpMenuPresenter [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDLaunchAnalysisTools >> selectedIndividual [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDLaunchAnalysisTools >> selectedRunId [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TRMDLaunchAnalysisTools >> selectedTime [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 TRMDLaunchAnalysisTools >> tabularMenu [
 
 	^ self tabularMenu: self newMenu
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 
 	^ aSpMenuPresenter
@@ -179,7 +181,7 @@ TRMDLaunchAnalysisTools >> tabularMenu: aSpMenuPresenter [
 		  yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 TRMDLaunchAnalysisTools >> updateOpenAnalysisButtons [
 
 	self canOpenAnalysis

@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDTaskDefinitionBrowser,
-	#superclass : #RMDPresenter,
+	#name : 'RMDTaskDefinitionBrowser',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'simulationModel',
 		'agentName',
@@ -22,10 +22,12 @@ Class {
 		'removeParameterInstantiationButton',
 		'viewParameterInstantiationButton'
 	],
-	#category : #'ReMobidyc-Spec2-Components'
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDTaskDefinitionBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newVertical
@@ -77,19 +79,19 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTaskDefinitionBrowser class >> on: aRMDSimulationModel [
 	^ self new
 		simulationModel: aRMDSimulationModel;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTaskDefinitionBrowser class >> withoutInterpreter [
 	^ self new
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> acceptNearestCheckBox [
 
 	self taskDefinition ifNotNil: [ :task | 
@@ -98,7 +100,7 @@ RMDTaskDefinitionBrowser >> acceptNearestCheckBox [
 			self updateSourceText ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> acceptObjectIdentifierField [
 
 	self taskDefinition ifNotNil: [ :task | 
@@ -109,7 +111,7 @@ RMDTaskDefinitionBrowser >> acceptObjectIdentifierField [
 		self updateSourceText ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> acceptRangeField [
 
 	self taskDefinition ifNotNil: [ :task | 
@@ -126,7 +128,7 @@ RMDTaskDefinitionBrowser >> acceptRangeField [
 			self updateSourceText ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> acceptVerbIdentifierField [
 	self taskDefinition
 		ifNotNil: [ :task | 
@@ -138,12 +140,12 @@ RMDTaskDefinitionBrowser >> acceptVerbIdentifierField [
 			self updateSourceText ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> actionDefinition [
 	^ actionList selection selectedItem
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDTaskDefinitionBrowser >> actionListMenu [
 
 	^ self newMenu
@@ -176,7 +178,7 @@ RMDTaskDefinitionBrowser >> actionListMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> addAction [
 
 	| newActionDef |
@@ -197,7 +199,7 @@ RMDTaskDefinitionBrowser >> addAction [
 					updateSourceText ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> addParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model | 
@@ -219,17 +221,17 @@ RMDTaskDefinitionBrowser >> addParameterInstantiation [
 							updateSourceText ] ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> agentName [
 	^ agentName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> agentName: aString [
 	agentName := aString
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> editAction [
 
 	self actionDefinition ifNotNil: [ :oldActionDef | 
@@ -253,7 +255,7 @@ RMDTaskDefinitionBrowser >> editAction [
 						updateSourceText ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> editParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model | 
@@ -285,7 +287,7 @@ RMDTaskDefinitionBrowser >> editParameterInstantiation [
 								updateSourceText ] ] ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> importAction [
 
 	RMDRepositoryActionsBrowser openToLoadDo: [ :action | 
@@ -301,7 +303,7 @@ RMDTaskDefinitionBrowser >> importAction [
 				updateSourceText ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTaskDefinitionBrowser >> initializePresenters [
 
 	super initializePresenters.
@@ -475,7 +477,7 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 	self updateActionList
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -483,7 +485,7 @@ RMDTaskDefinitionBrowser >> initializeWindow: aWindowPresenter [
 	aWindowPresenter initialExtent: 900 @ 600
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDTaskDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 
 	^ super newHighlightingSyntaxNodeTextInput
@@ -491,7 +493,7 @@ RMDTaskDefinitionBrowser >> newHighlightingSyntaxNodeTextInput [
 		  yourself
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDTaskDefinitionBrowser >> newSourceWith: aPP2Node [
 
 	^ (super newSourceWith: aPP2Node)
@@ -501,7 +503,7 @@ RMDTaskDefinitionBrowser >> newSourceWith: aPP2Node [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDTaskDefinitionBrowser >> parameterInstiationListMenu [
 
 	^ self newMenu
@@ -528,7 +530,7 @@ RMDTaskDefinitionBrowser >> parameterInstiationListMenu [
 		  yourself
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> removeAction [
 
 	self actionDefinition ifNotNil: [ :oldActionDef | 
@@ -546,7 +548,7 @@ RMDTaskDefinitionBrowser >> removeAction [
 							updateSourceText ] ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> removeParameterInstantiation [
 
 	parameterInstantiationList selection selectedItem ifNotNil: [ :bind | 
@@ -558,12 +560,12 @@ RMDTaskDefinitionBrowser >> removeParameterInstantiation [
 				updateSourceText ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> simulationModel [
 	^ simulationModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> simulationModel: aRMDSimulationModel [
 
 	simulationModel := aRMDSimulationModel.
@@ -572,18 +574,18 @@ RMDTaskDefinitionBrowser >> simulationModel: aRMDSimulationModel [
 	sourceText text ifNotEmpty: [ self updateSourceText ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> taskDefinition [
 	^ taskDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> taskDefinition: aRMDTaskDefinitionNode [
 	taskDefinitionNode := aRMDTaskDefinitionNode.
 	self taskDefinitionChanged
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 
 	taskDefinitionNode ifNotNil: [ 
@@ -596,7 +598,7 @@ RMDTaskDefinitionBrowser >> taskDefinitionChanged [
 		updateTitle
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionBrowser >> title [
 
 	^ 'Task definition' , (self taskDefinition
@@ -604,7 +606,7 @@ RMDTaskDefinitionBrowser >> title [
 		   ifNotNil: [ :task | ' of ' , task name ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateActionButtons [
 
 	| selected |
@@ -615,7 +617,7 @@ RMDTaskDefinitionBrowser >> updateActionButtons [
 	editActionButton enabled: selected
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateActionList [
 
 	| selection |
@@ -631,14 +633,14 @@ RMDTaskDefinitionBrowser >> updateActionList [
 		ifNil: [ actionList items: Array new ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateNearestCheckBox [
 
 	self taskDefinition ifNotNil: [ :taskDefinition | 
 		nearestCheckBox state: taskDefinition nearest ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
 
 	objectIdentifierField text asString trim ifEmpty: [ 
@@ -649,7 +651,7 @@ RMDTaskDefinitionBrowser >> updateObjectIdentifierField [
 				ifNil: [ objectIdentifierField text: '' ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateParameterInstantiationList [
 
 	parameterInstantiationList items: (self taskDefinition
@@ -658,7 +660,7 @@ RMDTaskDefinitionBrowser >> updateParameterInstantiationList [
 			 ifNil: [ Array new ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateRangeField [
 
 	rangeField text asString trim ifEmpty: [ 
@@ -668,7 +670,7 @@ RMDTaskDefinitionBrowser >> updateRangeField [
 				ifNil: [ rangeField text: '' ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateSourceText [
 
 	simulationModel ifNotNil: [
@@ -680,7 +682,7 @@ RMDTaskDefinitionBrowser >> updateSourceText [
 					 do: [ :ex | String new ]) ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateTaskDefinition [
 
 	self actionDefinition ifNotNil: [ :actionDefinition |
@@ -720,7 +722,7 @@ RMDTaskDefinitionBrowser >> updateTaskDefinition [
 							ifNotNil: [ rangeField beOk ] ] ] ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateTemplateText [
 
 	self actionDefinition
@@ -729,13 +731,13 @@ RMDTaskDefinitionBrowser >> updateTemplateText [
 		ifNil: [ templateText text: '' ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateTitle [
 
 	self window ifNotNil: [ :w | w title: self title ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDTaskDefinitionBrowser >> updateVerbIdentifierField [
 
 	verbIdentifierField text asString trim ifEmpty: [ 
@@ -744,7 +746,7 @@ RMDTaskDefinitionBrowser >> updateVerbIdentifierField [
 				(taskDefinition verbIdentifier ifNil: [ String new ]) ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDTaskDefinitionBrowser >> viewParameterInstantiation [
 
 	self simulationModel ifNotNil: [ :model |

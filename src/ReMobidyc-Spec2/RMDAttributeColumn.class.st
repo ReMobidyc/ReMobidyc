@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDAttributeColumn,
-	#superclass : #RMDTabularColumn,
+	#name : 'RMDAttributeColumn',
+	#superclass : 'RMDTabularColumn',
 	#instVars : [
 		'attribute'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeColumn class >> attribute: aRMDAttributeDeclarationNode [
 
 	^ self new
@@ -15,13 +17,13 @@ RMDAttributeColumn class >> attribute: aRMDAttributeDeclarationNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeColumn >> attribute [
 
 	^ attribute
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeColumn >> attribute: aRMDAttributeDeclarationNode [
 
 	attribute := aRMDAttributeDeclarationNode.
@@ -29,12 +31,12 @@ RMDAttributeColumn >> attribute: aRMDAttributeDeclarationNode [
 	         , ']'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeColumn >> ifOnChartDo: aBlock [
 	^ aBlock cull: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeColumn >> value: aRow [
 
 	^ aRow

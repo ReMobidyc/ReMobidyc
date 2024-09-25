@@ -1,6 +1,6 @@
-Extension { #name : #RMDUtilityVariableNode }
+Extension { #name : 'RMDUtilityVariableNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDUtilityVariableNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode utility: self identifier

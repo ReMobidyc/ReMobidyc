@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDVariabilityPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDVariabilityPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'seedOrMultiplicityDropList',
 		'naturalNumberField',
 		'metaParameterSequencePresenters'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDVariabilityPresenter >> defaultLayout [
 
 	| newLayout |
@@ -32,7 +34,7 @@ RMDVariabilityPresenter >> defaultLayout [
 	^ newLayout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDVariabilityPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -57,7 +59,7 @@ RMDVariabilityPresenter >> initializePresenters [
 	metaParameterSequencePresenters := #(  )
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDVariabilityPresenter >> naturalNumberChanged [
 
 	seedOrMultiplicityDropList selectedItem = #seed
@@ -70,7 +72,7 @@ RMDVariabilityPresenter >> naturalNumberChanged [
 		ifFalse: [ node multiplicity: naturalNumberField number ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDVariabilityPresenter >> nodeChanged [
 
 	node
@@ -95,7 +97,7 @@ RMDVariabilityPresenter >> nodeChanged [
 	self layout: self defaultLayout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityPresenter >> preferredHeight [
 
 	^ metaParameterSequencePresenters
@@ -103,7 +105,7 @@ RMDVariabilityPresenter >> preferredHeight [
 		  into: [ :sum :presenter | sum + presenter preferredHeight ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDVariabilityPresenter >> seedOrMultiplicityChanged [
 
 	naturalNumberField number:

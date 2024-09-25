@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPatchDefinitionBrowser,
-	#superclass : #RMDAgentDefinitionBrowser,
-	#category : #'ReMobidyc-Spec2-Components'
+	#name : 'RMDPatchDefinitionBrowser',
+	#superclass : 'RMDAgentDefinitionBrowser',
+	#category : 'ReMobidyc-Spec2-Components',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Components'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchDefinitionBrowser class >> on: aRMDSimulationModeler [
 
 	^ self new
@@ -12,7 +14,7 @@ RMDPatchDefinitionBrowser class >> on: aRMDSimulationModeler [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDPatchDefinitionBrowser >> addRendererMenu [
 
 	^ self newMenu addGroup: [ :group | 
@@ -37,26 +39,26 @@ RMDPatchDefinitionBrowser >> addRendererMenu [
 									   and: '1.0' asRMDExpression) ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchDefinitionBrowser >> agentName [
 	^ 'Patch'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchDefinitionBrowser >> definitionDo: aBlock [
 
 	^ self simulationModel ifNotNil: [ :model |
 		  model patchDefinition ifNotNil: aBlock ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDPatchDefinitionBrowser >> renameAttribute: aString to: anotherString [
 
 	super renameAttribute: aString to: anotherString.
 	self renameAttribute: aString to: anotherString agentRef: 'here'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPatchDefinitionBrowser >> renderersDo: aBlock [
 
 	self simulationModel ifNotNil: [ :model | 

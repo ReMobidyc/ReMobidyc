@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDHighlightingSyntaxNodeTextInputPresenter,
-	#superclass : #RMDSyntaxNodeTextInputPresenter,
+	#name : 'RMDHighlightingSyntaxNodeTextInputPresenter',
+	#superclass : 'RMDSyntaxNodeTextInputPresenter',
 	#instVars : [
 		'#highlightColor => ObservableSlot',
 		'#simulationModelBlock',
@@ -9,23 +9,25 @@ Class {
 		'#utilitiesBlock',
 		'#expectedType'
 	],
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> expectedType [
 
 	^ expectedType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> expectedType: aRMDType [
 
 	expectedType := aRMDType.
 	self prettyPrint
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> initialize [
 
 	super initialize.
@@ -33,26 +35,26 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> initialize [
 	expectedType := RMDType any
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> object [
 
 	^ objectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> objectBlock: aBlock [
 
 	objectBlock := aBlock.
 	self prettyPrint
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint [
 
 	syntaxNode ifNotNil: [ text := self prettyPrint: syntaxNode ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 
 	^ aRMDSyntaxNode
@@ -81,32 +83,32 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> prettyPrint: aRMDSyntaxNode [
 		  ifNil: [ Text new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> simulationModel [
 
 	^ simulationModelBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> simulationModelBlock: aBlock [
 	simulationModelBlock := aBlock.
 	self prettyPrint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> subject [
 
 	^ subjectBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> subjectBlock: aBlock [
 
 	subjectBlock := aBlock.
 	self prettyPrint
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 
 	syntaxNode := aRMDSyntaxNode.
@@ -120,7 +122,7 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> syntaxNode: aRMDSyntaxNode [
 	text := self prettyPrint: aRMDSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> typechecker [
 
 	^ self simulationModel
@@ -128,13 +130,13 @@ RMDHighlightingSyntaxNodeTextInputPresenter >> typechecker [
 		  ifNil: [ RMDTypechecker new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> utilities [
 
 	^ utilitiesBlock ifNotNil: #value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHighlightingSyntaxNodeTextInputPresenter >> utilitiesBlock: aBlock [
 
 	utilitiesBlock := aBlock.

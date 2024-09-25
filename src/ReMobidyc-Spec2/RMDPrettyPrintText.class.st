@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPrettyPrintText,
-	#superclass : #RSLabel,
-	#category : #'ReMobidyc-Spec2-PrettyPrint'
+	#name : 'RMDPrettyPrintText',
+	#superclass : 'RSLabel',
+	#category : 'ReMobidyc-Spec2-PrettyPrint',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'PrettyPrint'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> agent: aString [
 
 	^ self new
@@ -15,13 +17,13 @@ RMDPrettyPrintText class >> agent: aString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPrettyPrintText class >> fontSize [
 
 	^ 12
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> identifier: aString [
 
 	^ self new
@@ -32,7 +34,7 @@ RMDPrettyPrintText class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> keyword: aString [
 
 	^ self new
@@ -43,7 +45,7 @@ RMDPrettyPrintText class >> keyword: aString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> literal: aString [
 
 	^ self new
@@ -54,7 +56,7 @@ RMDPrettyPrintText class >> literal: aString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> operator: aString [
 
 	^ self new
@@ -65,7 +67,7 @@ RMDPrettyPrintText class >> operator: aString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPrettyPrintText class >> unit: aString [
 
 	^ self new
@@ -76,7 +78,7 @@ RMDPrettyPrintText class >> unit: aString [
 		  yourself
 ]
 
-{ #category : #positioning }
+{ #category : 'positioning' }
 RMDPrettyPrintText >> , aRMDPrettyPrintText [
 
 	aRMDPrettyPrintText translateMiddleLeftTo:
@@ -84,7 +86,7 @@ RMDPrettyPrintText >> , aRMDPrettyPrintText [
 	^ aRMDPrettyPrintText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPrettyPrintText >> margin [
 
 	^ 4

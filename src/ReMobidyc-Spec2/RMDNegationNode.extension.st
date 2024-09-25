@@ -1,6 +1,6 @@
-Extension { #name : #RMDNegationNode }
+Extension { #name : 'RMDNegationNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDNegationNode >> asPrettyPrintNode [
 
 	| conditionNode negationNode |

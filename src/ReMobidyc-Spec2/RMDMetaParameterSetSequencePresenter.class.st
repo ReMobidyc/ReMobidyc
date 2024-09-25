@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDMetaParameterSetSequencePresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDMetaParameterSetSequencePresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'placeholdersLabel',
 		'tuplesField'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDMetaParameterSetSequencePresenter class >> defaultLayout [
 
 	^ SpBoxLayout newHorizontal
@@ -20,7 +22,7 @@ RMDMetaParameterSetSequencePresenter class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMetaParameterSetSequencePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -40,7 +42,7 @@ RMDMetaParameterSetSequencePresenter >> initializePresenters [
 		               yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequencePresenter >> nodeChanged [
 
 	node ifNotNil: [ 
@@ -49,13 +51,13 @@ RMDMetaParameterSetSequencePresenter >> nodeChanged [
 		tuplesField syntaxNode: node literalTuples ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequencePresenter >> preferredHeight [
 
 	^ self class inputTextHeight * 5
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDMetaParameterSetSequencePresenter >> tuplesChanged [
 
 	node literalTuples: tuplesField lastValidSyntaxNode

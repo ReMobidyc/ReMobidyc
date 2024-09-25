@@ -1,6 +1,6 @@
-Extension { #name : #RMDDirectionOfGradientDirectiveNode }
+Extension { #name : 'RMDDirectionOfGradientDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDDirectionOfGradientDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode

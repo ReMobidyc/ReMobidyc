@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDBackgroundColorRendererPresenter,
-	#superclass : #RMDRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDBackgroundColorRendererPresenter',
+	#superclass : 'RMDRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDBackgroundColorRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -17,7 +19,7 @@ RMDBackgroundColorRendererPresenter class >> defaultLayout [
 		height: self inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBackgroundColorRendererPresenter >> preferredHeight [
 	^ self class inputTextHeight
 ]

@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDLiteralPresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDLiteralPresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'unitPresenter',
 		'numberPresenter'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralPresenter >> expressionChanged [
 
 	unitPresenter label: (expression unit hasDimension
@@ -18,7 +20,7 @@ RMDLiteralPresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLiteralPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -31,7 +33,7 @@ RMDLiteralPresenter >> initializePresenters [
 		                       yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDLiteralPresenter >> layout [
 
 	^ SpBoxLayout newVertical

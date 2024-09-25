@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPatchColorMapRendererPresenter,
-	#superclass : #RMDPatchExpressionRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDPatchColorMapRendererPresenter',
+	#superclass : 'RMDPatchExpressionRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDPatchColorMapRendererPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical
@@ -30,24 +32,24 @@ RMDPatchColorMapRendererPresenter class >> defaultLayout [
 			height: self inputTextHeight
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPatchColorMapRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	self whenBuiltDo: [ self updateSpec ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapRendererPresenter >> preferredHeight [
 	^ (renderer numberOfMinAndColors + 3) * self class inputTextHeight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchColorMapRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self updateSpec
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchColorMapRendererPresenter >> updateSpec [
 	| theLayout |
 	layout ifNil: [ ^ self ].

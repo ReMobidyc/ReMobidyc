@@ -1,6 +1,6 @@
-Extension { #name : #RMDVariabilityNode }
+Extension { #name : 'RMDVariabilityNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDVariabilityNode >> asPresenter [
 
 	^ RMDVariabilityPresenter on: self

@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDIndividualsInLocationDirectivePresenter,
-	#superclass : #RMDExpressionPresenter,
+	#name : 'RMDIndividualsInLocationDirectivePresenter',
+	#superclass : 'RMDExpressionPresenter',
 	#instVars : [
 		'directiveLabel',
 		'animatLabel',
 		'locationLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInLocationDirectivePresenter >> expressionChanged [
 
 	directiveLabel label: expression directiveName , ' '.
@@ -18,7 +20,7 @@ RMDIndividualsInLocationDirectivePresenter >> expressionChanged [
 	super expressionChanged
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDIndividualsInLocationDirectivePresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -35,7 +37,7 @@ RMDIndividualsInLocationDirectivePresenter >> initializePresenters [
 		                 yourself
 ]
 
-{ #category : #layouting }
+{ #category : 'layouting' }
 RMDIndividualsInLocationDirectivePresenter >> layout [
 
 	| newLayout |

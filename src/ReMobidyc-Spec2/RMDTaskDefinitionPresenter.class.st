@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDTaskDefinitionPresenter,
-	#superclass : #RMDSyntaxNodePresenter,
+	#name : 'RMDTaskDefinitionPresenter',
+	#superclass : 'RMDSyntaxNodePresenter',
 	#instVars : [
 		'source'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 RMDTaskDefinitionPresenter class >> defaultLayout [
 	<spec>
 	^ SpBoxLayout newVertical add: #source expand: true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTaskDefinitionPresenter >> initializePresenters [
 	super initializePresenters.
 	source := (self newSourceWith: RMDGrammar current taskDefinition)
@@ -27,7 +29,7 @@ RMDTaskDefinitionPresenter >> initializePresenters [
 				ifNil: [ node := newNode ] ]
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDTaskDefinitionPresenter >> newSourceWith: aPP2Node [
 
 	^ (super newSourceWith: aPP2Node)
@@ -36,17 +38,17 @@ RMDTaskDefinitionPresenter >> newSourceWith: aPP2Node [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionPresenter >> nodeChanged [
 	self updateSource
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionPresenter >> preferredHeight [
 	^ 100
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionPresenter >> updateSource [
 	source text: node printString
 ]

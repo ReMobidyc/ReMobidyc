@@ -1,36 +1,38 @@
 Class {
-	#name : #RMDPresenter,
-	#superclass : #SpPresenter,
+	#name : 'RMDPresenter',
+	#superclass : 'SpPresenter',
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
-	#category : #'ReMobidyc-Spec2-Abstract'
+	#category : 'ReMobidyc-Spec2-Abstract',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Abstract'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPresenter class >> isAbstract [
 
 	^ self = RMDPresenter
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> acceptIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallOk
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> addIcon [
 	^ Smalltalk ui icons iconNamed: #add
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDPresenter >> agentNameValidation [
 
 	^ [ :name | 
 	  (RMDGrammar current agentIdentifier parse: name) isPetit2Success ]
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> boxChartIcon [
 
 	| form fillColor |
@@ -58,18 +60,18 @@ RMDPresenter >> boxChartIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> chartIcon [
 
 	^ self lineChartIcon
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> downIcon [
 	^ Smalltalk ui icons down
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> dropdownIcon [
 
 	| form |
@@ -87,24 +89,24 @@ RMDPresenter >> dropdownIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> editIcon [
 	^ Smalltalk ui icons iconNamed: #edit
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> experimentariumIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallProfile
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> exportIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallExport
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> filterIcon [
 
 	| form fillColor |
@@ -124,7 +126,7 @@ RMDPresenter >> filterIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> greenTriangleIcon [
 
 	| form canvas |
@@ -142,19 +144,19 @@ RMDPresenter >> greenTriangleIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> historyIcon [
 
 	^ Smalltalk ui iconNamed: #history
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> icebergIcon [
 
 	^ Smalltalk ui icons iconNamed: #komitterSmalltalkhubRemote
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPresenter >> initializePresenters [
 	self
 		whenBuiltDo: [ :w | 
@@ -166,7 +168,7 @@ RMDPresenter >> initializePresenters [
 						ifTrue: [ m font: font ] ] ]
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> lineChartIcon [
 
 	| form |
@@ -208,13 +210,13 @@ RMDPresenter >> lineChartIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> modelerIcon [
 
 	^Smalltalk ui icons iconNamed: #edit
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newAnimatInput [
 	^ self newValidatedTextInput
 		validation: [ :name | 
@@ -222,7 +224,7 @@ RMDPresenter >> newAnimatInput [
 				and: [ (#('World' 'Patch') includes: name asString) not ] ]
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newColorDropList [
 
 	^ self newColorDropList: { 
@@ -236,7 +238,7 @@ RMDPresenter >> newColorDropList [
 			  Color yellow }
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newColorDropList: anArrayOfColor [
 
 	^ self newDropList
@@ -250,45 +252,45 @@ RMDPresenter >> newColorDropList: anArrayOfColor [
 		  yourself
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newHighlightingSyntaxNodeTextInput [
 	^ self instantiate: RMDHighlightingSyntaxNodeTextInputPresenter
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newMetadata [
 	^ self instantiate: RMDMetadataPresenter
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newNumberInput [
 	^ self instantiate: RMDNumberInputPresenter
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newSourceWith: aParser [
 	^ (self instantiate: RMDSourceTextPresenter)
 		parser: aParser;
 		yourself
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newSyntaxNodeTextInput [
 	^ self instantiate: RMDSyntaxNodeTextInputPresenter
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newTableWithHorizontalScrollbar [
 
 	^ self instantiate: RMDTableWithHBarPresenter
 ]
 
-{ #category : #widgets }
+{ #category : 'widgets' }
 RMDPresenter >> newValidatedTextInput [
 	^ self instantiate: RMDValidatedTextInputPresenter
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> observatoryIcon [
 
 	| form |
@@ -323,7 +325,7 @@ RMDPresenter >> observatoryIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> pullIcon [
 
 	| icebergIcon downIcon icon canvas |
@@ -345,7 +347,7 @@ RMDPresenter >> pullIcon [
 	^ icon
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> pushIcon [
 
 	| icebergIcon upIcon icon canvas |
@@ -367,7 +369,7 @@ RMDPresenter >> pushIcon [
 	^ icon
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> redTriangleIcon [
 
 	| form canvas |
@@ -385,23 +387,23 @@ RMDPresenter >> redTriangleIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> removeIcon [
 	^ Smalltalk ui icons remove
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> replacementIcon [
 	^ Smalltalk ui icons iconNamed: #smallForward
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> repositoryIcon [
 
 	^ Smalltalk ui icons database
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> resetIcon [
 
 	| form |
@@ -425,7 +427,7 @@ RMDPresenter >> resetIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> runIcon [
 
 	| form |
@@ -442,13 +444,13 @@ RMDPresenter >> runIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> saveIcon [
 
 	^ (Smalltalk ui icons iconNamed: #smallSave) scaledToSize: 24 @ 24
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> saveIconWith: aString [
 
 	| form label font |
@@ -474,13 +476,13 @@ RMDPresenter >> saveIconWith: aString [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> spreadIcon [
 
 	^ Smalltalk ui iconNamed: #exception
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> stepIcon [
 
 	| form |
@@ -498,36 +500,36 @@ RMDPresenter >> stepIcon [
 	^ form
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> tabularIcon [
 
 	^ Smalltalk ui icons iconNamed: #workspace
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> upIcon [
 
 	^ Smalltalk ui iconNamed: #up
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> updateIcon [
 
 	^ Smalltalk ui icons iconNamed: #smallUpdate
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> validatoriumIcon [
 
 	^ Smalltalk ui iconNamed: #smallInspectIt
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> versionsIcon [
 	^ Smalltalk ui icons iconNamed: #smallProfile
 ]
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDPresenter >> yellowTriangleIcon [
 
 	| form canvas |

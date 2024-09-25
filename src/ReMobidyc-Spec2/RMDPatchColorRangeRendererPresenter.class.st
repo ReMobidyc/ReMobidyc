@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPatchColorRangeRendererPresenter,
-	#superclass : #RMDPatchExpressionRendererPresenter,
-	#category : #'ReMobidyc-Spec2-Editors'
+	#name : 'RMDPatchColorRangeRendererPresenter',
+	#superclass : 'RMDPatchExpressionRendererPresenter',
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchColorRangeRendererPresenter class >> isAbstract [
 
 	^ self == RMDPatchColorRangeRendererPresenter
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPatchColorRangeRendererPresenter >> initializePresenters [
 	super initializePresenters.
 	minField := self newSyntaxNodeTextInput
@@ -25,7 +27,7 @@ RMDPatchColorRangeRendererPresenter >> initializePresenters [
 			self valueChanged ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchColorRangeRendererPresenter >> rendererChanged [
 	super rendererChanged.
 	self
@@ -33,12 +35,12 @@ RMDPatchColorRangeRendererPresenter >> rendererChanged [
 		updateMaxField
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchColorRangeRendererPresenter >> updateMaxField [
 	renderer ifNotNil: [ maxField syntaxNode: renderer max ]
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDPatchColorRangeRendererPresenter >> updateMinField [
 	renderer ifNotNil: [ minField syntaxNode: renderer min ]
 ]

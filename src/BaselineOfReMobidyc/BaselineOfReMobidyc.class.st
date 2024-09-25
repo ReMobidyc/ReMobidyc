@@ -158,7 +158,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
 				   'ReMobidyc-Visualization-Tests' ).
-		spec postLoadDoIt: #postLoad ]
+		spec postLoadDoIt: #postLoad ].
+	spec for: #'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
 ]
 
 { #category : #scripts }
@@ -180,6 +181,19 @@ BaselineOfReMobidyc >> installLogos [
 						and: [ response entity contentType sub = 'png' ])
 						ifTrue: [ self logoDirectoryPath / basename
 								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
+]
+
+{ #category : #scripts }
+BaselineOfReMobidyc >> installRoassal3 [
+
+	<script: 'BaselineOfReMobidyc new installRoassal3'>
+	[
+	Metacello new
+		baseline: 'Roassal3';
+		repository: 'github://ObjectProfile/Roassal3';
+		load: 'Full' ]
+		on: MCMergeOrLoadWarning
+		do: [ :warning | warning load ]
 ]
 
 { #category : #scripts }

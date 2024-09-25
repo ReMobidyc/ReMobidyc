@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDSnapshotTabular,
-	#superclass : #RMDAbstractSnapshotTabular,
+	#name : 'RMDSnapshotTabular',
+	#superclass : 'RMDAbstractSnapshotTabular',
 	#instVars : [
 		'openBoxChartButton',
 		'agentDropList',
 		'traceableActionContext',
 		'taskList'
 	],
-	#category : #'ReMobidyc-Spec2-Tabulars'
+	#category : 'ReMobidyc-Spec2-Tabulars',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Tabulars'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDSnapshotTabular class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -51,13 +53,13 @@ RMDSnapshotTabular class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> agentChanged [
 
 	self updateTable
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSnapshotTabular >> initializePresenters [
 
 	super initializePresenters.
@@ -83,7 +85,7 @@ RMDSnapshotTabular >> initializePresenters [
 		                          RMDTraceableActionContextPresenter
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSnapshotTabular >> metaInterpreter: aRMDMetaInterpreter [
 
 	super metaInterpreter: aRMDMetaInterpreter.
@@ -92,26 +94,21 @@ RMDSnapshotTabular >> metaInterpreter: aRMDMetaInterpreter [
 		updateTable
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 RMDSnapshotTabular >> openChart [
 
-	table columns ifNotEmpty: [ :columns | 
+	table columns ifNotEmpty: [ :columns |
 		| canvas |
 		canvas := RSCanvas new @ RMDMultiChartInteraction.
-		columns do: [ :column | 
-			column ifOnChartDo: [ 
+		columns do: [ :column |
+			column ifOnChartDo: [
 				| chart |
-				chart := RSChart new.
+				chart := (RSBoxPlot data:
+					          { (table items collect: [ :row | column value: row ]) })
+					         chart.
 				chart
 					extent: 150 @ 400;
 					title: column title.
-				chart
-					addPlot: (RSBoxPlot new y:
-								 { (table items collect: [ :row | column value: row ]) });
-					addDecoration: (RSVerticalTick new
-							 numberOfTicks: 10;
-							 fontSize: 10;
-							 asFloat).
 				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSHorizontalLineLayout on: canvas shapes.
 		(canvas openWithTitle: 'Attributes Chart'
@@ -122,13 +119,13 @@ RMDSnapshotTabular >> openChart [
 					  ifNil: [ '' ])) extent: 160 * columns size @ 400 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSnapshotTabular >> selectedAgent [
 
 	^ agentDropList selectedItem
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSnapshotTabular >> selectedIndividual [
 
 	self selectedAgent ifNotNil: [ :agent |
@@ -139,7 +136,7 @@ RMDSnapshotTabular >> selectedIndividual [
 			  id isInteger ifTrue: [ id ] ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSnapshotTabular >> title [
 
 	^ 'Snapshot Tabular'
@@ -149,7 +146,7 @@ RMDSnapshotTabular >> title [
 			   ifNil: [ '' ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateAgentDropList [
 
 	| selection items |
@@ -163,7 +160,7 @@ RMDSnapshotTabular >> updateAgentDropList [
 				 ifFalse: [ items ifNotEmpty: #first ifEmpty: [ nil ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateColumns [
 
 	table columns: (Array streamContents: [ :stream | 
@@ -180,7 +177,7 @@ RMDSnapshotTabular >> updateColumns [
 						 stream nextPut: (RMDAttributeColumn attribute: attributeDecl) ] ] ] ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateRows [
 
 	table
@@ -224,7 +221,7 @@ RMDSnapshotTabular >> updateRows [
 		refresh
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateRunDropList [
 
 	| selection items |
@@ -237,7 +234,7 @@ RMDSnapshotTabular >> updateRunDropList [
 				 ifFalse: [ items ifEmpty: [ nil ] ifNotEmpty: #first ])
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateTaskList [
 
 	| selection |
@@ -258,7 +255,7 @@ RMDSnapshotTabular >> updateTaskList [
 	taskList items: Array new
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDSnapshotTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem

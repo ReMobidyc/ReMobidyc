@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDUnitTableColumn,
-	#superclass : #RMDSyntaxTableColumn,
+	#name : 'RMDUnitTableColumn',
+	#superclass : 'RMDSyntaxTableColumn',
 	#instVars : [
 		'basicAcceptAction'
 	],
-	#category : #'ReMobidyc-Spec2-Columns'
+	#category : 'ReMobidyc-Spec2-Columns',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Columns'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDUnitTableColumn >> defaultAcceptAction [
 
 	^ [ :item :stringOrText |
@@ -28,13 +30,13 @@ RMDUnitTableColumn >> defaultAcceptAction [
 					   yourself) ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDUnitTableColumn >> defaultColorAction [
 
 	^ nil
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDUnitTableColumn >> defaultEvaluationBlock [
 
 	^ [ :item |
@@ -45,7 +47,7 @@ RMDUnitTableColumn >> defaultEvaluationBlock [
 		  ifFalse: [ '' ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDUnitTableColumn >> defaultTextChangedAction [
 
 	^ [ :item :stringOrText :widget |

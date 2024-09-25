@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSimulationModeler,
-	#superclass : #RMDPresenter,
+	#name : 'RMDSimulationModeler',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'simulationModel',
 		'views',
@@ -14,10 +14,12 @@ Class {
 		'variabilityPresenter',
 		'canDiscardEdits'
 	],
-	#category : #'ReMobidyc-Spec2-Browsers'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDSimulationModeler class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -33,21 +35,21 @@ RMDSimulationModeler class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDSimulationModeler class >> goatAndWolf [
 
 	<script: 'RMDSimulationModeler goatAndWolf open'>
 	^ RMDSimulationModeler on: RMDSimulationModel goatAndWolf
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationModeler class >> on: aRMDSimulationModel [
 	^ self new
 		setSimulationModel: aRMDSimulationModel;
 		yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -86,13 +88,13 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 						help: 'A simple simulation of plants, herbivore, and carnivore.' ] ]
 ]
 
-{ #category : #examples }
+{ #category : 'examples' }
 RMDSimulationModeler class >> sugarScape [
 	<script: 'RMDSimulationModeler sugarScape openWithSpec'>
 	^ RMDSimulationModeler on: RMDSimulationModel sugarScape
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> addAnimatInitializer [
 
 	| animatNames |
@@ -116,7 +118,7 @@ RMDSimulationModeler >> addAnimatInitializer [
 							 utilityDefinitions: Array new) ] ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 
 	| stageName speciesName animatDefinitionNode |
@@ -144,7 +146,7 @@ RMDSimulationModeler >> addAnimatNamed: aString species: anotherString [
 	self updatePages
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> addNewIconDo: aBlock [
 
 	| icons |
@@ -166,7 +168,7 @@ RMDSimulationModeler >> addNewIconDo: aBlock [
 		aBlock value: iconName ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> copyStage: aString to: anotherString [
 
 	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 
@@ -183,7 +185,7 @@ RMDSimulationModeler >> copyStage: aString to: anotherString [
 	self updatePages
 ]
 
-{ #category : #menu }
+{ #category : 'menu' }
 RMDSimulationModeler >> fileMenu [
 
 	^ self newMenu
@@ -232,7 +234,7 @@ RMDSimulationModeler >> fileMenu [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationModeler >> initializePresenters [
 
 	super initializePresenters.
@@ -282,32 +284,32 @@ RMDSimulationModeler >> initializePresenters [
 		                                 yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationModeler >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter initialExtent: 1000 @ 600
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> metadataPageIndex [
 	^ 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModeler >> modelFileReference [
 
 	^ modelFileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 
 	modelFileReference := aFileReferenceOrNil.
 	self updateWindowTitle
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 RMDSimulationModeler >> okToClose [
 
 	(UIManager default
@@ -316,19 +318,19 @@ RMDSimulationModeler >> okToClose [
 	^ true
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> open [
 
 	Cursor wait showWhile: [ ^ super open ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> openInExperimentarium [
 
 	self openInExperimentariumMenu openWithSpecAtPointer
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> openInExperimentariumMenu [
 
 	^ self newMenu
@@ -350,7 +352,7 @@ RMDSimulationModeler >> openInExperimentariumMenu [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> removeAnimatNamed: aString [
 
 	(simulationModel animatDefinitionAt: aString ifAbsent: [ nil ])
@@ -365,7 +367,7 @@ RMDSimulationModeler >> removeAnimatNamed: aString [
 			self updatePages ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> removeSpeciesNamed: aString [
 
 	| stages |
@@ -381,7 +383,7 @@ RMDSimulationModeler >> removeSpeciesNamed: aString [
 		self updatePages ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> renameSpecies: aString to: anotherString [
 
 	| stages |
@@ -397,7 +399,7 @@ RMDSimulationModeler >> renameSpecies: aString to: anotherString [
 	self updatePages
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> renameStage: aString to: anotherString [
 
 	(self simulationModel animatDefinitionAt: aString ifAbsent: [ nil ]) 
@@ -414,7 +416,7 @@ RMDSimulationModeler >> renameStage: aString to: anotherString [
 	self updatePages
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDSimulationModeler >> save [
 
 	modelFileReference ifNil: [
@@ -428,7 +430,7 @@ RMDSimulationModeler >> save [
 	simulationModel exportModel: modelFileReference
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 
 	simulationModel := aRMDSimulationModel.
@@ -441,24 +443,24 @@ RMDSimulationModeler >> setSimulationModel: aRMDSimulationModel [
 	self updatePages
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> simulationDefinitionPageIndex [
 	^ 3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModeler >> simulationDefinitionPresenter [
 
 	^ simulationDefinitionPresenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModeler >> simulationModel [
 
 	^ simulationModel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> title [
 
 	^ 'Modeler'
@@ -467,7 +469,7 @@ RMDSimulationModeler >> title [
 			   ' @ ' , name ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> updatePages [
 
 	| selection |
@@ -523,13 +525,13 @@ RMDSimulationModeler >> updatePages [
 		views selectPageIndex: (selection min: views pages size) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModeler >> variabilityPageIndex [
 	^ 2
 ]

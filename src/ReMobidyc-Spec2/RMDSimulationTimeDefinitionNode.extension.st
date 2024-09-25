@@ -1,6 +1,6 @@
-Extension { #name : #RMDSimulationTimeDefinitionNode }
+Extension { #name : 'RMDSimulationTimeDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDSimulationTimeDefinitionNode >> asPresenter [
 	^ RMDSimulationTimeDefinitionPresenter on: self
 ]

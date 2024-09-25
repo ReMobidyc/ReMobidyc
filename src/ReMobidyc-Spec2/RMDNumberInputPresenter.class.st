@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDNumberInputPresenter,
-	#superclass : #SpNumberInputFieldPresenter,
+	#name : 'RMDNumberInputPresenter',
+	#superclass : 'SpNumberInputFieldPresenter',
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
 	#instVars : [
@@ -9,10 +9,12 @@ Class {
 		'#isNonZero',
 		'#isNonNegative'
 	],
-	#category : #'ReMobidyc-Spec2-Widgets'
+	#category : 'ReMobidyc-Spec2-Widgets',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Widgets'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> acceptNumber: aNumber [
 
 	number := self isInteger
@@ -25,26 +27,26 @@ RMDNumberInputPresenter >> acceptNumber: aNumber [
 		ifFalse: [ self beError ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> beNonNegative [
 
 	isNonNegative := true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> beNonZero [
 
 	isNonZero := true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> bePositive [
 
 	isNonZero := true.
 	isNonNegative := true
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDNumberInputPresenter >> initialize [
 
 	super initialize.
@@ -53,7 +55,7 @@ RMDNumberInputPresenter >> initialize [
 	self whenSubmitDo: [:t | self prettyPrint ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDNumberInputPresenter >> isValidNumber: aNumber [
 
 	(aNumber isKindOf: self numberType) ifFalse: [ ^ false ].
@@ -62,17 +64,17 @@ RMDNumberInputPresenter >> isValidNumber: aNumber [
 	^ true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> lastValidNumber [
 	^ lastValidNumber
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> number [
 	^ number
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> number: aNumber [
 
 	number := aNumber ifNil: [ 0 ] ifNotNil: [
@@ -87,13 +89,13 @@ RMDNumberInputPresenter >> number: aNumber [
 	super text: aNumber printString
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> prettyPrint [
 
 	self number: self number
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 RMDNumberInputPresenter >> text: aString [
 
 	[
@@ -112,12 +114,12 @@ RMDNumberInputPresenter >> text: aString [
 	^ super text: aString
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDNumberInputPresenter >> whenLastValidNumberChangedDo: aBlock [
 	self property: #lastValidNumber whenChangedDo: aBlock
 ]
 
-{ #category : #'api-events' }
+{ #category : 'api-events' }
 RMDNumberInputPresenter >> whenNumberChangedDo: aBlock [
 
 	self whenTextChangedDo: [ :txt | aBlock cull: self number ]

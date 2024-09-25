@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAbout,
-	#superclass : #RMDPresenter,
+	#name : 'RMDAbout',
+	#superclass : 'RMDPresenter',
 	#instVars : [
 		'logoImage',
 		'releaseLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Utilities'
+	#category : 'ReMobidyc-Spec2-Utilities',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Utilities'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 RMDAbout class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
@@ -16,7 +18,7 @@ RMDAbout class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDAbout class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -28,18 +30,18 @@ RMDAbout class >> remobidycMenuOn: aBuilder [
 		help: 'Open an about window.'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbout >> codename [
 	^ 'Wimereux'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbout >> initialExtent [
 
 	^ 600 @ 600
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbout >> initializePresenters [
 
 	super initializePresenters.
@@ -52,25 +54,25 @@ RMDAbout >> initializePresenters [
 				             yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbout >> logo [
 
 	^ self logoPath isFile ifTrue: [ 
 		  PNGReadWriter formFromFileNamed: self logoPath ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbout >> logoPath [
 
 	^ FileLocator localDirectory / 'ReMobidyc' / 'logos' / 'default.png'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbout >> releaseName [
 	^ 'reːmobidyc ', self codename
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbout >> title [
 
 	^ self releaseName

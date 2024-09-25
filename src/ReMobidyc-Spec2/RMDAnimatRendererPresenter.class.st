@@ -1,33 +1,35 @@
 Class {
-	#name : #RMDAnimatRendererPresenter,
-	#superclass : #RMDRendererPresenter,
+	#name : 'RMDAnimatRendererPresenter',
+	#superclass : 'RMDRendererPresenter',
 	#instVars : [
 		'animatLabel'
 	],
-	#category : #'ReMobidyc-Spec2-Editors'
+	#category : 'ReMobidyc-Spec2-Editors',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Editors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAnimatRendererPresenter class >> isAbstract [
 
 	^ self == RMDAnimatRendererPresenter
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatRendererPresenter >> disableAgentFields [
 
 	super disableAgentFields.
 	self updateAnimatLabel
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatRendererPresenter >> enableAgentFields [
 
 	super enableAgentFields.
 	self updateAnimatLabel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatRendererPresenter >> initializePresenters [
 
 	super initializePresenters.
@@ -36,14 +38,14 @@ RMDAnimatRendererPresenter >> initializePresenters [
 		               yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatRendererPresenter >> rendererChanged [
 
 	super rendererChanged.
 	self updateAnimatLabel
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 RMDAnimatRendererPresenter >> updateAnimatLabel [
 
 	animatLabel label: (agentFieldEnabled

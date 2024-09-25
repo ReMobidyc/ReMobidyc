@@ -1,6 +1,6 @@
-Extension { #name : #RMDPowerNode }
+Extension { #name : 'RMDPowerNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDPowerNode >> asPrettyPrintNode [
 
 	| node |

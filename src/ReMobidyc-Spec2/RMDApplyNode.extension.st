@@ -1,6 +1,6 @@
-Extension { #name : #RMDApplyNode }
+Extension { #name : 'RMDApplyNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDApplyNode >> asPrettyPrintNode [
 
 	^ function = 'power'

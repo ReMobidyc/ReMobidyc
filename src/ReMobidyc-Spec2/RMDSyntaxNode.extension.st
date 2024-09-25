@@ -1,6 +1,6 @@
-Extension { #name : #RMDSyntaxNode }
+Extension { #name : 'RMDSyntaxNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDSyntaxNode >> openPrettyPrint [
 
 	| c |
@@ -10,7 +10,7 @@ RMDSyntaxNode >> openPrettyPrint [
 	c open
 ]
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDSyntaxNode >> openPrettyPrint: aString [
 
 	| c |

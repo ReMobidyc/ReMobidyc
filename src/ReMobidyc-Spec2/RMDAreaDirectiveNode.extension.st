@@ -1,6 +1,6 @@
-Extension { #name : #RMDAreaDirectiveNode }
+Extension { #name : 'RMDAreaDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Spec2' }
+{ #category : '*ReMobidyc-Spec2' }
 RMDAreaDirectiveNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode directive: self printString
