@@ -187,7 +187,13 @@ BaselineOfReMobidyc >> installLogos [
 BaselineOfReMobidyc >> installRoassal3 [
 
 	<script: 'BaselineOfReMobidyc new installRoassal3'>
-	RSWorldMenu loadFullVersion
+	[
+	Metacello new
+		baseline: 'Roassal3';
+		repository: 'github://ObjectProfile/Roassal3';
+		load: 'Full' ]
+		on: MCMergeOrLoadWarning
+		do: [ :warning | warning load ]
 ]
 
 { #category : #scripts }
