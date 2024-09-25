@@ -159,7 +159,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
 				   'ReMobidyc-Visualization-Tests' ).
 		spec postLoadDoIt: #postLoad ].
-	spec for: 'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
+	spec for: #'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
 ]
 
 { #category : #scripts }
