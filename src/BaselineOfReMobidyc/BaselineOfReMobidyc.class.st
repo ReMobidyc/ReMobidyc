@@ -110,9 +110,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 
 	<baseline>
 	spec for: #common do: [
-		spec
-			baseline: 'Roassal3'
-			with: [ spec repository: 'github://ObjectProfile/Roassal3/' ].
+		spec baseline: 'Roassal3' with: [
+			spec
+				repository: 'github://ObjectProfile/Roassal3/';
+				loads: 'Full' ].
 		spec
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
