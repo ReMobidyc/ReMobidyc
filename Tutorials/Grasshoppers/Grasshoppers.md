@@ -4,40 +4,44 @@ This tutorial guides you to build a simple model with lifehisotry stages.
 
 <img alt="Grasshopper model" src="Grasshoppers.png">
 
-## 1. Open a modeller
+## 1. Open a modeler
 
-In the menu bar, find "re:Mobidyc" submenu to select "Modeller".
+In the menu bar, find "re:Mobidyc" menu to select "Modeler (GUI)".
 
-<img alt="modeller" src="modeller-initial.png" width=600>
+<img alt="modeller" src="modeler-initial.png" width=600>
 
-## 2. Define Cell
+## 2. Define Patch
 
-We want grasshoppers fly to rich grass, so in this model each cell has the amount of grass as an attribute.
+We want grasshoppers fly to rich grass, so in this model each patch has the amount of grass as an attribute.
 The unit of amount could be expressed in weight (such as `kg`), height (such as `cm`), or some other units.
 In this model, we consider it's nutrition and use `kcal` to measure the amount of grass.
 
 ### the grass attribute
 
-Cell initially does not have any attribute.
-We first select Cell definition page by clicking at Cell tab.
-Then we add the `grass` attribute to Cell by pressing the green '+' button and fill `grass` and `kcal` into Add attribute to Cell dialog.
+Select the 'Patch' tab in the modeler to edit the definition of Patch.
 
-<img alt="add the grass attribute" src="add-grass-attribute-in-Cell.png" width=600>
+The attribute definitions of the Patch agent is listed in the upper left list of the Patch page.
+The list is initially empty because Patch initially has no attribute.
+We will add the `grass` attribute to Patch.
 
-The Cell definition page will look as below.
+First, click the green '+' button below the attribute list to add a new definition.
+The newly added definition is empty and incomplete as indicated by the red triangle at the head column of the row.
+Enter 'grass' into the name column, 'kcal' to the unit column, and 'uniform 0 [kcal] to 100 [kcal]' to the initial value column.
 
-<img alt="Cell definition with the grass attribute" src="grass-added.png" width=600>
+The Patch definition page will look as below.
+
+<img alt="add the grass attribute" src="add-grass-attribute-in-Patch-filled.png" width=600>
 
 ### visualization
 
 We want to visualize the amount of grass during the simulation.
-The visualization can be set at the Visualization section of the Cell definition page.
-
-<img alt="Cell visualization" src="cell-visualization.png" width=600>
+The visualization can be set at the Visualization section of the Patch definition page.
 
 Fill in `my grass` after the "with alpha =" label, and `0 [kcal]` and `100 [kcal]` into the following fields.
-This visualization renders each cell with green blended with black background proportional to the cell's `grass` attribute.
-When the grass is `0 [kcal]` the cell will look black, and `100 [kcal]` will color the cell in fully green.
+This visualization renders each patch with green blended with black background proportional to the patch's `grass` attribute.
+When the grass is `0 [kcal]` the patch will look black, and `100 [kcal]` will color the patch in fully green.
+
+<img alt="Patch visualization" src="patch-visualization.png" width=600>
 
 ## 3. Define Grasshopper and Egg as Animats
 
@@ -81,12 +85,12 @@ Select cyan in the Visualization section at the right top part of the `Egg` defi
 
 <img alt="visualization of Egg" src="Egg-visualization.png" width=600>
 
-## 4. Define the "grow" task of Cell
+## 4. Define the "grow" task of Patch
 
 Now we are at the very core part of the model to define the behavior of each agent.
 In re:mobidyc, the behavior of an agent is defined by tasks.
-A task of an agent is tyically definitions of changes to properties of the agent, the cell where the agent is on, and optionally other agents within a given range.
-For example, the `grow` task is to increase the value of the `grass` attribute of a cell.
+A task of an agent is tyically definitions of changes to properties of the agent, the patch where the agent is on, and optionally other agents within a given range.
+For example, the `grow` task is to increase the value of the `grass` attribute of a patch.
 
 Clicking at the green "plus" button below the Task list, the task definition browser will open.
 
@@ -96,7 +100,7 @@ Clicking at the green "plus" button below the Task list, the task definition bro
 
 To define a new task, we take two steps: (1) select or define an action, and then (2) specialize the action by providing the context of the situation to perform the task.
 An action is a generalized template of the task.
-For example, we want to define a `gain` task that increases the amount of the `grass`, which can be generalized as `gain` action because the `grass` in each cell will be gained.
+For example, we want to define a `gain` task that increases the amount of the `grass`, which can be generalized as `gain` action because the `grass` in each patch will be gained.
 In the re:mobidyc, several actions, including the `gain` action`, are provided in the built-in repository.
 
 Clicking at the left-most button with a repository icon, the repository action browser will open.
@@ -130,9 +134,9 @@ The task definition will look as follows.
 
 <img alt="grow task" src="task-definition-grow.png" width=600>
 
-Press the "OK" button and then the Cell definition page will look as follows.
+Press the "OK" button and then the Patch definition page will look as follows.
 
-<img alt="complete definition of cell" src="cell-defined.png" width=600>
+<img alt="complete definition of patch" src="patch-defined.png" width=600>
 
 ## 5. Define tasks of Grasshopper
 
@@ -166,7 +170,7 @@ We simply select the `age` action and press the `OK` button in the task definiti
 
 ### the "move" task
 
-The `move` task takes a grasshopper to richer field, i.e. the cell with more `grass` attribute.
+The `move` task takes a grasshopper to richer field, i.e. the patch with more `grass` attribute.
 The re:mobidyc's built-in action repository provides the `move` action that allows you to specify the direction and the speed.
 Click at the green "+" button at the task section to open the task definition browser.
 
@@ -305,13 +309,13 @@ Please set as the following.
 
 ```during 1.0 year step by 1.0 day```
 
-### Cell
+### Patch
 
 The second and the third lines specify the structure of the space and initial values of the `grass` attribute.
 Please set as the following.
 
 ```
-10 x 10 of 1.0 km Cell with
+10 x 10 of 1.0 km Patch with
   grass = uniform 0 [kcal] to 100 [kcal]
 ```
 
