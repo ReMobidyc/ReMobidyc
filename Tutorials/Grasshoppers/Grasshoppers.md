@@ -43,12 +43,12 @@ When the grass is `0 [kcal]` the patch will look black, and `100 [kcal]` will co
 
 <img alt="Patch visualization" src="patch-visualization.png" width=600>
 
-## 3. Define Grasshopper and Egg as Animats
+## 3. Define Grasshopper as a species with Adult and Egg stages
 
-This model exhibits grasshoppers lay eggs and eggs become grasshopper when hatching.
-Grasshopper and Egg are stages in lifehistory and are both modeled as Animat.
+This model exhibits grasshoppers lay eggs and eggs become adults by hatching.
+Adult and Egg are life-history stages and are both modeled as Animat.
 
-### Grasshopper animat
+### Adult animat
 
 Selecting the green '+' tab will bring you the new animat page.
 
