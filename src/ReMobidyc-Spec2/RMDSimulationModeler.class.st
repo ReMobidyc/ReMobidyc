@@ -493,6 +493,8 @@ RMDSimulationModeler >> updatePages [
 									                                     (simulationModel
 										                                      ifNotNil:
 											                                      #simulationDefinition))
+								                                    simulationModel:
+									                                    simulationModel;
 								
 								                                    addAnimatInitializerAction: [
 									                                    self addAnimatInitializer ];

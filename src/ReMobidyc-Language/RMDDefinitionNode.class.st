@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDDefinitionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'variable',
 		'definitionBody'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDefinitionNode class >> isAbstract [
 
 	^ self == RMDDefinitionNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDDefinitionNode class >> variable: aRMDVariableNode expression: aRMDExpressionNode [
 	^ self new
 		variable: aRMDVariableNode;
@@ -22,72 +24,72 @@ RMDDefinitionNode class >> variable: aRMDVariableNode expression: aRMDExpression
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ variable = anObject variable
 				and: [ definitionBody = anObject definitionBody ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDDefinitionNode >> childrenDo: aBlock [
 	aBlock
 		value: variable;
 		value: definitionBody
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDDefinitionNode >> childrenTransform: aBlock [
 
 	variable := aBlock value: variable.
 	definitionBody := aBlock value: definitionBody
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDefinitionNode >> definitionBody [
 	^ definitionBody
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDefinitionNode >> definitionBody: aRMDExpressionNode [
 	definitionBody := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDDefinitionNode >> hash [
 	^ (self class hash bitXor: variable hash) bitXor: definitionBody hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDefinitionNode >> operator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDDefinitionNode >> postCopy [
 	variable := variable copy.
 	definitionBody := definitionBody copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDefinitionNode >> printShortOn: aStream [
 
 	aStream nextPutAll: 'Definition of '.
 	self variable printOn: aStream
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDDefinitionNode >> replaceChildren: aDictionary [
 	variable := variable copyReplace: aDictionary.
 	definitionBody := definitionBody copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDefinitionNode >> variable [
 	^ variable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDefinitionNode >> variable: aRMDVariableNode [
 	variable := aRMDVariableNode
 ]

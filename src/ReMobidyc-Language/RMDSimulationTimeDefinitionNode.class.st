@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDSimulationTimeDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDSimulationTimeDefinitionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'duration',
 		'step'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherRMDExpression [
 	^ self new
 		duration: aRMDExpression;
@@ -16,7 +18,7 @@ RMDSimulationTimeDefinitionNode class >> duration: aRMDExpression step: anotherR
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
 	<script:
 		'(RMDSimulationTimeDefinitionNode during: ''100 [day]'' by: ''0.5 [day]'') inspect'>
@@ -25,60 +27,60 @@ RMDSimulationTimeDefinitionNode class >> during: aString by: anotherString [
 		step: anotherString asRMDExpression
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationTimeDefinitionNode class >> empty [
 	^ self
 		duration: '1 [day]' asRMDExpression
 		step: '1 [day]' asRMDExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSimulationTimeDefinitionNode >> = anObject [
 	^ self class = anObject class
 		and: [ duration = anObject duration and: [ step = anObject step ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationTimeDefinitionNode >> childrenDo: aBlock [
 	aBlock
 		value: duration;
 		value: step
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationTimeDefinitionNode >> childrenTransform: aBlock [
 
 	duration := aBlock value: duration.
 	step := aBlock value: step
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionNode >> duration [
 	^ duration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionNode >> duration: aRMDExpressionNode [
 	duration := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSimulationTimeDefinitionNode >> hash [
 	^ duration hash bitXor: step hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSimulationTimeDefinitionNode >> isSimulationTimeDefinitionNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDSimulationTimeDefinitionNode >> postCopy [
 	duration := duration copy.
 	step := step copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSimulationTimeDefinitionNode >> printOn: aStream [
 	aStream nextPutAll: 'during '.
 	duration printOn: aStream.
@@ -86,7 +88,7 @@ RMDSimulationTimeDefinitionNode >> printOn: aStream [
 	step printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSimulationTimeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -104,18 +106,18 @@ RMDSimulationTimeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfR
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSimulationTimeDefinitionNode >> replaceChildren: aDictionary [
 	duration := duration copyReplace: aDictionary.
 	step := step copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionNode >> step [
 	^ step
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationTimeDefinitionNode >> step: aRMDExpressionNode [
 	step := aRMDExpressionNode
 ]

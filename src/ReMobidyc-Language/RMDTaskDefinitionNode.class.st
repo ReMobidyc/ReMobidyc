@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDTaskDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDTaskDefinitionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'subjectIdentifier',
 		'verbIdentifier',
@@ -14,10 +14,12 @@ Class {
 		'parameterInstantiations',
 		'enabled'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> goat_eat: dietString upto: maxString [
 	<script:
 		'(RMDTaskDefinitionNode goat_eat: ''1000[kcal/day]'' upto: ''10000[kcal]'') inspect'>
@@ -29,7 +31,7 @@ where
 	the amount -> ' ,  dietString, ' * delta time.') asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> goat_reproduce [
 
 	<script: '(RMDTaskDefinitionNode goat_reproduce) inspect'>
@@ -42,7 +44,7 @@ RMDTaskDefinitionNode class >> goat_reproduce [
 	the reproduction_cost -> 4000 [kcal].' asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> goat_respire: aString [
 
 	<script:
@@ -55,7 +57,7 @@ where
 		  asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> goat_starve: thresholdString [
 
 	<script:
@@ -66,7 +68,7 @@ where
 	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> goat_walk_for_grass [
 	<script:
 		'RMDTaskDefinitionNode goat_walk_for_grass asPresenter openWithSpec'>
@@ -76,7 +78,7 @@ where
 	the speed -> 1[km/day].' asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> patch_grow_grass: amountString upto: maxString [
 
 	<script:
@@ -88,7 +90,7 @@ where
 	the amount -> ' , amountString , ' * delta time .') asRMDTaskDefinition
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: verbString objectIdentifier: agentString2 actionIdentifier: aRMDActionIdentifierNode nearest: aBoolean1 within: aRMDLiteralNode enabled: aBoolean2 guard: aRMDConditionNode parameterInstantiations: anArrayOfRMDParameterInstantiationNode [
 
 	^ self new
@@ -104,7 +106,7 @@ RMDTaskDefinitionNode class >> subjectIdentifier: agentString1 verbIdentifier: v
 		  yourself
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> wolf_chase_goat [
 	<script:
 		'RMDTaskDefinitionNode wolf_chase_goat asPresenter openWithSpec'>
@@ -114,7 +116,7 @@ where
 	the speed -> 1.0[km/day].' asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 	<script:
 		'(RMDTaskDefinitionNode wolf_prey_on_goat: ''15000[kcal]'') inspect'>
@@ -123,7 +125,7 @@ RMDTaskDefinitionNode class >> wolf_prey_on_goat: maxString [
 	the threshold -> ', maxString, '.') asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> wolf_reproduce [
 
 	<script: '(RMDTaskDefinitionNode wolf_reproduce) inspect'>
@@ -136,7 +138,7 @@ RMDTaskDefinitionNode class >> wolf_reproduce [
 	the reproduction_cost -> 2000 [kcal].' asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> wolf_respire: aString [
 
 	<script:
@@ -149,7 +151,7 @@ where
 		  asRMDTaskDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDTaskDefinitionNode class >> wolf_starve: thresholdString [
 
 	<script:
@@ -160,7 +162,7 @@ where
 	the minimum -> ' , thresholdString , '.') asRMDTaskDefinition
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDTaskDefinitionNode >> = anObject [
 
 	^ self class = anObject class and: [
@@ -173,18 +175,18 @@ RMDTaskDefinitionNode >> = anObject [
 								  and: [ actionIdentifier = anObject actionIdentifier ] ] ] ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> actionIdentifier [
 	^ actionIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> actionIdentifier: aRMDActionIdentifierNode [
 	actionIdentifier := aRMDActionIdentifierNode.
 	self resetAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 
 	^ action ifNil: [
@@ -202,7 +204,7 @@ RMDTaskDefinitionNode >> actionWith: aRMDSimulationModel [
 			            yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> appendParameterInstantiations: anArrayOfRMDParameterInstantiation [
 
 	| placeholders |
@@ -214,19 +216,19 @@ RMDTaskDefinitionNode >> appendParameterInstantiations: anArrayOfRMDParameterIns
 			                            placeholders includes: inst placeholder ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> beDisabled [
 
 	enabled := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> beEnabled [
 
 	enabled := true
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTaskDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: [ aBlock value: guard ].
@@ -234,7 +236,7 @@ RMDTaskDefinitionNode >> childrenDo: aBlock [
 	parameterInstantiations do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTaskDefinitionNode >> childrenTransform: aBlock [
 
 	guard ifNotNil: [ guard := aBlock value: guard ].
@@ -242,7 +244,7 @@ RMDTaskDefinitionNode >> childrenTransform: aBlock [
 	parameterInstantiations := parameterInstantiations collect: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTaskDefinitionNode >> createName [
 
 	^ String streamContents: [ :stream | 
@@ -256,36 +258,36 @@ RMDTaskDefinitionNode >> createName [
 				  nextPutAll: objectIdentifier ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> enabled [
 
 	^ enabled
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> enabled: aBoolean [
 
 	enabled := aBoolean ~= false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> guard [
 
 	^ guard
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> guard: aRMDConditionNode [
 
 	guard := aRMDConditionNode
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTaskDefinitionNode >> hasObject [
 	^ objectIdentifier notNil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDTaskDefinitionNode >> hash [
 
 	^ ((((((self class hash bitXor: subjectIdentifier hash) bitXor:
@@ -294,19 +296,19 @@ RMDTaskDefinitionNode >> hash [
 		   parameterInstantiations hash) bitXor: actionIdentifier hash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTaskDefinitionNode >> initialize [
 
 	super initialize.
 	enabled := true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTaskDefinitionNode >> isTaskDefinitionNode [
 	^ true
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDTaskDefinitionNode >> metaparameters: aDictionary [
 
 	^ self copy
@@ -321,48 +323,48 @@ RMDTaskDefinitionNode >> metaparameters: aDictionary [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> name [
 
 	^ name ifNil: [ name := self createName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> nearest [
 
 	^ nearest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> nearest: aBoolean [
 
 	nearest := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> objectIdentifier [
 	^ objectIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> objectIdentifier: aString [
 	objectIdentifier := aString.
 	name := nil.
 	self resetAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> parameterInstantiations [
 	^ parameterInstantiations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> parameterInstantiations: anArrayOfRMDParameterInstantiationNode [
 	parameterInstantiations := anArrayOfRMDParameterInstantiationNode.
 	self resetAction
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDTaskDefinitionNode >> postCopy [
 
 	range := range ifNotNil: #copy.
@@ -372,7 +374,7 @@ RMDTaskDefinitionNode >> postCopy [
 	action := nil
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTaskDefinitionNode >> printOn: aStream [
 
 	aStream
@@ -412,7 +414,7 @@ RMDTaskDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -465,7 +467,7 @@ RMDTaskDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTaskDefinitionNode >> printShortOn: aStream [
 
 	aStream
@@ -482,17 +484,17 @@ RMDTaskDefinitionNode >> printShortOn: aStream [
 	enabled ifFalse: [ aStream nextPutAll: ' disabled' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> range [
 	^ range
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> range: aRMDLiteral [
 	range := aRMDLiteral
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDTaskDefinitionNode >> renameAnimat: aString to: anotherString [
 
 	subjectIdentifier = aString ifTrue: [ 
@@ -503,7 +505,7 @@ RMDTaskDefinitionNode >> renameAnimat: aString to: anotherString [
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 
 	aDictionary
@@ -532,17 +534,17 @@ RMDTaskDefinitionNode >> replaceChildren: aDictionary [
 		ifPresent: [ :node | actionIdentifier := node copy ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> resetAction [
 	action := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> subjectIdentifier [
 	^ subjectIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> subjectIdentifier: aString [
 
 	subjectIdentifier := aString.
@@ -550,12 +552,12 @@ RMDTaskDefinitionNode >> subjectIdentifier: aString [
 	self resetAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> verbIdentifier [
 	^ verbIdentifier 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTaskDefinitionNode >> verbIdentifier: aString [
 	verbIdentifier := aString.
 	self resetAction

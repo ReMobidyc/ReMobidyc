@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDAssignableAttributeVariableNode,
-	#superclass : #RMDAbstractAssignableAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDAssignableAttributeVariableNode',
+	#superclass : 'RMDAbstractAssignableAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAssignableAttributeVariableNode >> identifier: aString [
 
 	self attributeVariable identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAssignableAttributeVariableNode >> isAssignableAttributeVariableNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAssignableAttributeVariableNode >> operator [
 	^ ''
 ]

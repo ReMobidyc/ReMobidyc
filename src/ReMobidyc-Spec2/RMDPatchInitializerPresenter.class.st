@@ -31,6 +31,12 @@ RMDPatchInitializerPresenter class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'accessing' }
+RMDPatchInitializerPresenter >> agentDefinition [
+
+	^ simulationModel ifNotNil: #patchDefinition
+]
+
 { #category : 'initialization' }
 RMDPatchInitializerPresenter >> initializePresenters [
 

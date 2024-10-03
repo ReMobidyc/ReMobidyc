@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDDistanceDirectiveNode,
-	#superclass : #RMDAgentDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDistanceDirectiveNode',
+	#superclass : 'RMDAgentDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDDistanceDirectiveNode class >> agent: anotherString [
 
 	^ self new
@@ -12,19 +14,19 @@ RMDDistanceDirectiveNode class >> agent: anotherString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDistanceDirectiveNode >> directiveName [
 
 	^ 'distance'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDistanceDirectiveNode >> isDistanceDirectiveNode [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDistanceDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -32,7 +34,7 @@ RMDDistanceDirectiveNode >> printOn: aStream [
 		nextPutAll: agentIdentifier asString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDistanceDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

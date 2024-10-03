@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDGrammar,
-	#superclass : #PP2CompositeNode,
+	#name : 'RMDGrammar',
+	#superclass : 'PP2CompositeNode',
 	#instVars : [
 		'_expression',
 		'_actionDefinition',
@@ -23,10 +23,12 @@ Class {
 		'Current',
 		'Keywords'
 	],
-	#category : #'ReMobidyc-Language-Parser'
+	#category : 'ReMobidyc-Language-Parser',
+	#package : 'ReMobidyc-Language',
+	#tag : 'Parser'
 }
 
-{ #category : #'accessing method dictionary' }
+{ #category : 'accessing method dictionary' }
 RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 	Keywords := nil.
 	Builtins := nil.
@@ -34,13 +36,13 @@ RMDGrammar class >> addSelectorSilently: selector withMethod: compiledMethod [
 	^ super addSelectorSilently: selector withMethod: compiledMethod
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGrammar class >> current [
 
 	^ Current ifNil: [ Current := self new ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> _actionDefinition [
 
 	^ self actionDefinitionHeaderLine , self whenClause optional
@@ -58,7 +60,7 @@ RMDGrammar >> _actionDefinition [
 			  utilityDefinitions: (array fifth ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> _agentIdentifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
@@ -72,7 +74,7 @@ RMDGrammar >> _agentIdentifier [
 								message: 'An agent name must start with a uppercase letter.' ] ] ]
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> _agentReference [
 
 	^ ('my' asPParser , #space asPParser) trimBlanks ==> [ :str | nil ]
@@ -82,7 +84,7 @@ RMDGrammar >> _agentReference [
 	  / (_identifier , '''s ' asPParser trimBlanks ==> #first)
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> _animatDefinition [
 
 	^ self animatHeader , self withAttributeClause optional
@@ -95,32 +97,32 @@ RMDGrammar >> _animatDefinition [
 		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> _condition [
 
 	^ self cond3
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> _csvColumnName [
 
 	^ self csvTimeColumnName
 	  / (_identifier , self type , self interpolation optional)
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> _csvTimeColumnName [
 
 	^ 'time' asPParser trimBlanks , self type , self cycle optional
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> _expression [
 
 	^ self guardedChoice
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> _guardedChoice [
 	^ (self expr6 separatedBy: self guard)
 		==> [ :array | 
@@ -133,7 +135,7 @@ RMDGrammar >> _guardedChoice [
 								copyWith: true -> array last) ] ]
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> _identifier [
 	^ (#letter asPParser
 		, (#letter asPParser / #digit asPParser / $_ asPParser) star)
@@ -147,7 +149,7 @@ RMDGrammar >> _identifier [
 								message: 'An identifier must start with a lowercase letter.' ] ] ]
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> _literal [
 
 	^ self decimalString / self pi , self type optional ==> [ :pair |
@@ -156,7 +158,7 @@ RMDGrammar >> _literal [
 		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> _patchDefinition [
 
 	^ 'Patch' asPParser , self withAttributeClause optional
@@ -167,7 +169,7 @@ RMDGrammar >> _patchDefinition [
 		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> _taskDefinition [
 
 	^ self taskDefinitionHeader , self disabled optional
@@ -191,7 +193,7 @@ RMDGrammar >> _taskDefinition [
 			  parameterInstantiations: (quad fourth ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> _unit [
 	^ (self unitTerm
 		, (('/' asPParser trimBlanks , self unitTerm) ==> #second) optional)
@@ -201,7 +203,7 @@ RMDGrammar >> _unit [
 				ifNil: [ pair first ] ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> _worldDefinition [
 
 	^ 'World' asPParser , self withAttributeClause optional
@@ -212,13 +214,13 @@ RMDGrammar >> _worldDefinition [
 		  utilityDefinitions: (penta third ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> actionDefinition [
 
 	^ _actionDefinition
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> actionDefinitionAttributePart [
 
 	^ #newline asPParser trimBlanks optional
@@ -226,7 +228,7 @@ RMDGrammar >> actionDefinitionAttributePart [
 			   #newline asPParser trimBlanks) ==> #second
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> actionDefinitionHeaderLine [
 
 	^ 'to' asPParser trimBlanks , _identifier trimBlanks
@@ -237,42 +239,42 @@ RMDGrammar >> actionDefinitionHeaderLine [
 			  array third } ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> actionDefinitionNodeClass [
 	^ RMDActionDefinitionNode 
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> actionIdentifier [
 
 	^ _identifier
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> actionsFile [
 
 	^ self actionDefinition star
 	  ==> [ :actions | self actionsFileNodeClass actions: actions ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> actionsFileNodeClass [
 
 	^ RMDActionsFileNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> additionNodeClass [
 	^ RMDAdditionNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> agentDefinition [
 
 	^ self worldDefinition / self patchDefinition / self animatDefinition
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> agentDirective [
 
 	^ self numberOfIndividualsInPatchDirective
@@ -286,32 +288,32 @@ RMDGrammar >> agentDirective [
 	  / self lengthDirective / self areaDirective
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> agentIdentifier [
 
 	^ _agentIdentifier
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> agentReference [
 
 	^ _agentReference
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> agentsFile [
 
 	^ self agentDefinition star
 	  ==> [ :agents | self agentsFileNodeClass agents: agents ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> agentsFileNodeClass [
 
 	^ RMDAgentsFileNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> allUnits [
 	^ Dictionary new
 		addAll: self timeUnits;
@@ -322,18 +324,18 @@ RMDGrammar >> allUnits [
 		yourself
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> animatDefinition [
 
 	^ _animatDefinition
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> animatDefinitionNodeClass [
 	^ RMDAnimatDefinitionNode
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> animatDotRenderer [
 
 	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
@@ -346,7 +348,7 @@ RMDGrammar >> animatDotRenderer [
 		  color: (array at: 5) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> animatHeader [
 
 	^ _agentIdentifier , 'is' asPParser trimBlanks
@@ -356,7 +358,7 @@ RMDGrammar >> animatHeader [
 		  triple third } ]
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> animatIconRenderer [
 
 	^ self agentIdentifier , '->' asPParser trimBlanks , $" asPParser
@@ -373,7 +375,7 @@ RMDGrammar >> animatIconRenderer [
 		  RMDAnimatIconRenderer on: animat iconName: icon scale: scale ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> animatInitializer [
 
 	^ #digit asPParser plus flatten trimBlanks , _agentIdentifier
@@ -388,12 +390,12 @@ RMDGrammar >> animatInitializer [
 		  utilityDefinitions: (quad fourth ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> animatInitializerNodeClass [
 	^ RMDAnimatInitializerNode
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> animatRectangleRenderer [
 
 	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
@@ -406,7 +408,7 @@ RMDGrammar >> animatRectangleRenderer [
 		  color: (array at: 5) ]
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> animatTriangleRenderer [
 
 	^ self agentIdentifier , '->' asPParser trimBlanks , self nat
@@ -419,7 +421,7 @@ RMDGrammar >> animatTriangleRenderer [
 		  color: (array at: 5) ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> apply [
 	^ (_identifier , $( asPParser trimBlanks
 		, (_expression onlySeparatedBy: $, asPParser trimBlanks)
@@ -428,12 +430,12 @@ RMDGrammar >> apply [
 			[ :quad | self applyNodeClass function: quad first expressions: quad third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> applyNodeClass [
 	^ RMDApplyNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> areaDirective [
 
 	^ ('area' asPParser , #blank asPParser plus , 'of' asPParser
@@ -441,13 +443,13 @@ RMDGrammar >> areaDirective [
 	  ==> [ :array | self areaDirectiveNodeClass new ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> areaDirectiveNodeClass [
 
 	^ RMDAreaDirectiveNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> assignableAttributeVariable [
 
 	^ _agentReference , _identifier ==> [ :pair | 
@@ -458,12 +460,12 @@ RMDGrammar >> assignableAttributeVariable [
 		   (self placeholderNodeClass identifier: pair second) ])
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> assignableAttributeVariableNodeClass [
 	^ RMDAssignableAttributeVariableNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> assignableDeltaAttributeVariable [
 
 	^ _agentReference , self delta , _identifier ==> [ :triple | 
@@ -475,12 +477,12 @@ RMDGrammar >> assignableDeltaAttributeVariable [
 			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> assignableDeltaAttributeVariableNodeClass [
 	^ RMDAssignableDeltaAttributeVariableNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> assignableDifferentialAttributeVariable [
 
 	^ _agentReference , self differential , _identifier ==> [ :triple | 
@@ -493,12 +495,12 @@ RMDGrammar >> assignableDifferentialAttributeVariable [
 			   (self placeholderNodeClass identifier: triple third) ])
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> assignableDifferentialAttributeVariableNodeClass [
 	^ RMDAssignableDifferentialAttributeVariableNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> assignableNewAttributeVariable [
 
 	^ 'new' asPParser , #blank asPParser plus , _identifier
@@ -507,7 +509,7 @@ RMDGrammar >> assignableNewAttributeVariable [
 			  (self newAttributeVariableNodeClass identifier: triple third) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> assignableVariable [
 
 	^ self assignableDifferentialAttributeVariable
@@ -515,7 +517,7 @@ RMDGrammar >> assignableVariable [
 	  / self assignableAttributeVariable
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> attributeDeclaration [
 
 	^ _identifier , self type
@@ -527,12 +529,12 @@ RMDGrammar >> attributeDeclaration [
 			  initializerExpression: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> attributeDeclarationNodeClass [
 	^ RMDAttributeDeclarationNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> attributeDefinition [
 
 	^ self assignableVariable , $' asPParser trimBlanks
@@ -542,12 +544,12 @@ RMDGrammar >> attributeDefinition [
 		  expression: quad fourth ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> attributeDefinitionNodeClass [
 	^ RMDAttributeDefinitionNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> attributeInitializer [
 
 	^ _identifier
@@ -558,12 +560,12 @@ RMDGrammar >> attributeInitializer [
 			  expression: pair second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> attributeInitializerNodeClass [
 	^ RMDAttributeInitializerNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> attributeVariable [
 	^ (_agentReference , _identifier)
 		==> [ :pair | 
@@ -572,12 +574,12 @@ RMDGrammar >> attributeVariable [
 				agent: pair first ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> attributeVariableNodeClass [
 	^ RMDAttributeVariableNode
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> backgroundColorRenderer [
 
 	^ 'World' asPParser trimBlanks , '->' asPParser trimBlanks
@@ -586,7 +588,7 @@ RMDGrammar >> backgroundColorRenderer [
 	  ==> [ :triple | RMDBackgroundColorRenderer color: triple third ]
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> binaryCombinatorFrom: anArray [
 	| operator conds |
 	anArray size = 1
@@ -604,7 +606,7 @@ RMDGrammar >> binaryCombinatorFrom: anArray [
 	^ PP2Failure message: 'Unknown operator: ' , operator
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> binaryRelation [
 
 	^ _expression , self binaryRelationOperator
@@ -614,7 +616,7 @@ RMDGrammar >> binaryRelation [
 			  (Array with: triple first with: triple second) , triple third ]
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> binaryRelationFrom: anArray [
 	| operator expressions |
 	anArray size < 3
@@ -632,7 +634,7 @@ RMDGrammar >> binaryRelationFrom: anArray [
 		expressions: expressions
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> binaryRelationNodeClassFor: aString [
 	aString = '='
 		ifTrue: [ ^ RMDEqualityNode ].
@@ -647,7 +649,7 @@ RMDGrammar >> binaryRelationNodeClassFor: aString [
 	^ RMDNotEqualNode
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> binaryRelationOperator [
 
 	^ ('=' asPParser / '/=' asPParser
@@ -655,25 +657,25 @@ RMDGrammar >> binaryRelationOperator [
 	   / ($> asPParser , $= asPParser optional) flatten) trimBlanks
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> bindNodeClass [
 	^ RMDTaskDefinitionNode
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> chance [
 
 	^ _expression , 'chance' asPParser trimBlanks
 	  ==> [ :pair | self chanceNodeClass probability: pair first ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> chanceNodeClass [
 
 	^ RMDChanceNode
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> color [
 
 	^ #blank asPParser star , ((PP2ChoiceNode withAll:
@@ -683,14 +685,14 @@ RMDGrammar >> color [
 		    ==> [ :pair | Color fromHexString: pair second ])) ==> #second
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> cond1 [
 
 	^ $( asPParser trimBlanks , _condition , $) asPParser trimBlanks
 	  ==> #second / self binaryRelation / self chance / self placeholder
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> cond2 [
 	^ ('not' asPParser trimBlanks optional , self cond1)
 		==> [ :pair | 
@@ -699,37 +701,37 @@ RMDGrammar >> cond2 [
 				ifNil: [ pair second ] ]
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> cond3 [
 	^ (self cond2
 		separatedBy: ('and' asPParser / 'or' asPParser) trimBlanks)
 		==> [ :array | self binaryCombinatorFrom: array ]
 ]
 
-{ #category : #'parsers-conditions' }
+{ #category : 'parsers-conditions' }
 RMDGrammar >> condition [
 
 	^ _condition
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> conjunctionNodeClass [
 	^ RMDConjunctionNode
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> csvColumnName [
 
 	^ _csvColumnName
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> csvTimeColumnName [
 
 	^ _csvTimeColumnName
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> cycle [
 
 	^ 'cycle' asPParser trimBlanks , _literal trimBlanks ==> [ :pair |
@@ -740,35 +742,35 @@ RMDGrammar >> cycle [
 		  ifFalse: [ PP2Failure message: 'cycle must be in time dimension' ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> deUnitExpressionNodeClass [
 
 	^ RMDDeUnitExpressionNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> decimalString [
 
 	^ ($- asPParser optional , #digit asPParser plus
 	   , ($. asPParser , #digit asPParser plus) optional) flatten
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> definition [
 	^ self attributeDefinition
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> delta [
 	^ ('delta ' asPParser / 'Δ' asPParser) trimBlanks
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> deltaTimeDirectiveNodeClass [
 	^ RMDDeltaTimeDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> densityOfIndividualsInPatchDirective [
 
 	^ 'density' asPParser trimLeft , #blank asPParser plus
@@ -778,13 +780,13 @@ RMDGrammar >> densityOfIndividualsInPatchDirective [
 		  triple second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> densityOfIndividualsInPatchDirectiveNodeClass [
 
 	^ RMDDensityOfIndividualsInPatchDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> densityOfIndividualsInRadiusDirective [
 
 	^ 'density' asPParser trimLeft , #blank asPParser plus
@@ -796,13 +798,13 @@ RMDGrammar >> densityOfIndividualsInRadiusDirective [
 		  radius: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> densityOfIndividualsInRadiusDirectiveNodeClass [
 
 	^ RMDDensityOfIndividualsInRadiusDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> densityOfIndividualsInWorldDirective [
 
 	^ 'density' asPParser trimLeft , #blank asPParser plus
@@ -816,48 +818,48 @@ RMDGrammar >> densityOfIndividualsInWorldDirective [
 			  triple second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> densityOfIndividualsInWorldDirectiveNodeClass [
 
 	^ RMDDensityOfIndividualsInWorldDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> dieDirective [
 
 	^ 'die' asPParser trimBlanks
 	  ==> [ :die | self dieDirectiveNodeClass new ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> dieDirectiveNodeClass [
 
 	^ RMDDieDirectiveNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> differential [
 	^ 'd/dt ' asPParser trimBlanks
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> differential2 [
 	^ ('d2/dt2 ' asPParser / 'd^2/dt^2 ' asPParser) trimBlanks
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> directionDirective [
 	^ ('direction' asPParser trimBlanks , _identifier)
 		==>
 			[ :pair | self directionDirectiveNodeClass agent: pair second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> directionDirectiveNodeClass [
 	^ RMDDirectionDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> directionOfGradientDirective [
 
 	^ 'direction' asPParser trimLeft , #blank asPParser plus
@@ -867,41 +869,41 @@ RMDGrammar >> directionOfGradientDirective [
 		  (RMDAttributeVariableNode identifier: pair fourth agent: 'here') ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> directionOfGradientDirectiveNodeClass [
 	^ RMDDirectionOfGradientDirectiveNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> disabled [
 
 	^ 'disabled' asPParser trimBlanks
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> disjunctionNodeClass [
 	^ RMDDisjunctionNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> distanceDirective [
 	^ ('distance' asPParser trimBlanks , _identifier)
 		==>
 			[ :pair | self distanceDirectiveNodeClass agent: pair second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> distanceDirectiveNodeClass [
 	^ RMDDistanceDirectiveNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> enUnitExpressionNodeClass [
 
 	^ RMDEnUnitExpressionNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> energyUnits [
 	^ {('J' -> #(1.0 nil 'J')).
 	('kJ' -> #(1000.0 nil 'J')).
@@ -909,7 +911,7 @@ RMDGrammar >> energyUnits [
 	('cal' -> #(4.184 nil 'J'))} asDictionary
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expr1 [
 
 	^ ($( asPParser trimBlanks , self unit , $) asPParser trimBlanks
@@ -942,7 +944,7 @@ RMDGrammar >> expr1 [
 						  unit: deUnit ] ] ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expr2 [
 	^ (self expr1
 		, (($^ asPParser trimBlanks , self int) ==> #second) optional)
@@ -952,7 +954,7 @@ RMDGrammar >> expr2 [
 				ifNotNil: [ self powerNodeClass expression: pair first order: pair second ] ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expr4 [
 
 	^ (self expr2 separatedBy:
@@ -973,7 +975,7 @@ RMDGrammar >> expr4 [
 					  expression: (array at: index + 1) ] ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expr5 [
 	^ (self expr4 separatedBy: ($+ asPParser / $- asPParser) trimBlanks)
 		==> [ :array | 
@@ -989,30 +991,30 @@ RMDGrammar >> expr5 [
 						expression: (array at: index + 1) ] ]
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expr6 [
 
 	^ self uniformDistribution / self normalDistribution
 	  / self gammaDistribution / self logLogisticDistribution / self expr5
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> expression [
 
 	^ _expression
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> externalVariableNodeClass [
 	^ RMDUtilityVariableNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> fractionNodeClass [
 	^ RMDFractionNode
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> gammaDistribution [
 
 	^ 'gamma' asPParser trimBlanks , self expr5 , 'scale' asPParser trimBlanks
@@ -1034,36 +1036,36 @@ RMDGrammar >> gammaDistribution [
 			   mean: quad fourth ])
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> gammaDistributionNodeClass [
 
 	^ RMDGammaDistributionNode
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> guard [
 	^ ('if ' asPParser trimBlanks , _condition , $, asPParser trimBlanks
 		, #newline asPParser trimBlanks optional) ==> #second
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> guardedChoice [
 
 	^ _guardedChoice
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> guardedChoiceNodeClass [
 	^ RMDGuardedChoiceNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> identifier [
 
 	^ _identifier
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> int [
 
 	^ $- asPParser optional , self nat
@@ -1071,7 +1073,7 @@ RMDGrammar >> int [
 	  (pair first ifNil: [ 1 ] ifNotNil: [ -1 ]) * pair second ]
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> interpolation [
 
 	^ ('nearest' asPParser ==> [ :s | RMDDataInterpolation nearest ]
@@ -1080,7 +1082,7 @@ RMDGrammar >> interpolation [
 		  trimBlanks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGrammar >> keywords [
 	^ Keywords
 		ifNil:
@@ -1088,20 +1090,20 @@ RMDGrammar >> keywords [
 				substrings asSet ]
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> killDirective [
 
 	^ 'kill' asPParser trimBlanks
 	  ==> [ :die | self killDirectiveNodeClass new ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> killDirectiveNodeClass [
 
 	^ RMDKillDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> lengthDirective [
 
 	^ ('length' asPParser , #blank asPParser plus , 'of' asPParser
@@ -1109,13 +1111,13 @@ RMDGrammar >> lengthDirective [
 	  ==> [ :array | self lengthDirectiveNodeClass new ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> lengthDirectiveNodeClass [
 
 	^ RMDLengthDirectiveNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> lengthUnits [
 	^ {('km' -> #(1000.0 nil 'm')).
 	('m' -> #(1.0 nil 'm')).
@@ -1123,30 +1125,30 @@ RMDGrammar >> lengthUnits [
 	('mm' -> #(0.001 nil 'm'))} asDictionary
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> lifeDirective [
 
 	^ self dieDirective / self killDirective / self newDirective / self stageDirective
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> literal [
 
 	^ _literal
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> literalNodeClass [
 	^ RMDLiteralNode
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> literalSequence [
 
 	^ _literal onlySeparatedBy: $, asPParser trimSpaces
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> logLogisticDistribution [
 
 	^ ('loglogistic' asPParser / 'fisk' asPParser) trimBlanks , self expr5
@@ -1156,19 +1158,19 @@ RMDGrammar >> logLogisticDistribution [
 		  shape: quad fourth ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> logLogisticDistributionNodeClass [
 
 	^ RMDLogLogisticDistributionNode
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> metaParameterSequence [
 
 	^ self metaSingleParameterSequence / self metaParameterSetSequence
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> metaParameterSetSequence [
 
 	^ (self placeholder onlySeparatedBy: $, asPParser trimBlanks)
@@ -1187,13 +1189,13 @@ RMDGrammar >> metaParameterSetSequence [
 				  'The size of each tuple should be equal to the number of parameters' ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> metaParameterSetSequenceNodeClass [
 
 	^ RMDMetaParameterSetSequenceNode
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> metaSingleParameterSequence [
 
 	^ self placeholder , '->' asPParser trimSpaces , self literalSequence
@@ -1203,13 +1205,13 @@ RMDGrammar >> metaSingleParameterSequence [
 			  literals: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> metaSingleParameterSequenceNodeClass [
 
 	^ RMDMetaSingleParameterSequenceNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> metaVariable [
 
 	^ ('_' asPParser
@@ -1218,13 +1220,13 @@ RMDGrammar >> metaVariable [
 	  ==> [ :str | self utilityVariableNodeClass identifier: str ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> namely [
 
 	^ 'namely' asPParser trimBlanks
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> nat [
 
 	^ #digit asPParser plus
@@ -1232,24 +1234,24 @@ RMDGrammar >> nat [
 	  digits inject: 0 into: [ :i :c | i * 10 + c digitValue ] ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> nearest [
 
 	^ #blank asPParser , 'nearest' asPParser , #blank asPParser
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> negationNodeClass [
 	^ RMDNegationNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> newAttributeVariableNodeClass [
 
 	^ RMDNewAttributeVariableNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> newDirective [
 
 	^ 'new' asPParser , #blank asPParser plus
@@ -1264,13 +1266,13 @@ RMDGrammar >> newDirective [
 					  quantity: pair first ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> newDirectiveNodeClass [
 
 	^ RMDNewDirectiveNode
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> normalDistribution [
 
 	^ 'normal' asPParser trimBlanks , self expr5
@@ -1280,13 +1282,13 @@ RMDGrammar >> normalDistribution [
 		  sigma: quad fourth ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> normalDistributionNodeClass [
 
 	^ RMDNormalDistributionNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> numberOfIndividualsInPatchDirective [
 
 	^ 'number' asPParser trimLeft , #blank asPParser plus
@@ -1296,12 +1298,12 @@ RMDGrammar >> numberOfIndividualsInPatchDirective [
 		  triple second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> numberOfIndividualsInPatchDirectiveNodeClass [
 	^ RMDNumberOfIndividualsInPatchDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> numberOfIndividualsInRadiusDirective [
 
 	^ 'number' asPParser trimLeft , #blank asPParser plus
@@ -1313,13 +1315,13 @@ RMDGrammar >> numberOfIndividualsInRadiusDirective [
 		  radius: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> numberOfIndividualsInRadiusDirectiveNodeClass [
 
 	^ RMDNumberOfIndividualsInRadiusDirectiveNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> numberOfIndividualsInWorldDirective [
 
 	^ 'number' asPParser trimLeft , #blank asPParser plus
@@ -1333,12 +1335,12 @@ RMDGrammar >> numberOfIndividualsInWorldDirective [
 			  triple second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> numberOfIndividualsInWorldDirectiveNodeClass [
 	^ RMDNumberOfIndividualsInWorldDirectiveNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> numberString [
 
 	^ self decimalString , self type optional ==> [ :pair |
@@ -1347,7 +1349,7 @@ RMDGrammar >> numberString [
 		  unit: (pair second ifNil: [ RMDUnit noDimension ]) ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> parameterInstantiation [
 
 	^ self placeholder , '->' asPParser trimBlanks
@@ -1362,17 +1364,17 @@ RMDGrammar >> parameterInstantiation [
 		  replacement: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> parameterInstantiationNodeClass [
 	^ RMDParameterInstantiationNode
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> parenExpression [
 	^ ($( asPParser , _guardedChoice , $) asPParser) ==> #second
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> patchColorAlphaRenderer [
 
 	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
@@ -1395,7 +1397,7 @@ RMDGrammar >> patchColorAlphaRenderer [
 		  yourself ]
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> patchColorBrightnessRenderer [
 
 	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
@@ -1418,7 +1420,7 @@ RMDGrammar >> patchColorBrightnessRenderer [
 		  yourself ]
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> patchColorMapRenderer [
 
 	^ 'Patch' asPParser trimBlanks , '->' asPParser trimBlanks
@@ -1448,18 +1450,18 @@ RMDGrammar >> patchColorMapRenderer [
 	  renderer ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> patchDefinition [
 
 	^ _patchDefinition
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> patchDefinitionNodeClass [
 	^ RMDPatchDefinitionNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> patchInitializer [
 
 	^ #digit asPParser plus flatten trimBlanks , 'x' asPParser
@@ -1478,12 +1480,12 @@ RMDGrammar >> patchInitializer [
 		  utilityDefinitions: (array eighth ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> patchInitializerNodeClass [
 	^ RMDPatchInitializerNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> pi [
 
 	^ $- asPParser trimBlanks optional
@@ -1491,7 +1493,7 @@ RMDGrammar >> pi [
 	  ==> [ :pair | (pair first ifNil: [ '' ] ifNotNil: [ '-' ]) , 'π' ]
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> placeholder [
 
 	^ 'the' asPParser , #blank asPParser plus , _identifier
@@ -1499,28 +1501,28 @@ RMDGrammar >> placeholder [
 	  self placeholderNodeClass identifier: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> placeholderNodeClass [
 	^ RMDPlaceholderNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> powerNodeClass [
 	^ RMDPowerNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> productNodeClass [
 	^ RMDProductNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> remainderNodeClass [
 
 	^ RMDRemainderNode
 ]
 
-{ #category : #'parsers-visualizations' }
+{ #category : 'parsers-visualizations' }
 RMDGrammar >> renderer [
 
 	^ self animatDotRenderer / self animatRectangleRenderer
@@ -1529,7 +1531,7 @@ RMDGrammar >> renderer [
 	  / self patchColorBrightnessRenderer / self patchColorMapRenderer
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> simulationDefinition [
 	^ (('Simulation' asPParser trimBlanks , 'with' asPParser
 		, #newline asPParser trimBlanks) ==> [ :triple | nil ]
@@ -1548,25 +1550,25 @@ RMDGrammar >> simulationDefinition [
 				animatInitializers: (array fifth ifNil: [ { } ]) ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> simulationDefinitionNodeClass [
 	^ RMDSimulationDefinitionNode
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> simulationFile [
 
 	^ self simulationDefinition ==> [ :simulation | 
 	  self simulationFileNodeClass simulationDefinition: simulation ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> simulationFileNodeClass [
 
 	^ RMDSimulationFileNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> simulationTimeDefinition [
 	^ (('during' asPParser trimBlanks , _literal) ==> #last
 		,
@@ -1578,12 +1580,12 @@ RMDGrammar >> simulationTimeDefinition [
 				step: pair second ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> simulationTimeDefinitionNodeClass [
 	^ RMDSimulationTimeDefinitionNode
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> stageDirective [
 
 	^ 'stage' asPParser , #blank asPParser plus
@@ -1593,38 +1595,38 @@ RMDGrammar >> stageDirective [
 		  self stageDirectiveNodeClass animatIdentifier: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> stageDirectiveNodeClass [
 
 	^ RMDStageDirectiveNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGrammar >> start [
 	"Answer the production to start this parser with."
 	
 	self definition
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> subtractionNodeClass [
 	^ RMDSubtractionNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> taskDefinition [
 
 	^ _taskDefinition
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeader [
 
 	^ self taskDefinitionHeaderWithNamely
 	  / self taskDefinitionHeaderWithoutNamely
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeaderWithNamely [
 
 	^ _agentIdentifier , _identifier
@@ -1647,7 +1649,7 @@ RMDGrammar >> taskDefinitionHeaderWithNamely [
 		  action } ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> taskDefinitionHeaderWithoutNamely [
 
 	^ _agentIdentifier , self actionIdentifier
@@ -1670,34 +1672,34 @@ RMDGrammar >> taskDefinitionHeaderWithoutNamely [
 		  action } ]
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> tasksFile [
 
 	^ self taskDefinition star
 	  ==> [ :tasks | self tasksFileNodeClass tasks: tasks ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> tasksFileNodeClass [
 
 	^ RMDTasksFileNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> temperatureUnits [
 	^ {('K' -> #(1.0 nil 'K')).
 	('C' -> #(1.0 273.15 'K')).
 	('F' -> #(0.5555555555555556 255.3722222222222 'J'))} asDictionary
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> the [
 
 	^ 'the' asPParser ==> [ :the | #the ] , #blank asPParser plus
 	  ==> #first
 ]
 
-{ #category : #'parsers-directives' }
+{ #category : 'parsers-directives' }
 RMDGrammar >> timeDirective [
 
 	^ self delta optional , 'time' asPParser trimBlanks ==> [ :pair | 
@@ -1706,12 +1708,12 @@ RMDGrammar >> timeDirective [
 		  ifNotNil: [ self deltaTimeDirectiveNodeClass new ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> timeDirectiveNodeClass [
 	^ RMDTimeDirectiveNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> timeUnits [
 	^ {('ms' -> #(0.001 nil 's')).
 	('s' -> #(1.0 nil 's')).
@@ -1720,7 +1722,7 @@ RMDGrammar >> timeUnits [
 	('day' -> #(86400.0 nil 's'))} asDictionary
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> tupleSequence [
 
 	^ $( asPParser trimBlanks
@@ -1729,7 +1731,7 @@ RMDGrammar >> tupleSequence [
 		  $, asPParser trimSpaces
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> type [
 
 	^ $[ asPParser trimBlanks , self unit optional
@@ -1737,12 +1739,12 @@ RMDGrammar >> type [
 	  ==> [ :triple | triple second ifNil: [ RMDUnit noDimension ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> unaryMinusNodeClass [
 	^ RMDUnaryMinusNode
 ]
 
-{ #category : #'parsers-expressions' }
+{ #category : 'parsers-expressions' }
 RMDGrammar >> uniformDistribution [
 
 	^ 'uniform_integer' asPParser trimBlanks , self expr5
@@ -1758,24 +1760,24 @@ RMDGrammar >> uniformDistribution [
 			   to: quad fourth ])
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> uniformDistributionNodeClass [
 	^ RMDUniformDistributionNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> uniformIntegerDistributionNodeClass [
 
 	^ RMDUniformIntegerDistributionNode
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> unit [
 
 	^ _unit
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> unitFactor [
 	^ (self unitSymbol
 		,
@@ -1792,7 +1794,7 @@ RMDGrammar >> unitFactor [
 				ifNil: [ pair first ] ]
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> unitSymbol [
 
 	^ ((#space asPParser / $/ asPParser / $] asPParser / $) asPParser
@@ -1803,7 +1805,7 @@ RMDGrammar >> unitSymbol [
 			  ifAbsent: [ PP2Failure message: 'Unknown unit symbol: ' , symbol ] ]
 ]
 
-{ #category : #'parsers-units' }
+{ #category : 'parsers-units' }
 RMDGrammar >> unitTerm [
 
 	^ (self unitFactor onlySeparatedBy:
@@ -1813,7 +1815,7 @@ RMDGrammar >> unitTerm [
 	  / ('1' asPParser trimBlanks ==> [ :one | RMDUnit noDimension ])
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> utilityDefinition [
 	^ (self utilityVariable , '=' asPParser trimBlanks , _guardedChoice)
 		==> [ :triple | 
@@ -1822,23 +1824,23 @@ RMDGrammar >> utilityDefinition [
 				expression: triple third ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> utilityDefinitionNodeClass [
 	^ RMDUtilityDefinitionNode
 ]
 
-{ #category : #'parsers-atoms' }
+{ #category : 'parsers-atoms' }
 RMDGrammar >> utilityVariable [
 	^ _identifier
 		==> [ :str | self utilityVariableNodeClass identifier: str ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> utilityVariableNodeClass [
 	^ RMDUtilityVariableNode
 ]
 
-{ #category : #'parsers-variability' }
+{ #category : 'parsers-variability' }
 RMDGrammar >> variability [
 
 	^ 'Variability' asPParser trimBlanks , ('with' asPParser
@@ -1871,13 +1873,13 @@ RMDGrammar >> variability [
 							  metaParameterSequences: (triple third ifNil: [ #(  ) ]) ] ] ] ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> variabilityNodeClass [
 
 	^ RMDVariabilityNode
 ]
 
-{ #category : #'parsers-files' }
+{ #category : 'parsers-files' }
 RMDGrammar >> visualizationFile [
 
 	^ self renderer star
@@ -1885,13 +1887,13 @@ RMDGrammar >> visualizationFile [
 	  self visualizationFileNodeClass renderers: renderers ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> visualizationFileNodeClass [
 
 	^ RMDVisualizationFileNode
 ]
 
-{ #category : #units }
+{ #category : 'units' }
 RMDGrammar >> weightUnits [
 	^ {('t' -> #(1000 nil 'kg')).
 	('kg' -> #(1 nil 'kg')).
@@ -1899,14 +1901,14 @@ RMDGrammar >> weightUnits [
 	('mg' -> #(0.000001 nil 'kg'))} asDictionary
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> whenClause [
 
 	^ #newline asPParser trimBlanks , 'when' asPParser trimBlanks
 	  , _condition ==> #third
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> whereClause [
 
 	^ #newline asPParser trimBlanks optional
@@ -1917,7 +1919,7 @@ RMDGrammar >> whereClause [
 	  , #newline asPParser trimBlanks optional ==> #fourth
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> withAttributeClause [
 	^ ('with' asPParser trimBlanks , #newline asPParser trimBlanks
 		,
@@ -1926,7 +1928,7 @@ RMDGrammar >> withAttributeClause [
 		, #newline asPParser trimBlanks optional) ==> #third
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> withDirectiveClause [
 
 	^ #newline asPParser trimBlanks , 'with' asPParser trimBlanks
@@ -1937,24 +1939,24 @@ RMDGrammar >> withDirectiveClause [
 		  (1 to: array size by: 2) collect: [ :index | array at: index ] ]
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> withinClause [
 
 	^ 'within' asPParser trimBlanks , _literal ==> #second
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> worldDefinition [
 
 	^ _worldDefinition
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> worldDefinitionNodeClass [
 	^ RMDWorldDefinitionNode
 ]
 
-{ #category : #'parsers-definitions' }
+{ #category : 'parsers-definitions' }
 RMDGrammar >> worldInitializer [
 
 	^ 'World' asPParser trimBlanks
@@ -1968,7 +1970,7 @@ RMDGrammar >> worldInitializer [
 		  utilityDefinitions: (quad third ifNil: [ Array new ]) ]
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGrammar >> worldInitializerNodeClass [
 	^ RMDWorldInitializerNode
 ]

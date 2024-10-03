@@ -1,72 +1,74 @@
 Class {
-	#name : #RMDNegationNode,
-	#superclass : #RMDConditionNode,
+	#name : 'RMDNegationNode',
+	#superclass : 'RMDConditionNode',
 	#instVars : [
 		'condition'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNegationNode class >> condition: aRMDConditionNode [
 	^ self new
 		condition: aRMDConditionNode;
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNegationNode >> = anObject [
 	^ self class = anObject class and: [ condition = anObject condition ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDNegationNode >> asPresenter [
 
 	^ RMDNegationPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNegationNode >> childrenDo: aBlock [
 	aBlock value: condition
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNegationNode >> childrenTransform: aBlock [
 
 	condition := aBlock value: condition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNegationNode >> condition [
 	^ condition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNegationNode >> condition: aRMDConditionNode [
 	condition := aRMDConditionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNegationNode >> hash [
 	^ self class hash bitXor: condition hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNegationNode >> isNegationNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDNegationNode >> postCopy [
 	condition := condition copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNegationNode >> precedence [
 	^ 1
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNegationNode >> printOn: aStream [
 	aStream nextPutAll: 'not '.
 	self precedence <= condition precedence
@@ -76,7 +78,7 @@ RMDNegationNode >> printOn: aStream [
 		ifFalse: [ aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNegationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -93,7 +95,7 @@ RMDNegationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode add
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDNegationNode >> replaceChildren: aDictionary [
 	condition := condition copyReplace: aDictionary
 ]

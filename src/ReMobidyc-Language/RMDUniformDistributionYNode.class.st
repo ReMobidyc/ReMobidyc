@@ -1,77 +1,79 @@
 Class {
-	#name : #RMDUniformDistributionYNode,
-	#superclass : #RMDRandomNode,
+	#name : 'RMDUniformDistributionYNode',
+	#superclass : 'RMDRandomNode',
 	#classInstVars : [
 		'current'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode class >> current [
 	^ current ifNil: [ current := self new ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUniformDistributionYNode >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUniformDistributionYNode >> childrenDo: aBlock [
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUniformDistributionYNode >> childrenTransform: aBlock [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode >> distributionName [
 
 	^ 'uniform'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUniformDistributionYNode >> hash [
 	^ self class hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode >> parameter1Expression [
 
 	^ 'south'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode >> parameter2Expression [
 
 	^ 'north'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode >> parameterName [
 
 	^ 'to'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDUniformDistributionYNode >> postCopy [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionYNode >> precedence [
 	^ 1
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformDistributionYNode >> printOn: aStream [
 	aStream nextPutAll: 'uniform south to north'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformDistributionYNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -80,7 +82,7 @@ RMDUniformDistributionYNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDUniformDistributionYNode >> replaceChildren: aDictionary [
 	
 ]

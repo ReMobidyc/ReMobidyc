@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDVisualizationFileNode,
-	#superclass : #RMDModelFileNode,
+	#name : 'RMDVisualizationFileNode',
+	#superclass : 'RMDModelFileNode',
 	#instVars : [
 		'renderers'
 	],
-	#category : #'ReMobidyc-Language-File'
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVisualizationFileNode class >> renderers: anArrayOfRMDRenderer [
 
 	^ self new
@@ -15,25 +17,25 @@ RMDVisualizationFileNode class >> renderers: anArrayOfRMDRenderer [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDVisualizationFileNode >> contentsDo: aBlock [
 
 	renderers do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDVisualizationFileNode >> isVisualizationFileNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizationFileNode >> renderers [
 
 	^ renderers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVisualizationFileNode >> renderers: anArrayOfRMDRenderer [
 
 	renderers := anArrayOfRMDRenderer

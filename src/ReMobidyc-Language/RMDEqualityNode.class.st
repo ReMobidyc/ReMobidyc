@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDEqualityNode,
-	#superclass : #RMDBinaryRelationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDEqualityNode',
+	#superclass : 'RMDBinaryRelationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDEqualityNode >> isEqualityNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDEqualityNode >> operator [
 	^ ' = '
 ]

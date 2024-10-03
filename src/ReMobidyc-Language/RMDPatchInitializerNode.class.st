@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPatchInitializerNode,
-	#superclass : #RMDAgentInitializerNode,
+	#name : 'RMDPatchInitializerNode',
+	#superclass : 'RMDAgentInitializerNode',
 	#instVars : [
 		'xDivisions',
 		'yDivisions',
 		'size',
 		'length'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchInitializerNode class >> empty [
 	^ self
 		xDivisions: 1
@@ -20,7 +22,7 @@ RMDPatchInitializerNode class >> empty [
 		utilityDefinitions: Array new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDPatchInitializerNode class >> grassInitializer: xDivisions by: yDivisions of: lengthString grass: minString to: maxString [
 	<script:
 		'(RMDPatchInitializerNode grassInitializer: 10 by: 10 of: ''1[km]'' grass: ''5000[kcal]'' to: ''10000[kcal]'') inspect'>
@@ -42,7 +44,7 @@ RMDPatchInitializerNode class >> grassInitializer: xDivisions by: yDivisions of:
 						nextPutAll: maxString ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPatchInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExpression2 length: aRMDExpression3 patchAttributeInitializers: anArrayOfRMDSimulationPatchAttributeDefinitions utilityDefinitions: aRMDUtilityDefinitionNode [
 
 	^ self new
@@ -55,7 +57,7 @@ RMDPatchInitializerNode class >> xDivisions: aRMDExpression1 yDivisions: aRMDExp
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPatchInitializerNode >> = anObject [
 	^ self class = anObject class
 		and: [ xDivisions = anObject xDivisions
@@ -63,45 +65,45 @@ RMDPatchInitializerNode >> = anObject [
 					[ yDivisions = anObject yDivisions and: [ size = anObject size ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> agentName [
 
 	^ 'Patch'
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPatchInitializerNode >> childrenDo: aBlock [
 
 	size ifNotNil: [ aBlock value: size ].
 	super childrenDo: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPatchInitializerNode >> childrenTransform: aBlock [
 
 	size ifNotNil: [ size := aBlock value: size ].
 	super childrenTransform: aBlock
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPatchInitializerNode >> hash [
 	^ (((super hash bitXor: xDivisions hash) bitXor: yDivisions hash)
 		bitXor: size hash) bitXor: length hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchInitializerNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current patchInitializer end parse: self printString)
 	  = self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchInitializerNode >> isPatchInitializerNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> length [
 	^ length
 		ifNil: [ length := size unit siUnit = RMDUnit m
@@ -111,13 +113,13 @@ RMDPatchInitializerNode >> length [
 						ifFalse: [ nil ] ] ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDPatchInitializerNode >> postCopy [
 	super postCopy.
 	size := size copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPatchInitializerNode >> printOn: aStream [
 
 	xDivisions printOn: aStream.
@@ -147,7 +149,7 @@ RMDPatchInitializerNode >> printOn: aStream [
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPatchInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -196,40 +198,40 @@ RMDPatchInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDPatchInitializerNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: size ifPresent: [ :node | size := node copy ].
 	length := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> size [
 	^ size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> size: aRMDLiteralNode [
 	size := aRMDLiteralNode.
 	length := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> xDivisions [
 	^ xDivisions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> xDivisions: anInteger [
 	xDivisions := anInteger
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> yDivisions [
 	^ yDivisions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchInitializerNode >> yDivisions: anInteger [
 	yDivisions := anInteger
 ]

@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDApplyNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDApplyNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'function',
 		'arguments'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDApplyNode class >> function: aString expressions: anArrayOfRMDExpression [
 	^ self new
 		function: aString;
@@ -16,71 +18,71 @@ RMDApplyNode class >> function: aString expressions: anArrayOfRMDExpression [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDApplyNode >> = anObject [
 	^ self class = anObject class
 		and:
 			[ function = anObject function and: [ arguments = anObject arguments ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyNode >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyNode >> arguments: anArrayOfRMDExpressionNode [
 	arguments := anArrayOfRMDExpressionNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDApplyNode >> asPresenter [
 
 	^ RMDApplyExpressionPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDApplyNode >> childrenDo: aBlock [
 	arguments do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDApplyNode >> childrenTransform: aBlock [
 
 	arguments := arguments collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyNode >> function [
 	^ function
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyNode >> function: aString [
 	function := aString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDApplyNode >> hash [
 	^ (self class hash bitXor: function hash) bitXor: arguments hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDApplyNode >> isApplyNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDApplyNode >> postCopy [
 	arguments := arguments collect: #copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDApplyNode >> precedence [
 	^ 1
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDApplyNode >> printOn: aStream [
 	aStream nextPutAll: function.
 	aStream nextPut: $(.
@@ -90,7 +92,7 @@ RMDApplyNode >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDApplyNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -108,7 +110,7 @@ RMDApplyNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSec
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDApplyNode >> replaceChildren: aDictionary [
 	aDictionary at: function ifPresent: [ :node | function := node copy ].
 	arguments := arguments

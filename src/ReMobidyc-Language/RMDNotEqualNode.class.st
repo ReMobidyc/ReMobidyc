@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDNotEqualNode,
-	#superclass : #RMDBinaryRelationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDNotEqualNode',
+	#superclass : 'RMDBinaryRelationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNotEqualNode class >> expressions: anArrayOfRMDExpressionNode [
 	^ anArrayOfRMDExpressionNode size = 2
 		ifTrue: [ super expressions: anArrayOfRMDExpressionNode ]
 		ifFalse: [ nil ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNotEqualNode >> isNotEqualNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNotEqualNode >> operator [
 	^ ' /= '
 ]

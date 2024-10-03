@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDMetaSingleParameterSequenceNode,
-	#superclass : #RMDMetaParameterSequenceNode,
+	#name : 'RMDMetaSingleParameterSequenceNode',
+	#superclass : 'RMDMetaParameterSequenceNode',
 	#instVars : [
 		'placeholder',
 		'literals'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetaSingleParameterSequenceNode class >> placeholder: aRMDPlaceholderNode literals: anArrayOfRMDLiteral [
 
 	^ self new
@@ -17,7 +19,7 @@ RMDMetaSingleParameterSequenceNode class >> placeholder: aRMDPlaceholderNode lit
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDMetaSingleParameterSequenceNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -25,21 +27,21 @@ RMDMetaSingleParameterSequenceNode >> = anObject [
 			  literals = anObject literals ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaSingleParameterSequenceNode >> childrenDo: aBlock [
 
 	aBlock value: placeholder.
 	literals do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaSingleParameterSequenceNode >> childrenTransform: aBlock [
 
 	placeholder := aBlock value: placeholder.
 	literals := literals collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock [
 
 	| literal |
@@ -49,62 +51,62 @@ RMDMetaSingleParameterSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlo
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDMetaSingleParameterSequenceNode >> hash [
 
 	^ (self class hash bitXor: placeholder hash) bitXor: literals hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> literalAt: anInteger ifAbsent: errorBlock [
 
 	^ literals at: anInteger ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> literals [
 
 	^ literals
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> literals: anArrayOfRMDLiteralNode [
 
 	literals := anArrayOfRMDLiteralNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> metaParametersSize [
 
 	^ 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> placeholder [
 
 	^ placeholder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> placeholder: anArrayOfRMDPlaceholderNode [
 
 	placeholder := anArrayOfRMDPlaceholderNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaSingleParameterSequenceNode >> placeholdersDo: aBlock [
 
 	aBlock value: placeholder
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDMetaSingleParameterSequenceNode >> postCopy [
 
 	placeholder := placeholder copy.
 	literals := literals collect: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetaSingleParameterSequenceNode >> printOn: aStream [
 
 	placeholder printOn: aStream.
@@ -114,7 +116,7 @@ RMDMetaSingleParameterSequenceNode >> printOn: aStream [
 		separatedBy: [ aStream nextPutAll: ', ' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetaSingleParameterSequenceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -135,7 +137,7 @@ RMDMetaSingleParameterSequenceNode >> printOn: aStream ifIncludedIn: aCollection
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDMetaSingleParameterSequenceNode >> replaceChildren: aDictionary [
 
 	placeholder := placeholder copyReplace: aDictionary.
@@ -143,13 +145,13 @@ RMDMetaSingleParameterSequenceNode >> replaceChildren: aDictionary [
 		            literal copyReplace: aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaSingleParameterSequenceNode >> size [
 
 	^ literals size
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetaSingleParameterSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
 
 	^ (aCollectionOfRMDPlaceholderNode includes: placeholder)

@@ -1,64 +1,66 @@
 Class {
-	#name : #RMDGammaRateDistributionNode,
-	#superclass : #RMDGammaDistributionNode,
+	#name : 'RMDGammaRateDistributionNode',
+	#superclass : 'RMDGammaDistributionNode',
 	#instVars : [
 		'rateExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaRateDistributionNode >> = anObject [
 
 	^ super = anObject and: [ rateExpression = anObject rateExpression ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaRateDistributionNode >> childrenDo: aBlock [
 
 	super childrenDo: aBlock.
 	aBlock value: rateExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaRateDistributionNode >> childrenTransform: aBlock [
 
 	super childrenTransform: aBlock.
 	rateExpression := aBlock value: rateExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaRateDistributionNode >> hash [
 
 	^ super hash bitXor: rateExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGammaRateDistributionNode >> isGammaRateDistributionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaRateDistributionNode >> parameter2Expression [
 
 	^ self rateExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaRateDistributionNode >> parameterName [
 
 	^ 'rate'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDGammaRateDistributionNode >> postCopy [
 
 	super postCopy.
 	rateExpression := rateExpression copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaRateDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'gamma '.
@@ -67,7 +69,7 @@ RMDGammaRateDistributionNode >> printOn: aStream [
 	rateExpression printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaRateDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -86,19 +88,19 @@ RMDGammaRateDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDS
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaRateDistributionNode >> rateExpression [
 
 	^ rateExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaRateDistributionNode >> rateExpression: aRMDExpressionNode [
 
 	rateExpression := aRMDExpressionNode
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDGammaRateDistributionNode >> replaceChildren: aDictionary [
 
 	super replaceChildren: aDictionary.

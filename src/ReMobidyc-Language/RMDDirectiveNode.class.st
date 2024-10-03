@@ -1,33 +1,35 @@
 Class {
-	#name : #RMDDirectiveNode,
-	#superclass : #RMDExpressionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDirectiveNode',
+	#superclass : 'RMDExpressionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDirectiveNode class >> isAbstract [
 
 	^ self = RMDDirectiveNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDDirectiveNode >> childrenTransform: aBlock [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDirectiveNode >> isReferenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDirectiveNode >> precedence [
 	^ 1
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDDirectiveNode >> replaceChildren: aDictionary [
 
 	

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDLeftAssociativeApplicationNode,
-	#superclass : #RMDBinaryOperatorApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDLeftAssociativeApplicationNode',
+	#superclass : 'RMDBinaryOperatorApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLeftAssociativeApplicationNode class >> isAbstract [
 
 	^ self == RMDLeftAssociativeApplicationNode
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLeftAssociativeApplicationNode >> printOn: aStream [
 	self precedence < expression1 precedence
 		ifTrue: [ aStream nextPut: $( ].
@@ -25,7 +27,7 @@ RMDLeftAssociativeApplicationNode >> printOn: aStream [
 		ifTrue: [ aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLeftAssociativeApplicationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.

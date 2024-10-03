@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDActionsFileNode,
-	#superclass : #RMDModelFileNode,
+	#name : 'RMDActionsFileNode',
+	#superclass : 'RMDModelFileNode',
 	#instVars : [
 		'actions'
 	],
-	#category : #'ReMobidyc-Language-File'
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDActionsFileNode class >> actions: anArrayOfRMDActionDefinitionNode [
 
 	^ self new
@@ -15,25 +17,25 @@ RMDActionsFileNode class >> actions: anArrayOfRMDActionDefinitionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionsFileNode >> actions [
 
 	^ actions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionsFileNode >> actions: anArrayOfRMDActionDefinitionNode [
 
 	actions := anArrayOfRMDActionDefinitionNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDActionsFileNode >> contentsDo: aBlock [
 
 	actions do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDActionsFileNode >> isActionsFileNode [
 	^ true
 ]

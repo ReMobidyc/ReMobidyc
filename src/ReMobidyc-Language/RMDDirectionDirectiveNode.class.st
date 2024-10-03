@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDDirectionDirectiveNode,
-	#superclass : #RMDAgentDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDirectionDirectiveNode',
+	#superclass : 'RMDAgentDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDDirectionDirectiveNode class >> agent: anotherString [
 
 	^ self new
@@ -12,19 +14,19 @@ RMDDirectionDirectiveNode class >> agent: anotherString [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDirectionDirectiveNode >> directiveName [
 
 	^ 'direction'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDirectionDirectiveNode >> isDirectionDirectiveNode [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDirectionDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -32,7 +34,7 @@ RMDDirectionDirectiveNode >> printOn: aStream [
 		nextPutAll: agentIdentifier asString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDirectionDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

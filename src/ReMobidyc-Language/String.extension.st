@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDActionDefinition [
 
 	| node |
@@ -10,7 +10,7 @@ String >> asRMDActionDefinition [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDAnimatDefinition [
 
 	| node |
@@ -20,7 +20,7 @@ String >> asRMDAnimatDefinition [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDExpression [
 
 	^ self
@@ -28,12 +28,12 @@ String >> asRMDExpression [
 		  ifError: [ :failure | RMDSyntaxError signal: failure ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDExpressionDo: aBlock [
 	^ self asRMDExpressionDo: aBlock ifError: [  ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 	| node |
 	node := RMDGrammar current expression end parse: self.
@@ -42,13 +42,13 @@ String >> asRMDExpressionDo: aBlock ifError: errorBlock [
 		ifFalse: [ aBlock ]) cull: node
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDExpressionOrNil [
 
 	^ self asRMDExpressionDo: [ :node | node ] ifError: [  ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDSimulationDefinition [
 
 	| node |
@@ -58,7 +58,7 @@ String >> asRMDSimulationDefinition [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDTaskDefinition [
 
 	| node |
@@ -68,7 +68,7 @@ String >> asRMDTaskDefinition [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDUnit [
 
 	^ self ifEmpty: [ RMDUnit noDimension ] ifNotEmpty: [ 
@@ -79,7 +79,7 @@ String >> asRMDUnit [
 			  ifFalse: [ node ] ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDUnitOrNil [
 
 	| node |
@@ -88,7 +88,7 @@ String >> asRMDUnitOrNil [
 		  ifFalse: [ nil ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDUnitOrNoDimension [
 
 	| node |
@@ -98,7 +98,7 @@ String >> asRMDUnitOrNoDimension [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> asRMDWorldDefinition [
 
 	| node |
@@ -108,7 +108,7 @@ String >> asRMDWorldDefinition [
 		  ifFalse: [ node ]
 ]
 
-{ #category : #'*ReMobidyc-Language' }
+{ #category : '*ReMobidyc-Language' }
 String >> isCorrectRMDIdentifier [
 
 	^ (RMDGrammar current identifier end parse: self) = self

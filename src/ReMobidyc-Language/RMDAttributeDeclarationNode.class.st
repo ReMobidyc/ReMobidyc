@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDAttributeDeclarationNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDAttributeDeclarationNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'identifier',
 		'unit',
 		'initializerExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit [
 
 	^ self identifier: aString unit: aRMDUnit initializerExpression: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit initializerExpression: aRMDExpression [
 
 	^ self new
@@ -25,13 +27,13 @@ RMDAttributeDeclarationNode class >> identifier: aString unit: aRMDUnit initiali
 		  yourself
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAttributeDeclarationNode class >> template [
 
 	^ self identifier: '' unit: RMDUnit noDimension
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAttributeDeclarationNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -40,73 +42,79 @@ RMDAttributeDeclarationNode >> = anObject [
 				  initializerExpression = anObject initializerExpression ] ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
+RMDAttributeDeclarationNode >> asAttributeInitializerNode [
+	^ RMDAttributeInitializerNode identifier: self identifier expression: (self initializerExpression ifNil: [
+	RMDLiteralNode literal: '0.0' unit: self unit ])
+]
+
+{ #category : 'converting' }
 RMDAttributeDeclarationNode >> asPresenter [
 	^ RMDAttributeDeclarationPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeDeclarationNode >> childrenDo: aBlock [
 
 	initializerExpression ifNotNil: [ 
 		aBlock value: initializerExpression ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeDeclarationNode >> childrenTransform: aBlock [
 
 	initializerExpression ifNotNil: [
 		initializerExpression := aBlock value: initializerExpression ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDeclarationNode >> hasInitializer [
 
 	^ initializerExpression notNil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAttributeDeclarationNode >> hash [
 
 	^ ((self class hash bitXor: identifier hash) bitXor: unit hash) 
 		  bitXor: initializerExpression hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> initializerExpression [
 
 	^ initializerExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> initializerExpression: aRMDExpression [
 
 	initializerExpression := aRMDExpression
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDeclarationNode >> isAttributeDeclarationNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDeclarationNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current attributeDeclaration end parse:
 		   self printString) = self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDeclarationNode >> isCorrectTypeWithSubject: aString in: aRMDSimulationModel [
 
 	| agentDefinition |
@@ -127,7 +135,7 @@ RMDAttributeDeclarationNode >> isCorrectTypeWithSubject: aString in: aRMDSimulat
 			   attributeDeclaration identifier = self identifier ] ]) not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> nameWithUnit [
 
 	^ String streamContents: [ :stream | 
@@ -137,13 +145,13 @@ RMDAttributeDeclarationNode >> nameWithUnit [
 		  stream nextPutAll: ']' ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAttributeDeclarationNode >> postCopy [
 
 	initializerExpression := initializerExpression ifNotNil: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDeclarationNode >> printOn: aStream [
 
 	aStream
@@ -156,7 +164,7 @@ RMDAttributeDeclarationNode >> printOn: aStream [
 		initializerExpression printOn: aStream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -176,7 +184,7 @@ RMDAttributeDeclarationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDeclarationNode >> printShortOn: aStream [
 
 	aStream
@@ -184,7 +192,7 @@ RMDAttributeDeclarationNode >> printShortOn: aStream [
 		nextPutAll: self identifier
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAttributeDeclarationNode >> replaceChildren: aDictionary [
 
 	aDictionary
@@ -196,12 +204,12 @@ RMDAttributeDeclarationNode >> replaceChildren: aDictionary [
 			                         aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> unit [
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDeclarationNode >> unit: anRMDUnit [
 	unit := anRMDUnit
 ]

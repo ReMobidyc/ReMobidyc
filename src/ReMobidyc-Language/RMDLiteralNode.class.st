@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDLiteralNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDLiteralNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'literal',
 		'numeric',
 		'unit'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDLiteralNode class >> literal: aString unit: aRMDUnit [
 	^ self new
 		literal: aString;
@@ -17,65 +19,65 @@ RMDLiteralNode class >> literal: aString unit: aRMDUnit [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDLiteralNode class >> zero [
 
 	^ self literal: '0.0' unit: RMDUnit noDimension
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLiteralNode >> = anObject [
 	^ self class = anObject class and: [ literal = anObject literal ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDLiteralNode >> asPresenter [
 
 	^ RMDLiteralPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLiteralNode >> childrenDo: aBlock [
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLiteralNode >> childrenTransform: aBlock [
 	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDLiteralNode >> computeNumeric [
 
 	^ unit toSI: (self numericFrom: literal)
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLiteralNode >> hash [
 	^ literal hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLiteralNode >> isLiteralNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> literal [
 	^ literal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> literal: aString [
 	literal := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> numeric [
 	^ numeric ifNil: [ numeric := self computeNumeric ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDLiteralNode >> numericFrom: aString [
 
 	| sign decimal |
@@ -94,17 +96,17 @@ RMDLiteralNode >> numericFrom: aString [
 				   ifFalse: [ (RMDUndefinedLiteralError on: self) signal ] ])
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDLiteralNode >> postCopy [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> precedence [
 	^ 0
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLiteralNode >> printOn: aStream [
 	aStream nextPutAll: self literal.
 	unit hasDimension
@@ -113,7 +115,7 @@ RMDLiteralNode >> printOn: aStream [
 			aStream nextPut: $] ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLiteralNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -126,7 +128,7 @@ RMDLiteralNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addS
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDLiteralNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: literal
@@ -140,12 +142,12 @@ RMDLiteralNode >> replaceChildren: aDictionary [
 			numeric := nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> unit [
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLiteralNode >> unit: aRMDUnit [
 	unit := aRMDUnit
 ]

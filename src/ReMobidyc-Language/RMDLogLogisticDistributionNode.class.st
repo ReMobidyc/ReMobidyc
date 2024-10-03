@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDLogLogisticDistributionNode,
-	#superclass : #RMDRandomNode,
+	#name : 'RMDLogLogisticDistributionNode',
+	#superclass : 'RMDRandomNode',
 	#instVars : [
 		'scaleExpression',
 		'shapeExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDLogLogisticDistributionNode class >> scale: aRMDExpressionNode shape: anotherRMDExpressionNode [
 
 	^ self new
@@ -17,14 +19,14 @@ RMDLogLogisticDistributionNode class >> scale: aRMDExpressionNode shape: another
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLogLogisticDistributionNode >> = anObject [
 	^ self class = anObject class
 		and: [ shapeExpression = anObject shapeExpression
 				and: [ scaleExpression = anObject scaleExpression ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLogLogisticDistributionNode >> childrenDo: aBlock [
 
 	aBlock
@@ -32,60 +34,60 @@ RMDLogLogisticDistributionNode >> childrenDo: aBlock [
 		value: scaleExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLogLogisticDistributionNode >> childrenTransform: aBlock [
 
 	shapeExpression := aBlock value: shapeExpression.
 	scaleExpression := aBlock value: scaleExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> distributionName [
 
 	^ 'loglogistic'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLogLogisticDistributionNode >> hash [
 	^ (self class hash bitXor: shapeExpression hash) bitXor: scaleExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLogLogisticDistributionNode >> isLogLogisticDistributionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> parameter1Expression [
 
 	^ self scale
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> parameter2Expression [
 
 	^ self shape
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> parameterName [
 
 	^ 'shape'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDLogLogisticDistributionNode >> postCopy [
 
 	shapeExpression := shapeExpression copy.
 	scaleExpression := scaleExpression copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> precedence [
 	^ 10
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLogLogisticDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'loglogistic '.
@@ -94,7 +96,7 @@ RMDLogLogisticDistributionNode >> printOn: aStream [
 	shapeExpression printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLogLogisticDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -113,32 +115,32 @@ RMDLogLogisticDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRM
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDLogLogisticDistributionNode >> replaceChildren: aDictionary [
 
 	shapeExpression := shapeExpression copyReplace: aDictionary.
 	scaleExpression := scaleExpression copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> scaleExpression [
 
 	^ scaleExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> scaleExpression: aRMDExpressionNode [
 
 	scaleExpression := aRMDExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> shapeExpression [
 
 	^ shapeExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLogLogisticDistributionNode >> shapeExpression: aRMDExpressionNode [
 
 	shapeExpression := aRMDExpressionNode

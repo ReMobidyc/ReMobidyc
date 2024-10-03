@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDChanceNode,
-	#superclass : #RMDConditionNode,
+	#name : 'RMDChanceNode',
+	#superclass : 'RMDConditionNode',
 	#instVars : [
 		'probability'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDChanceNode class >> probability: aRMDExpressionNode [
 
 	^ self new
@@ -15,62 +17,62 @@ RMDChanceNode class >> probability: aRMDExpressionNode [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDChanceNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  probability = anObject probability ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDChanceNode >> asPresenter [
 
 	^ RMDChancePresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDChanceNode >> childrenDo: aBlock [
 
 	aBlock value: probability
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDChanceNode >> childrenTransform: aBlock [
 
 	probability := aBlock value: probability
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDChanceNode >> hash [
 
 	^ self class hash bitXor: probability hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDChanceNode >> isChanceNode [
 
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDChanceNode >> postCopy [
 
 	probability := probability copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDChanceNode >> precedence [
 	^ 0
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDChanceNode >> printOn: aStream [
 
 	probability printOn: aStream.
 	aStream nextPutAll: ' chance'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDChanceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -84,19 +86,19 @@ RMDChanceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSe
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDChanceNode >> probability [
 
 	^ probability
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDChanceNode >> probability: aRMDExpression [
 
 	probability := aRMDExpression
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDChanceNode >> replaceChildren: aDictionary [
 
 	probability := probability copyReplace: aDictionary

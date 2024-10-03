@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDUniformIntegerDistributionNode,
-	#superclass : #RMDUniformDistributionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDUniformIntegerDistributionNode',
+	#superclass : 'RMDUniformDistributionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformIntegerDistributionNode >> distributionName [
 
 	^ 'uniform_integer'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUniformIntegerDistributionNode >> isUniformIntegerDistributionNode [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformIntegerDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'uniform_integer '.
@@ -33,7 +35,7 @@ RMDUniformIntegerDistributionNode >> printOn: aStream [
 		aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformIntegerDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

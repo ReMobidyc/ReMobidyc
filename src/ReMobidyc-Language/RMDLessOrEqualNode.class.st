@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDLessOrEqualNode,
-	#superclass : #RMDBinaryRelationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDLessOrEqualNode',
+	#superclass : 'RMDBinaryRelationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLessOrEqualNode >> isLessOrEqualNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLessOrEqualNode >> operator [
 	^ ' <= '
 ]

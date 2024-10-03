@@ -1,79 +1,81 @@
 Class {
-	#name : #RMDExpressionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDExpressionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'type'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExpressionNode class >> isAbstract [
 
 	^ self == RMDExpressionNode
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDExpressionNode >> * aRMDExpression [
 	^ RMDProductNode expression: self expression: aRMDExpression
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDExpressionNode >> + aRMDExpression [
 	^ RMDAdditionNode expression: self expression: aRMDExpression
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDExpressionNode >> - aRMDExpression [
 	^ RMDSubtractionNode expression: self expression: aRMDExpression
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDExpressionNode >> / aRMDExpression [
 	^ RMDFractionNode expression: self expression: aRMDExpression
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDExpressionNode >> asPresenter [
 
 	^ RMDAtomicExpressionPresenter on: self
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDExpressionNode >> insertTrace [
 
 	^ RMDTraceNode on: super insertTrace
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExpressionNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current expression end parse: self printString) = self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDExpressionNode >> isExpressionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionNode >> precedence [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDExpressionNode >> printExpression [
 
 	^ self printString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDExpressionNode >> printValue [
 
 	^ '-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExpressionNode >> type [
 
 	^ type

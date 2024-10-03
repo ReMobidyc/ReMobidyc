@@ -14,6 +14,12 @@ RMDWorldInitializerPresenter class >> defaultLayout [
 		yourself
 ]
 
+{ #category : 'accessing' }
+RMDWorldInitializerPresenter >> agentDefinition [
+
+	^ simulationModel ifNotNil: #worldDefinition
+]
+
 { #category : 'layouting' }
 RMDWorldInitializerPresenter >> newLayout [
 

@@ -1,32 +1,34 @@
 Class {
-	#name : #RMDGuardedChoiceNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDGuardedChoiceNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'guardsAndChoices'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDGuardedChoiceNode class >> from: anArrayOfAssociation [
 	^ self new
 		guardsAndChoices: anArrayOfAssociation;
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGuardedChoiceNode >> = anObject [
 	^ self class = anObject class
 		and: [ guardsAndChoices = anObject guardsAndChoices ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDGuardedChoiceNode >> asPresenter [
 
 	^ RMDGuardedChoicePresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGuardedChoiceNode >> childrenDo: aBlock [
 
 	guardsAndChoices do: [ :assoc |
@@ -34,7 +36,7 @@ RMDGuardedChoiceNode >> childrenDo: aBlock [
 		aBlock value: assoc value ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGuardedChoiceNode >> childrenTransform: aBlock [
 
 	guardsAndChoices := guardsAndChoices collect: [ :assoc |
@@ -44,17 +46,17 @@ RMDGuardedChoiceNode >> childrenTransform: aBlock [
 		                    -> (aBlock value: assoc value) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDGuardedChoiceNode >> guardsAndChoices [
 	^ guardsAndChoices
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDGuardedChoiceNode >> guardsAndChoices: anArrayOfAssociation [
 	guardsAndChoices := anArrayOfAssociation
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGuardedChoiceNode >> hasConditionPlaceholder: aRMDPlaceholder [
 
 	guardsAndChoices do: [ :assoc | 
@@ -62,27 +64,27 @@ RMDGuardedChoiceNode >> hasConditionPlaceholder: aRMDPlaceholder [
 	^ super hasConditionPlaceholder: aRMDPlaceholder
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGuardedChoiceNode >> hash [
 	^ self class hash bitXor: guardsAndChoices hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGuardedChoiceNode >> isGuardedChoiceNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDGuardedChoiceNode >> postCopy [
 	guardsAndChoices := guardsAndChoices collect: #copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGuardedChoiceNode >> precedence [
 	^ 100
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGuardedChoiceNode >> printInlineOn: aStream [
 	guardsAndChoices
 		do: [ :assoc | 
@@ -96,7 +98,7 @@ RMDGuardedChoiceNode >> printInlineOn: aStream [
 		separatedBy: [ aStream nextPutAll: ', ' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGuardedChoiceNode >> printMultilineIndent: anInteger on: aStream [
 	guardsAndChoices
 		do: [ :assoc | 
@@ -113,12 +115,12 @@ RMDGuardedChoiceNode >> printMultilineIndent: anInteger on: aStream [
 				nextPut: Character cr ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGuardedChoiceNode >> printOn: aStream [
 	self printInlineOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGuardedChoiceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -127,7 +129,7 @@ RMDGuardedChoiceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNod
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDGuardedChoiceNode >> replaceChildren: aDictionary [
 	guardsAndChoices := guardsAndChoices
 		collect: [ :assoc | 

@@ -1,28 +1,30 @@
 Class {
-	#name : #RMDTimeDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDTimeDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDTimeDirectiveNode >> asPresenter [
 
 	^ RMDAtomicDirectivePresenter on: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTimeDirectiveNode >> isTimeDirectiveNode [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTimeDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'time'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTimeDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

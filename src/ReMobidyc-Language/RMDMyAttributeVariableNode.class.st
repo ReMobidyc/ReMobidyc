@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDMyAttributeVariableNode,
-	#superclass : #RMDAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDMyAttributeVariableNode',
+	#superclass : 'RMDAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMyAttributeVariableNode >> agent [
 	^ nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMyAttributeVariableNode >> isMyAttributeVariableNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMyAttributeVariableNode >> prefix [
 
 	^ 'my'

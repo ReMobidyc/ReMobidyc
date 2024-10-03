@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDNumberOfIndividualsInPatchDirectiveNode,
-	#superclass : #RMDIndividualsInPatchDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDNumberOfIndividualsInPatchDirectiveNode',
+	#superclass : 'RMDIndividualsInPatchDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> directiveName [
 
 	^ 'number of'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> isNumberOfIndividualsInPatchDirective [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -25,7 +27,7 @@ RMDNumberOfIndividualsInPatchDirectiveNode >> printOn: aStream [
 		nextPutAll: ' here'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

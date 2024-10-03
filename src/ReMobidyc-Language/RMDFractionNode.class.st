@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDFractionNode,
-	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDFractionNode',
+	#superclass : 'RMDLeftAssociativeApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDFractionNode >> isFractionNode [ 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFractionNode >> operator [
 	^ '/'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFractionNode >> precedence [
 	^ 4
 ]

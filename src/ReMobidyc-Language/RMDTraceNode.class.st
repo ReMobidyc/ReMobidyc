@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDTraceNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDTraceNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'node',
 		'value'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTraceNode class >> on: aRMDSyntaxNode [
 
 	^ self new
@@ -16,97 +18,97 @@ RMDTraceNode class >> on: aRMDSyntaxNode [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDTraceNode >> = anObject [
 
 	^ anObject = node
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDTraceNode >> asPresenter [
 
 	^ node asPresenter
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTraceNode >> childrenDo: aBlock [
 
 	aBlock value: node
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTraceNode >> childrenTransform: aBlock [
 
 	node := aBlock value: node
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDTraceNode >> hash [
 
 	^ node hash
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTraceNode >> insertTrace [
 
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTraceNode >> isTraceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceNode >> node [
 
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceNode >> node: aRMDSyntaxNode [
 
 	node := aRMDSyntaxNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTraceNode >> pealTrace [
 
 	^ node
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDTraceNode >> postCopy [
 
 	node := node copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceNode >> precedence [
 
 	^ node precedence
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTraceNode >> printCondition [
 
 	^ node printCondition
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTraceNode >> printExpression [
 
 	^ node printExpression
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTraceNode >> printOn: aStream [
 
 	node printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTraceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	value
@@ -125,7 +127,7 @@ RMDTraceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSec
 				addSectionTo: aCollection ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTraceNode >> printValue [
 
 	^ value
@@ -141,25 +143,25 @@ RMDTraceNode >> printValue [
 		  ifNil: [ '' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTraceNode >> removeTrace [
 
 	^ node removeTrace
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDTraceNode >> replaceChildren: aDictionary [
 
 	node replaceChildren: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceNode >> type: aRMDType [
 
 	type := aRMDType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTraceNode >> value [
 
 	^ value

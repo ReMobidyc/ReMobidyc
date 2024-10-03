@@ -1,52 +1,54 @@
 Class {
-	#name : #RMDModelFileNode,
-	#superclass : #RMDSyntaxNode,
-	#category : #'ReMobidyc-Language-File'
+	#name : 'RMDModelFileNode',
+	#superclass : 'RMDSyntaxNode',
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDModelFileNode >> = anObject [
 
 	^ self == anObject
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDModelFileNode >> childrenDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDModelFileNode >> childrenTransform: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDModelFileNode >> contentsDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDModelFileNode >> hash [
 
 	^ self identityHash
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDModelFileNode >> postCopy [
 
 	
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDModelFileNode >> printOn: aStream [
 
 	self contentsDo: [ :content | content printOn: aStream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDModelFileNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	self contentsDo: [ :content | 
@@ -56,7 +58,7 @@ RMDModelFileNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode ad
 			addSectionTo: aCollection ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDModelFileNode >> replaceChildren: aDictionary [
 
 	

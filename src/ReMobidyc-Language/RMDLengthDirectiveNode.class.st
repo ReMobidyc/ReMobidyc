@@ -1,27 +1,29 @@
 Class {
-	#name : #RMDLengthDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDLengthDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDLengthDirectiveNode >> asPresenter [
 
 	^ RMDAtomicDirectivePresenter on: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLengthDirectiveNode >> isLengthDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLengthDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'length of here'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDLengthDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

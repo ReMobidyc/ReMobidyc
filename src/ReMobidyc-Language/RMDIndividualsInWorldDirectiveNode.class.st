@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDIndividualsInWorldDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
+	#name : 'RMDIndividualsInWorldDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
 	#instVars : [
 		'animatName'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIndividualsInWorldDirectiveNode class >> animatName: aString [
 
 	^ self new
@@ -15,62 +17,62 @@ RMDIndividualsInWorldDirectiveNode class >> animatName: aString [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDIndividualsInWorldDirectiveNode class >> isAbstract [
 
 	^ self == RMDIndividualsInWorldDirectiveNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDIndividualsInWorldDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  animatName = anObject animatName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInWorldDirectiveNode >> animatName [
 
 	^ animatName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInWorldDirectiveNode >> animatName: aString [
 
 	animatName := aString
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDIndividualsInWorldDirectiveNode >> asPresenter [
 
 	^ RMDIndividualsInLocationDirectivePresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDIndividualsInWorldDirectiveNode >> childrenDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInWorldDirectiveNode >> directiveName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDIndividualsInWorldDirectiveNode >> hash [
 
 	^ self class hash bitXor: animatName hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInWorldDirectiveNode >> locationName [
 
 	^ 'in world'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDIndividualsInWorldDirectiveNode >> postCopy [
 
 	

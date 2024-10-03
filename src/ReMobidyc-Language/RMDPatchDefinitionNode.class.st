@@ -1,47 +1,49 @@
 Class {
-	#name : #RMDPatchDefinitionNode,
-	#superclass : #RMDAgentDefinitionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDPatchDefinitionNode',
+	#superclass : 'RMDAgentDefinitionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchDefinitionNode class >> createBuiltinAttributes [
 
 	^ {  }
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDPatchDefinitionNode class >> grassField [
 	<script: 'RMDPatchDefinitionNode grassField inspect'>
 	^ RMDGrammar current patchDefinition end parse: 'Patch with
 	grass [kcal].'
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDPatchDefinitionNode class >> sugarField [
 	<script: 'RMDPatchDefinitionNode sugarField inspect'>
 	^ RMDGrammar current patchDefinition end parse: 'Patch with
 	sugar [kcal].'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchDefinitionNode >> fullName [
 
 	^ self name
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchDefinitionNode >> isPatchDefinitionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPatchDefinitionNode >> name [
 
 	^ 'Patch'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPatchDefinitionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'Patch'.
@@ -67,7 +69,7 @@ RMDPatchDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPatchDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

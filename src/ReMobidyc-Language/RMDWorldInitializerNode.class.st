@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDWorldInitializerNode,
-	#superclass : #RMDAgentInitializerNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDWorldInitializerNode',
+	#superclass : 'RMDAgentInitializerNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDWorldInitializerNode class >> attributeInitializers: anArrayOfRMDAttributeInitializer utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	^ self new
@@ -13,32 +15,32 @@ RMDWorldInitializerNode class >> attributeInitializers: anArrayOfRMDAttributeIni
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDWorldInitializerNode class >> empty [
 
 	<script: 'RMDWorldInitializerNode empty inspect'>
 	^ self attributeInitializers: Array new utilityDefinitions: Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldInitializerNode >> agentName [
 
 	^ 'World'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDWorldInitializerNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current worldInitializer end parse: self printString)
 	  = self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDWorldInitializerNode >> isWorldInitializerNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDWorldInitializerNode >> printOn: aStream [
 
 	aStream nextPutAll: 'World'.
@@ -63,7 +65,7 @@ RMDWorldInitializerNode >> printOn: aStream [
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDWorldInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

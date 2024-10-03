@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDTasksFileNode,
-	#superclass : #RMDModelFileNode,
+	#name : 'RMDTasksFileNode',
+	#superclass : 'RMDModelFileNode',
 	#instVars : [
 		'tasks'
 	],
-	#category : #'ReMobidyc-Language-File'
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTasksFileNode class >> tasks: anArrayOfRMDTaskDefinitionNode [
 
 	^ self new
@@ -15,25 +17,25 @@ RMDTasksFileNode class >> tasks: anArrayOfRMDTaskDefinitionNode [
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDTasksFileNode >> contentsDo: aBlock [
 
 	tasks do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTasksFileNode >> isTasksFileNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTasksFileNode >> tasks [
 
 	^ tasks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTasksFileNode >> tasks: anArrayOfRMDTaskDefinitionNode [
 
 	tasks := anArrayOfRMDTaskDefinitionNode

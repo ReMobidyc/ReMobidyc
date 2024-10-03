@@ -68,11 +68,18 @@ RMDSimulationDefinitionPresenter >> newLayout [
 	newLayout
 		add: node timeDefinition asPresenter
 		height: self class buttonHeight;
-		add: node worldInitializer asPresenter expand: false;
-		add: node patchInitializer asPresenter expand: false.
+		add: (node worldInitializer asPresenter
+				 simulationModel: simulationModel;
+				 yourself)
+		expand: false;
+		add: (node patchInitializer asPresenter
+				 simulationModel: simulationModel;
+				 yourself)
+		expand: false.
 	node animatInitializers do: [ :initializer |
 		newLayout
 			add: (initializer asPresenter
+					 simulationModel: simulationModel;
 					 removeButtonAction: [ self removeAnimatInitializer: initializer ];
 					 yourself)
 			expand: false ].

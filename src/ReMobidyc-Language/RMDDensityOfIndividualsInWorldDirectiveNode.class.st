@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDDensityOfIndividualsInWorldDirectiveNode,
-	#superclass : #RMDIndividualsInWorldDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDensityOfIndividualsInWorldDirectiveNode',
+	#superclass : 'RMDIndividualsInWorldDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> directiveName [
 
 	^ 'density of'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> isDensityOfIndividualsInWorldDirective [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -25,7 +27,7 @@ RMDDensityOfIndividualsInWorldDirectiveNode >> printOn: aStream [
 		nextPutAll: ' in world'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

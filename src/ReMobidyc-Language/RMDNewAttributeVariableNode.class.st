@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDNewAttributeVariableNode,
-	#superclass : #RMDAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDNewAttributeVariableNode',
+	#superclass : 'RMDAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewAttributeVariableNode >> agent [
 
 	^ #new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNewAttributeVariableNode >> isNewAttributeVariableNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewAttributeVariableNode >> prefix [
 
 	^ 'new'

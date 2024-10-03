@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDProductNode,
-	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDProductNode',
+	#superclass : 'RMDLeftAssociativeApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDProductNode class >> expression: aRMDExpression1 expression: aRMDExpression2 [
 	^ self new
 		expression1: aRMDExpression1;
@@ -12,17 +14,17 @@ RMDProductNode class >> expression: aRMDExpression1 expression: aRMDExpression2 
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDProductNode >> isProductNode [ 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDProductNode >> operator [
 	^ '*'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDProductNode >> precedence [
 	^ 4
 ]
