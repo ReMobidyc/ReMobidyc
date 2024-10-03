@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDDensityOfIndividualsInPatchDirectiveNode,
-	#superclass : #RMDIndividualsInPatchDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDensityOfIndividualsInPatchDirectiveNode',
+	#superclass : 'RMDIndividualsInPatchDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> directiveName [
 
 	^ 'density of'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> isDensityOfIndividualsInPatchDirective [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -25,7 +27,7 @@ RMDDensityOfIndividualsInPatchDirectiveNode >> printOn: aStream [
 		nextPutAll: ' here'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

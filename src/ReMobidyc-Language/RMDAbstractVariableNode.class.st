@@ -1,55 +1,57 @@
 Class {
-	#name : #RMDAbstractVariableNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDAbstractVariableNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'identifier'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractVariableNode class >> isAbstract [
 
 	^ self == RMDAbstractVariableNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAbstractVariableNode >> = anObject [
 	^ self class = anObject class and: [ identifier = anObject identifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractVariableNode >> agent [
 	^ nil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAbstractVariableNode >> hash [
 	^ self class hash bitXor: identifier hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractVariableNode >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractVariableNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractVariableNode >> isReferenceNode [
 
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAbstractVariableNode >> postCopy [
 	
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAbstractVariableNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: identifier

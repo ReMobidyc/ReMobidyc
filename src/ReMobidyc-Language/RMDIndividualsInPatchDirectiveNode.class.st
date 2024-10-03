@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDIndividualsInPatchDirectiveNode,
-	#superclass : #RMDPatchDirectiveNode,
+	#name : 'RMDIndividualsInPatchDirectiveNode',
+	#superclass : 'RMDPatchDirectiveNode',
 	#instVars : [
 		'animatName'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIndividualsInPatchDirectiveNode class >> animatName: aString [
 
 	^ self new
@@ -15,62 +17,62 @@ RMDIndividualsInPatchDirectiveNode class >> animatName: aString [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDIndividualsInPatchDirectiveNode class >> isAbstract [
 
 	^ self == RMDIndividualsInPatchDirectiveNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDIndividualsInPatchDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  animatName = anObject animatName ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInPatchDirectiveNode >> animatName [
 
 	^ animatName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInPatchDirectiveNode >> animatName: aString [
 
 	animatName := aString
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDIndividualsInPatchDirectiveNode >> asPresenter [
 
 	^ RMDIndividualsInLocationDirectivePresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDIndividualsInPatchDirectiveNode >> childrenDo: aBlock [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInPatchDirectiveNode >> directiveName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDIndividualsInPatchDirectiveNode >> hash [
 
 	^ self class hash bitXor: animatName hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInPatchDirectiveNode >> locationName [
 
 	^ 'here'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDIndividualsInPatchDirectiveNode >> postCopy [
 
 	

@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDAttributeVariableNode,
-	#superclass : #RMDAbstractVariableNode,
+	#name : 'RMDAttributeVariableNode',
+	#superclass : 'RMDAbstractVariableNode',
 	#instVars : [
 		'offset'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeVariableNode class >> identifier: aString [
 	^ self new
 		identifier: aString;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeVariableNode class >> identifier: aString agent: anotherString [
 
 	(anotherString isNil or: [ anotherString = #my ]) ifTrue: [ 
@@ -35,58 +37,58 @@ RMDAttributeVariableNode class >> identifier: aString agent: anotherString [
 		  agent: anotherString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeVariableNode >> agent [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeVariableNode >> childrenDo: aBlock [
 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeVariableNode >> childrenTransform: aBlock [
 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeVariableNode >> isAttributeVariableNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeVariableNode >> offset [
 
 	^ offset
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeVariableNode >> offset: anInteger [
 
 	offset := anInteger
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAttributeVariableNode >> postCopy [
 
 	super postCopy.
 	offset := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeVariableNode >> precedence [
 	^ 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeVariableNode >> prefix [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeVariableNode >> printOn: aStream [
 
 	aStream
@@ -95,7 +97,7 @@ RMDAttributeVariableNode >> printOn: aStream [
 		nextPutAll: identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

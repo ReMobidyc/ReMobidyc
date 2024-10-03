@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDSubtractionNode,
-	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDSubtractionNode',
+	#superclass : 'RMDLeftAssociativeApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSubtractionNode class >> expression: aRMDExpression1 expression: aRMDExpression2 [
 	^ self new
 		expression1: aRMDExpression1;
@@ -12,17 +14,17 @@ RMDSubtractionNode class >> expression: aRMDExpression1 expression: aRMDExpressi
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSubtractionNode >> isSubtractionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSubtractionNode >> operator [
 	^ '-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSubtractionNode >> precedence [
 	^ 5
 ]

@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDPowerNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDPowerNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'expression',
 		'order'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPowerNode class >> expression: aRMDExpression order: anInteger [
 	^ self new
 		expression: aRMDExpression;
@@ -16,76 +18,76 @@ RMDPowerNode class >> expression: aRMDExpression order: anInteger [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPowerNode >> = anObject [
 	^ self class = anObject class
 		and: [ expression = anObject expression
 				and: [ order = anObject order ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDPowerNode >> asPresenter [
 
 	^ RMDPowerExpressionPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPowerNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPowerNode >> childrenTransform: aBlock [
 
 	expression := aBlock value: expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPowerNode >> hash [
 	^ self class hash bitXor: (expression hash bitXor: order hash)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPowerNode >> isPowerNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> operator [
 	^ '^'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> order [
 	^ order
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> order: anInteger [
 	order := anInteger
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDPowerNode >> postCopy [
 	expression := expression copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerNode >> precedence [
 	^ 2
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPowerNode >> printOn: aStream [
 
 	self precedence < expression precedence ifTrue: [ 
@@ -97,7 +99,7 @@ RMDPowerNode >> printOn: aStream [
 	order printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPowerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -116,7 +118,7 @@ RMDPowerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSec
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDPowerNode >> replaceChildren: aDictionary [
 	expression := expression copyReplace: aDictionary
 ]

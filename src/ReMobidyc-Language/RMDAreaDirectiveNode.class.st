@@ -1,27 +1,29 @@
 Class {
-	#name : #RMDAreaDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDAreaDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDAreaDirectiveNode >> asPresenter [
 
 	^ RMDAtomicDirectivePresenter on: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAreaDirectiveNode >> isAreaDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAreaDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'area of here'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAreaDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

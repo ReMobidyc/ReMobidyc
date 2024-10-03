@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDDieDirectiveNode,
-	#superclass : #RMDLifeDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDieDirectiveNode',
+	#superclass : 'RMDLifeDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDieDirectiveNode >> isDieDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDieDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'die'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDieDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

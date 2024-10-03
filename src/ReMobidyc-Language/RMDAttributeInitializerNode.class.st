@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAttributeInitializerNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDAttributeInitializerNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'identifier',
 		'expression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAttributeInitializerNode class >> identifier: aString expression: aRMDExpressionNode [
 	^ self new
 		identifier: aString;
@@ -16,69 +18,69 @@ RMDAttributeInitializerNode class >> identifier: aString expression: aRMDExpress
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAttributeInitializerNode >> = anObject [
 	^ self class = anObject class
 		and: [ identifier = anObject identifier
 				and: [ expression = anObject expression ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeInitializerNode >> childrenDo: aBlock [
 
 	expression ifNotNil: [ aBlock value: expression ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAttributeInitializerNode >> childrenTransform: aBlock [
 
 	expression ifNotNil: [ expression := aBlock value: expression ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerNode >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAttributeInitializerNode >> hash [
 	^ identifier hash bitXor: expression hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerNode >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeInitializerNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeInitializerNode >> isAttributeInitializerNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeInitializerNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current attributeInitializer end parse:
 		   self printString) = self
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAttributeInitializerNode >> postCopy [
 
 	expression := expression ifNotNil: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeInitializerNode >> printOn: aStream [
 
 	aStream nextPutAll: identifier.
@@ -87,7 +89,7 @@ RMDAttributeInitializerNode >> printOn: aStream [
 		expression printOn: aStream ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -103,7 +105,7 @@ RMDAttributeInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSy
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeInitializerNode >> printShortOn: aStream [
 
 	aStream
@@ -111,7 +113,7 @@ RMDAttributeInitializerNode >> printShortOn: aStream [
 		nextPutAll: self identifier
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAttributeInitializerNode >> replaceChildren: aDictionary [
 
 	aDictionary

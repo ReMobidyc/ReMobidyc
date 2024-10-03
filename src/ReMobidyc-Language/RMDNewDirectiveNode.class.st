@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDNewDirectiveNode,
-	#superclass : #RMDLifeDirectiveNode,
+	#name : 'RMDNewDirectiveNode',
+	#superclass : 'RMDLifeDirectiveNode',
 	#instVars : [
 		'animatIdentifier',
 		'quantity'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNewDirectiveNode class >> animatIdentifier: aString [
 
 	^ self
@@ -16,7 +18,7 @@ RMDNewDirectiveNode class >> animatIdentifier: aString [
 		  quantity: (RMDLiteralNode literal: '1' unit: RMDUnit noDimension)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNewDirectiveNode class >> animatIdentifier: aString quantity: aRMDExpression [
 
 	^ self new
@@ -25,7 +27,7 @@ RMDNewDirectiveNode class >> animatIdentifier: aString quantity: aRMDExpression 
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNewDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -33,13 +35,13 @@ RMDNewDirectiveNode >> = anObject [
 			  quantity = anObject quantity ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewDirectiveNode >> animatIdentifier [
 
 	^ animatIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewDirectiveNode >> animatIdentifier: aString [
 
 	animatIdentifier := aString = '-'
@@ -47,49 +49,49 @@ RMDNewDirectiveNode >> animatIdentifier: aString [
 		                    ifFalse: [ aString ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNewDirectiveNode >> childrenDo: aBlock [
 
 	quantity ifNotNil: [ aBlock value: quantity ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNewDirectiveNode >> childrenTransform: aBlock [
 
 	quantity ifNotNil: [ quantity := aBlock value: quantity ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNewDirectiveNode >> hasNewAgents [
 
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNewDirectiveNode >> hash [
 
 	^ (super hash bitXor: animatIdentifier hash) bitXor: quantity hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNewDirectiveNode >> isNewDirectiveNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNewDirectiveNode >> isPlaceholderNode [
 
 	^ animatIdentifier isNil
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDNewDirectiveNode >> postCopy [
 
 	super postCopy.
 	quantity := quantity copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNewDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'new '.
@@ -102,7 +104,7 @@ RMDNewDirectiveNode >> printOn: aStream [
 			nextPutAll: animatIdentifier ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNewDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -121,18 +123,18 @@ RMDNewDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewDirectiveNode >> quantity [
 	^ quantity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNewDirectiveNode >> quantity: aRMDExpression [
 
 	quantity := aRMDExpression
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDNewDirectiveNode >> renameAnimat: aString to: anotherString [
 
 	animatIdentifier = aString ifTrue: [ 
@@ -140,7 +142,7 @@ RMDNewDirectiveNode >> renameAnimat: aString to: anotherString [
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDNewDirectiveNode >> replaceChildren: aDictionary [
 
 	aDictionary

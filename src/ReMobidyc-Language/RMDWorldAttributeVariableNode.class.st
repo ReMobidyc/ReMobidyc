@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDWorldAttributeVariableNode,
-	#superclass : #RMDAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDWorldAttributeVariableNode',
+	#superclass : 'RMDAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldAttributeVariableNode >> agent [
 
 	^ #world
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDWorldAttributeVariableNode >> isWorldAttributeVariableNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldAttributeVariableNode >> prefix [
 
 	^ 'world''s'

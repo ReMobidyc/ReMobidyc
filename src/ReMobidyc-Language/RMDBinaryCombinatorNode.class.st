@@ -1,79 +1,81 @@
 Class {
-	#name : #RMDBinaryCombinatorNode,
-	#superclass : #RMDConditionNode,
+	#name : 'RMDBinaryCombinatorNode',
+	#superclass : 'RMDConditionNode',
 	#instVars : [
 		'conditions'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDBinaryCombinatorNode class >> conditions: anArrayOfRMDConditionNode [
 	^ self new
 		conditions: anArrayOfRMDConditionNode;
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDBinaryCombinatorNode class >> isAbstract [
 
 	^ self == RMDBinaryCombinatorNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDBinaryCombinatorNode >> = anObject [
 	^ self class = anObject class
 		and: [ conditions = anObject conditions ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDBinaryCombinatorNode >> asPresenter [
 
 	^ RMDBinaryCombinatorPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDBinaryCombinatorNode >> childrenDo: aBlock [
 	conditions do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDBinaryCombinatorNode >> childrenTransform: aBlock [
 
 	conditions := conditions collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorNode >> conditions [
 	^ conditions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorNode >> conditions: anArrayOfRMDConditionNode [
 	conditions := anArrayOfRMDConditionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDBinaryCombinatorNode >> hash [
 	^ self class hash bitXor: conditions hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorNode >> operator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDBinaryCombinatorNode >> postCopy [
 	conditions := conditions collect: #copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryCombinatorNode >> precedence [
 	^ 2
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDBinaryCombinatorNode >> printOn: aStream [
 	conditions
 		do: [ :cond | 
@@ -85,7 +87,7 @@ RMDBinaryCombinatorNode >> printOn: aStream [
 		separatedBy: [ aStream nextPutAll: self operator ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDBinaryCombinatorNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -104,7 +106,7 @@ RMDBinaryCombinatorNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDBinaryCombinatorNode >> replaceChildren: aDictionary [
 	conditions := conditions
 		collect: [ :node | node copyReplace: aDictionary ]

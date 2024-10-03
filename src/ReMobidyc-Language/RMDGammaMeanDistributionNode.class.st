@@ -1,76 +1,78 @@
 Class {
-	#name : #RMDGammaMeanDistributionNode,
-	#superclass : #RMDGammaDistributionNode,
+	#name : 'RMDGammaMeanDistributionNode',
+	#superclass : 'RMDGammaDistributionNode',
 	#instVars : [
 		'meanExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaMeanDistributionNode >> = anObject [
 
 	^ super = anObject and: [ meanExpression = anObject meanExpression ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaMeanDistributionNode >> childrenDo: aBlock [
 
 	super childrenDo: aBlock.
 	aBlock value: meanExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaMeanDistributionNode >> childrenTransform: aBlock [
 
 	super childrenTransform: aBlock.
 	meanExpression := aBlock value: meanExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaMeanDistributionNode >> hash [
 
 	^ super hash bitXor: meanExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGammaMeanDistributionNode >> isGammaMeanDistributionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaMeanDistributionNode >> meanExpression [
 
 	^ meanExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaMeanDistributionNode >> meanExpression: aRMDExpressionNode [
 
 	meanExpression := aRMDExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaMeanDistributionNode >> parameter2Expression [
 
 	^ self meanExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaMeanDistributionNode >> parameterName [
 
 	^ 'mean'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDGammaMeanDistributionNode >> postCopy [
 
 	super postCopy.
 	meanExpression := meanExpression copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaMeanDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'gamma '.
@@ -79,7 +81,7 @@ RMDGammaMeanDistributionNode >> printOn: aStream [
 	meanExpression printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaMeanDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -98,7 +100,7 @@ RMDGammaMeanDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDS
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDGammaMeanDistributionNode >> replaceChildren: aDictionary [
 
 	super replaceChildren: aDictionary.

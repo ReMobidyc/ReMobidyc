@@ -1,42 +1,44 @@
 Class {
-	#name : #RMDUtilityVariableNode,
-	#superclass : #RMDAbstractVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDUtilityVariableNode',
+	#superclass : 'RMDAbstractVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDUtilityVariableNode class >> identifier: aString [
 	^ self new
 		identifier: aString;
 		yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUtilityVariableNode >> childrenDo: aBlock [
 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUtilityVariableNode >> childrenTransform: aBlock [
 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUtilityVariableNode >> isUtilityVariableNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityVariableNode >> precedence [
 	^ 0
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUtilityVariableNode >> printOn: aStream [
 	aStream nextPutAll: identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUtilityVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.

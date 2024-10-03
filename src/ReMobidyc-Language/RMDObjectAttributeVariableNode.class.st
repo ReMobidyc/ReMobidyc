@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDObjectAttributeVariableNode,
-	#superclass : #RMDAttributeVariableNode,
+	#name : 'RMDObjectAttributeVariableNode',
+	#superclass : 'RMDAttributeVariableNode',
 	#instVars : [
 		'agent'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDObjectAttributeVariableNode class >> identifier: aString agent: anotherString [
 
 	^ (self identifier: aString)
@@ -15,33 +17,33 @@ RMDObjectAttributeVariableNode class >> identifier: aString agent: anotherString
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDObjectAttributeVariableNode >> = anObject [
 	^ super = anObject and: [ self agent = anObject agent ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDObjectAttributeVariableNode >> agent [
 	^ agent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDObjectAttributeVariableNode >> agent: aString [
 	agent := aString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDObjectAttributeVariableNode >> hash [
 	^ super hash bitXor: agent hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDObjectAttributeVariableNode >> prefix [
 
 	^ agent , '''s '
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDObjectAttributeVariableNode >> renameAnimat: aString to: anotherString [
 
 	agent = aString uncapitalized ifTrue: [ 
@@ -49,7 +51,7 @@ RMDObjectAttributeVariableNode >> renameAnimat: aString to: anotherString [
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDObjectAttributeVariableNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: agent ifPresent: [ :node | agent := node copy ]

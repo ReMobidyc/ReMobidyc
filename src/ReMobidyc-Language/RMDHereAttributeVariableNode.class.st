@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDHereAttributeVariableNode,
-	#superclass : #RMDAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDHereAttributeVariableNode',
+	#superclass : 'RMDAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHereAttributeVariableNode >> agent [
 	^ #here
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDHereAttributeVariableNode >> isHereAttributeVariableNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDHereAttributeVariableNode >> prefix [
 
 	^ 'here''s'

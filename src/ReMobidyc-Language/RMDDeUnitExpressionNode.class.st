@@ -1,27 +1,29 @@
 Class {
-	#name : #RMDDeUnitExpressionNode,
-	#superclass : #RMDCastExpression,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDeUnitExpressionNode',
+	#superclass : 'RMDCastExpression',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDDeUnitExpressionNode >> asPresenter [
 
 	^ RMDDeUnitExpressionPresenter on: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDeUnitExpressionNode >> isDeUnitExpressionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDeUnitExpressionNode >> precedence [
 	^ 0.1
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDeUnitExpressionNode >> printOn: aStream [
 
 	aStream nextPutAll: '('.
@@ -34,7 +36,7 @@ RMDDeUnitExpressionNode >> printOn: aStream [
 		aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDeUnitExpressionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

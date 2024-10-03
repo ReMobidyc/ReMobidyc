@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUtilityDefinitionNode,
-	#superclass : #RMDDefinitionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDUtilityDefinitionNode',
+	#superclass : 'RMDDefinitionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDUtilityDefinitionNode class >> template [
 
 	<script: 'RMDUtilityDefinitionNode template inspect'>
@@ -13,7 +15,7 @@ RMDUtilityDefinitionNode class >> template [
 		  expression: RMDLiteralNode zero
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDUtilityDefinitionNode >> asPresenter [
 
 	"^ RMDUtilityDefinitionBrowser on: self"
@@ -21,32 +23,32 @@ RMDUtilityDefinitionNode >> asPresenter [
 	^ RMDUtilityDefinitionPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUtilityDefinitionNode >> childrenTransform: aBlock [
 
 	definitionBody := aBlock value: definitionBody
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionNode >> identifier [
 
 	^ self variable identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionNode >> identifier: aString [
 
 	self variable identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUtilityDefinitionNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current utilityDefinition end parse: self printString)
 	  = self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUtilityDefinitionNode >> isCorrectTypeWithSubject: aString in: aRMDSimulationModel [
 
 	| agentDefinition |
@@ -67,17 +69,17 @@ RMDUtilityDefinitionNode >> isCorrectTypeWithSubject: aString in: aRMDSimulation
 			   attributeDeclaration identifier = self identifier ] ]) not
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUtilityDefinitionNode >> isUtilityDefinitionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUtilityDefinitionNode >> operator [
 	^ '='
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUtilityDefinitionNode >> printOn: aStream [
 	variable printOn: aStream.
 	aStream
@@ -87,7 +89,7 @@ RMDUtilityDefinitionNode >> printOn: aStream [
 	definitionBody printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUtilityDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.

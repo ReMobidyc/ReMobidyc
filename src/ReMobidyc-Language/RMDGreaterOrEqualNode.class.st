@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDGreaterOrEqualNode,
-	#superclass : #RMDBinaryRelationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDGreaterOrEqualNode',
+	#superclass : 'RMDBinaryRelationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGreaterOrEqualNode >> isGreaterOrEqualNode [ 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGreaterOrEqualNode >> operator [
 	^ ' >= '
 ]

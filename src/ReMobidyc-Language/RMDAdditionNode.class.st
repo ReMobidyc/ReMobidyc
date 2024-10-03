@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDAdditionNode,
-	#superclass : #RMDLeftAssociativeApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDAdditionNode',
+	#superclass : 'RMDLeftAssociativeApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAdditionNode >> isAdditionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAdditionNode >> operator [
 	^ '+'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAdditionNode >> precedence [
 	^ 5
 ]

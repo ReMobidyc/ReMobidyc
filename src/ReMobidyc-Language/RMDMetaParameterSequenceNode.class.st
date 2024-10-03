@@ -1,46 +1,48 @@
 Class {
-	#name : #RMDMetaParameterSequenceNode,
-	#superclass : #RMDSyntaxNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDMetaParameterSequenceNode',
+	#superclass : 'RMDSyntaxNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaParameterSequenceNode class >> isAbstract [
 
 	^ self = RMDMetaParameterSequenceNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaParameterSequenceNode >> isMetaParameterSequenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSequenceNode >> metaParametersSize [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaParameterSequenceNode >> placeholdersDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSequenceNode >> size [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetaParameterSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
 
 	^ self subclassResponsibility

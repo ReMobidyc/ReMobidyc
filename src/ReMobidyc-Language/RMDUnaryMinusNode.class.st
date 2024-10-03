@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDUnaryMinusNode,
-	#superclass : #RMDUnaryOperatorApplicationNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDUnaryMinusNode',
+	#superclass : 'RMDUnaryOperatorApplicationNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUnaryMinusNode >> isUnaryMinusNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryMinusNode >> operator [
 	^ '-'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryMinusNode >> precedence [
 	^ 1
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDAgentDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDAgentDefinitionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'attributeDeclarations',
 		'attributeOffsets',
@@ -10,10 +10,12 @@ Class {
 	#classInstVars : [
 		'builtinAttributes'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAgentDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDeclarationNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	^ self new
@@ -22,24 +24,24 @@ RMDAgentDefinitionNode class >> attributeDeclarations: anArrayOfRMDAttributeDecl
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode class >> builtinAttributes [
 	^ builtinAttributes
 		ifNil: [ builtinAttributes := self createBuiltinAttributes ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode class >> createBuiltinAttributes [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAgentDefinitionNode class >> empty [
 
 	^ self attributeDeclarations: Array new utilityDefinitions: Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode class >> flushBuiltinAttributes [
 
 	<script:
@@ -47,13 +49,13 @@ RMDAgentDefinitionNode class >> flushBuiltinAttributes [
 	builtinAttributes := nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentDefinitionNode class >> isAbstract [
 
 	^ self == RMDAgentDefinitionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAgentDefinitionNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -61,13 +63,13 @@ RMDAgentDefinitionNode >> = anObject [
 			  utilityDefinitions = anObject utilityDefinitions ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> agentName [
 
 	^ self name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> allAttributeDeclarations [
 	^ (self builtinAttributes
 		collect:
@@ -75,7 +77,7 @@ RMDAgentDefinitionNode >> allAttributeDeclarations [
 		, self attributeDeclarations
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> allAttributeDeclarationsDo: aBlock [
 
 	self builtinAttributes do: [ :assoc | 
@@ -86,7 +88,7 @@ RMDAgentDefinitionNode >> allAttributeDeclarationsDo: aBlock [
 	self attributeDeclarations do: aBlock
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDAgentDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 	^ (self attributeOffsets associations
 		collect: [ :assoc | 
@@ -95,34 +97,42 @@ RMDAgentDefinitionNode >> asDictionary: anInteger in: aRMDMemory [
 		asDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+RMDAgentDefinitionNode >> attributeDeclarationAt: aString ifAbsent: errorBlock [
+
+	self allAttributeDeclarationsDo: [ :decl |
+		decl identifier = aString ifTrue: [ ^ decl ] ].
+	^ errorBlock value
+]
+
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> attributeDeclarations [
 	^ attributeDeclarations
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> attributeDeclarations: anArrayOfAttributeDeclaration [
 	attributeDeclarations := anArrayOfAttributeDeclaration.
 	attributeOffsets := nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> attributeDeclarationsDo: aBlock [
 	attributeDeclarations do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> attributeIdentifiersDo: aBlock [
 	attributeDeclarations
 		do: [ :attribute | aBlock value: attribute identifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> attributeOffsetAt: aString ifAbsent: errorBlock [
 	^ self attributeOffsets at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> attributeOffsets [
 	^ attributeOffsets
 		ifNil: [ | offset |
@@ -138,12 +148,12 @@ RMDAgentDefinitionNode >> attributeOffsets [
 			attributeOffsets ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> attributeOffsetsDo: aBlock [
 	self attributeOffsets keysAndValuesDo: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> attributeUnitsDo: aBlock [
 	self builtinAttributes
 		do: [ :assoc | aBlock value: assoc key value: assoc value ].
@@ -151,26 +161,26 @@ RMDAgentDefinitionNode >> attributeUnitsDo: aBlock [
 		attributeDeclarationsDo: [ :decl | aBlock value: decl identifier value: decl unit ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> builtinAttributes [
 	^ self class builtinAttributes
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> childrenDo: aBlock [
 
 	attributeDeclarations do: aBlock.
 	utilityDefinitions do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> childrenTransform: aBlock [
 
 	attributeDeclarations := attributeDeclarations collect: aBlock.
 	utilityDefinitions := utilityDefinitions collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> complementUtilityDefinitions [
 
 	| boundUtils freeUtils |
@@ -202,56 +212,56 @@ RMDAgentDefinitionNode >> complementUtilityDefinitions [
 				                       expression: RMDLiteralNode zero ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> dataSource [
 
 	^ dataSource
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> dataSource: aRMDDataSource [
 
 	dataSource := aRMDDataSource
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> fullName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAgentDefinitionNode >> hash [
 
 	^ (self class hash bitXor: attributeDeclarations hash) bitXor:
 		  utilityDefinitions hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentDefinitionNode >> isAgentDefinitionNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentDefinitionNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current agentDefinition end parse: self printString)
 	  = self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> name [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> offsetAt: aString ifAbsent: errorBlock [
 
 	^ self attributeOffsets at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAgentDefinitionNode >> postCopy [
 
 	attributeDeclarations := attributeDeclarations collect: #copy.
@@ -259,13 +269,13 @@ RMDAgentDefinitionNode >> postCopy [
 	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAgentDefinitionNode >> printShortOn: aStream [
 
 	aStream nextPutAll: self agentName
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAgentDefinitionNode >> replaceChildren: aDictionary [
 
 	attributeDeclarations := attributeDeclarations collect: [ :node | 
@@ -275,12 +285,12 @@ RMDAgentDefinitionNode >> replaceChildren: aDictionary [
 		                      node copyReplace: aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> totalNumberOfAttributes [
 	^ self builtinAttributes size + attributeDeclarations size
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
 
 	self attributeUnitsDo: [ :identifier :unit | 
@@ -288,19 +298,19 @@ RMDAgentDefinitionNode >> unitOfAttribute: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> utilityDefinitions [
 
 	^ utilityDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	utilityDefinitions := anArrayOfRMDUtilityDefinitionNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentDefinitionNode >> utilityDefinitionsDo: aBlock [
 
 	utilityDefinitions do: aBlock

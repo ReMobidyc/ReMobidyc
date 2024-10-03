@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDBinaryOperatorApplicationNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDBinaryOperatorApplicationNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'expression1',
 		'expression2'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDBinaryOperatorApplicationNode class >> expression: aRMDExpression1 expression: aRMDExpression2 [
 	^ self new
 		expression1: aRMDExpression1;
@@ -16,76 +18,76 @@ RMDBinaryOperatorApplicationNode class >> expression: aRMDExpression1 expression
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDBinaryOperatorApplicationNode class >> isAbstract [
 
 	^ self == RMDBinaryOperatorApplicationNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDBinaryOperatorApplicationNode >> = anObject [
 	^ self class = anObject class
 		and: [ expression1 = anObject expression1
 				and: [ expression2 = anObject expression2 ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDBinaryOperatorApplicationNode >> asPresenter [
 
 	^ RMDBinaryOperatorExpressionPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDBinaryOperatorApplicationNode >> childrenDo: aBlock [
 	aBlock
 		value: expression1;
 		value: expression2
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDBinaryOperatorApplicationNode >> childrenTransform: aBlock [
 
 	expression1 := aBlock value: expression1.
 	expression2 := aBlock value: expression2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryOperatorApplicationNode >> expression1 [
 	^ expression1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryOperatorApplicationNode >> expression1: aRMDExpression [
 	expression1 := aRMDExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryOperatorApplicationNode >> expression2 [
 	^ expression2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryOperatorApplicationNode >> expression2: aRMDExpression [
 	expression2 := aRMDExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDBinaryOperatorApplicationNode >> hash [
 	^ self class hash bitXor: (expression1 hash bitXor: expression2 hash)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDBinaryOperatorApplicationNode >> operator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDBinaryOperatorApplicationNode >> postCopy [
 	expression1 := expression1 copy.
 	expression2 := expression2 copy
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDBinaryOperatorApplicationNode >> replaceChildren: aDictionary [
 	expression1 := expression1 copyReplace: aDictionary.
 	expression2 := expression2 copyReplace: aDictionary

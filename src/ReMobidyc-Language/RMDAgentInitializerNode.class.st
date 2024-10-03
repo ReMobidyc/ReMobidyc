@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDAgentInitializerNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDAgentInitializerNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'attributeInitializers',
 		'utilityDefinitions'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentInitializerNode class >> isAbstract [
 
 	^ self == RMDAgentInitializerNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAgentInitializerNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -22,37 +24,37 @@ RMDAgentInitializerNode >> = anObject [
 			  utilityDefinitions = anObject utilityDefinitions ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> agentName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> attributeInitializers [
 	^ attributeInitializers
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> attributeInitializers: anArayOfRMDAttributeInitializerNode [
 	attributeInitializers := anArayOfRMDAttributeInitializerNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentInitializerNode >> childrenDo: aBlock [
 
 	attributeInitializers do: aBlock.
 	utilityDefinitions do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentInitializerNode >> childrenTransform: aBlock [
 
 	attributeInitializers := attributeInitializers collect: aBlock.
 	utilityDefinitions := utilityDefinitions collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> complementUtilityDefinitions [
 
 	| boundUtils freeUtils |
@@ -86,26 +88,26 @@ RMDAgentInitializerNode >> complementUtilityDefinitions [
 				                       expression: RMDLiteralNode zero ])
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAgentInitializerNode >> hash [
 
 	^ (self class hash bitXor: attributeInitializers hash) bitXor:
 		  utilityDefinitions hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentInitializerNode >> isAgentInitializerNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAgentInitializerNode >> postCopy [
 
 	attributeInitializers := attributeInitializers collect: #copy.
 	utilityDefinitions := utilityDefinitions collect: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAgentInitializerNode >> printShortOn: aStream [
 
 	aStream
@@ -113,7 +115,7 @@ RMDAgentInitializerNode >> printShortOn: aStream [
 		nextPutAll: self agentName
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAgentInitializerNode >> replaceChildren: aDictionary [
 
 	attributeInitializers := attributeInitializers collect: [ :node | 
@@ -122,13 +124,13 @@ RMDAgentInitializerNode >> replaceChildren: aDictionary [
 		                      node copyReplace: aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> utilityDefinitions [
 
 	^ utilityDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentInitializerNode >> utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	utilityDefinitions := anArrayOfRMDUtilityDefinitionNode

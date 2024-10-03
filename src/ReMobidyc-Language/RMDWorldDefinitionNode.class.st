@@ -1,40 +1,42 @@
 Class {
-	#name : #RMDWorldDefinitionNode,
-	#superclass : #RMDAgentDefinitionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDWorldDefinitionNode',
+	#superclass : 'RMDAgentDefinitionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldDefinitionNode class >> createBuiltinAttributes [
 
 	^ {  }
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDWorldDefinitionNode class >> empty [
 
 	<script: 'RMDWorldDefinitionNode empty inspect'>
 	^ self attributeDeclarations: Array new utilityDefinitions: Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldDefinitionNode >> fullName [
 
 	^ self name
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDWorldDefinitionNode >> isWorldDefinitionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDWorldDefinitionNode >> name [
 
 	^ 'World'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDWorldDefinitionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'World'.
@@ -60,7 +62,7 @@ RMDWorldDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDWorldDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

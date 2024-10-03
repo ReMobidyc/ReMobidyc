@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDIndividualsInRadiusDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
+	#name : 'RMDIndividualsInRadiusDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
 	#instVars : [
 		'animatName',
 		'radius'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIndividualsInRadiusDirectiveNode class >> animatName: aString radius: aRMDExpressionNode [
 
 	^ self new
@@ -17,43 +19,43 @@ RMDIndividualsInRadiusDirectiveNode class >> animatName: aString radius: aRMDExp
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDIndividualsInRadiusDirectiveNode class >> isAbstract [
 
 	^ self = RMDIndividualsInRadiusDirectiveNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> animatName [
 
 	^ animatName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> animatName: aString [
 
 	animatName := aString
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDIndividualsInRadiusDirectiveNode >> asPresenter [
 
 	^ RMDIndividualsInRadiusDirectivePresenter on: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> directiveName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> locationName [
 
 	^ 'radius'
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDIndividualsInRadiusDirectiveNode >> numberOfIndividualsIn: aNumber with: aRMDInterpreter [
 
 	| interactionSpace count |
@@ -81,13 +83,13 @@ RMDIndividualsInRadiusDirectiveNode >> numberOfIndividualsIn: aNumber with: aRMD
 	^ count
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> radius [
 
 	^ radius
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIndividualsInRadiusDirectiveNode >> radius: aRMDExpressionNode [
 
 	radius := aRMDExpressionNode

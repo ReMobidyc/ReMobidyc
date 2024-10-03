@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDConjunctionNode,
-	#superclass : #RMDBinaryCombinatorNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDConjunctionNode',
+	#superclass : 'RMDBinaryCombinatorNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDConjunctionNode >> isConjunctionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConjunctionNode >> operator [
 	^ ' and '
 ]

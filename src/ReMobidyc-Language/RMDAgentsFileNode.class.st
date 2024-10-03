@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDAgentsFileNode,
-	#superclass : #RMDModelFileNode,
+	#name : 'RMDAgentsFileNode',
+	#superclass : 'RMDModelFileNode',
 	#instVars : [
 		'agents'
 	],
-	#category : #'ReMobidyc-Language-File'
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAgentsFileNode class >> agents: anArrayOfRMDAgentDefinitionNode [
 
 	^ self new
@@ -15,25 +17,25 @@ RMDAgentsFileNode class >> agents: anArrayOfRMDAgentDefinitionNode [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentsFileNode >> agents [
 
 	^ agents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAgentsFileNode >> agents: anArrayOfRMDAgentDefinitionNode [
 
 	agents := anArrayOfRMDAgentDefinitionNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAgentsFileNode >> contentsDo: aBlock [
 
 	agents do: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAgentsFileNode >> isAgentsFileNode [
 	^ true
 ]

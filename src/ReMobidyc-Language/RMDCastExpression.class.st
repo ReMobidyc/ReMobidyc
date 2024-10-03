@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDCastExpression,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDCastExpression',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'unit',
 		'expression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDCastExpression class >> expression: aRMDExpressionNode unit: aRMDUnit [
 
 	^ self new
@@ -17,69 +19,69 @@ RMDCastExpression class >> expression: aRMDExpressionNode unit: aRMDUnit [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDCastExpression class >> isAbstract [
 
 	^ self == RMDCastExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDCastExpression >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  expression = anObject expression and: [ unit = anObject unit ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDCastExpression >> childrenDo: aBlock [
 
 	aBlock value: expression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDCastExpression >> childrenTransform: aBlock [
 
 	expression := aBlock value: expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCastExpression >> expression [
 
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCastExpression >> expression: aRMDExpressionNode [
 
 	expression := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDCastExpression >> hash [
 
 	^ (self class hash bitXor: expression hash) bitXor: unit hash
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDCastExpression >> postCopy [
 
 	expression := expression copy
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDCastExpression >> replaceChildren: aDictionary [
 
 	expression := expression copyReplace: aDictionary.
 	aDictionary at: unit ifPresent: [ :node | unit := node copy ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCastExpression >> unit [
 
 	^ unit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCastExpression >> unit: aRMDUnit [
 
 	unit := aRMDUnit

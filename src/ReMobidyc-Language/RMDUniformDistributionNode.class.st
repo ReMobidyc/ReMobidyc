@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDUniformDistributionNode,
-	#superclass : #RMDRandomNode,
+	#name : 'RMDUniformDistributionNode',
+	#superclass : 'RMDRandomNode',
 	#instVars : [
 		'fromExpression',
 		'toExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDUniformDistributionNode class >> from: aRMDExpressionNode to: anotherRMDExpressionNode [
 
 	^ self new
@@ -17,83 +19,83 @@ RMDUniformDistributionNode class >> from: aRMDExpressionNode to: anotherRMDExpre
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUniformDistributionNode >> = anObject [
 	^ self class = anObject class
 		and: [ fromExpression = anObject fromExpression
 				and: [ toExpression = anObject toExpression ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUniformDistributionNode >> childrenDo: aBlock [
 	aBlock
 		value: fromExpression;
 		value: toExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUniformDistributionNode >> childrenTransform: aBlock [
 
 	fromExpression := aBlock value: fromExpression.
 	toExpression := aBlock value: toExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> distributionName [
 
 	^ 'uniform'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> fromExpression [
 	^ fromExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> fromExpression: aRMDExpressionNode [
 	fromExpression := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUniformDistributionNode >> hash [
 	^ (self class hash bitXor: fromExpression hash) bitXor: toExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUniformDistributionNode >> isUniformDistributionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> parameter1Expression [
 
 	^ self fromExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> parameter2Expression [
 
 	^ self toExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> parameterName [
 
 	^ 'to'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDUniformDistributionNode >> postCopy [
 	fromExpression := fromExpression copy.
 	toExpression := toExpression copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> precedence [
 	^ 10
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'uniform '.
@@ -110,7 +112,7 @@ RMDUniformDistributionNode >> printOn: aStream [
 		aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUniformDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -137,18 +139,18 @@ RMDUniformDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyn
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDUniformDistributionNode >> replaceChildren: aDictionary [
 	fromExpression := fromExpression copyReplace: aDictionary.
 	toExpression := toExpression copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> toExpression [
 	^ toExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUniformDistributionNode >> toExpression: aRMDLiteralNode [
 	toExpression := aRMDLiteralNode
 ]

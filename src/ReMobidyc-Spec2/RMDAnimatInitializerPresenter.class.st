@@ -27,6 +27,13 @@ RMDAnimatInitializerPresenter class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'accessing' }
+RMDAnimatInitializerPresenter >> agentDefinition [
+
+	^ simulationModel ifNotNil: [
+		  simulationModel animatDefinitionAt: node animat ifAbsent: [ nil ] ]
+]
+
 { #category : 'api' }
 RMDAnimatInitializerPresenter >> animatEnabled: aBoolean [
 	animatField enabled: aBoolean = true

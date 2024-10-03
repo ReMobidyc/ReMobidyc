@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDMetaParameterSetSequenceNode,
-	#superclass : #RMDMetaParameterSequenceNode,
+	#name : 'RMDMetaParameterSetSequenceNode',
+	#superclass : 'RMDMetaParameterSequenceNode',
 	#instVars : [
 		'placeholders',
 		'literalTuples'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetaParameterSetSequenceNode class >> placeholders: anArrayOfRMDPlaceHolder literalTuples: anArrayOfArrayOfRMDLiteralNode [
 
 	^ self new
@@ -17,7 +19,7 @@ RMDMetaParameterSetSequenceNode class >> placeholders: anArrayOfRMDPlaceHolder l
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDMetaParameterSetSequenceNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -25,14 +27,14 @@ RMDMetaParameterSetSequenceNode >> = anObject [
 			  literalTuples = anObject literalTuples ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaParameterSetSequenceNode >> childrenDo: aBlock [
 
 	placeholders do: aBlock.
 	literalTuples do: [ :tuple | tuple do: aBlock ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaParameterSetSequenceNode >> childrenTransform: aBlock [
 
 	placeholders := placeholders collect: aBlock.
@@ -40,7 +42,7 @@ RMDMetaParameterSetSequenceNode >> childrenTransform: aBlock [
 		                 tuple collect: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock [
 
 	| tuple dict |
@@ -51,56 +53,56 @@ RMDMetaParameterSetSequenceNode >> dictionaryAt: anInteger ifAbsent: errorBlock 
 	^ dict
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDMetaParameterSetSequenceNode >> hash [
 
 	^ (self class hash bitXor: placeholders hash) bitXor:
 		  literalTuples hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaParameterSetSequenceNode >> isMetaParameterSetSequenceNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> literalTuples [
 
 	^ literalTuples
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> literalTuples: anArrayOfArrayOfRMDLiteralNode [
 
 	literalTuples := anArrayOfArrayOfRMDLiteralNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> metaParametersSize [
 
 	^ placeholders size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> placeholders [
 
 	^ placeholders
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> placeholders: anArrayOfRMDPlaceHolderNode [
 
 	placeholders := anArrayOfRMDPlaceHolderNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaParameterSetSequenceNode >> placeholdersDo: aBlock [
 
 	placeholders do: aBlock
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDMetaParameterSetSequenceNode >> postCopy [
 
 	placeholders := placeholders collect: #copy.
@@ -108,7 +110,7 @@ RMDMetaParameterSetSequenceNode >> postCopy [
 		                 tuple collect: #copy ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetaParameterSetSequenceNode >> printOn: aStream [
 
 	placeholders
@@ -128,7 +130,7 @@ RMDMetaParameterSetSequenceNode >> printOn: aStream [
 				cr ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetaParameterSetSequenceNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -160,7 +162,7 @@ RMDMetaParameterSetSequenceNode >> printOn: aStream ifIncludedIn: aCollectionOfR
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDMetaParameterSetSequenceNode >> replaceChildren: aDictionary [
 
 	placeholders := placeholders collect: [ :placeholder | 
@@ -170,13 +172,13 @@ RMDMetaParameterSetSequenceNode >> replaceChildren: aDictionary [
 			                 literal copyReplace: aDictionary ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaParameterSetSequenceNode >> size [
 
 	^ literalTuples size
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetaParameterSetSequenceNode >> withoutPlaceholders: aCollectionOfRMDPlaceholderNode [
 
 	^ ((1 to: placeholders size) reject: [ :index | 

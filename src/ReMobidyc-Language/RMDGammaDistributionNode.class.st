@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDGammaDistributionNode,
-	#superclass : #RMDRandomNode,
+	#name : 'RMDGammaDistributionNode',
+	#superclass : 'RMDRandomNode',
 	#instVars : [
 		'shapeExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGammaDistributionNode class >> isAbstract [
 
 	^ self == RMDGammaDistributionNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDGammaDistributionNode class >> shape: aRMDExpressionNode mean: anotherRMDExpressionNode [
 
 	^ self withMeanClass new
@@ -22,7 +24,7 @@ RMDGammaDistributionNode class >> shape: aRMDExpressionNode mean: anotherRMDExpr
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDGammaDistributionNode class >> shape: aRMDExpressionNode rate: anotherRMDExpressionNode [
 
 	^ self withRateClass new
@@ -31,7 +33,7 @@ RMDGammaDistributionNode class >> shape: aRMDExpressionNode rate: anotherRMDExpr
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDGammaDistributionNode class >> shape: aRMDExpressionNode scale: anotherRMDExpressionNode [
 
 	^ self withScaleClass new
@@ -40,32 +42,32 @@ RMDGammaDistributionNode class >> shape: aRMDExpressionNode scale: anotherRMDExp
 		  yourself
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGammaDistributionNode class >> withMeanClass [
 
 	^ RMDGammaMeanDistributionNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGammaDistributionNode class >> withRateClass [
 
 	^ RMDGammaRateDistributionNode
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDGammaDistributionNode class >> withScaleClass [
 
 	^ RMDGammaScaleDistributionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaDistributionNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  shapeExpression = anObject shapeExpression ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDGammaDistributionNode >> AhrensDieter: aNumber in: aRMDInterpreter [
 
 	| e c1 |
@@ -86,7 +88,7 @@ RMDGammaDistributionNode >> AhrensDieter: aNumber in: aRMDInterpreter [
 			u2 <= (x ** (aNumber - 1.0)) ifTrue: [ ^ x ] ] ] repeat
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDGammaDistributionNode >> MarsagliaTsang: aNumber in: aRMDInterpreter [
 
 	| c1 c2 z v u |
@@ -103,25 +105,25 @@ RMDGammaDistributionNode >> MarsagliaTsang: aNumber in: aRMDInterpreter [
 		^ c1 * v ] ] repeat
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaDistributionNode >> childrenDo: aBlock [
 
 	aBlock value: shapeExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaDistributionNode >> childrenTransform: aBlock [
 
 	shapeExpression := aBlock value: shapeExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> distributionName [
 
 	^ 'gamma'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> gamma: aNumber in: aRMDInterpreter [
 
 	^ aNumber <= 1.0
@@ -129,54 +131,54 @@ RMDGammaDistributionNode >> gamma: aNumber in: aRMDInterpreter [
 		  ifFalse: [ self MarsagliaTsang: aNumber in: aRMDInterpreter ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaDistributionNode >> hash [
 
 	^ self class hash bitXor: shapeExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGammaDistributionNode >> isGammaDistributionNode [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDGammaDistributionNode >> normalIn: aRMDInterpreter [
 
 	^ (aRMDInterpreter random ln * -2.0) sqrt
 	  * (aRMDInterpreter random * Float pi * 2.0) cos
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> parameter1Expression [
 
 	^ self shapeExpression
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDGammaDistributionNode >> postCopy [
 
 	shapeExpression := shapeExpression copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> precedence [
 	^ 10
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDGammaDistributionNode >> replaceChildren: aDictionary [
 
 	shapeExpression := shapeExpression copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> shapeExpression [
 
 	^ shapeExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaDistributionNode >> shapeExpression: aRMDExpressionNode [
 
 	shapeExpression := aRMDExpressionNode

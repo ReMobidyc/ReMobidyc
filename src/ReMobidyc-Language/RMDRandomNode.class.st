@@ -1,40 +1,42 @@
 Class {
-	#name : #RMDRandomNode,
-	#superclass : #RMDExpressionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDRandomNode',
+	#superclass : 'RMDExpressionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDRandomNode class >> isAbstract [
 
 	^ self == RMDRandomNode
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDRandomNode >> asPresenter [
 
 	^ RMDBinaryDistributionPresenter on: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRandomNode >> distributionName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRandomNode >> parameter1Expression [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRandomNode >> parameter2Expression [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRandomNode >> parameterName [
 
 	^ self subclassResponsibility

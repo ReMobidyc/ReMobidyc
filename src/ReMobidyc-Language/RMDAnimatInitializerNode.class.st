@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAnimatInitializerNode,
-	#superclass : #RMDAgentInitializerNode,
+	#name : 'RMDAnimatInitializerNode',
+	#superclass : 'RMDAgentInitializerNode',
 	#instVars : [
 		'population',
 		'animat'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString1 to: aString2 [
 	<script:
 		'(RMDAnimatInitializerNode goatInitializer: 100 bloodSugar: ''10000[kcal]'' to: ''100000[kcal]'') inspect'>
@@ -26,7 +28,7 @@ RMDAnimatInitializerNode class >> goatInitializer: anInteger bloodSugar: aString
 						nextPutAll: aString2 ])
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAnimatInitializerNode class >> population: anInteger animat: aString attributeInitializers: anArrayOfRMDSimulationAttributeInitializerNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	^ self new
@@ -38,7 +40,7 @@ RMDAnimatInitializerNode class >> population: anInteger animat: aString attribut
 		  yourself
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAnimatInitializerNode class >> wolfInitializer: anInteger bloodSugar: aString1 to: aString2 [
 	<script:
 		'(RMDAnimatInitializerNode wolfInitializer: 20 bloodSugar: ''10000[kcal]'' to: ''50000[kcal]'') inspect'>
@@ -56,56 +58,56 @@ RMDAnimatInitializerNode class >> wolfInitializer: anInteger bloodSugar: aString
 						nextPutAll: aString2 ])
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAnimatInitializerNode >> = anObject [
 	^ super = anObject
 		and: [ population = anObject population and: [ animat = anObject animat ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerNode >> agentName [
 
 	^ self animat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerNode >> animat [
 	^ animat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerNode >> animat: aString [
 	animat := aString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAnimatInitializerNode >> hash [
 	^ (super hash bitXor: population hash) bitXor: animat hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAnimatInitializerNode >> isAnimatInitializerNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAnimatInitializerNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current animatInitializer end parse: self printString)
 	  = self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerNode >> population [
 	^ population
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatInitializerNode >> population: anInteger [
 	population := anInteger
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAnimatInitializerNode >> printOn: aStream [
 
 	population printOn: aStream.
@@ -133,7 +135,7 @@ RMDAnimatInitializerNode >> printOn: aStream [
 			separatedBy: [ aStream nextPut: Character cr ] ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -173,14 +175,14 @@ RMDAnimatInitializerNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynta
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAnimatInitializerNode >> renameAnimat: aString to: anotherString [
 
 	animat = aString ifTrue: [ animat := anotherString ].
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAnimatInitializerNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary at: animat ifPresent: [ :node | animat := node copy ]

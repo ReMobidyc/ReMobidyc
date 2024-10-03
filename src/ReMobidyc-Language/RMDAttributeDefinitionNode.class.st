@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDAttributeDefinitionNode,
-	#superclass : #RMDDefinitionNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDAttributeDefinitionNode',
+	#superclass : 'RMDDefinitionNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAttributeDefinitionNode class >> template [
 
 	<script: 'RMDAttributeDefinitionNode template inspect'>
@@ -14,41 +16,41 @@ RMDAttributeDefinitionNode class >> template [
 		  expression: RMDLiteralNode zero
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDAttributeDefinitionNode >> asPresenter [
 
 	^ RMDAttributeDefinitionBrowser on: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionNode >> identifier [
 
 	^ self variable identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionNode >> identifier: aString [ 
 	self variable identifier: aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDefinitionNode >> isAttributeDefinitionNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAttributeDefinitionNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current attributeDefinition end parse: self printString)
 	  = self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionNode >> operator [
 	^ '='
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDefinitionNode >> printOn: aStream [
 	variable printOn: aStream.
 	aStream
@@ -59,7 +61,7 @@ RMDAttributeDefinitionNode >> printOn: aStream [
 	definitionBody printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -80,20 +82,20 @@ RMDAttributeDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyn
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAttributeDefinitionNode >> printShortOn: aStream [
 
 	super printShortOn: aStream.
 	aStream nextPut: $'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionNode >> variableOperator [
 
 	^ variable operator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAttributeDefinitionNode >> variableOperator: aString [
 
 	variable := variable operator: aString

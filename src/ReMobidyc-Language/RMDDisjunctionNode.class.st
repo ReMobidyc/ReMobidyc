@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDDisjunctionNode,
-	#superclass : #RMDBinaryCombinatorNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDisjunctionNode',
+	#superclass : 'RMDBinaryCombinatorNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDisjunctionNode >> isDisjunctionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDisjunctionNode >> operator [
 	^ ' or '
 ]

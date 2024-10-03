@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDPatchDirectiveNode,
-	#superclass : #RMDDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDPatchDirectiveNode',
+	#superclass : 'RMDDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPatchDirectiveNode class >> isAbstract [
 
 	^ self = RMDPatchDirectiveNode

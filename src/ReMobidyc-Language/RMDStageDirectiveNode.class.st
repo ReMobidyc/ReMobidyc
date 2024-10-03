@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDStageDirectiveNode,
-	#superclass : #RMDLifeDirectiveNode,
+	#name : 'RMDStageDirectiveNode',
+	#superclass : 'RMDLifeDirectiveNode',
 	#instVars : [
 		'animatIdentifier'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDStageDirectiveNode class >> animatIdentifier: aString [
 
 	^ self new
@@ -15,20 +17,20 @@ RMDStageDirectiveNode class >> animatIdentifier: aString [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDStageDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  animatIdentifier = anObject animatIdentifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDStageDirectiveNode >> animatIdentifier [
 
 	^ animatIdentifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDStageDirectiveNode >> animatIdentifier: aString [
 
 	animatIdentifier := aString = '-'
@@ -36,30 +38,30 @@ RMDStageDirectiveNode >> animatIdentifier: aString [
 		                    ifFalse: [ aString ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDStageDirectiveNode >> hasNewAgents [
 
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDStageDirectiveNode >> hash [
 
 	^ super hash bitXor: animatIdentifier hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDStageDirectiveNode >> isPlaceholderNode [
 
 	^ animatIdentifier isNil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDStageDirectiveNode >> isStageDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDStageDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -67,7 +69,7 @@ RMDStageDirectiveNode >> printOn: aStream [
 		nextPutAll: (animatIdentifier ifNil: [ '-' ])
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDStageDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -79,7 +81,7 @@ RMDStageDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNo
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDStageDirectiveNode >> renameAnimat: aString to: anotherString [
 
 	animatIdentifier = aString ifTrue: [ 
@@ -87,7 +89,7 @@ RMDStageDirectiveNode >> renameAnimat: aString to: anotherString [
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDStageDirectiveNode >> replaceChildren: aDictionary [
 
 	aDictionary

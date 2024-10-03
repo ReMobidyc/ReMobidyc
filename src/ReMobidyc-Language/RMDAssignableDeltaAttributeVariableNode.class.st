@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDAssignableDeltaAttributeVariableNode,
-	#superclass : #RMDAbstractAssignableAttributeVariableNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDAssignableDeltaAttributeVariableNode',
+	#superclass : 'RMDAbstractAssignableAttributeVariableNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAssignableDeltaAttributeVariableNode >> isAssignableDeltaVariableNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAssignableDeltaAttributeVariableNode >> operator [
 	^ 'Δ'
 ]

@@ -1,28 +1,30 @@
 Class {
-	#name : #RMDSyntaxNode,
-	#superclass : #Object,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDSyntaxNode',
+	#superclass : 'Object',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSyntaxNode >> = anObject [
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> agentDirectiveNodesDo: aBlock [
 
 	self nodesDo: [ :node | 
 		node isAgentDirectiveNode ifTrue: [ aBlock cull: node ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDSyntaxNode >> asString [
 
 	^ self printString
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
 
 	^ self
@@ -30,7 +32,7 @@ RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode [
 		  color: Color red
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode color: aColor [
 
 	| sections nodes newText |
@@ -51,7 +53,7 @@ RMDSyntaxNode >> asTextWithHighlights: aCollectionOfIntervalOrRMDSyntaxNode colo
 	^ newText
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
 	self
 		nodesDo: [ :node | 
@@ -59,30 +61,30 @@ RMDSyntaxNode >> attributeVariableNodesDo: aBlock [
 				ifTrue: [ aBlock cull: node ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDSyntaxNode >> beTraceable [
 
 	^ self copy insertTrace
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> childrenDo: aBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> childrenTransform: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSyntaxNode >> copyReplace: aDictionary [
 	aDictionary at: self ifPresent: [ :node | ^ node copy ].
 	^ self shallowCopy replaceChildren: aDictionary
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> errorNodesInTypecheck: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
 
 	| errorNodes |
@@ -111,7 +113,7 @@ RMDSyntaxNode >> errorNodesInTypecheck: aRMDType subject: aString object: anothe
 	^ errorNodes
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> hasConditionPlaceholder: aRMDPlaceholder [
 
 	self childrenDo: [ :node | 
@@ -119,19 +121,19 @@ RMDSyntaxNode >> hasConditionPlaceholder: aRMDPlaceholder [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> hasPlaceholder [
 
 	self nodesDo: [ :node | node isPlaceholderNode ifTrue: [ ^ true ] ].
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSyntaxNode >> hash [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDTypechecker [
 
 	^ self
@@ -140,7 +142,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType in: aRMDTypechecker [
 		  in: aRMDTypechecker
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDTypechecker [
 
 	^ self
@@ -150,7 +152,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString in: aRMDTypec
 		  in: aRMDTypechecker
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString in: aRMDTypechecker [
 
 	^ self
@@ -161,7 +163,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 		  in: aRMDTypechecker
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker [
 
 	^ self
@@ -173,7 +175,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 		  permitUnresolvedAttributeReference: false
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode in: aRMDTypechecker permitUnresolvedAttributeReference: aBool [
 
 	^ self
@@ -187,7 +189,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString object: anoth
 		  color: (Color yellow mixed: 0.7 with: Color black)
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
 
 	^ self
@@ -198,7 +200,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType subject: aString utilities: an
 		  in: aRMDTypechecker
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtilityDefinition in: aRMDTypechecker [
 
 	^ self
@@ -208,7 +210,7 @@ RMDSyntaxNode >> highlightedSourceTyped: aRMDType utilities: anArrayOfRMDUtility
 		  in: aRMDTypechecker
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
 	self
 		nodesDo: [ :node | 
@@ -217,126 +219,126 @@ RMDSyntaxNode >> includesNode: aRMDSyntaxNode [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSyntaxNode >> insertTrace [
 
 	self childrenTransform: [ :node | node insertTrace ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isActionDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isActionsFileNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAdditionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAgentDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAgentDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAgentInitializerNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAgentsFileNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAnimatDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAnimatInitializerNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isApplyNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAreaDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAssignableAttributeVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAssignableDeltaVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAssignableDifferentialAttributeVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAttributeDeclarationNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAttributeDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAttributeInitializerNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isAttributeVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isBinaryRelationNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isChanceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isConditionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isConjunctionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isCorrectTypeWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel [
 
 	[
@@ -350,355 +352,355 @@ RMDSyntaxNode >> isCorrectTypeWithSubject: aString object: anotherString utiliti
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDeUnitExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDeltaTimeDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDensityOfIndividualsInPatchDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDensityOfIndividualsInRadiusDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDensityOfIndividualsInWorldDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDieDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDirectionDirectiveNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDirectionOfGradientDirectiveNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDisjunctionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isDistanceDirectiveNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isEnUnitExpressionNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isEqualityNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isExpressionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isFractionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGammaDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGammaMeanDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGammaRateDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGammaScaleDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGreaterOrEqualNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGreaterThanNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isGuardedChoiceNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isHereAttributeVariableNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isKillDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isLessOrEqualNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isLessThanNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isLifeDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isLiteralNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isLogLogisticDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isMetaParameterSequenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isMetaParameterSetSequenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isMetaSingleParameterSequenceNode [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isMyAttributeVariableNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNegationNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNewAttributeVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNewDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNormalDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNotEqualNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNumberOfIndividualsInPatchDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNumberOfIndividualsInRadiusDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isNumberOfIndividualsInWorldDirective [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isParameterInstantiationNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isPatchDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isPatchDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isPatchInitializerNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isPlaceholderNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isPowerNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isProductNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isReferenceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isRemainderNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isSimulationDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isSimulationDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isSimulationFileNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isSimulationTimeDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isStageDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isSubtractionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isTaskDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isTasksFileNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isTimeDirectiveNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isTraceNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isUnaryMinusNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isUniformDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isUniformIntegerDistributionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isUtilityDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isUtilityVariableNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isVisualizationFileNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isWellTypedWithSubject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinition in: aRMDSimulationModel permitsUnresolvedAttributeReference: aBool [
 
 	[
@@ -724,94 +726,94 @@ RMDSyntaxNode >> isWellTypedWithSubject: aString object: anotherString utilities
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isWorldAttributeVariableNode [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isWorldDefinitionNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNode >> isWorldInitializerNode [
 	^ false
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSyntaxNode >> metaparameters: aDictionary [
 
 	^ self copyReplace: aDictionary
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> nodesDo: aBlock [
 	aBlock value: self.
 	self childrenDo: [ :node | node nodesDo: aBlock ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> nodesSuchThat: condition do: aBlock [
 	(condition value: self)
 		ifTrue: [ aBlock value: self ].
 	self childrenDo: [ :node | node nodesSuchThat: condition do: aBlock ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSyntaxNode >> pealTrace [
 
 	self childrenTransform: [ :node | node pealTrace ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> placeholderNodesDo: aBlock [
 
 	self nodesDo: [ :node | 
 		node isPlaceholderNode ifTrue: [ aBlock cull: node ] ]
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDSyntaxNode >> postCopy [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> printOn: aStream [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSyntaxNode >> printShortOn: aStream [
 
 	self printOn: aStream
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSyntaxNode >> removeTrace [
 
 	self childrenTransform: [ :node | node removeTrace ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSyntaxNode >> renameAnimat: aString to: anotherString [
 
 	self childrenDo: [ :node | 
 		node renameAnimat: aString to: anotherString ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSyntaxNode >> replaceChildren: aDictionary [
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSyntaxNode >> utilityVariableNodesDo: aBlock [
 	self
 		nodesDo: [ :node | 

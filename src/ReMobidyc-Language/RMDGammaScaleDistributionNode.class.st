@@ -1,64 +1,66 @@
 Class {
-	#name : #RMDGammaScaleDistributionNode,
-	#superclass : #RMDGammaDistributionNode,
+	#name : 'RMDGammaScaleDistributionNode',
+	#superclass : 'RMDGammaDistributionNode',
 	#instVars : [
 		'scaleExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaScaleDistributionNode >> = anObject [
 
 	^ super = anObject and: [ scaleExpression = anObject scaleExpression ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaScaleDistributionNode >> childrenDo: aBlock [
 
 	super childrenDo: aBlock.
 	aBlock value: scaleExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDGammaScaleDistributionNode >> childrenTransform: aBlock [
 
 	super childrenTransform: aBlock.
 	scaleExpression := aBlock value: scaleExpression
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDGammaScaleDistributionNode >> hash [
 
 	^ super hash bitXor: scaleExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDGammaScaleDistributionNode >> isGammaScaleDistributionNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaScaleDistributionNode >> parameter2Expression [
 
 	^ self scaleExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaScaleDistributionNode >> parameterName [
 
 	^ 'scale'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDGammaScaleDistributionNode >> postCopy [
 
 	super postCopy.
 	scaleExpression := scaleExpression copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaScaleDistributionNode >> printOn: aStream [
 	aStream nextPutAll: 'gamma '.
 	shapeExpression printOn: aStream.
@@ -66,7 +68,7 @@ RMDGammaScaleDistributionNode >> printOn: aStream [
 	scaleExpression printOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDGammaScaleDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -85,20 +87,20 @@ RMDGammaScaleDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMD
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDGammaScaleDistributionNode >> replaceChildren: aDictionary [
 
 	super replaceChildren: aDictionary.
 	scaleExpression := scaleExpression copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaScaleDistributionNode >> scaleExpression [
 
 	^ scaleExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGammaScaleDistributionNode >> scaleExpression: aRMDExpressionNode [
 
 	scaleExpression := aRMDExpressionNode

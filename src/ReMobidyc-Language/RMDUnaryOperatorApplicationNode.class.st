@@ -1,74 +1,76 @@
 Class {
-	#name : #RMDUnaryOperatorApplicationNode,
-	#superclass : #RMDExpressionNode,
+	#name : 'RMDUnaryOperatorApplicationNode',
+	#superclass : 'RMDExpressionNode',
 	#instVars : [
 		'expression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDUnaryOperatorApplicationNode class >> expression: aRMDExpressionNode [
 	^ self new
 		expression: aRMDExpressionNode;
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDUnaryOperatorApplicationNode class >> isAbstract [
 
 	^ self == RMDUnaryOperatorApplicationNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUnaryOperatorApplicationNode >> = anObject [
 	^ self class = anObject class
 		and: [ expression = anObject expression ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDUnaryOperatorApplicationNode >> asPresenter [
 
 	^ RMDUnaryOperatorExpressionPresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUnaryOperatorApplicationNode >> childrenDo: aBlock [
 	aBlock value: expression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDUnaryOperatorApplicationNode >> childrenTransform: aBlock [
 
 	expression := aBlock value: expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryOperatorApplicationNode >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryOperatorApplicationNode >> expression: aRMDExpressionNode [
 	expression := aRMDExpressionNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUnaryOperatorApplicationNode >> hash [
 	^ self class hash bitXor: expression hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnaryOperatorApplicationNode >> operator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDUnaryOperatorApplicationNode >> postCopy [
 	expression := expression copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUnaryOperatorApplicationNode >> printOn: aStream [
 	aStream nextPutAll: self operator.
 	self precedence < expression precedence
@@ -78,7 +80,7 @@ RMDUnaryOperatorApplicationNode >> printOn: aStream [
 		ifTrue: [ aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUnaryOperatorApplicationNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 	| start |
 	start := aStream position + 1.
@@ -95,7 +97,7 @@ RMDUnaryOperatorApplicationNode >> printOn: aStream ifIncludedIn: aCollectionOfR
 		ifTrue: [ aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDUnaryOperatorApplicationNode >> replaceChildren: aDictionary [
 	expression := expression copyReplace: aDictionary
 ]

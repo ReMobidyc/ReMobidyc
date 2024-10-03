@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDVariabilityNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDVariabilityNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'randomSeed',
 		'metaParameterSequences',
 		'multiplicity'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVariabilityNode class >> multiplicity: anInteger metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
 
 	^ self new
@@ -18,7 +20,7 @@ RMDVariabilityNode class >> multiplicity: anInteger metaParameterSequences: anAr
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVariabilityNode class >> random: anIntegerOrNil metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
 
 	^ self new
@@ -27,7 +29,7 @@ RMDVariabilityNode class >> random: anIntegerOrNil metaParameterSequences: anArr
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDVariabilityNode class >> random: anIntegerOrNil multiplicity: anInteger metaParameterSequences: anArrayOfRMDMetaParameterSequenceNode [
 
 	^ self new
@@ -37,7 +39,7 @@ RMDVariabilityNode class >> random: anIntegerOrNil multiplicity: anInteger metaP
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDVariabilityNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -46,7 +48,7 @@ RMDVariabilityNode >> = anObject [
 				  metaParameterSequences = anObject metaParameterSequences ] ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDVariabilityNode >> addPlaceholders: aCollectionOfPlaceholders [
 
 	metaParameterSequences := metaParameterSequences
@@ -58,19 +60,19 @@ RMDVariabilityNode >> addPlaceholders: aCollectionOfPlaceholders [
 				                           literals: { '0.0' asRMDExpression } ])
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDVariabilityNode >> childrenDo: aBlock [
 
 	metaParameterSequences do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDVariabilityNode >> childrenTransform: aBlock [
 
 	metaParameterSequences := metaParameterSequences collect: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDVariabilityNode >> dictionariesDo: aBlock [
 
 	| numParams |
@@ -94,51 +96,51 @@ RMDVariabilityNode >> dictionariesDo: aBlock [
 			aBlock value: dict ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDVariabilityNode >> hash [
 
 	^ ((self class hash bitXor: randomSeed hash) bitXor: multiplicity hash) 
 		  bitXor: metaParameterSequences hash
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDVariabilityNode >> initialize [
 	multiplicity := 1.
 	randomSeed := nil.
 	metaParameterSequences := Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> metaParameterSequences [
 
 	^ metaParameterSequences
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> metaParameterSequences: anArrayOfRMDParameterSequence [
 
 	metaParameterSequences := anArrayOfRMDParameterSequence
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> multiplicity [
 
 	^ multiplicity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> multiplicity: anInteger [
 
 	multiplicity := anInteger
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDVariabilityNode >> postCopy [
 
 	metaParameterSequences := metaParameterSequences collect: #copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDVariabilityNode >> printOn: aStream [
 
 	aStream nextPutAll: 'Variability'.
@@ -161,7 +163,7 @@ RMDVariabilityNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDVariabilityNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -191,19 +193,19 @@ RMDVariabilityNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode 
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> randomSeed [
 
 	^ randomSeed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDVariabilityNode >> randomSeed: anIntegerOrNil [
 
 	randomSeed := anIntegerOrNil
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDVariabilityNode >> removePlaceholders: aCollectionOfPlaceholders [
 
 	metaParameterSequences := Array streamContents: [ :stream | 
@@ -216,7 +218,7 @@ RMDVariabilityNode >> removePlaceholders: aCollectionOfPlaceholders [
 				                          stream nextPut: newSequence ] ] ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDVariabilityNode >> replaceChildren: aDictionary [
 
 	metaParameterSequences := metaParameterSequences collect: [ 

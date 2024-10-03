@@ -1,41 +1,43 @@
 Class {
-	#name : #RMDSimulationDirectiveNode,
-	#superclass : #RMDDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDSimulationDirectiveNode',
+	#superclass : 'RMDDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSimulationDirectiveNode class >> isAbstract [
 
 	^ self = RMDSimulationDirectiveNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSimulationDirectiveNode >> = anObject [
 
 	^ self class = anObject class
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationDirectiveNode >> childrenDo: aBlock [
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDSimulationDirectiveNode >> hash [
 
 	^ self class hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSimulationDirectiveNode >> isSimulationDirectiveNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDSimulationDirectiveNode >> postCopy [
 	
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSimulationDirectiveNode >> replaceChildren: aDictionary [
 ]

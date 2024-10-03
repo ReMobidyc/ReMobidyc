@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDActionDefinitionNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDActionDefinitionNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'identifier',
 		'object',
@@ -9,10 +9,12 @@ Class {
 		'utilityDefinitions',
 		'attributeDefinitions'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDActionDefinitionNode class >> name: aString [
 
 	<script: '(RMDActionDefinitionNode name: ''verb'') inspect'>
@@ -25,7 +27,7 @@ RMDActionDefinitionNode class >> name: aString [
 		  utilityDefinitions: Array new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMDCondition lifeDirectives: anArrayOfRMDLifeDirective attributeDefinitions: anArrayOfRMDAttributeDefinition utilityDefinitions: anArrayOfRMDUtilityDefinition [
 
 	^ self new
@@ -40,7 +42,7 @@ RMDActionDefinitionNode class >> name: scriptName object: objectName guard: aRMD
 		  yourself
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDActionDefinitionNode class >> prey_on [
 	<script: 'RMDActionDefinitionNode prey_on inspect'>
 	^ 'to prey_on Prey is
@@ -49,7 +51,7 @@ with kill
 	my delta blood_sugar'' = prey''s blood_sugar.' asRMDActionDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDActionDefinitionNode class >> reproduce [
 	<script: 'RMDActionDefinitionNode reproduce inspect'>
 	^ 'to reproduce is
@@ -61,7 +63,7 @@ with new -
 	my delta blood_sugar'' = -the reproduction_cost.' asRMDActionDefinition
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDActionDefinitionNode class >> template [
 
 	<script: 'RMDActionDefinitionNode template inspect'>
@@ -74,7 +76,7 @@ RMDActionDefinitionNode class >> template [
 		  utilityDefinitions: Array new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 	| variables actionDefinition |
 	variables := Dictionary new.
@@ -121,7 +123,7 @@ RMDActionDefinitionNode class >> withAll: aCollectionOfRMDActionDefinitionNode [
 	^ actionDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 	^ self class
 		name: identifier , '_' , aRMDActionDefinitionNode identifier
@@ -145,7 +147,7 @@ RMDActionDefinitionNode >> + aRMDActionDefinitionNode [
 		utilityDefinitions: utilityDefinitions , aRMDActionDefinitionNode utilityDefinitions
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDActionDefinitionNode >> = anObject [
 
 	^ self class = anObject class and: [ 
@@ -157,23 +159,23 @@ RMDActionDefinitionNode >> = anObject [
 							  utilityDefinitions = anObject utilityDefinitions ] ] ] ] ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDActionDefinitionNode >> asPresenter [
 
 	^ RMDActionDefinitionBrowser on: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> attributeDefinitions [
 	^ attributeDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> attributeDefinitions: aRMDAttributeDefinitionNode [
 	attributeDefinitions := aRMDAttributeDefinitionNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDActionDefinitionNode >> childrenDo: aBlock [
 
 	guard ifNotNil: aBlock.
@@ -182,7 +184,7 @@ RMDActionDefinitionNode >> childrenDo: aBlock [
 	utilityDefinitions do: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDActionDefinitionNode >> childrenTransform: aBlock [
 
 	guard ifNotNil: [ guard := aBlock value: guard ].
@@ -191,29 +193,29 @@ RMDActionDefinitionNode >> childrenTransform: aBlock [
 	utilityDefinitions := utilityDefinitions collect: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> guard [
 	^ guard
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> guard: aRMDCondition [
 	guard := aRMDCondition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDActionDefinitionNode >> hasConditionPlaceholder: aRMDPlaceholder [
 
 	guard = aRMDPlaceholder ifTrue: [ ^ true ].
 	^ super hasConditionPlaceholder: aRMDPlaceholder
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDActionDefinitionNode >> hasObject [
 	^ object notNil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDActionDefinitionNode >> hash [
 
 	^ ((((identifier hash bitXor: object hash) bitXor: guard hash) 
@@ -221,55 +223,55 @@ RMDActionDefinitionNode >> hash [
 		  bitXor: utilityDefinitions hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDActionDefinitionNode >> isActionDefinitionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> lifeDirectives [
 	^ lifeDirectives
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> lifeDirectives: anArrayOfRMDLifeDirective [
 
 	lifeDirectives := anArrayOfRMDLifeDirective
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDActionDefinitionNode >> metaparameters: aDictionary [
 
 	^ self copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> name [
 
 	^ identifier , (object ifNil: [ '' ] ifNotNil: [ ' ' , object ])
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> object [
 	^ object
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> object: aString [
 	object := aString
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDActionDefinitionNode >> postCopy [
 
 	guard := guard ifNotNil: [ guard copy ].
@@ -281,7 +283,7 @@ RMDActionDefinitionNode >> postCopy [
 		                      utilityDefinitions collect: #copy ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDActionDefinitionNode >> printOn: aStream [
 
 	aStream
@@ -324,7 +326,7 @@ RMDActionDefinitionNode >> printOn: aStream [
 		nextPut: Character cr
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -384,7 +386,7 @@ RMDActionDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDActionDefinitionNode >> printShortOn: aStream [
 
 	aStream
@@ -396,7 +398,7 @@ RMDActionDefinitionNode >> printShortOn: aStream [
 			nextPutAll: object ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> references [
 
 	^ (Array streamContents: [ :stream |
@@ -405,14 +407,14 @@ RMDActionDefinitionNode >> references [
 			   do: [ :node | stream nextPut: node ] ]) asSet
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDActionDefinitionNode >> renameAnimat: aString to: anotherString [
 
 	object = aString ifTrue: [ object := anotherString ].
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDActionDefinitionNode >> replaceChildren: aDictionary [
 
 	aDictionary
@@ -431,7 +433,7 @@ RMDActionDefinitionNode >> replaceChildren: aDictionary [
 		                      node copyReplace: aDictionary ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> replaceObjectWith: aString [
 
 	| objectName agentName |
@@ -448,7 +450,7 @@ RMDActionDefinitionNode >> replaceObjectWith: aString [
 	object := aString capitalized
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
 
 	aRMDConditionNode ifNil: [ ^ self ].
@@ -457,7 +459,7 @@ RMDActionDefinitionNode >> taskGuard: aRMDConditionNode [
 		         ifNotNil: [ guard & aRMDConditionNode ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> traceReferences [
 
 	^ (Array streamContents: [ :stream |
@@ -469,12 +471,12 @@ RMDActionDefinitionNode >> traceReferences [
 		  #printString ascending
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> utilityDefinitions [
 	^ utilityDefinitions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionDefinitionNode >> utilityDefinitions: anArrayOfRMDUtilityDefinition [
 	utilityDefinitions := anArrayOfRMDUtilityDefinition
 ]

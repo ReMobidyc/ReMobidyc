@@ -1,27 +1,29 @@
 Class {
-	#name : #RMDDeltaTimeDirectiveNode,
-	#superclass : #RMDSimulationDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDDeltaTimeDirectiveNode',
+	#superclass : 'RMDSimulationDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDDeltaTimeDirectiveNode >> asPresenter [
 
 	^ RMDAtomicDirectivePresenter on: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDeltaTimeDirectiveNode >> isDeltaTimeDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDeltaTimeDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'Δtime'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDeltaTimeDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

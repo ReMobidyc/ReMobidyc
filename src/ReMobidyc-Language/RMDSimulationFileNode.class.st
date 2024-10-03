@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDSimulationFileNode,
-	#superclass : #RMDModelFileNode,
+	#name : 'RMDSimulationFileNode',
+	#superclass : 'RMDModelFileNode',
 	#instVars : [
 		'simulationDefinition'
 	],
-	#category : #'ReMobidyc-Language-File'
+	#category : 'ReMobidyc-Language-File',
+	#package : 'ReMobidyc-Language',
+	#tag : 'File'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationFileNode class >> simulationDefinition: aRMDSimulationDefinitionNode [
 
 	^ self new
@@ -15,25 +17,25 @@ RMDSimulationFileNode class >> simulationDefinition: aRMDSimulationDefinitionNod
 		  yourself
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationFileNode >> contentsDo: aBlock [
 
 	simulationDefinition value: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSimulationFileNode >> isSimulationFileNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationFileNode >> simulationDefinition [
 
 	^ simulationDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationFileNode >> simulationDefinition: aRMDSimulationDefinitionNode [
 
 	simulationDefinition := aRMDSimulationDefinitionNode

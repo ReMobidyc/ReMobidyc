@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDKillDirectiveNode,
-	#superclass : #RMDLifeDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDKillDirectiveNode',
+	#superclass : 'RMDLifeDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDKillDirectiveNode >> isKillDirectiveNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDKillDirectiveNode >> printOn: aStream [
 
 	aStream nextPutAll: 'kill'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDKillDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |

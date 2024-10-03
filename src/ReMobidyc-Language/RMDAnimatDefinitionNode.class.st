@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDAnimatDefinitionNode,
-	#superclass : #RMDAgentDefinitionNode,
+	#name : 'RMDAnimatDefinitionNode',
+	#superclass : 'RMDAgentDefinitionNode',
 	#instVars : [
 		'identifier',
 		'species'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode class >> createBuiltinAttributes [
 
 	^ { 
@@ -16,14 +18,14 @@ RMDAnimatDefinitionNode class >> createBuiltinAttributes [
 		  ('y' -> RMDUnit m) }
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAnimatDefinitionNode class >> goat [
 	<script: 'RMDAnimatDefinitionNode goat inspect'>
 	^ RMDGrammar current animatDefinition end parse: 'Goat is Goat with
 	blood_sugar [kcal].'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attributeDeclarations: anArrayOfRMDAttributeDeclarationNode utilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	^ (self
@@ -34,58 +36,58 @@ RMDAnimatDefinitionNode class >> identifier: aString species: anotherString attr
 		  yourself
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDAnimatDefinitionNode class >> wolf [
 	<script: 'RMDAnimatDefinitionNode wolf inspect'>
 	^ RMDGrammar current animatDefinition end parse: 'Wolf is Wolf with
 	blood_sugar [kcal].'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAnimatDefinitionNode >> = anObject [
 	^ super = anObject and: [ identifier = anObject identifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> fullName [
 
 	^ self species , '(' , identifier , ')'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAnimatDefinitionNode >> hash [
 	^ super hash bitXor: identifier hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> identifier [
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> identifier: aString [
 	identifier := aString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAnimatDefinitionNode >> initialize [
 
 	super initialize.
 	species := 'Animat'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAnimatDefinitionNode >> isAnimatDefinitionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> name [
 
 	^ identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAnimatDefinitionNode >> printOn: aStream [
 
 	aStream
@@ -114,7 +116,7 @@ RMDAnimatDefinitionNode >> printOn: aStream [
 	aStream nextPut: $.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAnimatDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -153,14 +155,14 @@ RMDAnimatDefinitionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntax
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAnimatDefinitionNode >> renameAnimat: aString to: anotherString [
 
 	identifier = aString ifTrue: [ identifier := anotherString ].
 	super renameAnimat: aString to: anotherString
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAnimatDefinitionNode >> replaceChildren: aDictionary [
 	super replaceChildren: aDictionary.
 	aDictionary
@@ -168,24 +170,24 @@ RMDAnimatDefinitionNode >> replaceChildren: aDictionary [
 		ifPresent: [ :node | identifier := node copy ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> species [
 
 	^ species
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> species: aString [
 
 	species := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> xOffset [
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAnimatDefinitionNode >> yOffset [
 	^ 1
 ]

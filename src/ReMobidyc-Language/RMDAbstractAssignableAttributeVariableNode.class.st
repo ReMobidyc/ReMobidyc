@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDAbstractAssignableAttributeVariableNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDAbstractAssignableAttributeVariableNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'attributeVariable'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAbstractAssignableAttributeVariableNode class >> attributeVariable: aRMDAttributeVariableNode [
 
 	^ self new
@@ -15,7 +17,7 @@ RMDAbstractAssignableAttributeVariableNode class >> attributeVariable: aRMDAttri
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode class >> classForOperator: aString [
 
 	aString = self deltaOperator ifTrue: [
@@ -25,108 +27,108 @@ RMDAbstractAssignableAttributeVariableNode class >> classForOperator: aString [
 	^ RMDAssignableAttributeVariableNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode class >> deltaOperator [
 
 	^ 'Δ'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode class >> differentialOperator [
 
 	^ 'd/dt '
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAbstractAssignableAttributeVariableNode class >> identifier: aString agent: anotherString [
 	^ self new
 		attributeVariable: (RMDAttributeVariableNode identifier: aString agent: anotherString);
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDAbstractAssignableAttributeVariableNode class >> operator: aString attributeVariable: aRMDAttributeVariableNode [
 
 	^ (self classForOperator: aString) attributeVariable:
 		  aRMDAttributeVariableNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAbstractAssignableAttributeVariableNode >> = anObject [
 	^ self class = anObject class
 		and: [ attributeVariable = anObject attributeVariable ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> agent [
 	^ attributeVariable agent
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> agent: aString [
 
 	self attributeVariable:
 		(RMDAttributeVariableNode identifier: self identifier agent: aString)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> attributeVariable [
 	^ attributeVariable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> attributeVariable: aRMDAttributeVariableNode [
 	attributeVariable := aRMDAttributeVariableNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAbstractAssignableAttributeVariableNode >> childrenDo: aBlock [
 	aBlock value: attributeVariable
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDAbstractAssignableAttributeVariableNode >> childrenTransform: aBlock [
 
 	attributeVariable := aBlock value: attributeVariable
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDAbstractAssignableAttributeVariableNode >> hash [
 	^ self class hash bitXor: attributeVariable hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> identifier [
 	^ attributeVariable identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> identifier: aString [
 
 	attributeVariable identifier: aString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractAssignableAttributeVariableNode >> insertTrace [
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractAssignableAttributeVariableNode >> operator [
 	^ self subclassResponsibility
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDAbstractAssignableAttributeVariableNode >> operator: aString [
 
 	^ self class operator: aString attributeVariable: attributeVariable
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDAbstractAssignableAttributeVariableNode >> postCopy [
 	
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAbstractAssignableAttributeVariableNode >> printOn: aStream [
 
 	aStream
@@ -136,7 +138,7 @@ RMDAbstractAssignableAttributeVariableNode >> printOn: aStream [
 		nextPutAll: self identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDAbstractAssignableAttributeVariableNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -151,7 +153,7 @@ RMDAbstractAssignableAttributeVariableNode >> printOn: aStream ifIncludedIn: aCo
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDAbstractAssignableAttributeVariableNode >> replaceChildren: aDictionary [
 	attributeVariable := attributeVariable copyReplace: aDictionary
 ]

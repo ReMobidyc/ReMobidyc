@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDPlaceholderNode,
-	#superclass : #RMDSyntaxNode,
+	#name : 'RMDPlaceholderNode',
+	#superclass : 'RMDSyntaxNode',
 	#instVars : [
 		'identifier'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDPlaceholderNode class >> identifier: aString [
 
 	^ self new
@@ -15,83 +17,83 @@ RMDPlaceholderNode class >> identifier: aString [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPlaceholderNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  identifier = anObject identifier ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPlaceholderNode >> agent [
 	^ #the
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDPlaceholderNode >> asPrettyPrintNode [
 
 	^ RMDPrettyPrintNode agent: 'the' attribute: self identifier
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPlaceholderNode >> childrenDo: aBlock [
 
 	
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDPlaceholderNode >> childrenTransform: aBlock [
 
 	
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDPlaceholderNode >> hash [
 
 	^ self class hash bitXor: identifier hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPlaceholderNode >> identifier [
 
 	^ identifier
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPlaceholderNode >> identifier: aString [
 
 	identifier := aString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPlaceholderNode >> isConditionPlaceholderIn: aRMDActionDefinitionNode [
 
 	^ aRMDActionDefinitionNode hasConditionPlaceholder: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDPlaceholderNode >> isPlaceholderNode [
 
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDPlaceholderNode >> postCopy [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPlaceholderNode >> precedence [
 	^ 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPlaceholderNode >> prefix [
 	^ 'the'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPlaceholderNode >> printOn: aStream [
 
 	aStream
@@ -100,7 +102,7 @@ RMDPlaceholderNode >> printOn: aStream [
 		nextPutAll: identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -113,7 +115,7 @@ RMDPlaceholderNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode 
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDPlaceholderNode >> replaceChildren: aDictionary [
 
 	aDictionary

@@ -1,52 +1,54 @@
 Class {
-	#name : #RMDLifeDirectiveNode,
-	#superclass : #RMDSyntaxNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDLifeDirectiveNode',
+	#superclass : 'RMDSyntaxNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLifeDirectiveNode class >> isAbstract [
 
 	^ self == RMDLifeDirectiveNode
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLifeDirectiveNode >> = anObject [
 	^ self class = anObject class
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLifeDirectiveNode >> childrenDo: aBlock [
 
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDLifeDirectiveNode >> childrenTransform: aBlock [
 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLifeDirectiveNode >> hasNewAgents [
 
 	^ false
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDLifeDirectiveNode >> hash [
 	^ self class hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLifeDirectiveNode >> isLifeDirectiveNode [
 	^ true
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDLifeDirectiveNode >> postCopy [
 	
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDLifeDirectiveNode >> replaceChildren: aDictionary [
 	
 ]

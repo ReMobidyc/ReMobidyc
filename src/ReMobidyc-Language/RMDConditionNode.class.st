@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDConditionNode,
-	#superclass : #RMDSyntaxNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDConditionNode',
+	#superclass : 'RMDSyntaxNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDConditionNode class >> isAbstract [
 
 	^ self == RMDConditionNode
 ]
 
-{ #category : #'boolean operations' }
+{ #category : 'boolean operations' }
 RMDConditionNode >> & aRMDConditionNode [
 
 	^ aRMDConditionNode ifNil: [ self ] ifNotNil: [ 
@@ -18,35 +20,35 @@ RMDConditionNode >> & aRMDConditionNode [
 			  (Array with: self with: aRMDConditionNode) ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDConditionNode >> insertTrace [
 
 	^ RMDTraceNode on: super insertTrace
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDConditionNode >> isConditionNode [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDConditionNode >> isCorrectSyntax [
 
 	^ (RMDGrammar current condition end parse: self printString) = self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDConditionNode >> precedence [
 	^ self subclassResponsibility
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDConditionNode >> printCondition [
 
 	^ self printString
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDConditionNode >> printValue [
 
 	^ '-'

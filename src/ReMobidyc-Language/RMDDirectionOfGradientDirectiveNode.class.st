@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDDirectionOfGradientDirectiveNode,
-	#superclass : #RMDPatchDirectiveNode,
+	#name : 'RMDDirectionOfGradientDirectiveNode',
+	#superclass : 'RMDPatchDirectiveNode',
 	#instVars : [
 		'patchAttributeVariable'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDDirectionOfGradientDirectiveNode class >> variable: aRMDAttributeVariableNodeOrRMDPlaceholderNode [
 
 	^ self new
@@ -16,55 +18,55 @@ RMDDirectionOfGradientDirectiveNode class >> variable: aRMDAttributeVariableNode
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDDirectionOfGradientDirectiveNode >> = anObject [
 
 	^ self class = anObject class and: [ 
 		  patchAttributeVariable = anObject patchAttributeVariable ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDDirectionOfGradientDirectiveNode >> asPresenter [
 
 	^ RMDDirectionOfGradientDirectivePresenter on: self
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDDirectionOfGradientDirectiveNode >> childrenDo: aBlock [
 
 	aBlock value: patchAttributeVariable
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDDirectionOfGradientDirectiveNode >> hash [
 	^ self class hash bitXor: patchAttributeVariable hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDDirectionOfGradientDirectiveNode >> isDirectionOfGradientDirectiveNode [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDirectionOfGradientDirectiveNode >> patchAttributeVariable [
 
 	^ patchAttributeVariable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDDirectionOfGradientDirectiveNode >> patchAttributeVariable: aRMDAttributeVariableNodeOrRMDPlaceholderNode [
 
 	patchAttributeVariable := aRMDAttributeVariableNodeOrRMDPlaceholderNode
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDDirectionOfGradientDirectiveNode >> postCopy [
 
 	patchAttributeVariable := patchAttributeVariable copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDirectionOfGradientDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -72,7 +74,7 @@ RMDDirectionOfGradientDirectiveNode >> printOn: aStream [
 		nextPutAll: patchAttributeVariable identifier
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDDirectionOfGradientDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -84,7 +86,7 @@ RMDDirectionOfGradientDirectiveNode >> printOn: aStream ifIncludedIn: aCollectio
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDDirectionOfGradientDirectiveNode >> replaceChildren: aDictionary [
 	aDictionary
 		at: patchAttributeVariable 

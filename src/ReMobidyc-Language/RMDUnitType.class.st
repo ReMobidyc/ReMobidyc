@@ -1,59 +1,61 @@
 Class {
-	#name : #RMDUnitType,
-	#superclass : #RMDType,
+	#name : 'RMDUnitType',
+	#superclass : 'RMDType',
 	#instVars : [
 		'originalUnit'
 	],
-	#category : #'ReMobidyc-Language-Type'
+	#category : 'ReMobidyc-Language-Type',
+	#package : 'ReMobidyc-Language',
+	#tag : 'Type'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDUnitType class >> unit: aRMDUnit [
 	^ self new
 		unit: aRMDUnit;
 		yourself
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDUnitType >> * aRMDType [
 
 	aRMDType isAny ifTrue: [ ^ aRMDType ].
 	^ RMDType unit: originalUnit * aRMDType originalUnit
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDUnitType >> ** aNumber [
 
 	^ RMDType unit: originalUnit ** aNumber
 ]
 
-{ #category : #arithmetics }
+{ #category : 'arithmetics' }
 RMDUnitType >> / aRMDType [
 
 	aRMDType isAny ifTrue: [ ^ aRMDType ].
 	^ RMDType unit: originalUnit / aRMDType originalUnit
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUnitType >> = anObject [
 
 	^ self class = anObject class and: [
 		  originalUnit = anObject originalUnit ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDUnitType >> hash [
 
 	^ self class hash bitXor: originalUnit hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnitType >> originalUnit [
 
 	^ originalUnit
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDUnitType >> printOn: aStream [
 
 	aStream nextPut: $[.
@@ -61,20 +63,20 @@ RMDUnitType >> printOn: aStream [
 	aStream nextPut: $]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDUnitType >> unify: aRMDType [
 
 	(aRMDType isAny or: [ self unit = aRMDType unit ]) ifTrue: [ ^ self ].
 	^ (RMDTypeUnificationError on: self and: aRMDType) signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnitType >> unit [
 
 	^ originalUnit siUnit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDUnitType >> unit: aRMDUnit [
 
 	originalUnit := aRMDUnit

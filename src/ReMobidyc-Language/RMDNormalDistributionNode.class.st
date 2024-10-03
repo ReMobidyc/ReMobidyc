@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDNormalDistributionNode,
-	#superclass : #RMDRandomNode,
+	#name : 'RMDNormalDistributionNode',
+	#superclass : 'RMDRandomNode',
 	#instVars : [
 		'sigmaExpression',
 		'meanExpression'
 	],
-	#category : #'ReMobidyc-Language-AST'
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNormalDistributionNode class >> mean: aRMDLiteral sigma: anotherRMDLiteral [
 
 	^ self new
@@ -17,85 +19,85 @@ RMDNormalDistributionNode class >> mean: aRMDLiteral sigma: anotherRMDLiteral [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNormalDistributionNode >> = anObject [
 	^ self class = anObject class
 		and: [ meanExpression = anObject meanExpression
 				and: [ sigmaExpression = anObject sigmaExpression ] ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNormalDistributionNode >> childrenDo: aBlock [
 	aBlock
 		value: meanExpression;
 		value: sigmaExpression
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDNormalDistributionNode >> childrenTransform: aBlock [
 
 	meanExpression := aBlock value: meanExpression.
 	sigmaExpression := aBlock value: sigmaExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> distributionName [
 
 	^ 'normal'
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RMDNormalDistributionNode >> hash [
 	^ (self class hash bitXor: meanExpression hash) bitXor: sigmaExpression hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNormalDistributionNode >> isNormalDistributionNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> meanExpression [
 
 	^ meanExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> meanExpression: aRMDExpressionNode [
 
 	meanExpression := aRMDExpressionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> parameter1Expression [
 
 	^ self meanExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> parameter2Expression [
 
 	^ self sigmaExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> parameterName [
 
 	^ 'sigma'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDNormalDistributionNode >> postCopy [
 	meanExpression := meanExpression copy.
 	sigmaExpression := sigmaExpression copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> precedence [
 	^ 10
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNormalDistributionNode >> printOn: aStream [
 
 	aStream nextPutAll: 'normal '.
@@ -112,7 +114,7 @@ RMDNormalDistributionNode >> printOn: aStream [
 		aStream nextPut: $) ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNormalDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
@@ -139,19 +141,19 @@ RMDNormalDistributionNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSynt
 		aCollection add: (start to: aStream position) ]
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDNormalDistributionNode >> replaceChildren: aDictionary [
 	meanExpression := meanExpression copyReplace: aDictionary.
 	sigmaExpression := sigmaExpression copyReplace: aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> sigmaExpression [
 
 	^ sigmaExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNormalDistributionNode >> sigmaExpression: aRMDExpressionNode [
 
 	sigmaExpression := aRMDExpressionNode

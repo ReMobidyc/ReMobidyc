@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDNumberOfIndividualsInRadiusDirectiveNode,
-	#superclass : #RMDIndividualsInRadiusDirectiveNode,
-	#category : #'ReMobidyc-Language-AST'
+	#name : 'RMDNumberOfIndividualsInRadiusDirectiveNode',
+	#superclass : 'RMDIndividualsInRadiusDirectiveNode',
+	#category : 'ReMobidyc-Language-AST',
+	#package : 'ReMobidyc-Language',
+	#tag : 'AST'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> directiveName [
 
 	^ 'number of'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> isNumberOfIndividualsInRadiusDirective [
 
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> printOn: aStream [
 
 	aStream
@@ -27,7 +29,7 @@ RMDNumberOfIndividualsInRadiusDirectiveNode >> printOn: aStream [
 	aStream nextPutAll: ' radius'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> printOn: aStream ifIncludedIn: aCollectionOfRMDSyntaxNode addSectionTo: aCollection [
 
 	| start |
