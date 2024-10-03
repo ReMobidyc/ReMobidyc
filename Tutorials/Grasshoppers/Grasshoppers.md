@@ -51,10 +51,10 @@ Adult and Egg are life-history stages and are both modeled as Animat.
 ### Adult animat
 
 Selecting the green '+' tab will bring you the new animat page.
+Type "Grasshopper" as the new species name and "Adult" as the stage name.
+Then, press the green "+" button on the right to create a new animat named `Adult`.
 
 <img alt="Add Grasshopper" src="create-Grasshopper.png" width=600>
-
-Type "Grasshopper" and then press the green "+" button on the right to create a new animat named `Grasshopper`.
 
 ### age attribute of Grasshopper
 
@@ -63,7 +63,7 @@ To judge maturity of grasshopper to lay eggs, we define the `age` attribute of t
 
 <img alt="Grasshopper definition" src="Grasshopper-initial.png" width=600>
 
-Pressing the green "+" button below the Attribute list and type `age` and `[day]` to define the age attribute.
+Pressing the green "+" button below the Attribute list and type `age` in the name column, `[day]` in the unit column, and `0 [day]` in the initial value column to define the age attribute.
 
 <img alt="the age attribute of Grasshopper" src="Grasshopper-age-added.png" width=600>
 
