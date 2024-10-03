@@ -392,7 +392,9 @@ RMDCSVImporter >> initializePresenters [
 		              yourself.
 	self whenBuiltDo: [
 		(self window notNil and: [ self window isDialog ]) ifTrue: [
-			self window buttons first disable ] ]
+			(self window buttons
+				 detect: [ :button | button label = 'Ok' ]
+				 ifNone: [ nil ]) ifNotNil: #disable ] ]
 ]
 
 { #category : 'initialization' }
@@ -707,8 +709,11 @@ RMDCSVImporter >> updateTable [
 					ifTrue: [ table color: Color white ]
 					ifFalse: [ table color: self errorColor ].
 				(self window notNil and: [ self window isDialog ]) ifTrue: [
-					self window buttons first enabled:
-						(newDataFrame numberOfColumns > 1 and: [ self validateTable ]) ] ]
+					(self window buttons
+						 detect: [ :button | button label = 'Ok' ]
+						 ifNone: [ nil ]) ifNotNil: [ :button |
+						button enabled:
+							(newDataFrame numberOfColumns > 1 and: [ self validateTable ]) ] ] ]
 			ifNil: [ table color: self errorColor ] ]
 ]
 

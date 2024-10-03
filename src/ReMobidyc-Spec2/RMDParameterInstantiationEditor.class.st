@@ -114,8 +114,11 @@ RMDParameterInstantiationEditor >> initializePresenters [
 		                   contextMenu: [ self expressionFieldMenu ];
 		                   whenSyntaxNodeChangedDo: [
 			                   self owner ifNotNil: [ :dialog |
-					                   dialog buttons first enabled:
-							                   expressionField syntaxNode notNil ] ]
+					                   (dialog buttons
+						                    detect: [ :button | button label = 'Ok' ]
+						                    ifNone: [ nil ]) ifNotNil: [ :button |
+							                   button enabled:
+									                   expressionField syntaxNode notNil ] ] ]
 				                   yourself.
 	viewExpressionButton := self newButton
 		                        icon: self validatoriumIcon;
