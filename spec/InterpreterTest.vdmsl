@@ -1,8 +1,6 @@
 module InterpreterTest
 imports
-    from UnitTesting
-        operations
-            assertEquals renamed assertEquals;,
+    from UnitTesting operations assertEquals renamed assertEquals;,
     from Interpreter all,
     from AST all,
     from Unit all,
@@ -10,12 +8,20 @@ imports
 exports all
 definitions
 values
-     exampleWorld : AST`WorldDefinition = mk_AST`WorldDefinition([], []);
-     examplePatch : AST`PatchDefinition = mk_AST`PatchDefinition([], []);
-     exampleAnimatA : AST`AnimatDefinition =
+    exampleWorld : AST`WorldDefinition =
+        mk_AST`WorldDefinition([], []);
+    
+    examplePatch : AST`PatchDefinition =
+        mk_AST`PatchDefinition([], []);
+    
+    exampleAnimatA : AST`AnimatDefinition =
         mk_AST`AnimatDefinition(
-            "AnimatA", "Stage1", [mk_AST`AttributeDeclaration("age", Unit`day, nil)], []);
-     exampleActionAge : AST`ActionDefinition =
+            "AnimatA",
+            "Stage1",
+            [mk_AST`AttributeDeclaration("age", Unit`day, nil)],
+            []);
+    
+    exampleActionAge : AST`ActionDefinition =
         mk_AST`ActionDefinition(
             "age",
             nil,
@@ -23,7 +29,8 @@ values
             [],
             [],
             [mk_AST`UtilityDefinition("dt", mk_AST`Literal(1, Unit`s))]);
-     exampleSimulationModel : AST`SimulationModel =
+    
+    exampleSimulationModel : AST`SimulationModel =
         mk_AST`SimulationModel(
             mk_AST`SimulationDefinition(
                 mk_AST`SimulationTimeDefinition(mk_AST`Literal(10, Unit`s), mk_AST`Literal(1, Unit`s)),
@@ -35,7 +42,6 @@ values
             mk_AST`PatchDefinition([], []),
             {"age" |-> exampleActionAge},
             []);
-
 operations
     testSetupActionContextSV : () ==> ()
     testSetupActionContextSV() ==
@@ -139,5 +145,4 @@ operations
             Interpreter`getUtilityDefinition("x"),
             mk_AST`Literal(2, Unit`m),
             "x is defined as x = 2[m]"));
-
 end InterpreterTest

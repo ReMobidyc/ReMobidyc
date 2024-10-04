@@ -7,10 +7,11 @@ imports
 exports all
 definitions
 values
-     UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
-     X_ATTRIBUTE_NAME = "x";
-     Y_ATTRIBUTE_NAME = "y";
-
+    UNRESOLVED_REFERENCE = <UNRESOLVED_REFERENCE>;
+    
+    X_ATTRIBUTE_NAME = "x";
+    
+    Y_ATTRIBUTE_NAME = "y";
 state Interpreter of
     simulationModel : AST`SimulationModel
     attributes : map [AST`Identifier] to (map AST`Identifier to Memory`Address)
@@ -30,7 +31,6 @@ init s ==
         mk_Random`RandomGenerator(1),
         1)
 end
-
 operations
     setGlobalSeed : nat1 ==> ()
     setGlobalSeed(newSeed) == globalSeed := newSeed;
@@ -107,13 +107,13 @@ operations
             random
                 := mk_Random`RandomGenerator(Random`hash([globalSeed, Memory`getTime(), subject, taskSeed])));
     
-    loadUtilityDefinitions: seq of AST`UtilityDefinition ==> ()
+    loadUtilityDefinitions : seq of AST`UtilityDefinition ==> ()
     loadUtilityDefinitions(newUtilityDefinitions) ==
         (utilities := {|->};
         utilityDefinitions
             := {utilDef.identifier |-> utilDef.expression
             | utilDef in seq newUtilityDefinitions});
-
+    
     pure attributeAddresses : AST`AgentDefinition * Memory`Address ==> map AST`Identifier to Memory`Address
     attributeAddresses(agentDefinition, animat) ==
         return let
@@ -127,8 +127,7 @@ operations
                     ^ [decl.identifier
                         | decl in seq agentDefinition.attributeDeclarations]
             in
-                {attrs(offset) |-> animat + offset - 1
-                | offset in set inds attrs};
+                {attrs(offset) |-> animat + offset - 1 | offset in set inds attrs};
     
     pure readUtility : AST`Identifier ==> [real]
     readUtility(identifier) ==
@@ -214,5 +213,4 @@ operations
     
     pure normalizeY : real ==> real
     normalizeY(y) == return (y - worldSouth()) / patchLength();
-
 end Interpreter

@@ -3,41 +3,53 @@ imports from Unit all
 exports all
 definitions
 types
-     SimulationModel ::
+    SimulationModel ::
         simulationDefinition : AST`SimulationDefinition
         animatDefinitions : map AST`AgentIdentifier to AST`AnimatDefinition
         worldDefinition : AST`WorldDefinition
         patchDefinition : AST`PatchDefinition
         actionDefinitions : map AST`Identifier to AST`ActionDefinition
         taskDefinitions : seq of AST`TaskDefinition;
-     SimulationDefinition ::
+    
+    SimulationDefinition ::
         timeDefinition : SimulationTimeDefinition
         worldInitializer : WorldInitializer
         patchInitializer : PatchInitializer
         animatInitializers : seq of AnimatInitializer;
-     SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
-     AnimatDefinition ::
+    
+    SimulationTimeDefinition :: timeDuration : Literal timeStep : Literal;
+    
+    AnimatDefinition ::
         identifier : AgentIdentifier
         species : AgentIdentifier
         attributeDeclarations : seq of AttributeDeclaration
         utilityDefinitions : seq of UtilityDefinition;
-     PatchDefinition ::
+    
+    PatchDefinition ::
         attributeDeclarations : seq of AttributeDeclaration
         utilityDefinitions : seq of UtilityDefinition;
-     WorldDefinition ::
+    
+    WorldDefinition ::
         attributeDeclarations : seq of AttributeDeclaration
         utilityDefinitions : seq of UtilityDefinition;
-     AgentDefinition = 
-        AnimatDefinition| PatchDefinition| WorldDefinition;
-     AttributeDeclaration :: identifier : Identifier unit : Unit initializerExpression : [Expression];
-     ActionDefinition ::
+    
+    AgentDefinition =
+        AnimatDefinition | PatchDefinition | WorldDefinition;
+    
+    AttributeDeclaration ::
+        identifier : Identifier
+        unit : Unit
+        initializerExpression : [Expression];
+    
+    ActionDefinition ::
         identifier : Identifier
         object : [AgentIdentifier]
         guard : [Condition]
         lifeDirectives : seq of LifeDirective
         attributeDefinitions : seq of AttributeDefinition
         utilityDefinitions : seq of UtilityDefinition;
-     TaskDefinition ::
+    
+    TaskDefinition ::
         subjectIdentifier : AgentIdentifier
         verbIdentifier : Identifier
         objectIdentifier : [AgentIdentifier]
@@ -45,124 +57,195 @@ types
         range : Expression
         actionIdentifier : Identifier
         replacements : seq of Replacement;
-     Replacement ::
-        placeholder : Placeholder| DirectivePlaceholder
-        replacement : Expression| Condition| NewDirective| StageDirective;
-     LifeDirective =
-        DieDirective| KillDirective| NewDirective| StageDirective|
+    
+    Replacement ::
+        placeholder : Placeholder | DirectivePlaceholder
+        replacement : Expression | Condition | NewDirective | StageDirective;
+    
+    LifeDirective =
+        DieDirective | KillDirective | NewDirective | StageDirective |
         DirectivePlaceholder;
-     DieDirective = <die>;
-     KillDirective = <kill>;
-     NewDirective :: stage : AgentIdentifier quantity : Expression;
-     StageDirective :: stage : AgentIdentifier;
-     DirectivePlaceholder =
-        NewDirectivePlaceholder| StageDirectivePlaceholder;
-     NewDirectivePlaceholder = <new>;
-     StageDirectivePlaceholder = <stage>;
-     AttributeDefinition ::
-        variable : AttributeVariable|Placeholder decorator:Decorator expression : Expression;
-     Decorator = <assign> | <delta> | <differential>;
-     UtilityDefinition :: identifier : Identifier expression : Expression;
-     AttributeBind ::
-        placeholder : Placeholder| DirectivePlaceholder
+    
+    DieDirective = <die>;
+    
+    KillDirective = <kill>;
+    
+    NewDirective :: stage : AgentIdentifier quantity : Expression;
+    
+    StageDirective :: stage : AgentIdentifier;
+    
+    DirectivePlaceholder =
+        NewDirectivePlaceholder | StageDirectivePlaceholder;
+    
+    NewDirectivePlaceholder = <new>;
+    
+    StageDirectivePlaceholder = <stage>;
+    
+    AttributeDefinition ::
+        variable : AttributeVariable | Placeholder
+        decorator : Decorator
+        expression : Expression;
+    
+    Decorator = <assign> | <delta> | <differential>;
+    
+    UtilityDefinition :: identifier : Identifier expression : Expression;
+    
+    AttributeBind ::
+        placeholder : Placeholder | DirectivePlaceholder
         replacement : Expression;
-     Placeholder :: identifier : Identifier;
-     AnimatInitializer ::
+    
+    Placeholder :: identifier : Identifier;
+    
+    AnimatInitializer ::
         animat : AgentIdentifier
         population : nat1
         attributeInitializers : seq of AttributeInitializer
         utilityDefinitions : seq of UtilityDefinition;
-     PatchInitializer ::
+    
+    PatchInitializer ::
         xDivisions : nat1
         yDivisions : nat1
         size : Literal
         attributeInitializers : seq of AttributeInitializer
         utilityDefinitions : seq of UtilityDefinition;
-     WorldInitializer ::
+    
+    WorldInitializer ::
         attributeInitializers : seq of AttributeInitializer
         utilityDefinitions : seq of UtilityDefinition;
-     AttributeInitializer ::
+    
+    AttributeInitializer ::
         identifier : Identifier expression : [Expression];
-     Expression =
-        Variable| Literal| Casting| Apply| Arithmetics| Distribution|
-        GuardedChoices| Directive| Placeholder;
-     Variable =
-        AttributeVariable| NewAttributeVariable| UtilityVariable;
-     AttributeVariable :: agent : [Identifier] identifier : Identifier;
-     NewAttributeVariable :: identifier : Identifier;
-     UtilityVariable :: identifier : Identifier;
-     Literal :: val : real unit : Unit;
-     GuardedChoices :: seq of (Condition * Expression) Expression;
-     Apply :: function : Identifier arguments : seq1 of Expression;
-     Arithmetics =
-        Addition| Subtraction| Product| Fraction| Power| Minus;
-     Addition :: Expression Expression;
-     Subtraction :: Expression Expression;
-     Product :: Expression Expression;
-     Fraction :: Expression Expression;
-     Power :: Expression int;
-     Minus :: Expression;
-     Distribution =
-        UniformDistribution| UniformDistributionX| UniformDistributionY|
-        NormalDistribution| GammaDistribution| LogLogisticDistribution;
-     UniformDistribution ::
+    
+    Expression =
+        Variable | Literal | Casting | Apply | Arithmetics | Distribution |
+        GuardedChoices | Directive | Placeholder;
+    
+    Variable =
+        AttributeVariable | NewAttributeVariable | UtilityVariable;
+    
+    AttributeVariable :: agent : [Identifier] identifier : Identifier;
+    
+    NewAttributeVariable :: identifier : Identifier;
+    
+    UtilityVariable :: identifier : Identifier;
+    
+    Literal :: val : real unit : Unit;
+    
+    GuardedChoices :: seq of (Condition * Expression) Expression;
+    
+    Apply :: function : Identifier arguments : seq1 of Expression;
+    
+    Arithmetics =
+        Addition | Subtraction | Product | Fraction | Power | Minus;
+    
+    Addition :: Expression Expression;
+    
+    Subtraction :: Expression Expression;
+    
+    Product :: Expression Expression;
+    
+    Fraction :: Expression Expression;
+    
+    Power :: Expression int;
+    
+    Minus :: Expression;
+    
+    Distribution =
+        UniformDistribution | UniformDistributionX | UniformDistributionY |
+        NormalDistribution | GammaDistribution | LogLogisticDistribution;
+    
+    UniformDistribution ::
         beginSection : Expression endSection : Expression;
-     UniformDistributionX = <uniform_distribution_x>;
-     UniformDistributionY = <uniform_distribution_y>;
-     NormalDistribution :: mean : Expression sigma : Expression;
-     GammaDistribution :: shape : Expression scale : Expression;
-     LogLogisticDistribution :: scale : Expression shape : Expression;
-     Directive = AgentDirective| PatchDirective;
-     AgentDirective ::
-        <direction>| <distance>| <time>| <delta_time> agent : [Identifier];
-     PatchDirective :: <direction_of_gradient> Identifier;
-     Casting = DeUnitCasting| EnUnitCasting;
-     DeUnitCasting :: Unit Expression;
-     EnUnitCasting :: Expression Unit;
-     Unit :: seq of (SIBaseUnit * int) scale : real
+    
+    UniformDistributionX = <uniform_distribution_x>;
+    
+    UniformDistributionY = <uniform_distribution_y>;
+    
+    NormalDistribution :: mean : Expression sigma : Expression;
+    
+    GammaDistribution :: shape : Expression scale : Expression;
+    
+    LogLogisticDistribution :: scale : Expression shape : Expression;
+    
+    Directive = AgentDirective | PatchDirective;
+    
+    AgentDirective ::
+        <direction> | <distance> | <time> | <delta_time>
+        agent : [Identifier];
+    
+    PatchDirective :: <direction_of_gradient> Identifier;
+    
+    Casting = DeUnitCasting | EnUnitCasting;
+    
+    DeUnitCasting :: Unit Expression;
+    
+    EnUnitCasting :: Expression Unit;
+    
+    Unit :: seq of (SIBaseUnit * int) scale : real
         inv mk_Unit(us, -) ==
             card {u | mk_(u, -) in seq us} = len us
             and (forall mk_(-, o) in set elems us & o <> 0);
-     SIBaseUnit = <kg>| <m>| <s>| <℃>| <K>| <℉>| <rad>| <mol>;
-     Condition =
-        Equality| GreaterOrEqual| GreaterThan| LessOrEqual| LessThan|
-        NotEqual| Negation| Conjunction| Disjunction| Placeholder;
-     Equality :: seq1 of Expression
+    
+    SIBaseUnit = <kg> | <m> | <s> | <℃> | <K> | <℉> | <rad> | <mol>;
+    
+    Condition =
+        Equality | GreaterOrEqual | GreaterThan | LessOrEqual | LessThan |
+        NotEqual | Negation | Conjunction | Disjunction | Placeholder;
+    
+    Equality :: seq1 of Expression
         inv mk_Equality(exprs) == len exprs >= 2;
-     GreaterOrEqual :: seq1 of Expression
+    
+    GreaterOrEqual :: seq1 of Expression
         inv mk_GreaterOrEqual(exprs) == len exprs >= 2;
-     GreaterThan :: seq1 of Expression
+    
+    GreaterThan :: seq1 of Expression
         inv mk_GreaterThan(exprs) == len exprs >= 2;
-     LessOrEqual :: seq1 of Expression
+    
+    LessOrEqual :: seq1 of Expression
         inv mk_LessOrEqual(exprs) == len exprs >= 2;
-     LessThan :: seq1 of Expression
+    
+    LessThan :: seq1 of Expression
         inv mk_LessThan(exprs) == len exprs >= 2;
-     NotEqual :: Expression Expression;
-     Negation :: Condition;
-     Conjunction :: seq1 of Condition
+    
+    NotEqual :: Expression Expression;
+    
+    Negation :: Condition;
+    
+    Conjunction :: seq1 of Condition
         inv mk_Conjunction(conds) == len conds >= 2;
-     Disjunction :: seq1 of Condition
+    
+    Disjunction :: seq1 of Condition
         inv mk_Disjunction(conds) == len conds >= 2;
-     Identifier = seq of char;
-     AgentIdentifier = seq of char;
-
+    
+    Identifier = seq of char;
+    
+    AgentIdentifier = seq of char;
 values
-     dieDirective : DieDirective = <die>;
-     killDirective : KillDirective = <kill>;
-     newDirectivePlaceholder : NewDirectivePlaceholder = <new>;
-     stageDirectivePlaceholder : StageDirectivePlaceholder = <stage>;
-     uniformDistributionX : UniformDistributionX =
+    dieDirective : DieDirective = <die>;
+    
+    killDirective : KillDirective = <kill>;
+    
+    newDirectivePlaceholder : NewDirectivePlaceholder = <new>;
+    
+    stageDirectivePlaceholder : StageDirectivePlaceholder = <stage>;
+    
+    uniformDistributionX : UniformDistributionX =
         <uniform_distribution_x>;
-     uniformDistributionY : UniformDistributionY =
+    
+    uniformDistributionY : UniformDistributionY =
         <uniform_distribution_y>;
-     directionDirective = <direction>;
-     distanceDirective = <distance>;
-     timeDirective = <time>;
-     deltaTimeDirective = <delta_time>;
-     directionOfGradientDirective = <direction_of_gradient>;
-
+    
+    directionDirective = <direction>;
+    
+    distanceDirective = <distance>;
+    
+    timeDirective = <time>;
+    
+    deltaTimeDirective = <delta_time>;
+    
+    directionOfGradientDirective = <direction_of_gradient>;
 values
-     emptySimulationModel : AST`SimulationModel =
+    emptySimulationModel : AST`SimulationModel =
         mk_AST`SimulationModel(
             emptySimulationDefinition,
             {|->},
@@ -170,28 +253,33 @@ values
             emptyPatchDefinition,
             {|->},
             []);
-     emptySimulationDefinition : AST`SimulationDefinition =
+    
+    emptySimulationDefinition : AST`SimulationDefinition =
         mk_AST`SimulationDefinition(
             emptySimulationTimeDefinition,
             emptyWorldInitializer,
             emptyPatchInitializer,
             []);
-     emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
+    
+    emptySimulationTimeDefinition : AST`SimulationTimeDefinition =
         mk_AST`SimulationTimeDefinition(mk_AST`Literal(0, Unit`s), mk_AST`Literal(1, Unit`s));
-     emptyWorldDefinition : AST`WorldDefinition =
+    
+    emptyWorldDefinition : AST`WorldDefinition =
         mk_AST`WorldDefinition([], []);
-     emptyPatchDefinition : AST`PatchDefinition =
+    
+    emptyPatchDefinition : AST`PatchDefinition =
         mk_AST`PatchDefinition([], []);
-     emptyWorldInitializer : AST`WorldInitializer =
+    
+    emptyWorldInitializer : AST`WorldInitializer =
         mk_AST`WorldInitializer([], []);
-     emptyPatchInitializer : AST`PatchInitializer =
+    
+    emptyPatchInitializer : AST`PatchInitializer =
         mk_AST`PatchInitializer(1, 1, mk_AST`Literal(0, Unit`m), [], []);
-     AGENT_NEW = "new";
-
+    
+    AGENT_NEW = "new";
 types
-     ReplacementMap =
-        map (Placeholder| DirectivePlaceholder) to (Expression| Condition| NewDirective| StageDirective);
-
+    ReplacementMap =
+        map (Placeholder | DirectivePlaceholder) to (Expression | Condition | NewDirective | StageDirective);
 functions
     sizeOfAgent : AST`AgentDefinition -> nat
     sizeOfAgent(agentDefinition) ==
@@ -229,8 +317,7 @@ functions
     
     replaceAttributeDefinition : AST`AttributeDefinition * ReplacementMap -> AST`AttributeDefinition
     replaceAttributeDefinition(attributeDefinition, replacement) ==
-        let
-            attributeVariable = attributeDefinition.variable
+        let attributeVariable = attributeDefinition.variable
         in
             mk_AttributeDefinition(
                 if
@@ -340,5 +427,4 @@ functions
                     mk_AST`Disjunction([replaceCondition(cond, replacement) | cond in seq conds]),
                 others -> condition
                 end;
-
 end AST

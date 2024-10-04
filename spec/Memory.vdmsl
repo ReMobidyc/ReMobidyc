@@ -3,12 +3,11 @@ imports from AST all
 exports all
 definitions
 types
-     Address = nat1;
-
+    Address = nat1;
 values
-     ADDRESS_ERROR = <ADDRESS_ERROR>;
-     TIME_ERROR = <TIME_ERROR>;
-
+    ADDRESS_ERROR = <ADDRESS_ERROR>;
+    
+    TIME_ERROR = <TIME_ERROR>;
 state Memory of
     vals : map Address to real
     next : map Address to real
@@ -29,7 +28,6 @@ init s ==
     = mk_Memory(
         {|->}, {|->}, {|->}, nil, 1, nil, nil, nil, {|->}, {|->}, {}, [], [], 0)
 end
-
 operations
     reset : () ==> ()
     reset() ==
@@ -150,7 +148,6 @@ operations
         deads := {};
         ticks := t)
     pre  t <= len valuesStorage and t <= len animatsStorage;
-
 functions
     within : real * real * real -> real
     within(x, min, max) ==
@@ -161,5 +158,4 @@ functions
         else
             x
     pre min <= max;
-
 end Memory

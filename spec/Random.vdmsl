@@ -2,12 +2,11 @@ module Random
 exports all
 definitions
 types
-     RandomGenerator :: seed : nat1;
-
+    RandomGenerator :: seed : nat1;
 values
-     factor : nat1 = 742938285;
-     modulo : nat1 = 2147483647;
-
+    factor : nat1 = 742938285;
+    
+    modulo : nat1 = 2147483647;
 functions
     value : Random`RandomGenerator -> real
     value(mk_Random`RandomGenerator(seed)) ==
@@ -23,7 +22,8 @@ functions
             calcSeed : nat * seq of nat1 -> nat1
             calcSeed(x, ys) ==
                 cases ys:
-                    [z]^zs -> calcSeed(bitXor(x * factor, z  * factor) mod modulo, zs),
+                    [z]^zs ->
+                        calcSeed(bitXor(x  * factor, z  * factor) mod modulo, zs),
                     others -> x
                     end
         in calcSeed(0, seeds);
@@ -39,8 +39,7 @@ functions
                 else
                     bitXor(x1, y1)  * 2 + z)
     measure m_bitXor;
-
+    
     m_bitXor : nat * nat -> nat
     m_bitXor(x, -) == x;
-
 end Random

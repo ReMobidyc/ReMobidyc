@@ -35,19 +35,17 @@ functions
     
     sqrt : real -> real
     sqrt(a) == is not yet specified;
-
 operations
     srand : int ==> ()
-    srand(a) == def - = MATH`srand2(a); in skip
-    pre  a >= -1;
+    srand(a) == def - =  MATH`srand2(a); in skip
+    pre  a >= - 1;
     
     rand : int ==> int
     rand(a) == is not yet specified;
     
     srand2 : int ==> int
     srand2(a) == is not yet specified
-    pre  a >= -1;
-
+    pre  a >= - 1;
 functions
     exp : real +> real
     exp(a) == is not yet specified;
@@ -62,5 +60,4 @@ functions
     
     fac : nat -> nat1
     fac(a) == is not yet specified;
-
 end MATH

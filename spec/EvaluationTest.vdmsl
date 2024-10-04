@@ -13,20 +13,23 @@ imports
 exports all
 definitions
 values
-     exampleWorld : AST`WorldDefinition =
+    exampleWorld : AST`WorldDefinition =
         mk_AST`WorldDefinition(
             [mk_AST`AttributeDeclaration("temperature", Unit`℃, nil),
             mk_AST`AttributeDeclaration("humidity", Unit`nodimension, mk_AST`UtilityVariable("h"))],
             [mk_AST`UtilityDefinition("h", mk_AST`Literal(0.75, Unit`nodimension))]);
-     examplePatch : AST`PatchDefinition =
+    
+    examplePatch : AST`PatchDefinition =
         mk_AST`PatchDefinition([mk_AST`AttributeDeclaration("depth", Unit`m, nil)], []);
-     exampleAnimatA : AST`AnimatDefinition =
+    
+    exampleAnimatA : AST`AnimatDefinition =
         mk_AST`AnimatDefinition(
             "AnimatA",
             "Stage1",
             [mk_AST`AttributeDeclaration("age", Unit`day, nil)],
             []);
-     exampleActionAge : AST`ActionDefinition =
+    
+    exampleActionAge : AST`ActionDefinition =
         mk_AST`ActionDefinition(
             "age",
             nil,
@@ -37,7 +40,8 @@ values
                 <assign>,
                 mk_AST`UtilityVariable("dt"))],
             [mk_AST`UtilityDefinition("dt", mk_AST`AgentDirective(<delta_time>, nil))]);
-     exampleSimulationModel : AST`SimulationModel =
+    
+    exampleSimulationModel : AST`SimulationModel =
         mk_AST`SimulationModel(
             mk_AST`SimulationDefinition(
                 mk_AST`SimulationTimeDefinition(mk_AST`Literal(10, Unit`s), mk_AST`Literal(0.1, Unit`s)),
@@ -60,11 +64,14 @@ values
             examplePatch,
             {"age" |-> exampleActionAge},
             []);
+    
     ONE = mk_AST`Literal(1, Unit`nodimension);
+    
     TWO = mk_AST`Literal(2, Unit`nodimension);
+    
     THREE = mk_AST`Literal(3, Unit`nodimension);
+    
     FOUR = mk_AST`Literal(4, Unit`nodimension);
-
 operations
     testEvalWorldInitializer : () ==> ()
     testEvalWorldInitializer() ==
@@ -265,7 +272,7 @@ operations
                 mk_AST`Subtraction(
                     mk_AST`Literal(1, Unit`nodimension),
                     mk_AST`Literal(2, Unit`nodimension))),
-            -1,
+            - 1,
             1.0e-16,
             "1-2 -> -1");
     
@@ -305,7 +312,7 @@ operations
         assertApproxEquals(
             Evaluation`evalExpression(
                 mk_AST`Minus(mk_AST`Literal(2, Unit`nodimension))),
-            -2,
+            - 2,
             1.0e-16,
             "-(2) -> -2");
     
@@ -407,7 +414,7 @@ operations
     testEvalExpression_Apply_abs() ==
         (assertApproxEquals(
             Evaluation`evalExpression(
-                mk_AST`Apply("abs", [mk_AST`Literal(-5.0, Unit`nodimension)])),
+                mk_AST`Apply("abs", [mk_AST`Literal(- 5.0, Unit`nodimension)])),
             5.0,
             1.0e-16,
             "abs(-5.0) = 5.0");
@@ -424,7 +431,7 @@ operations
                     Evaluation`evalExpression(
                         mk_AST`Apply(
                             "abs",
-                            [mk_AST`Literal(-5.0, Unit`nodimension),
+                            [mk_AST`Literal(- 5.0, Unit`nodimension),
                             mk_AST`Literal(5.0, Unit`nodimension)]))
             in exit "abs takes only one argument.");
     
@@ -439,7 +446,7 @@ operations
         assertApproxEquals(
             Evaluation`evalExpression(
                 mk_AST`Apply("cos", [mk_AST`Literal(180, Unit`degree)])),
-            -1.0,
+            - 1.0,
             1.0e-16,
             "cos(pi) = -1.0");
         trap (Evaluation`NUM_ARGS_ERROR) with skip
@@ -509,7 +516,7 @@ operations
                 mk_AST`Apply(
                     "max",
                     [mk_AST`Literal(1, Unit`nodimension),
-                    mk_AST`Literal(-2, Unit`nodimension)])),
+                    mk_AST`Literal(- 2, Unit`nodimension)])),
             1.0,
             1.0e-16,
             "max(1, -2) = 1");
@@ -532,8 +539,8 @@ operations
                 mk_AST`Apply(
                     "min",
                     [mk_AST`Literal(1, Unit`nodimension),
-                    mk_AST`Literal(-2, Unit`nodimension)])),
-            -2.0,
+                    mk_AST`Literal(- 2, Unit`nodimension)])),
+            - 2.0,
             1.0e-16,
             "min(1, -2) = -2");
         assertApproxEquals(
@@ -555,8 +562,8 @@ operations
                 mk_AST`Apply(
                     "mean",
                     [mk_AST`Literal(1, Unit`nodimension),
-                    mk_AST`Literal(-2, Unit`nodimension)])),
-            -0.5,
+                    mk_AST`Literal(- 2, Unit`nodimension)])),
+            - 0.5,
             1.0e-16,
             "mean(1, -2) = -0.5");
         assertApproxEquals(
@@ -575,7 +582,7 @@ operations
     testEvalExpression_Apply_positive() ==
         (assertApproxEquals(
             Evaluation`evalExpression(
-                mk_AST`Apply("positive", [mk_AST`Literal(-5.0, Unit`nodimension)])),
+                mk_AST`Apply("positive", [mk_AST`Literal(- 5.0, Unit`nodimension)])),
             0.0,
             1.0e-16,
             "positive(-5.0) = 0");
@@ -592,7 +599,7 @@ operations
                     Evaluation`evalExpression(
                         mk_AST`Apply(
                             "positive",
-                            [mk_AST`Literal(-5.0, Unit`nodimension),
+                            [mk_AST`Literal(- 5.0, Unit`nodimension),
                             mk_AST`Literal(5.0, Unit`nodimension)]))
             in exit "positive takes only one argument.");
     
@@ -685,8 +692,8 @@ operations
                 mk_AST`Apply(
                     "sum",
                     [mk_AST`Literal(1, Unit`nodimension),
-                    mk_AST`Literal(-2, Unit`nodimension)])),
-            -1,
+                    mk_AST`Literal(- 2, Unit`nodimension)])),
+            - 1,
             1.0e-16,
             "sum(1, -2) = -1");
         assertApproxEquals(
@@ -700,31 +707,34 @@ operations
             10,
             1.0e-16,
             "sum(1, 2, 3, 4) = 10"));
-    testEvalExpression_GuardedChoices: () ==> ()
+    
+    testEvalExpression_GuardedChoices : () ==> ()
     testEvalExpression_GuardedChoices() ==
         (assertEquals(
-            Evaluation`evalExpression(mk_AST`GuardedChoices(
-                [mk_(mk_AST`Equality([TWO, TWO]), ONE), 
-                mk_(mk_AST`Equality([ONE, THREE]), TWO)], 
-                THREE)),
+            Evaluation`evalExpression(
+                mk_AST`GuardedChoices(
+                    [mk_(mk_AST`Equality([TWO, TWO]), ONE),
+                    mk_(mk_AST`Equality([ONE, THREE]), TWO)],
+                    THREE)),
             1,
             "the first choice");
         assertEquals(
-            Evaluation`evalExpression(mk_AST`GuardedChoices(
-                [mk_(mk_AST`Equality([ONE, TWO]), ONE), 
-                mk_(mk_AST`Equality([ONE, ONE]), TWO)], 
-                THREE)),
+            Evaluation`evalExpression(
+                mk_AST`GuardedChoices(
+                    [mk_(mk_AST`Equality([ONE, TWO]), ONE),
+                    mk_(mk_AST`Equality([ONE, ONE]), TWO)],
+                    THREE)),
             2,
             "the second choice");
         assertEquals(
-            Evaluation`evalExpression(mk_AST`GuardedChoices(
-                [mk_(mk_AST`Equality([TWO, THREE]), ONE), 
-                mk_(mk_AST`Equality([ONE, THREE]), TWO)], 
-                THREE)),
+            Evaluation`evalExpression(
+                mk_AST`GuardedChoices(
+                    [mk_(mk_AST`Equality([TWO, THREE]), ONE),
+                    mk_(mk_AST`Equality([ONE, THREE]), TWO)],
+                    THREE)),
             3,
             "the default choice"));
-
-
+    
     testEvalExpression_UtilityVariable : () ==> ()
     testEvalExpression_UtilityVariable() ==
         (Interpreter`setUtilityDefinition("x", mk_AST`Literal(1, Unit`m));
@@ -943,5 +953,4 @@ operations
                         [mk_AST`Literal(3, Unit`nodimension),
                         mk_AST`Literal(4, Unit`nodimension)])])),
             "1=2 or 2=3 or 3=4 is false"));
-
 end EvaluationTest

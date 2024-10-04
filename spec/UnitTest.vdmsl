@@ -1,8 +1,7 @@
 module UnitTest
 imports
     from UnitTesting
-        operations
-            assertApproxEquals renamed assertApproxEquals;,
+        operations assertApproxEquals renamed assertApproxEquals;,
     from Unit all
 exports all
 definitions
@@ -22,5 +21,4 @@ operations
             105,
             1.0,
             "65 mph = 110 km/h"));
-
 end UnitTest
