@@ -1,38 +1,47 @@
 module ASTTest
 imports
-    from UnitTesting
-        operations
-            assertEquals renamed assertEquals,
+    from UnitTesting operations assertEquals renamed assertEquals;,
     from AST all,
     from Unit all
 exports all
 definitions
 values
-     placeholder1 : AST`Placeholder =
+    placeholder1 : AST`Placeholder =
         mk_AST`Placeholder("placeholder1");
-     placeholder2 : AST`Placeholder =
+    
+    placeholder2 : AST`Placeholder =
         mk_AST`Placeholder("placeholder2");
-     placeholder3 : AST`Placeholder =
+    
+    placeholder3 : AST`Placeholder =
         mk_AST`Placeholder("placeholder3");
-     replacement1 : AST`UtilityVariable =
+    
+    replacement1 : AST`UtilityVariable =
         mk_AST`UtilityVariable("var1");
-     replacement2 : AST`UtilityVariable =
+    
+    replacement2 : AST`UtilityVariable =
         mk_AST`UtilityVariable("var2");
-     replacement3 : AST`UtilityVariable =
+    
+    replacement3 : AST`UtilityVariable =
         mk_AST`UtilityVariable("var3");
-     replacementMap : AST`ReplacementMap =
+    
+    replacementMap : AST`ReplacementMap =
         {placeholder1 |-> replacement1, placeholder2 |-> replacement2,
         placeholder3 |-> replacement3};
-     expression1 : AST`Expression = mk_AST`Literal(1, Unit`nodimension);
-     expression2 : AST`Expression = mk_AST`Literal(2, Unit`nodimension);
-     expression3 : AST`Expression = mk_AST`Literal(3, Unit`nodimension);
-     condition1 : AST`Condition =
+    
+    expression1 : AST`Expression = mk_AST`Literal(1, Unit`nodimension);
+    
+    expression2 : AST`Expression = mk_AST`Literal(2, Unit`nodimension);
+    
+    expression3 : AST`Expression = mk_AST`Literal(3, Unit`nodimension);
+    
+    condition1 : AST`Condition =
         mk_AST`Equality([expression1, expression1]);
-     condition2 : AST`Condition =
+    
+    condition2 : AST`Condition =
         mk_AST`Equality([expression2, expression2]);
-     condition3 : AST`Condition =
+    
+    condition3 : AST`Condition =
         mk_AST`Equality([expression3, expression3]);
-
 operations
     testSizeOfAgent_World : () ==> ()
     testSizeOfAgent_World() ==
@@ -69,7 +78,8 @@ operations
     testSizeOfAgent_Animat : () ==> ()
     testSizeOfAgent_Animat() ==
         (assertEquals(
-            AST`sizeOfAgent(mk_AST`AnimatDefinition("Stage", "Species", [], [])),
+            AST`sizeOfAgent(
+                mk_AST`AnimatDefinition("Stage", "Species", [], [])),
             2,
             "size of the empty animat is 2 including x and y.");
         assertEquals(
@@ -78,7 +88,8 @@ operations
                     "Stage",
                     "Species",
                     [mk_AST`AttributeDeclaration("heading", Unit`degree, nil),
-                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s), nil)], [])),
+                    mk_AST`AttributeDeclaration("speed", Unit`fraction(Unit`m, Unit`s), nil)],
+                    [])),
             4,
             "size of Animat with 2 attributes is 4 including x and y."));
     
@@ -445,10 +456,7 @@ operations
                 mk_AST`AttributeDefinition(placeholder1, <assign>, placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
-            mk_AST`AttributeDefinition(
-                mk_AST`AttributeVariable(nil, "attr1"),
-                <assign>,
-                replacement2),
+            mk_AST`AttributeDefinition(mk_AST`AttributeVariable(nil, "attr1"), <assign>, replacement2),
             "the placeholder1' = the placeholder2 -> my attr1' = var2");
     
     testReplaceAttributeDefinition_DeltaAttributeVariable : () ==> ()
@@ -458,26 +466,18 @@ operations
                 mk_AST`AttributeDefinition(placeholder1, <delta>, placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
-            mk_AST`AttributeDefinition(
-                mk_AST`AttributeVariable(nil, "attr1"),
-                <delta>,
-                replacement2),
+            mk_AST`AttributeDefinition(mk_AST`AttributeVariable(nil, "attr1"), <delta>, replacement2),
             "the delta placeholder1' = the placeholder2 -> my delta attr1' = var2");
     
     testReplaceAttributeDefinition_DifferentialAttributeVariable : () ==> ()
     testReplaceAttributeDefinition_DifferentialAttributeVariable() ==
         assertEquals(
             AST`replaceAttributeDefinition(
-                mk_AST`AttributeDefinition(
-                    placeholder1,
-                    <differential>,
-                    placeholder2),
+                mk_AST`AttributeDefinition(placeholder1, <differential>, placeholder2),
                 {placeholder1 |-> mk_AST`AttributeVariable(nil, "attr1"),
                 placeholder2 |-> replacement2}),
             mk_AST`AttributeDefinition(
-                mk_AST`AttributeVariable(nil, "attr1"),
-                <differential>,
-                replacement2),
+                mk_AST`AttributeVariable(nil, "attr1"), <differential>, replacement2),
             "the d/dt  placeholder1' = the placeholder2 -> my d/dt attr1' = var2");
     
     testReplaceActionDefinition : () ==> ()
@@ -519,5 +519,4 @@ operations
                     mk_AST`UtilityVariable("replacement3"))],
                 [mk_AST`UtilityDefinition("utility", mk_AST`UtilityVariable("replacement4"))]),
             "to action1 is when the placeholder1 with new - the placeholder2' = the placeholder3 where utility = the replacement4 -> ");
-
 end ASTTest

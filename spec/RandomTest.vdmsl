@@ -47,5 +47,4 @@ operations
         (assertEquals(Random`hash([1]), 742938285, "hash([1])");
         assertEquals(Random`hash([1, 2]), 495583787, "hash([1,2])");
         assertEquals(Random`hash([1, 2, 3]), 1644498793, "hash([1,2,3])"));
-
 end RandomTest

@@ -1,8 +1,6 @@
 module MemoryTest
 imports
-    from UnitTesting
-        operations
-            assertEquals renamed assertEquals,
+    from UnitTesting operations assertEquals renamed assertEquals;,
     from Memory all
 exports all
 definitions
@@ -239,5 +237,4 @@ operations
             Memory`getAnimats("A"),
             {a1, a2},
             "a1 and a2 stored by the store operation."));
-
 end MemoryTest

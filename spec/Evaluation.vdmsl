@@ -15,8 +15,7 @@ imports
 exports all
 definitions
 values
-     NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
-
+    NUM_ARGS_ERROR = <NUM_ARGS_ERROR>;
 operations
     evalWorldInitializer : AST`WorldInitializer ==> ()
     evalWorldInitializer(worldInitializer) ==
@@ -105,7 +104,7 @@ operations
     
     evalAttributeDefinition : AST`AttributeDefinition ==> ()
     evalAttributeDefinition(attributeDefinition) ==
-        let 
+        let
             value = evalExpression(attributeDefinition.expression),
             agent = attributeDefinition.variable.agent,
             identifier = attributeDefinition.variable.identifier
@@ -113,7 +112,8 @@ operations
             cases attributeDefinition.decorator:
                 <assign> -> writeVariable(agent, identifier, value),
                 <delta> -> writeDeltaVariable(agent, identifier, value),
-                <differential> -> writeDeltaVariable(agent, identifier, value  * deltaTime())
+                <differential> ->
+                    writeDeltaVariable(agent, identifier, value  * deltaTime())
                 end;
     
     evalExpression : AST`Expression ==> real
@@ -140,7 +140,7 @@ operations
                 mk_AST`Fraction(expr1, expr2) ->
                     evalExpression(expr1) / evalExpression(expr2),
                 mk_AST`Power(expr1, order) -> pow(evalExpression(expr1), order),
-                mk_AST`Minus(expr1) -> -evalExpression(expr1),
+                mk_AST`Minus(expr1) -> - evalExpression(expr1),
                 mk_AST`DeUnitCasting(unit, expr1) ->
                     Unit`fromSI(unit, evalExpression(expr1)),
                 mk_AST`EnUnitCasting(expr1, unit) ->
@@ -205,7 +205,6 @@ operations
                 mk_AST`Disjunction(conds) ->
                     exists cond1 in seq conds & evalCondition(cond1)
                 end;
-
 operations
     readVariable : [AST`Identifier] * AST`Identifier ==> real
     readVariable(agent, identifier) ==
@@ -228,7 +227,7 @@ operations
     normal(mean, sigma) ==
         return let x1 = Interpreter`nextRandom(), x2 = Interpreter`nextRandom()
             in
-                sqrt(ln(x1)  * -2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
+                sqrt(ln(x1)  * - 2.0)  * cos(x2  * 3.141592653589793  * 2.0)  * sigma
                 + mean
     pre  sigma > 0;
     
@@ -243,7 +242,6 @@ operations
         (if
             shape <= 1.0
         then
-				-- Ahrens-Diester algorithm
             (let e = 2.718281828459045, c1 = e / (shape + e)
             in
                 while true
@@ -255,18 +253,17 @@ operations
                         u1 <= c1
                     then
                         (let x = (u1 / c1) ** (1 / shape)
-                        in if u2 <= exp(-x) then return x  * scale)
+                        in if u2 <= exp(- x) then return x  * scale)
                     else
-                        (let x = -ln((1 - u1) / (c1  * shape))
+                        (let x = - ln((1 - u1) / (c1  * shape))
                         in if u2 <= x ** (shape - 1.0) then return x  * scale)))
         else
-				-- Marsaglia-Tsang algorithm
             (let c1 = shape - 1 / 3, c2 = 1 / sqrt(9  * c1)
             in
                 while true
                 do
                     (dcl z:real := normal(0, 1), v:real, u:real;
-                    while c2  * z <= -1.0 do z := normal(0, 1);
+                    while c2  * z <= - 1.0 do z := normal(0, 1);
                     v := let t = c2  * z + 1.0 in t  * t  * t;
                     u := Interpreter`nextRandom();
                     if u < 1.0 - 0.0331  * z  * z  * z  * z then return c1  * v  * scale;
@@ -354,7 +351,6 @@ operations
                 if len args = 1 then return sqrt(hd args) else exit NUM_ARGS_ERROR,
             "sum" -> return sum(args)
             end;
-
 functions
     max : seq1 of real -> real
     max(xs) ==
@@ -398,6 +394,7 @@ functions
                             if y >= 0 then th else 6.283185307179586 + th
                         else
                             3.141592653589793 + th));
+    
     m_aggregate : seq1 of real -> nat
     m_aggregate(args) == len args;
 end Evaluation
