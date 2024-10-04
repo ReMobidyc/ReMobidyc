@@ -196,9 +196,11 @@ RMDAbstractRepositoryBrowser >> addRepositoryMenu [
 { #category : 'private' }
 RMDAbstractRepositoryBrowser >> disableOk [
 
-	self withWindowDo: [ :window | 
-		window isDialog ifTrue: [ 
-			window buttons ifNotEmpty: [ :buttons | buttons first disable ] ] ]
+	self withWindowDo: [ :window |
+		window isDialog ifTrue: [
+			(window buttons
+				 detect: [ :button | button label = 'Ok' ]
+				 ifNone: [ nil ]) ifNotNil: #disable ] ]
 ]
 
 { #category : 'operations' }
@@ -217,9 +219,11 @@ RMDAbstractRepositoryBrowser >> editRepository [
 { #category : 'private' }
 RMDAbstractRepositoryBrowser >> enableOk [
 
-	self withWindowDo: [ :window | 
-		window isDialog ifTrue: [ 
-			window buttons ifNotEmpty: [ :buttons | buttons first enable ] ] ]
+	self withWindowDo: [ :window |
+		window isDialog ifTrue: [
+			(window buttons
+				 detect: [ :button | button label = 'Ok' ]
+				 ifNone: [ nil ]) ifNotNil: #enable ] ]
 ]
 
 { #category : 'operations' }
@@ -445,8 +449,10 @@ RMDAbstractRepositoryBrowser >> newItemList [
 { #category : 'private' }
 RMDAbstractRepositoryBrowser >> performOK [
 
-	self withWindowDo: [ :window | 
-		window buttons ifNotEmpty: [ :buttons | buttons first click ] ]
+	self withWindowDo: [ :window |
+		(window buttons
+			 detect: [ :button | button label = 'Ok' ]
+			 ifNone: [ nil ]) ifNotNil: #click ]
 ]
 
 { #category : 'operations' }
