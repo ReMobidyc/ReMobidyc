@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfReMobidyc,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfReMobidyc
+	#name : 'BaselineOfReMobidyc',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfReMobidyc',
+	#package : 'BaselineOfReMobidyc'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> deploy [
 
 	<script>
@@ -31,7 +32,7 @@ BaselineOfReMobidyc class >> deploy [
 	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> ensureIcebergRepository [
 
 	^ IceRepository repositories
@@ -56,7 +57,7 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 				  yourself ]
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -74,7 +75,7 @@ BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 					'Upgrade the re:mobidyc from the official github repository.' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> updateFromOfficialRepository [
 
 	<script: 'BaselineOfReMobidyc updateFromOfficialRepository'>
@@ -105,7 +106,7 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	Smalltalk snapshot: true andQuit: false
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfReMobidyc >> baselineOf: spec [
 
 	<baseline>
@@ -116,6 +117,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			baseline: 'DataFrame'
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
+			package: 'ReMobidyc-HiDeHo';
 			package: 'ReMobidyc-Storage';
 			package: 'ReMobidyc-DataSource'
 			with: [ spec requires: #( 'DataFrame' ) ];
@@ -151,9 +153,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
 			with:
-				#( 'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units'
-				   'ReMobidyc-Interpreter' 'ReMobidyc-Visualization'
-				   'ReMobidyc-Repository' 'ReMobidyc-Spec2' );
+				#( 'ReMobidyc-HiDeHo' 'ReMobidyc-Storage' 'ReMobidyc-Language'
+				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
+				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
+				   'ReMobidyc-Spec2' );
 			group: 'tests'
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
@@ -162,7 +165,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	spec for: #'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
 ]
 
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> installLogos [
 	| imagesUrl basenames client |
 	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
@@ -183,7 +186,7 @@ BaselineOfReMobidyc >> installLogos [
 								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
 ]
 
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> installRoassal3 [
 
 	<script: 'BaselineOfReMobidyc new installRoassal3'>
@@ -196,7 +199,7 @@ BaselineOfReMobidyc >> installRoassal3 [
 		do: [ :warning | warning load ]
 ]
 
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> installStandardRepository [
 
 	<script: 'BaselineOfReMobidyc new installStandardRepository'>
@@ -221,13 +224,13 @@ BaselineOfReMobidyc >> installStandardRepository [
 				  yourself ]
 ]
 
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> logoDirectoryPath [
 	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
 		ensureCreateDirectory
 ]
 
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> postLoad [
 
 	<script: 'BaselineOfReMobidyc new postLoad'>
