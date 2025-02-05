@@ -1,12 +1,12 @@
 Class {
-	#name : 'RMDModelRepository',
+	#name : 'RMDVersionStore',
 	#superclass : 'HiDeStorage',
 	#category : 'ReMobidyc-HiDeHo',
 	#package : 'ReMobidyc-HiDeHo'
 }
 
 { #category : 'class access' }
-RMDModelRepository >> payloadClassFor: aHiDeMetadata [
+RMDVersionStore >> payloadClassFor: aHiDeMetadata [
 
 	^ RMDModelVersion
 ]
