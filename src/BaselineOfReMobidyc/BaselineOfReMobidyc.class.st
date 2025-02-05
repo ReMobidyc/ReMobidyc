@@ -113,7 +113,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'HiDeHo'
-			with: [ spec repository: 'github://tomooda/HiDeHo/' ];
+			with: [ spec repository: 'github://tomooda/HiDeHo:main/' ];
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
 			baseline: 'DataFrame'
