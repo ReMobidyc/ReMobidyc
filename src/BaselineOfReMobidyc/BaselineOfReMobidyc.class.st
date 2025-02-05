@@ -112,12 +112,14 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'HiDeHo'
+			with: [ spec repository: 'github://tomooda/HiDeHo/' ];
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
 			baseline: 'DataFrame'
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
-			package: 'ReMobidyc-HiDeHo';
+			package: 'ReMobidyc-HiDeHo' with: [ spec requires: #( 'HiDeHo' ) ];
 			package: 'ReMobidyc-Storage';
 			package: 'ReMobidyc-DataSource'
 			with: [ spec requires: #( 'DataFrame' ) ];
