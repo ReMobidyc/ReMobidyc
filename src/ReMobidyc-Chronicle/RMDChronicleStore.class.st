@@ -8,6 +8,12 @@ Class {
 	#package : 'ReMobidyc-Chronicle'
 }
 
+{ #category : 'operations' }
+RMDChronicleStore class >> chronicleRawModels [
+
+	^ self current chronicleRawModels
+]
+
 { #category : 'sole instance' }
 RMDChronicleStore class >> current [
 
@@ -23,8 +29,17 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 { #category : 'operations' }
 RMDChronicleStore >> chronicleModels [
 
-	^ self chronicleSuchThat: [ :payload |
-		  payload hideMetadata hasTag: 'model' ]
+	^ self chronicleSuchThat: [ :metadata | metadata hasTag: 'model' ]
+]
+
+{ #category : 'operations' }
+RMDChronicleStore >> chronicleRawModels [
+
+	| payloads |
+	payloads := chronicle values select: [ :payload |
+		            payload hideMetadata hasTag: 'model' ].
+	^ payloads asSortedCollection: [ :newer :older |
+		  older hideMetadata timestamp <= newer hideMetadata timestamp ]
 ]
 
 { #category : 'initialization' }

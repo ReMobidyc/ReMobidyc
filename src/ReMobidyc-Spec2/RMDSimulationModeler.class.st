@@ -189,11 +189,11 @@ RMDSimulationModeler >> copyStage: aString to: anotherString [
 RMDSimulationModeler >> fileMenu [
 
 	^ self newMenu
-		  addGroup: [ :group | 
-			  group addItem: [ :item | 
+		  addGroup: [ :group |
+			  group addItem: [ :item |
 					  item
 						  name: 'New';
-						  action: [ 
+						  action: [
 							  self
 								  setSimulationModel: (RMDSimulationModel new
 										   addRenderer:
@@ -205,32 +205,35 @@ RMDSimulationModeler >> fileMenu [
 												    and: '1.0' asRMDExpression);
 										   yourself);
 								  modelFileReference: nil ] ].
-			  group addItem: [ :item | 
+			  group addItem: [ :item |
 				  item
 					  name: 'Open...';
-					  action: [ 
-						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+					  action: [
+						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser |
 								  self
 									  setSimulationModel: model;
 									  modelFileReference: repBrowser file ] ] ].
-			  group addItem: [ :item | 
+			  group addItem: [ :item |
 				  item
 					  name: 'Save';
 					  enabled: [ modelFileReference notNil ];
-					  action: [ 
+					  action: [
 						  simulationModel updateMetadata.
 						  metadataPresenter metadataChanged.
-						  simulationModel exportModel: modelFileReference ] ].
-			  group addItem: [ :item | 
+						  simulationModel
+							  exportModel: modelFileReference;
+							  recordInChronicle ] ].
+			  group addItem: [ :item |
 				  item
 					  name: 'Save As...';
-					  action: [ 
+					  action: [
 						  simulationModel updateMetadata.
 						  metadataPresenter metadataChanged.
 						  RMDRepositoryModelsBrowser
 							  openForSave: simulationModel
-							  do: [ :model :repBrowser | 
-								  self modelFileReference: repBrowser file ] ] ] ];
+							  do: [ :model :repBrowser |
+								  self modelFileReference: repBrowser file ].
+						  simulationModel recordInChronicle ] ] ];
 		  yourself
 ]
 
@@ -427,7 +430,9 @@ RMDSimulationModeler >> save [
 	modelFileReference ifNil: [ ^ self ].
 	simulationModel updateMetadata.
 	metadataPresenter metadataChanged.
-	simulationModel exportModel: modelFileReference
+	simulationModel
+		exportModel: modelFileReference;
+		recordInChronicle
 ]
 
 { #category : 'private' }
@@ -458,6 +463,13 @@ RMDSimulationModeler >> simulationDefinitionPresenter [
 RMDSimulationModeler >> simulationModel [
 
 	^ simulationModel
+]
+
+{ #category : 'accessing' }
+RMDSimulationModeler >> simulationModel: aRMDSimulationModel [
+
+	self setSimulationModel: aRMDSimulationModel.
+	views selectPageIndex: 1
 ]
 
 { #category : 'private' }
