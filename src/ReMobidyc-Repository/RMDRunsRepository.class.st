@@ -1,110 +1,111 @@
 Class {
-	#name : #RMDRunsRepository,
-	#superclass : #RMDRepository,
+	#name : 'RMDRunsRepository',
+	#superclass : 'RMDRepository',
 	#classInstVars : [
 		'current'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRunsRepository class >> current [
 
 	^ current ifNil: [ current := self new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRunsRepository class >> runsDirectory [
 
 	^ (FileLocator documents / 'ReMobidyc' / 'runs')
 		  ensureCreateDirectory
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> actionFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> actionNames [
 
 	^ Array new
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDRunsRepository >> addDataFile: aFileReference named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDRunsRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDRunsRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDRunsRepository >> dataNames [
 
 	^ Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRunsRepository >> icon [
 
 	^ Smalltalk ui icons iconNamed: #open
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDRunsRepository >> iconNamed: aString ifAbsent: errorBlock [
 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDRunsRepository >> iconNames [
 
 	^ Array new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDRunsRepository >> isModifiable [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDRunsRepository >> isRunsRepository [
 
 	^ true
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	| ref |
@@ -114,7 +115,7 @@ RMDRunsRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBl
 		  ifFalse: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -124,7 +125,7 @@ RMDRunsRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> modelNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -134,7 +135,7 @@ RMDRunsRepository >> modelNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> modelNames [
 
 	^ ((self runsDirectory directories select: [ :dir | 
@@ -143,19 +144,19 @@ RMDRunsRepository >> modelNames [
 		  #basename
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDRunsRepository >> removeIconNamed: aString ifAbsent: errorBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 
 	| ref |
@@ -165,37 +166,37 @@ RMDRunsRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 		  ifFalse: errorBlock
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDRunsRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDRunsRepository >> renameData: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ absentBlock value
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDRunsRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDRunsRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	^ self shouldNotImplement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRunsRepository >> repositoryName [
 
 	^ 'Runs'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRunsRepository >> runsDirectory [
 
 	^ self class runsDirectory

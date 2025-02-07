@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDAbstractFileRepository,
-	#superclass : #RMDRepository,
+	#name : 'RMDAbstractFileRepository',
+	#superclass : 'RMDRepository',
 	#instVars : [
 		'name'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractFileRepository class >> isAbstract [
 		
 	^ self == RMDAbstractFileRepository
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> actionFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	self actionsDirectoryDo: [ :actionsDirectory | 
@@ -25,7 +26,7 @@ RMDAbstractFileRepository >> actionFileNamed: aString ifPresent: aBlock ifAbsent
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 
 	| action |
@@ -39,7 +40,7 @@ RMDAbstractFileRepository >> actionNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> actionNames [
 
 	self actionsDirectoryDo: [ :actionsDirectory | 
@@ -48,14 +49,14 @@ RMDAbstractFileRepository >> actionNames [
 	^ Array new
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> actionsDirectoryDo: aBlock [
 
 	^ self directoryDo: [ :directory | 
 		  aBlock value: (directory / 'actions') ensureCreateDirectory ]
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> addAction: aRMDActionDefinitionNode named: aString ifPresent: aBlock [
 
 	self actionsDirectoryDo: [ :actionsDirectory | 
@@ -66,7 +67,7 @@ RMDAbstractFileRepository >> addAction: aRMDActionDefinitionNode named: aString 
 			aRMDActionDefinitionNode printOn: stream ] ]
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDAbstractFileRepository >> addDataFile: aFileReference named: aString ifPresent: aBlock [
 
 	self dataDirectoryDo: [ :dataDirectory |
@@ -76,7 +77,7 @@ RMDAbstractFileRepository >> addDataFile: aFileReference named: aString ifPresen
 		aFileReference copyTo: ref ]
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 
 	self iconsDirectoryDo: [ :iconsDirectory | 
@@ -86,7 +87,7 @@ RMDAbstractFileRepository >> addIcon: aForm named: aString ifPresent: aBlock [
 		PNGReadWriter putForm: aForm onFileNamed: ref ensureDelete ]
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString ifPresent: presentBlock [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
@@ -97,20 +98,20 @@ RMDAbstractFileRepository >> addModel: aRMDSimulationModel named: aString ifPres
 		^ aRMDSimulationModel exportModel: ref ensureDeleteAll ]
 ]
 
-{ #category : #privatee }
+{ #category : 'privatee' }
 RMDAbstractFileRepository >> basicDirectory [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDAbstractFileRepository >> dataDirectoryDo: aBlock [
 
 	^ self directoryDo: [ :directory |
 		  aBlock cull: (directory / 'data') ensureCreateDirectory ]
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDAbstractFileRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	self dataDirectoryDo: [ :dataDirectory |
@@ -120,7 +121,7 @@ RMDAbstractFileRepository >> dataFileNamed: aString ifPresent: aBlock ifAbsent: 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDAbstractFileRepository >> dataNames [
 
 	self dataDirectoryDo: [ :iconDirectory |
@@ -129,7 +130,7 @@ RMDAbstractFileRepository >> dataNames [
 	^ Array new
 ]
 
-{ #category : #controling }
+{ #category : 'controling' }
 RMDAbstractFileRepository >> directoryDo: aBlock [
 
 	self basicDirectory ifNotNil: [ :directory | 
@@ -137,13 +138,13 @@ RMDAbstractFileRepository >> directoryDo: aBlock [
 	^ nil
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractFileRepository >> hasEditMenu [
 
 	^ true
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> iconFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	self iconsDirectoryDo: [ :iconsDirectory | 
@@ -153,7 +154,7 @@ RMDAbstractFileRepository >> iconFileNamed: aString ifPresent: aBlock ifAbsent: 
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> iconNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -162,7 +163,7 @@ RMDAbstractFileRepository >> iconNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> iconNames [
 
 	self iconsDirectoryDo: [ :iconDirectory | 
@@ -171,20 +172,20 @@ RMDAbstractFileRepository >> iconNames [
 	^ Array new
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> iconsDirectoryDo: aBlock [
 
 	^ self directoryDo: [ :directory | 
 		  aBlock cull: (directory / 'icons') ensureCreateDirectory ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractFileRepository >> isModifiable [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent: errorBlock [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
@@ -196,7 +197,7 @@ RMDAbstractFileRepository >> modelFileNamed: aString ifPresent: aBlock ifAbsent:
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -206,7 +207,7 @@ RMDAbstractFileRepository >> modelMetadataNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> modelNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -216,7 +217,7 @@ RMDAbstractFileRepository >> modelNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> modelNames [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
@@ -225,25 +226,25 @@ RMDAbstractFileRepository >> modelNames [
 	^ Array new
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> modelsDirectoryDo: aBlock [
 
 	^ self directoryDo: [ :directory | 
 		  aBlock cull: (directory / 'models') ensureCreateDirectory ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractFileRepository >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractFileRepository >> name: aString [
 
 	name := aString
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -252,7 +253,7 @@ RMDAbstractFileRepository >> removeActionNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> removeIconNamed: aString ifAbsent: errorBlock [
 
 	^ self
@@ -261,7 +262,7 @@ RMDAbstractFileRepository >> removeIconNamed: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 
 	self modelsDirectoryDo: [ :modelsDirectory | 
@@ -273,7 +274,7 @@ RMDAbstractFileRepository >> removeModelNamed: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #'accessing-actions' }
+{ #category : 'accessing-actions' }
 RMDAbstractFileRepository >> renameAction: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	aString = anotherString ifTrue: [ ^ self ].
@@ -287,7 +288,7 @@ RMDAbstractFileRepository >> renameAction: aString ifAbsent: absentBlock to: ano
 		ifAbsent: absentBlock
 ]
 
-{ #category : #'accessing-data' }
+{ #category : 'accessing-data' }
 RMDAbstractFileRepository >> renameData: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	aString = anotherString ifTrue: [ ^ self ].
@@ -301,7 +302,7 @@ RMDAbstractFileRepository >> renameData: aString ifAbsent: absentBlock to: anoth
 		ifAbsent: absentBlock
 ]
 
-{ #category : #'accessing-icons' }
+{ #category : 'accessing-icons' }
 RMDAbstractFileRepository >> renameIcon: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	aString = anotherString ifTrue: [ ^ self ].
@@ -315,7 +316,7 @@ RMDAbstractFileRepository >> renameIcon: aString ifAbsent: absentBlock to: anoth
 		ifAbsent: absentBlock
 ]
 
-{ #category : #'accessing-models' }
+{ #category : 'accessing-models' }
 RMDAbstractFileRepository >> renameModel: aString ifAbsent: absentBlock to: anotherString ifPresent: presentBlock [
 
 	aString = anotherString ifTrue: [ ^ self ].
@@ -329,7 +330,7 @@ RMDAbstractFileRepository >> renameModel: aString ifAbsent: absentBlock to: anot
 		  ifAbsent: absentBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractFileRepository >> repositoryName [
 
 	self directoryDo: [ :directory | ^ name ].
