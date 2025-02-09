@@ -7,40 +7,49 @@ Class {
 		'authorField',
 		'dateField',
 		'descriptionField',
-		'modeler',
-		'searchField'
+		'searchField',
+		'modelerButton',
+		'updateButton'
 	],
-	#category : 'ReMobidyc-Chronicle',
-	#package : 'ReMobidyc-Chronicle'
+	#category : 'ReMobidyc-Spec2-Browsers',
+	#package : 'ReMobidyc-Spec2',
+	#tag : 'Browsers'
 }
 
 { #category : 'layout' }
 RMDChronicleModelBrowser class >> defaultLayout [
 
 	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.3;
+		  positionOfSlider: 0.4;
 		  add: (SpBoxLayout newVertical
-				   add: 'Filters' asPresenter expand: false;
+				   add: 'Metadata' asPresenter expand: false;
 				   add: (SpGridLayout new
-						    add: 'name' asPresenter at: 1 @ 1;
+						    borderWidth: 0;
+						    add: '    name' asPresenter at: 1 @ 1;
 						    add: #nameField at: 2 @ 1;
-						    add: 'author' asPresenter at: 1 @ 2;
+						    add: '    author' asPresenter at: 1 @ 2;
 						    add: #authorField at: 2 @ 2;
-						    add: 'date' asPresenter at: 1 @ 3;
+						    add: '    timestamp' asPresenter at: 1 @ 3;
 						    add: #dateField at: 2 @ 3;
-						    add: 'description' asPresenter at: 1 @ 4;
+						    add: '    description' asPresenter at: 1 @ 4;
 						    add: #descriptionField at: 2 @ 4;
 						    columnHomogeneous: false;
 						    column: 1 expand: false;
 						    column: 2 expand: true;
 						    yourself)
-				   height: self buttonHeight * 5;
-				   add: 'Search in model' asPresenter expand: false;
+				   height: self buttonHeight * 4 + 5;
+				   add: 'Full text search' asPresenter expand: false;
 				   add: #searchField expand: false;
-				   add: 'Chronicle' expand: false;
-				   add: #modelList;
 				   yourself);
-		  add: #modeler;
+		  add: (SpBoxLayout newVertical
+				   add: #modelList;
+				   add: (SpBoxLayout newHorizontal
+						    add: #updateButton width: self buttonHeight;
+						    add: ' ' asPresenter expand: false;
+						    add: #modelerButton width: self buttonHeight;
+						    yourself)
+				   expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -102,7 +111,15 @@ RMDChronicleModelBrowser >> initializePresenters [
 		                    self descriptionFieldChanged ].
 	searchField := self newTextInput whenSubmitDo: [ :s |
 		               self searchFieldChanged ].
-	modeler := self instantiate: RMDSimulationModeler.
+	updateButton := self newButton
+		                icon: self updateIcon;
+		                action: [ self updateModelList ];
+		                yourself.
+	modelerButton := self newButton
+		                 icon: self editIcon;
+		                 action: [ self openInModeler ];
+		                 disable;
+		                 yourself.
 	self updateModelList
 ]
 
@@ -121,6 +138,15 @@ RMDChronicleModelBrowser >> nameFieldChanged [
 	self updateModelList
 ]
 
+{ #category : 'operations' }
+RMDChronicleModelBrowser >> openInModeler [
+
+	modelList selectedItem ifNotNil: [ :payload |
+		(payload
+			 load;
+			 simulationModel) openInModeler ]
+]
+
 { #category : 'updates' }
 RMDChronicleModelBrowser >> searchFieldChanged [
 
@@ -131,8 +157,15 @@ RMDChronicleModelBrowser >> searchFieldChanged [
 RMDChronicleModelBrowser >> selectedModelChanged [
 
 	modelList selectedItem ifNotNil: [ :chronicleModel |
-		chronicleModel load.
-		modeler simulationModel: chronicleModel simulationModel ]
+		self updateButtons ]
+]
+
+{ #category : 'updates' }
+RMDChronicleModelBrowser >> updateButtons [
+
+	modelList selectedItem
+		ifNotNil: [ modelerButton enable ]
+		ifNil: [ modelerButton disable ]
 ]
 
 { #category : 'updates' }
@@ -155,5 +188,6 @@ RMDChronicleModelBrowser >> updateModelList [
 			          m description asLowercase includesSubstring: str ] ].
 	searchField text asString trim ifNotEmpty: [ :str |
 		models := models select: [ :m | m includesSubstring: str ] ].
-	modelList items: models
+	modelList items: models.
+	self updateButtons
 ]

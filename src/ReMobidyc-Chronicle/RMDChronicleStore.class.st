@@ -11,7 +11,9 @@ Class {
 { #category : 'operations' }
 RMDChronicleStore class >> chronicleRawModels [
 
-	^ self current chronicleRawModels
+	^ self current
+		  loadChronicle;
+		  chronicleRawModels
 ]
 
 { #category : 'sole instance' }

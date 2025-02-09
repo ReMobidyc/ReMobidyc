@@ -242,8 +242,8 @@ RMDSimulationModeler >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self newMenuBar
-		           addGroup: [ :group | 
-			           group addItem: [ :item | 
+		           addGroup: [ :group |
+			           group addItem: [ :item |
 					           item
 						           name: 'File';
 						           subMenu: self fileMenu ] ];
@@ -253,16 +253,16 @@ RMDSimulationModeler >> initializePresenters [
 		                     yourself.
 
 	views := self newNotebook
-		         whenSelectedPageChangedDo: [ 
+		         whenSelectedPageChangedDo: [
 			         | pageIndex |
 			         pageIndex := views selectedPageIndex.
-			         pageIndex = self variabilityPageIndex ifTrue: [ 
+			         pageIndex = self variabilityPageIndex ifTrue: [
 					         simulationModel ifNotNil: #updateMetaParameters.
 					         variabilityPresenter ifNotNil: #nodeChanged.
 					         (views pageAt: self variabilityPageIndex) resetContent ].
-			         pageIndex = self simulationDefinitionPageIndex ifTrue: [ 
+			         pageIndex = self simulationDefinitionPageIndex ifTrue: [
 					         simulationDefinitionPresenter ifNotNil: #nodeChanged ] ];
-		         whenPageRemovedDo: [ :page | 
+		         whenPageRemovedDo: [ :page |
 			         self removeSpeciesNamed: page title ];
 		         yourself.
 	saveButton := self newButton
@@ -272,15 +272,15 @@ RMDSimulationModeler >> initializePresenters [
 		              yourself.
 	openExperimentariumButton := self newButton
 		                             icon: self experimentariumIcon;
-		                             action: [ 
-			                             simulationModel metaInterpreterOnFile 
+		                             action: [
+			                             simulationModel metaInterpreterOnFile
 				                             ifNotNil: #openInExperimentarium ];
 		                             help:
 			                             'Run the model in an experimentarium.';
 		                             yourself.
 	openExperimentariumMenuButton := self newButton
 		                                 icon: self dropdownIcon;
-		                                 action: [ 
+		                                 action: [
 			                                 self openInExperimentarium ];
 		                                 help:
 			                                 'Run the model in an experimentarium with selected memory model.';
