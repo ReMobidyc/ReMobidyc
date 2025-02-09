@@ -22,6 +22,12 @@ RMDChronicleModel >> description [
 	^ hideMetadata at: 'description' ifAbsent: [ '' ]
 ]
 
+{ #category : 'testing' }
+RMDChronicleModel >> hasTag: aString [
+
+	^ hideMetadata hasTag: aString
+]
+
 { #category : 'hideho-operations' }
 RMDChronicleModel >> hideLoad: aFileReference storage: aHiDeStorage [
 
@@ -99,6 +105,18 @@ RMDChronicleModel >> simulationModel: aRMDSimulationModel [
 			hideMetadata at: 'authors' put: authors asArray ].
 		simulationModel description ifNotNil: [ :description |
 			hideMetadata at: 'description' put: description ] ]
+]
+
+{ #category : 'accessing' }
+RMDChronicleModel >> tags [
+
+	^ hideMetadata tags
+]
+
+{ #category : 'accessing' }
+RMDChronicleModel >> tags: aCollectionOfString [
+
+	hideMetadata tags: aCollectionOfString
 ]
 
 { #category : 'accessing' }
