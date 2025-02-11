@@ -1,6 +1,8 @@
 Class {
 	#name : 'RMDChronicleModelBrowser',
 	#superclass : 'RMDPresenter',
+	#traits : 'THiDeEditTags',
+	#classTraits : 'THiDeEditTags classTrait',
 	#instVars : [
 		'modelList',
 		'nameField',
@@ -11,9 +13,7 @@ Class {
 		'searchField',
 		'updateButton',
 		'modelerButton',
-		'tagButton',
-		'tagHistogram',
-		'requiredTags'
+		'tagButton'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -95,48 +95,12 @@ RMDChronicleModelBrowser >> descriptionFieldChanged [
 RMDChronicleModelBrowser >> editTags [
 
 	modelList selectedItem ifNotNil: [ :chronicleModel |
-		| listEditor |
-		listEditor := RMDListEditPresenter new.
-		listEditor
-			items: chronicleModel tags;
-			addAction: [
-				| menu |
-				menu := listEditor newMenu.
-				(tagHistogram asSet asArray copyWithoutAll: listEditor items)
-					asSortedCollection do: [ :tag |
-						menu addItem: [ :item |
-								item
-									name: tag;
-									action: [
-										listEditor items: (listEditor items asSortedCollection
-													 add: tag;
-													 yourself) ] ] ].
-				menu addItem: [ :item |
-					item
-						name: 'Create new...';
-						action: [
-							(UIManager default request: 'New tag') ifNotNil: [ :tag |
-									listEditor items: (listEditor items asSortedCollection
-												 add: tag trim;
-												 yourself) ] ] ].
-				menu openWithSpecAtPointer ];
-			removeAction: [
-				listEditor items:
-					(listEditor items copyWithout: listEditor selectedItem) ].
-		listEditor openDialog
-			title: 'Edit tags';
-			okAction: [
-				chronicleModel tags: listEditor items.
-				chronicleModel save.
-				self chronicleChanged ] ]
-]
-
-{ #category : 'initialization' }
-RMDChronicleModelBrowser >> initialize [
-
-	tagHistogram := Bag new.
-	requiredTags := Set new.
-	super initialize
+		self
+			editTags: tagList items
+			on: chronicleModel
+			title: 'Edit tags'
+			createNewTagTitle: 'Create new'
+			okAction: [ self chronicleChanged ] ]
 ]
 
 { #category : 'initialization' }
@@ -170,32 +134,10 @@ RMDChronicleModelBrowser >> initializePresenters [
 		             self dateFieldChanged ].
 	descriptionField := self newTextInput whenSubmitDo: [ :s |
 		                    self descriptionFieldChanged ].
-	tagList := self newTable
-		           beResizable;
-		           addColumn: ((SpCheckBoxTableColumn
-				             title: ''
-				             evaluated: [ :tag | requiredTags includes: tag ])
-				            onActivation: [ :tag |
-					            requiredTags add: tag.
-					            self updateModelList ];
-				            onDeactivation: [ :tag |
-					            requiredTags remove: tag ifAbsent: [  ].
-					            self updateModelList ];
-				            beNotExpandable;
-				            yourself);
-		           addColumn:
-			           (SpStringTableColumn
-				            title: 'tag'
-				            evaluated: [ :tag | tag ]) beSortable;
-		           addColumn: ((SpStringTableColumn
-				             title: '# models'
-				             evaluated: [ :tag |
-					             (tagHistogram occurrencesOf: tag) asString ])
-				            width: 80;
-				            beSortable;
-				            sortFunction:
-					            [ :tag | tagHistogram occurrencesOf: tag ] ascending;
-				            yourself);
+	tagList := (self instantiate: HiDeTagFilterPresenter)
+		           tagColumnTitle: 'tag';
+		           quantityColumnTitle: '# models';
+		           whenFilterChangedDo: [ self updateModelList ];
 		           yourself.
 	searchField := self newTextInput whenSubmitDo: [ :s |
 		               self searchFieldChanged ].
@@ -287,8 +229,7 @@ RMDChronicleModelBrowser >> updateModelList [
 	descriptionField text asString trim asLowercase ifNotEmpty: [ :str |
 		models := models select: [ :m |
 			          m description asLowercase includesSubstring: str ] ].
-	requiredTags do: [ :tag |
-		models := models select: [ :m | m hasTag: tag ] ].
+	models := models select: tagList.
 	searchField text asString trim ifNotEmpty: [ :str |
 		models := models select: [ :m | m includesSubstring: str ] ].
 	modelList items: models.
@@ -298,13 +239,5 @@ RMDChronicleModelBrowser >> updateModelList [
 { #category : 'updates' }
 RMDChronicleModelBrowser >> updateTags: aCollectionOfChronicleModel [
 
-	tagHistogram := aCollectionOfChronicleModel
-		                inject: Bag new
-		                into: [ :tags :chronicleModel |
-			                tags
-				                addAll: chronicleModel tags;
-				                yourself ].
-	requiredTags := requiredTags select: [ :tag |
-		                tagHistogram includes: tag ].
-	tagList items: tagHistogram asSet asSortedCollection
+	tagList persistencies: aCollectionOfChronicleModel
 ]
