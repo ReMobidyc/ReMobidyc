@@ -9,11 +9,11 @@ Class {
 }
 
 { #category : 'operations' }
-RMDChronicleStore class >> chronicleRawModels [
+RMDChronicleStore class >> chronicleModels [
 
 	^ self current
 		  loadChronicle;
-		  chronicleRawModels
+		  chronicleModels
 ]
 
 { #category : 'sole instance' }
@@ -29,17 +29,23 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 ]
 
 { #category : 'operations' }
+RMDChronicleStore >> chronicleAt: aString ifAbsent: errorBlock [
+
+	^ chronicle at: aString ifAbsent: errorBlock
+]
+
+{ #category : 'operations' }
 RMDChronicleStore >> chronicleModels [
 
 	^ self chronicleSuchThat: [ :metadata | metadata hasTag: 'model' ]
 ]
 
 { #category : 'operations' }
-RMDChronicleStore >> chronicleRawModels [
+RMDChronicleStore >> chronicleSuchThat: aBlock [
 
 	| payloads |
 	payloads := chronicle values select: [ :payload |
-		            payload hideMetadata hasTag: 'model' ].
+		            aBlock value: payload hideMetadata ].
 	^ payloads asSortedCollection: [ :newer :older |
 		  older hideMetadata timestamp <= newer hideMetadata timestamp ]
 ]

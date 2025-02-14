@@ -214,7 +214,7 @@ RMDChronicleModelBrowser >> updateButtons [
 RMDChronicleModelBrowser >> updateModelList [
 
 	| models |
-	models := RMDChronicleStore chronicleRawModels.
+	models := RMDChronicleStore chronicleModels.
 	self updateTags: models.
 	nameField text asString trim asLowercase ifNotEmpty: [ :str |
 		models := models select: [ :m |

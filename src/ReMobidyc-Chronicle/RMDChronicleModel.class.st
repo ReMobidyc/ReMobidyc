@@ -4,7 +4,7 @@ Class {
 	#traits : 'THiDePersistency',
 	#classTraits : 'THiDePersistency classTrait',
 	#instVars : [
-		'simulationModel'
+		'#simulationModel => HiDePersistencySlot'
 	],
 	#category : 'ReMobidyc-Chronicle',
 	#package : 'ReMobidyc-Chronicle'
@@ -62,6 +62,13 @@ RMDChronicleModel >> includesSubstring: aString [
 					ref readStreamDo: [ :stream |
 						(stream upToEnd includesSubstring: aString) ifTrue: [ ^ true ] ] ] ] ].
 	^ false
+]
+
+{ #category : 'initialization' }
+RMDChronicleModel >> initialize [
+
+	self class initializeSlots: self.
+	super initialize.
 ]
 
 { #category : 'hideho-initialization' }
