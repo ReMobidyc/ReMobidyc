@@ -29,25 +29,9 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 ]
 
 { #category : 'operations' }
-RMDChronicleStore >> chronicleAt: aString ifAbsent: errorBlock [
-
-	^ chronicle at: aString ifAbsent: errorBlock
-]
-
-{ #category : 'operations' }
 RMDChronicleStore >> chronicleModels [
 
 	^ self chronicleSuchThat: [ :metadata | metadata hasTag: 'model' ]
-]
-
-{ #category : 'operations' }
-RMDChronicleStore >> chronicleSuchThat: aBlock [
-
-	| payloads |
-	payloads := chronicle values select: [ :payload |
-		            aBlock value: payload hideMetadata ].
-	^ payloads asSortedCollection: [ :newer :older |
-		  older hideMetadata timestamp <= newer hideMetadata timestamp ]
 ]
 
 { #category : 'initialization' }
@@ -79,6 +63,6 @@ RMDChronicleStore >> recordModel: aRMDSimulationModel [
 	chronicleModel := RMDChronicleModel new
 		                  simulationModel: aRMDSimulationModel;
 		                  yourself.
-	self chronicleAdd: chronicleModel.
+	self chronicleSave: chronicleModel.
 	^ chronicleModel
 ]

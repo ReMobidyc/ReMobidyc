@@ -29,14 +29,14 @@ RMDChronicleModel >> hasTag: aString [
 ]
 
 { #category : 'hideho-operations' }
-RMDChronicleModel >> hideLoad: aFileReference storage: aHiDeStorage [
+RMDChronicleModel >> hideLoad: aFileReference [
 
 	aFileReference / 'model' ifExists: [ :ref |
 		simulationModel := RMDSimulationModel new importModel: ref ]
 ]
 
 { #category : 'hideho-operations' }
-RMDChronicleModel >> hideSave: aFileReference storage: aHiDeStorage [
+RMDChronicleModel >> hideSave: aFileReference [
 
 	simulationModel ifNotNil: [
 		simulationModel exportModel: ((aFileReference / 'model')
@@ -69,6 +69,7 @@ RMDChronicleModel >> initialize [
 
 	self class initializeSlots: self.
 	super initialize.
+	self initializeHideMetadata
 ]
 
 { #category : 'hideho-initialization' }
