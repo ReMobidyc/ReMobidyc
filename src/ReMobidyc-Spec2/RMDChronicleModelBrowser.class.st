@@ -26,7 +26,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 	^ SpPanedLayout newHorizontal
 		  positionOfSlider: 0.4;
 		  add: (SpBoxLayout newVertical
-				   add: 'Metadata' asPresenter expand: false;
+				   add: 'Search by Metadata' asPresenter expand: false;
 				   add: (SpGridLayout new
 						    borderWidth: 0;
 						    add: '    name' asPresenter at: 1 @ 1;
@@ -42,7 +42,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 						    column: 2 expand: true;
 						    yourself)
 				   height: self buttonHeight * 4 + 5;
-				   add: 'Tags' expand: false;
+				   add: 'Search by Tags' expand: false;
 				   add: #tagList;
 				   add: 'Full text search' asPresenter expand: false;
 				   add: #searchField expand: false;

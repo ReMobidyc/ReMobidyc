@@ -35,10 +35,10 @@ RMDLauncher >> initializePresenters [
 	super initializePresenters.
 	notebook := self newNotebook
 		            addPage: (SpNotebookPage
-				             title: 'Repositories'
+				             title: 'Folders'
 				             provider: [ RMDRepositoryLauncher new ]);
 		            addPage: (SpNotebookPage
-				             title: 'Chronicle'
+				             title: 'Archives'
 				             provider: [ RMDChronicleModelBrowser new ]);
 		            yourself
 ]
