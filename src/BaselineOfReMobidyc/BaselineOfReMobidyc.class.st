@@ -80,7 +80,12 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	<script: 'BaselineOfReMobidyc updateFromOfficialRepository'>
 	| repository |
 	repository := self ensureIcebergRepository.
-	repository pull.
+	[ repository pull ]
+		on: IceExperimentalFeature
+		do: [ :ex | ex load ].
+	[ (repository packageNamed: 'BaselineOfReMobidyc') load ]
+		on: MCMergeOrLoadWarning
+		do: [ :ex | ex load ].
 	Cursor wait showWhile: [
 		| maxCount count |
 		maxCount := 5.
