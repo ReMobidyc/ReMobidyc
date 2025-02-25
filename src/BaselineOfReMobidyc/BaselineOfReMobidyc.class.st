@@ -82,7 +82,7 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	repository := self ensureIcebergRepository.
 	[ repository pull ]
 		on: IceExperimentalFeature
-		do: [ :ex | ex load ].
+		do: [ :ex | ex resume ].
 	[ (repository packageNamed: 'BaselineOfReMobidyc') load ]
 		on: MCMergeOrLoadWarning
 		do: [ :ex | ex load ].
