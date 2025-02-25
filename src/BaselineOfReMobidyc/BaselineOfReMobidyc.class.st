@@ -47,7 +47,7 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 						          repository: nil;
 						          remote:
 							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/ReMobidyc.git');
+									           'https://github.com/tomooda/ReMobidyc.git');
 						          location:
 							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
 							          / 'ReMobidyc';
@@ -81,7 +81,12 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	<script: 'BaselineOfReMobidyc updateFromOfficialRepository'>
 	| repository |
 	repository := self ensureIcebergRepository.
-	repository pull.
+	[ repository pull ]
+		on: IceExperimentalFeature
+		do: [ :ex | ex resume ].
+	[ (repository packageNamed: 'BaselineOfReMobidyc') reload ]
+		on: MCMergeOrLoadWarning
+		do: [ :ex | ex load ].
 	Cursor wait showWhile: [
 		| maxCount count |
 		maxCount := 5.
