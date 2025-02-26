@@ -13,10 +13,10 @@ BaselineOfReMobidyc class >> deploy [
 	RMDRepositoryDirectory flushCurrent.
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	Smalltalk cleanUp: true except: {  } confirming: false.
-	MCRepositoryGroup allSubInstancesDo: [ :group | 
+	MCRepositoryGroup allSubInstancesDo: [ :group |
 		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store | 
+	IceCredentialStore current in: [ :store |
 		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	Deprecation
@@ -28,7 +28,7 @@ BaselineOfReMobidyc class >> deploy [
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
-	self new postLoad.
+	self initializeResources.
 	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
@@ -55,6 +55,72 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 			  repo
 				  register;
 				  yourself ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> initializeResources [
+
+	<script: 'BaselineOfReMobidyc initializeResources'>
+	self installLogos.
+	PharoLightTheme beCurrent.
+	PolymorphSystemSettings desktopLogoFileName: ''.
+	PolymorphSystemSettings desktopLogoFileName:
+		(self logoDirectoryPath / 'default.png') fullName.
+	PolymorphSystemSettings desktopColor:
+		(Color cyan mixed: 0.02 with: Color white).
+	Smalltalk at: #RMDFileMemory ifPresent: [ :class | class initialize ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installLogos [
+	| imagesUrl basenames client |
+	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
+		asUrl.
+	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
+	client := ZnClient new.
+	basenames
+		do: [ :basename | 
+			(self logoDirectoryPath / basename) exists
+				ifFalse: [ | response |
+					response := client
+						url: imagesUrl / basename;
+						get;
+						response.
+					(response isSuccess
+						and: [ response entity contentType sub = 'png' ])
+						ifTrue: [ self logoDirectoryPath / basename
+								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installStandardRepository [
+
+	<script: 'BaselineOfReMobidyc new installStandardRepository'>
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'StandardModels' ]
+		  ifNone: [ 
+			  | repo |
+			  UIManager default
+				  informUser: 'Cloning the official re:mobidyc standard models'
+				  during: [ 
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/ReMobidyc/StandardModels.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+							          / 'StandardModels';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> logoDirectoryPath [
+	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
+		ensureCreateDirectory
 ]
 
 { #category : 'menus' }
@@ -198,27 +264,6 @@ BaselineOfReMobidyc >> baselineOf: spec [
 ]
 
 { #category : 'scripts' }
-BaselineOfReMobidyc >> installLogos [
-	| imagesUrl basenames client |
-	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
-		asUrl.
-	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
-	client := ZnClient new.
-	basenames
-		do: [ :basename | 
-			(self logoDirectoryPath / basename) exists
-				ifFalse: [ | response |
-					response := client
-						url: imagesUrl / basename;
-						get;
-						response.
-					(response isSuccess
-						and: [ response entity contentType sub = 'png' ])
-						ifTrue: [ self logoDirectoryPath / basename
-								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
-]
-
-{ #category : 'scripts' }
 BaselineOfReMobidyc >> installRoassal3 [
 
 	<script: 'BaselineOfReMobidyc new installRoassal3'>
@@ -232,47 +277,10 @@ BaselineOfReMobidyc >> installRoassal3 [
 ]
 
 { #category : 'scripts' }
-BaselineOfReMobidyc >> installStandardRepository [
-
-	<script: 'BaselineOfReMobidyc new installStandardRepository'>
-	^ IceRepository repositories
-		  detect: [ :repo | repo name = 'StandardModels' ]
-		  ifNone: [ 
-			  | repo |
-			  UIManager default
-				  informUser: 'Cloning the official re:mobidyc standard models'
-				  during: [ 
-					  repo := IceRepositoryCreator new
-						          repository: nil;
-						          remote:
-							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/StandardModels.git');
-						          location:
-							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
-							          / 'StandardModels';
-						          createRepository ].
-			  repo
-				  register;
-				  yourself ]
-]
-
-{ #category : 'scripts' }
-BaselineOfReMobidyc >> logoDirectoryPath [
-	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
-		ensureCreateDirectory
-]
-
-{ #category : 'scripts' }
 BaselineOfReMobidyc >> postLoad [
 
 	<script: 'BaselineOfReMobidyc new postLoad'>
-	self installLogos.
-	PharoLightTheme beCurrent.
-	PolymorphSystemSettings desktopLogoFileName: ''.
-	PolymorphSystemSettings desktopLogoFileName:
-		(self logoDirectoryPath / 'default.png') fullName.
-	PolymorphSystemSettings desktopColor:
-		(Color cyan mixed: 0.02 with: Color white).
-	Smalltalk at: #RMDFileMemory ifPresent: [ :class | class initialize ].
-	self installStandardRepository
+	self class
+		initializeResources;
+		installStandardRepository
 ]
