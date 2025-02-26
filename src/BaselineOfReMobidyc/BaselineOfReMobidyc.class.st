@@ -95,14 +95,14 @@ BaselineOfReMobidyc class >> installLogos [
 { #category : 'scripts' }
 BaselineOfReMobidyc class >> installStandardRepository [
 
-	<script: 'BaselineOfReMobidyc new installStandardRepository'>
+	<script: 'BaselineOfReMobidyc  installStandardRepository'>
 	^ IceRepository repositories
 		  detect: [ :repo | repo name = 'StandardModels' ]
-		  ifNone: [ 
+		  ifNone: [
 			  | repo |
 			  UIManager default
 				  informUser: 'Cloning the official re:mobidyc standard models'
-				  during: [ 
+				  during: [
 					  repo := IceRepositoryCreator new
 						          repository: nil;
 						          remote:

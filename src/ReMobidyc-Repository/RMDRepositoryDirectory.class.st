@@ -13,8 +13,11 @@ Class {
 
 { #category : 'sole instance' }
 RMDRepositoryDirectory class >> current [
+
 	<script: 'RMDRepositoryDirectory current inspect'>
-	^ current ifNil: [ current := self new ]
+	^ current ifNil: [
+		  BaselineOfReMobidyc installStandardRepository.
+		  current := self new ]
 ]
 
 { #category : 'sole instance' }
