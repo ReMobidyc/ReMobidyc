@@ -23,7 +23,7 @@ RMDLauncher class >> remobidycMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #ReMobidycLauncher)
 		parent: 'ReMobidyc';
-		order: 0;
+		order: 1;
 		label: 'Launcher';
 		action: [ RMDLauncher new open ];
 		help: 'Open a model launcher'

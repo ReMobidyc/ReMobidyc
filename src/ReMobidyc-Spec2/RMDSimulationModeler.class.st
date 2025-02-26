@@ -55,7 +55,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #ReMobidyc)
 		label: 're:Mobidyc';
-		order: 1;
+		order: 2;
 		with: [ 
 			(aBuilder item: #OpenNew)
 				parent: 'ReMobidyc';

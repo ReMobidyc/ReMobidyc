@@ -65,14 +65,38 @@ BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 		parent: 'ReMobidyc';
 		order: 100;
 		label: 'System';
-		with: [ 
+		with: [
+			(aBuilder item: #ReMobidycSettings)
+				order: 0;
+				label: 'Settings...';
+				action: [ self showSettingsBrowser ];
+				help: 'Open a settings browser for re:mobidyc'.
 			(aBuilder item: #Upgrade)
-				parent: #ReMobidycSystem;
 				order: 100;
 				label: 'Upgrade from the official repository';
 				action: [ self updateFromOfficialRepository ];
 				help:
 					'Upgrade the re:mobidyc from the official github repository.' ]
+]
+
+{ #category : 'settings' }
+BaselineOfReMobidyc class >> settingOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #remobidyc)
+		label: 're:mobidyc';
+		description: 'All settings about re:mobidyc'
+]
+
+{ #category : 'settings' }
+BaselineOfReMobidyc class >> showSettingsBrowser [
+
+	<script: 'BaselineOfReMobidyc showSettingsBrowser'>
+	SettingBrowser new
+		changePackageSet:
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ReMobidyc-' ]);
+		open
 ]
 
 { #category : 'utilities' }
