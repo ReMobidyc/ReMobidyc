@@ -61,10 +61,11 @@ RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #TextBrowser)
 		parent: 'ReMobidyc';
-		order: 2;
+		order: 3;
 		label: 'Modeler (text)';
 		action: [ RMDModelFileTextBrowser openFromRepository ];
-		help: 'Open a text-based browser on a local repository'
+		help: 'Open a text-based browser on a local repository';
+		withSeparatorAfter
 ]
 
 { #category : 'operations' }
@@ -104,32 +105,34 @@ RMDModelFileTextBrowser >> agentsFileParser [
 RMDModelFileTextBrowser >> fileMenu [
 
 	^ self newMenu
-		  addGroup: [ :group | 
-			  group addItem: [ :item | 
+		  addGroup: [ :group |
+			  group addItem: [ :item |
 					  item
 						  name: 'Open...';
-						  action: [ 
-							  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+						  action: [
+							  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser |
 									  self modelFileReference: repBrowser file ] ] ].
-			  group addItem: [ :item | 
+			  group addItem: [ :item |
 				  item
 					  name: 'Save';
-					  enabled: [ 
+					  enabled: [
 						  modelFileReference notNil and: [ editingTexts notEmpty ] ];
-					  action: [ 
+					  action: [
 						  self simulationModel
 							  updateMetadata;
-							  exportModel: modelFileReference ] ].
-			  group addItem: [ :item | 
+							  exportModel: modelFileReference;
+							  recordInChronicle ] ].
+			  group addItem: [ :item |
 				  item
 					  name: 'Save As...';
-					  action: [ 
+					  action: [
 						  RMDRepositoryModelsBrowser
 							  openForSave: (self simulationModel
 									   updateMetadata;
 									   yourself)
-							  do: [ :model :repBrowser | 
-							  self modelFileReference: repBrowser file ] ] ] ];
+							  do: [ :model :repBrowser |
+							  self modelFileReference: repBrowser file ].
+						  self simulationModel recordInChronicle ] ] ];
 		  yourself
 ]
 

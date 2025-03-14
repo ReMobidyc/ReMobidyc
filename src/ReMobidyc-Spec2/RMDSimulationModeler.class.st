@@ -55,7 +55,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #ReMobidyc)
 		label: 're:Mobidyc';
-		order: 1;
+		order: 2;
 		with: [ 
 			(aBuilder item: #OpenNew)
 				parent: 'ReMobidyc';
@@ -189,11 +189,11 @@ RMDSimulationModeler >> copyStage: aString to: anotherString [
 RMDSimulationModeler >> fileMenu [
 
 	^ self newMenu
-		  addGroup: [ :group | 
-			  group addItem: [ :item | 
+		  addGroup: [ :group |
+			  group addItem: [ :item |
 					  item
 						  name: 'New';
-						  action: [ 
+						  action: [
 							  self
 								  setSimulationModel: (RMDSimulationModel new
 										   addRenderer:
@@ -205,32 +205,35 @@ RMDSimulationModeler >> fileMenu [
 												    and: '1.0' asRMDExpression);
 										   yourself);
 								  modelFileReference: nil ] ].
-			  group addItem: [ :item | 
+			  group addItem: [ :item |
 				  item
 					  name: 'Open...';
-					  action: [ 
-						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser | 
+					  action: [
+						  RMDRepositoryModelsBrowser openToLoadDo: [ :model :repBrowser |
 								  self
 									  setSimulationModel: model;
 									  modelFileReference: repBrowser file ] ] ].
-			  group addItem: [ :item | 
+			  group addItem: [ :item |
 				  item
 					  name: 'Save';
 					  enabled: [ modelFileReference notNil ];
-					  action: [ 
+					  action: [
 						  simulationModel updateMetadata.
 						  metadataPresenter metadataChanged.
-						  simulationModel exportModel: modelFileReference ] ].
-			  group addItem: [ :item | 
+						  simulationModel
+							  exportModel: modelFileReference;
+							  recordInChronicle ] ].
+			  group addItem: [ :item |
 				  item
 					  name: 'Save As...';
-					  action: [ 
+					  action: [
 						  simulationModel updateMetadata.
 						  metadataPresenter metadataChanged.
 						  RMDRepositoryModelsBrowser
 							  openForSave: simulationModel
-							  do: [ :model :repBrowser | 
-								  self modelFileReference: repBrowser file ] ] ] ];
+							  do: [ :model :repBrowser |
+								  self modelFileReference: repBrowser file ].
+						  simulationModel recordInChronicle ] ] ];
 		  yourself
 ]
 
@@ -239,8 +242,8 @@ RMDSimulationModeler >> initializePresenters [
 
 	super initializePresenters.
 	menuBar := self newMenuBar
-		           addGroup: [ :group | 
-			           group addItem: [ :item | 
+		           addGroup: [ :group |
+			           group addItem: [ :item |
 					           item
 						           name: 'File';
 						           subMenu: self fileMenu ] ];
@@ -250,16 +253,16 @@ RMDSimulationModeler >> initializePresenters [
 		                     yourself.
 
 	views := self newNotebook
-		         whenSelectedPageChangedDo: [ 
+		         whenSelectedPageChangedDo: [
 			         | pageIndex |
 			         pageIndex := views selectedPageIndex.
-			         pageIndex = self variabilityPageIndex ifTrue: [ 
+			         pageIndex = self variabilityPageIndex ifTrue: [
 					         simulationModel ifNotNil: #updateMetaParameters.
 					         variabilityPresenter ifNotNil: #nodeChanged.
 					         (views pageAt: self variabilityPageIndex) resetContent ].
-			         pageIndex = self simulationDefinitionPageIndex ifTrue: [ 
+			         pageIndex = self simulationDefinitionPageIndex ifTrue: [
 					         simulationDefinitionPresenter ifNotNil: #nodeChanged ] ];
-		         whenPageRemovedDo: [ :page | 
+		         whenPageRemovedDo: [ :page |
 			         self removeSpeciesNamed: page title ];
 		         yourself.
 	saveButton := self newButton
@@ -269,15 +272,15 @@ RMDSimulationModeler >> initializePresenters [
 		              yourself.
 	openExperimentariumButton := self newButton
 		                             icon: self experimentariumIcon;
-		                             action: [ 
-			                             simulationModel metaInterpreterOnFile 
+		                             action: [
+			                             simulationModel metaInterpreterOnFile
 				                             ifNotNil: #openInExperimentarium ];
 		                             help:
 			                             'Run the model in an experimentarium.';
 		                             yourself.
 	openExperimentariumMenuButton := self newButton
 		                                 icon: self dropdownIcon;
-		                                 action: [ 
+		                                 action: [
 			                                 self openInExperimentarium ];
 		                                 help:
 			                                 'Run the model in an experimentarium with selected memory model.';
@@ -427,7 +430,9 @@ RMDSimulationModeler >> save [
 	modelFileReference ifNil: [ ^ self ].
 	simulationModel updateMetadata.
 	metadataPresenter metadataChanged.
-	simulationModel exportModel: modelFileReference
+	simulationModel
+		exportModel: modelFileReference;
+		recordInChronicle
 ]
 
 { #category : 'private' }
@@ -458,6 +463,13 @@ RMDSimulationModeler >> simulationDefinitionPresenter [
 RMDSimulationModeler >> simulationModel [
 
 	^ simulationModel
+]
+
+{ #category : 'accessing' }
+RMDSimulationModeler >> simulationModel: aRMDSimulationModel [
+
+	self setSimulationModel: aRMDSimulationModel.
+	views selectPageIndex: 1
 ]
 
 { #category : 'private' }

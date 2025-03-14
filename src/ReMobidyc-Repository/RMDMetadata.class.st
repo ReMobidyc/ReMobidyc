@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDMetadata,
-	#superclass : #Object,
+	#name : 'RMDMetadata',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'authors',
@@ -10,41 +10,42 @@ Class {
 	#classVars : [
 		'CurrentAuthor'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata class >> currentAuthor [
 
 	[ CurrentAuthor isNil ] whileTrue: [ self renewCurrentAuthor ].
 	^ CurrentAuthor
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata class >> flushCurrentAuthor [
 
 	CurrentAuthor := nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetadata class >> fromJsonObject: aDictionary [
 
 	^ self new readFromJsonObject: aDictionary
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetadata class >> fromJsonStream: aStream [
 
 	^ self fromJsonObject: (STONJSON fromStream: aStream)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetadata class >> fromJsonString: aString [
 
 	^ self fromJsonObject: (STONJSON fromString: aString)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata class >> guessUserName [
 
 	(OSEnvironment current at: 'USER' ifAbsent: [ nil ]) ifNotNil: [ :n | 
@@ -54,7 +55,7 @@ RMDMetadata class >> guessUserName [
 	^ 'Anonymous'
 ]
 
-{ #category : #menus }
+{ #category : 'menus' }
 RMDMetadata class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -66,7 +67,7 @@ RMDMetadata class >> remobidycMenuOn: aBuilder [
 		help: 'Forget the current user''s name as an author of models'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata class >> renewCurrentAuthor [
 
 	(UIManager default
@@ -76,7 +77,7 @@ RMDMetadata class >> renewCurrentAuthor [
 	^ CurrentAuthor
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDMetadata >> asJsonObject [
 
 	^ Dictionary new
@@ -87,13 +88,13 @@ RMDMetadata >> asJsonObject [
 		  yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDMetadata >> asJsonString [
 
 	^ String streamContents: [ :stream | self printJsonOn: stream ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDMetadata >> asText [
 
 	^ name asText allBold , (String streamContents: [ :stream | 
@@ -109,31 +110,31 @@ RMDMetadata >> asText [
 			   nextPutAll: description ]) asText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> authors [
 
 	^ authors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> authors: aString [
 
 	authors := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> authorsField [
 
 	^ 'authors'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> date [
 
 	^ date
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> date: aDateAndTime [
 
 	date := aDateAndTime isString
@@ -144,13 +145,13 @@ RMDMetadata >> date: aDateAndTime [
 		        ifFalse: [ aDateAndTime ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> dateField [
 
 	^ 'date'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> dateString [
 
 	^ String streamContents: [ :stream | 
@@ -190,47 +191,47 @@ RMDMetadata >> dateString [
 			  ifNil: [ stream nextPutAll: 'N/A' ] ]
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDMetadata >> defaultAuthors [
 
 	^ {  }
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDMetadata >> defaultDate [
 
 	^ nil
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDMetadata >> defaultDescription [
 	^ ''
 ]
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 RMDMetadata >> defaultName [
 	^ ''
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> description [
 
 	^ description
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> description: aString [
 
 	description := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> descriptionField [
 
 	^ 'description'
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetadata >> ensureAuthor: aString [
 
 	aString trim ifNotEmpty: [ :author | 
@@ -238,13 +239,13 @@ RMDMetadata >> ensureAuthor: aString [
 			authors := authors , { author } ] ]
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetadata >> ensureCurrentAuthor [
 
 	^ self ensureAuthor: self class currentAuthor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMetadata >> initialize [
 
 	super initialize.
@@ -254,37 +255,37 @@ RMDMetadata >> initialize [
 	description := self defaultDescription
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> name: aString [
 
 	name := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetadata >> nameField [
 
 	^ 'name'
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDMetadata >> postCopy [
 
 	authors := authors copy
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetadata >> printJsonOn: aStream [
 
 	STONJSON put: self asJsonObject onStreamPretty: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDMetadata >> printOn: aStream [
 
 	aStream nextPutAll: name.
@@ -295,7 +296,7 @@ RMDMetadata >> printOn: aStream [
 			separatedBy: [ aStream nextPutAll: ', ' ] ]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDMetadata >> readFromJsonObject: aDictionary [
 
 	aDictionary isDictionary ifFalse: [ ^ self ].
@@ -313,7 +314,7 @@ RMDMetadata >> readFromJsonObject: aDictionary [
 				 ifAbsent: [ self defaultDescription ])
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RMDMetadata >> readFromJsonString: aString [
 
 	self readFromJsonObject: ([ STONJSON fromString: aString ]
@@ -321,7 +322,7 @@ RMDMetadata >> readFromJsonString: aString [
 			 do: [ :ex | nil ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 RMDMetadata >> updateDate [
 
 	date := DateAndTime now

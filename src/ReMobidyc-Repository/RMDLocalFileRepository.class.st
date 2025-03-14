@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDLocalFileRepository,
-	#superclass : #RMDAbstractFileRepository,
+	#name : 'RMDLocalFileRepository',
+	#superclass : 'RMDAbstractFileRepository',
 	#instVars : [
 		'directory',
 		'modifiable'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDLocalFileRepository class >> default [
 
-	^ self on:
-		  (FileLocator documents / 'ReMobidyc') ensureCreateDirectory name: 'Local default'
+	^ self
+		  on: (FileLocator documents / 'ReMobidyc') ensureCreateDirectory
+		  name: 'Local default'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDLocalFileRepository class >> on: aFileReference name: aString [
 
 	^ self new
@@ -24,49 +26,49 @@ RMDLocalFileRepository class >> on: aFileReference name: aString [
 		  yourself
 ]
 
-{ #category : #privatee }
+{ #category : 'privatee' }
 RMDLocalFileRepository >> basicDirectory [
 
 	^ directory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> beModifiable [
 
 	^ self modifiable: true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> beReadOnly [
 
 	^ self modifiable: false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> directory [
 
 	^ directory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> directory: aFileReference [
 
 	directory := aFileReference asFileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> icon [
 
 	^ Smalltalk ui icons iconNamed: #open
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLocalFileRepository >> initialize [
 	super initialize.
 	modifiable := true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLocalFileRepository >> isModifiable [
 
 	modifiable = true ifFalse: [ ^ false ].
@@ -74,13 +76,13 @@ RMDLocalFileRepository >> isModifiable [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> modifiable [
 
 	^ modifiable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLocalFileRepository >> modifiable: aBoolean [
 
 	modifiable := aBoolean

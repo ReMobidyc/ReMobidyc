@@ -1,35 +1,39 @@
 Class {
-	#name : #RMDRepositoryDirectory,
-	#superclass : #Object,
+	#name : 'RMDRepositoryDirectory',
+	#superclass : 'Object',
 	#instVars : [
 		'repositories'
 	],
 	#classInstVars : [
 		'current'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #'sole instance' }
+{ #category : 'sole instance' }
 RMDRepositoryDirectory class >> current [
+
 	<script: 'RMDRepositoryDirectory current inspect'>
-	^ current ifNil: [ current := self new ]
+	^ current ifNil: [
+		  BaselineOfReMobidyc installStandardRepository.
+		  current := self new ]
 ]
 
-{ #category : #'sole instance' }
+{ #category : 'sole instance' }
 RMDRepositoryDirectory class >> flushCurrent [
 
 	current := nil
 ]
 
-{ #category : #'adding-removing' }
+{ #category : 'adding-removing' }
 RMDRepositoryDirectory >> add: aRMDRepository [
 	(repositories includes: aRMDRepository)
 		ifFalse: [ repositories add: aRMDRepository ].
 	^ aRMDRepository
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDRepositoryDirectory >> initialize [
 
 	super initialize.
@@ -39,13 +43,13 @@ RMDRepositoryDirectory >> initialize [
 		                with: RMDLocalFileRepository default
 ]
 
-{ #category : #'adding-removing' }
+{ #category : 'adding-removing' }
 RMDRepositoryDirectory >> remove: aRMDRepository [
 	repositories remove: aRMDRepository ifAbsent: [].
 	^ aRMDRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRepositoryDirectory >> repositories [
 	^ repositories
 ]

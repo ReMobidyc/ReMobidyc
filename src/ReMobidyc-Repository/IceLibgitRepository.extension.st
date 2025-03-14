@@ -1,6 +1,6 @@
-Extension { #name : #IceLibgitRepository }
+Extension { #name : 'IceLibgitRepository' }
 
-{ #category : #'*ReMobidyc-Repository' }
+{ #category : '*ReMobidyc-Repository' }
 IceLibgitRepository >> isReMobidycRepository [
 
 	^ self location

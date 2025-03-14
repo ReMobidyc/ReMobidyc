@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDIcebergRepository,
-	#superclass : #RMDAbstractFileRepository,
+	#name : 'RMDIcebergRepository',
+	#superclass : 'RMDAbstractFileRepository',
 	#instVars : [
 		'icebergRepositoryName'
 	],
-	#category : #'ReMobidyc-Repository'
+	#category : 'ReMobidyc-Repository',
+	#package : 'ReMobidyc-Repository'
 }
 
-{ #category : #icons }
+{ #category : 'icons' }
 RMDIcebergRepository class >> icon [
 
 	^ Smalltalk ui icons iconNamed: #komitterSmalltalkhubRemote
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIcebergRepository class >> on: aString name: anotherString [
 
 	^ self new
@@ -22,7 +23,7 @@ RMDIcebergRepository class >> on: aString name: anotherString [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIcebergRepository class >> onLocalGit: aFileReference name: anotherString [
 
 	^ self new
@@ -32,7 +33,7 @@ RMDIcebergRepository class >> onLocalGit: aFileReference name: anotherString [
 		  yourself
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDIcebergRepository class >> reactivateExistingLocal: aFileReference [
 
 	^ (IceRepositoryCreator new
@@ -43,19 +44,19 @@ RMDIcebergRepository class >> reactivateExistingLocal: aFileReference [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDIcebergRepository class >> standardModels [
 
 	^ self on: 'StandardModels' name: 'Standard Models'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepository >> basicDirectory [
 
 	^ self icebergRepository ifNotNil: #location
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepository >> icebergRepository [
 
 	^ IceRepository repositories
@@ -63,31 +64,31 @@ RMDIcebergRepository >> icebergRepository [
 		  ifNone: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepository >> icebergRepositoryName [
 
 	^ icebergRepositoryName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepository >> icebergRepositoryName: aString [
 
 	icebergRepositoryName := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDIcebergRepository >> icon [
 
 	^ self class icon
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDIcebergRepository >> isIcebergRepository [
 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDIcebergRepository >> isModifiable [
 
 	self directoryDo: [ :directory | ^ true ].

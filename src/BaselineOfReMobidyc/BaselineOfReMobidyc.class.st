@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfReMobidyc,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfReMobidyc
+	#name : 'BaselineOfReMobidyc',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfReMobidyc',
+	#package : 'BaselineOfReMobidyc'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> deploy [
 
 	<script>
@@ -12,10 +13,10 @@ BaselineOfReMobidyc class >> deploy [
 	RMDRepositoryDirectory flushCurrent.
 	GraphicFontSettings setFontsToStyleNamed: #small.
 	Smalltalk cleanUp: true except: {  } confirming: false.
-	MCRepositoryGroup allSubInstancesDo: [ :group | 
+	MCRepositoryGroup allSubInstancesDo: [ :group |
 		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store | 
+	IceCredentialStore current in: [ :store |
 		store allCredentials do: [ :each | each removeFrom: store ] ].
 	World closeAllWindowsDiscardingChanges.
 	Deprecation
@@ -27,11 +28,11 @@ BaselineOfReMobidyc class >> deploy [
 	Stdio useNullStreams.
 	MCCacheRepository uniqueInstance disable.
 	EpMonitor reset.
-	self new postLoad.
+	self initializeResources.
 	5 timesRepeat: [ Smalltalk garbageCollect ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> ensureIcebergRepository [
 
 	^ IceRepository repositories
@@ -46,7 +47,7 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 						          repository: nil;
 						          remote:
 							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/ReMobidyc.git');
+									           'https://github.com/tomooda/ReMobidyc.git');
 						          location:
 							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
 							          / 'ReMobidyc';
@@ -56,7 +57,73 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 				  yourself ]
 ]
 
-{ #category : #menus }
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> initializeResources [
+
+	<script: 'BaselineOfReMobidyc initializeResources'>
+	self installLogos.
+	PharoLightTheme beCurrent.
+	PolymorphSystemSettings desktopLogoFileName: ''.
+	PolymorphSystemSettings desktopLogoFileName:
+		(self logoDirectoryPath / 'default.png') fullName.
+	PolymorphSystemSettings desktopColor:
+		(Color cyan mixed: 0.02 with: Color white).
+	Smalltalk at: #RMDFileMemory ifPresent: [ :class | class initialize ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installLogos [
+	| imagesUrl basenames client |
+	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
+		asUrl.
+	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
+	client := ZnClient new.
+	basenames
+		do: [ :basename | 
+			(self logoDirectoryPath / basename) exists
+				ifFalse: [ | response |
+					response := client
+						url: imagesUrl / basename;
+						get;
+						response.
+					(response isSuccess
+						and: [ response entity contentType sub = 'png' ])
+						ifTrue: [ self logoDirectoryPath / basename
+								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installStandardRepository [
+
+	<script: 'BaselineOfReMobidyc  installStandardRepository'>
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'StandardModels' ]
+		  ifNone: [
+			  | repo |
+			  UIManager default
+				  informUser: 'Cloning the official re:mobidyc standard models'
+				  during: [
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          remote:
+							          (IceGitRemote url:
+									           'https://github.com/ReMobidyc/StandardModels.git');
+						          location:
+							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+							          / 'StandardModels';
+						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> logoDirectoryPath [
+	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
+		ensureCreateDirectory
+]
+
+{ #category : 'menus' }
 BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
@@ -64,9 +131,13 @@ BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 		parent: 'ReMobidyc';
 		order: 100;
 		label: 'System';
-		with: [ 
+		with: [
+			(aBuilder item: #ReMobidycSettings)
+				order: 0;
+				label: 'Settings...';
+				action: [ self showSettingsBrowser ];
+				help: 'Open a settings browser for re:mobidyc'.
 			(aBuilder item: #Upgrade)
-				parent: #ReMobidycSystem;
 				order: 100;
 				label: 'Upgrade from the official repository';
 				action: [ self updateFromOfficialRepository ];
@@ -74,7 +145,27 @@ BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 					'Upgrade the re:mobidyc from the official github repository.' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'settings' }
+BaselineOfReMobidyc class >> settingOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #remobidyc)
+		label: 're:mobidyc';
+		description: 'All settings about re:mobidyc'
+]
+
+{ #category : 'settings' }
+BaselineOfReMobidyc class >> showSettingsBrowser [
+
+	<script: 'BaselineOfReMobidyc showSettingsBrowser'>
+	SettingBrowser new
+		changePackageSet:
+			(PackageOrganizer default packages select: [ :package |
+					 package name beginsWith: 'ReMobidyc-' ]);
+		open
+]
+
+{ #category : 'utilities' }
 BaselineOfReMobidyc class >> updateFromOfficialRepository [
 
 	<script: 'BaselineOfReMobidyc updateFromOfficialRepository'>
@@ -110,17 +201,21 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	Smalltalk snapshot: true andQuit: false
 ]
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfReMobidyc >> baselineOf: spec [
 
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'HiDeHo'
+			with: [ spec repository: 'github://tomooda/HiDeHo:main/' ];
 			baseline: 'PetitParser2Core'
 			with: [ spec repository: 'github://kursjan/petitparser2/' ];
 			baseline: 'DataFrame'
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
+			package: 'ReMobidyc-Chronicle'
+			with: [ spec requires: #( 'HiDeHo' 'ReMobidyc-Interpreter' ) ];
 			package: 'ReMobidyc-Storage';
 			package: 'ReMobidyc-DataSource'
 			with: [ spec requires: #( 'DataFrame' ) ];
@@ -156,9 +251,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
 			with:
-				#( 'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units'
-				   'ReMobidyc-Interpreter' 'ReMobidyc-Visualization'
-				   'ReMobidyc-Repository' 'ReMobidyc-Spec2' );
+				#( 'ReMobidyc-Chronicle' 'ReMobidyc-Storage' 'ReMobidyc-Language'
+				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
+				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
+				   'ReMobidyc-Spec2' );
 			group: 'tests'
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
@@ -167,28 +263,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	spec for: #'pharo11.x' do: [ spec preLoadDoIt: #installRoassal3 ]
 ]
 
-{ #category : #scripts }
-BaselineOfReMobidyc >> installLogos [
-	| imagesUrl basenames client |
-	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
-		asUrl.
-	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
-	client := ZnClient new.
-	basenames
-		do: [ :basename | 
-			(self logoDirectoryPath / basename) exists
-				ifFalse: [ | response |
-					response := client
-						url: imagesUrl / basename;
-						get;
-						response.
-					(response isSuccess
-						and: [ response entity contentType sub = 'png' ])
-						ifTrue: [ self logoDirectoryPath / basename
-								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
-]
-
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> installRoassal3 [
 
 	<script: 'BaselineOfReMobidyc new installRoassal3'>
@@ -201,48 +276,11 @@ BaselineOfReMobidyc >> installRoassal3 [
 		do: [ :warning | warning load ]
 ]
 
-{ #category : #scripts }
-BaselineOfReMobidyc >> installStandardRepository [
-
-	<script: 'BaselineOfReMobidyc new installStandardRepository'>
-	^ IceRepository repositories
-		  detect: [ :repo | repo name = 'StandardModels' ]
-		  ifNone: [ 
-			  | repo |
-			  UIManager default
-				  informUser: 'Cloning the official re:mobidyc standard models'
-				  during: [ 
-					  repo := IceRepositoryCreator new
-						          repository: nil;
-						          remote:
-							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/StandardModels.git');
-						          location:
-							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
-							          / 'StandardModels';
-						          createRepository ].
-			  repo
-				  register;
-				  yourself ]
-]
-
-{ #category : #scripts }
-BaselineOfReMobidyc >> logoDirectoryPath [
-	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
-		ensureCreateDirectory
-]
-
-{ #category : #scripts }
+{ #category : 'scripts' }
 BaselineOfReMobidyc >> postLoad [
 
 	<script: 'BaselineOfReMobidyc new postLoad'>
-	self installLogos.
-	PharoLightTheme beCurrent.
-	PolymorphSystemSettings desktopLogoFileName: ''.
-	PolymorphSystemSettings desktopLogoFileName:
-		(self logoDirectoryPath / 'default.png') fullName.
-	PolymorphSystemSettings desktopColor:
-		(Color cyan mixed: 0.02 with: Color white).
-	Smalltalk at: #RMDFileMemory ifPresent: [ :class | class initialize ].
-	self installStandardRepository
+	self class
+		initializeResources;
+		installStandardRepository
 ]
