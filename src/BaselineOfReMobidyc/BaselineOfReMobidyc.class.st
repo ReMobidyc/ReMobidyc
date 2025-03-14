@@ -8,7 +8,7 @@ Class {
 { #category : 'accessing' }
 BaselineOfReMobidyc class >> codename [
 
-	^ 'Wimereux'
+	^ 'Nowhere'
 ]
 
 { #category : 'utilities' }
