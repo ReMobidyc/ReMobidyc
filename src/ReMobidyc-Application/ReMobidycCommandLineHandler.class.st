@@ -39,6 +39,10 @@ ReMobidycCommandLineHandler class >> generateMacOS [
 		targetPlatforms:
 			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );
 		addExternalDirectory:
+			(IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
+			/ 'cheatsheets'
+		destination: 'pharo-local/ReMobidyc/';
+		addExternalDirectory:
 			FileLocator localDirectory / 'ReMobidyc' / 'logos'
 		destination: 'pharo-local/ReMobidyc/';
 		generate
@@ -48,7 +52,7 @@ ReMobidycCommandLineHandler class >> generateMacOS [
 ReMobidycCommandLineHandler >> activate [
 
 	self installMenu.
-	BaselineOfReMobidyc installStandardRepository.
+	BaselineOfReMobidyc ensureStandardRepository.
 	RMDLauncher new open
 ]
 
@@ -82,8 +86,10 @@ ReMobidycCommandLineHandler >> installMenu [
 								  yourself)) open ] ];
 			addSubmenu: 'Help' with: [ :m |
 			m
-				addItemWithTitle: 'Show Help'
-				action: [ self inform: 'Help' ]
+				addItemWithTitle: 're:mobidyc docs...'
+				action: [
+					MicDocumentBrowserPresenter openDocument:
+						'github://ReMobidyc/ReMobidyc/docs/cheatsheets' ]
 				shortcut: '' ].
 		main setAsMainMenu ]
 ]

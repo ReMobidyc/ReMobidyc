@@ -16,7 +16,7 @@ RMDRepositoryDirectory class >> current [
 
 	<script: 'RMDRepositoryDirectory current inspect'>
 	^ current ifNil: [
-		  BaselineOfReMobidyc installStandardRepository.
+		  BaselineOfReMobidyc ensureStandardRepository.
 		  current := self new ]
 ]
 

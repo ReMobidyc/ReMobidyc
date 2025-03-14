@@ -43,21 +43,53 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 
 	^ IceRepository repositories
 		  detect: [ :repo | repo name = 'ReMobidyc' ]
-		  ifNone: [ 
+		  ifNone: [
 			  | repo |
 			  UIManager default
 				  informUser:
 				  'Cloning repository from the official re:mobidyc repository'
-				  during: [ 
+				  during: [
 					  repo := IceRepositoryCreator new
 						          repository: nil;
 						          remote:
 							          (IceGitRemote url:
-									           'https://github.com/tomooda/ReMobidyc.git');
+									           'https://github.com/ReMobidyc/ReMobidyc.git');
 						          location:
 							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
 							          / 'ReMobidyc';
 						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> ensureStandardRepository [
+
+	<script: 'BaselineOfReMobidyc  ensureStandardRepository'>
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'StandardModels' ]
+		  ifNone: [
+			  | location repo |
+			  location := FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+			              / 'StandardModels'.
+			  location isDirectory
+				  ifTrue: [
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          location: location;
+						          createRepository ]
+				  ifFalse: [
+					  UIManager default
+						  informUser: 'Cloning the official re:mobidyc standard models'
+						  during: [
+							  repo := IceRepositoryCreator new
+								          repository: nil;
+								          remote:
+									          (IceGitRemote url:
+											           'https://github.com/ReMobidyc/StandardModels.git');
+								          location: location;
+								          createRepository ] ].
 			  repo
 				  register;
 				  yourself ]
@@ -96,31 +128,6 @@ BaselineOfReMobidyc class >> installLogos [
 						and: [ response entity contentType sub = 'png' ])
 						ifTrue: [ self logoDirectoryPath / basename
 								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
-]
-
-{ #category : 'scripts' }
-BaselineOfReMobidyc class >> installStandardRepository [
-
-	<script: 'BaselineOfReMobidyc  installStandardRepository'>
-	^ IceRepository repositories
-		  detect: [ :repo | repo name = 'StandardModels' ]
-		  ifNone: [
-			  | repo |
-			  UIManager default
-				  informUser: 'Cloning the official re:mobidyc standard models'
-				  during: [
-					  repo := IceRepositoryCreator new
-						          repository: nil;
-						          remote:
-							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/StandardModels.git');
-						          location:
-							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
-							          / 'StandardModels';
-						          createRepository ].
-			  repo
-				  register;
-				  yourself ]
 ]
 
 { #category : 'scripts' }
@@ -294,5 +301,5 @@ BaselineOfReMobidyc >> postLoad [
 	<script: 'BaselineOfReMobidyc new postLoad'>
 	self class
 		initializeResources;
-		installStandardRepository
+		ensureStandardRepository
 ]
