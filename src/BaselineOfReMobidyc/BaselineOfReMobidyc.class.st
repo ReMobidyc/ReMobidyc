@@ -5,6 +5,12 @@ Class {
 	#package : 'BaselineOfReMobidyc'
 }
 
+{ #category : 'accessing' }
+BaselineOfReMobidyc class >> codename [
+
+	^ 'Wimereux'
+]
+
 { #category : 'utilities' }
 BaselineOfReMobidyc class >> deploy [
 
@@ -18,7 +24,7 @@ BaselineOfReMobidyc class >> deploy [
 	IceRepository registry removeAll.
 	IceCredentialStore current in: [ :store |
 		store allCredentials do: [ :each | each removeFrom: store ] ].
-	World closeAllWindowsDiscardingChanges.
+	self currentWorld closeAllWindowsDiscardingChanges.
 	Deprecation
 		raiseWarning: false;
 		showWarning: false.
@@ -207,6 +213,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'Phleeter'
+			with: [ spec repository: 'github://tomooda/Phleeter:main/' ];
+			baseline: 'ObjCBridge'
+			with: [ spec repository: 'github://tesonep/objcbridge/src' ];
 			baseline: 'HiDeHo'
 			with: [ spec repository: 'github://tomooda/HiDeHo:main/' ];
 			baseline: 'PetitParser2Core'
@@ -214,6 +224,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			baseline: 'DataFrame'
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
+			package: 'ReMobidyc-Application'
+			with: [ spec requires: #( 'Phleeter' 'ObjCBridge' ) ];
 			package: 'ReMobidyc-Chronicle'
 			with: [ spec requires: #( 'HiDeHo' 'ReMobidyc-Interpreter' ) ];
 			package: 'ReMobidyc-Storage';
@@ -251,10 +263,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
 			with:
-				#( 'ReMobidyc-Chronicle' 'ReMobidyc-Storage' 'ReMobidyc-Language'
-				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
-				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
-				   'ReMobidyc-Spec2' );
+				#( 'ReMobidyc-Application' 'ReMobidyc-Chronicle'
+				   'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units'
+				   'ReMobidyc-Interpreter' 'ReMobidyc-Visualization'
+				   'ReMobidyc-Repository' 'ReMobidyc-Spec2' );
 			group: 'tests'
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'

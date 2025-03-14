@@ -18,6 +18,13 @@ RMDAbout class >> defaultLayout [
 		  yourself
 ]
 
+{ #category : 'instance creation' }
+RMDAbout class >> open [
+
+	<script>
+	self new open
+]
+
 { #category : 'menus' }
 RMDAbout class >> remobidycMenuOn: aBuilder [
 
@@ -26,19 +33,21 @@ RMDAbout class >> remobidycMenuOn: aBuilder [
 		parent: 'ReMobidyc';
 		order: 999;
 		label: 'About...';
-		action: [ RMDAbout new open ];
+		action: [ RMDAbout open ];
 		help: 'Open an about window.'
 ]
 
 { #category : 'accessing' }
 RMDAbout >> codename [
-	^ 'Wimereux'
+	^ BaselineOfReMobidyc codename
 ]
 
 { #category : 'initialization' }
 RMDAbout >> initialExtent [
 
-	^ 600 @ 600
+	^ (logoImage ifNotNil: #image)
+		  ifNotNil: [ :form | form extent + (4 @ 4) ]
+		  ifNil: [ 700 @ 800 ]
 ]
 
 { #category : 'initialization' }
@@ -57,8 +66,22 @@ RMDAbout >> initializePresenters [
 { #category : 'accessing' }
 RMDAbout >> logo [
 
-	^ self logoPath isFile ifTrue: [ 
-		  PNGReadWriter formFromFileNamed: self logoPath ]
+	^ self logoPath isFile ifTrue: [
+		  | logo font |
+		  logo := PNGReadWriter formFromFileNamed: self logoPath.
+		  font := LogicalFont
+			          familyName: 'Bitmap DejaVu Sans'
+			          pointSize: 24
+			          stretchValue: 5
+			          weightValue: 400
+			          slantValue: 10.
+		  logo getCanvas
+			  drawString: self codename
+			  at:
+			  logo extent - ((font widthOfString: self codename) @ font height)
+			  font: font
+			  color: Color darkGray.
+		  logo ]
 ]
 
 { #category : 'accessing' }
