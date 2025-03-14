@@ -174,7 +174,7 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 	[ repository pull ]
 		on: IceExperimentalFeature
 		do: [ :ex | ex resume ].
-	[ (repository packageNamed: 'BaselineOfReMobidyc') reload ]
+	[ (repository packageNamed: 'BaselineOfReMobidyc') load ]
 		on: MCMergeOrLoadWarning
 		do: [ :ex | ex load ].
 	Cursor wait showWhile: [
