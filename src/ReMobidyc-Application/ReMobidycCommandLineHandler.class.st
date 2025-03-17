@@ -65,8 +65,10 @@ ReMobidycCommandLineHandler >> installMenu [
 		main := CocoaMenu new.
 		main
 			title: 'MainMenu';
-			addSubmenu: 'ViennaTalk' with: [ :m |
+			addSubmenu: 're:mobidyc' with: [ :m |
 				m
+					addItemWithTitle: 'Settings...'
+					action: [ BaselineOfReMobidyc showSettingsBrowser ];
 					addItemWithTitle: 'About...' action: [ RMDAbout open ];
 					addItemWithTitle: 'Quit'
 					action: [ Smalltalk snapshot: false andQuit: true ]
