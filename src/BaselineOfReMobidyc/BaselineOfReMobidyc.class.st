@@ -18,7 +18,7 @@ BaselineOfReMobidyc class >> deploy [
 	RMDMetadata flushCurrentAuthor.
 	RMDRepositoryDirectory flushCurrent.
 	GraphicFontSettings setFontsToStyleNamed: #small.
-	Smalltalk cleanUp: true except: {  } confirming: false.
+	"Smalltalk cleanUp: true except: {  } confirming: false."
 	MCRepositoryGroup allSubInstancesDo: [ :group |
 		group repositories do: [ :repo | group removeRepository: repo ] ].
 	IceRepository registry removeAll.
