@@ -64,7 +64,7 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 RMDChronicleStore class >> settingOn: aBuilder [
 
 	<systemsettings>
-	(aBuilder group: #archives)
+	(aBuilder group: #remobidycArchives)
 		parent: #remobidyc;
 		label: 'Archives';
 		description: 'Settings about archives';
