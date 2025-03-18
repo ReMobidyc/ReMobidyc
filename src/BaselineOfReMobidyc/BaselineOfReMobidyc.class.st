@@ -110,35 +110,30 @@ BaselineOfReMobidyc class >> initializeResources [
 ]
 
 { #category : 'scripts' }
+BaselineOfReMobidyc class >> installDocuments [
+
+	<script>
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'docs' / 'cheatsheets' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'docs' / 'cheatsheets')
+				ensureCreateDirectory.
+		repo location / 'Tutorials' / 'Grasshoppers' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'Tutorials'
+			 / 'Grasshoppers') ensureCreateDirectory ]
+]
+
+{ #category : 'scripts' }
 BaselineOfReMobidyc class >> installFonts [
 
 	<script: 'BaselineOfReMobidyc installFonts'>
-	(IceRepository repositoryNamed: 'ReMobidyc')
-		ifNotNil: [ :repo |
-			repo location / 'resources' / 'Fonts' copyAllTo:
-				(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
-			Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
-				EmbeddedFreeTypeFontInstaller registerFont: fontClass.
-				FreeTypeFontProvider current buildFamilies.
-				StandardFonts setAllStandardFontsTo:
-					(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
-		ifNil: [
-			| fontPath |
-			fontPath := FileLocator workingDirectory / 'Fonts'
-			            / 'PlemolJP-Regular.ttf'.
-			fontPath isFile ifFalse: [
-				| response |
-				response := ZnClient new
-					            url:
-						            'https://github.com/tomooda/ReMobidyc/raw/main/resources/Fonts/PlemolJP-Regular.ttf'
-							            asUrl;
-					            get;
-					            response.
-				(response isSuccess and: [
-					 response entity contentType sub = 'png' ]) ifTrue: [
-					fontPath parent ensureCreateDirectory.
-					fontPath binaryWriteStreamDo: [ :writeStream |
-						response entity writeOn: writeStream ] ] ] ]
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'resources' / 'Fonts' copyAllTo:
+			(FileLocator imageDirectory / 'Fonts') ensureCreateDirectory.
+		Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
+			EmbeddedFreeTypeFontInstaller registerFont: fontClass.
+			FreeTypeFontProvider current buildFamilies.
+			StandardFonts setAllStandardFontsTo:
+				(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
 ]
 
 { #category : 'scripts' }
@@ -217,14 +212,14 @@ BaselineOfReMobidyc class >> settingOn: aBuilder [
 { #category : 'utilities' }
 BaselineOfReMobidyc class >> showCheatsheets [
 
+	<script>
 	| documentBrowser |
 	documentBrowser := MicDocumentBrowserPresenter new.
 	documentBrowser documentRoots
 		removeAll;
 		addAll:
-			(((IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
- / 'cheatsheets' filesMatching: '*.md') collect:
-	#asMicResourceReference).
+			((FileLocator localDirectory / 'ReMobidyc' / 'docs' / 'cheatsheets'
+				  filesMatching: '*.md') collect: #asMicResourceReference).
 	documentBrowser open
 ]
 
@@ -242,13 +237,13 @@ BaselineOfReMobidyc class >> showSettingsBrowser [
 { #category : 'utilities' }
 BaselineOfReMobidyc class >> showTutorial [
 
+	<script>
 	| documentBrowser |
 	documentBrowser := MicDocumentBrowserPresenter new.
 	documentBrowser documentRoots
 		removeAll;
-		addAll:
-			(((IceRepository repositoryNamed: 'ReMobidyc') location
-			  / 'Tutorials' / 'Grasshoppers' filesMatching: '*.md') collect:
+		addAll: ((FileLocator localDirectory / 'ReMobidyc' / 'Tutorials'
+			  / 'Grasshoppers' filesMatching: '*.md') collect:
 					 #asMicResourceReference).
 	documentBrowser open
 ]
@@ -377,5 +372,6 @@ BaselineOfReMobidyc >> postLoad [
 	self class
 		initializeResources;
 		ensureStandardRepository;
-		installFonts
+		installFonts;
+		installDocuments
 ]

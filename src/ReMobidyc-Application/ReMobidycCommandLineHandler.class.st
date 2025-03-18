@@ -46,8 +46,8 @@ ReMobidycCommandLineHandler class >> generate [
 			/ 'cheatsheets'
 		destination: 'pharo-local/ReMobidyc/';
 		addExternalDirectory:
-			FileLocator localDirectory / 'ReMobidyc' / 'logos'
-		destination: 'pharo-local/ReMobidyc/';
+			FileLocator localDirectory / 'ReMobidyc'
+		destination: 'pharo-local/';
 		generate
 ]
 
