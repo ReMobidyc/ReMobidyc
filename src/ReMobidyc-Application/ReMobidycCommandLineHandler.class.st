@@ -39,7 +39,7 @@ ReMobidycCommandLineHandler class >> generate [
 		targetPlatforms:
 			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );
 		addExternalDirectory:
-			(IceRepository repositoryNamed: 'gOLAP') location / 'resources'
+			(IceRepository repositoryNamed: 'ReMobidyc') location / 'resources'
 			/ 'Fonts';
 		addExternalDirectory:
 			(IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
