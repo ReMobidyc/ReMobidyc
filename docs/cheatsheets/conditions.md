@@ -5,7 +5,7 @@
 ## relational conditions
 | name | syntax | description |
 | -----|------- | ----------- |
-| equality | _expr1_ `=` _expr2_ `=` ... `=` _exprn_ | all _expr1_ through _exprn_ are equal values |
+| equality | _expr1_  `=`  _expr2_  `=`  ...  `=`  _exprn_ | all  _expr1_  through  _exprn_  are equal values |
 | less than | _expr1_ `<` _expr2_ `<` ... `<` _exprn_ | _expr1_ < _expr2_  ∧  _expr2_ < _expr3_  ∧  ...  ∧  _exprn-1_ < exprn | 
 | less than or equal to | _expr1_ `<=` _expr2_ `<=` ... `<=` _exprn_ | _expr1_ ≦ _expr2_  ∧  _expr2_ ≦ _expr3_  ∧  ...  ∧  _exprn-1_ ≦ exprn | 
 | greater than | _expr1_ `>` _expr2_ `>` ... `>` _exprn_ | _expr1_ > _expr2_  ∧  _expr2_ > _expr3_  ∧  ...  ∧  _exprn-1_ > exprn | 
