@@ -6,20 +6,34 @@
 ## Numeric presentation
 | name | syntax | description |
 | -----|------- | ----------- |
-| decimal | _decimal_ | _decimal_ number with or without a sign and a decimal point |
-| π  | `π` <br> `pi` |  the ratio of a circle's circumference to its diameter, approximately equal to 3.14159 |
+| numeric | 1 | numbers |
+|  | 3.14 | numbers with decimal points |
+|  | -1 | negative numbers |
+|  | -3.14 | negative numbers with decimal points |
+| π  | `π` | approximately equal to 3.14159 |
+|   | `pi` | 
+
 
 ## Literal numbers
 | name | syntax | description |
 | -----|------- | ----------- |
-| numeric with unit | _numeric_ `[`_unit_`]` | _numeric_ as a quantity with the specified _unit_ |
-| numeric without unit | _numeric_ <br> _numeric_ `[]` | _numeric_ without a unit or with a dimensionless unit |
+| numeric with unit |  **numeric**  \[ **unit** \] |  **numeric**  as a quantity with the specified  **unit**,  |
+| | | e.g. 100 [km/h]
+| numeric without unit |  **numeric**  |  **numeric**  without a unit, |
+| | | e.g. 21
+|  ` ` | **numeric**  \[\] |  **numeric** with a dimensionless unit, |
+| | | e.g. 21 \[\]
+
+NOTE: A numeric without a unit is identical to the numeric with a dimensionless unit.
+
 
 ## Unit conversions
 | name | syntax | description |
 | -----|------- | ----------- |
-| en-unit conversion | _expr_`[`_unit_`]` | the dimensionless value `_expr_` makes a quantity with the given _unit_,<br> e.g. `(100+200)[m]` is equivalent to `300[m]` |
-| de-unit conversion | `(`_unit_`)` _expr_ | the quantity _unit_ is converted to a number in the given _unit_,<br> e.g. `(m)(1 [km])` is equivalent to `1000.0` |
+| en-unit conversion |  **expr** \[ **unit** \] | the dimensionless value  **expr**  makes a quantity with the given  **unit**,
+| | | e.g. (100+200)[m] is equivalent to 300[m] |
+| de-unit conversion | ( **unit** )  **expr**  | the quantity  **expr**  is converted to a number in the given  **unit**,
+| | | e.g. (m)(1 [km]) is equivalent to 1000.0 |
 
 ## Variable References
 Various variables can be read in a task definition.
@@ -34,99 +48,117 @@ The increment of the `time` variable is naturally the time step of the simulatio
 
 | name | syntax | description |
 | -----|------- | ----------- |
-| utility variable | _identifier_ | the value of the variable defined in the `where` clause in the task |
+| utility variable |  **identifier**  | the value of the variable defined in the `where` clause in the task, |
+| | | e.g. length |
 | time | `time` | the current time |
-| time step | `Δtime` <br> `delta time`| the time step of the simulation |
+| time step | `Δtime` | the time step of the simulation |
+|  | `delta time`|  |
 
 ### Individual's Attributes 
 The attributes of the performer of the task can be accessed in the following ways.
 The performer can be either the world, a patch, or an animat.
 
 | name | syntax | description |
-| -----|------- | ----------- |
-| my attribute | `my` _identifier_ | the value of the individual's _attribute_ |
-| my incremental attribute | `my Δ` _attribute_ <br> `my delta` _attribute_| the increment of the individual's _attribute_ |
-| my differential attribute | `my d/dt` _attribute_ | the derivative of the individual's _attribute_ |
+| -----|------- | ----------- | 
+| my attribute | `my`  **attribute** | the value of the individual's  **attribute**  |
+| my incremental attribute | `my Δ`  **attribute** | the increment of the individual's  **attribute** since the last timestep  |
+|  | `my delta`  **attribute** |  |
+| my differential attribute | `my d/dt`  **attribute**  | the derivative of the individual's  **attribute**  |
 
 ### Patch Attributes 
 Patch attributes can be used in the tasks of located agents, namely animats and patches.
 
 | name | syntax | description |
 | -----|------- | ----------- |
-| spatial attribute | `here's` _attribute_ | the value of the patch's _attribute_ where the individual is located |
-| spatial incremental attribute | `here's Δ` _attribute_ <br> `here's delta` _attribute_| the increment of the patch's _attribute_ where the individual is located |
-| spatial differential attribute | `here's d/dt` _attribute_ | the derivative of the patch's _attribute_ where the individual is located |
+| spatial attribute | `here's`  **attribute**  | the value of the patch's  **attribute**  where the individual is located |
+| spatial incremental attribute | `here's Δ`  **attribute**  | the increment of the patch's  **attribute**  where the individual is located |
+| | `here's delta`  **attribute** | |
+| spatial differential attribute | `here's d/dt`  **attribute**  | the derivative of the patch's  **attribute**  where the individual is located |
 
 ### World Attributes 
 Any task definition can refer to the value of an attribute of the World agent.
 
 | name | syntax | description |
 | -----|------- | ----------- |
-| global attribute | `world's` _attribute_ | the value of the world global _attribute_ |
-| global incremental attribute | `world's Δ` _attribute_ | the increment of the world global _attribute_ |
-| global differential attribute | `world's d/dt` _attribute_ | the derivative of the world global _attribute_ |
+| global attribute | `world's`  **attribute**  | the value of the world global  **attribute**  |
+| global incremental attribute | `world's Δ`  **attribute**  | the increment of the world global  **attribute**  |
+| global differential attribute | `world's d/dt`  **attribute**  | the derivative of the world global  **attribute**  |
 
 ### Object Attributes 
-Tasks that defines an interaction between two animats takes a peer animat, which is called _object_.
+Tasks that defines an interaction between two animats takes a peer animat, which is called  **object**.
 For example, a task that a wolf eat a goat, `goat` is the object in the task.
 The attributes of the object can be accessed in the following ways.
 
 | name | syntax | description |
 | -----|------- | ----------- |
-| object attribute | _object_`'s` _attribute_ | the value of the _object_'s _attribute_ specified as the object of the task |
-| object incremental attribute | _object_`'s Δ` _attribute_ <br>_object_`'s delta` _attribute_ | the increment of the _object_'s _attribute_ specified as the object of the task |
-| object differential attribute | _object_`'s d/dt` _attribute_ | the derivative of the _object_'s _attribute_ specified as the object of the task |
+| object attribute |  **object**`'s`  **attribute**  | the value of the  **object**'s  **attribute**  specified as the object of the task |
+| object incremental attribute |  **object**`'s Δ`  **attribute**  | the increment of the  **object**'s  **attribute**  specified as the object of the task |
+| | **object**`'s delta`  **attribute**  |  |
+| object differential attribute |  **object**`'s d/dt`  **attribute**  | the derivative of the  **object**'s  **attribute**  specified as the object of the task |
 
 ## Spatial Expressions
 | name | syntax | description |
 | -----|------- | ----------- |
-| direction of agent | `direction` _agent_ | the direction of the _agent_ from the individual |
-| distance to agent | `distance` _agent_ | the distance between the individual and the _agent_ |
-| direction of spatial gradient | `direction neighbor's` _attribute_ | the direction of the gradient of _attribute_ at the current patch |
+| direction of agent | `direction`  **agent**  | the direction of the  **agent**  from the individual |
+| distance to agent | `distance`  **agent**  | the distance between the individual and the  **agent**  |
+| direction of spatial gradient | `direction neighbor's`  **attribute**  | the direction of the gradient of  **attribute**  at the current patch |
 | length of a patch | `length of here` | the length of the current patch |
 | area of a patch | `area of here` | the area of the current patch |
 
 ## Population Expressions
 | name | syntax | description |
 | -----|------- | ----------- |
-| number of agents in radius | `number of ` _agent_ `in` _expression_ `radius` | the number of individual agents in the given radius |
-| number of local agents | `number of ` _agent_ `here` | the number of individual agents in the same patch |
-| number of agents | `number of ` _agent_ `in world` | the number of individual agents in the simulation |
-| density of agents in radius | `number of ` _agent_ `in` _expression_ `radius` | the number of individual agents per area in the given radius |
-| density of local agents | `density of ` _agent_ `here` | the number of individual agents per area in the patch |
-| density of agents | `density of ` _agent_ `in world` | the number of individual agents per area in the simulation |
+| number of agents in radius | `number of `  **agent**  `in`  **expression**  `radius` | the number of individual agents in the given radius |
+| number of local agents | `number of `  **agent**  `here` | the number of individual agents in the same patch |
+| number of agents | `number of `  **agent**  `in world` | the number of individual agents in the simulation |
+| density of agents in radius | `number of `  **agent**  `in`  **expression**  `radius` | the number of individual agents per area in the given radius |
+| density of local agents | `density of `  **agent**  `here` | the number of individual agents per area in the patch |
+| density of agents | `density of `  **agent**  `in world` | the number of individual agents per area in the simulation |
 
 ## Math Expressions
 | name | syntax | description |
 | -----|------- | ----------- |
-| parenthesis | `(` _expr_ `)` | the value of the _expr_ |
-| negation | `-` _expr_ | flips the sign of the value ||
-| addition | _expr1_ `+` _expr2_ | sums the two values |
-| subtraction | _expr1_ `-` _expr2_ | diffs the two values |
-| product | _expr1_ `*` _expr2_ | multiplies the two values |
-| fraction | _expr1_ `/` _expr2_ | the left-value over the right-value |
-| remainder | _expr1_ `%` _expr2_ | the remainder of the left-value by the right-value |
-| repeated multiplication | _expr_ `^` _digit_ | _expr_ powered to _digit_ ||
-| square root | `sqrt(`_expr_`)` | the square root of _expr_ which must be non-negative |
-| power | `power(`_expr1_, _expr2_`)` | the left value powered to the right value <br>_expr1_ and _expr2_ must be non-dimensional|
-| exponential | `exp(`_expr_`)` | _e_ powered to _expr_ <br> the _expr_ must be non-dimensional |
-| natural logarithm | `ln(`_expr_`)`| the x such that _e_ powered to _x_ equals to _expr_ <br> the _expr_ must be non-dimensional |
-| sine | `sin(`_expr_`)` | the sine of _expr_ <br> the _expr_ must be an angle, such as radians and degrees |
-| cosine | `cos(`_expr_`)` | the cosine of _expr_ where the _expr_ must be an angle <br> the _expr_ must be an angle, such as radians and degrees |
-| absolute value | `abs(`_expr_`)` | the value without the sign |
-| positive | `positive(`_expr_`)` | the value if positive, otherwise `0` |
-| round | `round(`_expr_`)` | the rounded value |
-| floor | `floor(`_expr_`)` | the rounded-down value |
-| ceiling | `ceiling(`_expr_`)` | the rounded-up value |
-| maximum | `max(`_expr1_, _expr2_, ..., _exprn_`)` | the most value among arguments <br> all _expr_ must have the same dimension |
-| minimum | `min(`_expr1_, _expr2_, ..., _exprn_`)` | the least value among arguments <br> all _expr_ must have the same dimension |
-| average(mean) | `mean(`_expr1_, _expr2_, ..., _exprn_`)` | the mean value of arguments <br> all _expr_ must have the same dimension |
+| parenthesis | `(`  **expr**  `)` | the value of the  **expr**  |
+| negation | `-`  **expr**  | flips the sign of the value ||
+| addition |  **expr1**  `+`  **expr2**  | sums the two values |
+| subtraction |  **expr1**  `-`  **expr2**  | diffs the two values |
+| product |  **expr1**  `*`  **expr2**  | multiplies the two values |
+| fraction |  **expr1**  `/`  **expr2**  | the left-value over the right-value |
+| remainder |  **expr1**  `%`  **expr2**  | the remainder of the left-value by the right-value |
+| repeated multiplication |  **expr**  `^`  **digit**  |  **expr**  powered to  **digit**  ||
+| square root | `sqrt(`**expr**`)` | the square root of  **expr**  which must be non-negative |
+| power | `power(`**expr1**,  **expr2**`)` | the left value powered to the right value |
+| | | **expr1**  and  **expr2**  must be non-dimensional|
+| exponential | `exp(`**expr**`)` |  **e**  powered to  **expr** |
+| | | the  **expr**  must be non-dimensional |
+| natural logarithm | `ln(`**expr**`)`| the x such that  **e**  powered to  **x**  equals to  **expr**  |
+| | | the  **expr**  must be non-dimensional |
+| sine | `sin(`**expr**`)` | the sine of  **expr** |
+| | | the  **expr**  must be an angle, such as radians and degrees |
+| cosine | `cos(`**expr**`)` | the cosine of  **expr**  where the  **expr**  must be an angle |
+| | | the  **expr**  must be an angle, such as radians and degrees |
+| absolute value | `abs(`**expr**`)` | the value without the sign |
+| positive | `positive(`**expr**`)` | the value if positive, otherwise `0` |
+| round | `round(`**expr**`)` | the rounded value |
+| floor | `floor(`**expr**`)` | the rounded-down value |
+| ceiling | `ceiling(`**expr**`)` | the rounded-up value |
+| maximum | `max(`**expr1**,  **expr2**, ...,  **exprn**`)` | the most value among arguments |
+| | | all  **expr**  must have the same dimension |
+| minimum | `min(`**expr1**,  **expr2**, ...,  **exprn**`)` | the least value among arguments |
+| | | all  **expr**  must have the same dimension |
+| average(mean) | `mean(`**expr1**,  **expr2**, ...,  **exprn**`)` | the mean value of arguments |
+| | | all  **expr**  must have the same dimension |
 
 ## Random generators
 | name | syntax | description |
 | -----|------- | ----------- |
-| uniform distribution | `uniform` _expr1_ `to` _expr2_ | a random number from the uniform distribtion in [_expr1_, _expr2_] <br> _expr1_ and _expr2_ must have the same dimension |
-| uniform integer distribution | `uniform_integer` _expr1_ `to` _expr2_ | a random integer from the uniform distribtion in [_expr1_, _expr2_] <br> _expr1_ and _expr2_ must have the same dimension |
-| normal distribution | `normal` _expr1_ `sigma` _expr2_ | a random number from the normal distribtion with the mean=_expr1_ and sigma=_expr2_ <br> _expr1_ and _expr2_ must have the same dimension |
-| gamma distribution | `gamma` _expr1_ `scale` _expr2_ | a random number from the gamma distribution with the shape=_expr1_ and scale=_expr2_ <br> _expr2_ must be non-dimensional |
-| log-logistic (or Fisk) distribution | `loglogistic` _expr1_ `shape` _expr2_ <br> `fisk` _expr1_ `shape` _expr2_| a random number from the log-logistic distribution with the scale=_expr1_ and shape=_expr2_ <br> _expr2_ must be non-dimensional |
+| uniform distribution | `uniform`  **expr1**  `to`  **expr2**  | a random number from the uniform distribtion in [**expr1**,  **expr2**] |
+| | |  **expr1**  and  **expr2**  must have the same dimension |
+| uniform integer distribution | `uniform**integer`  **expr1**  `to`  **expr2**  | a random integer from the uniform distribtion in [**expr1**,  **expr2**] |
+| | |  **expr1**  and  **expr2**  must have the same dimension |
+| normal distribution | `normal`  **expr1**  `sigma`  **expr2**  | a random number from the normal distribtion with the mean=**expr1**  and sigma=**expr2**  |
+| | | **expr1**  and  **expr2**  must have the same dimension |
+| gamma distribution | `gamma`  **expr1**  `scale`  **expr2**  | a random number from the gamma distribution with the shape=**expr1**  and scale=**expr2** |
+| | |  **expr2**  must be non-dimensional |
+| log-logistic (or Fisk) distribution | `loglogistic`  **expr1**  `shape`  **expr2**  | a random number from the log-logistic distribution with the scale=**expr1**  and shape=**expr2** |
+| | `fisk`  **expr1**  `shape`  **expr2** |  **expr2**  must be non-dimensional |
