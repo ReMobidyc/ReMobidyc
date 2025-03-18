@@ -113,14 +113,14 @@ BaselineOfReMobidyc class >> initializeResources [
 BaselineOfReMobidyc class >> installFonts [
 
 	<script: 'BaselineOfReMobidyc installFonts'>
-	(IceRepository repositoryNamed: 'ReMobidyc') location / 'resources'
-	/ 'Fonts' copyAllTo:
-		(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
-	Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
-		EmbeddedFreeTypeFontInstaller registerFont: fontClass.
-		FreeTypeFontProvider current buildFamilies.
-		StandardFonts setAllStandardFontsTo:
-			(LogicalFont familyName: 'PlemolJP' pointSize: 10) ]
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'resources' / 'Fonts' copyAllTo:
+			(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
+		Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
+			EmbeddedFreeTypeFontInstaller registerFont: fontClass.
+			FreeTypeFontProvider current buildFamilies.
+			StandardFonts setAllStandardFontsTo:
+				(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
 ]
 
 { #category : 'scripts' }
