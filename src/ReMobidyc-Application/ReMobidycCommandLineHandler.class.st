@@ -39,6 +39,9 @@ ReMobidycCommandLineHandler class >> generateMacOS [
 		targetPlatforms:
 			#( 'Darwin-arm64' 'Darwin-x86_64' 'Windows-x86_64' );
 		addExternalDirectory:
+			(IceRepository repositoryNamed: 'gOLAP') location / 'resources'
+			/ 'Fonts';
+		addExternalDirectory:
 			(IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
 			/ 'cheatsheets'
 		destination: 'pharo-local/ReMobidyc/';

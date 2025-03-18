@@ -110,6 +110,20 @@ BaselineOfReMobidyc class >> initializeResources [
 ]
 
 { #category : 'scripts' }
+BaselineOfReMobidyc class >> installFonts [
+
+	<script: 'BaselineOfReMobidyc installFonts'>
+	(IceRepository repositoryNamed: 'ReMobidyc') location / 'resources'
+	/ 'Fonts' copyAllTo:
+		(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
+	Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
+		EmbeddedFreeTypeFontInstaller registerFont: fontClass.
+		FreeTypeFontProvider current buildFamilies.
+		StandardFonts setAllStandardFontsTo:
+			(LogicalFont familyName: 'PlemolJP' pointSize: 10) ]
+]
+
+{ #category : 'scripts' }
 BaselineOfReMobidyc class >> installLogos [
 	| imagesUrl basenames client |
 	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
@@ -301,5 +315,6 @@ BaselineOfReMobidyc >> postLoad [
 	<script: 'BaselineOfReMobidyc new postLoad'>
 	self class
 		initializeResources;
-		ensureStandardRepository
+		ensureStandardRepository;
+		installFonts
 ]
