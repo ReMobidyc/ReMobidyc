@@ -6,10 +6,10 @@
 | name | syntax | description |
 | -----|------- | ----------- |
 | equality | _expr1_ `=` _expr2_ `=` ... `=` _exprn_ | all _expr1_ through _exprn_ are equal values |
-| less than | _expr1_ `<` _expr2_ `<` ... `<` _exprn_ | _expr1_ < _expr2_ &and; _expr2_ < _expr3_ &and; ... &and; _exprn-1_ < exprn | 
-| less than or equal to | _expr1_ `<=` _expr2_ `<=` ... `<=` _exprn_ | _expr1_ ≦ _expr2_ &and; _expr2_ ≦ _expr3_ &and; ... &and; _exprn-1_ ≦ exprn | 
-| greater than | _expr1_ `>` _expr2_ `>` ... `>` _exprn_ | _expr1_ > _expr2_ &and; _expr2_ > _expr3_ &and; ... &and; _exprn-1_ > exprn | 
-| greater than or equal to | _expr1_ `>=` _expr2_ `>=` ... `>=` _exprn_ | _expr1_ ≧ _expr2_ &and; _expr2_ ≧ _expr3_ &and; ... &and; _exprn-1_ ≧ exprn | 
+| less than | _expr1_ `<` _expr2_ `<` ... `<` _exprn_ | _expr1_ < _expr2_  ∧  _expr2_ < _expr3_  ∧  ...  ∧  _exprn-1_ < exprn | 
+| less than or equal to | _expr1_ `<=` _expr2_ `<=` ... `<=` _exprn_ | _expr1_ ≦ _expr2_  ∧  _expr2_ ≦ _expr3_  ∧  ...  ∧  _exprn-1_ ≦ exprn | 
+| greater than | _expr1_ `>` _expr2_ `>` ... `>` _exprn_ | _expr1_ > _expr2_  ∧  _expr2_ > _expr3_  ∧  ...  ∧  _exprn-1_ > exprn | 
+| greater than or equal to | _expr1_ `>=` _expr2_ `>=` ... `>=` _exprn_ | _expr1_ ≧ _expr2_  ∧  _expr2_ ≧ _expr3_  ∧  ...  ∧  _exprn-1_ ≧ exprn | 
 | inequality | _expr1_ `/=` _expr2 | _expr1_ is not equal to _expr2_ |
 
 ## logical conditions
