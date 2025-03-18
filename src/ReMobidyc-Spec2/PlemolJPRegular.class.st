@@ -12,7 +12,7 @@ Class {
 { #category : 'testing' }
 PlemolJPRegular class >> canBeInstalled [
 
-	^ super canBeInstalled and: [ self fontReference notNil ]
+	^ super canBeInstalled and: [ self fontReference isFile ]
 ]
 
 { #category : 'testing' }
