@@ -12,9 +12,9 @@ ReMobidycCommandLineHandler class >> commandName [
 ]
 
 { #category : 'accessing' }
-ReMobidycCommandLineHandler class >> generateMacOS [
+ReMobidycCommandLineHandler class >> generate [
 
-	<script: 'ReMobidycCommandLineHandler generateMacOS'>
+	<script>
 	PhleeterOnOSX new
 		properties: {
 				(#AppName -> 'remobidyc').
