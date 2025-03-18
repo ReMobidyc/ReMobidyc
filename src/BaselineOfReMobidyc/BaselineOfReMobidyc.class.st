@@ -113,20 +113,38 @@ BaselineOfReMobidyc class >> initializeResources [
 BaselineOfReMobidyc class >> installFonts [
 
 	<script: 'BaselineOfReMobidyc installFonts'>
-	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
-		repo location / 'resources' / 'Fonts' copyAllTo:
-			(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
-		Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
-			EmbeddedFreeTypeFontInstaller registerFont: fontClass.
-			FreeTypeFontProvider current buildFamilies.
-			StandardFonts setAllStandardFontsTo:
-				(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
+	(IceRepository repositoryNamed: 'ReMobidyc')
+		ifNotNil: [ :repo |
+			repo location / 'resources' / 'Fonts' copyAllTo:
+				(FileLocator workingDirectory / 'Fonts') ensureCreateDirectory.
+			Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
+				EmbeddedFreeTypeFontInstaller registerFont: fontClass.
+				FreeTypeFontProvider current buildFamilies.
+				StandardFonts setAllStandardFontsTo:
+					(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
+		ifNil: [
+			| fontPath |
+			fontPath := FileLocator workingDirectory / 'Fonts'
+			            / 'PlemolJP-Regular.ttf'.
+			fontPath isFile ifFalse: [
+				| response |
+				response := ZnClient new
+					            url:
+						            'https://github.com/tomooda/ReMobidyc/raw/main/resources/Fonts/PlemolJP-Regular.ttf'
+							            asUrl;
+					            get;
+					            response.
+				(response isSuccess and: [
+					 response entity contentType sub = 'png' ]) ifTrue: [
+					fontPath parent ensureCreateDirectory.
+					fontPath binaryWriteStreamDo: [ :writeStream |
+						response entity writeOn: writeStream ] ] ] ]
 ]
 
 { #category : 'scripts' }
 BaselineOfReMobidyc class >> installLogos [
 	| imagesUrl basenames client |
-	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
+	imagesUrl := 'https://github.com/ReMobidyc/ReMobidyc/raw/main/images'
 		asUrl.
 	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
 	client := ZnClient new.
