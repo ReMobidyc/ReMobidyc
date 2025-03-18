@@ -91,10 +91,10 @@ ReMobidycCommandLineHandler >> installMenu [
 								  yourself)) open ] ];
 			addSubmenu: 'Help' with: [ :m |
 			m
-				addItemWithTitle: 're:mobidyc docs...'
-				action: [
-					MicDocumentBrowserPresenter openDocument:
-						'github://ReMobidyc/ReMobidyc/docs/cheatsheets' ]
-				shortcut: '' ].
+				addItemWithTitle: 'Cheatsheets...'
+				action: [ BaselineOfReMobidyc showCheatsheets ]
+				shortcut: '';
+				addItemWithTitle: 'Tutorial...'
+				action: [ BaselineOfReMobidyc showTutorial ] ].
 		main setAsMainMenu ]
 ]

@@ -172,6 +172,21 @@ BaselineOfReMobidyc class >> logoDirectoryPath [
 BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
+	(aBuilder item: #ReMobidycDocuments)
+		parent: 'ReMobidyc';
+		order: 80;
+		label: 'Documents';
+		with: [
+			(aBuilder item: #ReMobidycCheatsheets)
+				order: 10;
+				label: 'Cheatsheets...';
+				action: [ self showCheatsheets ];
+				help: 'Open cheatsheets browser for re:mobidyc'.
+			(aBuilder item: #ReMobidycTutorial)
+				order: 20;
+				label: 'Grasshopper Tutorial';
+				action: [ self showTutorial ];
+				help: 'Open a tutorial to build a model of grasshoppers and eggs' ].
 	(aBuilder item: #ReMobidycSystem)
 		parent: 'ReMobidyc';
 		order: 100;
@@ -199,6 +214,20 @@ BaselineOfReMobidyc class >> settingOn: aBuilder [
 		description: 'All settings about re:mobidyc'
 ]
 
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> showCheatsheets [
+
+	| documentBrowser |
+	documentBrowser := MicDocumentBrowserPresenter new.
+	documentBrowser documentRoots
+		removeAll;
+		addAll:
+			(((IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
+ / 'cheatsheets' filesMatching: '*.md') collect:
+	#asMicResourceReference).
+	documentBrowser open
+]
+
 { #category : 'settings' }
 BaselineOfReMobidyc class >> showSettingsBrowser [
 
@@ -208,6 +237,20 @@ BaselineOfReMobidyc class >> showSettingsBrowser [
 			(PackageOrganizer default packages select: [ :package |
 					 package name beginsWith: 'ReMobidyc-' ]);
 		open
+]
+
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> showTutorial [
+
+	| documentBrowser |
+	documentBrowser := MicDocumentBrowserPresenter new.
+	documentBrowser documentRoots
+		removeAll;
+		addAll:
+			(((IceRepository repositoryNamed: 'ReMobidyc') location
+			  / 'Tutorials' / 'Grasshoppers' filesMatching: '*.md') collect:
+					 #asMicResourceReference).
+	documentBrowser open
 ]
 
 { #category : 'utilities' }
