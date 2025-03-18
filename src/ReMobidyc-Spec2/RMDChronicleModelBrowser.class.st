@@ -5,6 +5,7 @@ Class {
 	#classTraits : 'THiDeEditTags classTrait',
 	#instVars : [
 		'modelList',
+		'folderNameField',
 		'nameField',
 		'authorField',
 		'dateField',
@@ -103,6 +104,12 @@ RMDChronicleModelBrowser >> editTags [
 			okAction: [ self chronicleChanged ] ]
 ]
 
+{ #category : 'updates' }
+RMDChronicleModelBrowser >> folderNameFieldChanged [
+
+	self updateModelList
+]
+
 { #category : 'initialization' }
 RMDChronicleModelBrowser >> initializePresenters [
 
@@ -110,6 +117,10 @@ RMDChronicleModelBrowser >> initializePresenters [
 	modelList := self newTable
 		             beResizable;
 		             beSingleSelection;
+		             addColumn: (SpStringTableColumn
+				              title: 'location name'
+				              evaluated: [ :chronicleModel |
+					              chronicleModel folderName ifNil: [ '' ] ]);
 		             addColumn: (SpStringTableColumn
 				              title: 'name'
 				              evaluated: [ :chronicleModel |
@@ -126,6 +137,8 @@ RMDChronicleModelBrowser >> initializePresenters [
 							              desc lines ifNotEmpty: #first ifEmpty: [ desc ] ]
 						              ifNil: [ '' ] ]);
 		             whenSelectedItemChangedDo: [ self selectedModelChanged ].
+	folderNameField := self newTextInput whenSubmitDo: [ :s |
+		                   self folderNameFieldChanged ].
 	nameField := self newTextInput whenSubmitDo: [ :s |
 		             self nameFieldChanged ].
 	authorField := self newTextInput whenSubmitDo: [ :s |
@@ -216,6 +229,9 @@ RMDChronicleModelBrowser >> updateModelList [
 	| models |
 	models := RMDChronicleStore chronicleModels.
 	self updateTags: models.
+	folderNameField text asString trim asLowercase ifNotEmpty: [ :str |
+		models := models select: [ :m |
+			          m folderName asLowercase includesSubstring: str ] ].
 	nameField text asString trim asLowercase ifNotEmpty: [ :str |
 		models := models select: [ :m |
 			          m name asLowercase includesSubstring: str ] ].

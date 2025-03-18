@@ -17,9 +17,29 @@ RMDChronicleModel >> authors [
 ]
 
 { #category : 'accessing' }
+RMDChronicleModel >> defaultFolderName [
+
+	^ '-'
+]
+
+{ #category : 'accessing' }
 RMDChronicleModel >> description [
 
 	^ hideMetadata at: 'description' ifAbsent: [ '' ]
+]
+
+{ #category : 'accessing' }
+RMDChronicleModel >> folderName [
+
+	^ hideMetadata at: 'folderName' ifAbsent: [ self defaultFolderName ]
+]
+
+{ #category : 'accessing' }
+RMDChronicleModel >> folderName: aString [
+
+	aString
+		ifNotNil: [ hideMetadata at: 'folderName' put: aString ]
+		ifNil: [ hideMetadata removeKey: 'folderName' ifAbsent: [  ] ]
 ]
 
 { #category : 'testing' }

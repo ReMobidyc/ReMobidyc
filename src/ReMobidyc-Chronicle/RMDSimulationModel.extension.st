@@ -1,7 +1,7 @@
 Extension { #name : 'RMDSimulationModel' }
 
 { #category : '*ReMobidyc-Chronicle' }
-RMDSimulationModel >> recordInChronicle [
+RMDSimulationModel >> recordInChronicle: aString [
 
-	RMDChronicleStore recordModel: self
+	^ RMDChronicleStore recordModel: self folderName: aString
 ]

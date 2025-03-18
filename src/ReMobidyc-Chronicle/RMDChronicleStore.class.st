@@ -60,6 +60,12 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 	^ self current recordModel: aRMDSimulationModel
 ]
 
+{ #category : 'operations' }
+RMDChronicleStore class >> recordModel: aRMDSimulationModel folderName: aString [
+
+	^ self current recordModel: aRMDSimulationModel folderName: aString
+]
+
 { #category : 'settings' }
 RMDChronicleStore class >> settingOn: aBuilder [
 
@@ -143,9 +149,16 @@ RMDChronicleStore >> payloadClassFor: aHiDeMetadata [
 { #category : 'operations' }
 RMDChronicleStore >> recordModel: aRMDSimulationModel [
 
+	^ self recordModel: aRMDSimulationModel folderName: nil
+]
+
+{ #category : 'operations' }
+RMDChronicleStore >> recordModel: aRMDSimulationModel folderName: aString [
+
 	| chronicleModel |
 	chronicleModel := RMDChronicleModel new
 		                  simulationModel: aRMDSimulationModel;
+		                  folderName: aString;
 		                  yourself.
 	self chronicleSave: chronicleModel.
 	^ chronicleModel

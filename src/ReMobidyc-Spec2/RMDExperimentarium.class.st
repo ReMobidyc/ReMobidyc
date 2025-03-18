@@ -24,7 +24,8 @@ Class {
 		'metaInterpreter',
 		'visualizationImage',
 		'showPopulationChartRadioButton',
-		'showVisualMapRadioButton'
+		'showVisualMapRadioButton',
+		'chronicleModel'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -85,9 +86,11 @@ RMDExperimentarium class >> defaultLayout [
 
 { #category : 'instance creation' }
 RMDExperimentarium class >> metaInterpreter: aRMDInterpreter [
+
 	^ self new
-		setMetaInterpreter: aRMDInterpreter;
-		yourself
+		  setMetaInterpreter: aRMDInterpreter;
+		  recordInChronicle;
+		  yourself
 ]
 
 { #category : 'updating' }
@@ -354,6 +357,19 @@ RMDExperimentarium >> printNat: anInteger [
 					  str ]
 				  ifFalse: [ '0' ] ]
 		  ifNil: [ '-' ]
+]
+
+{ #category : 'operations' }
+RMDExperimentarium >> recordInChronicle [
+
+	chronicleModel
+		ifNil: [
+			metaInterpreter ifNotNil: [ :interpreter |
+				chronicleModel := interpreter simulationModel recordInChronicle:
+					                  (interpreter modelPath ifNotNil: #basename).
+				chronicleModel hideMetadata addTag: 'run'.
+				chronicleModel hideSave ] ]
+		ifNotNil: [ :cm | cm hideSave ]
 ]
 
 { #category : 'operations' }
