@@ -1,6 +1,6 @@
-Extension { #name : #RMDAssignableDifferentialAttributeVariableNode }
+Extension { #name : 'RMDAssignableDifferentialAttributeVariableNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 
 	aRMDInterpreter
@@ -9,7 +9,7 @@ RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber in: aRMDInterp
 	^ aNumber
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
 
 	aRMDInterpreter
@@ -18,7 +18,7 @@ RMDAssignableDifferentialAttributeVariableNode >> assign: aNumber toNewIndividua
 	^ aNumber
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAssignableDifferentialAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 
 	^ (attributeVariable typecheckIn: aRMDInterpreter) / RMDType time

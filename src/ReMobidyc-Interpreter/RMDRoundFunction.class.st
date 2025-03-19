@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDRoundFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDRoundFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRoundFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDRoundFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -21,7 +23,7 @@ RMDRoundFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDAppl
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDRoundFunction >> value: aNumber [
 	^ aNumber rounded asFloat
 ]

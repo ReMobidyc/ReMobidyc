@@ -1,6 +1,6 @@
-Extension { #name : #RMDVariabilityNode }
+Extension { #name : 'RMDVariabilityNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDVariabilityNode >> metaEvalIn: aRMDMetaInterpreter [
 
 	self dictionariesDo: [ :metaparameters | 

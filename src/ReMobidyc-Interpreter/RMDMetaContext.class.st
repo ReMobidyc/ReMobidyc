@@ -1,19 +1,21 @@
 Class {
-	#name : #RMDMetaContext,
-	#superclass : #RMDContext,
+	#name : 'RMDMetaContext',
+	#superclass : 'RMDContext',
 	#instVars : [
 		'interpreters'
 	],
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaContext class >> isAbstract [
 
 	^ self = RMDMetaContext
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDMetaContext >> addInterpreter: aRMDInterpreter [
 
 	aRMDInterpreter runId > interpreters size ifTrue: [ 
@@ -25,7 +27,7 @@ RMDMetaContext >> addInterpreter: aRMDInterpreter [
 	^ aRMDInterpreter runId
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDMetaContext >> addInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil [
 
 	| runId |
@@ -38,44 +40,44 @@ RMDMetaContext >> addInterpreterOn: aRMDSimulationModel metaparameters: aDiction
 	^ runId
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContext >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContext >> exportModel: aRMDSimulationModel [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDMetaContext >> initialize [
 
 	super initialize.
 	interpreters := Array new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContext >> interpreterAt: anInteger ifAbsent: errorBlock [
 
 	^ (interpreters at: anInteger ifAbsent: [ nil ]) ifNil: errorBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContext >> interpretersDo: aBlock [
 
 	interpreters do: [ :i | i ifNotNil: aBlock ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaContext >> isForFileMemory [
 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaContext >> isRunningSimulation [
 
 	self interpretersDo: [ :interpreter | 
@@ -83,38 +85,38 @@ RMDMetaContext >> isRunningSimulation [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContext >> memoryName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContext >> modelPath [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContext >> numberOfInterpreters [
 
 	^ interpreters size
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContext >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContext >> runIdsDo: aBlock [
 
 	self interpretersDo: [ :interpreter | 
 		aBlock value: interpreter runId ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContext >> runningRunIdsDo: aBlock [
 
 	self interpretersDo: [ :interpreter | 

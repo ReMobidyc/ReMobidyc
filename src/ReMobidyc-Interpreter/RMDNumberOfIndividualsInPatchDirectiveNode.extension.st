@@ -1,12 +1,12 @@
-Extension { #name : #RMDNumberOfIndividualsInPatchDirectiveNode }
+Extension { #name : 'RMDNumberOfIndividualsInPatchDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> evalIn: aRMDInterpreter [
 
 	^ aRMDInterpreter numberOfIndividualsInPatch: animatName
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNumberOfIndividualsInPatchDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel

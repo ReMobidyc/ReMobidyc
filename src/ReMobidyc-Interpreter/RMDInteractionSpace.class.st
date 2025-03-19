@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDInteractionSpace,
-	#superclass : #Object,
+	#name : 'RMDInteractionSpace',
+	#superclass : 'Object',
 	#instVars : [
 		'animats',
 		'range',
@@ -11,10 +11,12 @@ Class {
 		'xs',
 		'ys'
 	],
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDInteractionSpace class >> width: aFloat1 height: aFloat2 range: aFloat3 [
 
 	^ self new
@@ -22,7 +24,7 @@ RMDInteractionSpace class >> width: aFloat1 height: aFloat2 range: aFloat3 [
 		  yourself
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDInteractionSpace >> add: anArray x: x y: y [
 
 	| row columnIndex cell |
@@ -35,7 +37,7 @@ RMDInteractionSpace >> add: anArray x: x y: y [
 	^ anArray
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 
 	| xIndex0 yIndex0 r2 |
@@ -50,12 +52,12 @@ RMDInteractionSpace >> animatsAroundX: x y: y do: aBlock [
 					<= r2 ifTrue: [ aBlock value: animat ] ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInteractionSpace >> maxDivisions [
 	^ 1000
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
 
 	| xIndex0 yIndex0 minR2 nearest |
@@ -75,7 +77,7 @@ RMDInteractionSpace >> nearestAnimatAroundX: x y: y do: aBlock [
 	nearest ifNotNil: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInteractionSpace >> width: aFloat1 height: aFloat2 range: aFloat3 [
 
 	range := aFloat3.
@@ -88,13 +90,13 @@ RMDInteractionSpace >> width: aFloat1 height: aFloat2 range: aFloat3 [
 	ys := Dictionary new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInteractionSpace >> xIndexOf: aFloat [
 
 	^ aFloat // divisionWidth + 1 min: xDivisions max: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInteractionSpace >> yIndexOf: aFloat [
 
 	^ aFloat // divisionHeight + 1 min: yDivisions max: 1

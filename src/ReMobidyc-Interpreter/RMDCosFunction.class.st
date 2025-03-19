@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDCosFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDCosFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCosFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDCosFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -32,7 +34,7 @@ RMDCosFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 	^ RMDType noDimension
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCosFunction >> value: aNumber [
 	^ aNumber cos
 ]

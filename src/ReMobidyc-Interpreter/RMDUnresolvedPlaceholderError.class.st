@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUnresolvedPlaceholderError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUnresolvedPlaceholderError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUnresolvedPlaceholderError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

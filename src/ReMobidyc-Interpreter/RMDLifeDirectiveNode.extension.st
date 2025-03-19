@@ -1,6 +1,6 @@
-Extension { #name : #RMDLifeDirectiveNode }
+Extension { #name : 'RMDLifeDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDLifeDirectiveNode >> evalIn: aRMDInterpreter [
 
 	^ self subclassResponsibility

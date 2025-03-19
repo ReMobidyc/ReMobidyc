@@ -1,6 +1,6 @@
-Extension { #name : #RMDGammaMeanDistributionNode }
+Extension { #name : 'RMDGammaMeanDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaMeanDistributionNode >> evalIn: aRMDInterpreter [
 
 	| shape mean |
@@ -9,7 +9,7 @@ RMDGammaMeanDistributionNode >> evalIn: aRMDInterpreter [
 	^ (self gamma: shape in: aRMDInterpreter) * mean / shape
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaMeanDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	super typecheckIn: aRMDInterpreter.

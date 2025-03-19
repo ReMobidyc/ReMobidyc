@@ -1,6 +1,6 @@
-Extension { #name : #RMDGammaDistributionNode }
+Extension { #name : 'RMDGammaDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaDistributionNode >> evalIn: aRMDInterpreter [
 
 	^ self
@@ -8,7 +8,7 @@ RMDGammaDistributionNode >> evalIn: aRMDInterpreter [
 		  in: aRMDInterpreter
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := [

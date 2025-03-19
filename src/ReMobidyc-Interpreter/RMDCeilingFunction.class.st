@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDCeilingFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDCeilingFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCeilingFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDCeilingFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -21,7 +23,7 @@ RMDCeilingFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDAp
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDCeilingFunction >> value: aNumber [
 	^ aNumber ceiling asFloat
 ]

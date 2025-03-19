@@ -1,12 +1,12 @@
-Extension { #name : #RMDTraceNode }
+Extension { #name : 'RMDTraceNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTraceNode >> evalIn: aRMDInterpreter [
 
 	^ value := node evalIn: aRMDInterpreter
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTraceNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := node typecheckIn: aRMDInterpreter

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDSumFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDSumFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSumFunction >> expectedNumArgs [
 
 	^ nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSumFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	| type |
@@ -20,27 +22,27 @@ RMDSumFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSumFunction >> value: aNumber [
 	^ aNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSumFunction >> value: aNumber1 value: aNumber2 [
 	^ aNumber1 + aNumber2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSumFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
 	^ aNumber1 + aNumber2 + aNumber3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSumFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
 	^ aNumber1 + aNumber2 + aNumber3 + aNumber4
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDSumFunction >> valueWithArguments: anArrayOfNumber [
 	anArrayOfNumber ifEmpty: [ ^ self numArgsError ].
 	^ anArrayOfNumber sum

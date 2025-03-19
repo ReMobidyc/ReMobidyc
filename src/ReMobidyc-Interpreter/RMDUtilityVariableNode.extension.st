@@ -1,6 +1,6 @@
-Extension { #name : #RMDUtilityVariableNode }
+Extension { #name : 'RMDUtilityVariableNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
 
 	^ aRMDInterpreter
@@ -8,7 +8,7 @@ RMDUtilityVariableNode >> evalIn: aRMDInterpreter [
 		  ifAbsent: [ RMDUndefinedUtilityError signal: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUtilityVariableNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := aRMDInterpreter

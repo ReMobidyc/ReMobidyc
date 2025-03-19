@@ -1,21 +1,23 @@
 Class {
-	#name : #RMDFunction,
-	#superclass : #Object,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDFunction',
+	#superclass : 'Object',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> abs [
 	^ RMDAbsFunction new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFunction class >> at: aString [
 
 	^ self at: aString ifAbsent: [ KeyNotFound signal: aString ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDFunction class >> at: aString ifAbsent: errorBlock [
 
 	aString = 'abs' ifTrue: [ ^ self abs ].
@@ -38,127 +40,127 @@ RMDFunction class >> at: aString ifAbsent: errorBlock [
 	^ errorBlock cull: aString
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> ceiling [
 	^ RMDCeilingFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> cos [
 	^ RMDCosFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> exp [
 	^ RMDExpFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> floor [
 	^ RMDFloorFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> gaussian [
 	^ RMDGaussianFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> ln [
 	^ RMDLnFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> max [
 	^ RMDMaxFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> mean [
 	^ RMDMeanFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> min [
 	^ RMDMinFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> positive [
 	^ RMDPositiveFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> power [
 	^ RMDPowerFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> round [
 	^ RMDRoundFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> sin [
 	^ RMDSinFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> sqrt [
 	^ RMDSquareRootFunction new
 ]
 
-{ #category : #'typical instances' }
+{ #category : 'typical instances' }
 RMDFunction class >> sum [
 	^ RMDSumFunction new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> expectedNumArgs [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDFunction >> numArgsError [
 	^ RMDNumArgsError signal
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDFunction >> numArgsError: actual expected: expected [
 
 	^ RMDNumArgsError signal: self actual: actual expected: expected
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> value: aNumber [
 
 	^ self numArgsError: 1 expected: self expectedNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> value: aNumber1 value: aNumber2 [
 	^ self numArgsError: 2 expected: self expectedNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
 
 	^ self numArgsError: 3 expected: self expectedNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
 
 	^ self numArgsError: 4 expected: self expectedNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFunction >> valueWithArguments: anArrayOfNumber [
 	| arity |
 	arity := anArrayOfNumber size.

@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUndefinedUtilityError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUndefinedUtilityError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUndefinedUtilityError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

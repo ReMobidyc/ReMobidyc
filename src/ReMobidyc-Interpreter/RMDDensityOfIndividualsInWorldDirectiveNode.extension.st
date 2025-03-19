@@ -1,6 +1,6 @@
-Extension { #name : #RMDDensityOfIndividualsInWorldDirectiveNode }
+Extension { #name : 'RMDDensityOfIndividualsInWorldDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| area |
@@ -11,7 +11,7 @@ RMDDensityOfIndividualsInWorldDirectiveNode >> evalIn: aRMDInterpreter [
 		  (aRMDInterpreter numberOfIndividualsInWorld: animatName) / area ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInWorldDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel

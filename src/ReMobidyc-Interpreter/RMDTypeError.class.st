@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDTypeError,
-	#superclass : #RMDSemanticError,
+	#name : 'RMDTypeError',
+	#superclass : 'RMDSemanticError',
 	#instVars : [
 		'type1',
 		'type2',
 		'subnode1',
 		'subnode2'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTypeError class >> on: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
 
 	^ (self on: aRMDSyntaxNode1)
@@ -21,7 +23,7 @@ RMDTypeError class >> on: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDTyp
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTypeError class >> signal: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRMDType2 subnode: aRMDSyntaxNode3 type: aRMDType3 [
 
 	^ (self
@@ -32,7 +34,7 @@ RMDTypeError class >> signal: aRMDSyntaxNode1 subnode: aRMDSyntaxNode2 type: aRM
 		   type: aRMDType3) signal
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTypeError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
@@ -54,49 +56,49 @@ RMDTypeError >> composeMessageText [
 		  stream nextPutAll: '.' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> subnode1 [
 
 	^ subnode1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> subnode1: aRMDSyntaxNode [
 
 	subnode1 := aRMDSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> subnode2 [
 
 	^ subnode2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> subnode2: aRMDSyntaxNode [
 
 	subnode2 := aRMDSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> type1 [
 
 	^ type1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> type1: aRMDType [
 
 	type1 := aRMDType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> type2 [
 
 	^ type2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeError >> type2: aRMDType [
 
 	type2 := aRMDType

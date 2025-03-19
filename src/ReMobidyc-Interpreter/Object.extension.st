@@ -1,11 +1,11 @@
-Extension { #name : #Object }
+Extension { #name : 'Object' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 Object >> evalIn: aRMDInterpreter [
 	
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 Object >> typecheckIn: aRMDInterpreter [
 	
 ]

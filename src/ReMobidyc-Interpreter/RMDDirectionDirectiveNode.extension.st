@@ -1,6 +1,6 @@
-Extension { #name : #RMDDirectionDirectiveNode }
+Extension { #name : 'RMDDirectionDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDirectionDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| x1 y1 x2 y2 |
@@ -11,7 +11,7 @@ RMDDirectionDirectiveNode >> evalIn: aRMDInterpreter [
 	^ (x2 - x1 @ (y2 - y1)) theta
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDirectionDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| t |

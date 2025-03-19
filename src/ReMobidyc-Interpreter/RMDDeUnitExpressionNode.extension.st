@@ -1,13 +1,13 @@
-Extension { #name : #RMDDeUnitExpressionNode }
+Extension { #name : 'RMDDeUnitExpressionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDeUnitExpressionNode >> evalIn: aRMDInterpreter [
 
 	^ (unit fromSI: (expression evalIn: aRMDInterpreter)) ifNanOrInfinite: [ 
 		  RMDNotComputableError on: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDeUnitExpressionNode >> typecheckIn: aRMDInterpreter [
 
 	[

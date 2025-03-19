@@ -1,49 +1,51 @@
 Class {
-	#name : #RMDSemanticError,
-	#superclass : #RMDError,
+	#name : 'RMDSemanticError',
+	#superclass : 'RMDError',
 	#instVars : [
 		'node'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSemanticError class >> isAbstract [
 
 	^ self = RMDSemanticError
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSemanticError class >> on: aRMDSyntaxNode [
 
 	^ self new node: aRMDSyntaxNode
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSemanticError class >> signal: aRMDSyntaxNode [
 
 	^ (self on: aRMDSyntaxNode) signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSemanticError >> node [
 
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSemanticError >> node: aRMDSyntaxNode [
 
 	node := aRMDSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSemanticError >> originalSemanticError [
 
 	^ self
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 RMDSemanticError >> signalWithScope: aRMDSyntax [
 
 	self resume:

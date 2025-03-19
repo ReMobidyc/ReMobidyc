@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDSpeciesError,
-	#superclass : #RMDRuntimeError,
+	#name : 'RMDSpeciesError',
+	#superclass : 'RMDRuntimeError',
 	#instVars : [
 		'animatDefinition1',
 		'animatDefinition2'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSpeciesError class >> on: aRMDSyntaxNode animatDefinition1: aRMDAnimatDefintionNode animatDefinition2: anotherRMDAnimatDefinitionNode [
 
 	^ (self on: aRMDSyntaxNode)
@@ -17,31 +19,31 @@ RMDSpeciesError class >> on: aRMDSyntaxNode animatDefinition1: aRMDAnimatDefinti
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesError >> animatDefinition1 [
 
 	^ animatDefinition1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesError >> animatDefinition1: aRMDAnimatDefinitionNode [
 
 	animatDefinition1 := aRMDAnimatDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesError >> animatDefinition2 [
 
 	^ animatDefinition2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSpeciesError >> animatDefinition2: aRMDAnimatDefinitionNode [
 
 	animatDefinition2 := aRMDAnimatDefinitionNode
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSpeciesError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

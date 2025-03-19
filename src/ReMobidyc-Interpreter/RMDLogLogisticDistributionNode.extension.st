@@ -1,6 +1,6 @@
-Extension { #name : #RMDLogLogisticDistributionNode }
+Extension { #name : 'RMDLogLogisticDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDLogLogisticDistributionNode >> evalIn: aRMDInterpreter [
 
 	| p |
@@ -11,7 +11,7 @@ RMDLogLogisticDistributionNode >> evalIn: aRMDInterpreter [
 	   ** (shapeExpression evalIn: aRMDInterpreter) reciprocal)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDLogLogisticDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	[

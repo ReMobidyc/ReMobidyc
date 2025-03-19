@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDAbsFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDAbsFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbsFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDAbsFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -21,7 +23,7 @@ RMDAbsFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbsFunction >> value: aNumber [
 	^ aNumber abs
 ]

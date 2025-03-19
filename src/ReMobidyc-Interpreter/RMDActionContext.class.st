@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDActionContext,
-	#superclass : #RMDExecutionContextWithRandomGenerator,
+	#name : 'RMDActionContext',
+	#superclass : 'RMDExecutionContextWithRandomGenerator',
 	#instVars : [
 		'action',
 		'object',
@@ -12,22 +12,24 @@ Class {
 		'location',
 		'space'
 	],
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> action [
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> action: aRMDActionDefinitionNode [
 
 	action := aRMDActionDefinitionNode.
 	self loadUtilityDefinitions: action utilityDefinitions
 ]
 
-{ #category : #'memory access' }
+{ #category : 'memory access' }
 RMDActionContext >> attributeDictFor: aString [
 
 	aString = 'here' ifTrue: [ 
@@ -52,75 +54,75 @@ RMDActionContext >> attributeDictFor: aString [
 	^ Dictionary new
 ]
 
-{ #category : #'memory access' }
+{ #category : 'memory access' }
 RMDActionContext >> createPatchAttributeDict: anInteger [
 
 	^ patchDefinition attributeOffsets copy associationsDo: [ :assoc | 
 		  assoc value: anInteger + assoc value ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDActionContext >> hasObject [
 
 	^ object notNil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> location [
 
 	^ location ifNil: [ location := locationBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> location: anIntegerOrBlock definition: aRMDPatchDefinition [
 
 	patchDefinition := aRMDPatchDefinition.
 	locationBlock := anIntegerOrBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> locationDefinition [
 
 	^ patchDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> newDefinition [
 
 	^ newDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> newIndividuals: anArrayOfInteger definition: aRMDAnimatDefinition [
 
 	newIndividuals := anArrayOfInteger.
 	newDefinition := aRMDAnimatDefinition
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDActionContext >> newIndividualsDo: aBlock [
 
 	newIndividuals ifNotNil: [ newIndividuals do: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> object [
 	^ object
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> object: anInteger definition: aRMDAnimatDefinition [
 
 	object := anInteger.
 	objectDefinition := aRMDAnimatDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> objectDefinition [
 	^ objectDefinition
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDActionContext >> printOn: aStream [
 
 	subjectDefinition
@@ -145,12 +147,12 @@ RMDActionContext >> printOn: aStream [
 		aStream nextPut: $) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> space [
 	^ space
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDActionContext >> space: aRMDMemory [
 
 	space := aRMDMemory

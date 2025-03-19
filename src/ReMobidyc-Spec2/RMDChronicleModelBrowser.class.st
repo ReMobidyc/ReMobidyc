@@ -24,30 +24,35 @@ Class {
 { #category : 'layout' }
 RMDChronicleModelBrowser class >> defaultLayout [
 
-	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.4;
-		  add: (SpBoxLayout newVertical
-				   add: 'Search by Metadata' asPresenter expand: false;
-				   add: (SpGridLayout new
-						    borderWidth: 0;
-						    add: '    name' asPresenter at: 1 @ 1;
-						    add: #nameField at: 2 @ 1;
-						    add: '    author' asPresenter at: 1 @ 2;
-						    add: #authorField at: 2 @ 2;
-						    add: '    timestamp' asPresenter at: 1 @ 3;
-						    add: #dateField at: 2 @ 3;
-						    add: '    description' asPresenter at: 1 @ 4;
-						    add: #descriptionField at: 2 @ 4;
-						    columnHomogeneous: false;
-						    column: 1 expand: false;
-						    column: 2 expand: true;
-						    yourself)
-				   height: self buttonHeight * 4 + 5;
-				   add: 'Search by Tags' expand: false;
-				   add: #tagList;
-				   add: 'Full text search' asPresenter expand: false;
-				   add: #searchField expand: false;
-				   yourself);
+	^ SpBoxLayout newVertical
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.7;
+				   add: (SpBoxLayout newVertical
+						    add: 'Search by Metadata' asPresenter expand: false;
+						    add: (SpGridLayout new
+								     borderWidth: 0;
+								     add: '    name' asPresenter at: 1 @ 1;
+								     add: #nameField at: 2 @ 1;
+								     add: '    author' asPresenter at: 1 @ 2;
+								     add: #authorField at: 2 @ 2;
+								     add: '    timestamp' asPresenter at: 1 @ 3;
+								     add: #dateField at: 2 @ 3;
+								     add: '    description' asPresenter at: 1 @ 4;
+								     add: #descriptionField at: 2 @ 4;
+								     columnHomogeneous: false;
+								     column: 1 expand: false;
+								     column: 2 expand: true;
+								     yourself)
+						    height: self buttonHeight * 4 + 5;
+						    add: 'Full text search' asPresenter expand: false;
+						    add: #searchField expand: false;
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Search by Tags' expand: false;
+						    add: #tagList;
+						    yourself);
+				   yourself)
+		  height: self buttonHeight * 7 + 5;
 		  add: (SpBoxLayout newVertical
 				   add: #modelList;
 				   add: (SpBoxLayout newHorizontal
@@ -179,7 +184,7 @@ RMDChronicleModelBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter
-		initialExtent: 1200 @ 600;
+		initialExtent: 1200 @ 800;
 		title: 'Chronicle (models)'
 ]
 

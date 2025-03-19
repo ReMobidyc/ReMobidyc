@@ -1,6 +1,6 @@
-Extension { #name : #RMDBinaryRelationNode }
+Extension { #name : 'RMDBinaryRelationNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDBinaryRelationNode >> typecheckIn: aRMDInterpreter [
 
 	| type |

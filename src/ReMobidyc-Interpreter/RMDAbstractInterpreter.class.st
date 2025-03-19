@@ -1,15 +1,17 @@
 Class {
-	#name : #RMDAbstractInterpreter,
-	#superclass : #Model,
+	#name : 'RMDAbstractInterpreter',
+	#superclass : 'Model',
 	#instVars : [
 		'simulationModel',
 		'context',
 		'contextSemaphore'
 	],
-	#category : #'ReMobidyc-Interpreter-Core'
+	#category : 'ReMobidyc-Interpreter-Core',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Core'
 }
 
-{ #category : #'library access' }
+{ #category : 'library access' }
 RMDAbstractInterpreter class >> standardLibrary [
 
 	^ {
@@ -32,24 +34,24 @@ RMDAbstractInterpreter class >> standardLibrary [
 		  ('gaussian' -> RMDFunction gaussian) } asDictionary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractInterpreter >> context [
 	^ context
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDAbstractInterpreter >> deltaTimeUnit [
 
 	^ simulationModel deltaTimeUnit
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDAbstractInterpreter >> durationUnit [
 
 	^ simulationModel durationUnit
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDAbstractInterpreter >> initialize [
 
 	super initialize.
@@ -57,34 +59,34 @@ RMDAbstractInterpreter >> initialize [
 	contextSemaphore := Semaphore forMutualExclusion
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractInterpreter >> isMetaInterpreter [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDAbstractInterpreter >> isTypechecker [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractInterpreter >> kindName [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDAbstractInterpreter >> load: aRMDSyntaxNode [
 	simulationModel load: aRMDSyntaxNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractInterpreter >> modelName [
 
 	^ simulationModel ifNotNil: #name ifNil: [ '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractInterpreter >> name [
 
 	^ String streamContents: [ :stream | 
@@ -97,34 +99,34 @@ RMDAbstractInterpreter >> name [
 			  nextPutAll: ']' ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDAbstractInterpreter >> patchLengthUnit [
 
 	^ simulationModel patchLengthUnit
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDAbstractInterpreter >> setContext: aRMDContext [
 	context := aRMDContext
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDAbstractInterpreter >> shortName [
 
 	^ self modelName
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDAbstractInterpreter >> simulationModel [
 	^ simulationModel
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDAbstractInterpreter >> simulationModel: aRMDSimulationModel [
 	simulationModel := aRMDSimulationModel
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 
 	contextSemaphore critical: [ 
@@ -135,7 +137,7 @@ RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 			  context := originalContext ] ]
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDAbstractInterpreter >> withSubContext: aRMDContext do: aBlock [
 
 	| originalContext |

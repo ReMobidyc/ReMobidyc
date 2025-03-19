@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDTimeChanged,
-	#superclass : #RMDSimulationAnnouncement,
+	#name : 'RMDTimeChanged',
+	#superclass : 'RMDSimulationAnnouncement',
 	#instVars : [
 		'time'
 	],
-	#category : #'ReMobidyc-Interpreter-Announcements'
+	#category : 'ReMobidyc-Interpreter-Announcements',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Announcements'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTimeChanged class >> interpreter: aRMDInterpreter time: aNumber [
 
 	^ (self interpreter: aRMDInterpreter)
@@ -15,7 +17,7 @@ RMDTimeChanged class >> interpreter: aRMDInterpreter time: aNumber [
 		  yourself
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDTimeChanged >> printOn: aStream [
 
 	aStream
@@ -33,12 +35,12 @@ RMDTimeChanged >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeChanged >> time [
 	^ time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTimeChanged >> time: aNumber [
 	time := aNumber
 ]

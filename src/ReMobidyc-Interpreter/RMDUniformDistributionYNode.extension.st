@@ -1,6 +1,6 @@
-Extension { #name : #RMDUniformDistributionYNode }
+Extension { #name : 'RMDUniformDistributionYNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUniformDistributionYNode >> evalIn: aRMDInterpreter [
 
 	^ aRMDInterpreter simulationModel north
@@ -8,7 +8,7 @@ RMDUniformDistributionYNode >> evalIn: aRMDInterpreter [
 	  + aRMDInterpreter simulationModel south
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUniformDistributionYNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := RMDType unit: aRMDInterpreter patchLengthUnit

@@ -1,6 +1,6 @@
-Extension { #name : #RMDNormalDistributionNode }
+Extension { #name : 'RMDNormalDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNormalDistributionNode >> evalIn: aRMDInterpreter [
 
 	^ (aRMDInterpreter random ln * -2.0) sqrt
@@ -9,7 +9,7 @@ RMDNormalDistributionNode >> evalIn: aRMDInterpreter [
 	  + (meanExpression evalIn: aRMDInterpreter)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNormalDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := [

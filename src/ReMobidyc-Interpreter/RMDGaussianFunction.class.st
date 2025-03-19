@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDGaussianFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDGaussianFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGaussianFunction >> expectedNumArgs [
 
 	^ 4
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDGaussianFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	| type |
@@ -25,7 +27,7 @@ RMDGaussianFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDA
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDGaussianFunction >> value: a value: b value: c value: x [
 
 	^ a * ((x - b) squared / (-2.0 * c squared)) exp

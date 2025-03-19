@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPositiveFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDPositiveFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPositiveFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDPositiveFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -21,7 +23,7 @@ RMDPositiveFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDA
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDPositiveFunction >> value: aNumber [
 
 	^ aNumber >= 0

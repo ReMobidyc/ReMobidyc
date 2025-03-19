@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDScopedSemanticError,
-	#superclass : #RMDRuntimeError,
+	#name : 'RMDScopedSemanticError',
+	#superclass : 'RMDRuntimeError',
 	#instVars : [
 		'exception'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDScopedSemanticError class >> on: aRMDSyntaxNode exception: aRMDSemanticException [
 
 	^ (super on: aRMDSyntaxNode)
@@ -15,13 +17,13 @@ RMDScopedSemanticError class >> on: aRMDSyntaxNode exception: aRMDSemanticExcept
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDScopedSemanticError class >> signal: aRMDSyntaxNode exception: aRMDSemanticException [
 
 	^ (self on: aRMDSyntaxNode exception: aRMDSemanticException) signal
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDScopedSemanticError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
@@ -32,19 +34,19 @@ RMDScopedSemanticError >> composeMessageText [
 			  nextPutAll: exception messageText ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDScopedSemanticError >> exception [
 
 	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDScopedSemanticError >> exception: aRMDSemanticError [
 
 	exception := aRMDSemanticError
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDScopedSemanticError >> originalSemanticError [
 	^ exception originalSemanticError
 ]

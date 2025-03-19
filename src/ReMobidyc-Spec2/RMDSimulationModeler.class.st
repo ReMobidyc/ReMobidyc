@@ -316,7 +316,7 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 RMDSimulationModeler >> okToClose [
 
 	(UIManager default
-		 confirm: 'Export the model before close?'
+		 confirm: 'Save the model before close?'
 		 orCancel: [ ^ false ]) ifTrue: [ self save ].
 	^ true
 ]

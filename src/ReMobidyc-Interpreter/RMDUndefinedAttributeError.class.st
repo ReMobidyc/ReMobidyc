@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUndefinedAttributeError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUndefinedAttributeError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUndefinedAttributeError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

@@ -1,6 +1,6 @@
-Extension { #name : #RMDDistanceDirectiveNode }
+Extension { #name : 'RMDDistanceDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDistanceDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| x1 y1 x2 y2 |
@@ -12,7 +12,7 @@ RMDDistanceDirectiveNode >> evalIn: aRMDInterpreter [
 		  RMDNotComputableError on: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDistanceDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| t |

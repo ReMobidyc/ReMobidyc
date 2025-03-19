@@ -1,11 +1,11 @@
-Extension { #name : #RMDNegationNode }
+Extension { #name : 'RMDNegationNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNegationNode >> evalIn: aRMDInterpreter [
 	^ (condition evalIn: aRMDInterpreter) not
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNegationNode >> typecheckIn: aRMDInterpreter [
 	condition typecheckIn: aRMDInterpreter
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #RMDDirectionOfGradientDirectiveNode }
+Extension { #name : 'RMDDirectionOfGradientDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| attribute here west east south north vector |
@@ -27,7 +27,7 @@ RMDDirectionOfGradientDirectiveNode >> evalIn: aRMDInterpreter [
 	^ vector theta ifNanOrInfinite: [ RMDNotComputableError signal: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDirectionOfGradientDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	patchAttributeVariable isPlaceholderNode ifTrue: [

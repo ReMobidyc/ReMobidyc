@@ -1,22 +1,24 @@
 Class {
-	#name : #RMDError,
-	#superclass : #Exception,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDError',
+	#superclass : 'Exception',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDError >> composeMessageText [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDError >> defaultAction [
 
 	^ UnhandledError signalForException: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDError >> messageText [
 
 	^ messageText ifNil: [ messageText := self composeMessageText ]

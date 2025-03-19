@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUndefinedDirectiveError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUndefinedDirectiveError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUndefinedDirectiveError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

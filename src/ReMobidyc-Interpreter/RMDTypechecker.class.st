@@ -1,23 +1,25 @@
 Class {
-	#name : #RMDTypechecker,
-	#superclass : #RMDAbstractInterpreter,
+	#name : 'RMDTypechecker',
+	#superclass : 'RMDAbstractInterpreter',
 	#instVars : [
 		'libraries'
 	],
-	#category : #'ReMobidyc-Interpreter-Core'
+	#category : 'ReMobidyc-Interpreter-Core',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Core'
 }
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDTypechecker >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDTypechecker >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDTypechecker >> changeStage: animatString [
 
 	| animatDefinition |
@@ -28,7 +30,7 @@ RMDTypechecker >> changeStage: animatString [
 	^ animatString
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDTypechecker >> functionAt: aString ifAbsent: errorBlock [
 	libraries
 		do:
@@ -36,26 +38,26 @@ RMDTypechecker >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTypechecker >> initialize [
 
 	super initialize.
 	libraries := OrderedCollection with: self standardLibrary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDTypechecker >> isTypechecker [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypechecker >> kindName [
 
 	^ 'type checker'
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDTypechecker >> newIndividual: animatString [
 
 	| animatDefinition |
@@ -66,12 +68,12 @@ RMDTypechecker >> newIndividual: animatString [
 	^ animatString
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDTypechecker >> standardLibrary [
 	^ self class standardLibrary 
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDTypechecker >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
 
 	^ self context typeAt: aString ifAbsentPut: [ 
@@ -79,7 +81,7 @@ RMDTypechecker >> typeOfUtilityVariable: aString ifAbsent: errorBlock [
 			  typecheckIn: self ]
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDTypechecker >> typeOfVariable: aString agent: anotherString ifAbsent: errorBlock [
 	^ context
 		typeOfVariable: aString
@@ -87,26 +89,26 @@ RMDTypechecker >> typeOfVariable: aString agent: anotherString ifAbsent: errorBl
 		ifAbsent: errorBlock
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDTypechecker >> typeUtilityVariable: aString as: aRMDType [
 
 	self context typeAt: aString put: aRMDType.
 	^ aRMDType
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheck: aRMDSyntaxNode [
 
 	^ self typecheck: aRMDSyntaxNode subject: nil object: nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString [
 
 	^ self typecheck: aRMDSyntaxNode subject: aString object: nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherString [
 
 	^ self
@@ -115,7 +117,7 @@ RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherStri
 		  do: [ aRMDSyntaxNode typecheckIn: self ]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherString utilities: anArrayOfRMDUtilityDefinitionNode [
 
 	^ self withSubject: aString object: anotherString do: [
@@ -124,7 +126,7 @@ RMDTypechecker >> typecheck: aRMDSyntaxNode subject: aString object: anotherStri
 		  aRMDSyntaxNode typecheckIn: self ]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheckAgentDefinitions [
 
 	self
@@ -138,7 +140,7 @@ RMDTypechecker >> typecheckAgentDefinitions [
 		self typecheck: animatDefinition subject: animatDefinition agentName ]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheckAll [
 
 	self
@@ -147,7 +149,7 @@ RMDTypechecker >> typecheckAll [
 		typecheckTasks
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheckInitializers [
 
 	self
@@ -160,7 +162,7 @@ RMDTypechecker >> typecheckInitializers [
 		self typecheck: animatInitializer subject: animatInitializer animat ]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> typecheckTasks [
 
 	simulationModel taskDefinitionsDo: [ :taskDefinition | 
@@ -170,19 +172,19 @@ RMDTypechecker >> typecheckTasks [
 			object: taskDefinition objectIdentifier ]
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> weakTypecheck: aRMDSyntaxNode [
 
 	^ self weakTypecheck: aRMDSyntaxNode subject: nil object: nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: subject [
 
 	^ self weakTypecheck: aRMDSyntaxNode subject: subject object: nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: subject object: object [
 
 	^ [ self typecheck: aRMDSyntaxNode subject: subject object: object ]
@@ -190,7 +192,7 @@ RMDTypechecker >> weakTypecheck: aRMDSyntaxNode subject: subject object: object 
 		  do: [ :ex | ex resume: RMDType any ]
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDTypechecker >> withSubject: subject object: object do: aBlock [
 
 	| subjectDefinition objectIdentifier objectDefinition |

@@ -1,12 +1,12 @@
-Extension { #name : #RMDStageDirectiveNode }
+Extension { #name : 'RMDStageDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDStageDirectiveNode >> evalIn: aRMDInterpreter [
 
 	aRMDInterpreter changeStage: animatIdentifier
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDStageDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| animatDefinition |

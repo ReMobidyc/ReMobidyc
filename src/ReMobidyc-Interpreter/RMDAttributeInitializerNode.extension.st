@@ -1,12 +1,12 @@
-Extension { #name : #RMDAttributeInitializerNode }
+Extension { #name : 'RMDAttributeInitializerNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeInitializerNode >> addressIn: aRMDInterpreter [
 
 	^ aRMDInterpreter context subject + (self offsetIn: aRMDInterpreter)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 
 	expression ifNotNil: [ 
@@ -17,7 +17,7 @@ RMDAttributeInitializerNode >> evalIn: aRMDInterpreter [
 			to: (self addressIn: aRMDInterpreter) ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeInitializerNode >> offsetIn: aRMDInterpreter [
 
 	^ aRMDInterpreter context subjectDefinition
@@ -25,7 +25,7 @@ RMDAttributeInitializerNode >> offsetIn: aRMDInterpreter [
 		  ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	| type |

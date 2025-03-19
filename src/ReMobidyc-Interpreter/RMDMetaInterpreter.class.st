@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDMetaInterpreter,
-	#superclass : #RMDAbstractInterpreter,
-	#category : #'ReMobidyc-Interpreter-Core'
+	#name : 'RMDMetaInterpreter',
+	#superclass : 'RMDAbstractInterpreter',
+	#category : 'ReMobidyc-Interpreter-Core',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Core'
 }
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDMetaInterpreter class >> forDryRunOn: aRMDSimulationModel [
 
 	^ self new
@@ -13,7 +15,7 @@ RMDMetaInterpreter class >> forDryRunOn: aRMDSimulationModel [
 		  yourself
 ]
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDMetaInterpreter class >> on: aRMDSimulationModel modelPath: aFileReference [
 
 	^ self new
@@ -23,7 +25,7 @@ RMDMetaInterpreter class >> on: aRMDSimulationModel modelPath: aFileReference [
 		  yourself
 ]
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDMetaInterpreter class >> on: aRMDSimulationModel readOnlyModelPath: aFileReference [
 
 	^ self new
@@ -33,7 +35,7 @@ RMDMetaInterpreter class >> on: aRMDSimulationModel readOnlyModelPath: aFileRefe
 		  yourself
 ]
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDMetaInterpreter class >> onModelPath: aFileReference [
 
 	^ self new
@@ -46,7 +48,7 @@ RMDMetaInterpreter class >> onModelPath: aFileReference [
 		  yourself
 ]
 
-{ #category : #'instancce creation' }
+{ #category : 'instancce creation' }
 RMDMetaInterpreter class >> onReadOnlyModelPath: aFileReference [
 
 	^ self new
@@ -59,7 +61,7 @@ RMDMetaInterpreter class >> onReadOnlyModelPath: aFileReference [
 		  yourself
 ]
 
-{ #category : #'meta-interpreting' }
+{ #category : 'meta-interpreting' }
 RMDMetaInterpreter >> addInterpreterWithMetaparameters: aDictionary multiplicity: anInteger randomSeed: anIntegerOrNil [
 
 	| runIds |
@@ -74,50 +76,50 @@ RMDMetaInterpreter >> addInterpreterWithMetaparameters: aDictionary multiplicity
 	^ runIds
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 RMDMetaInterpreter >> announceSimulationPaused [
 
 	self announcer announce: (RMDSimulationPaused interpreter: self)
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 RMDMetaInterpreter >> announceSimulationStarted [
 
 	self announcer announce: (RMDSimulationStarted interpreter: self)
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> fastForward [
 
 	self interpretersDo: #fastForward
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaInterpreter >> guard: aBlock [
 
 	self interpretersDo: [ :interpreter | interpreter guard: aBlock ]
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> interpreterAt: anInteger ifAbsent: errorBlock [
 
 	anInteger ifNil: [ ^ errorBlock value ].
 	^ context interpreterAt: anInteger ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> interpretersDo: aBlock [
 
 	context interpretersDo: aBlock
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaInterpreter >> isMetaInterpreter [
 
 	^ true
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> isRunningSimulation [
 
 	self interpretersDo: [ :interpreter | 
@@ -125,44 +127,44 @@ RMDMetaInterpreter >> isRunningSimulation [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaInterpreter >> kindName [
 
 	^ 'meta-interpreter'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaInterpreter >> memoryName [
 
 	^ context ifNotNil: #memoryName ifNil: [ '' ]
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDMetaInterpreter >> modelPath [
 
 	^ context ifNotNil: #modelPath
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> nameAt: anInteger ifAbsent: errorBlock [
 
 	^ (context interpreterAt: anInteger ifAbsent: [ ^ errorBlock value ])
 		  shortName
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> numberOfInterpreters [
 
 	^ context numberOfInterpreters
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> pauseSimulation [
 
 	self interpretersDo: #pauseSimulation
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> progress [
 
 	| sum n |
@@ -176,26 +178,26 @@ RMDMetaInterpreter >> progress [
 		  ifFalse: [ ^ 0.0 ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> reloadMemory [
 
 	self interpretersDo: #reloadMemory
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> rewind [
 
 	self interpretersDo: #rewind
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> runIds [
 
 	^ Array streamContents: [ :stream | 
 		  context runIdsDo: [ :runId | stream nextPut: runId ] ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> runSimulationOnError: errorHandlerBlock [
 
 	self interpretersDo: [ :interpreter | 
@@ -207,7 +209,7 @@ RMDMetaInterpreter >> runSimulationOnError: errorHandlerBlock [
 		announceSimulationPaused ] forkAt: Processor userBackgroundPriority
 ]
 
-{ #category : #'meta-interpreting' }
+{ #category : 'meta-interpreting' }
 RMDMetaInterpreter >> setupInterpreters [
 
 	context
@@ -218,13 +220,13 @@ RMDMetaInterpreter >> setupInterpreters [
 			simulationModel variability metaEvalIn: self ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> setupSimulation [
 	self setupInterpreters.
 	self interpretersDo: #setupSimulation
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> stepSimulation [
 
 	| finishSemaphore |
@@ -235,25 +237,25 @@ RMDMetaInterpreter >> stepSimulation [
 	self interpretersDo: [ :interpreter | finishSemaphore wait ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> typecheck [
 
 	self interpretersDo: #typecheck
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDMetaInterpreter >> waitForPause [
 
 	[ context isRunningSimulation ] whileTrue: [ self waitingTime wait ]
 ]
 
-{ #category : #'accessing-interpreters' }
+{ #category : 'accessing-interpreters' }
 RMDMetaInterpreter >> waitingTime [
 
 	^ 200 milliSecond
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDMetaInterpreter >> withDryRunContextDo: aBlock [
 
 	^ self withContext: RMDMetaContextForDryRun new do: aBlock

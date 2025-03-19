@@ -9,6 +9,7 @@ Class {
 		'importActionButton',
 		'addActionButton',
 		'removeActionButton',
+		'removeActionMenuButton',
 		'editActionButton',
 		'verbIdentifierField',
 		'objectIdentifierField',
@@ -40,7 +41,8 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 						    add: (SpBoxLayout newHorizontal
 								     add: #importActionButton width: self buttonHeight;
 								     add: #addActionButton width: self buttonHeight;
-								     add: #removeActionButton width: self buttonHeight;
+								     addButton: #removeActionButton
+								     dropdownButton: #removeActionMenuButton;
 								     add: #editActionButton width: self buttonHeight;
 								     yourself)
 						    height: self buttonHeight;
@@ -62,15 +64,19 @@ RMDTaskDefinitionBrowser class >> defaultLayout [
 										      add: (SpBoxLayout newHorizontal
 												       vAlignCenter;
 												       add: 'within ' expand: false;
-												       add: #rangeField width: 100) expand: false)
+												       add: #rangeField width: 100)
+										      expand: false)
 								     height: self inputTextHeight;
 								     add: #parameterInstantiationList;
 								     add: (SpBoxLayout newHorizontal
-										      add: #addParameterInstantiationButton width: self buttonHeight;
+										      add: #addParameterInstantiationButton
+										      width: self buttonHeight;
 										      add: #removeParameterInstantiationButton
 										      width: self buttonHeight;
-										      add: #editParameterInstantiationButton width: self buttonHeight;
-										      add: #viewParameterInstantiationButton width: self buttonHeight;
+										      add: #editParameterInstantiationButton
+										      width: self buttonHeight;
+										      add: #viewParameterInstantiationButton
+										      width: self buttonHeight;
 										      yourself)
 								     height: self buttonHeight;
 								     yourself);
@@ -349,6 +355,12 @@ RMDTaskDefinitionBrowser >> initializePresenters [
 		                      help: 'Remove the selected action';
 		                      disable;
 		                      yourself.
+	removeActionMenuButton := self newButton
+		                          icon: self dropdownIcon;
+		                          action: [ self openRemoveActionMenu ];
+		                          help: 'Open a menu to remove actions';
+		                          enable;
+		                          yourself.
 	editActionButton := self newButton
 		                    icon: self editIcon;
 		                    action: [ self editAction ];
@@ -503,6 +515,12 @@ RMDTaskDefinitionBrowser >> newSourceWith: aPP2Node [
 		  yourself
 ]
 
+{ #category : 'operations' }
+RMDTaskDefinitionBrowser >> openRemoveActionMenu [
+
+	^ self removeActionMenu openWithSpecAtPointer
+]
+
 { #category : 'menus' }
 RMDTaskDefinitionBrowser >> parameterInstiationListMenu [
 
@@ -548,6 +566,22 @@ RMDTaskDefinitionBrowser >> removeAction [
 							updateSourceText ] ] ] ]
 ]
 
+{ #category : 'menus' }
+RMDTaskDefinitionBrowser >> removeActionMenu [
+
+	^ self newMenu addGroup: [ :group |
+		  group
+			  addItem: [ :item |
+				  item
+					  name: 'Remove the selected action';
+					  enabled: actionList selectedItem notNil;
+					  action: [ self removeAction ] ];
+			  addItem: [ :item |
+				  item
+					  name: 'Remove unused actions';
+					  action: [ self removeUnreferencedActions ] ] ]
+]
+
 { #category : 'operations' }
 RMDTaskDefinitionBrowser >> removeParameterInstantiation [
 
@@ -558,6 +592,21 @@ RMDTaskDefinitionBrowser >> removeParameterInstantiation [
 			self
 				updateParameterInstantiationList;
 				updateSourceText ] ]
+]
+
+{ #category : 'operations' }
+RMDTaskDefinitionBrowser >> removeUnreferencedActions [
+
+	(UIManager default confirm: 'Sure to remove all unused actions?')
+		ifTrue: [
+			self simulationModel ifNotNil: [ :model |
+				model removeUnreferencedActions.
+				self taskDefinition ifNotNil: #resetAction.
+				self
+					updateActionList;
+					updateActionButtons;
+					updateTemplateText;
+					updateSourceText ] ]
 ]
 
 { #category : 'accessing' }

@@ -1,6 +1,6 @@
-Extension { #name : #RMDUniformDistributionNode }
+Extension { #name : 'RMDUniformDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUniformDistributionNode >> evalIn: aRMDInterpreter [
 
 	| to from |
@@ -9,7 +9,7 @@ RMDUniformDistributionNode >> evalIn: aRMDInterpreter [
 	^ to - from * aRMDInterpreter random + from
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUniformDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := [

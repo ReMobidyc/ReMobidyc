@@ -1,11 +1,11 @@
-Extension { #name : #RMDAbstractAssignableAttributeVariableNode }
+Extension { #name : 'RMDAbstractAssignableAttributeVariableNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAbstractAssignableAttributeVariableNode >> assign: aNumber in: aRMDInterpreter [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAbstractAssignableAttributeVariableNode >> assign: aNumber toNewIndividual: anInteger in: aRMDInterpreter [
 
 	^ self subclassResponsibility

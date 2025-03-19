@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDInterpreter,
-	#superclass : #RMDAbstractInterpreter,
+	#name : 'RMDInterpreter',
+	#superclass : 'RMDAbstractInterpreter',
 	#instVars : [
 		'memory',
 		'libraries',
@@ -8,39 +8,41 @@ Class {
 		'runState',
 		'guard'
 	],
-	#category : #'ReMobidyc-Interpreter-Core'
+	#category : 'ReMobidyc-Interpreter-Core',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Core'
 }
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDInterpreter >> addLibraries: aCollectionOfDictionary [
 	libraries addAll: aCollectionOfDictionary
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDInterpreter >> addLibrary: aDictionary [
 	libraries add: aDictionary
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 RMDInterpreter >> announceSimulationPaused [
 
 	self announcer announce: (RMDSimulationPaused interpreter: self)
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 RMDInterpreter >> announceSimulationStarted [
 
 	self announcer announce: (RMDSimulationStarted interpreter: self)
 ]
 
-{ #category : #announcement }
+{ #category : 'announcement' }
 RMDInterpreter >> announceTimeChanged [
 
 	self announcer announce:
 		(RMDTimeChanged interpreter: self time: self time)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> applyMeta [
 
 	memory metaparameters ifNotNil: [ :meta |
@@ -48,7 +50,7 @@ RMDInterpreter >> applyMeta [
 			                   meta ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> basicStepSimulation [
 
 	^ (guard value: self) and: [ 
@@ -63,7 +65,7 @@ RMDInterpreter >> basicStepSimulation [
 			  true ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> bounceOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -84,24 +86,24 @@ RMDInterpreter >> bounceOutOfBoundsAnimats [
 				and: simulationModel north ] ]
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> byChanceOf: aNumber [
 	^ self random < aNumber
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> centerXOfPatch: anInteger [
 
 	^ (self xPatchOf: anInteger) - 0.5 * simulationModel patchLength
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> centerYOfPatch: anInteger [
 
 	^ (self yPatchOf: anInteger) - 0.5 * simulationModel patchLength
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> changeStage: animatString [
 
 	| animatDefinition newIndividual offset |
@@ -135,7 +137,7 @@ RMDInterpreter >> changeStage: animatString [
 	^ newIndividual
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> critical: aBlock [
 
 	^ runSemaphore critical: [ 
@@ -146,18 +148,18 @@ RMDInterpreter >> critical: aBlock [
 			  self announceSimulationPaused ] ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> deltaTime [
 
 	^ self simulationModel deltaTime
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> duration [
 	^ simulationModel duration
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> easts: aString ifAbsent: errorBlock [
 
 	memory eastOf: context location do: [ :id | 
@@ -172,13 +174,13 @@ RMDInterpreter >> easts: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #exporting }
+{ #category : 'exporting' }
 RMDInterpreter >> exportAPNG: aFileReference [
 
 	^ self exportAPNG: aFileReference extent: 250 @ 250
 ]
 
-{ #category : #exporting }
+{ #category : 'exporting' }
 RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 
 	| oldTime |
@@ -209,7 +211,7 @@ RMDInterpreter >> exportAPNG: aFileReference extent: aPoint [
 			writer close ] ] ] ensure: [ self time: oldTime ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> fastForward [
 
 	self critical: [ 
@@ -217,7 +219,7 @@ RMDInterpreter >> fastForward [
 		self announceTimeChanged ]
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	libraries
 		do:
@@ -225,19 +227,19 @@ RMDInterpreter >> functionAt: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> guard [
 
 	^ guard
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> guard: aBlock [
 
 	guard := aBlock
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> here [
 
 	| patchX patchY |
@@ -250,7 +252,7 @@ RMDInterpreter >> here [
 	^ memory patchAtXIndex: patchX yIndex: patchY
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> heres: aString [
 
 	^ memory
@@ -263,7 +265,7 @@ RMDInterpreter >> heres: aString [
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> individualsOf: aRMDAgentDefinitionNode do: aBlock [
 
 	aRMDAgentDefinitionNode isAnimatDefinitionNode ifTrue: [ 
@@ -278,7 +280,7 @@ RMDInterpreter >> individualsOf: aRMDAgentDefinitionNode do: aBlock [
 	^ self error: 'Unknown agent type'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDInterpreter >> initialize [
 
 	super initialize.
@@ -287,19 +289,19 @@ RMDInterpreter >> initialize [
 	guard := [ :interpreter | true ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> isRunningSimulation [
 
 	^ runState
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> kindName [
 
 	^ 'interpreter'
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> loadDataSources [
 
 	memory
@@ -317,30 +319,30 @@ RMDInterpreter >> loadDataSources [
 			timeStep: self deltaTime ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> memory [
 	^ memory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> memoryName [
 
 	^ memory ifNotNil: #name ifNil: [ '' ]
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDInterpreter >> metaparameters [
 
 	^ memory metaparameters
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDInterpreter >> metaparametersString [
 
 	^ memory metaparametersString
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> my: aString [
 
 	^ memory
@@ -353,7 +355,7 @@ RMDInterpreter >> my: aString [
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> my: aString ifAbsent: errorBlock [
 
 	^ memory
@@ -363,7 +365,7 @@ RMDInterpreter >> my: aString ifAbsent: errorBlock [
 		  ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> name [
 
 	^ String streamContents: [ :stream | 
@@ -374,7 +376,7 @@ RMDInterpreter >> name [
 			  nextPutAll: ']' ]
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 
 	| animatDefinition newIndividuals offset |
@@ -405,13 +407,13 @@ RMDInterpreter >> newIndividual: animatString quantity: anInteger [
 	^ newIndividuals
 ]
 
-{ #category : #'random numbers' }
+{ #category : 'random numbers' }
 RMDInterpreter >> nextSeed [
 
 	^ context nextSeed
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> norths: aString ifAbsent: errorBlock [
 
 	memory northOf: context location do: [ :id | 
@@ -426,13 +428,13 @@ RMDInterpreter >> norths: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> numberOfIndividuals [
 
 	^ memory numberOfAnimats
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> numberOfIndividualsInPatch: animatName [
 
 	| total |
@@ -453,7 +455,7 @@ RMDInterpreter >> numberOfIndividualsInPatch: animatName [
 	^ total
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> numberOfIndividualsInWorld: animatName [
 
 	| total |
@@ -463,7 +465,7 @@ RMDInterpreter >> numberOfIndividualsInWorld: animatName [
 	^ total
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> numberOfIndividualsOf: aRMDAgentDefinitionNode [
 
 	aRMDAgentDefinitionNode isWorldDefinitionNode ifTrue: [ ^ 1 ].
@@ -472,7 +474,7 @@ RMDInterpreter >> numberOfIndividualsOf: aRMDAgentDefinitionNode [
 	^ memory numberOfAnimats: aRMDAgentDefinitionNode identifier
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> objects: aString [
 
 	^ memory
@@ -485,77 +487,77 @@ RMDInterpreter >> objects: aString [
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> patchArea [
 
 	^ self simulationModel patchLength squared
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> patchAtXIndex: anInteger yIndex: anotherInteger [
 	^ memory patchAtXIndex: anInteger yIndex: anotherInteger
 ]
 
-{ #category : #directives }
+{ #category : 'directives' }
 RMDInterpreter >> patchLength [
 
 	^ self simulationModel patchLength
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> patchX: aNumber [
 
 	^ aNumber - self simulationModel west / simulationModel patchLength
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> patchY: aNumber [
 
 	^ aNumber - self simulationModel south / simulationModel patchLength
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> patchesDo: aBlock [
 
 	memory patchesDo: aBlock
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> pauseSimulation [
 
 	runState := false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> performTasks [
 	simulationModel tasksDo: [ :task | task evalIn: self ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> progress [
 
 	^ self time / self duration
 ]
 
-{ #category : #'random numbers' }
+{ #category : 'random numbers' }
 RMDInterpreter >> random [
 
 	^ context random
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDInterpreter >> randomSeed [
 
 	^ memory randomSeed
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> read: anInteger ifAbsent: errorBlock [
 
 	^ memory at: anInteger ifAbsent: errorBlock
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 
 	| numberOrExpression |
@@ -567,13 +569,13 @@ RMDInterpreter >> readUtility: aString ifAbsent: errorBlock [
 		  context utilityAt: aString put: (numberOrExpression evalIn: self) ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> reloadMemory [
 
 	memory reload
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> removeOutOfBoundsAnimats [
 
 	simulationModel animatDefinitionsDo: [ :animatDef | 
@@ -593,17 +595,17 @@ RMDInterpreter >> removeOutOfBoundsAnimats [
 				ifFalse: [ self terminate: individual animat: animatDef ] ] ]
 ]
 
-{ #category : #'accessing - repository' }
+{ #category : 'accessing - repository' }
 RMDInterpreter >> repositoryName [
 	^ 'local'
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDInterpreter >> resetTasks [
 	simulationModel tasksDo: [ :task | task resetAction ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> rewind [
 
 	self critical: [ 
@@ -611,13 +613,13 @@ RMDInterpreter >> rewind [
 		self announceTimeChanged ]
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDInterpreter >> runId [
 
 	^ memory runId
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 
 	[ 
@@ -627,14 +629,14 @@ RMDInterpreter >> runSimulationOnError: errorHandlerBlock [
 			do: errorHandlerBlock ] ] forkAt: Processor userBackgroundPriority 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDInterpreter >> setMemory: aRMDMemory [
 
 	memory := aRMDMemory.
 	self applyMeta
 ]
 
-{ #category : #'random numbers' }
+{ #category : 'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
@@ -646,7 +648,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger1 and: anInteger2 task: aRM
 				 aRMDTaskDefinitionNode) }
 ]
 
-{ #category : #'random numbers' }
+{ #category : 'random numbers' }
 RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNode [
 
 	context randomSeedWithHash: { 
@@ -657,7 +659,7 @@ RMDInterpreter >> setupRandomForIndividual: anInteger task: aRMDTaskDefinitionNo
 				 aRMDTaskDefinitionNode) }
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> setupSimulation [
 
 	self critical: [
@@ -672,13 +674,13 @@ RMDInterpreter >> setupSimulation [
 		self announceTimeChanged ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> shortName [
 
 	^ self runId printString, ':', self metaparametersString
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> souths: aString ifAbsent: errorBlock [
 
 	memory southOf: context location do: [ :id | 
@@ -693,24 +695,24 @@ RMDInterpreter >> souths: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #'accessing - libraries' }
+{ #category : 'accessing - libraries' }
 RMDInterpreter >> standardLibrary [
 	^ self class standardLibrary 
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> stepSimulation [
 
 	self critical: [ ^ self basicStepSimulation ]
 ]
 
-{ #category : #'random numbers' }
+{ #category : 'random numbers' }
 RMDInterpreter >> taskHashFor: aRMDTaskDefinitionNode [
 
 	^ simulationModel taskDefinitions indexOf: aRMDTaskDefinitionNode
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> terminate: aString [
 
 	^ aString
@@ -720,7 +722,7 @@ RMDInterpreter >> terminate: aString [
 		  self terminate: context subject animat: context subjectDefinition ]
 ]
 
-{ #category : #'animat operations' }
+{ #category : 'animat operations' }
 RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 
 	memory
@@ -731,25 +733,25 @@ RMDInterpreter >> terminate: anInteger animat: aRMDAnimatDefinitionNode [
 	:slot | memory nextAt: slot put: nil ]
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> tick [
 
 	memory tick
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> ticks [
 
 	^ memory time
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> time [
 
 	^ memory time * self deltaTime
 ]
 
-{ #category : #timing }
+{ #category : 'timing' }
 RMDInterpreter >> time: aNumber [
 
 	| newTime lastTime |
@@ -767,25 +769,25 @@ RMDInterpreter >> time: aNumber [
 	self announceTimeChanged
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> typecheck [
 
 	self critical: [ simulationModel typecheck ]
 ]
 
-{ #category : #simulating }
+{ #category : 'simulating' }
 RMDInterpreter >> waitForPause [
 
 	[ self isRunningSimulation ] whileTrue: [ self waitingTime wait ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDInterpreter >> waitingTime [
 
 	^ 200 milliSecond
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> wests: aString ifAbsent: errorBlock [
 
 	memory westOf: context location do: [ :id | 
@@ -800,7 +802,7 @@ RMDInterpreter >> wests: aString ifAbsent: errorBlock [
 	^ errorBlock value
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger1 definition: aRMDAnimatDefinitionNode1 object: anInteger2 definition: aRMDAnimatDefinitionNode2 taskHash: hashInteger do: aBlock [
 
 	| newContext |
@@ -829,7 +831,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 	^ self withContext: newContext do: aBlock
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInteger definition: aRMDAnimatDefinitionNode taskHash: anotherInteger do: aBlock [
 
 	| newContext |
@@ -862,7 +864,7 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 	^ self withContext: newContext do: aBlock
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
@@ -876,7 +878,7 @@ RMDInterpreter >> withInitializerContextWithSubject: anInteger definition: aRMDA
 		  do: aBlock
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withObserverContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
@@ -886,7 +888,7 @@ RMDInterpreter >> withObserverContextWithSubject: anInteger definition: aRMDAgen
 		  do: aBlock
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withObserverSubContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
@@ -896,7 +898,7 @@ RMDInterpreter >> withObserverSubContextWithSubject: anInteger definition: aRMDA
 		  do: aBlock
 ]
 
-{ #category : #'context controls' }
+{ #category : 'context controls' }
 RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aRMDAgentDefinitionNode do: aBlock [
 
 	^ self
@@ -911,13 +913,13 @@ RMDInterpreter >> withSubInitializerContextWithSubject: anInteger definition: aR
 		  do: aBlock
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> world [
 
 	^ memory world
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> worlds: aString [
 
 	^ memory
@@ -930,51 +932,51 @@ RMDInterpreter >> worlds: aString [
 				  (RMDAttributeVariableNode identifier: aString agent: nil) ]
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> write: aFloat to: anInteger [
 
 	^ memory at: anInteger put: aFloat
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> write: aNumber toUtility: aString [
 
 	^ context utilityAt: aString put: aNumber
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> writeDelta: aFloat to: anInteger [
 
 	memory nextDeltaAt: anInteger add: aFloat.
 	^ aFloat
 ]
 
-{ #category : #'variable access' }
+{ #category : 'variable access' }
 RMDInterpreter >> writeNext: aFloat to: anInteger [
 
 	memory nextAt: anInteger put: aFloat.
 	^ aFloat
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> xIndexOfPatch: anInteger [
 
 	^ anInteger - memory patch // memory patchSize + 1
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> xPatchOf: anInteger [
 
 	^ memory xPatchOf: anInteger
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> yIndexOfPatch: anInteger [
 
 	^ anInteger - memory patch // memory patchSize \\ memory xPatches + 1
 ]
 
-{ #category : #'space access' }
+{ #category : 'space access' }
 RMDInterpreter >> yPatchOf: anInteger [
 
 	^ memory yPatchOf: anInteger

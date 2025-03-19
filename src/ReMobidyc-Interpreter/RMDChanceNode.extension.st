@@ -1,12 +1,12 @@
-Extension { #name : #RMDChanceNode }
+Extension { #name : 'RMDChanceNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDChanceNode >> evalIn: aRMDInterpreter [
 
 	^ aRMDInterpreter random < (probability evalIn: aRMDInterpreter)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDChanceNode >> typecheckIn: aRMDInterpreter [
 
 	[ 

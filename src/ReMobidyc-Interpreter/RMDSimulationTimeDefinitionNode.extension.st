@@ -1,6 +1,6 @@
-Extension { #name : #RMDSimulationTimeDefinitionNode }
+Extension { #name : 'RMDSimulationTimeDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDSimulationTimeDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	| type |

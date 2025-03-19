@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDContext,
-	#superclass : #Object,
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#name : 'RMDContext',
+	#superclass : 'Object',
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDContext >> checkRecursion: anObject do: aBlock onRecursion: errorBlock [
 
 	| context |

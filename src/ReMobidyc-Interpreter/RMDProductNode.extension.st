@@ -1,6 +1,6 @@
-Extension { #name : #RMDProductNode }
+Extension { #name : 'RMDProductNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDProductNode >> evalIn: aRMDInterpreter [
 
 	^ (expression1 evalIn: aRMDInterpreter)
@@ -8,7 +8,7 @@ RMDProductNode >> evalIn: aRMDInterpreter [
 		  RMDNotComputableError signal: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDProductNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := (expression1 typecheckIn: aRMDInterpreter)

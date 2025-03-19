@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDMeanFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDMeanFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> expectedNumArgs [
 
 	^ nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDMeanFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	| type |
@@ -20,27 +22,27 @@ RMDMeanFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApply
 	^ type
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> value: aNumber [
 	^ aNumber
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> value: aNumber1 value: aNumber2 [
 	^ (aNumber1 + aNumber2) / 2.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
 	^ (aNumber1 + aNumber2 + aNumber3) / 3.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
 	^ (aNumber1 + aNumber2 + aNumber3 + aNumber4) / 4.0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMeanFunction >> valueWithArguments: anArrayOfNumber [
 	anArrayOfNumber ifEmpty: [ ^ self numArgsError ].
 	^ anArrayOfNumber sum / anArrayOfNumber size
