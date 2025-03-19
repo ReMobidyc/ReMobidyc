@@ -97,6 +97,15 @@ RMDPresenter >> chartIcon [
 	^ self lineChartIcon
 ]
 
+{ #category : 'ui requests' }
+RMDPresenter >> confirm: queryString label: titleString [
+
+	^ self application newConfirm
+		  title: titleString;
+		  label: queryString;
+		  openModal
+]
+
 { #category : 'icons' }
 RMDPresenter >> downIcon [
 	^ Smalltalk ui icons down

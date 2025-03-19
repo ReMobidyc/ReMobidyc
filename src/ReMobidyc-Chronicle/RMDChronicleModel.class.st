@@ -4,16 +4,33 @@ Class {
 	#traits : 'THiDePersistency',
 	#classTraits : 'THiDePersistency classTrait',
 	#instVars : [
-		'#simulationModel => HiDePersistencySlot'
+		'#simulationModel => HiDePersistencySlot loader: #hideLoadSimulationModel',
+		'#charts => HiDePersistencySlot loader: #hideLoadCharts'
 	],
 	#category : 'ReMobidyc-Chronicle',
 	#package : 'ReMobidyc-Chronicle'
 }
 
+{ #category : 'adding' }
+RMDChronicleModel >> addChart: aForm [
+
+	self hideMetadata addTag: 'chart'.
+	charts
+		ifNil: [ charts := Array with: aForm ]
+		ifNotNil: [ charts := charts copyWith: aForm ].
+	^ aForm
+]
+
 { #category : 'accessing' }
 RMDChronicleModel >> authors [
 
 	^ hideMetadata at: 'authors' ifAbsent: [ '' ]
+]
+
+{ #category : 'accessing' }
+RMDChronicleModel >> charts [
+
+	^ charts ifNil: [ #(  ) ]
 ]
 
 { #category : 'accessing' }
@@ -51,12 +68,76 @@ RMDChronicleModel >> hasTag: aString [
 { #category : 'hideho-operations' }
 RMDChronicleModel >> hideLoad: aFileReference [
 
-	aFileReference / 'model' ifExists: [ :ref |
-		simulationModel := RMDSimulationModel new importModel: ref ]
+	"self
+		hideLoadSimulationModel: aFileReference;
+		hideLoadCharts: aFileReference"
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideLoadCharts [
+
+	self hideBaseDirectoryDo: [ :ref | self hideLoadCharts: ref ]
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideLoadCharts: aFileReference [
+
+	charts := aFileReference / 'charts'
+		          ifExists: [ :directory |
+			          (((Array streamContents: [ :stream |
+				             (directory filesMatching: '*.png') do: [ :fileRef |
+					             stream nextPut:
+						             (fileRef basename withoutExtension asNumber ifNil: [
+							              0 ]) -> (Form fromFileNamed: fileRef) ] ])
+				            asSortedCollection: #key ascending) collect: #value)
+				          ifNotEmpty: #asArray
+				          ifEmpty: [ nil ] ]
+		          ifAbsent: [ nil ]
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideLoadSimulationModel [
+
+	self hideBaseDirectoryDo: [ :ref | self hideLoadSimulationModel: ref ]
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideLoadSimulationModel: aFileReference [
+
+	simulationModel := aFileReference / 'model'
+		                   ifExists: [ :ref |
+		                   RMDSimulationModel new importModel: ref ]
+		                   ifAbsent: [ nil ]
 ]
 
 { #category : 'hideho-operations' }
 RMDChronicleModel >> hideSave: aFileReference [
+
+	self
+		hideSaveSimulationModel: aFileReference;
+		hideSaveCharts: aFileReference
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideSaveCharts [
+
+	self hideBaseDirectoryDo: [ :ref | self hideSaveCharts: ref ]
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideSaveCharts: aFileReference [
+
+	charts ifNotNil: [
+		| dir |
+		dir := (aFileReference / 'charts')
+			       ensureCreateDirectory;
+			       deleteAllChildren.
+		charts doWithIndex: [ :form :index |
+			form writePNGFileNamed: dir / index printString , 'png' ] ]
+]
+
+{ #category : 'hideho-operations' }
+RMDChronicleModel >> hideSaveSimulationModel: aFileReference [
 
 	simulationModel ifNotNil: [
 		simulationModel exportModel: ((aFileReference / 'model')

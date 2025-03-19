@@ -25,7 +25,7 @@ Class {
 		'visualizationImage',
 		'showPopulationChartRadioButton',
 		'showVisualMapRadioButton',
-		'chronicleModel'
+		'saved'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -87,9 +87,9 @@ RMDExperimentarium class >> defaultLayout [
 { #category : 'instance creation' }
 RMDExperimentarium class >> metaInterpreter: aRMDInterpreter [
 
+	aRMDInterpreter recordInChronicle.
 	^ self new
 		  setMetaInterpreter: aRMDInterpreter;
-		  recordInChronicle;
 		  yourself
 ]
 
@@ -144,6 +144,7 @@ RMDExperimentarium >> initialize [
 
 	super initialize.
 	validated := false.
+	saved := false.
 	currentPopulation := Dictionary new.
 	maxPopulation := Dictionary new.
 	minPopulation := Dictionary new.
@@ -283,10 +284,22 @@ RMDExperimentarium >> interpreterDo: aBlock [
 		ifNotNil: aBlock
 ]
 
+{ #category : 'testing' }
+RMDExperimentarium >> isRemoved [
+
+	^ metaInterpreter isNil
+]
+
 { #category : 'api' }
 RMDExperimentarium >> isRunningSimulation [
 
 	^ metaInterpreter isRunningSimulation
+]
+
+{ #category : 'testing' }
+RMDExperimentarium >> isSaved [
+
+	^ saved
 ]
 
 { #category : 'testing' }
@@ -327,6 +340,15 @@ RMDExperimentarium >> modelName [
 		  ifNil: [ 'noname' ]
 ]
 
+{ #category : 'operations' }
+RMDExperimentarium >> okToClose [
+
+	(self
+		 confirm: 'Do you want to remove the run data?'
+		 label: 'Experimentarium') ifTrue: [ self removeRun ].
+	^ true
+]
+
 { #category : 'api' }
 RMDExperimentarium >> pauseSimulation [
 
@@ -357,19 +379,6 @@ RMDExperimentarium >> printNat: anInteger [
 					  str ]
 				  ifFalse: [ '0' ] ]
 		  ifNil: [ '-' ]
-]
-
-{ #category : 'operations' }
-RMDExperimentarium >> recordInChronicle [
-
-	chronicleModel
-		ifNil: [
-			metaInterpreter ifNotNil: [ :interpreter |
-				chronicleModel := interpreter simulationModel recordInChronicle:
-					                  (interpreter modelPath ifNotNil: #basename).
-				chronicleModel hideMetadata addTag: 'run'.
-				chronicleModel hideSave ] ]
-		ifNotNil: [ :cm | cm hideSave ]
 ]
 
 { #category : 'operations' }
@@ -421,6 +430,7 @@ RMDExperimentarium >> saveRunAs [
 					^ UIManager default alert:
 						  'A run named "' , name , '" already exists.' ].
 				modelPath moveTo: ref.
+				saved := true.
 				self setMetaInterpreter: (RMDMetaInterpreter onModelPath: ref) ] ] ]
 ]
 

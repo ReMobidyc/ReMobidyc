@@ -9,7 +9,8 @@ Class {
 		'table',
 		'exportCSVButton',
 		'reloadButton',
-		'baseRowIndex'
+		'baseRowIndex',
+		'chronicleModel'
 	],
 	#category : 'ReMobidyc-Spec2-Tabulars',
 	#package : 'ReMobidyc-Spec2',
@@ -69,6 +70,27 @@ RMDTabular >> canOpenAnalysis [
 
 	^ metaInterpreter notNil and: [ 
 		  metaInterpreter context isForFileMemory ]
+]
+
+{ #category : 'operations' }
+RMDTabular >> chronicleChart: aRSCanvas [
+
+	self chronicleModel ifNotNil: [ :cm |
+		cm
+			addChart: (RSAthensMorph new
+					 renderer: RSAthensRenderer new;
+					 canvas: aRSCanvas;
+					 extent: 600 @ 600;
+					 asForm);
+			hideSaveCharts;
+			hideSaveMetadata ]
+]
+
+{ #category : 'accessing' }
+RMDTabular >> chronicleModel [
+
+	^ chronicleModel ifNil: [
+		  chronicleModel := metaInterpreter ifNotNil: #recordInChronicle ]
 ]
 
 { #category : 'private' }
