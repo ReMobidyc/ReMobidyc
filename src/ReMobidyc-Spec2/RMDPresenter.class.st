@@ -106,6 +106,13 @@ RMDPresenter >> confirm: queryString label: titleString [
 		  openModal
 ]
 
+{ #category : 'accessing' }
+RMDPresenter >> currentWorld [
+
+	self withAdapterDo: [ :a | a widgetDo: [ :w | ^ w currentWorld ] ].
+	^ super currentWorld
+]
+
 { #category : 'icons' }
 RMDPresenter >> downIcon [
 	^ Smalltalk ui icons down

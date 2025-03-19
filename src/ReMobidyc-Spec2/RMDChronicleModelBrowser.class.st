@@ -14,7 +14,8 @@ Class {
 		'searchField',
 		'updateButton',
 		'modelerButton',
-		'tagButton'
+		'tagButton',
+		'openChartsButton'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -60,6 +61,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 						    add: ' ' asPresenter expand: false;
 						    add: #modelerButton width: self buttonHeight;
 						    add: #tagButton width: self buttonHeight;
+						    add: #openChartsButton width: self buttonHeight;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -176,6 +178,12 @@ RMDChronicleModelBrowser >> initializePresenters [
 		             action: [ self editTags ];
 		             disable;
 		             yourself.
+	openChartsButton := self newButton
+		                    icon: self chartIcon;
+		                    help: 'Open charts';
+		                    action: [ self openCharts ];
+		                    disable;
+		                    yourself.
 	self chronicleChanged
 ]
 
@@ -192,6 +200,15 @@ RMDChronicleModelBrowser >> initializeWindow: aSpWindowPresenter [
 RMDChronicleModelBrowser >> nameFieldChanged [
 
 	self updateModelList
+]
+
+{ #category : 'operations' }
+RMDChronicleModelBrowser >> openCharts [
+
+	modelList selectedItem ifNotNil: [ :chronicleModel |
+		chronicleModel charts ifNotEmpty: [ :charts |
+			(RMDScrollPresenter with: (RMDChartsViewer withAll: charts)) open
+				title: 'Charts for ' , chronicleModel name ] ]
 ]
 
 { #category : 'operations' }
@@ -220,12 +237,14 @@ RMDChronicleModelBrowser >> selectedModelChanged [
 RMDChronicleModelBrowser >> updateButtons [
 
 	modelList selectedItem
-		ifNotNil: [
+		ifNotNil: [ :chronicleModel |
 			modelerButton enable.
-			tagButton enable ]
+			tagButton enable.
+			openChartsButton enabled: (chronicleModel hasTag: 'chart') ]
 		ifNil: [
 			modelerButton disable.
-			tagButton disable ]
+			tagButton disable.
+			openChartsButton disable ]
 ]
 
 { #category : 'updates' }

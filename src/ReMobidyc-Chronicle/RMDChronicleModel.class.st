@@ -87,7 +87,7 @@ RMDChronicleModel >> hideLoadCharts: aFileReference [
 			          (((Array streamContents: [ :stream |
 				             (directory filesMatching: '*.png') do: [ :fileRef |
 					             stream nextPut:
-						             (fileRef basename withoutExtension asNumber ifNil: [
+						             (fileRef withoutExtension basename asNumber ifNil: [
 							              0 ]) -> (Form fromFileNamed: fileRef) ] ])
 				            asSortedCollection: #key ascending) collect: #value)
 				          ifNotEmpty: #asArray
