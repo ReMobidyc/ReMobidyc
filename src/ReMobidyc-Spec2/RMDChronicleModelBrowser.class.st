@@ -27,7 +27,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 
 	^ SpBoxLayout newVertical
 		  add: (SpPanedLayout newHorizontal
-				   positionOfSlider: 0.7;
+				   positionOfSlider: 0.6;
 				   add: (SpBoxLayout newVertical
 						    add: 'Search by Metadata' asPresenter expand: false;
 						    add: (SpGridLayout new
@@ -53,7 +53,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 						    add: #tagList;
 						    yourself);
 				   yourself)
-		  height: self buttonHeight * 7 + 5;
+		  height: self labelHeight * 2 + (self inputTextHeight * 5) + 2;
 		  add: (SpBoxLayout newVertical
 				   add: #modelList;
 				   add: (SpBoxLayout newHorizontal
@@ -207,8 +207,8 @@ RMDChronicleModelBrowser >> openCharts [
 
 	modelList selectedItem ifNotNil: [ :chronicleModel |
 		chronicleModel charts ifNotEmpty: [ :charts |
-			(RMDScrollPresenter with: (RMDChartsViewer withAll: charts)) open
-				title: 'Charts for ' , chronicleModel name ] ]
+			(RMDChartsViewer withAll: charts) open title:
+				'Charts for ' , chronicleModel name ] ]
 ]
 
 { #category : 'operations' }

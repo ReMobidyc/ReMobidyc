@@ -26,7 +26,7 @@ RMDChartsViewer class >> withAll: aCollectionOfForm [
 RMDChartsViewer >> defaultLayout [
 
 	| innerLayout |
-	innerLayout := SpBoxLayout newVertical.
+	innerLayout := SpBoxLayout newHorizontal.
 	forms ifNotNil: [
 		forms do: [ :form |
 			innerLayout
@@ -34,7 +34,7 @@ RMDChartsViewer >> defaultLayout [
 				expand: false ] ].
 	^ SpBoxLayout newVertical
 		  add: (scrollableLayout := (SpScrollableLayout with: innerLayout)
-				                       hAlignCenter);
+				                       vAlignCenter);
 		  add: (SpBoxLayout newHorizontal
 				   add: panButton expand: false;
 				   add: fitButton expand: false;
@@ -85,7 +85,17 @@ RMDChartsViewer >> initializePresenters [
 	panButton := self newButton
 		             label: '-';
 		             action: [ self pan ];
-		             yourself
+		             yourself.
+	self whenBuiltDo: [ self fit ]
+]
+
+{ #category : 'initialization' }
+RMDChartsViewer >> initializeWindow: aSpWindowPresenter [
+
+	super initializeWindow: aSpWindowPresenter.
+	aSpWindowPresenter
+		initialExtent: 1000 @ 500;
+		title: 'Charts'
 ]
 
 { #category : 'operations' }
