@@ -12,33 +12,6 @@ BaselineOfReMobidyc class >> codename [
 ]
 
 { #category : 'utilities' }
-BaselineOfReMobidyc class >> deploy [
-
-	<script>
-	RMDMetadata flushCurrentAuthor.
-	RMDRepositoryDirectory flushCurrent.
-	GraphicFontSettings setFontsToStyleNamed: #small.
-	"Smalltalk cleanUp: true except: {  } confirming: false."
-	MCRepositoryGroup allSubInstancesDo: [ :group |
-		group repositories do: [ :repo | group removeRepository: repo ] ].
-	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store |
-		store allCredentials do: [ :each | each removeFrom: store ] ].
-	self currentWorld closeAllWindowsDiscardingChanges.
-	Deprecation
-		raiseWarning: false;
-		showWarning: false.
-	NoChangesLog install.
-	"NoPharoFilesOpener install."
-	FFICompilerPlugin install.
-	Stdio useNullStreams.
-	MCCacheRepository uniqueInstance disable.
-	EpMonitor reset.
-	self initializeResources.
-	5 timesRepeat: [ Smalltalk garbageCollect ]
-]
-
-{ #category : 'utilities' }
 BaselineOfReMobidyc class >> ensureIcebergRepository [
 
 	^ IceRepository repositories
@@ -134,6 +107,16 @@ BaselineOfReMobidyc class >> installFonts [
 			FreeTypeFontProvider current buildFamilies.
 			StandardFonts setAllStandardFontsTo:
 				(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installIcons [
+
+	<script: 'BaselineOfReMobidyc installIcons'>
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'resources' / 'icons' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'icons')
+				ensureCreateDirectory ]
 ]
 
 { #category : 'scripts' }
@@ -373,5 +356,6 @@ BaselineOfReMobidyc >> postLoad [
 		initializeResources;
 		ensureStandardRepository;
 		installFonts;
+		installIcons;
 		installDocuments
 ]

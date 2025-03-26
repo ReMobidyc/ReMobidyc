@@ -11,6 +11,33 @@ ReMobidycCommandLineHandler class >> commandName [
 	^ 're:mobidyc'
 ]
 
+{ #category : 'utilities' }
+ReMobidycCommandLineHandler class >> deploy [
+
+	<script>
+	RMDMetadata flushCurrentAuthor.
+	RMDRepositoryDirectory flushCurrent.
+	GraphicFontSettings setFontsToStyleNamed: #small.
+	"Smalltalk cleanUp: true except: {  } confirming: false."
+	MCRepositoryGroup allSubInstancesDo: [ :group |
+		group repositories do: [ :repo | group removeRepository: repo ] ].
+	IceRepository registry removeAll.
+	IceCredentialStore current in: [ :store |
+		store allCredentials do: [ :each | each removeFrom: store ] ].
+	self currentWorld closeAllWindowsDiscardingChanges.
+	Deprecation
+		raiseWarning: false;
+		showWarning: false.
+	NoChangesLog install.
+	"NoPharoFilesOpener install."
+	FFICompilerPlugin install.
+	Stdio useNullStreams.
+	MCCacheRepository uniqueInstance disable.
+	EpMonitor reset.
+	BaselineOfReMobidyc initializeResources.
+	5 timesRepeat: [ Smalltalk garbageCollect ]
+]
+
 { #category : 'accessing' }
 ReMobidycCommandLineHandler class >> generate [
 
@@ -33,7 +60,7 @@ ReMobidycCommandLineHandler class >> generate [
 					  / 'images' / 'remobidyc-disk.icns')).
 				(#CommandLineHandler -> self commandName).
 				(#CompanyName -> 're:mobidyc project').
-				(#DeployPharoExpression -> 'BaselineOfReMobidyc deploy') }
+				(#DeployPharoExpression -> 'ReMobidycCommandLineHandler deploy') }
 				asDictionary;
 		outputDirectory: FileLocator home / 'src' / 'ReMobidyc' / 'build';
 		targetPlatforms:
@@ -45,8 +72,7 @@ ReMobidycCommandLineHandler class >> generate [
 			(IceRepository repositoryNamed: 'ReMobidyc') location / 'docs'
 			/ 'cheatsheets'
 		destination: 'pharo-local/ReMobidyc/';
-		addExternalDirectory:
-			FileLocator localDirectory / 'ReMobidyc'
+		addExternalDirectory: FileLocator localDirectory / 'ReMobidyc'
 		destination: 'pharo-local/';
 		generate
 ]
@@ -54,9 +80,21 @@ ReMobidycCommandLineHandler class >> generate [
 { #category : 'activation' }
 ReMobidycCommandLineHandler >> activate [
 
-	self installMenu.
+	self
+		installMenu;
+		installIcon.
 	BaselineOfReMobidyc ensureStandardRepository.
 	RMDLauncher new open
+]
+
+{ #category : 'utilities' }
+ReMobidycCommandLineHandler >> installIcon [
+
+	self currentWorld worldState worldRenderer ifNotNil: [ :renderer |
+		renderer windowTitle: 're:mobidyc'.
+		renderer osWindow icon: (Form fromFileNamed:
+				 FileLocator localDirectory / 'ReMobidyc' / 'icons'
+				 / 'remobidyc-icon.png') ]
 ]
 
 { #category : 'utilities' }
