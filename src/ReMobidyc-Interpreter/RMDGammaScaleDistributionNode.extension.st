@@ -1,13 +1,13 @@
-Extension { #name : #RMDGammaScaleDistributionNode }
+Extension { #name : 'RMDGammaScaleDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaScaleDistributionNode >> evalIn: aRMDInterpreter [
 
 	^ (super evalIn: aRMDInterpreter)
 	  * (scaleExpression evalIn: aRMDInterpreter)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGammaScaleDistributionNode >> typecheckIn: aRMDInterpreter [
 
 	super typecheckIn: aRMDInterpreter.

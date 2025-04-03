@@ -1,6 +1,6 @@
-Extension { #name : #RMDDensityOfIndividualsInRadiusDirectiveNode }
+Extension { #name : 'RMDDensityOfIndividualsInRadiusDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInRadiusDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| r count |
@@ -9,7 +9,7 @@ RMDDensityOfIndividualsInRadiusDirectiveNode >> evalIn: aRMDInterpreter [
 	^ count asFloat / r squared / Float pi
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInRadiusDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	[ (radius typecheckIn: aRMDInterpreter) unify: RMDType length ]

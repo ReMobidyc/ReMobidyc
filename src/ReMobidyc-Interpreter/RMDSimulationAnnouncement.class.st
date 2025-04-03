@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDSimulationAnnouncement,
-	#superclass : #Announcement,
+	#name : 'RMDSimulationAnnouncement',
+	#superclass : 'Announcement',
 	#instVars : [
 		'interpreter'
 	],
-	#category : #'ReMobidyc-Interpreter-Announcements'
+	#category : 'ReMobidyc-Interpreter-Announcements',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Announcements'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationAnnouncement class >> interpreter: aRMDInterpreter [
 
 	^ self new
@@ -15,19 +17,19 @@ RMDSimulationAnnouncement class >> interpreter: aRMDInterpreter [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationAnnouncement >> interpreter [
 
 	^ interpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationAnnouncement >> interpreter: aRMDInterpreter [
 
 	interpreter := aRMDInterpreter
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 RMDSimulationAnnouncement >> printOn: aStream [
 
 	aStream

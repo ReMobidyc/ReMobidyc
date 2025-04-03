@@ -1,20 +1,22 @@
 Class {
-	#name : #RMDTypeUnificationError,
-	#superclass : #RMDError,
+	#name : 'RMDTypeUnificationError',
+	#superclass : 'RMDError',
 	#instVars : [
 		'type1',
 		'type2'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTypeUnificationError class >> on: aRMDType and: anotherRMDType [
 
 	^ self type1: aRMDType type2: anotherRMDType
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDTypeUnificationError class >> type1: aRMDType type2: anotherRMDType [
 	^ self new
 		type1: aRMDType;
@@ -23,7 +25,7 @@ RMDTypeUnificationError class >> type1: aRMDType type2: anotherRMDType [
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDTypeUnificationError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
@@ -34,27 +36,27 @@ RMDTypeUnificationError >> composeMessageText [
 		  stream nextPutAll: '.' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeUnificationError >> defaultAction [
 	^ UnhandledError signalForException: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeUnificationError >> type1 [
 	^ type1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeUnificationError >> type1: aRMDType [
 	type1 := aRMDType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeUnificationError >> type2 [
 	^ type2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypeUnificationError >> type2: aRMDType [
 	type2 := aRMDType
 ]

@@ -1,25 +1,25 @@
-Extension { #name : #RMDAttributeVariableNode }
+Extension { #name : 'RMDAttributeVariableNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> addressIn: aRMDInterpreter [
 
 	^ (self agentAddressIn: aRMDInterpreter)
 	  + (self offsetIn: aRMDInterpreter)
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> agentAddressIn: aRMDInterpreter [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> agentDefinitionIn: aRMDInterpreter [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> evalIn: aRMDInterpreter [
 
 	| address |
@@ -29,7 +29,7 @@ RMDAttributeVariableNode >> evalIn: aRMDInterpreter [
 		  ifAbsent: [ RMDAddressError signal: self address: address ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> offsetIn: aRMDInterpreter [
 
 	^ offset ifNil: [ 
@@ -38,7 +38,7 @@ RMDAttributeVariableNode >> offsetIn: aRMDInterpreter [
 			            ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeVariableNode >> typecheckIn: aRMDInterpreter [
 
 	^ type := aRMDInterpreter

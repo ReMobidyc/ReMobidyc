@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDStorageError,
-	#superclass : #RMDError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDStorageError',
+	#superclass : 'RMDError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDStorageError >> composeMessageText [
 
 	^ 'Storage error.'

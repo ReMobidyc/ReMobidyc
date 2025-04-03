@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDSquareRootFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDSquareRootFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSquareRootFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSquareRootFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -23,7 +25,7 @@ RMDSquareRootFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRM
 		  ** (1 / 2)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSquareRootFunction >> value: aNumber [
 
 	^ aNumber sqrt

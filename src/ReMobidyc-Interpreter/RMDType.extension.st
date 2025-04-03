@@ -1,6 +1,6 @@
-Extension { #name : #RMDType }
+Extension { #name : 'RMDType' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDType >> typecheckIn: aRMDInterpreter [
 	^ self
 ]

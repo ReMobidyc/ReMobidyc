@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDTypecheckContext,
-	#superclass : #RMDContext,
+	#name : 'RMDTypecheckContext',
+	#superclass : 'RMDContext',
 	#instVars : [
 		'subjectDefinition',
 		'objectDefinition',
@@ -12,22 +12,24 @@ Class {
 		'attributes',
 		'patchDefinition'
 	],
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> action [
 	^ action
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> action: aRMDActionDefinitionNode [
 
 	action := aRMDActionDefinitionNode.
 	self loadUtilityDefinitions: action utilityDefinitions
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDTypecheckContext >> initialize [
 	super initialize.
 	utilities := Dictionary new.
@@ -35,7 +37,7 @@ RMDTypecheckContext >> initialize [
 	attributes := Dictionary new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> loadUtilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	utilities := Dictionary new:
@@ -44,7 +46,7 @@ RMDTypecheckContext >> loadUtilityDefinitions: anArrayOfRMDUtilityDefinitionNode
 		utilities at: def variable identifier put: def ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> newDefinition: aRMDAnimatDefinitionNode [
 
 	| dict |
@@ -55,7 +57,7 @@ RMDTypecheckContext >> newDefinition: aRMDAnimatDefinitionNode [
 	attributes at: 'new' put: dict
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> object: aString [
 
 	objectDefinition ifNotNil: [ 
@@ -66,7 +68,7 @@ RMDTypecheckContext >> object: aString [
 		attributes at: aString uncapitalized put: dict ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
 
 	| dict |
@@ -78,17 +80,17 @@ RMDTypecheckContext >> object: aString definition: aRMDAnimatDefinitionNode [
 		attributes at: aString uncapitalized put: dict ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> objectDefinition [
 	^ objectDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> patchDefinition [
 	^ patchDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> patchDefinition: aRMDPatchDefinitionNode [
 	| dict |
 	patchDefinition := aRMDPatchDefinitionNode.
@@ -102,12 +104,12 @@ RMDTypecheckContext >> patchDefinition: aRMDPatchDefinitionNode [
 	attributes at: 'north' put: dict
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> subjectDefinition [
 	^ subjectDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
 
 	aRMDAgentDefinitionNode ifNotNil: [ 
@@ -119,7 +121,7 @@ RMDTypecheckContext >> subjectDefinition: aRMDAgentDefinitionNode [
 		attributes at: nil put: dict ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> typeAt: aString ifAbsentPut: errorBlock [
 
 	^ self
@@ -128,13 +130,13 @@ RMDTypecheckContext >> typeAt: aString ifAbsentPut: errorBlock [
 		  onRecursion: [ RMDRecursionError signal: subjectDefinition ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> typeAt: aString put: aRMDType [
 
 	^ utilityTypes at: aString put: aRMDType
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> typeOfVariable: aString agent: agentReference ifAbsent: errorBlock [
 	^ attributes
 		at: agentReference
@@ -142,18 +144,18 @@ RMDTypecheckContext >> typeOfVariable: aString agent: agentReference ifAbsent: e
 		ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> utilityAt: aString ifAbsent: errorBlock [
 
 	^ utilities at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> worldDefinition [
 	^ worldDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDTypecheckContext >> worldDefinition: aRMDWorldDefinitionNode [
 	| dict |
 	worldDefinition := aRMDWorldDefinitionNode.

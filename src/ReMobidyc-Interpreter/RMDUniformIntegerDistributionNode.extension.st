@@ -1,6 +1,6 @@
-Extension { #name : #RMDUniformIntegerDistributionNode }
+Extension { #name : 'RMDUniformIntegerDistributionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDUniformIntegerDistributionNode >> evalIn: aRMDInterpreter [
 
 	| to from |

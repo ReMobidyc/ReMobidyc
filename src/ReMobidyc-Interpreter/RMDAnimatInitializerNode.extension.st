@@ -1,6 +1,6 @@
-Extension { #name : #RMDAnimatInitializerNode }
+Extension { #name : 'RMDAnimatInitializerNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 
 	| animatDefinition |
@@ -33,7 +33,7 @@ RMDAnimatInitializerNode >> evalIn: aRMDInterpreter [
 				super evalIn: aRMDInterpreter ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAnimatInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context

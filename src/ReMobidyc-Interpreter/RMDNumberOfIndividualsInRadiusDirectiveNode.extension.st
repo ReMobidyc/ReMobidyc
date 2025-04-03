@@ -1,6 +1,6 @@
-Extension { #name : #RMDNumberOfIndividualsInRadiusDirectiveNode }
+Extension { #name : 'RMDNumberOfIndividualsInRadiusDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> evalIn: aRMDInterpreter [
 
 	^ self
@@ -8,7 +8,7 @@ RMDNumberOfIndividualsInRadiusDirectiveNode >> evalIn: aRMDInterpreter [
 		  with: aRMDInterpreter
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNumberOfIndividualsInRadiusDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	[ (radius typecheckIn: aRMDInterpreter) unify: RMDType length ]

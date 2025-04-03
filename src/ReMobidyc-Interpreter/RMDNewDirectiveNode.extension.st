@@ -1,6 +1,6 @@
-Extension { #name : #RMDNewDirectiveNode }
+Extension { #name : 'RMDNewDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 
 	animatIdentifier ifNil: [
@@ -11,7 +11,7 @@ RMDNewDirectiveNode >> evalIn: aRMDInterpreter [
 			 ifNotNil: [ (quantity evalIn: aRMDInterpreter) floor ])
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDNewDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	| animatDefinition |

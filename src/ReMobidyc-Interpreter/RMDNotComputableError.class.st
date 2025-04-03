@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDNotComputableError,
-	#superclass : #RMDRuntimeError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDNotComputableError',
+	#superclass : 'RMDRuntimeError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDNotComputableError >> composeMessageText [
 
 	^ node printString, ' is not computable.'

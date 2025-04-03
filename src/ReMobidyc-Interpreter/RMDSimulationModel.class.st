@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDSimulationModel,
-	#superclass : #Object,
+	#name : 'RMDSimulationModel',
+	#superclass : 'Object',
 	#instVars : [
 		'metadata',
 		'simulationDefinition',
@@ -13,22 +13,24 @@ Class {
 		'icons',
 		'variability'
 	],
-	#category : #'ReMobidyc-Interpreter-Core'
+	#category : 'ReMobidyc-Interpreter-Core',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> actionsFileName [
 
 	^ 'actions.rmd'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> agentsFileName [
 
 	^ 'agents.rmd'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationModel class >> goatAndWolf [
 
 	| model |
@@ -111,13 +113,13 @@ RMDSimulationModel class >> goatAndWolf [
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> iconsDirectoryName [
 
 	^ 'icons'
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 RMDSimulationModel class >> importMetadata: aFileReference ifError: errorBlock [
 
 	^ [ 
@@ -127,7 +129,7 @@ RMDSimulationModel class >> importMetadata: aFileReference ifError: errorBlock [
 		  do: [ :ex | errorBlock value ]
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 RMDSimulationModel class >> importModel [
 
 	<script: 'RMDSimulationModel importModel open'>
@@ -140,7 +142,7 @@ RMDSimulationModel class >> importModel [
 	^ nil
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 RMDSimulationModel class >> importModel: aFileReference ifError: errorBlock [
 
 	[ 
@@ -151,19 +153,19 @@ RMDSimulationModel class >> importModel: aFileReference ifError: errorBlock [
 		do: [ :ex | ^ errorBlock value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> metadataFileName [
 
 	^ 'metadata.json'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> simulationDefinitionFileName [
 
 	^ 'simulation.rmd'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDSimulationModel class >> sugarScape [
 
 	^ self new
@@ -219,58 +221,58 @@ RMDSimulationModel class >> sugarScape [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> tasksFileName [
 
 	^ 'tasks.rmd'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> variabilityFileName [
 
 	^ 'variability.rmd'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> visualizationFileName [
 
 	^ 'visualization.rmd'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel class >> worldDataSourceFileName [
 
 	^ 'world.csv'
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifAbsent: errorBlock [
 	^ actionDefinitions at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> actionDefinitionAt: aString ifPresent: aBlock [
 	^ actionDefinitions at: aString ifPresent: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModel >> actionDefinitions [
 
 	^ actionDefinitions
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> actionDefinitionsDo: aBlock [
 
 	self actionDefinitions do: aBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> actionNames [
 	^ actionDefinitions keys asSortedCollection
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
 
 	actionDefinitions
@@ -283,24 +285,24 @@ RMDSimulationModel >> addActionDefinition: aRMDActionDefinitionNode [
 	^ aRMDActionDefinitionNode
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> addAnimatDefinition: aRMDAnimatDefinitionNode [
 	^ animatDefinitions
 		at: aRMDAnimatDefinitionNode identifier
 		put: aRMDAnimatDefinitionNode
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> addRenderer: aRMDRenderer [
 	renderers add: aRMDRenderer
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> addTaskDefinition: aRMDTaskDefinitionNode [
 	^ taskDefinitions add: aRMDTaskDefinitionNode
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> agentDefinitionAt: aString ifAbsent: errorBlock [
 
 	aString = 'World' ifTrue: [ ^ self worldDefinition ].
@@ -308,7 +310,7 @@ RMDSimulationModel >> agentDefinitionAt: aString ifAbsent: errorBlock [
 	^ self animatDefinitionAt: aString ifAbsent: errorBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> agentDefinitionsDo: aBlock [
 
 	worldDefinition ifNotNil: aBlock.
@@ -316,7 +318,7 @@ RMDSimulationModel >> agentDefinitionsDo: aBlock [
 	self animatDefinitionsDo: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> agentInitializersDo: aBlock [
 
 	self worldInitializer ifNotNil: aBlock.
@@ -324,55 +326,55 @@ RMDSimulationModel >> agentInitializersDo: aBlock [
 	self animatInitializersDo: aBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifAbsent: errorBlock [
 	^ animatDefinitions at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> animatDefinitionAt: aString ifPresent: aBlock [
 	^ animatDefinitions at: aString ifPresent: aBlock
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModel >> animatDefinitions [
 	^ animatDefinitions
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> animatDefinitionsDo: aBlock [
 	animatDefinitions valuesDo: aBlock
 ]
 
-{ #category : #'accessing - initializers' }
+{ #category : 'accessing - initializers' }
 RMDSimulationModel >> animatInitializers [
 	^ simulationDefinition animatInitializers
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> animatInitializersDo: aBlock [
 	simulationDefinition animatInitializers do: aBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> animatNames [
 
 	^ animatDefinitions keys asArray
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> authors [
 
 	^ metadata authors
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> authors: anArrayOfString [
 
 	metadata authors: anArrayOfString
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> copyAnimat: aString to: anotherString [
 
 	| animatDef |
@@ -392,57 +394,57 @@ RMDSimulationModel >> copyAnimat: aString to: anotherString [
 				(renderer copy renameAnimat: aString to: anotherString) ] ]
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> date [
 	^ metadata date
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> date: aDateString [
 
 	metadata description: aDateString
 ]
 
-{ #category : #'accessing - time' }
+{ #category : 'accessing - time' }
 RMDSimulationModel >> deltaTime [
 	^ simulationDefinition timeDefinition step numeric
 ]
 
-{ #category : #'accessing - time' }
+{ #category : 'accessing - time' }
 RMDSimulationModel >> deltaTimeUnit [
 
 	^ simulationDefinition timeDefinition step unit
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> description [
 
 	^ metadata description
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> description: aString [
 
 	metadata description: aString
 ]
 
-{ #category : #'accessing - time' }
+{ #category : 'accessing - time' }
 RMDSimulationModel >> duration [
 	^ simulationDefinition timeDefinition duration numeric
 ]
 
-{ #category : #'accessing - time' }
+{ #category : 'accessing - time' }
 RMDSimulationModel >> durationUnit [
 
 	^ simulationDefinition timeDefinition duration unit
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> east [
 	^ self patchLength * self patchXDivisions
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportActions: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -450,7 +452,7 @@ RMDSimulationModel >> exportActions: aFileReference [
 			actionDefinition printOn: stream ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportAgents: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -463,7 +465,7 @@ RMDSimulationModel >> exportAgents: aFileReference [
 			stream nextPut: Character cr ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportDataSource: aFileReference [
 
 	self worldDefinition dataSource ifNotNil: [ :dataSource |
@@ -476,7 +478,7 @@ RMDSimulationModel >> exportDataSource: aFileReference [
 				(aFileReference / animatDefinition identifier withExtension: 'csv') ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportIcons: aFileReference [
 
 	self removeUnusedIcons.
@@ -486,14 +488,14 @@ RMDSimulationModel >> exportIcons: aFileReference [
 			onFileNamed: (aFileReference / name) ensureDelete ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportMetadata: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		metadata printJsonOn: stream ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportModel [
 
 	(UIManager default
@@ -504,7 +506,7 @@ RMDSimulationModel >> exportModel [
 		self exportModel: ref ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportModel: aFileReference [
 
 	aFileReference
@@ -526,14 +528,14 @@ RMDSimulationModel >> exportModel: aFileReference [
 			aFileReference / self class visualizationFileName
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportSimulationDefinition: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		simulationDefinition printOn: stream ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportTasks: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -542,14 +544,14 @@ RMDSimulationModel >> exportTasks: aFileReference [
 			stream nextPut: Character cr ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportVariability: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
 		variability printOn: stream ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> exportVisualization: aFileReference [
 
 	aFileReference lfWriteStreamDo: [ :stream | 
@@ -557,25 +559,25 @@ RMDSimulationModel >> exportVisualization: aFileReference [
 			renderer printOn: stream ] ]
 ]
 
-{ #category : #'accessing - icons' }
+{ #category : 'accessing - icons' }
 RMDSimulationModel >> iconAt: aString ifAbsent: errorBlock [
 
 	^ icons at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing - icons' }
+{ #category : 'accessing - icons' }
 RMDSimulationModel >> iconAt: aString put: aForm [
 
 	^ icons at: aString put: aForm
 ]
 
-{ #category : #'accessing - icons' }
+{ #category : 'accessing - icons' }
 RMDSimulationModel >> iconNames [
 
 	^ icons keys asSortedCollection
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importActions: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
@@ -598,7 +600,7 @@ RMDSimulationModel >> importActions: aFileReference [
 			self load: def ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importAgents: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
@@ -621,7 +623,7 @@ RMDSimulationModel >> importAgents: aFileReference [
 			self load: def ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importDataSource: aFileReference [
 
 	aFileReference / 'World.csv'
@@ -638,7 +640,7 @@ RMDSimulationModel >> importDataSource: aFileReference [
 				animatDefinition dataSource: (RMDDataSource readFromCsv: ref) ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importIcons: aFileReference [
 
 	aFileReference isDirectory ifFalse: [ ^ self ].
@@ -647,7 +649,7 @@ RMDSimulationModel >> importIcons: aFileReference [
 			self iconAt: pngRef basename put: form ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importMetadata: aFileReference [
 
 	aFileReference exists
@@ -662,7 +664,7 @@ RMDSimulationModel >> importMetadata: aFileReference [
 				date: DateAndTime now ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importModel [
 
 	(UIManager default
@@ -677,7 +679,7 @@ RMDSimulationModel >> importModel [
 	^ nil
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importModel: aFileReference [
 
 	self resetDefinitions.
@@ -695,7 +697,7 @@ RMDSimulationModel >> importModel: aFileReference [
 			aFileReference / self class visualizationFileName
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importSimulationDefinition: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
@@ -706,7 +708,7 @@ RMDSimulationModel >> importSimulationDefinition: aFileReference [
 		self load: def ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importTasks: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
@@ -729,7 +731,7 @@ RMDSimulationModel >> importTasks: aFileReference [
 			self load: def ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importVariability: aFileReference [
 
 	aFileReference isFile ifTrue: [ 
@@ -739,7 +741,7 @@ RMDSimulationModel >> importVariability: aFileReference [
 			node isPetit2Success ifTrue: [ self variability: node ] ] ]
 ]
 
-{ #category : #'exporting/importing' }
+{ #category : 'exporting/importing' }
 RMDSimulationModel >> importVisualization: aFileReference [
 
 	aFileReference readStreamDo: [ :stream | 
@@ -762,14 +764,14 @@ RMDSimulationModel >> importVisualization: aFileReference [
 			self addRenderer: def ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationModel >> initialize [
 
 	super initialize.
 	self resetDefinitions
 ]
 
-{ #category : #'accessing - initializers' }
+{ #category : 'accessing - initializers' }
 RMDSimulationModel >> initializersFor: aString do: aBlock [
 
 	aString = 'World' ifTrue: [
@@ -782,7 +784,7 @@ RMDSimulationModel >> initializersFor: aString do: aBlock [
 		initializer agentName = aString ifTrue: [ aBlock cull: initializer ] ]
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 
 	^ self shallowCopy
@@ -790,13 +792,13 @@ RMDSimulationModel >> instantiateWithMetaParameters: aDictionary [
 		  yourself
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterForDryRun [
 
 	^ self interpreterOn: RMDDryMemory new
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterOn: aRMDMemory [
 
 	^ RMDInterpreter new
@@ -806,14 +808,14 @@ RMDSimulationModel >> interpreterOn: aRMDMemory [
 		  yourself
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterOnExistingFile: basePath modelPath: modelPath [
 
 	^ self interpreterOn:
 		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterOnFile [
 
 	| memory |
@@ -822,20 +824,20 @@ RMDSimulationModel >> interpreterOnFile [
 	^ self interpreterOn: memory
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterOnFile: basePath modelPath: modelPath [
 
 	^ self interpreterOn:
 		  (RMDFileMemory on: basePath modelPath: modelPath)
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> interpreterOnMemory [
 
 	^ self interpreterOn: RMDOnMemory new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel >> load: aRMDSyntaxNode [
 	aRMDSyntaxNode isWorldDefinitionNode
 		ifTrue: [ ^ self worldDefinition: aRMDSyntaxNode ].
@@ -852,13 +854,13 @@ RMDSimulationModel >> load: aRMDSyntaxNode [
 	^ self error: 'Unknown load'
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> metaInterpreterForDryRun [
 
 	^ RMDMetaInterpreter forDryRunOn: self
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> metaInterpreterOnFile [
 
 	^ RMDMetaInterpreter
@@ -866,25 +868,25 @@ RMDSimulationModel >> metaInterpreterOnFile [
 		  modelPath: (RMDFileMemory modelPathFor: self)
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> metaInterpreterOnModelPath: aFileReference [
 
 	^ RMDMetaInterpreter on: self modelPath: aFileReference
 ]
 
-{ #category : #interpreting }
+{ #category : 'interpreting' }
 RMDSimulationModel >> metaInterpreterOnReadOnlyModelPath: aFileReference [
 
 	^ RMDMetaInterpreter on: self readOnlyModelPath: aFileReference
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> metadata [
 
 	^ metadata
 ]
 
-{ #category : #'accessing - meta parameters' }
+{ #category : 'accessing - meta parameters' }
 RMDSimulationModel >> metaparameters: aDictionary [
 
 	variability := variability copy.
@@ -908,64 +910,64 @@ RMDSimulationModel >> metaparameters: aDictionary [
 	icons := icons copy
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> name [
 	^ metadata name
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> name: aString [
 
 	metadata name: aString
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> north [
 	^ self patchLength * self patchYDivisions
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> patchArea [
 	^ self patchLength squared
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> patchDefinition [
 	^ patchDefinition
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> patchDefinition: aRMDPatchDefinitionNode [
 	patchDefinition := aRMDPatchDefinitionNode
 ]
 
-{ #category : #'accessing - initializers' }
+{ #category : 'accessing - initializers' }
 RMDSimulationModel >> patchInitializer [
 	^ simulationDefinition patchInitializer
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> patchLength [
 	^ simulationDefinition patchInitializer length
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> patchLengthUnit [
 
 	^ simulationDefinition patchInitializer size unit
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> patchXDivisions [
 	^ simulationDefinition patchInitializer xDivisions
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> patchYDivisions [
 	^ simulationDefinition patchInitializer yDivisions
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 RMDSimulationModel >> postCopy [
 
 	metadata := metadata copy.
@@ -984,7 +986,7 @@ RMDSimulationModel >> postCopy [
 	icons := icons copy
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> removeActionDefinition: aRMDActionDefinitionNode ifAbsent: errorBlock [
 
 	actionDefinitions
@@ -997,7 +999,7 @@ RMDSimulationModel >> removeActionDefinition: aRMDActionDefinitionNode ifAbsent:
 	^ aRMDActionDefinitionNode
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 
 	| animatDefinition |
@@ -1013,30 +1015,42 @@ RMDSimulationModel >> removeAnimat: aString ifAbsent: errorBlock [
 	^ animatDefinition
 ]
 
-{ #category : #'accessing - icons' }
+{ #category : 'accessing - icons' }
 RMDSimulationModel >> removeIconAt: aString ifAbsent: errorBlock [
 
 	^ icons removeKey: aString ifAbsent: errorBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> removeRenderer: aRMDRenderer ifAbsent: errorBlock [
 	^ renderers remove: aRMDRenderer ifAbsent: errorBlock
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> removeRenderersForAnimat: aString [
 
 	renderers removeAllSuchThat: [ :renderer | 
 		renderer isAnimatRendererFor: aString ]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RMDSimulationModel >> removeTaskDefinition: aRMDTaskDefinitionNode ifAbsent: errorBlock [
 	^ taskDefinitions remove: aRMDTaskDefinitionNode ifAbsent: errorBlock
 ]
 
-{ #category : #'accessing - icons' }
+{ #category : 'accessing - definitions' }
+RMDSimulationModel >> removeUnreferencedActions [
+
+	| actions |
+	actions := actionDefinitions keys asSet.
+	taskDefinitions do: [ :taskDef |
+		actions remove: taskDef actionIdentifier ifAbsent: [  ] ].
+	actions do: [ :actionName |
+		actionDefinitions removeKey: actionName ifAbsent: [  ] ].
+	^ actions asArray
+]
+
+{ #category : 'accessing - icons' }
 RMDSimulationModel >> removeUnusedIcons [
 
 	| names |
@@ -1047,7 +1061,7 @@ RMDSimulationModel >> removeUnusedIcons [
 		(names includes: name) not ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> renameAnimat: aString to: anotherString [
 
 	(animatDefinitions includesKey: aString) ifFalse: [ ^ self ].
@@ -1065,7 +1079,7 @@ RMDSimulationModel >> renameAnimat: aString to: anotherString [
 		renderer renameAnimat: aString to: anotherString ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> renameSpecies: aString to: anotherString [
 
 	(animatDefinitions anySatisfy: [ :animatDef | 
@@ -1077,17 +1091,17 @@ RMDSimulationModel >> renameSpecies: aString to: anotherString [
 			animatDef species: anotherString ] ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> renderers [
 	^ renderers
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> renderersDo: aBlock [
 	renderers do: aBlock
 ]
 
-{ #category : #rewriting }
+{ #category : 'rewriting' }
 RMDSimulationModel >> replaceChildren: aDictionary [
 
 	metadata := metadata copy.
@@ -1107,7 +1121,7 @@ RMDSimulationModel >> replaceChildren: aDictionary [
 	icons := icons copy
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDefinitionNode [
 	| index |
 	index := taskDefinitions indexOf: aRMDTaskDefinitionNode.
@@ -1118,12 +1132,12 @@ RMDSimulationModel >> replaceTask: aRMDTaskDefinitionNode with: anotherRMDTaskDe
 	^ anotherRMDTaskDefinitionNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSimulationModel >> repositoryName [
 	^ 'model'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSimulationModel >> resetDefinitions [
 
 	metadata := RMDMetadata new.
@@ -1138,22 +1152,22 @@ RMDSimulationModel >> resetDefinitions [
 	icons := Dictionary new
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> simulationDefinition [
 	^ simulationDefinition
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> simulationDefinition: aRMDSimulationDefinition [
 	simulationDefinition := aRMDSimulationDefinition
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> south [
 	^ 0.0
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> speciesNames [
 
 	| names |
@@ -1165,7 +1179,7 @@ RMDSimulationModel >> speciesNames [
 	^ names asArray
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> stageNamesOf: aString [
 
 	^ (animatDefinitions values
@@ -1173,7 +1187,7 @@ RMDSimulationModel >> stageNamesOf: aString [
 		  thenCollect: #identifier) asArray
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString [
 
 	^ animatDefinitions
@@ -1184,7 +1198,7 @@ RMDSimulationModel >> stagesOf: aString [
 				   animat species = aString ]) asArray ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> stagesOf: aString do: aBlock [
 
 	animatDefinitions at: aString ifPresent: aBlock ifAbsent: [
@@ -1192,7 +1206,7 @@ RMDSimulationModel >> stagesOf: aString do: aBlock [
 			animat species = aString ifTrue: [ aBlock value: animat ] ] ]
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> swapTasks: aRMDTaskDefinitionNode and: anotherRMDTaskDefinitionNode [
 
 	| index1 index2 |
@@ -1206,51 +1220,51 @@ RMDSimulationModel >> swapTasks: aRMDTaskDefinitionNode and: anotherRMDTaskDefin
 	taskDefinitions at: index2 put: aRMDTaskDefinitionNode
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> taskDefinitions [
 	^ Array withAll: taskDefinitions
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> taskDefinitions: aCollectionOfRMDTaskDefinitionNode [
 
 	taskDefinitions := OrderedCollection withAll:
 		                   aCollectionOfRMDTaskDefinitionNode
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> taskDefinitionsDo: aBlock [
 	taskDefinitions do: aBlock
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> taskNames [
 	^ (taskDefinitions collect: #name) asSortedCollection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDSimulationModel >> tasksDo: aBlock [
 	taskDefinitions do: aBlock
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSimulationModel >> typecheck [
 	self typechecker typecheckAll
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSimulationModel >> typecheck: aRMDSyntaxNode [
 	aRMDSyntaxNode typecheckIn: self typechecker
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSimulationModel >> typechecker [
 	^ RMDTypechecker new
 		simulationModel: self;
 		yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSimulationModel >> updateMetaParameters [
 
 	| freePlaceholders boundPlaceholders |
@@ -1281,7 +1295,7 @@ RMDSimulationModel >> updateMetaParameters [
 		addPlaceholders: freePlaceholders asArray \ boundPlaceholders
 ]
 
-{ #category : #'accessing - metadata' }
+{ #category : 'accessing - metadata' }
 RMDSimulationModel >> updateMetadata [
 
 	metadata
@@ -1289,40 +1303,40 @@ RMDSimulationModel >> updateMetadata [
 		updateDate
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> variability [
 
 	^ variability
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> variability: aRMDVariabilityNode [
 
 	variability := aRMDVariabilityNode
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> west [
 	^ 0.0
 ]
 
-{ #category : #'accessing - patch' }
+{ #category : 'accessing - patch' }
 RMDSimulationModel >> worldArea [
 
 	^ self patchArea * self patchXDivisions * self patchYDivisions
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> worldDefinition [
 	^ worldDefinition
 ]
 
-{ #category : #'accessing - definitions' }
+{ #category : 'accessing - definitions' }
 RMDSimulationModel >> worldDefinition: aRMDWorldDefinitionNode [
 	worldDefinition := aRMDWorldDefinitionNode
 ]
 
-{ #category : #'accessing - initializers' }
+{ #category : 'accessing - initializers' }
 RMDSimulationModel >> worldInitializer [
 	^ simulationDefinition worldInitializer
 ]

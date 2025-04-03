@@ -1,6 +1,6 @@
-Extension { #name : #RMDWorldDefinitionNode }
+Extension { #name : 'RMDWorldDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDWorldDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context

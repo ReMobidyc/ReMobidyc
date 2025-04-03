@@ -111,6 +111,7 @@ RMDSnapshotTabular >> openChart [
 					title: column title.
 				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSHorizontalLineLayout on: canvas shapes.
+		self chronicleChart: canvas.
 		(canvas openWithTitle: 'Attributes Chart'
 			 ,
 			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])

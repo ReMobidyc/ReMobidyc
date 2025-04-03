@@ -1,11 +1,11 @@
-Extension { #name : #RMDConditionNode }
+Extension { #name : 'RMDConditionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDConditionNode >> evalIn: aRMDInterpreter [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDConditionNode >> typecheckIn: aRMDInterpreter [
 	^ self subclassResponsibility
 ]

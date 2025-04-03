@@ -1,6 +1,6 @@
-Extension { #name : #RMDWorldInitializerNode }
+Extension { #name : 'RMDWorldInitializerNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDWorldInitializerNode >> evalIn: aRMDInterpreter [
 
 	| worldDefinition world |
@@ -14,7 +14,7 @@ RMDWorldInitializerNode >> evalIn: aRMDInterpreter [
 			super evalIn: aRMDInterpreter ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDWorldInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context

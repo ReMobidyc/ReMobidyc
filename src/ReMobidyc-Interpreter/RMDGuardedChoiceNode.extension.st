@@ -1,6 +1,6 @@
-Extension { #name : #RMDGuardedChoiceNode }
+Extension { #name : 'RMDGuardedChoiceNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 	guardsAndChoices
 		do: [ :assoc | 
@@ -9,7 +9,7 @@ RMDGuardedChoiceNode >> evalIn: aRMDInterpreter [
 	^ self error: 'All guards failed'
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDGuardedChoiceNode >> typecheckIn: aRMDInterpreter [
 
 	| node |

@@ -1,6 +1,6 @@
-Extension { #name : #RMDEqualityNode }
+Extension { #name : 'RMDEqualityNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDEqualityNode >> evalIn: aRMDInterpreter [
 
 	| val1 |

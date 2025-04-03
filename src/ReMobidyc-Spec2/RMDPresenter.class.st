@@ -3,6 +3,9 @@ Class {
 	#superclass : 'SpPresenter',
 	#traits : 'TRMDPresenter',
 	#classTraits : 'TRMDPresenter classTrait',
+	#classVars : [
+		'UsesOSWindow'
+	],
 	#category : 'ReMobidyc-Spec2-Abstract',
 	#package : 'ReMobidyc-Spec2',
 	#tag : 'Abstract'
@@ -12,6 +15,34 @@ Class {
 RMDPresenter class >> isAbstract [
 
 	^ self = RMDPresenter
+]
+
+{ #category : 'settings' }
+RMDPresenter class >> settingOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #remobidycAppearance)
+		parent: #remobidyc;
+		label: 'Appearance';
+		description: 'Settings about GUI (experimental)';
+		with: [
+			(aBuilder setting: #usesOSWindow)
+				label: 'Opens native windows';
+				target: self;
+				description:
+					'Opens a separate OS-native window if checked. Open a simulated window within one OS-native window, otherwise. You are warned that this is experimental feature and there are known issues using this feature.' ]
+]
+
+{ #category : 'settings' }
+RMDPresenter class >> usesOSWindow [
+
+	^ (UsesOSWindow ifNil: [ UsesOSWindow := false ]) = true
+]
+
+{ #category : 'settings' }
+RMDPresenter class >> usesOSWindow: aBoolean [
+
+	UsesOSWindow := aBoolean = true
 ]
 
 { #category : 'icons' }
@@ -64,6 +95,22 @@ RMDPresenter >> boxChartIcon [
 RMDPresenter >> chartIcon [
 
 	^ self lineChartIcon
+]
+
+{ #category : 'ui requests' }
+RMDPresenter >> confirm: queryString label: titleString [
+
+	^ self application newConfirm
+		  title: titleString;
+		  label: queryString;
+		  openModal
+]
+
+{ #category : 'accessing' }
+RMDPresenter >> currentWorld [
+
+	self withAdapterDo: [ :a | a widgetDo: [ :w | ^ w currentWorld ] ].
+	^ super currentWorld
 ]
 
 { #category : 'icons' }
@@ -323,6 +370,25 @@ RMDPresenter >> observatoryIcon [
 		borderColor: Color lightGray;
 		flush.
 	^ form
+]
+
+{ #category : 'showing' }
+RMDPresenter >> open [
+
+	^ self class usesOSWindow
+		  ifTrue: [ self openInExternalWindow ]
+		  ifFalse: [ super open ]
+]
+
+{ #category : 'showing' }
+RMDPresenter >> openInExternalWindow [
+
+	| morph world |
+	morph := self build.
+	world := morph openInExternalWindow.
+	morph layoutFrame: (0 @ 0 extent: 1 @ 1).
+	self initializeWindow: (RMDOSWindowPresenter on: world).
+	^ self
 ]
 
 { #category : 'icons' }

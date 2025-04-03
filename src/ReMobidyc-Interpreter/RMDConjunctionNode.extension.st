@@ -1,6 +1,6 @@
-Extension { #name : #RMDConjunctionNode }
+Extension { #name : 'RMDConjunctionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDConjunctionNode >> evalIn: aRMDInterpreter [
 	^ conditions allSatisfy: [ :cond | cond evalIn: aRMDInterpreter ]
 ]

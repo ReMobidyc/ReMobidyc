@@ -121,7 +121,7 @@ RMDModelFileTextBrowser >> fileMenu [
 						  self simulationModel
 							  updateMetadata;
 							  exportModel: modelFileReference;
-							  recordInChronicle ] ].
+							  recordInChronicle: modelFileReference basename ] ].
 			  group addItem: [ :item |
 				  item
 					  name: 'Save As...';
@@ -131,8 +131,9 @@ RMDModelFileTextBrowser >> fileMenu [
 									   updateMetadata;
 									   yourself)
 							  do: [ :model :repBrowser |
-							  self modelFileReference: repBrowser file ].
-						  self simulationModel recordInChronicle ] ] ];
+								  self modelFileReference: repBrowser file.
+								  self simulationModel recordInChronicle:
+									  repBrowser file basename ] ] ] ];
 		  yourself
 ]
 

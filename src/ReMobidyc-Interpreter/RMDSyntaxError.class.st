@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDSyntaxError,
-	#superclass : #RMDError,
+	#name : 'RMDSyntaxError',
+	#superclass : 'RMDError',
 	#instVars : [
 		'failure'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 RMDSyntaxError class >> failure: aPetit2Failure [
 
 	^ self new
@@ -15,13 +17,13 @@ RMDSyntaxError class >> failure: aPetit2Failure [
 		  yourself
 ]
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 RMDSyntaxError class >> signal: aPetit2Failure [
 
 	^ (self failure: aPetit2Failure) signal: aPetit2Failure printString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDSyntaxError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
@@ -29,13 +31,13 @@ RMDSyntaxError >> composeMessageText [
 		  failure printOn: stream ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxError >> failure [
 
 	^ failure
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSyntaxError >> failure: aPetit2Failure [
 
 	failure := aPetit2Failure

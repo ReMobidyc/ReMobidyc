@@ -1,6 +1,6 @@
-Extension { #name : #RMDDensityOfIndividualsInPatchDirectiveNode }
+Extension { #name : 'RMDDensityOfIndividualsInPatchDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> evalIn: aRMDInterpreter [
 
 	| area |
@@ -11,7 +11,7 @@ RMDDensityOfIndividualsInPatchDirectiveNode >> evalIn: aRMDInterpreter [
 		  (aRMDInterpreter numberOfIndividualsInPatch: animatName) / area ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDensityOfIndividualsInPatchDirectiveNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter simulationModel

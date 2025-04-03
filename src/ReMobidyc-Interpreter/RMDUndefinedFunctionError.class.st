@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUndefinedFunctionError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUndefinedFunctionError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUndefinedFunctionError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

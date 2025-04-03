@@ -149,6 +149,7 @@ RMDAttributeByTimeTabular >> openChart: aRMDTabularColumn [
 		addDecoration: (RSYLabelDecoration new
 				 title: aRMDTabularColumn title;
 				 fontSize: 10).
+	self chronicleChart: chart canvas.
 	(chart build openWithTitle:
 		 agentDropList selectedItem fullName , '''s '
 		 , aRMDTabularColumn title

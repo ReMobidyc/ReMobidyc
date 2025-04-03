@@ -1,13 +1,15 @@
 Class {
-	#name : #RMDMetaContextForFileMemory,
-	#superclass : #RMDMetaContext,
+	#name : 'RMDMetaContextForFileMemory',
+	#superclass : 'RMDMetaContext',
 	#instVars : [
 		'modelPath'
 	],
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDMetaContextForFileMemory class >> modelPath: aFileReference [
 
 	^ self new
@@ -15,7 +17,7 @@ RMDMetaContextForFileMemory class >> modelPath: aFileReference [
 		  yourself
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContextForFileMemory >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
 
 	| memory |
@@ -32,43 +34,43 @@ RMDMetaContextForFileMemory >> createInterpreterOn: aRMDSimulationModel metapara
 		  interpreterOn: memory
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContextForFileMemory >> exportModel: aRMDSimulationModel [
 
 	aRMDSimulationModel exportModel: modelPath
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDMetaContextForFileMemory >> isForFileMemory [
 
 	^ true
 ]
 
-{ #category : #'class access' }
+{ #category : 'class access' }
 RMDMetaContextForFileMemory >> memoryClass [
 
 	^ RMDFileMemory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContextForFileMemory >> memoryName [
 
 	^ modelPath ifNotNil: #basename ifNil: [ '' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContextForFileMemory >> modelPath [
 
 	^ modelPath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContextForFileMemory >> modelPath: aFileReference [
 
 	modelPath := aFileReference ensureCreateDirectory
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContextForFileMemory >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 
 	^ (modelPath directoriesMatching: 'run*')

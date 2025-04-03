@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDExecutionContextWithRandomGenerator,
-	#superclass : #RMDExecutionContext,
+	#name : 'RMDExecutionContextWithRandomGenerator',
+	#superclass : 'RMDExecutionContext',
 	#instVars : [
 		'randomGenerator',
 		'utilities'
 	],
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExecutionContextWithRandomGenerator >> initialize [
 
 	super initialize.
@@ -16,7 +18,7 @@ RMDExecutionContextWithRandomGenerator >> initialize [
 	utilities := Dictionary new
 ]
 
-{ #category : #'utility access' }
+{ #category : 'utility access' }
 RMDExecutionContextWithRandomGenerator >> loadUtilityDefinitions: anArrayOfRMDUtilityDefinitionNode [
 
 	utilities := Dictionary new:
@@ -25,29 +27,29 @@ RMDExecutionContextWithRandomGenerator >> loadUtilityDefinitions: anArrayOfRMDUt
 		utilities at: def variable identifier put: def ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExecutionContextWithRandomGenerator >> nextSeed [
 
 	^ randomGenerator nextSeed
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExecutionContextWithRandomGenerator >> random [
 	^ randomGenerator next
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDExecutionContextWithRandomGenerator >> randomSeedWithHash: anArray [
 
 	randomGenerator seedWithHash: anArray
 ]
 
-{ #category : #'utility access' }
+{ #category : 'utility access' }
 RMDExecutionContextWithRandomGenerator >> utilityAt: aString ifAbsent: errorBlock [
 	^ utilities at: aString ifAbsent: errorBlock
 ]
 
-{ #category : #'utility access' }
+{ #category : 'utility access' }
 RMDExecutionContextWithRandomGenerator >> utilityAt: aString put: aNumber [
 
 	^ utilities at: aString put: aNumber

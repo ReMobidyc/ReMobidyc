@@ -1,6 +1,6 @@
-Extension { #name : #RMDActionDefinitionNode }
+Extension { #name : 'RMDActionDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
 
 	(guard isNil or: [ guard evalIn: aRMDInterpreter ]) ifTrue: [
@@ -8,7 +8,7 @@ RMDActionDefinitionNode >> evalIn: aRMDInterpreter [
 		attributeDefinitions do: [ :def | def evalIn: aRMDInterpreter ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDActionDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context action: self.

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDLnFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDLnFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLnFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDLnFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -31,7 +33,7 @@ RMDLnFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNo
 					 type: ex type2) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDLnFunction >> value: aNumber [
 
 	^ aNumber >= 0

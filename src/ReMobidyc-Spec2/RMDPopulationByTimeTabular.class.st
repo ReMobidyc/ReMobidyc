@@ -245,6 +245,7 @@ RMDPopulationByTimeTabular >> openChart [
 				text: (columns at: plotIndex + 1) title
 				withBoxColor: (chart plots at: plotIndex) line color ].
 		legend build.
+		self chronicleChart: canvas.
 		(canvas openWithTitle: 'Population Chart'
 			 ,
 			 (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])

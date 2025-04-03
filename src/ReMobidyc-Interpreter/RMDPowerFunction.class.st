@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDPowerFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDPowerFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDPowerFunction >> expectedNumArgs [
 
 	^ 2
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 2 ifFalse: [ 
@@ -43,7 +45,7 @@ RMDPowerFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDAppl
 	^ RMDType noDimension
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDPowerFunction >> value: aNumber1 value: aNumber2 [
 
 	^ aNumber1 ** aNumber2

@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDRecursionError,
-	#superclass : #RMDRuntimeError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDRecursionError',
+	#superclass : 'RMDRuntimeError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDRecursionError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

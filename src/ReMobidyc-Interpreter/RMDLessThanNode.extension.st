@@ -1,6 +1,6 @@
-Extension { #name : #RMDLessThanNode }
+Extension { #name : 'RMDLessThanNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDLessThanNode >> evalIn: aRMDInterpreter [
 	| val |
 	val := expressions first evalIn: aRMDInterpreter.

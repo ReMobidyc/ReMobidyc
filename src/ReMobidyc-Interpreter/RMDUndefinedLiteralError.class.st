@@ -1,10 +1,12 @@
 Class {
-	#name : #RMDUndefinedLiteralError,
-	#superclass : #RMDUnresolvedReferenceError,
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#name : 'RMDUndefinedLiteralError',
+	#superclass : 'RMDUnresolvedReferenceError',
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDUndefinedLiteralError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 

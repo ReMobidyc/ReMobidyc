@@ -1,14 +1,16 @@
 Class {
-	#name : #RMDNumArgsError,
-	#superclass : #RMDRuntimeError,
+	#name : 'RMDNumArgsError',
+	#superclass : 'RMDRuntimeError',
 	#instVars : [
 		'expectedNumArgs',
 		'actualNumArgs'
 	],
-	#category : #'ReMobidyc-Interpreter-Exceptions'
+	#category : 'ReMobidyc-Interpreter-Exceptions',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNumArgsError class >> on: aRMDSyntaxNode actual: anInteger expected: anotherInteger [
 
 	^ (self on: aRMDSyntaxNode)
@@ -17,7 +19,7 @@ RMDNumArgsError class >> on: aRMDSyntaxNode actual: anInteger expected: anotherI
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RMDNumArgsError class >> signal: aRMDSyntaxNode actual: anInteger expected: anotherInteger [
 
 	^ (self
@@ -26,19 +28,19 @@ RMDNumArgsError class >> signal: aRMDSyntaxNode actual: anInteger expected: anot
 		   expected: anotherInteger) signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumArgsError >> actual [
 
 	^ actualNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumArgsError >> actual: anInteger [
 
 	actualNumArgs := anInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDNumArgsError >> composeMessageText [
 
 	^ String streamContents: [ :stream | 
@@ -51,13 +53,13 @@ RMDNumArgsError >> composeMessageText [
 		  stream nextPutAll: '.' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumArgsError >> expected [
 
 	^ expectedNumArgs
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDNumArgsError >> expected: anInteger [
 
 	expectedNumArgs := anInteger

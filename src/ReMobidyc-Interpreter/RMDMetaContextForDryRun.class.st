@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDMetaContextForDryRun,
-	#superclass : #RMDMetaContext,
-	#category : #'ReMobidyc-Interpreter-Contexts'
+	#name : 'RMDMetaContextForDryRun',
+	#superclass : 'RMDMetaContext',
+	#category : 'ReMobidyc-Interpreter-Contexts',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Contexts'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContextForDryRun >> createInterpreterFor: aRMDSimulationModel [
 
 	^ aRMDSimulationModel interpreterForDryRun
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContextForDryRun >> createInterpreterOn: aRMDSimulationModel metaparameters: aDictionary randomSeed: anIntegerOrNil runId: anInteger [
 
 	| memory |
@@ -25,25 +27,25 @@ RMDMetaContextForDryRun >> createInterpreterOn: aRMDSimulationModel metaparamete
 		  interpreterOn: memory
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 RMDMetaContextForDryRun >> exportModel: aRMDSimulationModel [
 
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContextForDryRun >> memoryName [
 
 	^ 'dry-run'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDMetaContextForDryRun >> modelPath [
 
 	^ nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 RMDMetaContextForDryRun >> restoreMemoriesDo: aBlock ifEmpty: emptyBlock [
 
 	^ emptyBlock value

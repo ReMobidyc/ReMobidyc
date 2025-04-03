@@ -145,6 +145,7 @@ RMDIndividualHistoryTabular >> openChart [
 							 fontSize: 10).
 				canvas addShape: (RSComposite new shapes: chart build shapes) ] ].
 		RSFlowLayout on: canvas shapes.
+		self chronicleChart: canvas.
 		(canvas openWithTitle:
 			 stageDropList selectedItem value first , ' ('
 			 , stageDropList selectedItem value second printString , ')'

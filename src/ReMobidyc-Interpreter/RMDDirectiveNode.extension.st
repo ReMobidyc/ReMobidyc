@@ -1,6 +1,6 @@
-Extension { #name : #RMDDirectiveNode }
+Extension { #name : 'RMDDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDirectiveNode >> typecheck: aRMDAttributeVariableNode with: aRMDType in: aRMDInterpreter [
 
 	^ [ 

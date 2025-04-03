@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDSinFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDSinFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSinFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDSinFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -32,7 +34,7 @@ RMDSinFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 	^ RMDType noDimension
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDSinFunction >> value: aNumber [
 	^ aNumber sin
 ]

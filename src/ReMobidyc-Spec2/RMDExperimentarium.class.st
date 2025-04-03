@@ -24,7 +24,8 @@ Class {
 		'metaInterpreter',
 		'visualizationImage',
 		'showPopulationChartRadioButton',
-		'showVisualMapRadioButton'
+		'showVisualMapRadioButton',
+		'saved'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -85,9 +86,11 @@ RMDExperimentarium class >> defaultLayout [
 
 { #category : 'instance creation' }
 RMDExperimentarium class >> metaInterpreter: aRMDInterpreter [
+
+	aRMDInterpreter recordInChronicle.
 	^ self new
-		setMetaInterpreter: aRMDInterpreter;
-		yourself
+		  setMetaInterpreter: aRMDInterpreter;
+		  yourself
 ]
 
 { #category : 'updating' }
@@ -141,6 +144,7 @@ RMDExperimentarium >> initialize [
 
 	super initialize.
 	validated := false.
+	saved := false.
 	currentPopulation := Dictionary new.
 	maxPopulation := Dictionary new.
 	minPopulation := Dictionary new.
@@ -280,10 +284,22 @@ RMDExperimentarium >> interpreterDo: aBlock [
 		ifNotNil: aBlock
 ]
 
+{ #category : 'testing' }
+RMDExperimentarium >> isRemoved [
+
+	^ metaInterpreter isNil
+]
+
 { #category : 'api' }
 RMDExperimentarium >> isRunningSimulation [
 
 	^ metaInterpreter isRunningSimulation
+]
+
+{ #category : 'testing' }
+RMDExperimentarium >> isSaved [
+
+	^ saved
 ]
 
 { #category : 'testing' }
@@ -322,6 +338,15 @@ RMDExperimentarium >> modelName [
 	^ metaInterpreter
 		  ifNotNil: [ metaInterpreter simulationModel name ]
 		  ifNil: [ 'noname' ]
+]
+
+{ #category : 'operations' }
+RMDExperimentarium >> okToClose [
+
+	(self
+		 confirm: 'Do you want to remove the run data?'
+		 label: 'Experimentarium') ifTrue: [ self removeRun ].
+	^ true
 ]
 
 { #category : 'api' }
@@ -405,6 +430,7 @@ RMDExperimentarium >> saveRunAs [
 					^ UIManager default alert:
 						  'A run named "' , name , '" already exists.' ].
 				modelPath moveTo: ref.
+				saved := true.
 				self setMetaInterpreter: (RMDMetaInterpreter onModelPath: ref) ] ] ]
 ]
 

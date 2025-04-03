@@ -1,6 +1,6 @@
-Extension { #name : #RMDAttributeDeclarationNode }
+Extension { #name : 'RMDAttributeDeclarationNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 
 	initializerExpression ifNotNil: [
@@ -14,7 +14,7 @@ RMDAttributeDeclarationNode >> evalIn: aRMDInterpreter [
 						 ifAbsent: [ ^ RMDUndefinedAttributeError signal: self ]) ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAttributeDeclarationNode >> typecheckIn: aRMDInterpreter [
 
 	| type |

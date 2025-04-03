@@ -1,6 +1,6 @@
-Extension { #name : #RMDPatchInitializerNode }
+Extension { #name : 'RMDPatchInitializerNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 
 	| patchDefinition |
@@ -16,7 +16,7 @@ RMDPatchInitializerNode >> evalIn: aRMDInterpreter [
 					super evalIn: aRMDInterpreter ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDPatchInitializerNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context

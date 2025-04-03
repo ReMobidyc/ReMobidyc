@@ -1,6 +1,6 @@
-Extension { #name : #RMDTaskDefinitionNode }
+Extension { #name : 'RMDTaskDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 
 	enabled ifTrue: [
@@ -15,7 +15,7 @@ RMDTaskDefinitionNode >> evalIn: aRMDInterpreter [
 			do: [ :ex | ex signalWithScope: self ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
@@ -64,7 +64,7 @@ RMDTaskDefinitionNode >> evalWithAllObjectsIn: aRMDInterpreter [
 					do: [ specializedAction evalIn: aRMDInterpreter ] ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithNearestObjectIn: aRMDInterpreter [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace |
@@ -113,7 +113,7 @@ RMDTaskDefinitionNode >> evalWithNearestObjectIn: aRMDInterpreter [
 					do: [ specializedAction evalIn: aRMDInterpreter ] ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 
 	| agent taskHash specializedAction |
@@ -132,7 +132,7 @@ RMDTaskDefinitionNode >> evalWithoutObjectIn: aRMDInterpreter [
 			do: [ specializedAction evalIn: aRMDInterpreter ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	[ 
@@ -142,7 +142,7 @@ RMDTaskDefinitionNode >> typecheckIn: aRMDInterpreter [
 		do: [ :ex | ex signalWithScope: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> validate: anInteger in: aRMDInterpreter do: aBlock [
 
 	self hasObject
@@ -161,7 +161,7 @@ RMDTaskDefinitionNode >> validate: anInteger in: aRMDInterpreter do: aBlock [
 				do: aBlock ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> validate: anInteger withAllObjectsIn: aRMDInterpreter do: aBlock [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace subjectAnimat subjectX subjectY |
@@ -217,7 +217,7 @@ RMDTaskDefinitionNode >> validate: anInteger withAllObjectsIn: aRMDInterpreter d
 					aBlock value: context ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> validate: anInteger withNearestObjectIn: aRMDInterpreter do: aBlock [
 
 	| specializedAction taskHash subjectAgent objectAgent interactionSpace subjectAnimat subjectX subjectY |
@@ -273,7 +273,7 @@ RMDTaskDefinitionNode >> validate: anInteger withNearestObjectIn: aRMDInterprete
 					aBlock value: context ] ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDTaskDefinitionNode >> validateWithoutObject: anInteger in: aRMDInterpreter do: aBlock [
 
 	| traceableAction taskHash subjectAgent |

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDFloorFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDFloorFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFloorFunction >> expectedNumArgs [
 
 	^ 1
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDFloorFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	anArrayOfRMDExpression size = 1 ifFalse: [ 
@@ -21,7 +23,7 @@ RMDFloorFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDAppl
 	^ anArrayOfRMDExpression first typecheckIn: aRMDInterpreter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RMDFloorFunction >> value: aNumber [
 	^ aNumber floor asFloat
 ]

@@ -1,16 +1,18 @@
 Class {
-	#name : #RMDMinFunction,
-	#superclass : #RMDFunction,
-	#category : #'ReMobidyc-Interpreter-Libraries'
+	#name : 'RMDMinFunction',
+	#superclass : 'RMDFunction',
+	#category : 'ReMobidyc-Interpreter-Libraries',
+	#package : 'ReMobidyc-Interpreter',
+	#tag : 'Libraries'
 }
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> expectedNumArgs [
 
 	^ nil
 ]
 
-{ #category : #'type checking' }
+{ #category : 'type checking' }
 RMDMinFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyNode in: aRMDInterpreter [
 
 	| type |
@@ -20,27 +22,27 @@ RMDMinFunction >> typecheckWithArguments: anArrayOfRMDExpression for: aRMDApplyN
 	^ type
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> value: aNumber1 [
 	^ aNumber1
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> value: aNumber1 value: aNumber2 [
 	^ aNumber1 min: aNumber2
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> value: aNumber1 value: aNumber2 value: aNumber3 [
 	^ (aNumber1 min: aNumber2) min: aNumber3
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> value: aNumber1 value: aNumber2 value: aNumber3 value: aNumber4 [
 	^ ((aNumber1 min: aNumber2) min: aNumber3) min: aNumber4
 ]
 
-{ #category : #evaluating }
+{ #category : 'evaluating' }
 RMDMinFunction >> valueWithArguments: anArrayOfNumber [
 	anArrayOfNumber ifEmpty: [ ^ self numArgsError ].
 	^ anArrayOfNumber

@@ -222,7 +222,7 @@ RMDSimulationModeler >> fileMenu [
 						  metadataPresenter metadataChanged.
 						  simulationModel
 							  exportModel: modelFileReference;
-							  recordInChronicle ] ].
+							  recordInChronicle: (modelFileReference ifNotNil: #basename) ] ].
 			  group addItem: [ :item |
 				  item
 					  name: 'Save As...';
@@ -232,8 +232,8 @@ RMDSimulationModeler >> fileMenu [
 						  RMDRepositoryModelsBrowser
 							  openForSave: simulationModel
 							  do: [ :model :repBrowser |
-								  self modelFileReference: repBrowser file ].
-						  simulationModel recordInChronicle ] ] ];
+								  self modelFileReference: repBrowser file.
+								  simulationModel recordInChronicle: repBrowser file basename ] ] ] ];
 		  yourself
 ]
 
@@ -316,7 +316,7 @@ RMDSimulationModeler >> modelFileReference: aFileReferenceOrNil [
 RMDSimulationModeler >> okToClose [
 
 	(UIManager default
-		 confirm: 'Export the model before close?'
+		 confirm: 'Save the model before close?'
 		 orCancel: [ ^ false ]) ifTrue: [ self save ].
 	^ true
 ]
@@ -432,7 +432,7 @@ RMDSimulationModeler >> save [
 	metadataPresenter metadataChanged.
 	simulationModel
 		exportModel: modelFileReference;
-		recordInChronicle
+		recordInChronicle: modelFileReference basename
 ]
 
 { #category : 'private' }

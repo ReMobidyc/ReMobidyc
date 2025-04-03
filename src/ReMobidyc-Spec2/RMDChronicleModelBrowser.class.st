@@ -5,6 +5,7 @@ Class {
 	#classTraits : 'THiDeEditTags classTrait',
 	#instVars : [
 		'modelList',
+		'folderNameField',
 		'nameField',
 		'authorField',
 		'dateField',
@@ -13,7 +14,8 @@ Class {
 		'searchField',
 		'updateButton',
 		'modelerButton',
-		'tagButton'
+		'tagButton',
+		'openChartsButton'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -23,30 +25,35 @@ Class {
 { #category : 'layout' }
 RMDChronicleModelBrowser class >> defaultLayout [
 
-	^ SpPanedLayout newHorizontal
-		  positionOfSlider: 0.4;
-		  add: (SpBoxLayout newVertical
-				   add: 'Search by Metadata' asPresenter expand: false;
-				   add: (SpGridLayout new
-						    borderWidth: 0;
-						    add: '    name' asPresenter at: 1 @ 1;
-						    add: #nameField at: 2 @ 1;
-						    add: '    author' asPresenter at: 1 @ 2;
-						    add: #authorField at: 2 @ 2;
-						    add: '    timestamp' asPresenter at: 1 @ 3;
-						    add: #dateField at: 2 @ 3;
-						    add: '    description' asPresenter at: 1 @ 4;
-						    add: #descriptionField at: 2 @ 4;
-						    columnHomogeneous: false;
-						    column: 1 expand: false;
-						    column: 2 expand: true;
-						    yourself)
-				   height: self buttonHeight * 4 + 5;
-				   add: 'Search by Tags' expand: false;
-				   add: #tagList;
-				   add: 'Full text search' asPresenter expand: false;
-				   add: #searchField expand: false;
-				   yourself);
+	^ SpBoxLayout newVertical
+		  add: (SpPanedLayout newHorizontal
+				   positionOfSlider: 0.6;
+				   add: (SpBoxLayout newVertical
+						    add: 'Search by Metadata' asPresenter expand: false;
+						    add: (SpGridLayout new
+								     borderWidth: 0;
+								     add: '    name' asPresenter at: 1 @ 1;
+								     add: #nameField at: 2 @ 1;
+								     add: '    author' asPresenter at: 1 @ 2;
+								     add: #authorField at: 2 @ 2;
+								     add: '    timestamp' asPresenter at: 1 @ 3;
+								     add: #dateField at: 2 @ 3;
+								     add: '    description' asPresenter at: 1 @ 4;
+								     add: #descriptionField at: 2 @ 4;
+								     columnHomogeneous: false;
+								     column: 1 expand: false;
+								     column: 2 expand: true;
+								     yourself)
+						    height: self buttonHeight * 4 + 5;
+						    add: 'Full text search' asPresenter expand: false;
+						    add: #searchField expand: false;
+						    yourself);
+				   add: (SpBoxLayout newVertical
+						    add: 'Search by Tags' expand: false;
+						    add: #tagList;
+						    yourself);
+				   yourself)
+		  height: self labelHeight * 2 + (self inputTextHeight * 5) + 2;
 		  add: (SpBoxLayout newVertical
 				   add: #modelList;
 				   add: (SpBoxLayout newHorizontal
@@ -54,6 +61,7 @@ RMDChronicleModelBrowser class >> defaultLayout [
 						    add: ' ' asPresenter expand: false;
 						    add: #modelerButton width: self buttonHeight;
 						    add: #tagButton width: self buttonHeight;
+						    add: #openChartsButton width: self buttonHeight;
 						    yourself)
 				   expand: false;
 				   yourself);
@@ -103,6 +111,12 @@ RMDChronicleModelBrowser >> editTags [
 			okAction: [ self chronicleChanged ] ]
 ]
 
+{ #category : 'updates' }
+RMDChronicleModelBrowser >> folderNameFieldChanged [
+
+	self updateModelList
+]
+
 { #category : 'initialization' }
 RMDChronicleModelBrowser >> initializePresenters [
 
@@ -110,6 +124,10 @@ RMDChronicleModelBrowser >> initializePresenters [
 	modelList := self newTable
 		             beResizable;
 		             beSingleSelection;
+		             addColumn: (SpStringTableColumn
+				              title: 'location name'
+				              evaluated: [ :chronicleModel |
+					              chronicleModel folderName ifNil: [ '' ] ]);
 		             addColumn: (SpStringTableColumn
 				              title: 'name'
 				              evaluated: [ :chronicleModel |
@@ -126,6 +144,8 @@ RMDChronicleModelBrowser >> initializePresenters [
 							              desc lines ifNotEmpty: #first ifEmpty: [ desc ] ]
 						              ifNil: [ '' ] ]);
 		             whenSelectedItemChangedDo: [ self selectedModelChanged ].
+	folderNameField := self newTextInput whenSubmitDo: [ :s |
+		                   self folderNameFieldChanged ].
 	nameField := self newTextInput whenSubmitDo: [ :s |
 		             self nameFieldChanged ].
 	authorField := self newTextInput whenSubmitDo: [ :s |
@@ -158,6 +178,12 @@ RMDChronicleModelBrowser >> initializePresenters [
 		             action: [ self editTags ];
 		             disable;
 		             yourself.
+	openChartsButton := self newButton
+		                    icon: self chartIcon;
+		                    help: 'Open charts';
+		                    action: [ self openCharts ];
+		                    disable;
+		                    yourself.
 	self chronicleChanged
 ]
 
@@ -166,7 +192,7 @@ RMDChronicleModelBrowser >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 	aSpWindowPresenter
-		initialExtent: 1200 @ 600;
+		initialExtent: 1200 @ 800;
 		title: 'Chronicle (models)'
 ]
 
@@ -174,6 +200,15 @@ RMDChronicleModelBrowser >> initializeWindow: aSpWindowPresenter [
 RMDChronicleModelBrowser >> nameFieldChanged [
 
 	self updateModelList
+]
+
+{ #category : 'operations' }
+RMDChronicleModelBrowser >> openCharts [
+
+	modelList selectedItem ifNotNil: [ :chronicleModel |
+		chronicleModel charts ifNotEmpty: [ :charts |
+			(RMDChartsViewer withAll: charts) open title:
+				'Charts for ' , chronicleModel name ] ]
 ]
 
 { #category : 'operations' }
@@ -202,12 +237,14 @@ RMDChronicleModelBrowser >> selectedModelChanged [
 RMDChronicleModelBrowser >> updateButtons [
 
 	modelList selectedItem
-		ifNotNil: [
+		ifNotNil: [ :chronicleModel |
 			modelerButton enable.
-			tagButton enable ]
+			tagButton enable.
+			openChartsButton enabled: (chronicleModel hasTag: 'chart') ]
 		ifNil: [
 			modelerButton disable.
-			tagButton disable ]
+			tagButton disable.
+			openChartsButton disable ]
 ]
 
 { #category : 'updates' }
@@ -216,6 +253,9 @@ RMDChronicleModelBrowser >> updateModelList [
 	| models |
 	models := RMDChronicleStore chronicleModels.
 	self updateTags: models.
+	folderNameField text asString trim asLowercase ifNotEmpty: [ :str |
+		models := models select: [ :m |
+			          m folderName asLowercase includesSubstring: str ] ].
 	nameField text asString trim asLowercase ifNotEmpty: [ :str |
 		models := models select: [ :m |
 			          m name asLowercase includesSubstring: str ] ].

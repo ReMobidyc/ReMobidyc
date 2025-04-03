@@ -1,6 +1,6 @@
-Extension { #name : #RMDPatchDefinitionNode }
+Extension { #name : 'RMDPatchDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDPatchDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	aRMDInterpreter context

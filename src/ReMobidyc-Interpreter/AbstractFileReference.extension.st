@@ -1,6 +1,6 @@
-Extension { #name : #AbstractFileReference }
+Extension { #name : 'AbstractFileReference' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 AbstractFileReference >> lfWriteStreamDo: aBlock [
 
 	self writeStreamDo: [ :stream | 

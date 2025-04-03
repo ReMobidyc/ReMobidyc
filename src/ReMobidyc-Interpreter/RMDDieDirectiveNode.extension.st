@@ -1,11 +1,11 @@
-Extension { #name : #RMDDieDirectiveNode }
+Extension { #name : 'RMDDieDirectiveNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDieDirectiveNode >> evalIn: aRMDInterpreter [
 
 	aRMDInterpreter terminate: nil
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDDieDirectiveNode >> typecheckIn: aRMDInterpreter [
 ]

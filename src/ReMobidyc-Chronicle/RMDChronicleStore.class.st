@@ -11,28 +11,32 @@ Class {
 { #category : 'accessing' }
 RMDChronicleStore class >> chronicleMaxDays [
 
-	^ self current chronicleMaxDays
+	^ self current chronicleMaxDays ifNil: [ 0 ]
 ]
 
 { #category : 'accessing' }
-RMDChronicleStore class >> chronicleMaxDays: anIntegerOrNil [
+RMDChronicleStore class >> chronicleMaxDays: anInteger [
 
 	self current
-		chronicleMaxDays: anIntegerOrNil;
+		chronicleMaxDays: (anInteger > 0
+				 ifTrue: [ anInteger ]
+				 ifFalse: [ nil ]);
 		saveSettings
 ]
 
 { #category : 'accessing' }
 RMDChronicleStore class >> chronicleMaxSize [
 
-	^ self current chronicleMaxSize
+	^ self current chronicleMaxSize ifNil: [ 0 ]
 ]
 
 { #category : 'accessing' }
 RMDChronicleStore class >> chronicleMaxSize: anIntegerOrNil [
 
 	self current
-		chronicleMaxSize: anIntegerOrNil;
+		chronicleMaxSize: (anIntegerOrNil > 0
+				 ifTrue: [ anIntegerOrNil ]
+				 ifFalse: [ nil ]);
 		saveSettings
 ]
 
@@ -56,11 +60,17 @@ RMDChronicleStore class >> recordModel: aRMDSimulationModel [
 	^ self current recordModel: aRMDSimulationModel
 ]
 
+{ #category : 'operations' }
+RMDChronicleStore class >> recordModel: aRMDSimulationModel folderName: aString [
+
+	^ self current recordModel: aRMDSimulationModel folderName: aString
+]
+
 { #category : 'settings' }
 RMDChronicleStore class >> settingOn: aBuilder [
 
 	<systemsettings>
-	(aBuilder group: #archives)
+	(aBuilder group: #remobidycArchives)
 		parent: #remobidyc;
 		label: 'Archives';
 		description: 'Settings about archives';
@@ -72,7 +82,7 @@ RMDChronicleStore class >> settingOn: aBuilder [
 						('week' -> 8).
 						('month' -> 32).
 						('year' -> 366).
-						('never' -> nil) };
+						('never' -> 0) };
 				description:
 					'An archive will be automatically expired in the specified period.'.
 			(aBuilder pickOne: #chronicleMaxSize)
@@ -82,7 +92,7 @@ RMDChronicleStore class >> settingOn: aBuilder [
 						('100' -> 100).
 						('1000' -> 1000).
 						('10000' -> 10000).
-						('no limit' -> nil) };
+						('no limit' -> 0) };
 				description:
 					'The storage will keep upto the specified number of archives. The oldest will be automatically removed when the archives exceed the capacity.' ]
 ]
@@ -139,9 +149,16 @@ RMDChronicleStore >> payloadClassFor: aHiDeMetadata [
 { #category : 'operations' }
 RMDChronicleStore >> recordModel: aRMDSimulationModel [
 
+	^ self recordModel: aRMDSimulationModel folderName: nil
+]
+
+{ #category : 'operations' }
+RMDChronicleStore >> recordModel: aRMDSimulationModel folderName: aString [
+
 	| chronicleModel |
 	chronicleModel := RMDChronicleModel new
 		                  simulationModel: aRMDSimulationModel;
+		                  folderName: aString;
 		                  yourself.
 	self chronicleSave: chronicleModel.
 	^ chronicleModel

@@ -5,31 +5,10 @@ Class {
 	#package : 'BaselineOfReMobidyc'
 }
 
-{ #category : 'utilities' }
-BaselineOfReMobidyc class >> deploy [
+{ #category : 'accessing' }
+BaselineOfReMobidyc class >> codename [
 
-	<script>
-	RMDMetadata flushCurrentAuthor.
-	RMDRepositoryDirectory flushCurrent.
-	GraphicFontSettings setFontsToStyleNamed: #small.
-	Smalltalk cleanUp: true except: {  } confirming: false.
-	MCRepositoryGroup allSubInstancesDo: [ :group |
-		group repositories do: [ :repo | group removeRepository: repo ] ].
-	IceRepository registry removeAll.
-	IceCredentialStore current in: [ :store |
-		store allCredentials do: [ :each | each removeFrom: store ] ].
-	World closeAllWindowsDiscardingChanges.
-	Deprecation
-		raiseWarning: false;
-		showWarning: false.
-	NoChangesLog install.
-	"NoPharoFilesOpener install."
-	FFICompilerPlugin install.
-	Stdio useNullStreams.
-	MCCacheRepository uniqueInstance disable.
-	EpMonitor reset.
-	self initializeResources.
-	5 timesRepeat: [ Smalltalk garbageCollect ]
+	^ 'Keelung'
 ]
 
 { #category : 'utilities' }
@@ -37,21 +16,53 @@ BaselineOfReMobidyc class >> ensureIcebergRepository [
 
 	^ IceRepository repositories
 		  detect: [ :repo | repo name = 'ReMobidyc' ]
-		  ifNone: [ 
+		  ifNone: [
 			  | repo |
 			  UIManager default
 				  informUser:
 				  'Cloning repository from the official re:mobidyc repository'
-				  during: [ 
+				  during: [
 					  repo := IceRepositoryCreator new
 						          repository: nil;
 						          remote:
 							          (IceGitRemote url:
-									           'https://github.com/tomooda/ReMobidyc.git');
+									           'https://github.com/ReMobidyc/ReMobidyc.git');
 						          location:
 							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
 							          / 'ReMobidyc';
 						          createRepository ].
+			  repo
+				  register;
+				  yourself ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> ensureStandardRepository [
+
+	<script: 'BaselineOfReMobidyc  ensureStandardRepository'>
+	^ IceRepository repositories
+		  detect: [ :repo | repo name = 'StandardModels' ]
+		  ifNone: [
+			  | location repo |
+			  location := FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
+			              / 'StandardModels'.
+			  location isDirectory
+				  ifTrue: [
+					  repo := IceRepositoryCreator new
+						          repository: nil;
+						          location: location;
+						          createRepository ]
+				  ifFalse: [
+					  UIManager default
+						  informUser: 'Cloning the official re:mobidyc standard models'
+						  during: [
+							  repo := IceRepositoryCreator new
+								          repository: nil;
+								          remote:
+									          (IceGitRemote url:
+											           'https://github.com/ReMobidyc/StandardModels.git');
+								          location: location;
+								          createRepository ] ].
 			  repo
 				  register;
 				  yourself ]
@@ -72,9 +83,46 @@ BaselineOfReMobidyc class >> initializeResources [
 ]
 
 { #category : 'scripts' }
+BaselineOfReMobidyc class >> installDocuments [
+
+	<script>
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'docs' / 'cheatsheets' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'docs' / 'cheatsheets')
+				ensureCreateDirectory.
+		repo location / 'Tutorials' / 'Grasshoppers' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'Tutorials'
+			 / 'Grasshoppers') ensureCreateDirectory ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installFonts [
+
+	<script: 'BaselineOfReMobidyc installFonts'>
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'resources' / 'Fonts' copyAllTo:
+			(FileLocator imageDirectory / 'Fonts') ensureCreateDirectory.
+		Smalltalk at: #PlemolJPRegular ifPresent: [ :fontClass |
+			EmbeddedFreeTypeFontInstaller registerFont: fontClass.
+			FreeTypeFontProvider current buildFamilies.
+			StandardFonts setAllStandardFontsTo:
+				(LogicalFont familyName: 'PlemolJP' pointSize: 10) ] ]
+]
+
+{ #category : 'scripts' }
+BaselineOfReMobidyc class >> installIcons [
+
+	<script: 'BaselineOfReMobidyc installIcons'>
+	(IceRepository repositoryNamed: 'ReMobidyc') ifNotNil: [ :repo |
+		repo location / 'resources' / 'icons' copyAllTo:
+			(FileLocator localDirectory / 'ReMobidyc' / 'icons')
+				ensureCreateDirectory ]
+]
+
+{ #category : 'scripts' }
 BaselineOfReMobidyc class >> installLogos [
 	| imagesUrl basenames client |
-	imagesUrl := 'https://github.com/tomooda/ReMobidyc/raw/main/images'
+	imagesUrl := 'https://github.com/ReMobidyc/ReMobidyc/raw/main/images'
 		asUrl.
 	basenames := #('logo-light1.png' 'logo-light2.png' 'logo-dark1.png' 'logo-dark2.png' 'default.png').
 	client := ZnClient new.
@@ -93,31 +141,6 @@ BaselineOfReMobidyc class >> installLogos [
 ]
 
 { #category : 'scripts' }
-BaselineOfReMobidyc class >> installStandardRepository [
-
-	<script: 'BaselineOfReMobidyc  installStandardRepository'>
-	^ IceRepository repositories
-		  detect: [ :repo | repo name = 'StandardModels' ]
-		  ifNone: [
-			  | repo |
-			  UIManager default
-				  informUser: 'Cloning the official re:mobidyc standard models'
-				  during: [
-					  repo := IceRepositoryCreator new
-						          repository: nil;
-						          remote:
-							          (IceGitRemote url:
-									           'https://github.com/ReMobidyc/StandardModels.git');
-						          location:
-							          FileLocator localDirectory / 'iceberg' / 'ReMobidyc'
-							          / 'StandardModels';
-						          createRepository ].
-			  repo
-				  register;
-				  yourself ]
-]
-
-{ #category : 'scripts' }
 BaselineOfReMobidyc class >> logoDirectoryPath [
 	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
 		ensureCreateDirectory
@@ -127,6 +150,21 @@ BaselineOfReMobidyc class >> logoDirectoryPath [
 BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 
 	<worldMenu>
+	(aBuilder item: #ReMobidycDocuments)
+		parent: 'ReMobidyc';
+		order: 80;
+		label: 'Documents';
+		with: [
+			(aBuilder item: #ReMobidycCheatsheets)
+				order: 10;
+				label: 'Cheatsheets...';
+				action: [ self showCheatsheets ];
+				help: 'Open cheatsheets browser for re:mobidyc'.
+			(aBuilder item: #ReMobidycTutorial)
+				order: 20;
+				label: 'Grasshopper Tutorial';
+				action: [ self showTutorial ];
+				help: 'Open a tutorial to build a model of grasshoppers and eggs' ].
 	(aBuilder item: #ReMobidycSystem)
 		parent: 'ReMobidyc';
 		order: 100;
@@ -154,6 +192,20 @@ BaselineOfReMobidyc class >> settingOn: aBuilder [
 		description: 'All settings about re:mobidyc'
 ]
 
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> showCheatsheets [
+
+	<script>
+	| documentBrowser |
+	documentBrowser := MicDocumentBrowserPresenter new.
+	documentBrowser documentRoots
+		removeAll;
+		addAll:
+			((FileLocator localDirectory / 'ReMobidyc' / 'docs' / 'cheatsheets'
+				  filesMatching: '*.md') collect: #asMicResourceReference).
+	documentBrowser open
+]
+
 { #category : 'settings' }
 BaselineOfReMobidyc class >> showSettingsBrowser [
 
@@ -163,6 +215,20 @@ BaselineOfReMobidyc class >> showSettingsBrowser [
 			(PackageOrganizer default packages select: [ :package |
 					 package name beginsWith: 'ReMobidyc-' ]);
 		open
+]
+
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> showTutorial [
+
+	<script>
+	| documentBrowser |
+	documentBrowser := MicDocumentBrowserPresenter new.
+	documentBrowser documentRoots
+		removeAll;
+		addAll: ((FileLocator localDirectory / 'ReMobidyc' / 'Tutorials'
+			  / 'Grasshoppers' filesMatching: '*.md') collect:
+					 #asMicResourceReference).
+	documentBrowser open
 ]
 
 { #category : 'utilities' }
@@ -207,6 +273,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 	<baseline>
 	spec for: #common do: [
 		spec
+			baseline: 'Phleeter'
+			with: [ spec repository: 'github://tomooda/Phleeter:main/' ];
+			baseline: 'ObjCBridge'
+			with: [ spec repository: 'github://tesonep/objcbridge/src' ];
 			baseline: 'HiDeHo'
 			with: [ spec repository: 'github://tomooda/HiDeHo:main/' ];
 			baseline: 'PetitParser2Core'
@@ -214,6 +284,8 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			baseline: 'DataFrame'
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
+			package: 'ReMobidyc-Application'
+			with: [ spec requires: #( 'Phleeter' 'ObjCBridge' ) ];
 			package: 'ReMobidyc-Chronicle'
 			with: [ spec requires: #( 'HiDeHo' 'ReMobidyc-Interpreter' ) ];
 			package: 'ReMobidyc-Storage';
@@ -251,10 +323,10 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			group: 'default' with: #( 'core' 'tests' );
 			group: 'core'
 			with:
-				#( 'ReMobidyc-Chronicle' 'ReMobidyc-Storage' 'ReMobidyc-Language'
-				   'ReMobidyc-Units' 'ReMobidyc-Interpreter'
-				   'ReMobidyc-Visualization' 'ReMobidyc-Repository'
-				   'ReMobidyc-Spec2' );
+				#( 'ReMobidyc-Application' 'ReMobidyc-Chronicle'
+				   'ReMobidyc-Storage' 'ReMobidyc-Language' 'ReMobidyc-Units'
+				   'ReMobidyc-Interpreter' 'ReMobidyc-Visualization'
+				   'ReMobidyc-Repository' 'ReMobidyc-Spec2' );
 			group: 'tests'
 			with: #( 'ReMobidyc-Storage-Tests' 'ReMobidyc-Language-Tests'
 				   'ReMobidyc-Units-Tests' 'ReMobidyc-Interpreter-Tests'
@@ -282,5 +354,8 @@ BaselineOfReMobidyc >> postLoad [
 	<script: 'BaselineOfReMobidyc new postLoad'>
 	self class
 		initializeResources;
-		installStandardRepository
+		ensureStandardRepository;
+		installFonts;
+		installIcons;
+		installDocuments
 ]

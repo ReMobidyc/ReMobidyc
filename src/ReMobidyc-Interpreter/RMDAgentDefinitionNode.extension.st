@@ -1,6 +1,6 @@
-Extension { #name : #RMDAgentDefinitionNode }
+Extension { #name : 'RMDAgentDefinitionNode' }
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAgentDefinitionNode >> evalIn: aRMDInterpreter [
 
 	[
@@ -19,7 +19,7 @@ RMDAgentDefinitionNode >> evalIn: aRMDInterpreter [
 		do: [ :ex | ex signalWithScope: self ]
 ]
 
-{ #category : #'*ReMobidyc-Interpreter' }
+{ #category : '*ReMobidyc-Interpreter' }
 RMDAgentDefinitionNode >> typecheckIn: aRMDInterpreter [
 
 	[ 
