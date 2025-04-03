@@ -1,4 +1,4 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-11-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-12-%23aac9ff.svg)](https://pharo.org/download)
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
 
@@ -27,13 +27,9 @@ There are three ways to install reːmobidyc.
 
 ### 1. from binary package
 
-The following pre-built packages are available.
+The pre-built packages are available at the <a href="https://viennatalk.org/builds/remobidyc/latest">official distribution site</a>.
 
-The latest release: [<kbd> <br> Wimereux <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
-* macOS / AppleSilicon [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-arm64.dmg)
-* macOS / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-mac-x64.dmg)
-* Linux / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-linux-x64.tar.bz2)
-* windows64 / Intel processor [![download](https://img.shields.io/badge/DOWNLOAD-f0f0f0?labelColor=a0a0a0&style=flat&logoColor=white&logo=DocuSign)](https://github.com/ReMobidyc/ReMobidyc/releases/latest/download/remobidyc-win-x64.zip)
+The latest release: [<kbd> <br> Keelung <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
 
 ### 2. from Pharo
 
