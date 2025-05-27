@@ -1101,6 +1101,34 @@ RMDSimulationModel >> renderersDo: aBlock [
 	renderers do: aBlock
 ]
 
+{ #category : 'accessing - definitions' }
+RMDSimulationModel >> reorderAnimatDefinitions [
+
+	self reorderAnimatDefinitions: (Array streamContents: [ :stream |
+			 self speciesNames do: [ :species |
+				 stream nextPutAll: (self stageNamesOf: species) ] ])
+]
+
+{ #category : 'accessing - definitions' }
+RMDSimulationModel >> reorderAnimatDefinitions: anArrayOfString [
+
+	| animats |
+	animats := animatDefinitions keys asOrderedCollection.
+	animatDefinitions := (Array streamContents: [ :stream |
+		                      anArrayOfString do: [ :name |
+			                      animats remove: name ifAbsent: [  ].
+			                      animatDefinitions
+				                      at: name
+				                      ifPresent: [ :def |
+				                      stream nextPut: name -> def ] ].
+		                      animats do: [ :name |
+			                      animatDefinitions
+				                      at: name
+				                      ifPresent: [ :def |
+				                      stream nextPut: name -> def ] ] ])
+		                     asOrderedDictionary
+]
+
 { #category : 'rewriting' }
 RMDSimulationModel >> replaceChildren: aDictionary [
 

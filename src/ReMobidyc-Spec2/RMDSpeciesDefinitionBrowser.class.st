@@ -79,6 +79,12 @@ RMDSpeciesDefinitionBrowser >> species: aString [
 	self updateStages
 ]
 
+{ #category : 'accessing' }
+RMDSpeciesDefinitionBrowser >> stagesNotebook [
+
+	^ stagesNotebook
+]
+
 { #category : 'updating' }
 RMDSpeciesDefinitionBrowser >> updateStages [
 

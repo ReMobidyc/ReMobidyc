@@ -7,7 +7,9 @@ Class {
 		'renameSpeciesButton',
 		'spreadAttributeButton',
 		'spreadUtilityButton',
-		'spreadTaskButton'
+		'spreadTaskButton',
+		'reorderSpeciesButton',
+		'reorderStageButton'
 	],
 	#category : 'ReMobidyc-Spec2-Components',
 	#package : 'ReMobidyc-Spec2',
@@ -20,7 +22,11 @@ RMDAnimatDefinitionBrowser class >> defaultLayout [
 	^ SpBoxLayout newVertical
 		  add: (SpBoxLayout newHorizontal
 				   add: #renameSpeciesButton expand: false;
+				   add: #reorderSpeciesButton expand: false;
+				   add: '    ' asPresenter expand: false;
 				   add: #renameStageButton expand: false;
+				   add: #reorderStageButton expand: false;
+				   add: '    ' asPresenter expand: false;
 				   add: #copyStageButton expand: false;
 				   yourself)
 		  height: self buttonHeight;
@@ -221,11 +227,22 @@ RMDAnimatDefinitionBrowser >> initializeStagePresenters [
 		                       help: 'Change the name of species.';
 		                       action: [ self renameSpecies ];
 		                       yourself.
+	reorderSpeciesButton := self newButton
+		                       label: 'reorder species';
+		                       help: 'Change the order of species.';
+		                       action: [ self reorderSpecies ];
+		                       yourself.
 	renameStageButton := self newButton
 		                     label: 'rename stage';
 		                     help:
 			                     'Change the name of stage. All references to this stage will be modified.';
 		                     action: [ self renameStage ];
+		                     yourself.
+	reorderStageButton := self newButton
+		                     label: 'reorder stages';
+		                     help:
+			                     'Change the order of stages.';
+		                     action: [ self reorderStages ];
 		                     yourself.
 	copyStageButton := self newButton
 		                   label: 'copy stage';
@@ -285,6 +302,50 @@ RMDAnimatDefinitionBrowser >> renderersDo: aBlock [
 	self simulationModel renderersDo: [ :renderer | 
 		(renderer isAnimatRendererFor: animat) ifTrue: [ 
 			aBlock cull: renderer ] ]
+]
+
+{ #category : 'operations' }
+RMDAnimatDefinitionBrowser >> reorderSpecies [
+
+	self simulationModel ifNotNil: [ :simulationModel |
+		| pageTitle |
+		pageTitle := modeler views selectedPage title.
+		RMDReorderingListPresenter
+			withAll: simulationModel speciesNames
+			display: [ :string | string ]
+			onAccept: [ :speciesNames |
+				simulationModel reorderAnimatDefinitions:
+					(Array streamContents: [ :stream |
+						 speciesNames do: [ :species |
+							 stream nextPutAll: (simulationModel stageNamesOf: species) ] ]).
+				modeler updatePages.
+				(modeler views pages
+					 detect: [ :page | page title = pageTitle ]
+					 ifNone: [  ]) ifNotNil: [ :page |
+					modeler views selectPage: page ] ] ]
+]
+
+{ #category : 'operations' }
+RMDAnimatDefinitionBrowser >> reorderStages [
+
+	self simulationModel ifNotNil: [ :simulationModel |
+		| pageTitle |
+		pageTitle := modeler views selectedPage title.
+		RMDReorderingListPresenter
+			withAll: (simulationModel stageNamesOf: self speciesName)
+			display: [ :string | string ]
+			onAccept: [ :stageNames |
+				simulationModel reorderAnimatDefinitions:
+					(Array streamContents: [ :stream |
+						 simulationModel speciesNames do: [ :species |
+							 stream nextPutAll: (species = self speciesName
+									  ifTrue: [ stageNames ]
+									  ifFalse: [ simulationModel stageNamesOf: species ]) ] ]).
+				modeler updatePages.
+				(modeler views pages
+					 detect: [ :page | page title = pageTitle ]
+					 ifNone: [  ]) ifNotNil: [ :page |
+					modeler views selectPage: page ] ] ]
 ]
 
 { #category : 'private' }

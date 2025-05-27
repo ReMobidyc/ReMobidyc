@@ -549,3 +549,9 @@ RMDSimulationModeler >> updateWindowTitle [
 RMDSimulationModeler >> variabilityPageIndex [
 	^ 2
 ]
+
+{ #category : 'accessing' }
+RMDSimulationModeler >> views [
+
+	^ views
+]
