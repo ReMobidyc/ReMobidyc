@@ -275,8 +275,6 @@ BaselineOfReMobidyc >> baselineOf: spec [
 		spec
 			baseline: 'Phleeter'
 			with: [ spec repository: 'github://tomooda/Phleeter:main/' ];
-			baseline: 'ObjCBridge'
-			with: [ spec repository: 'github://tesonep/objcbridge/src' ];
 			baseline: 'HiDeHo'
 			with: [ spec repository: 'github://tomooda/HiDeHo:main/' ];
 			baseline: 'PetitParser2Core'
