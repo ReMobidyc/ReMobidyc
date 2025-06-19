@@ -96,7 +96,7 @@ RMDAbout >> releaseName [
 ]
 
 { #category : 'accessing' }
-RMDAbout >> title [
+RMDAbout >> windowTitle [
 
 	^ self releaseName
 ]

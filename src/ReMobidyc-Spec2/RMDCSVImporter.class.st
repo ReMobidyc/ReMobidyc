@@ -795,3 +795,9 @@ RMDCSVImporter >> validateTable [
 		time ].
 	^ table items allSatisfy: [ :row | row allSatisfy: #isNumber ]
 ]
+
+{ #category : 'accessing' }
+RMDCSVImporter >> windowTitle [
+
+	^ 'Data Table Importer'
+]

@@ -808,3 +808,16 @@ RMDExperimentarium >> updateWindowTitle [
 
 	self window ifNotNil: [ :window | window title: self title ]
 ]
+
+{ #category : 'accessing' }
+RMDExperimentarium >> windowTitle [
+
+	^ 'Experimentarium'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (self isValidated
+			   ifTrue: [ '' ]
+			   ifFalse: [ ' (INVALID MODEL)' ]) , (metaInterpreter
+		   ifNotNil: [ 
+			   '[', metaInterpreter memoryName, ']' ]
+		   ifNil: [ '' ])
+]

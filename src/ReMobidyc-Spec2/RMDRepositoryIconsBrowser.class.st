@@ -166,3 +166,9 @@ RMDRepositoryIconsBrowser >> updateDescriptionText [
 				  form extent x printString , ' x ' , form extent y printString ]
 				  ifNil: [ '' ] ]) ifNil: [ '' ])
 ]
+
+{ #category : 'accessing' }
+RMDRepositoryIconsBrowser >> windowTitle [
+
+	^ 'Icons'
+]

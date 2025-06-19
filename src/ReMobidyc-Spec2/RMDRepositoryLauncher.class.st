@@ -330,3 +330,8 @@ RMDRepositoryLauncher >> updateItemList [
 				itemList withAdapterDo: [ :a | 
 					a widgetDo: [ :w | w beSingleSelection ] ] ] ]
 ]
+
+{ #category : 'initialization' }
+RMDRepositoryLauncher >> windowTitle [
+	^ 'Launcher'
+]

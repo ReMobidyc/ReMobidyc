@@ -152,3 +152,9 @@ RMDRepositoryDataBrowser >> updateDescriptionText [
 				 fileRef readStreamDo: [ :stream | (stream upTo: String lf) trim ] ]
 			 ifNil: [ '' ])
 ]
+
+{ #category : 'accessing' }
+RMDRepositoryDataBrowser >> windowTitle [
+
+	^ 'Data'
+]

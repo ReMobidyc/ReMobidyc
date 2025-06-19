@@ -150,3 +150,8 @@ RMDRepositoryModelsBrowser >> updateDescriptionText [
 			  descriptionText text:
 				  (repo modelMetadataNamed: item ifAbsent: [ '' ]) asText ] ]
 ]
+
+{ #category : 'initialization' }
+RMDRepositoryModelsBrowser >> windowTitle [
+	^ 'Models'
+]

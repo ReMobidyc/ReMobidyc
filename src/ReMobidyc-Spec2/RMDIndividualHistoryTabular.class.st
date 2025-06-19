@@ -374,3 +374,13 @@ RMDIndividualHistoryTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem
 ]
+
+{ #category : 'initialization' }
+RMDIndividualHistoryTabular >> windowTitle [
+
+	^ 'Individual History Tabular'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (metaInterpreter
+			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+			   ifNil: [ '' ])
+]

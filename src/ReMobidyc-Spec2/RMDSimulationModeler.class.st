@@ -59,7 +59,7 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 		with: [ 
 			(aBuilder item: #OpenNew)
 				parent: 'ReMobidyc';
-				order: 1;
+				order: 2;
 				label: 'Modeler (GUI)';
 				action: [ 
 					(RMDSimulationModeler on: (RMDSimulationModel new
@@ -554,4 +554,13 @@ RMDSimulationModeler >> variabilityPageIndex [
 RMDSimulationModeler >> views [
 
 	^ views
+]
+
+{ #category : 'private' }
+RMDSimulationModeler >> windowTitle [
+
+	^ 'Modeler'
+	  ,
+		  ((simulationModel ifNotNil: #name ifNil: '') ifNotEmpty: [ :name | 
+			   ' @ ' , name ])
 ]

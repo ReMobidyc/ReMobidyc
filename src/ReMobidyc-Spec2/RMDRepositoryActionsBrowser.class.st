@@ -159,3 +159,9 @@ RMDRepositoryActionsBrowser >> updateDescriptionText [
 	descriptionText text: ((self item ifNotNil: [ :item | 
 			  (self getAction: item) ifNotNil: #printString ]) ifNil: [ '' ])
 ]
+
+{ #category : 'accessing' }
+RMDRepositoryActionsBrowser >> windowTitle [
+
+	^ 'Actions'
+]

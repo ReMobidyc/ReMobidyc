@@ -789,3 +789,10 @@ RMDActionDefinitionBrowser >> viewUtility [
 		utilityDefinition definitionBody asPrettyPrintNode openTitle:
 			'definition of ' , utilityDefinition identifier ]
 ]
+
+{ #category : 'accessing' }
+RMDActionDefinitionBrowser >> windowTitle [
+
+	^ 'Action definition'
+	  , (node ifNil: [ '' ] ifNotNil: [ :action | ' of ' , action name ])
+]
