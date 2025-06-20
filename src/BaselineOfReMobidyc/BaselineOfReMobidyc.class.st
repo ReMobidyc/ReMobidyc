@@ -283,7 +283,7 @@ BaselineOfReMobidyc >> baselineOf: spec [
 			with: [ spec repository: 'github://PolyMathOrg/DataFrame/' ].
 		spec
 			package: 'ReMobidyc-Application'
-			with: [ spec requires: #( 'Phleeter' 'ObjCBridge' ) ];
+			with: [ spec requires: #( 'Phleeter' ) ];
 			package: 'ReMobidyc-Chronicle'
 			with: [ spec requires: #( 'HiDeHo' 'ReMobidyc-Interpreter' ) ];
 			package: 'ReMobidyc-Storage';
