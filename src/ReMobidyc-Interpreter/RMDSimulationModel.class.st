@@ -30,7 +30,7 @@ RMDSimulationModel class >> agentsFileName [
 	^ 'agents.rmd'
 ]
 
-{ #category : 'instance creation' }
+{ #category : 'examples' }
 RMDSimulationModel class >> goatAndWolf [
 
 	| model |
@@ -132,12 +132,9 @@ RMDSimulationModel class >> importMetadata: aFileReference ifError: errorBlock [
 { #category : 'importing' }
 RMDSimulationModel class >> importModel [
 
-	<script: 'RMDSimulationModel importModel open'>
-	(UIManager default
-		 chooseExistingFileReference: 'import simulation model'
-		 extensions: #(  )
-		 path: ((FileLocator documents / 'ReMobidyc' / 'models')
-				  ensureCreateDirectory / '*') absolutePath) ifNotNil: [ :ref | 
+	<script: 'RMDSimulationModel importModel inspect'>
+	(SpApplication defaultApplication selectDirectoryTitle:
+		 'import simulation model') ifNotNil: [ :ref |
 		^ self importModel: ref ifError: [ nil ] ].
 	^ nil
 ]
@@ -165,7 +162,7 @@ RMDSimulationModel class >> simulationDefinitionFileName [
 	^ 'simulation.rmd'
 ]
 
-{ #category : 'instance creation' }
+{ #category : 'examples' }
 RMDSimulationModel class >> sugarScape [
 
 	^ self new

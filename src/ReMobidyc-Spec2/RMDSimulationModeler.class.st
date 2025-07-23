@@ -12,7 +12,8 @@ Class {
 		'openExperimentariumButton',
 		'openExperimentariumMenuButton',
 		'variabilityPresenter',
-		'canDiscardEdits'
+		'canDiscardEdits',
+		'openLifehistoryDiagramButton'
 	],
 	#category : 'ReMobidyc-Spec2-Browsers',
 	#package : 'ReMobidyc-Spec2',
@@ -29,6 +30,8 @@ RMDSimulationModeler class >> defaultLayout [
 				   addSpace;
 				   addButton: #openExperimentariumButton
 				   dropdownButton: #openExperimentariumMenuButton;
+				   addSpace;
+				   add: #openLifehistoryDiagramButton width: self buttonHeight;
 				   yourself)
 		  height: self buttonHeight;
 		  add: #views yourself;
@@ -243,10 +246,10 @@ RMDSimulationModeler >> initializePresenters [
 	super initializePresenters.
 	menuBar := self newMenuBar
 		           addGroup: [ :group |
-			           group addItem: [ :item |
-					           item
-						           name: 'File';
-						           subMenu: self fileMenu ] ];
+				           group addItem: [ :item |
+							           item
+								           name: 'File';
+								           subMenu: self fileMenu ] ];
 		           yourself.
 	metadataPresenter := self newMetadata
 		                     whenNameChangedDo: [ self updateWindowTitle ];
@@ -254,14 +257,14 @@ RMDSimulationModeler >> initializePresenters [
 
 	views := self newNotebook
 		         whenSelectedPageChangedDo: [
-			         | pageIndex |
-			         pageIndex := views selectedPageIndex.
-			         pageIndex = self variabilityPageIndex ifTrue: [
-					         simulationModel ifNotNil: #updateMetaParameters.
-					         variabilityPresenter ifNotNil: #nodeChanged.
-					         (views pageAt: self variabilityPageIndex) resetContent ].
-			         pageIndex = self simulationDefinitionPageIndex ifTrue: [
-					         simulationDefinitionPresenter ifNotNil: #nodeChanged ] ];
+				         | pageIndex |
+				         pageIndex := views selectedPageIndex.
+				         pageIndex = self variabilityPageIndex ifTrue: [
+							         simulationModel ifNotNil: #updateMetaParameters.
+							         variabilityPresenter ifNotNil: #nodeChanged.
+							         (views pageAt: self variabilityPageIndex) resetContent ].
+				         pageIndex = self simulationDefinitionPageIndex ifTrue: [
+						         simulationDefinitionPresenter ifNotNil: #nodeChanged ] ];
 		         whenPageRemovedDo: [ :page |
 			         self removeSpeciesNamed: page title ];
 		         yourself.
@@ -284,7 +287,14 @@ RMDSimulationModeler >> initializePresenters [
 			                                 self openInExperimentarium ];
 		                                 help:
 			                                 'Run the model in an experimentarium with selected memory model.';
-		                                 yourself
+		                                 yourself.
+	openLifehistoryDiagramButton := self newButton
+		                                icon: (self iconNamed: #window);
+		                                action: [
+			                                simulationModel
+				                                openLifehistoryDiagram ];
+		                                help: 'Open a Life-history diagram';
+		                                yourself
 ]
 
 { #category : 'initialization' }
