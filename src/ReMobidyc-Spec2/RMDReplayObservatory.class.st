@@ -398,3 +398,13 @@ RMDReplayObservatory >> updateVisual [
 		visualizer extent: self imageExtent.
 		image image: (visualizer visualize: interpreter) ]
 ]
+
+{ #category : 'accessing' }
+RMDReplayObservatory >> windowTitle [
+
+	^ 'Replay Observatory' , ((metaInterpreter ifNotNil: #modelName)
+		   ifNil: [ '' ]
+		   ifNotNil: [ :name | ' @ ' , name ]) , (metaInterpreter
+		   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+		   ifNil: [ '' ])
+]

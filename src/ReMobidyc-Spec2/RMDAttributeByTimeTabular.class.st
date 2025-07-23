@@ -339,3 +339,13 @@ RMDAttributeByTimeTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem
 ]
+
+{ #category : 'accessing' }
+RMDAttributeByTimeTabular >> windowTitle [
+
+	^ 'Attribute Tabular'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (metaInterpreter
+			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+			   ifNil: [ '' ])
+]

@@ -261,3 +261,13 @@ RMDSnapshotTabular >> updateTraceableAction [
 
 	traceableActionContext context: taskList selectedItem
 ]
+
+{ #category : 'initialization' }
+RMDSnapshotTabular >> windowTitle [
+
+	^ 'Snapshot Tabular'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (metaInterpreter
+			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+			   ifNil: [ '' ])
+]

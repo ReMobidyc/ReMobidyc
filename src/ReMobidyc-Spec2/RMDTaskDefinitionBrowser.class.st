@@ -806,3 +806,11 @@ RMDTaskDefinitionBrowser >> viewParameterInstantiation [
 				n asPrettyPrintNode openTitle:
 					'definition of ' , bind placeholder printString ] ] ]
 ]
+
+{ #category : 'accessing' }
+RMDTaskDefinitionBrowser >> windowTitle [
+
+	^ 'Task definition' , (self taskDefinition
+		   ifNil: [ '' ]
+		   ifNotNil: [ :task | ' of ' , task name ])
+]

@@ -377,3 +377,13 @@ RMDPopulationByTimeTabular >> updateRunDropList [
 			                ifNone: [ nil ].
 		runDropList selectItem: selectedItem ]
 ]
+
+{ #category : 'initialization' }
+RMDPopulationByTimeTabular >> windowTitle [
+
+	^ 'Population Tabular'
+	  , (self modelName ifNil: [ '' ] ifNotNil: [ :name | ' @ ' , name ])
+	  , (metaInterpreter
+			   ifNotNil: [ '[' , metaInterpreter memoryName , ']' ]
+			   ifNil: [ '' ])
+]

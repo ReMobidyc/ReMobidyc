@@ -524,3 +524,11 @@ RMDIcebergRepositoryBrowser >> windowIcon [
 
 	^ self icebergIcon
 ]
+
+{ #category : 'accessing' }
+RMDIcebergRepositoryBrowser >> windowTitle [
+
+	^ icebergRepository
+		  ifNotNil: [ icebergRepository name ]
+		  ifNil: [ 'IcebergRepositoryBrowser' ]
+]

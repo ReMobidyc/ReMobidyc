@@ -519,12 +519,6 @@ RMDAbstractRepositoryBrowser >> save: anObject [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
-RMDAbstractRepositoryBrowser >> title [
-
-	^ 'Repository Browser'
-]
-
 { #category : 'updating' }
 RMDAbstractRepositoryBrowser >> updateButtons [
 
@@ -591,4 +585,10 @@ RMDAbstractRepositoryBrowser >> updateSourceText [
 	self item
 		ifNotNil: [ :action | descriptionText syntaxNode: action ]
 		ifNil: [ descriptionText text: '' ]
+]
+
+{ #category : 'accessing' }
+RMDAbstractRepositoryBrowser >> windowTitle [
+
+	^ 'Repository Browser'
 ]

@@ -327,3 +327,9 @@ RMDSourceTemplateFileBrowser >> updateTemplateList [
 							 RMDSourceTemplate fromJsonObject: dict ] ]
 				 ifNil: [ Array new ])
 ]
+
+{ #category : 'accessing' }
+RMDSourceTemplateFileBrowser >> windowTitle [
+
+	^ 'User-defined Template Browser'
+]

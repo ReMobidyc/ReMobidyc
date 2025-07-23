@@ -390,3 +390,11 @@ RMDModelFileTextBrowser >> visualizationFileParser [
 
 	^ RMDGrammar current visualizationFile end
 ]
+
+{ #category : 'private' }
+RMDModelFileTextBrowser >> windowTitle [
+
+	^ 'Modeler' , (modelFileReference
+		   ifNil: [ '' ]
+		   ifNotNil: [ ' @ ' , modelFileReference basename ])
+]
