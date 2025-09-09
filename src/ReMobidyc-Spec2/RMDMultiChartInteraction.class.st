@@ -47,25 +47,21 @@ RMDMultiChartInteraction >> onShape: aCanvas [
 
 { #category : 'events' }
 RMDMultiChartInteraction >> processKeyDown: evt [
+
 	| keyName |
 	keyName := evt keyName.
 	keyName = #I ifTrue: [ ^ self zoomIn: evt canvas ].
 	keyName = #O ifTrue: [ ^ self zoomOut: evt canvas ].
-	
-	evt shiftKeyPressed ifTrue: [ ^ self processKeyDownWithShift: evt  ].
-	
-	self configuration hasHorizontalScrolling ifTrue: [
-		keyName = #LEFT ifTrue: [ steps add: -1@0 ].
-		keyName = #RIGHT ifTrue: [ steps add: 1@0 ].
-	].
-	self configuration hasVerticalScrolling ifTrue: [ 
-		keyName = #UP ifTrue: [ steps add: 0@ -1 ].
-		keyName = #DOWN ifTrue: [ steps add: 0@ 1 ].
-	].
-	
+	evt shiftKeyPressed ifTrue: [ ^ self processKeyDownWithShift: evt ].
+
+	keyName = #LEFT ifTrue: [ steps add: -1 @ 0 ].
+	keyName = #RIGHT ifTrue: [ steps add: 1 @ 0 ].
+	keyName = #UP ifTrue: [ steps add: 0 @ -1 ].
+	keyName = #DOWN ifTrue: [ steps add: 0 @ 1 ].
+
 	speedMult := evt shiftKeyPressed
-		ifTrue: [ 4 ] 
-		ifFalse: [ 1 ].
+		             ifTrue: [ 4 ]
+		             ifFalse: [ 1 ].
 	animation ifNotNil: [ ^ self ].
 	steps ifEmpty: [ ^ self ].
 	self processStepsOn: evt canvas
