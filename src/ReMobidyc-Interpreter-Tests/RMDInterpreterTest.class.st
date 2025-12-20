@@ -1,13 +1,14 @@
 Class {
-	#name : #RMDInterpreterTest,
-	#superclass : #TestCase,
+	#name : 'RMDInterpreterTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'interpreter'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDInterpreterTest >> setUp [
 
 	interpreter := RMDInterpreter new
@@ -16,7 +17,7 @@ RMDInterpreterTest >> setUp [
 		               yourself
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testAddLibraries [
 	| foo bar buzz |
 	foo := [ :x :y | x + y ].
@@ -38,7 +39,7 @@ RMDInterpreterTest >> testAddLibraries [
 		equals: buzz
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testAddLibrary [
 	| foo bar buzz |
 	foo := [ :x :y | x + y ].
@@ -60,7 +61,7 @@ RMDInterpreterTest >> testAddLibrary [
 		equals: buzz
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testLoadDataSources [
 
 	| parser memory inputs |
@@ -106,7 +107,7 @@ RMDInterpreterTest >> testLoadDataSources [
 		equals: #( 100.0 120.0 140.0 160.0 180.0 200.0 )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testReadUtilityIfAbsent [
 	| parser source |
 	parser := RMDGrammar current.
@@ -126,7 +127,7 @@ where
 	self assert: (interpreter readUtility: 'z' ifAbsent: [ nil ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testSetUpSimulation [
 	| parser memory kcal celsius |
 	parser := RMDGrammar current.
@@ -178,7 +179,7 @@ RMDInterpreterTest >> testSetUpSimulation [
 		self assert: (memory at: goat + 3) closeTo: 0.0 ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInterpreterTest >> testWriteToUtility [
 	interpreter
 		write: 1.0 toUtility: 'foo';

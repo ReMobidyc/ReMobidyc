@@ -1,6 +1,6 @@
-Extension { #name : #RMDPatchInitializerNodeTest }
+Extension { #name : 'RMDPatchInitializerNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDPatchInitializerNodeTest >> testEvalIn [
 
 	| patchDef patchInitializer grass fertility count |

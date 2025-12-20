@@ -1,20 +1,21 @@
 Class {
-	#name : #RMDSimulationModelTest,
-	#superclass : #TestCase,
+	#name : 'RMDSimulationModelTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'parser',
 		'model'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDSimulationModelTest >> setUp [
 	parser := RMDGrammar current.
 	model := RMDSimulationModel new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testActionDefinitionAtIfAbsent [
 	| action |
 	action := parser actionDefinition end
@@ -31,7 +32,7 @@ RMDSimulationModelTest >> testActionDefinitionAtIfAbsent [
 		equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testActionDefinitionAtIfPresent [
 	| action |
 	action := parser actionDefinition end
@@ -48,7 +49,7 @@ RMDSimulationModelTest >> testActionDefinitionAtIfPresent [
 		equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testActionNames [
 	model
 		addActionDefinition:
@@ -69,7 +70,7 @@ RMDSimulationModelTest >> testActionNames [
 		equals: #('walk' 'run') asSortedCollection asArray
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAddActionDefinition [
 	| action |
 	action := parser actionDefinition end
@@ -95,7 +96,7 @@ RMDSimulationModelTest >> testAddActionDefinition [
 		equals: action
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAddAnimatDefinition [
 	| animat |
 	animat := parser animatDefinition end
@@ -120,7 +121,7 @@ RMDSimulationModelTest >> testAddAnimatDefinition [
 		equals: animat
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAddRenderer [
 	| backgroundRenderer colorAlphaRenderer |
 	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
@@ -139,7 +140,7 @@ RMDSimulationModelTest >> testAddRenderer [
 			colorAlphaRenderer} asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAddTaskDefinition [
 	| task |
 	task := parser taskDefinition end
@@ -154,7 +155,7 @@ RMDSimulationModelTest >> testAddTaskDefinition [
 		equals: {task}
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAnimatDefinitionAtIfAbsent [
 	| animat |
 	animat := parser animatDefinition end
@@ -170,7 +171,7 @@ RMDSimulationModelTest >> testAnimatDefinitionAtIfAbsent [
 		equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAnimatDefinitionAtIfPresent [
 	| animat |
 	animat := parser animatDefinition end
@@ -186,7 +187,7 @@ RMDSimulationModelTest >> testAnimatDefinitionAtIfPresent [
 		equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAnimatDefinitionsDo [
 	| animat1 animat2 animat3 |
 	animat1 := parser animatDefinition end
@@ -216,7 +217,7 @@ RMDSimulationModelTest >> testAnimatDefinitionsDo [
 			animat3} asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testAnimatInitializersDo [
 	| sim |
 	sim := parser simulationDefinition end
@@ -248,7 +249,7 @@ World with
 		equals: sim animatInitializers asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testDeltaTime [
 	| sim |
 	sim := parser simulationDefinition end
@@ -275,7 +276,7 @@ World with
 	self assert: model deltaTime closeTo: 12 * 60 * 60
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testDuration [
 	| sim |
 	sim := parser simulationDefinition end
@@ -302,7 +303,7 @@ World with
 	self assert: model duration closeTo: 300 * 24 * 60 * 60
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testEast [
 	| sim |
 	sim := parser simulationDefinition end
@@ -329,7 +330,7 @@ World with
 	self assert: model east closeTo: 50
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testInstantiateWithMetaParameters [
 
 	| sim sim1 |
@@ -389,7 +390,7 @@ where
 		equals: (sim1 taskDefinitions first actionWith: sim1)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testLoadAnimatDefinition [
 	| animat |
 	animat := parser animatDefinition end
@@ -414,7 +415,7 @@ RMDSimulationModelTest >> testLoadAnimatDefinition [
 		equals: animat
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testNorth [
 	| sim |
 	sim := parser simulationDefinition end
@@ -441,7 +442,7 @@ World with
 	self assert: model north closeTo: 60
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testPatchDefinition [
 
 	| patch |
@@ -451,7 +452,7 @@ RMDSimulationModelTest >> testPatchDefinition [
 	self assert: model patchDefinition equals: patch
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testPatchInitializer [
 	| sim |
 	sim := parser simulationDefinition end
@@ -484,7 +485,7 @@ World with
     grass = uniform 1000[kcal] to 5000[kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testPatchLength [
 	| sim |
 	sim := parser simulationDefinition end
@@ -534,7 +535,7 @@ World with
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testPatchXDivisions [
 	| sim |
 	sim := parser simulationDefinition end
@@ -561,7 +562,7 @@ World with
 	self assert: model patchXDivisions equals: 5
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testPatchYDivisions [
 	| sim |
 	sim := parser simulationDefinition end
@@ -588,7 +589,7 @@ World with
 	self assert: model patchYDivisions equals: 6
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testRenderersDo [
 	| backgroundRenderer colorAlphaRenderer |
 	backgroundRenderer := RMDBackgroundColorRenderer color: Color red.
@@ -611,7 +612,7 @@ RMDSimulationModelTest >> testRenderersDo [
 			colorAlphaRenderer} asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testSimulationDefinition [
 	| sim |
 	sim := parser simulationDefinition end
@@ -638,7 +639,7 @@ World with
 	self assert: model simulationDefinition equals: sim
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testSouth [
 	| sim |
 	sim := parser simulationDefinition end
@@ -665,7 +666,7 @@ World with
 	self assert: model south closeTo: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testTaskDefinitions [
 	| task1 task2 task3 |
 	task1 := parser taskDefinition end parse: 'Goat walk.'.
@@ -689,7 +690,7 @@ RMDSimulationModelTest >> testTaskDefinitions [
 			task3}
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testTaskDo [
 	| task1 task2 task3 |
 	task1 := parser taskDefinition end parse: 'Goat walk.'.
@@ -716,7 +717,7 @@ RMDSimulationModelTest >> testTaskDo [
 			task3} asSet
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testTaskNames [
 	| task1 task2 task3 |
 	task1 := parser taskDefinition end parse: 'Goat walk.'.
@@ -738,7 +739,7 @@ where
 		equals: #('Goat walk' 'Goat eat' 'Wolf walk') asSortedCollection
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testWest [
 	| sim |
 	sim := parser simulationDefinition end
@@ -765,7 +766,7 @@ World with
 	self assert: model west closeTo: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testWorldDefinition [
 	| world |
 	world := parser worldDefinition end
@@ -777,7 +778,7 @@ RMDSimulationModelTest >> testWorldDefinition [
 	self assert: model worldDefinition equals: world
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationModelTest >> testWorldInitializer [
 	| sim |
 	sim := parser simulationDefinition end

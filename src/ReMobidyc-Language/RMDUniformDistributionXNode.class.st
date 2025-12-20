@@ -40,6 +40,12 @@ RMDUniformDistributionXNode >> hash [
 	^ self class hash
 ]
 
+{ #category : 'testing' }
+RMDUniformDistributionXNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'accessing' }
 RMDUniformDistributionXNode >> parameter1Expression [
 

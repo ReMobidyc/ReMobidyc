@@ -1,6 +1,6 @@
-Extension { #name : #RMDActionDefinitionNodeTest }
+Extension { #name : 'RMDActionDefinitionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDActionDefinitionNodeTest >> testEvalIn [
 
 	| agent script |

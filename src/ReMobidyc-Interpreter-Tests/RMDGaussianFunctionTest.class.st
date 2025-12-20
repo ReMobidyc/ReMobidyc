@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDGaussianFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDGaussianFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'gaussian'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDGaussianFunctionTest >> setUp [
 	super setUp.
 	gaussian := RMDGaussianFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGaussianFunctionTest >> testValueValueValueValue [
 
 	self
@@ -22,5 +23,5 @@ RMDGaussianFunctionTest >> testValueValueValueValue [
 				 value: 21.08
 				 value: 4.348 / 2.0 sqrt
 				 value: 20.0)
-		closeTo: 78.3441
+		closeTo: 78.34412675162746
 ]

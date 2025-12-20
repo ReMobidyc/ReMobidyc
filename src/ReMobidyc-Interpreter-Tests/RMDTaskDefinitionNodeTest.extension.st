@@ -1,6 +1,6 @@
-Extension { #name : #RMDTaskDefinitionNodeTest }
+Extension { #name : 'RMDTaskDefinitionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDTaskDefinitionNodeTest >> testEvalDisabled [
 
 	| model horseDefinition drinkTaskDefinition |
@@ -33,7 +33,7 @@ RMDTaskDefinitionNodeTest >> testEvalDisabled [
 	drinkTaskDefinition evalIn: interpreter
 ]
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDTaskDefinitionNodeTest >> testEvalEnabled [
 
 	| model horseDefinition drinkTaskDefinition |
@@ -68,7 +68,7 @@ RMDTaskDefinitionNodeTest >> testEvalEnabled [
 		raise: RMDError
 ]
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 
 	| model horseDefinition tankDefinition drinkTaskDefinition waterInTank waterInHorse |
@@ -149,7 +149,7 @@ RMDTaskDefinitionNodeTest >> testEvalWithAllObjectsIn [
 	^ interpreter
 ]
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDTaskDefinitionNodeTest >> testEvalWithNearestObjectsIn [
 
 	| model horseDefinition tankDefinition drinkTaskDefinition waterInTank waterInHorse |

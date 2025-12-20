@@ -129,12 +129,13 @@ RMDAbstractInterpreter >> simulationModel: aRMDSimulationModel [
 { #category : 'context controls' }
 RMDAbstractInterpreter >> withContext: aRMDContext do: aBlock [
 
-	contextSemaphore critical: [ 
-		| originalContext |
-		originalContext := context.
-		self setContext: aRMDContext.
-		^ [ aBlock cull: self cull: context ] ensure: [ 
-			  context := originalContext ] ]
+	contextSemaphore critical: [
+			| originalContext ret |
+			originalContext := context.
+			self setContext: aRMDContext.
+			ret := aBlock value.
+			context := originalContext.
+			^ ret ]
 ]
 
 { #category : 'context controls' }

@@ -1,6 +1,6 @@
-Extension { #name : #RMDNormalDistributionTest }
+Extension { #name : 'RMDNormalDistributionTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDNormalDistributionTest >> testEvalIn [
 
 	| node cm m values |

@@ -605,6 +605,12 @@ RMDSyntaxNode >> isProductNode [
 ]
 
 { #category : 'testing' }
+RMDSyntaxNode >> isRandomNode [
+
+	^ false
+]
+
+{ #category : 'testing' }
 RMDSyntaxNode >> isReferenceNode [
 
 	^ false

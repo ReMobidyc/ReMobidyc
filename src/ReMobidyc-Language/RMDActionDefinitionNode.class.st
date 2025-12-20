@@ -7,7 +7,8 @@ Class {
 		'guard',
 		'lifeDirectives',
 		'utilityDefinitions',
-		'attributeDefinitions'
+		'attributeDefinitions',
+		'hasRandom'
 	],
 	#category : 'ReMobidyc-Language-AST',
 	#package : 'ReMobidyc-Language',
@@ -193,6 +194,13 @@ RMDActionDefinitionNode >> childrenTransform: aBlock [
 	utilityDefinitions := utilityDefinitions collect: aBlock
 ]
 
+{ #category : 'private' }
+RMDActionDefinitionNode >> computeHasRandom [
+
+	self nodesDo: [ :node | node isRandomNode ifTrue: [ ^ true ] ].
+	^ false
+]
+
 { #category : 'accessing' }
 RMDActionDefinitionNode >> guard [
 	^ guard
@@ -213,6 +221,12 @@ RMDActionDefinitionNode >> hasConditionPlaceholder: aRMDPlaceholder [
 { #category : 'testing' }
 RMDActionDefinitionNode >> hasObject [
 	^ object notNil
+]
+
+{ #category : 'testing' }
+RMDActionDefinitionNode >> hasRandom [
+
+	^ hasRandom ifNil: [ hasRandom := self computeHasRandom ]
 ]
 
 { #category : 'comparing' }
@@ -275,12 +289,13 @@ RMDActionDefinitionNode >> object: aString [
 RMDActionDefinitionNode >> postCopy [
 
 	guard := guard ifNotNil: [ guard copy ].
-	lifeDirectives := lifeDirectives ifNotNil: [ 
+	lifeDirectives := lifeDirectives ifNotNil: [
 		                  lifeDirectives collect: #copy ].
-	attributeDefinitions := attributeDefinitions ifNotNil: [ 
-		                       attributeDefinitions collect: #copy ].
-	utilityDefinitions := utilityDefinitions ifNotNil: [ 
-		                      utilityDefinitions collect: #copy ]
+	attributeDefinitions := attributeDefinitions ifNotNil: [
+		                        attributeDefinitions collect: #copy ].
+	utilityDefinitions := utilityDefinitions ifNotNil: [
+		                      utilityDefinitions collect: #copy ].
+	hasRandom := nil
 ]
 
 { #category : 'printing' }

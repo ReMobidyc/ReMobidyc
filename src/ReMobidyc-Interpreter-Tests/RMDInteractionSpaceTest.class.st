@@ -1,13 +1,14 @@
 Class {
-	#name : #RMDInteractionSpaceTest,
-	#superclass : #TestCase,
+	#name : 'RMDInteractionSpaceTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'space'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDInteractionSpaceTest >> setUp [
 
 	space := RMDInteractionSpace width: 7.5 height: 7.5 range: 1.5.
@@ -15,7 +16,7 @@ RMDInteractionSpaceTest >> setUp [
 		0 to: 5 do: [ :x | space add: x @ y x: x asFloat y: y asFloat ] ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDInteractionSpaceTest >> testAnimatsAroundXY [
 
 	self

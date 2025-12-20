@@ -1,6 +1,6 @@
-Extension { #name : #RMDEqualityNodeTest }
+Extension { #name : 'RMDEqualityNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDEqualityNodeTest >> testEvalIn [
 	self
 		assert: ((parser condition parse: '1 = 1') evalIn: interpreter)

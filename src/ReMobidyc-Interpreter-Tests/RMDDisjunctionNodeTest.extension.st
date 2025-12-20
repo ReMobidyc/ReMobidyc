@@ -1,6 +1,6 @@
-Extension { #name : #RMDDisjunctionNodeTest }
+Extension { #name : 'RMDDisjunctionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDDisjunctionNodeTest >> testEvalIn [
 	| expr |
 	expr := parser condition parse: '1 = 1 or 2 = 2'.

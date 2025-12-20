@@ -1,13 +1,14 @@
 Class {
-	#name : #RMDTypecheckerTest,
-	#superclass : #TestCase,
+	#name : 'RMDTypecheckerTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'simulationModel'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDTypecheckerTest >> setUp [
 
 	super setUp.
@@ -17,7 +18,7 @@ RMDTypecheckerTest >> setUp [
 			asRMDWorldDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDTypecheckerTest >> testTypecheck [
 
 	self
@@ -36,7 +37,7 @@ RMDTypecheckerTest >> testTypecheck [
 		raise: RMDUnresolvedPlaceholderError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDTypecheckerTest >> testWeakTypecheck [
 
 	| expr |

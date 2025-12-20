@@ -1,20 +1,21 @@
 Class {
-	#name : #RMDLnFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDLnFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'ln'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLnFunctionTest >> setUp [
 
 	super setUp.
 	ln := RMDLnFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLnFunctionTest >> testValue [
 
 	self assert: (ln value: 0) equals: Float infinity negated.
@@ -24,13 +25,13 @@ RMDLnFunctionTest >> testValue [
 	self should: [ ln value: -1.0 ] raise: ArithmeticError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLnFunctionTest >> testValueValue [
 
 	self should: [ ln value: 0.0 value: 0.0 ] raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLnFunctionTest >> testValueValueValue [
 
 	self
@@ -38,7 +39,7 @@ RMDLnFunctionTest >> testValueValueValue [
 		raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLnFunctionTest >> testValueValueValueValue [
 
 	self

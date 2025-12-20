@@ -40,6 +40,12 @@ RMDUniformDistributionYNode >> hash [
 	^ self class hash
 ]
 
+{ #category : 'testing' }
+RMDUniformDistributionYNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'accessing' }
 RMDUniformDistributionYNode >> parameter1Expression [
 

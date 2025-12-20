@@ -1,20 +1,21 @@
 Class {
-	#name : #RMDContextTest,
-	#superclass : #TestCase,
+	#name : 'RMDContextTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'parser',
 		'context'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDContextTest >> setUp [
 	context := RMDActionContext new.
 	parser := RMDGrammar current
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDContextTest >> testSubject [
 	| animatDef |
 	animatDef := parser animatDefinition

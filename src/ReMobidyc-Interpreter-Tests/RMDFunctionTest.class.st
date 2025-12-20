@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDFunctionTest,
-	#superclass : #TestCase,
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#name : 'RMDFunctionTest',
+	#superclass : 'TestCase',
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testAbs [
 	| f |
 	f := RMDFunction abs.
@@ -12,7 +13,7 @@ RMDFunctionTest >> testAbs [
 	self assert: (f value: 10) equals: 10
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testCos [
 	| f |
 	f := RMDFunction cos.
@@ -22,7 +23,7 @@ RMDFunctionTest >> testCos [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testExp [
 
 	| exp |
@@ -32,7 +33,7 @@ RMDFunctionTest >> testExp [
 	self assert: (exp value: 12.3) closeTo: 12.3 exp
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testLn [
 
 	| ln |
@@ -44,28 +45,28 @@ RMDFunctionTest >> testLn [
 	self should: [ ln value: -1.0 ] raise: ArithmeticError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testMax [
 	| f |
 	f := RMDFunction max.
 	self assert: (f value: 3.0 value: 5.0 value: -2.0) closeTo: 5.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testMean [
 	| f |
 	f := RMDFunction mean.
 	self assert: (f value: 3.0 value: 5.0 value: -2.0) closeTo: 2.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testMin [
 	| f |
 	f := RMDFunction min.
 	self assert: (f value: 3.0 value: 5.0 value: -2.0) closeTo: -2.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testPositive [
 	| f |
 	f := RMDFunction positive.
@@ -74,7 +75,7 @@ RMDFunctionTest >> testPositive [
 	self assert: (f value: 10) equals: 10
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testPower [
 
 	| power |
@@ -84,7 +85,7 @@ RMDFunctionTest >> testPower [
 	self assert: (power value: 0.0 value: 100.0) closeTo: 0.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testSin [
 	| f |
 	f := RMDFunction sin.
@@ -94,7 +95,7 @@ RMDFunctionTest >> testSin [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testSqrt [
 
 	| sqrt |
@@ -105,7 +106,7 @@ RMDFunctionTest >> testSqrt [
 	self should: [ sqrt value: -1.0 ] raise: ArithmeticError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFunctionTest >> testSum [
 	| f |
 	f := RMDFunction sum.

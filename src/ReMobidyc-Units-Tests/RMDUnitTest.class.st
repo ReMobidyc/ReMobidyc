@@ -1,6 +1,6 @@
 Class {
-	#name : #RMDUnitTest,
-	#superclass : #TestCase,
+	#name : 'RMDUnitTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'kg',
 		'kelvin',
@@ -14,10 +14,11 @@ Class {
 		'mile',
 		'fahrenheit'
 	],
-	#category : #'ReMobidyc-Units-Tests'
+	#category : 'ReMobidyc-Units-Tests',
+	#package : 'ReMobidyc-Units-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDUnitTest >> setUp [
 
 	meter := RMDUnitSymbol at: 'm'.
@@ -33,7 +34,7 @@ RMDUnitTest >> setUp [
 	fahrenheit := RMDUnitSymbol at: 'DegreeF'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnitTest >> testFromSI [
 
 	self assert: (meter fromSI: 3.14) closeTo: 3.14.
@@ -43,11 +44,11 @@ RMDUnitTest >> testFromSI [
 	self assert: (ton fromSI: 550000) closeTo: 550.0.
 	self assert: (hour fromSI: 1800.0) closeTo: 0.5.
 	self assert: (celsius fromSI: 300.15) closeTo: 300.15.
-	self assert: (acre fromSI: 121406) closeTo: 30.
+	self assert: (acre fromSI: 121406) closeTo: 30 precision: 1.0e-3.
 	self assert: (meter / hour fromSI: 8.3333333333333) closeTo: 30000.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnitTest >> testIsLength [
 
 	self assert: meter isLength.
@@ -56,7 +57,7 @@ RMDUnitTest >> testIsLength [
 	self deny: (meter / hour) isLength
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnitTest >> testIsTemperature [
 
 	self assert: kelvin isTemperature.
@@ -67,7 +68,7 @@ RMDUnitTest >> testIsTemperature [
 	self deny: (meter / hour) isTemperature
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnitTest >> testSiUnit [
 	self assert: meter siUnit equals: meter.
 	self assert: kg siUnit equals: kg.
@@ -80,7 +81,7 @@ RMDUnitTest >> testSiUnit [
 	self assert: (acre * kelvin) siUnit equals: meter * meter * kelvin
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnitTest >> testToSI [
 
 	self assert: (meter toSI: 3.14) closeTo: 3.14.

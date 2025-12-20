@@ -1,6 +1,6 @@
-Extension { #name : #RMDKillDirectiveNodeTest }
+Extension { #name : 'RMDKillDirectiveNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDKillDirectiveNodeTest >> testEvalIn [
 
 	| individualA individualB |

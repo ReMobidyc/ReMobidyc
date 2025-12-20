@@ -1,24 +1,25 @@
 Class {
-	#name : #RMDPowerFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDPowerFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'power'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPowerFunctionTest >> setUp [ 
 	power := RMDPowerFunction new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPowerFunctionTest >> testValue [
 
 	self should: [ power value: 1.0 ] raise: RMDNumArgsError
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDPowerFunctionTest >> testValueValue [
 
 	self should: [ power value: -1.0 value: 0.0 ] raise: ArithmeticError.
@@ -26,7 +27,7 @@ RMDPowerFunctionTest >> testValueValue [
 	self assert: (power value: 0.0 value: 100.0) closeTo: 0.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPowerFunctionTest >> testValueValueValue [
 
 	self
@@ -34,7 +35,7 @@ RMDPowerFunctionTest >> testValueValueValue [
 		raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPowerFunctionTest >> testValueValueValueValue [
 
 	self

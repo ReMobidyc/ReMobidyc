@@ -62,6 +62,12 @@ RMDUniformDistributionNode >> hash [
 ]
 
 { #category : 'testing' }
+RMDUniformDistributionNode >> isRandomNode [
+
+	^ true
+]
+
+{ #category : 'testing' }
 RMDUniformDistributionNode >> isUniformDistributionNode [
 	^ true
 ]

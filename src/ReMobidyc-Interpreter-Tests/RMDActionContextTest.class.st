@@ -1,18 +1,19 @@
 Class {
-	#name : #RMDActionContextTest,
-	#superclass : #TestCase,
+	#name : 'RMDActionContextTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'context'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDActionContextTest >> setUp [
 	context := RMDActionContext new.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionContextTest >> testAction [
 	| parser source |
 	parser := RMDGrammar current.
@@ -31,7 +32,7 @@ where
 		equals: (parser utilityDefinition parse: 'two = one + 1')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionContextTest >> testLoadUtilityDefinitions [
 
 	| parser sources |
@@ -47,7 +48,7 @@ RMDActionContextTest >> testLoadUtilityDefinitions [
 		equals: (parser utilityDefinition parse: 'two = one + 1')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionContextTest >> testObject [
 	| parser foo bar eat |
 	parser := RMDGrammar current.
@@ -72,7 +73,7 @@ Bar is Animat with
 	self assert: context object equals: 20
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionContextTest >> testUtilityAtIfAbsent [
 	context utilityAt: 'foo' put: 1.
 	context utilityAt: 'bar' put: 2.
@@ -81,7 +82,7 @@ RMDActionContextTest >> testUtilityAtIfAbsent [
 	self assert: (context utilityAt: 'buzz' ifAbsent: [ nil ]) isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionContextTest >> testUtilityAtPut [
 	context utilityAt: 'foo' put: 1.
 	context utilityAt: 'bar' put: 2.

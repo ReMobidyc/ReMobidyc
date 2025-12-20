@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDFishmanMooreRandomGeneratorTest,
-	#superclass : #TestCase,
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#name : 'RMDFishmanMooreRandomGeneratorTest',
+	#superclass : 'TestCase',
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFishmanMooreRandomGeneratorTest >> testHash [
 
 	| random |
@@ -15,7 +16,7 @@ RMDFishmanMooreRandomGeneratorTest >> testHash [
 	self assert: (random hash: #( 1 2 3 )) equals: 1644498793
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFishmanMooreRandomGeneratorTest >> testNextSeed [
 
 	| random |
@@ -28,7 +29,7 @@ RMDFishmanMooreRandomGeneratorTest >> testNextSeed [
 	self assert: random nextSeed equals: 559592802
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDFishmanMooreRandomGeneratorTest >> testValue [
 
 	| random |

@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDExpFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDExpFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'exp'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDExpFunctionTest >> setUp [
 	super setUp.
 	exp := RMDExpFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDExpFunctionTest >> testValue [
 
 	self assert: (exp value: 0) closeTo: 1.0.
@@ -21,13 +22,13 @@ RMDExpFunctionTest >> testValue [
 	self assert: (exp value: 12.3) closeTo: 12.3 exp
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDExpFunctionTest >> testValueValue [
 
 	self should: [ exp value: 0.0 value: 0.0 ] raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDExpFunctionTest >> testValueValueValue [
 
 	self
@@ -35,7 +36,7 @@ RMDExpFunctionTest >> testValueValueValue [
 		raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDExpFunctionTest >> testValueValueValueValue [
 
 	self

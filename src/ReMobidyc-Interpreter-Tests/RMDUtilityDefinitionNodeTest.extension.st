@@ -1,6 +1,6 @@
-Extension { #name : #RMDUtilityDefinitionNodeTest }
+Extension { #name : 'RMDUtilityDefinitionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDUtilityDefinitionNodeTest >> testEvalIn [
 	| expr |
 	expr := parser utilityDefinition parse: 'foo = 1 + 2'.

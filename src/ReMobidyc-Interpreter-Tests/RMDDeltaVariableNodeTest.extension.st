@@ -1,6 +1,6 @@
-Extension { #name : #RMDDeltaVariableNodeTest }
+Extension { #name : 'RMDDeltaVariableNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDDeltaVariableNodeTest >> testAssignIn [
 
 	| animatDef animat address |

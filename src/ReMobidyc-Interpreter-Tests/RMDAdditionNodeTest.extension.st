@@ -1,6 +1,6 @@
-Extension { #name : #RMDAdditionNodeTest }
+Extension { #name : 'RMDAdditionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDAdditionNodeTest >> testEvalIn [
 	| expr |
 	expr := parser expression parse: '2 + 5'.

@@ -1,6 +1,6 @@
-Extension { #name : #RMDTimeDirectiveNodeTest }
+Extension { #name : 'RMDTimeDirectiveNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDTimeDirectiveNodeTest >> testEvalIn [
 
 	interpreter tick.

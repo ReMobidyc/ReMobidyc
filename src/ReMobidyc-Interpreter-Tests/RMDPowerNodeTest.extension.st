@@ -1,6 +1,6 @@
-Extension { #name : #RMDPowerNodeTest }
+Extension { #name : 'RMDPowerNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDPowerNodeTest >> testEvalIn [
 	| expr |
 	expr := parser expression parse: '5^2'.

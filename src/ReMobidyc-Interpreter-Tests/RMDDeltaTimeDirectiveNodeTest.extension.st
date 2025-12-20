@@ -1,6 +1,6 @@
-Extension { #name : #RMDDeltaTimeDirectiveNodeTest }
+Extension { #name : 'RMDDeltaTimeDirectiveNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDDeltaTimeDirectiveNodeTest >> testEvalIn [
 
 	self

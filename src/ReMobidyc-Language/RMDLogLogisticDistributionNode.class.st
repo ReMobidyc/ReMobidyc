@@ -57,6 +57,12 @@ RMDLogLogisticDistributionNode >> isLogLogisticDistributionNode [
 	^ true
 ]
 
+{ #category : 'testing' }
+RMDLogLogisticDistributionNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'accessing' }
 RMDLogLogisticDistributionNode >> parameter1Expression [
 

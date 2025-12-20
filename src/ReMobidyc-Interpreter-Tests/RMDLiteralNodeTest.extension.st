@@ -1,6 +1,6 @@
-Extension { #name : #RMDLiteralNodeTest }
+Extension { #name : 'RMDLiteralNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDLiteralNodeTest >> testEvalIn [
 
 	| literal |

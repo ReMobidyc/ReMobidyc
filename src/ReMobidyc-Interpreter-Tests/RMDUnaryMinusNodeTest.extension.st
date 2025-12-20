@@ -1,6 +1,6 @@
-Extension { #name : #RMDUnaryMinusNodeTest }
+Extension { #name : 'RMDUnaryMinusNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDUnaryMinusNodeTest >> testEvalIn [
 	| expr |
 	expr := parser expression parse: '-(1+2)'.

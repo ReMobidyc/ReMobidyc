@@ -142,6 +142,12 @@ RMDGammaDistributionNode >> isGammaDistributionNode [
 	^ true
 ]
 
+{ #category : 'testing' }
+RMDGammaDistributionNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'private' }
 RMDGammaDistributionNode >> normalIn: aRMDInterpreter [
 

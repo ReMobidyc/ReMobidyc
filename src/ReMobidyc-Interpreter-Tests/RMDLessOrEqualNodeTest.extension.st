@@ -1,6 +1,6 @@
-Extension { #name : #RMDLessOrEqualNodeTest }
+Extension { #name : 'RMDLessOrEqualNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDLessOrEqualNodeTest >> testEvalIn [
 	self
 		assert: ((parser condition parse: '1 <= 2') evalIn: interpreter)

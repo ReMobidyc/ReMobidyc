@@ -1,18 +1,19 @@
 Class {
-	#name : #RMDMetaContextTest,
-	#superclass : #TestCase,
+	#name : 'RMDMetaContextTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'context'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDMetaContextTest >> setUp [
 	context := RMDMetaContext new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDMetaContextTest >> testInterpreterAtIfAbsent [
 
 	| i1 i2 |

@@ -1,6 +1,6 @@
-Extension { #name : #RMDWorldInitializerNodeTest }
+Extension { #name : 'RMDWorldInitializerNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDWorldInitializerNodeTest >> testEvalIn [
 
 	| worldDef worldInitializer count |

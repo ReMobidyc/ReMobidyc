@@ -1,6 +1,6 @@
-Extension { #name : #RMDApplyNodeTest }
+Extension { #name : 'RMDApplyNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDApplyNodeTest >> testEvalIn [
 
 	interpreter addLibrary: { 

@@ -54,6 +54,12 @@ RMDChanceNode >> isChanceNode [
 	^ true
 ]
 
+{ #category : 'testing' }
+RMDChanceNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'copying' }
 RMDChanceNode >> postCopy [
 

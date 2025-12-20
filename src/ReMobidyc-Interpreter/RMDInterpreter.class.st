@@ -53,16 +53,16 @@ RMDInterpreter >> applyMeta [
 { #category : 'simulating' }
 RMDInterpreter >> basicStepSimulation [
 
-	^ (guard value: self) and: [ 
-		  self time < simulationModel duration and: [ 
-			  memory time + 1 <= memory latestTime
-				  ifTrue: [ memory time: memory time + 1 ]
-				  ifFalse: [ 
-					  self performTasks.
-					  self bounceOutOfBoundsAnimats.
-					  self tick ].
-			  self announceTimeChanged.
-			  true ] ]
+	^ (guard value: self) and: [
+			  self time < simulationModel duration and: [
+					  memory time + 1 <= memory latestTime
+						  ifTrue: [ memory time: memory time + 1 ]
+						  ifFalse: [
+								  self performTasks.
+								  self bounceOutOfBoundsAnimats.
+								  self tick ].
+					  self announceTimeChanged.
+					  true ] ]
 ]
 
 { #category : 'private' }
@@ -810,24 +810,26 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               subject: anInteger1
 		               definition: aRMDAnimatDefinitionNode1)
 		              space: memory;
-		              randomSeedWithHash: { 
-				              self randomSeed.
-				              memory time.
-				              (memory seedAt: anInteger1).
-				              (memory seedAt: anInteger2).
-				              hashInteger };
 		              action: aRMDActionDefinitionNode;
 		              object: anInteger2
 		              definition: aRMDAnimatDefinitionNode2;
 		              yourself.
-	aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [ 
-		newContext
-			location: [ self here ]
-			definition: simulationModel patchDefinition ].
-	aRMDAnimatDefinitionNode1 isPatchDefinitionNode ifTrue: [ 
-		newContext
-			location: anInteger1
-			definition: simulationModel patchDefinition ].
+	hashInteger ifNotNil: [
+			newContext randomSeedWithHash: {
+					self randomSeed.
+					memory time.
+					(memory seedAt: anInteger1).
+					(memory seedAt: anInteger2).
+					hashInteger } ].
+
+	aRMDAnimatDefinitionNode1 isAnimatDefinitionNode ifTrue: [
+			newContext
+				location: [ self here ]
+				definition: simulationModel patchDefinition ].
+	aRMDAnimatDefinitionNode1 isPatchDefinitionNode ifTrue: [
+			newContext
+				location: anInteger1
+				definition: simulationModel patchDefinition ].
 	^ self withContext: newContext do: aBlock
 ]
 
@@ -839,28 +841,29 @@ RMDInterpreter >> withActionContextWith: aRMDActionDefinitionNode subject: anInt
 		               subject: anInteger
 		               definition: aRMDAnimatDefinitionNode)
 		              space: memory;
-		              randomSeedWithHash: { 
-				              self randomSeed.
-				              memory time.
-				              (memory seedAt: anInteger).
-				              anotherInteger };
 		              action: aRMDActionDefinitionNode;
 		              yourself.
-	aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [ 
-		newContext
-			location: [ 
-				memory
-					patchAtXIndex: ((self patchX: (self my: 'x')) floor + 1
-							 min: simulationModel patchXDivisions
-							 max: 1)
-					yIndex: ((self patchY: (self my: 'y')) floor + 1
-							 min: simulationModel patchYDivisions
-							 max: 1) ]
-			definition: simulationModel patchDefinition ].
-	aRMDAnimatDefinitionNode isPatchDefinitionNode ifTrue: [ 
-		newContext
-			location: anInteger
-			definition: simulationModel patchDefinition ].
+	anotherInteger ifNotNil: [
+			newContext randomSeedWithHash: {
+					self randomSeed.
+					memory time.
+					(memory seedAt: anInteger).
+					anotherInteger } ].
+	aRMDAnimatDefinitionNode isAnimatDefinitionNode ifTrue: [
+			newContext
+				location: [
+						memory
+							patchAtXIndex: ((self patchX: (self my: 'x')) floor + 1
+									 min: simulationModel patchXDivisions
+									 max: 1)
+							yIndex: ((self patchY: (self my: 'y')) floor + 1
+									 min: simulationModel patchYDivisions
+									 max: 1) ]
+				definition: simulationModel patchDefinition ].
+	aRMDAnimatDefinitionNode isPatchDefinitionNode ifTrue: [
+			newContext
+				location: anInteger
+				definition: simulationModel patchDefinition ].
 	^ self withContext: newContext do: aBlock
 ]
 

@@ -1,6 +1,6 @@
-Extension { #name : #RMDGuardedChoiceNodeTest }
+Extension { #name : 'RMDGuardedChoiceNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDGuardedChoiceNodeTest >> testEvalIn [
 	| expr |
 	expr := parser guardedChoice parse: '1 if 2 = 3, 4 if 5 = 5, 6'.

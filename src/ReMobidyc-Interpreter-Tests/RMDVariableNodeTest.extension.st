@@ -1,6 +1,6 @@
-Extension { #name : #RMDVariableNodeTest }
+Extension { #name : 'RMDVariableNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDVariableNodeTest >> testAssignIn [
 
 	| animatDef animat address |
@@ -29,7 +29,7 @@ RMDVariableNodeTest >> testAssignIn [
 	self assert: (interpreter memory at: 1) closeTo: 5
 ]
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDVariableNodeTest >> testEvalIn [
 
 	| animatDef animat address |

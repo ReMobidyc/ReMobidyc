@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDSquareRootFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDSquareRootFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'sqrt'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDSquareRootFunctionTest >> setUp [
 
 	sqrt := RMDSquareRootFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSquareRootFunctionTest >> testValue [
 
 	self assert: (sqrt value: 0) closeTo: 0.0.

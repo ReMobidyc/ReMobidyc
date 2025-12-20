@@ -56,6 +56,12 @@ RMDNormalDistributionNode >> isNormalDistributionNode [
 	^ true
 ]
 
+{ #category : 'testing' }
+RMDNormalDistributionNode >> isRandomNode [
+
+	^ true
+]
+
 { #category : 'accessing' }
 RMDNormalDistributionNode >> meanExpression [
 

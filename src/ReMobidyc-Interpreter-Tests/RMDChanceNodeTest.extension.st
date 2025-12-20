@@ -1,6 +1,6 @@
-Extension { #name : #RMDChanceNodeTest }
+Extension { #name : 'RMDChanceNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDChanceNodeTest >> testEvalIn [
 
 	self
@@ -12,7 +12,7 @@ RMDChanceNodeTest >> testEvalIn [
 		equals: true
 ]
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDChanceNodeTest >> testTypecheckIn [
 
 	self

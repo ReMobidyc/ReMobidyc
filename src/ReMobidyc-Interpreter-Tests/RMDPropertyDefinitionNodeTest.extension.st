@@ -1,6 +1,6 @@
-Extension { #name : #RMDPropertyDefinitionNodeTest }
+Extension { #name : 'RMDPropertyDefinitionNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDPropertyDefinitionNodeTest >> testEvalIn [
 
 	| animatDef animat1 animat2 |

@@ -1,18 +1,19 @@
 Class {
-	#name : #RMDCeilingFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDCeilingFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'ceiling'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDCeilingFunctionTest >> setUp [ 
 	ceiling := RMDCeilingFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDCeilingFunctionTest >> testValue [
 
 	self assert: (ceiling value: -1.6) closeTo: -1.0.
@@ -21,13 +22,13 @@ RMDCeilingFunctionTest >> testValue [
 	self assert: (ceiling value: 10.0) closeTo: 10.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDCeilingFunctionTest >> testValueValue [
 
 	self should: [ ceiling value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDCeilingFunctionTest >> testValueValueValue [
 
 	self
@@ -35,7 +36,7 @@ RMDCeilingFunctionTest >> testValueValueValue [
 		raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDCeilingFunctionTest >> testValueValueValueValue [
 
 	self

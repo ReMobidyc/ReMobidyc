@@ -1,18 +1,19 @@
 Class {
-	#name : #RMDRoundFunctionTest,
-	#superclass : #TestCase,
+	#name : 'RMDRoundFunctionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'round'
 	],
-	#category : #'ReMobidyc-Interpreter-Tests'
+	#category : 'ReMobidyc-Interpreter-Tests',
+	#package : 'ReMobidyc-Interpreter-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDRoundFunctionTest >> setUp [ 
 	round := RMDRoundFunction new
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDRoundFunctionTest >> testValue [
 	self assert: (round value: -1.6) closeTo: -2.0.
 	self assert: (round value: 1.6) closeTo: 2.0.
@@ -20,13 +21,13 @@ RMDRoundFunctionTest >> testValue [
 	self assert: (round value: 10.0) closeTo: 10.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDRoundFunctionTest >> testValueValue [
 
 	self should: [ round value: 1.0 value: 1.0 ] raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDRoundFunctionTest >> testValueValueValue [
 
 	self
@@ -34,7 +35,7 @@ RMDRoundFunctionTest >> testValueValueValue [
 		raise: RMDNumArgsError
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDRoundFunctionTest >> testValueValueValueValue [
 
 	self

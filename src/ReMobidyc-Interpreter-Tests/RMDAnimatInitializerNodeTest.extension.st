@@ -1,6 +1,6 @@
-Extension { #name : #RMDAnimatInitializerNodeTest }
+Extension { #name : 'RMDAnimatInitializerNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDAnimatInitializerNodeTest >> testEvalIn [
 
 	| goatDef goatInitializer minBody maxBody age count |

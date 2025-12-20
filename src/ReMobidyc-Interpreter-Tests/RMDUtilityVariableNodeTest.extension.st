@@ -1,6 +1,6 @@
-Extension { #name : #RMDUtilityVariableNodeTest }
+Extension { #name : 'RMDUtilityVariableNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDUtilityVariableNodeTest >> testEvalIn [
 
 	interpreter context

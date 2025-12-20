@@ -1,6 +1,6 @@
-Extension { #name : #RMDNewDirectiveNodeTest }
+Extension { #name : 'RMDNewDirectiveNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDNewDirectiveNodeTest >> testEvalIn [
 
 	| individual |

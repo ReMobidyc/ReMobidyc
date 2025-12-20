@@ -1,6 +1,6 @@
-Extension { #name : #RMDSyntaxNodeTest }
+Extension { #name : 'RMDSyntaxNodeTest' }
 
-{ #category : #'*ReMobidyc-Interpreter-Tests' }
+{ #category : '*ReMobidyc-Interpreter-Tests' }
 RMDSyntaxNodeTest >> setUpInterpreter [
 	interpreter := RMDInterpreter new
 		setMemory: RMDOnMemory new;
