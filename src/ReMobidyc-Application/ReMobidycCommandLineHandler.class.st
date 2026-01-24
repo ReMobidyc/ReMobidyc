@@ -100,6 +100,7 @@ ReMobidycCommandLineHandler >> installIcon [
 { #category : 'utilities' }
 ReMobidycCommandLineHandler >> installMenu [
 
+	RemobidycMenubarMorph reset.
 	OSWindowDriver current startUp: true.
 	OSPlatform current isMacOSX ifTrue: [
 		| main |

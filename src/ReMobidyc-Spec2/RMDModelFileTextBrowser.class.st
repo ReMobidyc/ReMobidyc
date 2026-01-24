@@ -58,6 +58,20 @@ RMDModelFileTextBrowser class >> openFromRepository [
 { #category : 'menus' }
 RMDModelFileTextBrowser class >> remobidycMenuOn: aBuilder [
 
+	<remobidycMenu>
+	(aBuilder item: #ReMobidycTextBrowser)
+		parent: #ReMobidycModels;
+		order: 3;
+		label: 'Modeler (text)';
+		iconName: #error;
+		action: [ RMDModelFileTextBrowser openFromRepository ];
+		help: 'Open a text-based browser on a local repository';
+		withSeparatorAfter
+]
+
+{ #category : 'menus' }
+RMDModelFileTextBrowser class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #TextBrowser)
 		parent: 'ReMobidyc';

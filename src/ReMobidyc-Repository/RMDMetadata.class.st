@@ -58,11 +58,12 @@ RMDMetadata class >> guessUserName [
 { #category : 'menus' }
 RMDMetadata class >> remobidycMenuOn: aBuilder [
 
-	<worldMenu>
+	<remobidycMenu>
 	(aBuilder item: #Upgrade)
+		label: 'Forget current user';
+		iconName: #userProfile;
 		parent: #ReMobidycSystem;
 		order: 10;
-		label: 'Forget current user';
 		action: [ self flushCurrentAuthor ];
 		help: 'Forget the current user''s name as an author of models'
 ]
@@ -75,6 +76,18 @@ RMDMetadata class >> renewCurrentAuthor [
 		 initialAnswer: self guessUserName) ifNotNil: [ :n | 
 		n trim ifNotEmpty: [ :author | CurrentAuthor := author ] ].
 	^ CurrentAuthor
+]
+
+{ #category : 'menus' }
+RMDMetadata class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #Upgrade)
+		parent: #ReMobidycSystem;
+		order: 10;
+		label: 'Forget current user';
+		action: [ self flushCurrentAuthor ];
+		help: 'Forget the current user''s name as an author of models'
 ]
 
 { #category : 'converting' }

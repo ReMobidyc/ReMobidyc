@@ -68,6 +68,12 @@ BaselineOfReMobidyc class >> ensureStandardRepository [
 				  yourself ]
 ]
 
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> icon [
+
+	^ self logo scaledToSize: 24 @ 24
+]
+
 { #category : 'scripts' }
 BaselineOfReMobidyc class >> initializeResources [
 
@@ -140,6 +146,12 @@ BaselineOfReMobidyc class >> installLogos [
 								binaryWriteStreamDo: [ :writeStream | response entity writeOn: writeStream ] ] ] ]
 ]
 
+{ #category : 'utilities' }
+BaselineOfReMobidyc class >> logo [
+
+	^ Form fromFileNamed: self logoDirectoryPath / 'default.png'
+]
+
 { #category : 'scripts' }
 BaselineOfReMobidyc class >> logoDirectoryPath [
 	^ (FileLocator localDirectory / 'ReMobidyc' / 'logos')
@@ -149,38 +161,35 @@ BaselineOfReMobidyc class >> logoDirectoryPath [
 { #category : 'menus' }
 BaselineOfReMobidyc class >> remobidycMenuOn: aBuilder [
 
-	<worldMenu>
+	<remobidycMenu>
 	(aBuilder item: #ReMobidycDocuments)
-		parent: 'ReMobidyc';
 		order: 80;
 		label: 'Documents';
+		iconName: #book;
 		with: [
-			(aBuilder item: #ReMobidycCheatsheets)
-				order: 10;
-				label: 'Cheatsheets...';
-				action: [ self showCheatsheets ];
-				help: 'Open cheatsheets browser for re:mobidyc'.
-			(aBuilder item: #ReMobidycTutorial)
-				order: 20;
-				label: 'Grasshopper Tutorial';
-				action: [ self showTutorial ];
-				help: 'Open a tutorial to build a model of grasshoppers and eggs' ].
+				(aBuilder item: #ReMobidycCheatsheets)
+					label: 'Cheatsheets...';
+					iconName: #help;
+					order: 10;
+					action: [ self showCheatsheets ];
+					help: 'Open cheatsheets browser for re:mobidyc'.
+				(aBuilder item: #ReMobidycTutorial)
+					label: 'Grasshopper Tutorial';
+					iconName: #bookmark;
+					order: 20;
+					action: [ self showTutorial ];
+					help: 'Open a tutorial to build a model of grasshoppers and eggs' ].
 	(aBuilder item: #ReMobidycSystem)
-		parent: 'ReMobidyc';
 		order: 100;
 		label: 'System';
+		iconName: #haloDebug;
 		with: [
-			(aBuilder item: #ReMobidycSettings)
-				order: 0;
-				label: 'Settings...';
-				action: [ self showSettingsBrowser ];
-				help: 'Open a settings browser for re:mobidyc'.
-			(aBuilder item: #Upgrade)
-				order: 100;
-				label: 'Upgrade from the official repository';
-				action: [ self updateFromOfficialRepository ];
-				help:
-					'Upgrade the re:mobidyc from the official github repository.' ]
+				(aBuilder item: #ReMobidycSettings)
+					label: 'Settings...';
+					iconName: #preferences;
+					order: 0;
+					action: [ self showSettingsBrowser ];
+					help: 'Open a settings browser for re:mobidyc' ]
 ]
 
 { #category : 'settings' }
@@ -265,6 +274,43 @@ BaselineOfReMobidyc class >> updateFromOfficialRepository [
 						ex retry ]
 					ifFalse: [ UIManager default alert: 'Failed to update' ] ] ].
 	Smalltalk snapshot: true andQuit: false
+]
+
+{ #category : 'menus' }
+BaselineOfReMobidyc class >> worldMenuOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #ReMobidycDocuments)
+		parent: 'ReMobidyc';
+		order: 80;
+		label: 'Documents';
+		with: [
+			(aBuilder item: #ReMobidycCheatsheets)
+				order: 10;
+				label: 'Cheatsheets...';
+				action: [ self showCheatsheets ];
+				help: 'Open cheatsheets browser for re:mobidyc'.
+			(aBuilder item: #ReMobidycTutorial)
+				order: 20;
+				label: 'Grasshopper Tutorial';
+				action: [ self showTutorial ];
+				help: 'Open a tutorial to build a model of grasshoppers and eggs' ].
+	(aBuilder item: #ReMobidycSystem)
+		parent: 'ReMobidyc';
+		order: 100;
+		label: 'System';
+		with: [
+			(aBuilder item: #ReMobidycSettings)
+				order: 0;
+				label: 'Settings...';
+				action: [ self showSettingsBrowser ];
+				help: 'Open a settings browser for re:mobidyc'.
+			(aBuilder item: #Upgrade)
+				order: 100;
+				label: 'Upgrade from the official repository';
+				action: [ self updateFromOfficialRepository ];
+				help:
+					'Upgrade the re:mobidyc from the official github repository.' ]
 ]
 
 { #category : 'baselines' }

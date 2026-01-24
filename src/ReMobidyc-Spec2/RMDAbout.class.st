@@ -28,6 +28,18 @@ RMDAbout class >> open [
 { #category : 'menus' }
 RMDAbout class >> remobidycMenuOn: aBuilder [
 
+	<remobidycMenu>
+	(aBuilder item: #ReMobidycAbout)
+		label: 'About...';
+		parent: #ReMobidycSystem;
+		order: 999;
+		action: [ RMDAbout open ];
+		help: 'Open an about window.'
+]
+
+{ #category : 'menus' }
+RMDAbout class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #ReMobidycAbout)
 		parent: 'ReMobidyc';

@@ -82,6 +82,23 @@ RMDSourceTemplateFileBrowser class >> defaultLayout [
 { #category : 'menus' }
 RMDSourceTemplateFileBrowser class >> remobidycMenuOn: aBuilder [
 
+	<remobidycMenu>
+	(aBuilder item: #ReMobidycTools)
+		label: 'Tools';
+		iconName: #tools;
+		order: 50;
+		with: [
+				(aBuilder item: #ReMobidycTemplateEditor)
+					label: 'User-defined Templates';
+					iconName: #smallCopy;
+					order: 15;
+					action: [ RMDSourceTemplateFileBrowser new open ];
+					help: 'Browse and edit user defined template files' ]
+]
+
+{ #category : 'menus' }
+RMDSourceTemplateFileBrowser class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #SourceTemplateFileBrowser)
 		parent: 'ReMobidyc';

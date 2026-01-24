@@ -20,6 +20,23 @@ RMDLauncher class >> defaultLayout [
 { #category : 'menus' }
 RMDLauncher class >> remobidycMenuOn: aBuilder [
 
+	<remobidycMenu>
+	(aBuilder item: #ReMobidycModels)
+		order: 1;
+		label: 'Models';
+		icon: BaselineOfReMobidyc icon;
+		with: [
+				(aBuilder item: #ReMobidycLauncher)
+					order: 1;
+					label: 'Launcher';
+					iconName: #open;
+					action: [ RMDLauncher new open ];
+					help: 'Open a model launcher' ]
+]
+
+{ #category : 'menus' }
+RMDLauncher class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #ReMobidycLauncher)
 		parent: 'ReMobidyc';

@@ -55,6 +55,46 @@ RMDSimulationModeler class >> on: aRMDSimulationModel [
 { #category : 'menus' }
 RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 
+	<remobidycMenu>
+	(aBuilder item: #OpenNew)
+		label: 'Modeler (GUI)';
+		iconName: #edit;
+		parent: #ReMobidycModels;
+		order: 2;
+		action: [
+				(RMDSimulationModeler on: (RMDSimulationModel new
+							  addRenderer: (RMDBackgroundColorRenderer color: Color black);
+							  addRenderer: (RMDPatchColorAlphaRenderer
+									   color: Color green
+									   alpha: '0.5' asRMDExpression
+									   between: '0.0' asRMDExpression
+									   and: '1.0' asRMDExpression);
+							  yourself)) open ];
+		help: 'Open a modeler window with a new simulation model'.
+	(aBuilder item: #ReMobidycExamples)
+		label: 'Examples';
+		parent: #ReMobidycDocuments;
+		order: 99;
+		with: [
+				(aBuilder item: #SugarScape)
+					label: 'sugar scape';
+					action: [ RMDSimulationModeler sugarScape open ];
+					help: 'A simple simulation of an energy cycle.'.
+				(aBuilder item: #GoatAndWolf)
+					label: 'goat and wolf';
+					action: [ RMDSimulationModeler goatAndWolf open ];
+					help: 'A simple simulation of plants, herbivore, and carnivore.' ]
+]
+
+{ #category : 'examples' }
+RMDSimulationModeler class >> sugarScape [
+	<script: 'RMDSimulationModeler sugarScape openWithSpec'>
+	^ RMDSimulationModeler on: RMDSimulationModel sugarScape
+]
+
+{ #category : 'menus' }
+RMDSimulationModeler class >> worldMenuOn: aBuilder [
+
 	<worldMenu>
 	(aBuilder item: #ReMobidyc)
 		label: 're:Mobidyc';
@@ -89,12 +129,6 @@ RMDSimulationModeler class >> remobidycMenuOn: aBuilder [
 						label: 'goat and wolf';
 						action: [ RMDSimulationModeler goatAndWolf open ];
 						help: 'A simple simulation of plants, herbivore, and carnivore.' ] ]
-]
-
-{ #category : 'examples' }
-RMDSimulationModeler class >> sugarScape [
-	<script: 'RMDSimulationModeler sugarScape openWithSpec'>
-	^ RMDSimulationModeler on: RMDSimulationModel sugarScape
 ]
 
 { #category : 'private' }
