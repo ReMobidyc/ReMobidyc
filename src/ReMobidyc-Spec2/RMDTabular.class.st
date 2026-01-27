@@ -104,13 +104,15 @@ RMDTabular >> csvQuote: aString [
 { #category : 'operations' }
 RMDTabular >> exportAsCSV [
 
-	(UIManager default
-		 chooseForSaveFileReference: 'Export a CSV file...'
-		 extensions: #( 'csv' )
-		 path: ((FileLocator documents / 'ReMobidyc') ensureCreateDirectory
-			  / (metaInterpreter context modelPath basename , '-populations') 
-				  withExtension: 'csv') absolutePath) ifNotNil: [ :fileRef | 
-		self writeCSVInto: fileRef ]
+	StSaveFilePresenter new
+		title: 'Export a CSV file...';
+		extensions: #( 'csv' );
+		defaultFolder:
+			(FileLocator documents / 'ReMobidyc') ensureCreateDirectory;
+		nameText:
+			metaInterpreter context modelPath basename , '-populations.csv';
+		okAction: [ :fileRef | self writeCSVInto: fileRef ];
+		openModal
 ]
 
 { #category : 'initialization' }
