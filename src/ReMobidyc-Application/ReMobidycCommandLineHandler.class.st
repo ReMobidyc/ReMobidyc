@@ -15,6 +15,8 @@ ReMobidycCommandLineHandler class >> commandName [
 ReMobidycCommandLineHandler class >> deploy [
 
 	<script>
+	PasteUpMorph shouldShowWorldMenu: false.
+	MenubarMorph showMenubar: false.
 	RMDMetadata flushCurrentAuthor.
 	RMDRepositoryDirectory flushCurrent.
 	GraphicFontSettings setFontsToStyleNamed: #small.
