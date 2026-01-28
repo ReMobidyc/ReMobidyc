@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDTimeDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDTimeDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDTimeDirectiveNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'time'.
@@ -17,7 +18,7 @@ RMDTimeDirectiveNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [day]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDTimeDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

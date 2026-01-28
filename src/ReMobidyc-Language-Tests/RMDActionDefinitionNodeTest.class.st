@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDActionDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDActionDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionDefinitionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser actionDefinition end
@@ -34,7 +35,7 @@ RMDActionDefinitionNodeTest >> testCopyReplace [
 		dir = direction target.')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionDefinitionNodeTest >> testPlus [
 	| node1 node2 sum |
 	node1 := parser actionDefinition end
@@ -73,7 +74,7 @@ RMDActionDefinitionNodeTest >> testPlus [
 		equals: 'y'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionDefinitionNodeTest >> testPrintOn [
 
 	| node copy |
@@ -91,7 +92,7 @@ RMDActionDefinitionNodeTest >> testPrintOn [
 	self assert: copy equals: node
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDActionDefinitionNodeTest >> testWithAll [
 	| node1 node2 sum |
 	node1 := parser actionDefinition end

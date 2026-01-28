@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPowerNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPowerNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPowerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '(a + b) ^ 2'.
@@ -17,7 +18,7 @@ RMDPowerNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '(a + x) ^ 2')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPowerNodeTest >> testPrintOn [
 
 	| node copy |

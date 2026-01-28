@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDNotEqualNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDNotEqualNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNotEqualNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end parse: 'a + b /= c * d'.
@@ -17,7 +18,7 @@ RMDNotEqualNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: 'a + x /= y * d')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNotEqualNodeTest >> testPrintOn [
 
 	| node copy |

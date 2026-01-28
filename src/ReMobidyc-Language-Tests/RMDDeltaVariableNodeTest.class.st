@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDeltaVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDeltaVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDeltaVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeDefinition end parse: 'my delta x'' = foo'.

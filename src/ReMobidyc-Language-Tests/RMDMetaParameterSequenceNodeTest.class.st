@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDMetaParameterSequenceNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDMetaParameterSequenceNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDMetaParameterSequenceNodeTest >> testPrintOn [
 
 	self

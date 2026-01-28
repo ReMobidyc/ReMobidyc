@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDSimulationTimeDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDSimulationTimeDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDSimulationTimeDefinitionNodeTest >> testPrintOn [
 
 	| node copy |

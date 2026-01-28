@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDWorldInitializerNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDWorldInitializerNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDWorldInitializerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser worldInitializer end
@@ -25,7 +26,7 @@ RMDWorldInitializerNodeTest >> testCopyReplace [
 	temp = 100 [F]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDWorldInitializerNodeTest >> testPrintOn [
 
 	| node copy |

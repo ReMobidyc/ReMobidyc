@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDVariabilityNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDVariabilityNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDVariabilityNodeTest >> testDictionariesDo [
 
 	self
@@ -47,7 +48,7 @@ RMDVariabilityNodeTest >> testDictionariesDo [
 		with: [ :dicts | self assert: dicts equals: { Dictionary new } ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDVariabilityNodeTest >> testPrintOn [
 
 	self

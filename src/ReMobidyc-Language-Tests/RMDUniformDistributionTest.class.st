@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDUniformDistributionTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDUniformDistributionTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUniformDistributionTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end
@@ -20,7 +21,7 @@ RMDUniformDistributionTest >> testCopyReplace [
 		equals: (parser expression end parse: 'uniform 110 [kcal] to 220 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUniformDistributionTest >> testPrintOn [
 
 	| node copy |

@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDLiteralNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDLiteralNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLiteralNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '10 [kcal]'.
@@ -17,7 +18,7 @@ RMDLiteralNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [J]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLiteralNodeTest >> testPrintOn [
 
 	| node copy |

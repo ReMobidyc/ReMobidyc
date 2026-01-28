@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDensityOfIndividualsInRadiusDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDensityOfIndividualsInRadiusDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDensityOfIndividualsInRadiusDirectiveNodeTest >> testEvalIn [
 
 	interpreter
@@ -66,7 +67,7 @@ RMDDensityOfIndividualsInRadiusDirectiveNodeTest >> testEvalIn [
 				equals: 9 / 9.0 / Float pi ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDensityOfIndividualsInRadiusDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

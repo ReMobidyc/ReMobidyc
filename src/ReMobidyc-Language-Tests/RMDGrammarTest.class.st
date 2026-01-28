@@ -1,13 +1,14 @@
 Class {
-	#name : #RMDGrammarTest,
-	#superclass : #TestCase,
+	#name : 'RMDGrammarTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'grammar'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> equalityTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 = 2 = 3'.
@@ -25,7 +26,7 @@ RMDGrammarTest >> equalityTest [
 		equals: (grammar expression parse: '3')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> greaterOrEqualTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 >= 2 >= 3'.
@@ -43,7 +44,7 @@ RMDGrammarTest >> greaterOrEqualTest [
 		equals: (grammar expression parse: '3')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> greaterThanTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 > 2 > 3'.
@@ -61,7 +62,7 @@ RMDGrammarTest >> greaterThanTest [
 		equals: (grammar expression parse: '3')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> lessOrEqualTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 <= 2 <= 3'.
@@ -79,7 +80,7 @@ RMDGrammarTest >> lessOrEqualTest [
 		equals: (grammar expression parse: '3')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> lessThanTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 < 2 < 3'.
@@ -97,7 +98,7 @@ RMDGrammarTest >> lessThanTest [
 		equals: (grammar expression parse: '3')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> notEqualTest [
 	| condition |
 	condition := grammar binaryRelation parse: '1 /= 2'.
@@ -114,12 +115,12 @@ RMDGrammarTest >> notEqualTest [
 	self assert: condition isPetit2Failure
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RMDGrammarTest >> setUp [
 	grammar := RMDGrammar current
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testActionDefinition [
 	| node |
 	node := grammar actionDefinition
@@ -166,7 +167,7 @@ where
 	self assert: node utilityDefinitions size equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testActionsFile [
 
 	| node |
@@ -188,7 +189,7 @@ to starve is
 	self assert: node actions second identifier equals: 'starve'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAgensFile [
 
 	| node |
@@ -206,7 +207,7 @@ Ant is Animat with
 	self assert: node agents third identifier equals: 'Ant'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAgentDirective [
 	| node |
 	node := grammar agentDirective parse: 'distance foo'.
@@ -223,7 +224,7 @@ RMDGrammarTest >> testAgentDirective [
 	self assert: node isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatDefinition [
 
 	| node |
@@ -291,7 +292,7 @@ where
 		equals: 'initialSugar'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatDotRenderer [
 
 	| renderer |
@@ -309,7 +310,7 @@ RMDGrammarTest >> testAnimatDotRenderer [
 	self assert: renderer animat equals: 'Wolf'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatIconRenderer [
 
 	| renderer |
@@ -327,7 +328,7 @@ RMDGrammarTest >> testAnimatIconRenderer [
 	self assert: renderer scale closeTo: 0.1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatInitializer [
 
 	| node |
@@ -357,7 +358,7 @@ RMDGrammarTest >> testAnimatInitializer [
 		equals: 'initialSpeed'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatRectangleRenderer [
 
 	| renderer |
@@ -375,7 +376,7 @@ RMDGrammarTest >> testAnimatRectangleRenderer [
 	self assert: renderer animat equals: 'Wolf'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAnimatTriangleRenderer [
 
 	| renderer |
@@ -393,7 +394,7 @@ RMDGrammarTest >> testAnimatTriangleRenderer [
 	self assert: renderer animat equals: 'Wolf'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testApply [
 	| apply |
 	apply := grammar apply parse: 'abs(x)'.
@@ -428,7 +429,7 @@ RMDGrammarTest >> testApply [
 		equals: (RMDUtilityVariableNode identifier: 'z')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAreaDirective [
 
 	| expr |
@@ -437,7 +438,7 @@ RMDGrammarTest >> testAreaDirective [
 	self assert: expr isAreaDirectiveNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAssignableDeltaAttributeVariable [
 
 	| variable |
@@ -479,7 +480,7 @@ RMDGrammarTest >> testAssignableDeltaAttributeVariable [
 	self assert: variable attributeVariable identifier equals: 'bar'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAssignableDifferentialAttributeVariable [
 
 	| variable |
@@ -506,7 +507,7 @@ RMDGrammarTest >> testAssignableDifferentialAttributeVariable [
 	self assert: variable attributeVariable identifier equals: 'bar'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAttributeDeclaration [
 
 	| declaration |
@@ -530,7 +531,7 @@ RMDGrammarTest >> testAttributeDeclaration [
 		equals: (grammar literal parse: '100[m]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAttributeDefinition [
 	| definition |
 	definition := grammar attributeDefinition parse: 'my x'' = 1[m]'.
@@ -581,7 +582,7 @@ RMDGrammarTest >> testAttributeDefinition [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testAttributeInitializer [
 	| node |
 	node := grammar attributeInitializer
@@ -593,7 +594,7 @@ RMDGrammarTest >> testAttributeInitializer [
 		equals: (grammar expression parse: 'uniform 100[kcal] to 1000[kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testBackgroundColorRenderer [
 
 	| renderer |
@@ -606,7 +607,7 @@ RMDGrammarTest >> testBackgroundColorRenderer [
 	self assert: renderer color equals: Color black
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testBinaryRelation [
 	self
 		equalityTest;
@@ -622,7 +623,7 @@ RMDGrammarTest >> testBinaryRelation [
 		assert: (grammar binaryRelation parse: '1 /= 2 < 3') isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testCastingExpression [
 
 	| node |
@@ -644,7 +645,7 @@ RMDGrammarTest >> testCastingExpression [
 	self assert: node expression expression isUtilityVariableNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testChance [
 
 	| node |
@@ -656,7 +657,7 @@ RMDGrammarTest >> testChance [
 	self assert: node probability equals: '0.1 + 0.2' asRMDExpression
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testColor [
 
 	| color |
@@ -668,7 +669,7 @@ RMDGrammarTest >> testColor [
 	self assert: color equals: Color white
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testCond1 [
 	| cond |
 	cond := grammar cond1 parse: '1 = 2'.
@@ -679,7 +680,7 @@ RMDGrammarTest >> testCond1 [
 	self assert: cond isConjunctionNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testCond2 [
 	| cond |
 	cond := grammar cond2 parse: 'not 1 = 2'.
@@ -694,7 +695,7 @@ RMDGrammarTest >> testCond2 [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testCond3 [
 	| cond |
 	cond := grammar cond3 parse: '1 = 2 and 3 = 4'.
@@ -713,7 +714,7 @@ RMDGrammarTest >> testCond3 [
 	self assert: cond isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testCondition [
 	| cond |
 	cond := grammar condition parse: '1 = 2 and 3 = 4'.
@@ -741,7 +742,7 @@ RMDGrammarTest >> testCondition [
 		equals: (grammar condition parse: '7 = 8')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testDensityOfIndividualsInPatchDirective [
 
 	| expr |
@@ -751,7 +752,7 @@ RMDGrammarTest >> testDensityOfIndividualsInPatchDirective [
 	self assert: expr animatName equals: 'A'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testDensityOfIndividualsInRadiusDirective [
 
 	| expr |
@@ -762,7 +763,7 @@ RMDGrammarTest >> testDensityOfIndividualsInRadiusDirective [
 	self assert: expr radius equals: (grammar expression parse: 'x + y')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testDensityOfIndividualsInWorldDirective [
 
 	| expr |
@@ -772,7 +773,7 @@ RMDGrammarTest >> testDensityOfIndividualsInWorldDirective [
 	self assert: expr animatName equals: 'A'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testExpr1 [
 
 	| expr1 |
@@ -832,7 +833,7 @@ RMDGrammarTest >> testExpr1 [
 	self assert: expr1 identifier equals: '_expr_'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testExpr2 [
 	| expr2 |
 	expr2 := grammar expr2 parse: 'x'.
@@ -845,7 +846,7 @@ RMDGrammarTest >> testExpr2 [
 	self assert: expr2 order equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testExpr4 [
 
 	| expr4 |
@@ -884,7 +885,7 @@ RMDGrammarTest >> testExpr4 [
 	self assert: expr4 expression2 order equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testExpr5 [
 	| expr5 |
 	expr5 := grammar expr5 parse: 'x + y - z'.
@@ -913,7 +914,7 @@ RMDGrammarTest >> testExpr5 [
 	self assert: expr5 expression2 expression2 identifier equals: 'z'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testExpression [
 	| expr |
 	expr := grammar expression parse: 'x + y * z'.
@@ -931,7 +932,7 @@ RMDGrammarTest >> testExpression [
 	self assert: expr isGuardedChoiceNode.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testGammaDistribution [
 
 	| node |
@@ -961,7 +962,7 @@ RMDGrammarTest >> testGammaDistribution [
 		equals: (grammar expression parse: '1[]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testGuardedChoice [
 	| choice |
 	choice := grammar guardedChoice parse: '1 if x = 0, 2 if x = 1, 3'.
@@ -996,7 +997,7 @@ RMDGrammarTest >> testGuardedChoice [
 	self assert: choice isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testInt [
 	self assert: (grammar int end parse: '0') equals: 0.
 	self assert: (grammar int end parse: '1') equals: 1.
@@ -1006,7 +1007,7 @@ RMDGrammarTest >> testInt [
 	self assert: (grammar int end parse: '3.14') isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testLengthDirective [
 
 	| expr |
@@ -1015,7 +1016,7 @@ RMDGrammarTest >> testLengthDirective [
 	self assert: expr isLengthDirectiveNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testLiteral [
 	| literal |
 	literal := grammar literal parse: '3.14[]'.
@@ -1042,7 +1043,7 @@ RMDGrammarTest >> testLiteral [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testLogLogisticDistribution [
 
 	| node |
@@ -1064,7 +1065,7 @@ RMDGrammarTest >> testLogLogisticDistribution [
 		equals: (grammar expression parse: '1[]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testMetaParameterSequence [
 
 	self
@@ -1090,7 +1091,7 @@ RMDGrammarTest >> testMetaParameterSequence [
 			 'the p, the q -> (1, 2), 3, 4, (5, 6)') isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testMetaParameterSetSequence [
 
 	self
@@ -1116,26 +1117,62 @@ RMDGrammarTest >> testMetaParameterSetSequence [
 			isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testMetaSingleParameterSequence [
 
 	self
 		assert:
 		(grammar metaSingleParameterSequence end parse:
 			 'the p -> 1, 2, 3, 4')
-		with: [ :node | 
-			self assert: node isMetaSingleParameterSequenceNode.
-			self assert: node size equals: 4.
-			self assert: node placeholder isPlaceholderNode.
-			self assert: node placeholder identifier equals: 'p' ].
+		with: [ :node |
+				self assert: node isMetaSingleParameterSequenceNode.
+				self assert: node size equals: 4.
+				self assert: node placeholder isPlaceholderNode.
+				self assert: node placeholder identifier equals: 'p' ].
 	self
 		assert: (grammar metaSingleParameterSequence end parse:
 				 'the p -> 1 [cm], 2 [mm], 3 [km], 4 [m]')
-		with: [ :node | 
-			self assert: node isMetaSingleParameterSequenceNode.
-			self assert: node size equals: 4.
-			self assert: node placeholder isPlaceholderNode.
-			self assert: node placeholder identifier equals: 'p' ].
+		with: [ :node |
+				self assert: node isMetaSingleParameterSequenceNode.
+				self assert: node size equals: 4.
+				self assert: node placeholder isPlaceholderNode.
+				self assert: node placeholder identifier equals: 'p' ].
+	self
+		assert: (grammar metaSingleParameterSequence end parse:
+				 'the p -> 1, 2, 3, 4 [km]')
+		with: [ :node |
+				self assert: node isMetaSingleParameterSequenceNode.
+				self assert: node size equals: 4.
+				self assert: node placeholder isPlaceholderNode.
+				self assert: node placeholder identifier equals: 'p'.
+				self assert: node literals first equals: '1 [km]' asRMDExpression.
+				self assert: node literals second equals: '2 [km]' asRMDExpression.
+				self assert: node literals third equals: '3 [km]' asRMDExpression.
+				self assert: node literals fourth equals: '4 [km]' asRMDExpression ].
+	self
+		assert: (grammar metaSingleParameterSequence end parse:
+				 'the p -> 1[km], 2[km], ..., 4 [km]')
+		with: [ :node |
+				self assert: node isMetaSingleParameterSequenceNode.
+				self assert: node size equals: 4.
+				self assert: node placeholder isPlaceholderNode.
+				self assert: node placeholder identifier equals: 'p'.
+				self assert: node literals first equals: '1.0 [km]' asRMDExpression.
+				self assert: node literals second equals: '2.0 [km]' asRMDExpression.
+				self assert: node literals third equals: '3.0 [km]' asRMDExpression.
+				self assert: node literals fourth equals: '4.0 [km]' asRMDExpression ].
+	self
+		assert: (grammar metaSingleParameterSequence end parse:
+				 'the p -> 1, 2,..., 4 [km]')
+		with: [ :node |
+				self assert: node isMetaSingleParameterSequenceNode.
+				self assert: node size equals: 4.
+				self assert: node placeholder isPlaceholderNode.
+				self assert: node placeholder identifier equals: 'p'.
+				self assert: node literals first equals: '1.0 [km]' asRMDExpression.
+				self assert: node literals second equals: '2.0 [km]' asRMDExpression.
+				self assert: node literals third equals: '3.0 [km]' asRMDExpression.
+				self assert: node literals fourth equals: '4.0 [km]' asRMDExpression ].
 	self assert:
 		(grammar metaSingleParameterSequence end parse: 'the p -> x')
 			isPetit2Failure.
@@ -1144,7 +1181,7 @@ RMDGrammarTest >> testMetaSingleParameterSequence [
 			isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testMetaVariable [
 
 	| variable |
@@ -1160,7 +1197,7 @@ RMDGrammarTest >> testMetaVariable [
 	self assert: variable isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testNormalDistribution [
 
 	| node |
@@ -1175,7 +1212,7 @@ RMDGrammarTest >> testNormalDistribution [
 		equals: (grammar expression parse: '2[cm]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testNumberOfIndividualsInPatchDirective [
 
 	| expr |
@@ -1185,7 +1222,7 @@ RMDGrammarTest >> testNumberOfIndividualsInPatchDirective [
 	self assert: expr animatName equals: 'A'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testNumberOfIndividualsInRadiusDirective [
 
 	| expr |
@@ -1196,7 +1233,7 @@ RMDGrammarTest >> testNumberOfIndividualsInRadiusDirective [
 	self assert: expr radius equals: (grammar expression parse: 'x + y')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testNumberOfIndividualsInWorldDirective [
 
 	| expr |
@@ -1206,7 +1243,7 @@ RMDGrammarTest >> testNumberOfIndividualsInWorldDirective [
 	self assert: expr animatName equals: 'A'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testParameterInstantiation [
 
 	| node |
@@ -1237,7 +1274,7 @@ RMDGrammarTest >> testParameterInstantiation [
 		equals: (grammar condition parse: 'my sugar = 0 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPatchColorAlphaRenderer [
 
 	| renderer |
@@ -1254,7 +1291,7 @@ RMDGrammarTest >> testPatchColorAlphaRenderer [
 	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPatchColorBrightnessRenderer [
 
 	| renderer |
@@ -1271,7 +1308,7 @@ RMDGrammarTest >> testPatchColorBrightnessRenderer [
 	self assert: renderer max equals: (grammar literal parse: '0 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPatchColorMapRenderer [
 
 	| renderer |
@@ -1285,7 +1322,7 @@ RMDGrammarTest >> testPatchColorMapRenderer [
 	self assert: renderer color equals: Color red
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPatchDefinition [
 
 	| node |
@@ -1323,7 +1360,7 @@ where
 		equals: 's'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPatchInitializer [
 
 	| node |
@@ -1359,7 +1396,7 @@ RMDGrammarTest >> testPatchInitializer [
 		equals: 'alpha'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testPlaceholder [
 
 	| exp |
@@ -1375,7 +1412,7 @@ RMDGrammarTest >> testPlaceholder [
 	self assert: exp expression2 equals: (grammar expression parse: '1')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testSimulationDefinition [
 	| node |
 	node := grammar simulationDefinition end
@@ -1393,7 +1430,7 @@ RMDGrammarTest >> testSimulationDefinition [
 		equals: (grammar literal parse: '10[day]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testSimulationFile [
 
 	| node |
@@ -1411,7 +1448,7 @@ RMDGrammarTest >> testSimulationFile [
 		equals: (grammar literal parse: '10[day]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testSimulationTimeDefinition [
 	| node |
 	node := grammar simulationTimeDefinition parse: 'during 100 [days] by 1 [hour]'.
@@ -1426,7 +1463,7 @@ RMDGrammarTest >> testSimulationTimeDefinition [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testTaskDefinition [
 
 	| node |
@@ -1458,7 +1495,7 @@ where
 	self assert: node parameterInstantiations size equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testTaskDefinitionHeader [
 	| node |
 	node := grammar taskDefinitionHeader parse: 'Wolf eat Goat within 1[m]
@@ -1466,7 +1503,7 @@ when my blood_sugar < my full'.
 	self deny: node isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testTasksFile [
 
 	| node |
@@ -1482,7 +1519,7 @@ where
 	self assert: node tasks second verbIdentifier equals: 'move'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testType [
 	| type |
 	type := grammar type parse: '[m]'.
@@ -1499,7 +1536,7 @@ RMDGrammarTest >> testType [
 	self assert: type equals: RMDUnit noDimension
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUniformDistribution [
 
 	| node |
@@ -1523,7 +1560,7 @@ RMDGrammarTest >> testUniformDistribution [
 		equals: (grammar expression parse: '2[cm]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUnit [
 	| unit |
 	unit := grammar unit parse: 'm'.
@@ -1540,7 +1577,7 @@ RMDGrammarTest >> testUnit [
 	self assert: unit isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUnitFactor [
 	| symbol |
 	symbol := grammar unitFactor parse: 'm'.
@@ -1554,7 +1591,7 @@ RMDGrammarTest >> testUnitFactor [
 	self assert: symbol equals: (RMDUnitSymbol at: 's') ** -2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUnitSymbol [
 	| symbol |
 	symbol := grammar unitSymbol parse: 'm'.
@@ -1565,7 +1602,7 @@ RMDGrammarTest >> testUnitSymbol [
 	self assert: symbol equals: (RMDUnitSymbol at: 'kg')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUnitTerm [
 	| symbol |
 	symbol := grammar unitTerm parse: 'm'.
@@ -1578,7 +1615,7 @@ RMDGrammarTest >> testUnitTerm [
 		equals: (RMDUnitSymbol at: 'kg') * (RMDUnitSymbol at: 'm')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUtilityDefinition [
 	| definition |
 	definition := grammar utilityDefinition parse: 'x = 1[m]'.
@@ -1597,7 +1634,7 @@ RMDGrammarTest >> testUtilityDefinition [
 	self assert: definition definitionBody isGuardedChoiceNode
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testUtilityVariable [
 	| variable |
 	variable := grammar utilityVariable parse: 'foo'.
@@ -1610,7 +1647,7 @@ RMDGrammarTest >> testUtilityVariable [
 	self assert: variable isPetit2Failure
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testVariability [
 
 	self
@@ -1668,7 +1705,7 @@ RMDGrammarTest >> testVariability [
 				node metaParameterSequences second isMetaParameterSetSequenceNode ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testVariable [
 	| variable |
 	variable := grammar attributeVariable parse: 'my foo'.
@@ -1685,7 +1722,7 @@ RMDGrammarTest >> testVariable [
 	self assert: variable identifier equals: 'bar'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testVisualizationFile [
 
 	| node |
@@ -1698,7 +1735,7 @@ Grasshopper_Egg -> 7 pixels cyan dot.
 	self assert: node renderers size equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testWorldDefinition [
 	| node |
 	node := grammar worldDefinition end parse: 'World.'.
@@ -1736,7 +1773,7 @@ where
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGrammarTest >> testWorldInitializer [
 
 	| node |

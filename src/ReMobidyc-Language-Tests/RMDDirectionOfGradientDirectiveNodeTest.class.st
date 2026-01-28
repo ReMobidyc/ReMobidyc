@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDirectionOfGradientDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDirectionOfGradientDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDirectionOfGradientDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

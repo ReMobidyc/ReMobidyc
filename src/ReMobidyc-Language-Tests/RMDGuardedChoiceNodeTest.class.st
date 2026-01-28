@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDGuardedChoiceNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDGuardedChoiceNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGuardedChoiceNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser guardedChoice end parse: 'a if x = y, b'.
@@ -17,7 +18,7 @@ RMDGuardedChoiceNodeTest >> testCopyReplace [
 		equals: (parser guardedChoice end parse: 'a if z = y, x')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGuardedChoiceNodeTest >> testPrintOn [
 
 	| node copy |

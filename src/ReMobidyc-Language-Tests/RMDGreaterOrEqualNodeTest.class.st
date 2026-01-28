@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDGreaterOrEqualNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDGreaterOrEqualNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGreaterOrEqualNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end parse: 'a + b >= c * d'.
@@ -17,7 +18,7 @@ RMDGreaterOrEqualNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: 'a + x >= y * d')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDGreaterOrEqualNodeTest >> testPrintOn [
 
 	| node copy |

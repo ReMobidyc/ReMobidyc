@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPropertyDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPropertyDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyDefinitionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeDefinition end parse: 'my blood_sugar'' = x'.
@@ -17,7 +18,7 @@ RMDPropertyDefinitionNodeTest >> testCopyReplace [
 		equals: (parser attributeDefinition end parse: 'my energy'' = 10 [m]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyDefinitionNodeTest >> testPrintOn [
 
 	| node copy |

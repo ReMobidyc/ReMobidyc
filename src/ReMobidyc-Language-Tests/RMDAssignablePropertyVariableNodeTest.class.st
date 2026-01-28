@@ -1,16 +1,17 @@
 Class {
-	#name : #RMDAssignablePropertyVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAssignablePropertyVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDAssignablePropertyVariableNodeTest >> setUpParser [ 
 	super setUpParser.
 	parser := parser assignableAttributeVariable end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAssignablePropertyVariableNodeTest >> testPrintOn [
 
 	| node copy |

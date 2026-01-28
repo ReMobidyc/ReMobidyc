@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPropertyVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPropertyVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '1 [m] + my foo'.
@@ -16,7 +17,7 @@ RMDPropertyVariableNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '1 [m] + 10 [m]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyVariableNodeTest >> testPrintOn [
 
 	| node copy |

@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDTaskDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDTaskDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDTaskDefinitionNodeTest >> testPrintOn [
 
 	| node copy |

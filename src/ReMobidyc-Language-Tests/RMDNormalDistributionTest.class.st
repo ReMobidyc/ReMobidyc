@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDNormalDistributionTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDNormalDistributionTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNormalDistributionTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end
@@ -20,7 +21,7 @@ RMDNormalDistributionTest >> testCopyReplace [
 		equals: (parser expression end parse: 'normal 110 [kcal] sigma 220 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNormalDistributionTest >> testPrintOn [
 
 	| node copy |

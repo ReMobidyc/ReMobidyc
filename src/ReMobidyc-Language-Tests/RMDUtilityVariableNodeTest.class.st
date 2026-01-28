@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDUtilityVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDUtilityVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUtilityVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser utilityVariable end parse: 'x'.
@@ -16,7 +17,7 @@ RMDUtilityVariableNodeTest >> testCopyReplace [
 		equals: (parser utilityVariable end parse: 'y')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUtilityVariableNodeTest >> testPrintOn [
 
 	| node copy |

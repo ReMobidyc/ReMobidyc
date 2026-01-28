@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDNumberOfIndividualsInPatchDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDNumberOfIndividualsInPatchDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNumberOfIndividualsInPatchDirectiveNodeTest >> testEvalIn [
 
 	interpreter
@@ -61,7 +62,7 @@ RMDNumberOfIndividualsInPatchDirectiveNodeTest >> testEvalIn [
 				equals: 4 ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNumberOfIndividualsInPatchDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

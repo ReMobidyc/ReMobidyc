@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPatchInitializerNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPatchInitializerNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPatchInitializerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser patchInitializer end
@@ -25,7 +26,7 @@ RMDPatchInitializerNodeTest >> testCopyReplace [
 	sugar = uniform 2000 [kcal] to 5000 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPatchInitializerNodeTest >> testPrintOn [
 
 	| node copy |

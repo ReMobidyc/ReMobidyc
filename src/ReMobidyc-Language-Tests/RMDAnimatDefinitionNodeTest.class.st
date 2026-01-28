@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDAnimatDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAnimatDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAnimatDefinitionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser animatDefinition end
@@ -24,7 +25,7 @@ blood_sugar [kcal].'.
 energy [J].')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAnimatDefinitionNodeTest >> testPrintOn [
 
 	| node copy |

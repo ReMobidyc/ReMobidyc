@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDNegationNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDNegationNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNegationNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end
@@ -18,7 +19,7 @@ RMDNegationNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: 'not (a1 = a2 or d1 = d2)')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDNegationNodeTest >> testPrintOn [
 
 	| node copy |

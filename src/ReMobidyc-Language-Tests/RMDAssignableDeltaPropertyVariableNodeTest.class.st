@@ -1,16 +1,17 @@
 Class {
-	#name : #RMDAssignableDeltaPropertyVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAssignableDeltaPropertyVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RMDAssignableDeltaPropertyVariableNodeTest >> setUpParser [ 
 	super setUpParser.
 	parser := parser assignableDeltaAttributeVariable end
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAssignableDeltaPropertyVariableNodeTest >> testPrintOn [
 
 	| node copy |

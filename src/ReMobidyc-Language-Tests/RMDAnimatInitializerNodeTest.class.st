@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDAnimatInitializerNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAnimatInitializerNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAnimatInitializerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser animatInitializer end
@@ -24,7 +25,7 @@ blood_sugar = uniform 1000 [kcal] to 2000 [kcal]'.
 blood_sugar = uniform 1500 [kcal] to 2000 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAnimatInitializerNodeTest >> testPrintOn [
 
 	| node copy |

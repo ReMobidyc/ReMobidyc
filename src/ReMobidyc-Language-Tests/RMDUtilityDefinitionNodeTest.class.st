@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDUtilityDefinitionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDUtilityDefinitionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUtilityDefinitionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser utilityDefinition end parse: 'x = a + b'.
@@ -18,7 +19,7 @@ RMDUtilityDefinitionNodeTest >> testCopyReplace [
 		equals: (parser utilityDefinition end parse: 'y = my foo + 10 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUtilityDefinitionNodeTest >> testPrintOn [
 
 	| node copy |

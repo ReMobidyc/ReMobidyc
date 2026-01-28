@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDifferentialVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDifferentialVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDifferentialVariableNodeTest >> testAssignIn [
 
 	| animatDef animat address dt |
@@ -41,7 +42,7 @@ RMDDifferentialVariableNodeTest >> testAssignIn [
 		closeTo: 4 + (6 * dt) + (7 * dt)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDifferentialVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeDefinition end parse: 'my d/dt x'' = foo'.

@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDeltaTimeDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDeltaTimeDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDeltaTimeDirectiveNodeTest >> testCopyReplace [
 
 	| node replacement |
@@ -18,7 +19,7 @@ RMDDeltaTimeDirectiveNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [ms]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDeltaTimeDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

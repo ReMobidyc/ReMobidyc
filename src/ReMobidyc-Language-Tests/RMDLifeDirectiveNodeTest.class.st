@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDLifeDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
+	#name : 'RMDLifeDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
 	#instVars : [
 		'bDef',
 		'aDef'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDLifeDirectiveNodeTest class >> isAbstract [ 
 	^ self == RMDLifeDirectiveNodeTest
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RMDLifeDirectiveNodeTest >> setUpInterpreter [
 
 	super setUpInterpreter.

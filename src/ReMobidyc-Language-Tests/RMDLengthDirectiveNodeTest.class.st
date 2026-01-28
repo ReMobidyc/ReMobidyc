@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDLengthDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDLengthDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLengthDirectiveNodeTest >> testEvalIn [
 
 	interpreter
@@ -17,7 +18,7 @@ RMDLengthDirectiveNodeTest >> testEvalIn [
 		closeTo: 2.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDLengthDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

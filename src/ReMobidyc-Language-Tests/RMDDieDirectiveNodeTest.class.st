@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDieDirectiveNodeTest,
-	#superclass : #RMDLifeDirectiveNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDieDirectiveNodeTest',
+	#superclass : 'RMDLifeDirectiveNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDieDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

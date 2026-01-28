@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDeUnitExpressionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDeUnitExpressionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDeUnitExpressionNodeTest >> testCopyReplace [
 
 	| node replacement |
@@ -18,7 +19,7 @@ RMDDeUnitExpressionNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '1 + (cm)(len1+len2)')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDeUnitExpressionNodeTest >> testPrintOn [
 
 	| node copy |

@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPropertyInitializerNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPropertyInitializerNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyInitializerNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeInitializer end
@@ -23,7 +24,7 @@ RMDPropertyInitializerNodeTest >> testCopyReplace [
 					'temp = 100 [DegreeF]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyInitializerNodeTest >> testPrintOn [
 
 	| node copy |

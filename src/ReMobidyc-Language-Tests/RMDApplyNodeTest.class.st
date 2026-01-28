@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDApplyNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDApplyNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDApplyNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'my a + min(my b, my c)'.
@@ -17,7 +18,7 @@ RMDApplyNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: 'my a + my z')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDApplyNodeTest >> testPrintOn [
 
 	| node copy |

@@ -449,6 +449,52 @@ RMDGrammar >> areaDirectiveNodeClass [
 	^ RMDAreaDirectiveNode
 ]
 
+{ #category : 'parsers-variability' }
+RMDGrammar >> arithmeticLiteralSequence [
+
+	^ self arithmeticNumberSequenceWithType
+	  / (_literal , $, asPParser trimSpaces ==> #first
+		   ,
+			   (_literal , $, asPParser trimSpaces , '...' asPParser trimSpaces
+			    , $, asPParser trimSpaces ==> #first) , _literal
+		   ==> [ :array |
+				   | first second last unit step |
+				   first := array first numeric.
+				   second := array second numeric.
+				   last := array third numeric.
+				   unit := array third unit.
+				   step := second - first.
+				   (step abs > 1.0e-8 and: [ step sign = (last - first) sign ])
+					   ifTrue: [
+							   (0 to: (last - first / step roundTo: 1.0e-8) truncated)
+								   collect: [ :index |
+										   self literalNodeClass
+											   literal: (unit fromSI: step * index + first) storeString
+											   unit: unit ] ] ])
+]
+
+{ #category : 'parsers-variability' }
+RMDGrammar >> arithmeticNumberSequenceWithType [
+
+	^ self decimalNumber , $, asPParser trimSpaces ==> #first
+	  , (self decimalNumber , $, asPParser trimSpaces
+		   , '...' asPParser trimSpaces , $, asPParser trimSpaces ==> #first)
+	  , self decimalNumber , self type optional ==> [ :array |
+		  | first second last type step |
+		  first := array first.
+		  second := array second.
+		  last := array third.
+		  type := array fourth ifNil: [ RMDUnit noDimension ].
+		  step := second - first.
+		  (step abs > 1.0e-8 and: [ step sign = (last - first) sign ])
+			  ifTrue: [
+					  (0 to: (last - first / step roundTo: 1.0e-8) truncated)
+						  collect: [ :index |
+								  self literalNodeClass
+									  literal: (step * index + first) storeString
+									  unit: type ] ] ]
+]
+
 { #category : 'parsers-atoms' }
 RMDGrammar >> assignableAttributeVariable [
 
@@ -746,6 +792,26 @@ RMDGrammar >> cycle [
 RMDGrammar >> deUnitExpressionNodeClass [
 
 	^ RMDDeUnitExpressionNode
+]
+
+{ #category : 'parsers-atoms' }
+RMDGrammar >> decimalNumber [
+
+	^ self decimalString ==> [ :string |
+		  | sign decimal |
+		  string first = $-
+			  ifTrue: [
+					  sign := -1.
+					  decimal := string copyWithoutFirst trim ]
+			  ifFalse: [
+					  sign := 1.
+					  decimal := string trim ].
+		  sign * (decimal first isDigit
+			   ifTrue: [ decimal asNumber asFloat ]
+			   ifFalse: [
+					   decimal = 'π'
+						   ifTrue: [ Float pi ]
+						   ifFalse: [ (RMDUndefinedLiteralError on: self) signal ] ]) ]
 ]
 
 { #category : 'parsers-atoms' }
@@ -1145,7 +1211,8 @@ RMDGrammar >> literalNodeClass [
 { #category : 'parsers-variability' }
 RMDGrammar >> literalSequence [
 
-	^ _literal onlySeparatedBy: $, asPParser trimSpaces
+	^ self arithmeticLiteralSequence / self numberSequenceWithType
+	  / (_literal onlySeparatedBy: $, asPParser trimSpaces)
 ]
 
 { #category : 'parsers-expressions' }
@@ -1338,6 +1405,17 @@ RMDGrammar >> numberOfIndividualsInWorldDirective [
 { #category : 'class access' }
 RMDGrammar >> numberOfIndividualsInWorldDirectiveNodeClass [
 	^ RMDNumberOfIndividualsInWorldDirectiveNode
+]
+
+{ #category : 'parsers-variability' }
+RMDGrammar >> numberSequenceWithType [
+
+	^ (self decimalString onlyStrictlySeparatedBy:
+		   $, asPParser trimSpaces) , self type optional ==> [ :pair |
+		  pair first collect: [ :decimal |
+				  self literalNodeClass
+					  literal: decimal
+					  unit: (pair second ifNil: [ RMDUnit noDimension ]) ] ]
 ]
 
 { #category : 'parsers-atoms' }

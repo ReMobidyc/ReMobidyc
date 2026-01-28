@@ -1,19 +1,20 @@
 Class {
-	#name : #RMDSyntaxNodeTest,
-	#superclass : #TestCase,
+	#name : 'RMDSyntaxNodeTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'interpreter',
 		'parser'
 	],
-	#category : #'ReMobidyc-Language-Tests'
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RMDSyntaxNodeTest class >> isAbstract [
 	^ self name = #RMDSyntaxNodeTest
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDSyntaxNodeTest >> assertPrintString: aString convergeByParser: aParser [
 
 	| node copy |
@@ -23,12 +24,12 @@ RMDSyntaxNodeTest >> assertPrintString: aString convergeByParser: aParser [
 	self assert: copy equals: node
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RMDSyntaxNodeTest >> expression: aString [
 	^ parser expression end parse: aString
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RMDSyntaxNodeTest >> setUp [
 	(self class allSelectors
 		select:
@@ -36,7 +37,7 @@ RMDSyntaxNodeTest >> setUp [
 		do: [ :selector | self perform: selector ]
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RMDSyntaxNodeTest >> setUpParser [
 	parser := RMDGrammar current
 ]

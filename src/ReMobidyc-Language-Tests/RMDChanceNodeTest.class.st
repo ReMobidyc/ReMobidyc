@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDChanceNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDChanceNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDChanceNodeTest >> testCopyReplace [
 
 	| node replacement |
@@ -20,7 +21,7 @@ RMDChanceNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: '10 [%] + 5 [%] chance')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDChanceNodeTest >> testPrintOn [
 
 	| node copy |

@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDAreaDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAreaDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAreaDirectiveNodeTest >> testEvalIn [
 
 	interpreter
@@ -17,7 +18,7 @@ RMDAreaDirectiveNodeTest >> testEvalIn [
 		closeTo: 4.0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAreaDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

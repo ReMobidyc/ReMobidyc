@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDistanceDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDistanceDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDistanceDirectiveNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'distance target'.
@@ -17,7 +18,7 @@ RMDDistanceDirectiveNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [mm]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDistanceDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

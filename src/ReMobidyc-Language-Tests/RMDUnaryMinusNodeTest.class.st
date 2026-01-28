@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDUnaryMinusNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDUnaryMinusNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnaryMinusNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '-(a + b)'.
@@ -17,7 +18,7 @@ RMDUnaryMinusNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '-(x + y)')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDUnaryMinusNodeTest >> testPrintOn [
 
 	| node copy |

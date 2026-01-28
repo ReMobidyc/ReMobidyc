@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPlaceholderNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPlaceholderNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPlaceholderNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end
@@ -18,7 +19,7 @@ RMDPlaceholderNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: 'b1 = b2 and a1 = a2')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPlaceholderNodeTest >> testPrintOn [
 
 	| node copy |

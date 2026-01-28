@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDisjunctionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDisjunctionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDisjunctionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser condition end
@@ -18,7 +19,7 @@ RMDDisjunctionNodeTest >> testCopyReplace [
 		equals: (parser condition end parse: 'a1 = a2 or d1 = d2')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDisjunctionNodeTest >> testPrintOn [
 
 	| node copy |

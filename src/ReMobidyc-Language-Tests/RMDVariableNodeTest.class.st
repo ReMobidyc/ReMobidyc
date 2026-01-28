@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDVariableNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDVariableNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDVariableNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeVariable end parse: 'my blood_sugar'.

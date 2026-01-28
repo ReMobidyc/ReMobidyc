@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDPropertyDeclarationNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDPropertyDeclarationNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDPropertyDeclarationNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser attributeDeclaration end parse: 'blood_sugar [kcal]'.

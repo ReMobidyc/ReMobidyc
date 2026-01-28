@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDAdditionNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDAdditionNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAdditionNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'a + target''s b'.
@@ -18,7 +19,7 @@ RMDAdditionNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [kcal] + 20 [kcal]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDAdditionNodeTest >> testPrintOn [
 
 	| node copy |

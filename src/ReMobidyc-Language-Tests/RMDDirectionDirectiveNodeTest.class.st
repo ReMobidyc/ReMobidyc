@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDDirectionDirectiveNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDDirectionDirectiveNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDirectionDirectiveNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: 'direction target'.
@@ -17,7 +18,7 @@ RMDDirectionDirectiveNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '10 [degree]')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDDirectionDirectiveNodeTest >> testPrintOn [
 
 	| node copy |

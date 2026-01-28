@@ -1,10 +1,11 @@
 Class {
-	#name : #RMDProductNodeTest,
-	#superclass : #RMDSyntaxNodeTest,
-	#category : #'ReMobidyc-Language-Tests'
+	#name : 'RMDProductNodeTest',
+	#superclass : 'RMDSyntaxNodeTest',
+	#category : 'ReMobidyc-Language-Tests',
+	#package : 'ReMobidyc-Language-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDProductNodeTest >> testCopyReplace [
 	| node replacement |
 	node := parser expression end parse: '(a + b) * (c * d)'.
@@ -17,7 +18,7 @@ RMDProductNodeTest >> testCopyReplace [
 		equals: (parser expression end parse: '(a + x) * (y * d)')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RMDProductNodeTest >> testPrintOn [
 
 	| node copy |
