@@ -95,6 +95,7 @@ ReMobidycCommandLineHandler class >> quit [
 ReMobidycCommandLineHandler >> activate [
 
 	self
+		installQuit;
 		installMenu;
 		installIcon.
 	BaselineOfReMobidyc ensureStandardRepository.
