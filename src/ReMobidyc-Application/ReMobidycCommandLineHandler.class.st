@@ -79,6 +79,18 @@ ReMobidycCommandLineHandler class >> generate [
 		generate
 ]
 
+{ #category : 'accessing' }
+ReMobidycCommandLineHandler class >> quit [
+
+	(SpApplication defaultApplication newConfirm
+		 title: 'Quit re:mobidyc?';
+		 label: 'Quit re:mobidyc?';
+		 acceptLabel: 'Quit';
+		 cancelLabel: 'Cancel';
+		 openModal) = true ifTrue: [
+		Smalltalk snapshot: false andQuit: true ]
+]
+
 { #category : 'activation' }
 ReMobidycCommandLineHandler >> activate [
 
@@ -138,4 +150,12 @@ ReMobidycCommandLineHandler >> installMenu [
 				addItemWithTitle: 'Tutorial...'
 				action: [ BaselineOfReMobidyc showTutorial ] ].
 		main setAsMainMenu ]
+]
+
+{ #category : 'utilities' }
+ReMobidycCommandLineHandler >> installQuit [
+
+	Smalltalk at: #WorldState ifPresent: [ :class |
+			class class compile:
+				'quitSession  ReMobidycCommandLineHandler quit' ]
 ]
