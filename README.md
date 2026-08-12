@@ -1,6 +1,6 @@
-[![Pharo version](https://img.shields.io/badge/Pharo-12-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo version](https://img.shields.io/badge/Pharo-13-%23aac9ff.svg)](https://pharo.org/download)
 ![CI](https://github.com/tomooda/ViennaTalk/actions/workflows/test.yml/badge.svg)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cormas/cormas/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/ReMobidyc/ReMobidyc/master/LICENSE)
 
 <img alt="logo" src="images/logo-light1.png" width=600>
 
@@ -29,7 +29,7 @@ There are three ways to install reːmobidyc.
 
 The pre-built packages are available at the <a href="https://viennatalk.org/builds/remobidyc/latest">official distribution site</a>.
 
-The latest release: [<kbd> <br> Keelung <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
+The latest release: [<kbd> <br> Hikone <br> &nbsp; </kbd>](https://github.com/ReMobidyc/ReMobidyc/releases/latest/)
 
 ### 2. from Pharo
 
